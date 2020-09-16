@@ -11,9 +11,11 @@ function MainLayout(props){
         <>
             <Layout>
                 <Header>
-                    <MainHeader/>
+                    <MainHeader title={props.title}/>
                 </Header>
-                <TopContent buttonAction={props.buttonAction} discard={props.discard}/>
+                {
+                    props.show && <TopContent {...props}/>
+                }
                 <Content id="content">
                     {props.children}
                 </Content>

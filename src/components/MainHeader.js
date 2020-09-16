@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'
 import { Drawer, Row, Col, Avatar, Dropdown, Button } from 'antd'
 import { UserOutlined, MenuOutlined, CaretDownOutlined } from '@ant-design/icons'
-import { menu } from '../data'
+import { menuProfile } from '../data'
+import MainConfig from './MainConfig'
 
-function MainHead(){
+function MainHead(props){
     const [visible, setVisible] = useState(false)
     const onCloseDrawer = ()=>{
       setVisible(false)
@@ -16,20 +18,15 @@ function MainHead(){
         <Row>
             <Col span={12}>
                 <Row>
-                    <Col span={6}><MenuOutlined onClick={onOpenDrawer}/> <span>INVERTORY</span></Col>
+                    <Col span={6}><MenuOutlined onClick={onOpenDrawer}/> <span>{props.title}</span></Col>
                     <Col span={18}>
-                        <Dropdown overlay={menu} trigger={['click']}>
-                            <Button type="text" className="ant-dropdown-link">Reports <CaretDownOutlined /></Button>
-                        </Dropdown>
-                        <Dropdown overlay={menu} trigger={['click']}>
-                            <Button type="text" className="ant-dropdown-link">Configuration <CaretDownOutlined /></Button>
-                        </Dropdown>
+                        <MainConfig/>
                     </Col>
                 </Row>
             </Col>
             <Col span={12} id="column-right">
                 <Avatar icon={<UserOutlined />} />
-                <Dropdown overlay={menu} trigger={['click']}>
+                <Dropdown overlay={menuProfile} trigger={['click']}>
                     <Button type="text" className="ant-dropdown-link">Administrator <CaretDownOutlined /></Button>
                 </Dropdown>
             </Col>
@@ -42,10 +39,11 @@ function MainHead(){
             onClose={onCloseDrawer}
             visible={visible}
             >
-            <p>INVERTORY</p>
-            <p>PURCHASING</p>
-            <p>SALES</p>
-            </Drawer>
+            <p><Link to="/">DASHBOARD</Link></p>
+            <p><Link to="/inventory">INVERTORY</Link></p>
+            <p><Link to="/purchasing">PURCHASING</Link></p>
+            <p><Link to="/sales">SALES</Link></p>
+        </Drawer>
         </>
     )
 
