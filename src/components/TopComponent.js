@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { Col, Row, Button, Input, Breadcrumb, Modal } from 'antd'
+import { Col, Row, Button, Breadcrumb } from 'antd'
 import Search from './Search'
 
 function TopContent(props){

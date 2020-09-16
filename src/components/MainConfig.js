@@ -12,6 +12,9 @@ export default function MainConfig (){
             <Dropdown overlay={menuConfig} trigger={['click']}>
                 <Button type="text" className="ant-dropdown-link">Configuration <CaretDownOutlined /></Button>
             </Dropdown>
+            <Dropdown overlay={menuConfig} trigger={['click']}>
+                <Button type="text" className="ant-dropdown-link">Configuration <CaretDownOutlined /></Button>
+            </Dropdown>
         </>
     )
 }

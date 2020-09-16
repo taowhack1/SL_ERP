@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Row, Col, Form, Input, Tabs } from 'antd'
 import MainLayout from '../../components/MainLayout'
 
-class Create extends Component {
+class CreateInventory extends Component {
     componentDidMount(){
         console.log(this.props.emp.salary)
     }
@@ -14,7 +14,7 @@ class Create extends Component {
         title: "INVENTORY",
         show:true,
         breadcrumb:['Home','New'],
-        search:true,
+        search: false,
         buttonAction: ['Save','SaveConfirm','Discard'],
         create:"",
         discard: "/inventory",
@@ -24,7 +24,7 @@ class Create extends Component {
         onConfirm:()=>{
             console.log('Confirm')
         }
-      }
+    }
     render(){
         return (
             <MainLayout {...this.config}>
@@ -139,4 +139,4 @@ function mapStateToProps(state){
     return { emp: state }
 }
 
-export default connect(mapStateToProps)(Create)
+export default connect(mapStateToProps)(CreateInventory)

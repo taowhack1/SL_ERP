@@ -3,7 +3,7 @@ import {Row, Col, Table } from 'antd'
 import MainLayout from '../../components/MainLayout'
 import { columns, data } from '../../data'
 
-class Inventory extends Component {
+class Purchasing extends Component {
   componentDidMount(){
     
   }
@@ -14,13 +14,13 @@ class Inventory extends Component {
     console.log('params', pagination, filters, sorter, extra);
   }
   config = {
-    title: "INVENTORY",
+    title: "PURCHASING",
     show:true,
     breadcrumb:['Home'],
     search:true,
-    create:"/inventory/create",
+    create:"/purchasing/create",
     buttonAction: ['Create'],
-    discard: "/inventory",
+    discard: "/purchasing",
     onCancel:()=>{
       console.log('Cancel')
     }
@@ -41,4 +41,4 @@ class Inventory extends Component {
   }
 }
 
-export default Inventory;
+export default Purchasing;
