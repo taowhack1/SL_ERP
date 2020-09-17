@@ -1,0 +1,16 @@
+.space-top-s {
+  margin-top: 16px;
+}
+.space-top-md {
+  margin-top: 32px;
+}
+.space-top-l {
+  margin-top: 64px;
+}
+.space-top-xl {
+  margin-top: 128px;
+}
+/* #item_name {
+  width: 100%;
+  background-color: red;
+} */
