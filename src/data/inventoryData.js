@@ -266,3 +266,22 @@ export const locationData = [
     name: "Location 11",
   },
 ];
+
+export const reqItemLine = [
+  {
+    line_id: 0,
+    item_name: `line_0`,
+    item_qty: 0.0001,
+    item_lot: 1,
+    item_qty_done: 0,
+    item_unit: "pc",
+  },
+  {
+    line_id: 1,
+    item_name: `line_1`,
+    item_qty: 0.0001,
+    item_lot: 2,
+    item_qty_done: 0,
+    item_unit: "unit",
+  },
+];

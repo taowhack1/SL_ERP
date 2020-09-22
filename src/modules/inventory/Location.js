@@ -54,6 +54,41 @@ const Location = () => {
     }
     setVisible(true);
   };
+
+  const modalSave = () => {
+    // setLocationData([...locationData, { ...newLo }]);
+    const isEditRow = locationData.filter(
+      (location) => location.locationId === newLo.locationId
+    ).length;
+    if (isEditRow) {
+      setLocationData(
+        locationData.map((location) =>
+          location.locationId === newLo.locationId
+            ? { ...location, ...newLo }
+            : location
+        )
+      );
+    } else {
+      setCount(count + 1);
+      setLocationData([...locationData, newLo]);
+    }
+
+    setVisible(false);
+  };
+  const onChangeValue = (data) => {
+    setNewLo({ ...newLo, ...data });
+  };
+  const modalCancel = () => {
+    setVisible(false);
+    setRowClick(false);
+    resetValue();
+  };
+
+  const changeRow = (rowIndex) => {
+    setRowClick(true);
+    setRowId(rowIndex);
+  };
+
   const config = {
     title: "INVENTORY",
     show: true,
@@ -87,40 +122,6 @@ const Location = () => {
     cancelText: "Discard",
   };
 
-  const modalSave = () => {
-    // setLocationData([...locationData, { ...newLo }]);
-    const isEditRow = locationData.filter(
-      (location) => location.locationId === newLo.locationId
-    ).length;
-    if (isEditRow) {
-      setLocationData(
-        locationData.map((location) =>
-          location.locationId === newLo.locationId
-            ? { ...location, ...newLo }
-            : location
-        )
-      );
-    } else {
-      setCount(count + 1);
-      setLocationData([...locationData, newLo]);
-    }
-
-    setVisible(false);
-  };
-
-  const onChangeValue = (data) => {
-    setNewLo({ ...newLo, ...data });
-  };
-  const modalCancel = () => {
-    setVisible(false);
-    setRowClick(false);
-    resetValue();
-  };
-
-  const changeRow = (rowIndex) => {
-    setRowClick(true);
-    setRowId(rowIndex);
-  };
   return (
     <div>
       <MainLayout {...config}>

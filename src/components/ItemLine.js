@@ -124,10 +124,7 @@ const ItemLine = ({
                     onChange={(data) =>
                       onChangeValue(line.line_id, "item_name", data)
                     }
-                    // onSelect={() => console.log("select")}
-                  >
-                    {/* {line.item_name} */}
-                  </AutoComplete>
+                  ></AutoComplete>
                 </Form.Item>
               </Col>
               <Col span={3} className="text-number">

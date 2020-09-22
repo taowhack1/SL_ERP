@@ -23,34 +23,15 @@ import {
   autoCompleteItem,
   locationData,
   autoCompleteUnit,
+  reqItemLine,
 } from "../../data/inventoryData";
 
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
-const CreateInventory = (props) => {
-  // const { decimalFormat } = useSelector((state) => state.systemConfig);
-  // const dispatch = useDispatch();
+
+const CreateInventory = () => {
   const [editForm, setEdit] = useState(true);
-  console.log(editForm);
-  const reqItemLine = [
-    {
-      line_id: 0,
-      item_name: `line_0`,
-      item_qty: 0.0001,
-      item_lot: 1,
-      item_qty_done: 0,
-      item_unit: "pc",
-    },
-    {
-      line_id: 1,
-      item_name: `line_1`,
-      item_qty: 0.0001,
-      item_lot: 2,
-      item_qty_done: 0,
-      item_unit: "unit",
-    },
-  ];
 
   const [formData, setData] = useState({
     req_code: "REQ2008-0001",
@@ -61,10 +42,6 @@ const CreateInventory = (props) => {
     req_note: "",
     req_item_line: [...reqItemLine],
   });
-
-  // useEffect(() => {
-  //   console.log("Effect");
-  // }, [formData]);
 
   const callback = (key) => {};
   const upDateFormValue = (data) => {
@@ -142,7 +119,7 @@ const CreateInventory = (props) => {
   return (
     <MainLayout {...config} data={formData}>
       <div id="form">
-        <Form {...formConfig} initialValues={{ remember: true }}>
+        <Form {...formConfig} initialValues={{ ...formData }}>
           {editForm ? (
             <>
               <Row className="col-2">
@@ -211,7 +188,7 @@ const CreateInventory = (props) => {
                     }
                   >
                     <Radio.Group
-                      defaultValue={1}
+                      // defaultValue={1}
                       name={"req_item_type"}
                       onChange={(e) =>
                         upDateFormValue({ req_item_type: e.target.value })
