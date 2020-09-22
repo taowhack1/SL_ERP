@@ -1,43 +1,15 @@
-/*
-import React from "react";
-import { withRouter } from "react-router-dom";
-import { Col, Row, Button, Breadcrumb } from "antd";
-import Search from "./Search";
-
-function TopContent(props) {
-  const onCreate = () => {
-    props.create === "modal"
-      ? props.openModal()
-      : props.history.push(props.create);
-  };
-  const onDiscard = () => {
-    props.history.push(props.discard);
-  };
-  return (
-    <>
-      <div id="top-content">
-        <Row>
-          <Col span={12}>
-            <div className="mt-1 mb-1">
-              <Breadcrumb>
-                {props.breadcrumb &&
-                  props.breadcrumb.map((item, index) => {
-                    return (
-                      <Breadcrumb.Item key={index}>{item}</Breadcrumb.Item>
-                    );
-                  })}
-              </Breadcrumb>
-*/
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { Col, Row, Button, Breadcrumb, Steps, Dropdown, Menu } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import Search from "./Search";
-//import { menuAction } from '../data'
 
 function TopContent(props) {
-  const onCreate = (type) => {
-    type === "create" ? props.openModal() : props.history.push(props.create);
+  const onCreate = () => {
+    console.log(props.create);
+    props.create === "modal"
+      ? props.openModal()
+      : props.history.push(props.create);
   };
   const onDiscard = () => {
     props.history.push(props.discard);
