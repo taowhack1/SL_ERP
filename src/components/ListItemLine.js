@@ -1,12 +1,21 @@
-import { Form, Input, Button, Space, Row, Col, InputNumber } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Space,
+  Row,
+  Col,
+  InputNumber,
+  AutoComplete,
+} from "antd";
 import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import CustomAutoComplete from "./AutoComplete";
-const ItemLine = ({ items, units }) => {
+const ListItemLine = ({ items, units }) => {
   const [lineItem, setLine] = useState([
     {
       line_id: 0,
-      item_name: items[0].name,
+      item_name: "",
       qty: 0.0001,
       qty_done: 0,
       unit: "pc",
@@ -17,20 +26,21 @@ const ItemLine = ({ items, units }) => {
   };
 
   return (
-    <Form.List name="users">
+    <Form.List name="itemLine">
       {(fields, { add, remove }) => {
+        console.log(fields);
         return (
           <div>
             {fields.map((field) => (
               <Row
                 key={field.key}
-                id={"itemLine"}
                 style={{
                   marginBottom: 0,
                   border: "1px solid white",
                   backgroundColor: "#FCFCFC",
+                  paddingLeft: "10px",
                 }}
-                gutter={4}
+                gutter={6}
                 className="col-2"
               >
                 <Col span={11}>
@@ -38,18 +48,30 @@ const ItemLine = ({ items, units }) => {
                     {...field}
                     name={[field.name, "item_name"]}
                     fieldKey={[field.fieldKey, "item_name"]}
-                    rules={[{ required: true, message: `missing item` }]}
-                    onSelect={selectedItem}
+                    rules={[{ required: true, message: "Missing first name" }]}
+                    // style={{ width: "50%" }}
                   >
-                    <CustomAutoComplete options={items} placeholder="Item" />
+                    {/* <Input placeholder="First Name" /> */}
+                    <AutoComplete
+                      options={items}
+                      placeholder="Item"
+                      // defaultValue={line.item_name}
+
+                      filterOption={(inputValue, option) =>
+                        option.value
+                          .toUpperCase()
+                          .indexOf(inputValue.toUpperCase()) !== -1
+                      }
+                      // onChange={}
+                    />
                   </Form.Item>
                 </Col>
                 <Col span={3}>
                   <Form.Item
                     {...field}
-                    name={[field.name, "qty"]}
-                    fieldKey={[field.fieldKey, "qty"]}
-                    rules={[{ required: true, message: "Missing last name" }]}
+                    name={[field.name, "Qty"]}
+                    fieldKey={[field.fieldKey, "Qty"]}
+                    rules={[{ required: true, message: "Missing Quantity" }]}
                     type="number"
                   >
                     <InputNumber
@@ -58,6 +80,7 @@ const ItemLine = ({ items, units }) => {
                       step={0.0001}
                       precision={4}
                       style={{ width: "100%" }}
+                      // defaultValue={line.qty}
                     />
                   </Form.Item>
                 </Col>
@@ -66,15 +89,12 @@ const ItemLine = ({ items, units }) => {
                     {...field}
                     name={[field.name, "lot_no"]}
                     fieldKey={[field.fieldKey, "lot_no"]}
-                    rules={[{ required: true, message: "Missing last name" }]}
+                    rules={[{ required: false, message: "Missing lot_no" }]}
                   >
-                    <InputNumber
-                      placeholder={"Lot no. : 200800001"}
-                      min={0.0001}
-                      step={0.0001}
-                      precision={4}
-                      style={{ width: "100%" }}
-                      disabled={1}
+                    <AutoComplete
+                      // val={line.lot_no}
+                      options={""}
+                      placeholder="Lot no."
                     />
                   </Form.Item>
                 </Col>
@@ -83,15 +103,17 @@ const ItemLine = ({ items, units }) => {
                     {...field}
                     name={[field.name, "qty_done"]}
                     fieldKey={[field.fieldKey, "qty_done"]}
-                    rules={[{ required: true, message: "Missing last name" }]}
+                    rules={[{ required: false, message: "Missing qty_done" }]}
+                    type="number"
                   >
                     <InputNumber
                       placeholder={"Qty Done : 0.0001"}
-                      min={0.0001}
+                      min={0.0}
                       step={0.0001}
                       precision={4}
                       style={{ width: "100%" }}
-                      disabled={1}
+                      // disabled={1}
+                      // defaultValue={0}
                     />
                   </Form.Item>
                 </Col>
@@ -100,21 +122,26 @@ const ItemLine = ({ items, units }) => {
                     {...field}
                     name={[field.name, "unit"]}
                     fieldKey={[field.fieldKey, "unit"]}
-                    rules={[{ required: true, message: "Missing last name" }]}
+                    rules={[{ required: true, message: "Missing unit" }]}
                   >
-                    <CustomAutoComplete options={units} placeholder="unit" />
+                    <AutoComplete
+                      // {...config}
+                      options={units}
+                      placeholder="unit"
+                      // defaultValue={"unit"}
+                      filterOption={(inputValue, option) =>
+                        option.value
+                          .toUpperCase()
+                          .indexOf(inputValue.toUpperCase()) !== -1
+                      }
+                    ></AutoComplete>
                   </Form.Item>
                 </Col>
                 <Col span={1}>
-                  <DeleteTwoTone
-                    onClick={() => {
-                      remove(field.name);
-                    }}
-                  />
+                  <DeleteTwoTone onClick={() => remove(field.name)} />
                 </Col>
               </Row>
             ))}
-
             <Form.Item style={{ marginTop: 10 }}>
               <Button
                 type="dashed"
@@ -133,4 +160,4 @@ const ItemLine = ({ items, units }) => {
   );
 };
 
-export default ItemLine;
+export default ListItemLine;

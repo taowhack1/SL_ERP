@@ -173,6 +173,29 @@ export const data = [
   },
 ];
 
+export const columnsLocation = [
+  {
+    title: "Location",
+    dataIndex: "transfer_ref_code",
+  },
+  {
+    title: "Warehouse",
+    dataIndex: "transfer_from",
+    sorter: {
+      // compare: (a, b) => a.chinese - b.chinese,
+      multiple: 3,
+    },
+  },
+  {
+    title: "Description",
+    dataIndex: "transfer_to",
+    sorter: {
+      // compare: (a, b) => a.math - b.math,
+      multiple: 2,
+    },
+  },
+];
+
 export const autoCompleteUser = [
   { value: "2559001 สุรเชษฐ อุ่นหล้า" },
   { value: "2563002 ตุลาการ สังอ่อนดี" },

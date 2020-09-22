@@ -11,13 +11,12 @@ class Inventory extends Component {
   };
   config = {
     title: "INVENTORY",
-    home: "/inventory",
     show: true,
-    breadcrumb: ["Home"],
+    breadcrumb: ["Home", "Requisition"],
     search: true,
-    create: "/inventory/create",
-    buttonAction: [""],
-    discard: "/inventory",
+    create: "/inventory/requisition/create",
+    buttonAction: ["Create"],
+    discard: "/inventory/requisition",
     onCancel: () => {
       console.log("Cancel");
     },
@@ -26,12 +25,16 @@ class Inventory extends Component {
     return (
       <div>
         <MainLayout {...this.config}>
-          <h1>Home</h1>
-          {/* <Row>
-               <Col span={24}>
-                 <Table columns={columns} dataSource={data} onChange={this.onChange} size='small'/>
-               </Col>
-           </Row> */}
+          <Row>
+            <Col span={24}>
+              <Table
+                columns={columns}
+                dataSource={data}
+                onChange={this.onChange}
+                size="small"
+              />
+            </Col>
+          </Row>
         </MainLayout>
       </div>
     );

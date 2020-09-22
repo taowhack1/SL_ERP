@@ -1,85 +1,69 @@
-import React, { Component } from 'react';
-import MainLayout from '../components/MainLayout'
-import { connect } from 'react-redux'
-import { Button, Modal } from 'antd'
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import MainLayout from "../components/MainLayout";
+import { Button, Modal } from "antd";
+import { addSalary, delSalary } from "../actions/salaryActions";
+const Dashboard = (props) => {
+  const { salary } = useSelector((state) => state.salary);
+  console.log(salary);
+  const dispatch = useDispatch();
 
-class Dashboard extends Component {
-
-  state = {
-    visible: false
-  }
-  OpenModal = ()=>{
-    console.log('11')
-    this.setState({visible: true})
-  }
-  handleOk = ()=>{
-    console.log('Handle OK Button')
-    this.setState({visible: false})
-  }
-  handleCancel = ()=>{
-    console.log('Handle Cancel Button')
-    this.setState({visible: false})
-  }
-
-  componentDidMount(){
-    console.log(this.props.emp.salary)
-  }
-  componentDidUpdate(){
-    console.log(this.props.emp.salary)
-  }
-  onChange = (pagination, filters, sorter, extra)=>{
-    console.log('params', pagination, filters, sorter, extra);
-  }
-  config = {
+  const [state, setState] = useState({
+    visible: false,
+  });
+  const OpenModal = () => {
+    console.log("11");
+    setState({ visible: true });
+  };
+  const handleOk = () => {
+    console.log("Handle OK Button");
+    setState({ visible: false });
+  };
+  const handleCancel = () => {
+    console.log("Handle Cancel Button");
+    setState({ visible: false });
+  };
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
+  const config = {
     title: "DASHBOARD",
-    show:true,
-    breadcrumb:['Home'],
-    search:false,
-    create:"",
-    buttonAction: ['Cancel'],
+    show: true,
+    breadcrumb: ["Home"],
+    search: false,
+    create: "",
+    buttonAction: ["Cancel"],
     discard: "",
-    onCancel:()=>{
-      console.log('Cancel')
-    }
-  }
-  render(){
-    return (
-      <div>
-        <MainLayout {...this.config}>
-          <Button onClick={this.OpenModal}>Popup</Button>
-          <Button onClick={()=>this.props.add_salary(1000)}>ADD SALARY + 1000</Button>
-          <Button onClick={()=>this.props.del_salary(500)}>DEL SALARY - 500</Button> 
-          Salary: {this.props.emp.salary}
-          <h1>This is Dashboard</h1>
-         </MainLayout>
-
-         <Modal
-            title="Basic Modal"
-            visible={this.state.visible}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-            >
-            <p>Some contents...1</p>
-            <p>Some contents...2</p>
-            <p>Some contents...3</p>
-          </Modal>
-      </div>
-    )
-  }
-}
-
-function mapStateToProps(state){
-  return { emp: state}
-}
-function mapDispatchToProps(dispatch){
-  return {
-    add_salary: (money)=>{
-      dispatch({type:'ADD', payload: money})
+    onCancel: () => {
+      console.log("Cancel");
     },
-    del_salary: (money)=>{
-      dispatch({type:'DEL', payload: money})
-    }
-  }
-}
+  };
+  return (
+    <div>
+      <MainLayout {...config}>
+        <Button onClick={OpenModal}>Popup</Button>
+        <Button onClick={() => dispatch(addSalary(salary))}>
+          ADD SALARY + 1000
+        </Button>
+        <Button onClick={() => dispatch(delSalary(salary))}>
+          DEL SALARY - 1000
+        </Button>
+        Salary: {salary}
+        <h1>This is Dashboard</h1>
+      </MainLayout>
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+      <Modal
+        title="Basic Modal"
+        visible={state.visible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <p>Some contents...1</p>
+        <p>Some contents...2</p>
+        <p>Some contents...3</p>
+      </Modal>
+    </div>
+  );
+};
+
+export default Dashboard;
