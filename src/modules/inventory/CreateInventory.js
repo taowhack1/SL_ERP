@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Row, Col, Form, Input, Tabs } from 'antd'
+import Comments from '../../components/Comments'
 import MainLayout from '../../components/MainLayout'
+import { dataComments } from '../../data'
 
 class CreateInventory extends Component {
     componentDidMount(){
@@ -15,6 +17,11 @@ class CreateInventory extends Component {
         show:true,
         breadcrumb:['Home','New'],
         search: false,
+        action: true,
+        step: {
+            current: 2,
+            step: ['User','Manager','Purchase','Manager Purchase','Board']
+        },
         buttonAction: ['Save','SaveConfirm','Discard'],
         create:"",
         discard: "/inventory",
@@ -130,6 +137,7 @@ class CreateInventory extends Component {
                         </Row>
                     </Form>
                 </div>
+                <Comments data={dataComments}/>
             </MainLayout>
         )
     }

@@ -15,6 +15,7 @@
 .col-2 .ant-form-item-control{flex:2;}
 .col-2 .ant-form-item-label > label::after{content:'';}
 .ant-form-small .ant-form-item-label label{height:auto;}
+.ant-steps{display:block;text-align:right;}
 /** normal **/
 
 h1,h2,h3,h4,h5,h6{color:#666;}
@@ -36,3 +37,4 @@ button.primary:hover{background:#5d6384;color:#fff;border:1px solid #6a7198;}
 #not-found{display:flex;align-items: center;justify-content: center;height: 100vh;font-size:40px;flex-direction: column;}
 #not-found p{font-size:20px;color:#777;margin-top:20px;}
 #form{width:80%;margin:0 auto;padding:20px;background:#fff;margin-top:10px;border:1px solid #ddd;box-shadow: 0px 0px 10px #ccc;}
+#comment{width:80%;margin:0 auto;padding:20px;background:#fff;margin-top:10px;}

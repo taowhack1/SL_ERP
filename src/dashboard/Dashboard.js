@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MainLayout from '../components/MainLayout'
 import { connect } from 'react-redux'
-import { Button, Modal } from 'antd'
+import { Modal, Button } from 'antd'
 
 class Dashboard extends Component {
 
@@ -35,6 +35,11 @@ class Dashboard extends Component {
     show:true,
     breadcrumb:['Home'],
     search:false,
+    action: true,
+    step: {
+        current: 2,
+        step: ['User','Manager','Purchase','Manager Purchase','Board']
+    },
     create:"",
     buttonAction: ['Cancel'],
     discard: "",

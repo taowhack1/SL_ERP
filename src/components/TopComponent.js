@@ -1,7 +1,9 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { Col, Row, Button, Breadcrumb } from 'antd'
+import { Col, Row, Button, Breadcrumb, Steps, Dropdown } from 'antd'
+import { CaretDownOutlined } from '@ant-design/icons'
 import Search from './Search'
+import { menuAction } from '../data'
 
 function TopContent(props){
     const onCreate = ()=>{
@@ -13,9 +15,9 @@ function TopContent(props){
     return (
         <>
             <div id="top-content">
-                <Row>
+                <Row className="mt-1 mb-1">
                     <Col span={12}>
-                        <div className="mt-1 mb-1">
+                        <div>
                             <Breadcrumb>
                                 {
                                    props.breadcrumb && props.breadcrumb.map((item, index)=>{
@@ -26,6 +28,17 @@ function TopContent(props){
                                 }
                             </Breadcrumb>
                         </div>
+                    </Col>
+                    <Col span={12}>
+                        <div>
+                            {
+                                props.search && <Search/>
+                            }
+                        </div>
+                    </Col>
+                 </Row>
+                 <Row>
+                    <Col span={8}>
                         <div>
                             {
                                 props.buttonAction.includes('Create') && <Button className="primary" onClick={onCreate}>Create</Button>
@@ -44,11 +57,24 @@ function TopContent(props){
                             }
                         </div>
                     </Col>
+                    <Col span={4}>
+                        {
+                            props.action && 
+                            <Dropdown overlay={menuAction} trigger={['click']}>
+                                <Button type="text">Action <CaretDownOutlined /></Button>
+                            </Dropdown>
+                        }
+                    </Col>
                     <Col span={12}>
-                        <div>&nbsp;</div>
                         <div>
-                            {
-                                props.search && <Search/>
+                            {  props.step &&
+                                <Steps size="small" current={props.step.current}>
+                                {
+                                props.step.step  && props.step.step.map((item, index)=>{
+                                    return <Steps.Step key={index} title={item} />
+                                })
+                                }
+                                </Steps>   
                             }
                         </div>
                     </Col>
