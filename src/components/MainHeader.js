@@ -25,7 +25,9 @@ function MainHead(props) {
           <Row>
             <Col span={6}>
               <MenuOutlined onClick={onOpenDrawer} />{" "}
-              <Link style={{ color: "white" }}>{props.title}</Link>
+              <Link to="/" style={{ color: "white" }}>
+                {props.title}
+              </Link>
             </Col>
             <Col span={18}>
               <MainConfig />

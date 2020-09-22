@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { Col, Row, Button, Breadcrumb, Steps, Dropdown, Menu } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import Search from "./Search";
@@ -15,18 +15,18 @@ function TopContent(props) {
     props.history.push(props.discard);
   };
   const menuAction = () => {
-    //console.log(props.action)
     const a = (
       <Menu>
-        {props.action.map((item, index) => {
-          return (
-            <Menu.Item key={index}>
-              <a target="_blank" href={item.link}>
-                {item.name}
-              </a>
-            </Menu.Item>
-          );
-        })}
+        {props.action &&
+          props.action.map((item, index) => {
+            return (
+              <Menu.Item key={index}>
+                <Link rel="noopener noreferrer" target="_blank" to={item.link}>
+                  {item.name}
+                </Link>
+              </Menu.Item>
+            );
+          })}
       </Menu>
     );
 
@@ -63,6 +63,15 @@ function TopContent(props) {
               {props.buttonAction.includes("Save") && (
                 <Button className="primary" onClick={props.onSave}>
                   Save
+                </Button>
+              )}
+              {props.buttonAction.includes("Edit") && (
+                <Button
+                  className="primary"
+                  onClick={props.onEdit}
+                  disabled={props.editDisabled}
+                >
+                  Edit
                 </Button>
               )}
               {props.buttonAction.includes("SaveConfirm") && (

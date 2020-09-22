@@ -14,7 +14,9 @@ import {
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import CustomAutoComplete from "./AutoComplete";
-const { Title, Paragraph, Text } = Typography;
+
+const { Text } = Typography;
+
 const ItemLine = ({
   items,
   units,
@@ -22,14 +24,12 @@ const ItemLine = ({
   updateItemLine,
   editForm,
 }) => {
-  // console.log(formData);
-  console.log("edit :", editForm);
   const countItem = req_item_line.length;
   const [count, setCount] = useState(countItem);
   const [lineItem, setLine] = useState([...req_item_line]);
-  useEffect(() => {
-    updateItemLine({ req_item_line: [...lineItem] });
-  }, [lineItem]);
+
+  useEffect(() => {}, [lineItem]);
+
   const addLine = () => {
     setLine([
       ...lineItem,
@@ -42,14 +42,13 @@ const ItemLine = ({
         item_unit: "unit",
       },
     ]);
-
-    // updateItemLine({ req_item_line: [...lineItem] });
     setCount(count + 1);
+    updateItemLine({ req_item_line: [...lineItem] });
   };
+
   const delLine = (id) => {
     setLine(lineItem.filter((line) => line.line_id !== id));
-
-    // updateItemLine({ req_item_line: [...lineItem] });
+    updateItemLine({ req_item_line: [...lineItem] });
   };
 
   const onChangeValue = (rowId, field, data) => {
@@ -58,12 +57,12 @@ const ItemLine = ({
         line.line_id === rowId ? { ...line, item_name: data } : line
       )
     );
-
-    // setLine());
+    updateItemLine({ req_item_line: [...lineItem] });
   };
-  // console.log(formData);
+
   return (
     <>
+      {/* Column Header */}
       <Row
         style={{
           backgroundColor: "#C6C6C6",
@@ -92,9 +91,10 @@ const ItemLine = ({
           </Text>
         </Col>
       </Row>
+      {/* Edit Form */}
       {editForm ? (
         <>
-          {lineItem.map((line) => (
+          {lineItem.map((line, key) => (
             <Row
               key={line.line_id}
               style={{
@@ -107,11 +107,7 @@ const ItemLine = ({
               className="col-2"
             >
               <Col span={11} className="text-string">
-                <Form.Item
-                  name={`item_name_${line.line_id}`}
-                  // rules={[{ required: true, message: `Missing item` }]}
-                  // onSelect={onChangeValue(line.line_id)}
-                >
+                <Form.Item name={`item_name_${line.line_id}`}>
                   <AutoComplete
                     options={items}
                     placeholder="Item"
@@ -128,10 +124,7 @@ const ItemLine = ({
                 </Form.Item>
               </Col>
               <Col span={3} className="text-number">
-                <Form.Item
-                  name={`qty_${line.line_id}`}
-                  // rules={[{ required: true, message: "Missing Quantity" }]}
-                >
+                <Form.Item name={`qty_${line.line_id}`}>
                   <InputNumber
                     placeholder={"Qty : 0.0001"}
                     min={0.0001}
@@ -143,10 +136,7 @@ const ItemLine = ({
                 </Form.Item>
               </Col>
               <Col span={3} className="text-string">
-                <Form.Item
-                  name={`lot_no_${line.line_id}`}
-                  // rules={[{ required: true, message: "Missing last name" }]}
-                >
+                <Form.Item name={`lot_no_${line.line_id}`}>
                   <CustomAutoComplete
                     val={line.lot_no}
                     options={""}
@@ -155,10 +145,7 @@ const ItemLine = ({
                 </Form.Item>
               </Col>
               <Col span={3} className="text-number">
-                <Form.Item
-                  name={`qty_done_${line.line_id}`}
-                  // rules={[{ required: true, message: "Missing last name" }]}
-                >
+                <Form.Item name={`qty_done_${line.line_id}`}>
                   <InputNumber
                     placeholder={"Qty Done : 0.0001"}
                     min={0.0}
@@ -171,17 +158,8 @@ const ItemLine = ({
                 </Form.Item>
               </Col>
               <Col span={3} className="text-string">
-                <Form.Item
-                  name={`unit_${line.line_id}`}
-                  // rules={[{ required: true, message: "Missing unit" }]}
-                >
-                  {/* <CustomAutoComplete
-                val={line.unit}
-                options={units}
-                placeholder="unit"
-              /> */}
+                <Form.Item name={`unit_${line.line_id}`}>
                   <AutoComplete
-                    // {...config}
                     options={units}
                     placeholder="unit"
                     defaultValue={line.item_unit}
@@ -212,13 +190,14 @@ const ItemLine = ({
         </>
       ) : (
         <>
+          {/* View Form */}
           {lineItem.map((line, key) => (
             <Row
               key={line.line_id}
               style={{
                 marginBottom: 0,
                 border: "1px solid white",
-                backgroundColor: key % 2 == 0 ? "#FCFCFC" : "#EAEAEA",
+                backgroundColor: key % 2 === 0 ? "#FCFCFC" : "#EAEAEA",
                 paddingLeft: "10px",
               }}
               gutter={6}

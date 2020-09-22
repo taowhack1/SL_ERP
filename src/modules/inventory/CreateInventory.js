@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Row,
   Col,
@@ -9,12 +9,10 @@ import {
   Radio,
   Select,
   AutoComplete,
-  Button,
   Typography,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
-// import "./createInventory.css";
 import ItemLine from "../../components/ItemLine";
 import {
   autoCompleteUser,
@@ -24,7 +22,7 @@ import {
   reqItemLine,
 } from "../../data/inventoryData";
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data/commentData";
+import { dataComments } from "../../data";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -44,16 +42,15 @@ const CreateInventory = () => {
   });
 
   const callback = (key) => {};
+
   const upDateFormValue = (data) => {
     setData({ ...formData, ...data });
   };
 
   const updateItemLine = (data) => {
     setData({ ...formData, ...data });
-    // return formData.req_item_line;
   };
   const submitForm = (values) => {
-    // console.log(values);
     console.log(formData);
   };
 
@@ -71,6 +68,7 @@ const CreateInventory = () => {
         return "Others";
     }
   };
+
   const config = {
     title: "INVENTORY",
     show: true,
@@ -134,15 +132,7 @@ const CreateInventory = () => {
               </Row>
               <Row className="col-2">
                 <Col span={11}>
-                  <Form.Item
-                    label="Contact"
-                    name="req_contact"
-                    rules={
-                      [
-                        // { required: true, message: "Please input your Test 1!" },
-                      ]
-                    }
-                  >
+                  <Form.Item label="Contact" name="req_contact" rules={[]}>
                     <AutoComplete
                       name={"req_contact"}
                       options={autoCompleteUser}
@@ -161,15 +151,7 @@ const CreateInventory = () => {
                     />
                   </Form.Item>
 
-                  <Form.Item
-                    label="Description"
-                    name="req_desc"
-                    rules={
-                      [
-                        // { required: true, message: "Please input your Test 2!" },
-                      ]
-                    }
-                  >
+                  <Form.Item label="Description" name="req_desc" rules={[]}>
                     <Input
                       name={"req_desc"}
                       onChange={(e) =>
@@ -177,17 +159,8 @@ const CreateInventory = () => {
                       }
                     />
                   </Form.Item>
-                  <Form.Item
-                    label="Item type"
-                    name="item_type"
-                    rules={
-                      [
-                        // { required: true, message: "Please input your Test 2!" },
-                      ]
-                    }
-                  >
+                  <Form.Item label="Item type" name="item_type" rules={[]}>
                     <Radio.Group
-                      // defaultValue={1}
                       name={"req_item_type"}
                       onChange={(e) =>
                         upDateFormValue({ req_item_type: e.target.value })
@@ -203,15 +176,7 @@ const CreateInventory = () => {
                 </Col>
                 <Col span={2}></Col>
                 <Col span={11}>
-                  <Form.Item
-                    label="Schedule Date"
-                    name="req_date"
-                    rules={
-                      [
-                        // { required: true, message: "Please input your Test 3!" },
-                      ]
-                    }
-                  >
+                  <Form.Item label="Schedule Date" name="req_date" rules={[]}>
                     <DatePicker
                       name={"req_date"}
                       format={dateConfig.format}
@@ -226,14 +191,7 @@ const CreateInventory = () => {
                   <Form.Item
                     label="Destination Location"
                     name="req_to"
-                    rules={
-                      [
-                        // {
-                        //   required: true,
-                        //   message: "Please input your destination location !",
-                        // },
-                      ]
-                    }
+                    rules={[]}
                   >
                     <Select
                       placeholder={"Select Location"}
@@ -265,10 +223,8 @@ const CreateInventory = () => {
                         units={autoCompleteUnit}
                         req_item_line={formData.req_item_line}
                         editForm={editForm}
-                        // formData={formData}
                       />
                     </Tabs.TabPane>
-                    {/* <Tabs.TabPane tab="Additional Info" key="2"></Tabs.TabPane> */}
                     <Tabs.TabPane tab="Note" key="3">
                       <Form.Item lebel="Note" name="req_note" className="">
                         <TextArea
@@ -300,65 +256,26 @@ const CreateInventory = () => {
               </Row>
               <Row className="col-2">
                 <Col span={11}>
-                  <Form.Item
-                    label="Contact"
-                    name="req_contact"
-                    rules={
-                      [
-                        // { required: true, message: "Please input your Test 1!" },
-                      ]
-                    }
-                  >
+                  <Form.Item label="Contact" name="req_contact" rules={[]}>
                     <Title level={5}>{formData.req_contact}</Title>
                   </Form.Item>
 
-                  <Form.Item
-                    label="Description"
-                    name="req_desc"
-                    rules={
-                      [
-                        // { required: true, message: "Please input your Test 2!" },
-                      ]
-                    }
-                  >
+                  <Form.Item label="Description" name="req_desc" rules={[]}>
                     <Title level={5}>{formData.req_desc}</Title>
                   </Form.Item>
-                  <Form.Item
-                    label="Item type"
-                    name="item_type"
-                    rules={
-                      [
-                        // { required: true, message: "Please input your Test 2!" },
-                      ]
-                    }
-                  >
+                  <Form.Item label="Item type" name="item_type" rules={[]}>
                     <Text>{getItemType(formData.req_item_type)}</Text>
                   </Form.Item>
                 </Col>
                 <Col span={2}></Col>
                 <Col span={11}>
-                  <Form.Item
-                    label="Schedule Date"
-                    name="req_date"
-                    rules={
-                      [
-                        // { required: true, message: "Please input your Test 3!" },
-                      ]
-                    }
-                  >
+                  <Form.Item label="Schedule Date" name="req_date" rules={[]}>
                     <Title level={5}>{formData.req_date}</Title>
                   </Form.Item>
                   <Form.Item
                     label="Destination Location"
                     name="req_to"
-                    rules={
-                      [
-                        // {
-                        //   required: true,
-                        //   message: "Please input your destination location !",
-                        // },
-                      ]
-                    }
+                    rules={[]}
                   >
                     <Title level={5}>{formData.req_to}</Title>
                   </Form.Item>
@@ -369,7 +286,6 @@ const CreateInventory = () => {
                   <Tabs defaultActiveKey="1" onChange={callback}>
                     <Tabs.TabPane tab="Request Detail" key="1">
                       <ItemLine
-                        updateItemLine={updateItemLine}
                         items={autoCompleteItem}
                         units={autoCompleteUnit}
                         req_item_line={formData.req_item_line}
@@ -396,7 +312,7 @@ const CreateInventory = () => {
           )}
         </Form>
       </div>
-      <Comments data={dataComments} />
+      <Comments data={[...dataComments]} />
     </MainLayout>
   );
 };

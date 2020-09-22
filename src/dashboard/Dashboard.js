@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MainLayout from "../components/MainLayout";
@@ -24,21 +23,21 @@ const Dashboard = (props) => {
     console.log("Handle Cancel Button");
     setState({ visible: false });
   };
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
+  // const onChange = (pagination, filters, sorter, extra) => {
+  //   console.log("params", pagination, filters, sorter, extra);
+  // };
   const config = {
     title: "DASHBOARD",
-    show:true,
-    breadcrumb:['Home'],
-    search:false,
-    action: true,
+    show: true,
+    breadcrumb: ["Home"],
+    search: false,
+    action: [],
     step: {
-        current: 2,
-        step: ['User','Manager','Purchase','Manager Purchase','Board']
+      current: 2,
+      step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
     },
-    create:"",
-    buttonAction: ['Cancel'],
+    create: "",
+    buttonAction: ["Cancel"],
     discard: "",
     onCancel: () => {
       console.log("Cancel");

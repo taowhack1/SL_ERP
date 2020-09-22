@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { Row, Col, Table, Modal } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { columns, locations, warehouse } from "../../data/locationData";
@@ -12,20 +12,9 @@ const layout = {
     span: 20,
   },
 };
-const validateMessages = {
-  required: "${label} is required!",
-  types: {
-    email: "${label} is not validate email!",
-    number: "${label} is not a validate number!",
-  },
-  number: {
-    range: "${label} must be between ${min} and ${max}",
-  },
-};
 const Location = () => {
   const [locationData, setLocationData] = useState([...locations]);
   const [count, setCount] = useState(locationData.length);
-  // console.log(locationData);
   const [visible, setVisible] = useState(false);
   const [newLo, setNewLo] = useState({
     locationId: count,
@@ -65,7 +54,7 @@ const Location = () => {
       OpenModal("create");
     },
     buttonAction: ["Create", "Edit"],
-    disableEdit: rowClick ? false : true,
+    editDisabled: rowClick ? false : true,
     discard: "/inventory/location",
     onCancel: () => {
       console.log("Cancel");
@@ -79,7 +68,6 @@ const Location = () => {
   };
 
   const modalSave = () => {
-    // setLocationData([...locationData, { ...newLo }]);
     const isEditRow = locationData.filter(
       (location) => location.locationId === newLo.locationId
     ).length;
@@ -157,8 +145,6 @@ const Location = () => {
           {...layout}
           preserve={false}
           name="nest-messages"
-          // onFinish={onFinish}
-          validateMessages={validateMessages}
           initialValues={newLo}
         >
           <Form.Item

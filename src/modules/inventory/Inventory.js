@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { columns, data } from "../../data/inventoryData";
 
 class Inventory extends Component {
   componentDidMount() {}

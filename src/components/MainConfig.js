@@ -1,7 +1,7 @@
 import React from "react";
 import { Dropdown, Button } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
-import { menuReport, menuConfig, operationsMenu } from "../data";
+import { menuConfig, operationsMenu } from "../data";
 
 export default function MainConfig({ ...props }) {
   return (
