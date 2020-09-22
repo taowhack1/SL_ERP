@@ -55,6 +55,29 @@ const Location = () => {
     setVisible(true);
   };
 
+  const config = {
+    title: "INVENTORY",
+    show: true,
+    breadcrumb: ["Home", "Location"],
+    search: true,
+    create: "modal",
+    openModal: () => {
+      OpenModal("create");
+    },
+    buttonAction: ["Create", "Edit"],
+    disableEdit: rowClick ? false : true,
+    discard: "/inventory/location",
+    onCancel: () => {
+      console.log("Cancel");
+    },
+    onCreate: () => {
+      console.log("Create");
+    },
+    onEdit: () => {
+      OpenModal("edit");
+    },
+  };
+
   const modalSave = () => {
     // setLocationData([...locationData, { ...newLo }]);
     const isEditRow = locationData.filter(
@@ -88,29 +111,6 @@ const Location = () => {
     setRowClick(true);
     setRowId(rowIndex);
   };
-
-  const config = {
-    title: "INVENTORY",
-    show: true,
-    breadcrumb: ["Home", "Location"],
-    search: true,
-    create: "modal",
-    openModal: () => {
-      OpenModal("create");
-    },
-    buttonAction: ["Create", "Edit"],
-    disableEdit: rowClick ? false : true,
-    discard: "/inventory/location",
-    onCancel: () => {
-      console.log("Cancel");
-    },
-    onCreate: () => {
-      console.log("Create");
-    },
-    onEdit: () => {
-      OpenModal("edit");
-    },
-  };
   const modalConfig = {
     width: 800,
     title: "Create Location",
@@ -121,7 +121,6 @@ const Location = () => {
     okText: "Save",
     cancelText: "Discard",
   };
-
   return (
     <div>
       <MainLayout {...config}>
