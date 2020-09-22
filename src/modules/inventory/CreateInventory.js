@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 // import { connect } from "react-redux";
 // import { useDispatch, useSelector } from "react-redux";
@@ -69,6 +70,63 @@ const CreateInventory = () => {
         return "Finish Good";
       default:
         return "Others";
+
+                            <Form.Item
+                                label="Test 4"
+                                name="test4"
+                            >
+                                <Input />
+                            </Form.Item>
+                            
+                            </Col>
+                        </Row>
+                        <Row className="col-2">
+                            <Col span={24}>
+                                <Tabs defaultActiveKey="1" onChange={this.callback}>
+                                    <Tabs.TabPane tab="Tab 1" key="1">
+                                        <Row>
+                                            <Col span={11}>
+                                                <Form.Item
+                                                    label="Test 20"
+                                                    name="test20"
+                                                >
+                                                    <Input />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    label="Test 21"
+                                                    name="test21"
+                                                >
+                                                    <Input />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    label="Test 22"
+                                                    name="test22"
+                                                >
+                                                    <Input />
+                                                </Form.Item>
+                                                
+                                            </Col>
+                                            <Col span={2}></Col>
+                                            <Col span={11}>
+                                                
+                                            </Col>
+                                        </Row>
+                                    </Tabs.TabPane>
+                                    <Tabs.TabPane tab="Tab 2" key="2">
+                                        Content of Tab Pane 2
+                                    </Tabs.TabPane>
+                                    <Tabs.TabPane tab="Tab 3" key="3">
+                                        Content of Tab Pane 3
+                                    </Tabs.TabPane>
+                                </Tabs>
+                            </Col>
+                        </Row>
+                    </Form>
+                </div>
+                <Comments data={dataComments}/>
+            </MainLayout>
+        )
+
     }
   };
 
