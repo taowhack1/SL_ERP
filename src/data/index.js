@@ -192,13 +192,8 @@ export const menuProfile = (
 export const menuAction = (
   <Menu>
     <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-        1st menu item
-      </a>
-    </Menu.Item>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-        2nd menu item
+      <a target="_blank" href="http://www.alipay.com/">
+        print
       </a>
     </Menu.Item>
   </Menu>

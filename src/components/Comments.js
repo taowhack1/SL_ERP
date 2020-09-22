@@ -28,7 +28,6 @@ export default function Comments(props){
                     })
                     
                 }
-                <Divider />
                 <Form.Item>
                     <Input.TextArea rows={4}/>
                 </Form.Item>

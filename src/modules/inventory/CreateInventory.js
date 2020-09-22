@@ -17,7 +17,16 @@ class CreateInventory extends Component {
         show:true,
         breadcrumb:['Home','New'],
         search: false,
-        action: true,
+        action: [
+            {
+                name:'print',
+                link:'https://via.placeholder.com/100x100'
+            },
+            {
+                name:'export',
+                link:'https://via.placeholder.com/300x200'
+            }
+        ],
         step: {
             current: 2,
             step: ['User','Manager','Purchase','Manager Purchase','Board']

@@ -1,9 +1,9 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { Col, Row, Button, Breadcrumb, Steps, Dropdown } from 'antd'
+import { Col, Row, Button, Breadcrumb, Steps, Dropdown, Menu } from 'antd'
 import { CaretDownOutlined } from '@ant-design/icons'
 import Search from './Search'
-import { menuAction } from '../data'
+//import { menuAction } from '../data'
 
 function TopContent(props){
     const onCreate = ()=>{
@@ -11,6 +11,23 @@ function TopContent(props){
     }
     const onDiscard = ()=>{
         props.history.push(props.discard)
+    }
+    const menuAction = ()=>{
+       //console.log(props.action)
+       const a = <Menu>
+            {  props.action.map((item, index)=>{
+                    return (
+                    <Menu.Item key={index}>
+                        <a target="_blank" href={item.link}>
+                           {item.name}
+                        </a>
+                    </Menu.Item>
+                    )
+                })
+            }
+        </Menu>
+
+        return a
     }
     return (
         <>
@@ -60,7 +77,7 @@ function TopContent(props){
                     <Col span={4}>
                         {
                             props.action && 
-                            <Dropdown overlay={menuAction} trigger={['click']}>
+                            <Dropdown overlay={menuAction()} trigger={['click']}>
                                 <Button type="text">Action <CaretDownOutlined /></Button>
                             </Dropdown>
                         }
