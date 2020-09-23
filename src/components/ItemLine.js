@@ -67,7 +67,7 @@ const ItemLine = ({
         style={{
           backgroundColor: "#C6C6C6",
           textAlign: "center",
-          paddingLeft: 10,
+          // paddingLeft: 10,
         }}
       >
         <Col span={11} className="col-outline">
@@ -96,18 +96,17 @@ const ItemLine = ({
         <>
           {lineItem.map((line, key) => (
             <Row
-              key={line.line_id}
+              key={key}
               style={{
                 marginBottom: 0,
                 border: "1px solid white",
                 backgroundColor: "#FCFCFC",
-                paddingLeft: "10px",
               }}
               gutter={6}
               className="col-2"
             >
               <Col span={11} className="text-string">
-                <Form.Item name={`item_name_${line.line_id}`}>
+                <Form.Item name={`item_name_${line.line_id}`} value="item 1">
                   <AutoComplete
                     options={items}
                     placeholder="Item"
@@ -141,6 +140,7 @@ const ItemLine = ({
                     val={line.lot_no}
                     options={""}
                     placeholder="Lot no."
+                    disabled={true}
                   />
                 </Form.Item>
               </Col>

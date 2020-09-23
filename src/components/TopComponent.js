@@ -5,14 +5,19 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import Search from "./Search";
 
 function TopContent(props) {
+  // console.log(props);
   const onCreate = () => {
-    console.log(props.create);
     props.create === "modal"
-      ? props.openModal()
+      ? props.openModal("Create")
       : props.history.push(props.create);
   };
   const onDiscard = () => {
     props.history.push(props.discard);
+  };
+  const onEdit = () => {
+    props.edit === "modal"
+      ? props.openModal("Edit")
+      : props.history.push(props.edit.path);
   };
   const menuAction = () => {
     const a = (
@@ -21,9 +26,9 @@ function TopContent(props) {
           props.action.map((item, index) => {
             return (
               <Menu.Item key={index}>
-                <Link rel="noopener noreferrer" target="_blank" to={item.link}>
+                <a rel="noopener noreferrer" target="_blank" href={item.link}>
                   {item.name}
-                </Link>
+                </a>
               </Menu.Item>
             );
           })}
@@ -61,19 +66,53 @@ function TopContent(props) {
                 </Button>
               )}
               {props.buttonAction.includes("Save") && (
-                <Button className="primary" onClick={props.onSave}>
-                  Save
-                </Button>
-              )}
-              {props.buttonAction.includes("Edit") && (
+                // <Button className="primary" onClick={props.onSave}>
+                //   Save
+                // </Button>
                 <Button
                   className="primary"
-                  onClick={props.onEdit}
-                  disabled={props.editDisabled}
+                  // onClick={onEdit}
+                  disabled={props.saveDisabled}
                 >
-                  Edit
+                  <Link
+                    to={{
+                      pathname: props.save.path,
+                      state: {
+                        ...props.save.data,
+                      },
+                    }}
+                  >
+                    Save
+                  </Link>
                 </Button>
               )}
+              {props.buttonAction.includes("Edit") &&
+                (props.edit == "modal" ? (
+                  <Button
+                    className="primary"
+                    onClick={onEdit}
+                    disabled={props.disabledEditBtn}
+                  >
+                    Edit
+                  </Button>
+                ) : (
+                  <Button
+                    className="primary"
+                    // onClick={onEdit}
+                    disabled={props.disabledEditBtn}
+                  >
+                    <Link
+                      to={{
+                        pathname: props.edit.path,
+                        state: {
+                          ...props.edit.data,
+                        },
+                      }}
+                    >
+                      Edit
+                    </Link>
+                  </Button>
+                ))}
               {props.buttonAction.includes("SaveConfirm") && (
                 <Button onClick={props.onConfirm}>Save & Confirm</Button>
               )}

@@ -31,7 +31,7 @@ const Dashboard = (props) => {
     show: true,
     breadcrumb: ["Home"],
     search: false,
-    action: [],
+    action: ["print"],
     step: {
       current: 2,
       step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],

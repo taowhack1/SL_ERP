@@ -13,7 +13,7 @@ class Inventory extends Component {
     show: true,
     breadcrumb: ["Home"],
     search: true,
-    create: "/inventory/create",
+    create: "",
     buttonAction: [""],
     discard: "/inventory",
     onCancel: () => {

@@ -1,37 +1,31 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { reqColumns, data } from "../../data/inventoryData";
+import { columnsMove, dataMove } from "../../data/inventoryData";
 import $ from "jquery";
-import axios from "axios";
 const Requisition = (props) => {
   console.log(props.location.state);
-
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState([]);
+  const [dataTable, setDataTable] = useState(dataMove);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  useEffect(() => {
-    axios.get("http://localhost:3001/requisition").then((res) => {
-      setDataTable(res.data);
-    });
-  }, []);
   const config = {
     title: "INVENTORY",
     show: true,
-    breadcrumb: ["Home", "Requisition"],
+    breadcrumb: ["Home", "Stock move"],
     search: true,
-    create: "/inventory/requisition/create",
-    buttonAction: ["Create", "Edit"],
+    create: "",
+    buttonAction: [],
     edit: {
-      data: selectedRow,
-      path: selectedRow && "/inventory/requisition/edit/" + selectedRow.id,
+      data: {},
+      path: "",
+      // path: selectedRow && "/inventory/stock_move/edit/" + selectedRow.key,
     },
     disabledEditBtn: !rowClick,
-    discard: "/inventory/requisition",
+    discard: "/inventory/stock_move",
     onCancel: () => {
       console.log("Cancel");
     },
@@ -43,7 +37,7 @@ const Requisition = (props) => {
         <Row>
           <Col span={24}>
             <Table
-              columns={reqColumns}
+              columns={columnsMove}
               dataSource={dataTable}
               onChange={onChange}
               size="small"

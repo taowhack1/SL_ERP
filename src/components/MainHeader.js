@@ -17,7 +17,6 @@ function MainHead(props) {
   const onOpenDrawer = () => {
     setVisible(true);
   };
-  //   console.log(props.link);
   return (
     <>
       <Row>

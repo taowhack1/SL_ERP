@@ -1,26 +1,33 @@
 import React from "react";
 import { Dropdown, Button } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
-import { menuConfig, operationsMenu } from "../data";
+import {
+  operationsMenu,
+  masterDataMenu,
+  menuConfig,
+  menuLevel1,
+  menuReport,
+} from "../data";
 
 export default function MainConfig({ ...props }) {
+  let menuLevel2 = [operationsMenu, masterDataMenu, menuReport, menuConfig];
   return (
     <>
-      <Dropdown overlay={operationsMenu} trigger={["click"]}>
-        <Button type="text" className="ant-dropdown-link">
-          Operations <CaretDownOutlined />
-        </Button>
-      </Dropdown>
-      <Dropdown overlay={menuConfig} trigger={["click"]}>
-        <Button type="text" className="ant-dropdown-link">
-          Reports <CaretDownOutlined />
-        </Button>
-      </Dropdown>
-      <Dropdown overlay={menuConfig} trigger={["click"]}>
-        <Button type="text" className="ant-dropdown-link">
-          Configuration <CaretDownOutlined />
-        </Button>
-      </Dropdown>
+      <div>
+        {menuLevel1.map((menu, key) => {
+          return (
+            <Dropdown
+              overlay={menuLevel2[key]}
+              trigger={["click"]}
+              key={menu.menuId}
+            >
+              <Button type="text" className="ant-dropdown-link">
+                {menu.menuName} <CaretDownOutlined />
+              </Button>
+            </Dropdown>
+          );
+        })}
+      </div>
     </>
   );
 }

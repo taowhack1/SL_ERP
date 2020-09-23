@@ -131,31 +131,35 @@ export const data = [
     address: "New York No. 1 Lake Park",
   },
 ];
-
+export const menuLevel1 = [
+  {
+    menuId: 0,
+    menuName: "Operations",
+    projectId: 1,
+  },
+  {
+    menuId: 1,
+    menuName: "Master Data",
+    projectId: 1,
+  },
+  {
+    menuId: 2,
+    menuName: "Reporting",
+    projectId: 1,
+  },
+  {
+    menuId: 3,
+    menuName: "Configuration",
+    projectId: 1,
+  },
+];
 export const menuReport = (
   <Menu>
     <Menu.Item>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="http://www.alipay.com/"
-      >
-        1st menu item
-      </a>
+      <Link to="/inventory/stock_move">Stock move</Link>
     </Menu.Item>
     <Menu.Item>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="http://www.taobao.com/"
-      >
-        2nd menu item
-      </a>
-    </Menu.Item>
-    <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-        3rd menu item
-      </a>
+      <Link to="/inventory/stock_on_hand">Stock on hand</Link>
     </Menu.Item>
   </Menu>
 );
@@ -163,18 +167,10 @@ export const menuReport = (
 export const menuConfig = (
   <Menu>
     <Menu.Item>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="http://www.alipay.com/"
-      >
-        1st menu item
-      </a>
+      <Link to="/inventory/location">Location</Link>
     </Menu.Item>
     <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-        3rd menu item
-      </a>
+      <Link to="/inventory/warehouse">Warehouse</Link>
     </Menu.Item>
   </Menu>
 );
@@ -184,8 +180,12 @@ export const operationsMenu = (
     <Menu.Item>
       <Link to="/inventory/requisition">Requisition</Link>
     </Menu.Item>
+  </Menu>
+);
+export const masterDataMenu = (
+  <Menu>
     <Menu.Item>
-      <Link to="/inventory/location">Location</Link>
+      <Link to="/inventory/items">Items</Link>
     </Menu.Item>
   </Menu>
 );

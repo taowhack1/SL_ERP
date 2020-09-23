@@ -1,0 +1,118 @@
+{
+  "items": [
+    {
+      "id": 0,
+      "itemCode": "108SRLA001",
+      "itemBarcode": "108SRLA001",
+      "itemName": "Item 1",
+      "itemQtyOnhand": 100.0,
+      "itemCateg": 0,
+      "itemDesc": "Item 1 Desc",
+      "locationId": 0
+    },
+    {
+      "id": 1,
+      "itemCode": "108SRLA002",
+      "itemBarcode": "108SRLA002",
+      "itemName": "Item 2",
+      "itemQtyOnhand": 100.0,
+      "itemCateg": 3,
+      "itemDesc": "Item 2 Desc",
+      "locationId": 1
+    },
+    {
+      "id": 2,
+      "itemCode": "108SRLA003",
+      "itemBarcode": "108SRLA003",
+      "itemName": "Item 2",
+      "itemQtyOnhand": 238.0,
+      "itemCateg": 1,
+      "itemDesc": "Item 2 Desc",
+      "locationId": 0
+    },
+    {
+      "id": 3,
+      "itemCode": "108SRLA004",
+      "itemBarcode": "108SRLA004",
+      "itemName": "Item 3",
+      "itemQtyOnhand": 50.0,
+      "itemCateg": 2,
+      "itemDesc": "Item 3 Desc",
+      "locationId": 2
+    }
+  ],
+  "requisition": [
+    {
+      "id": 0,
+      "req_code": "REQ20090001",
+      "req_contact": "ตุลาการ",
+      "req_date": null,
+      "req_to": 1,
+      "req_desc": "เบิก",
+      "req_item_type": 0,
+      "req_note": "โน้ต",
+      "req_item_line": [
+        {
+          "line_id": 0,
+          "item_name": "line 1",
+          "item_qty": 0.0001,
+          "item_lot": 2,
+          "item_qty_done": 0,
+          "item_unit": "unit"
+        },
+        {
+          "line_id": 1,
+          "item_name": "line 2",
+          "item_qty": 20.0,
+          "item_lot": 5,
+          "item_qty_done": 0,
+          "item_unit": "unit"
+        },
+        {
+          "line_id": 2,
+          "item_name": "line 3",
+          "item_qty": 12.0,
+          "item_lot": 3,
+          "item_qty_done": 0,
+          "item_unit": "unit"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "req_code": "REQ20090002",
+      "req_contact": "กิตติกานต์",
+      "req_date": "2020-09-20",
+      "req_to": 3,
+      "req_desc": "เบิก2",
+      "req_item_type": 0,
+      "req_note": "โน้ต2",
+      "req_item_line": [
+        {
+          "line_id": 0,
+          "item_name": "line 1",
+          "item_qty": 99.0001,
+          "item_lot": 2,
+          "item_qty_done": 0,
+          "item_unit": "unit"
+        },
+        {
+          "line_id": 1,
+          "item_name": "line 2",
+          "item_qty": 20.0,
+          "item_lot": 5,
+          "item_qty_done": 0,
+          "item_unit": "unit"
+        },
+        {
+          "line_id": 2,
+          "item_name": "line 3",
+          "item_qty": 12.0,
+          "item_lot": 3,
+          "item_qty_done": 0,
+          "item_unit": "unit"
+        }
+      ]
+    }
+  ]
+}

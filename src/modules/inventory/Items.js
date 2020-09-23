@@ -2,48 +2,61 @@ import React, { Component, useState, useEffect } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { reqColumns, data } from "../../data/inventoryData";
+import { columnsItem, data } from "../../data/inventoryData";
 import $ from "jquery";
 import axios from "axios";
-const Requisition = (props) => {
-  console.log(props.location.state);
-
+const Items = () => {
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const [dataTable, setDataTable] = useState([]);
+  const [copyTable, setCopy] = useState([]);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   useEffect(() => {
-    axios.get("http://localhost:3001/requisition").then((res) => {
+    axios.get("http://localhost:3001/items").then((res) => {
       setDataTable(res.data);
     });
   }, []);
   const config = {
     title: "INVENTORY",
     show: true,
-    breadcrumb: ["Home", "Requisition"],
+    breadcrumb: ["Home", "Items"],
     search: true,
-    create: "/inventory/requisition/create",
+    create: "/inventory/items/create",
     buttonAction: ["Create", "Edit"],
     edit: {
       data: selectedRow,
-      path: selectedRow && "/inventory/requisition/edit/" + selectedRow.id,
+      path: selectedRow && "/inventory/items/edit/" + selectedRow.key,
     },
     disabledEditBtn: !rowClick,
-    discard: "/inventory/requisition",
+    discard: "/inventory/items",
     onCancel: () => {
       console.log("Cancel");
     },
   };
-  console.log(selectedRow);
+  const setFunction = () => {};
+  const getCategoryName = (id) => {
+    switch (id) {
+      case 0:
+        return "Raw Material";
+      case 1:
+        return "Packaging";
+      case 2:
+        return "Bluk";
+      case 3:
+        return "Finish Good";
+      default:
+    }
+  };
+  console.log(copyTable);
   return (
     <div>
       <MainLayout {...config}>
         <Row>
           <Col span={24}>
             <Table
-              columns={reqColumns}
+              columns={columnsItem}
               dataSource={dataTable}
               onChange={onChange}
               size="small"
@@ -68,4 +81,4 @@ const Requisition = (props) => {
   );
 };
 
-export default withRouter(Requisition);
+export default withRouter(Items);

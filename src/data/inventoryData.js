@@ -48,6 +48,205 @@ export const columns = [
     ellipsis: true,
   },
 ];
+export const columnsItem = [
+  // "id": 3,
+  // "itemCode": "108SRLA004",
+  // "itemBarcode": "108SRLA004",
+  // "itemName": "Item 3",
+  // "itemQtyOnhand": 50.0,
+  // "itemCateg": 2,
+  // "itemDesc": "Item 3 Desc",
+  // "locationId": 2
+  {
+    title: "Code",
+    dataIndex: "itemCode",
+  },
+  {
+    title: "Barcode",
+    dataIndex: "itemBarcode",
+    sorter: {
+      compare: (a, b) => a.chinese - b.chinese,
+      multiple: 3,
+    },
+  },
+  {
+    title: "Item Name",
+    dataIndex: "itemName",
+    sorter: {
+      compare: (a, b) => a.math - b.math,
+      multiple: 2,
+    },
+  },
+  {
+    title: "Qty On Hand",
+    dataIndex: "itemQtyOnhand",
+    sorter: {
+      compare: (a, b) => a.english - b.english,
+      multiple: 1,
+    },
+  },
+  {
+    title: "Category",
+    dataIndex: "itemCateg",
+    ellipsis: true,
+  },
+  {
+    title: "Description",
+    dataIndex: "itemDesc",
+    ellipsis: true,
+  },
+];
+
+export const columnsMove = [
+  {
+    title: "Date",
+    dataIndex: "tfReqDate",
+  },
+  {
+    title: "Reference",
+    dataIndex: "tfRefCode",
+    sorter: {
+      compare: (a, b) => a.chinese - b.chinese,
+      multiple: 3,
+    },
+  },
+  {
+    title: "Item",
+    dataIndex: "tfItem",
+    sorter: {
+      compare: (a, b) => a.english - b.english,
+      multiple: 1,
+    },
+  },
+  {
+    title: "Lot/Batch No.",
+    dataIndex: "tfLot",
+    sorter: {
+      compare: (a, b) => a.english - b.english,
+      multiple: 1,
+    },
+  },
+  {
+    title: "From",
+    dataIndex: "tfForm",
+    sorter: {
+      compare: (a, b) => a.english - b.english,
+      multiple: 1,
+    },
+  },
+  {
+    title: "To",
+    dataIndex: "tfTo",
+    sorter: {
+      compare: (a, b) => a.english - b.english,
+      multiple: 1,
+    },
+  },
+  {
+    title: "Qty",
+    dataIndex: "tfQty",
+    sorter: {
+      compare: (a, b) => a.english - b.english,
+      multiple: 1,
+    },
+  },
+  {
+    title: "Unit",
+    dataIndex: "tfUnit",
+    sorter: {
+      compare: (a, b) => a.english - b.english,
+      multiple: 1,
+    },
+  },
+  {
+    title: "Status",
+    dataIndex: "tfStatus",
+    sorter: {
+      compare: (a, b) => a.english - b.english,
+      multiple: 1,
+    },
+  },
+];
+
+export const dataMove = [
+  {
+    id: 0,
+    tfReqDate: "17/09/2020",
+    tfRefCode: "TF2009-000001",
+    tfItem: "[102SLA030001] Item 1",
+    tfLot: "20080001",
+    tfForm: "Location 1",
+    tfTo: "Location 2",
+    tfQty: 300.0,
+    tfUnit: "Liter",
+    tfStatus: "Done",
+  },
+  {
+    id: 1,
+    tfReqDate: "18/09/2020",
+    tfRefCode: "TF2009-000002",
+    tfItem: "[102SLA030002] Item 2",
+    tfLot: "20080012",
+    tfForm: "Location 3",
+    tfTo: "Location 2",
+    tfQty: 50.0,
+    tfUnit: "pc",
+    tfStatus: "Done",
+  },
+  {
+    id: 2,
+    tfReqDate: "20/09/2020",
+    tfRefCode: "",
+    tfItem: "[102SLA030003] Item 4",
+    tfLot: "20080003",
+    tfForm: "Location 1",
+    tfTo: "Location 4",
+    tfQty: 120.0,
+    tfUnit: "pack",
+    tfStatus: "Draft",
+  },
+  {
+    id: 3,
+    tfReqDate: "23/09/2020",
+    tfRefCode: "TF2009-000003",
+    tfItem: "[102SLA030005] Item 99",
+    tfLot: "20080001",
+    tfForm: "Location 1",
+    tfTo: "Location 2",
+    tfQty: 390.0,
+    tfUnit: "Liter",
+    tfStatus: "To Approve",
+  },
+];
+export const reqColumns = [
+  {
+    title: "Reference",
+    dataIndex: "req_code",
+  },
+  {
+    title: "Request Date",
+    dataIndex: "req_date",
+    ellipsis: true,
+  },
+  {
+    title: "Location",
+    dataIndex: "req_to",
+    ellipsis: true,
+  },
+  {
+    title: "Contact",
+    dataIndex: "req_contact",
+    sorter: {
+      compare: (a, b) => a.chinese - b.chinese,
+      multiple: 3,
+    },
+  },
+  {
+    title: "Description",
+    dataIndex: "req_desc",
+    ellipsis: true,
+  },
+];
 
 export const data = [
   {
@@ -122,50 +321,6 @@ export const data = [
     transfer_from: "WH/RM",
     transfer_to: "WH/MN",
     transfer_contact: "KriangKrai",
-    transfer_req_date: "19/09/2020",
-    transfer_sch_date: "23/09/2020",
-    transfer_source_doc: "-",
-    transfer_status: "Draft",
-  },
-  {
-    key: 8,
-    transfer_ref_code: "TF2008-00008",
-    transfer_from: "WH/RM",
-    transfer_to: "WH/MN",
-    transfer_contact: "Somruk",
-    transfer_req_date: "19/09/2020",
-    transfer_sch_date: "23/09/2020",
-    transfer_source_doc: "-",
-    transfer_status: "Draft",
-  },
-  {
-    key: 9,
-    transfer_ref_code: "TF2008-00009",
-    transfer_from: "WH/RM",
-    transfer_to: "WH/MN",
-    transfer_contact: "Amorn",
-    transfer_req_date: "19/09/2020",
-    transfer_sch_date: "23/09/2020",
-    transfer_source_doc: "-",
-    transfer_status: "Draft",
-  },
-  {
-    key: 10,
-    transfer_ref_code: "TF2008-00010",
-    transfer_from: "WH/RM",
-    transfer_to: "WH/MN",
-    transfer_contact: "Amorn",
-    transfer_req_date: "19/09/2020",
-    transfer_sch_date: "23/09/2020",
-    transfer_source_doc: "-",
-    transfer_status: "Draft",
-  },
-  {
-    key: 11,
-    transfer_ref_code: "TF2008-00011",
-    transfer_from: "WH/RM",
-    transfer_to: "WH/MN",
-    transfer_contact: "Amorn",
     transfer_req_date: "19/09/2020",
     transfer_sch_date: "23/09/2020",
     transfer_source_doc: "-",
