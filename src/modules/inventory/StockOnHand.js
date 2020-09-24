@@ -25,6 +25,7 @@ const StockOnHand = () => {
   //   });
   // }, []);
   const config = {
+    projectId: 1,
     title: "INVENTORY",
     show: true,
     breadcrumb: ["Home", "Stock on hand"],

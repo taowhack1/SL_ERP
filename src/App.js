@@ -7,8 +7,8 @@ import Inventory from "./modules/inventory/Inventory";
 import RequisitionView from "./modules/inventory/RequisitionView";
 import RequisitionCreate from "./modules/inventory/RequisitionCreate";
 
-import Purchasing from "./modules/purchasing/Purchasing";
-import CreatePurchasing from "./modules/purchasing/CreatePurchasing";
+import Purchase from "./modules/purchasing/Purchase";
+import PurchaseRequisition from "./modules/purchasing/PurchaseRequisition";
 
 import NotFound from "./dashboard/NotFound";
 import { Provider } from "react-redux";
@@ -87,11 +87,11 @@ const App = (props) => {
           </Route>
 
           {/* PURCHASE */}
-          <Route exact path="/purchasing">
-            <Purchasing />
+          <Route exact path="/purchase">
+            <Purchase />
           </Route>
-          <Route exact path="/purchasing/create">
-            <CreatePurchasing />
+          <Route exact path="/purchase/pr">
+            <PurchaseRequisition />
           </Route>
 
           <Route>

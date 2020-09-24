@@ -78,6 +78,7 @@ const CreateInventory = (props) => {
   };
 
   const config = {
+    projectId: 1,
     title: "INVENTORY",
     show: true,
     breadcrumb: ["Home", "New"],

@@ -70,6 +70,7 @@ const ItemCreate = (props) => {
   };
   console.log(formData);
   const config = {
+    projectId: 1,
     title: "INVENTORY",
     show: true,
     breadcrumb: [

@@ -13,6 +13,7 @@ const Requisition = (props) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   const config = {
+    projectId: 1,
     title: "INVENTORY",
     show: true,
     breadcrumb: ["Home", "Stock move"],

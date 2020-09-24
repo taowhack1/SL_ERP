@@ -17,6 +17,10 @@ function MainHead(props) {
   const onOpenDrawer = () => {
     setVisible(true);
   };
+  const onClickProject = (id) => {
+    localStorage.removeItem("projectId");
+    localStorage.setItem("projectId", id);
+  };
   return (
     <>
       <Row>
@@ -29,7 +33,7 @@ function MainHead(props) {
               </Link>
             </Col>
             <Col span={18}>
-              <MainConfig />
+              <MainConfig projectId={props.projectId} />
             </Col>
           </Row>
         </Col>
@@ -51,16 +55,24 @@ function MainHead(props) {
         visible={visible}
       >
         <p>
-          <Link to="/">DASHBOARD</Link>
+          <Link to="/" onClick={onClickProject(0)}>
+            DASHBOARD
+          </Link>
         </p>
         <p>
-          <Link to="/inventory">INVERTORY</Link>
+          <Link to="/inventory" onClick={onClickProject(1)}>
+            INVERTORY
+          </Link>
         </p>
         <p>
-          <Link to="/purchasing">PURCHASING</Link>
+          <Link to="/purchase" onClick={onClickProject(2)}>
+            PURCHASING
+          </Link>
         </p>
         <p>
-          <Link to="/sales">SALES</Link>
+          <Link to="/sales" onClick={onClickProject(3)}>
+            SALES
+          </Link>
         </p>
       </Drawer>
     </>

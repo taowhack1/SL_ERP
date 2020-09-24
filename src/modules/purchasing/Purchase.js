@@ -1,42 +1,37 @@
 import React, { Component } from "react";
 import MainLayout from "../../components/MainLayout";
 
-class Inventory extends Component {
-  componentDidMount() {}
-  componentDidUpdate() {}
-  onChange = (pagination, filters, sorter, extra) => {
+const Purchase = () => {
+  const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  config = {
+  const config = {
     projectId: 1,
-    title: "INVENTORY",
-    home: "/inventory",
+    title: "PURCHASE",
+    home: "/purchase",
     show: true,
     breadcrumb: ["Home"],
     search: true,
     create: "",
     buttonAction: [""],
-    discard: "/inventory",
+    discard: "/purchase",
     onCancel: () => {
       console.log("Cancel");
     },
   };
 
-  render() {
-    console.log(localStorage.getItem("projectId"));
-    return (
-      <div>
-        <MainLayout {...this.config}>
-          <h1>Home</h1>
-          {/* <Row>
+  return (
+    <div>
+      <MainLayout {...config}>
+        <h1>Home Purchase</h1>
+        {/* <Row>
                <Col span={24}>
                  <Table columns={columns} dataSource={data} onChange={this.onChange} size='small'/>
                </Col>
            </Row> */}
-        </MainLayout>
-      </div>
-    );
-  }
-}
+      </MainLayout>
+    </div>
+  );
+};
 
-export default Inventory;
+export default Purchase;

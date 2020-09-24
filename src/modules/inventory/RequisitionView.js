@@ -78,6 +78,7 @@ const RequisitionView = (props) => {
   };
 
   const config = {
+    projectId: 1,
     title: "INVENTORY",
     show: true,
     breadcrumb: ["Home", "Requisition", "View", formData.req_code],
