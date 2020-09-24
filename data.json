@@ -54,7 +54,7 @@
       "req_step": 4,
       "req_item_line": [
         {
-          "line_id": 0,
+          "id": 0,
           "item_name": "line 1",
           "item_qty": 0.0001,
           "item_lot": 2,
@@ -62,7 +62,7 @@
           "item_unit": "unit"
         },
         {
-          "line_id": 1,
+          "id": 1,
           "item_name": "line 2",
           "item_qty": 20.0,
           "item_lot": 5,
@@ -70,7 +70,7 @@
           "item_unit": "unit"
         },
         {
-          "line_id": 2,
+          "id": 2,
           "item_name": "line 3",
           "item_qty": 12.0,
           "item_lot": 3,
@@ -91,7 +91,7 @@
       "req_step": 1,
       "req_item_line": [
         {
-          "line_id": 0,
+          "id": 0,
           "item_name": "line 1",
           "item_qty": 99.0001,
           "item_lot": 2,
@@ -99,7 +99,7 @@
           "item_unit": "unit"
         },
         {
-          "line_id": 1,
+          "id": 1,
           "item_name": "line 2",
           "item_qty": 20.0,
           "item_lot": 5,
@@ -107,7 +107,7 @@
           "item_unit": "unit"
         },
         {
-          "line_id": 2,
+          "id": 2,
           "item_name": "line 3",
           "item_qty": 12.0,
           "item_lot": 3,

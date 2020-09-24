@@ -20,19 +20,19 @@ const Requisition = (props) => {
     });
   }, []);
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: 2,
+    title: "PURCHASE",
     show: true,
     breadcrumb: ["Home", "Requisition"],
     search: true,
-    create: "/inventory/requisition/create",
+    create: "/purchase/requisition/create",
     buttonAction: ["Create", "Edit"],
     edit: {
       data: selectedRow,
-      path: selectedRow && "/inventory/requisition/edit/" + selectedRow.id,
+      path: selectedRow && "/purchase/requisition/edit/" + selectedRow.id,
     },
     disabledEditBtn: !rowClick,
-    discard: "/inventory/requisition",
+    discard: "/purchase/requisition",
     onCancel: () => {
       console.log("Cancel");
     },

@@ -15,7 +15,7 @@ export default function MainConfig(props) {
   const projectId = props.projectId && props.projectId ? props.projectId : 0;
   const projectMenu = menus.filter((menu) => menu.projectId === projectId);
   console.log(projectMenu);
-  let menuLevel2 = [operationsMenu, masterDataMenu, menuReport, menuConfig];
+  // let menuLevel2 = [operationsMenu, masterDataMenu, menuReport, menuConfig];
   const getSubMenu = (menu) => {
     let sub = (
       <Menu>

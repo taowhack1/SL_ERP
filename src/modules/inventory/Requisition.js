@@ -43,7 +43,7 @@ const Requisition = (props) => {
       <MainLayout {...config}>
         <Row>
           <Col span={24}>
-            {/* <Table
+            <Table
               columns={reqColumns}
               dataSource={dataTable}
               onChange={onChange}
@@ -61,7 +61,7 @@ const Requisition = (props) => {
                   },
                 };
               }}
-            /> */}
+            />
           </Col>
         </Row>
       </MainLayout>

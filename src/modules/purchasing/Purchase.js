@@ -6,7 +6,7 @@ const Purchase = () => {
     console.log("params", pagination, filters, sorter, extra);
   };
   const config = {
-    projectId: 1,
+    projectId: 2,
     title: "PURCHASE",
     home: "/purchase",
     show: true,
