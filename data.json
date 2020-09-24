@@ -51,6 +51,7 @@
       "req_desc": "เบิก",
       "req_item_type": 0,
       "req_note": "โน้ต",
+      "req_step": 4,
       "req_item_line": [
         {
           "line_id": 0,
@@ -87,6 +88,7 @@
       "req_desc": "เบิก2",
       "req_item_type": 0,
       "req_note": "โน้ต2",
+      "req_step": 1,
       "req_item_line": [
         {
           "line_id": 0,

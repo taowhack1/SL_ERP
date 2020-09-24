@@ -11,7 +11,7 @@ function MainLayout(props) {
     <>
       <Layout>
         <Header>
-          <MainHeader title={props.title} />
+          <MainHeader title={props.title} projectId={props.projectId} />
         </Header>
         {props.show && <TopContent {...props} />}
         <Content id="content">{props.children}</Content>

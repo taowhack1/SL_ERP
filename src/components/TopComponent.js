@@ -136,15 +136,17 @@ function TopContent(props) {
             )}
           </Col>
           <Col span={12}>
-            <div>
-              {props.step && (
-                <Steps size="small" current={props.step.current}>
-                  {props.step.step &&
-                    props.step.step.map((item, index) => {
-                      return <Steps.Step key={index} title={item} />;
-                    })}
-                </Steps>
-              )}
+            <div className="step">
+              {props.step &&
+                props.step.step &&
+                props.step.step.map((item, index) => {
+                  const pass = props.step.current >= index ? "pass" : "";
+                  return (
+                    <span className={`step-item ${pass}`} key={index}>
+                      {item}
+                    </span>
+                  );
+                })}
             </div>
           </Col>
         </Row>

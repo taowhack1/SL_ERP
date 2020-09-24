@@ -8,6 +8,7 @@ class Inventory extends Component {
     console.log("params", pagination, filters, sorter, extra);
   };
   config = {
+    projectId: 1,
     title: "INVENTORY",
     home: "/inventory",
     show: true,

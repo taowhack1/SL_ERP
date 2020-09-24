@@ -187,3 +187,19 @@ button.primary:hover {
 .row-margin-vertical {
   margin: 5px 0px !important;
 }
+.row-tab-margin {
+  margin-top: 15px;
+}
+.steps {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.step-item.pass {
+  color: rgba(0, 0, 0, 0.45);
+}
+.step-item:not(:last-of-type)::after {
+  content: "/";
+  margin-left: 8px;
+  margin-right: 8px;
+}

@@ -27,6 +27,7 @@ const Dashboard = (props) => {
   //   console.log("params", pagination, filters, sorter, extra);
   // };
   const config = {
+    projectId: 0,
     title: "DASHBOARD",
     show: true,
     breadcrumb: ["Home"],

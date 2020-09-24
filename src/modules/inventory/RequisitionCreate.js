@@ -45,6 +45,7 @@ const RequisitionCreate = (props) => {
           req_desc: "",
           req_item_type: 0,
           req_note: "",
+          req_step: 0,
           req_item_line: [{}],
         }
   );
@@ -92,7 +93,7 @@ const RequisitionCreate = (props) => {
       : ["Edit", "Approve", "Reject"],
     action: [{ name: "print", link: "www.google.co.th" }],
     step: {
-      current: 2,
+      current: formData.req_step,
       step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
     },
     create: "",

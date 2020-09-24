@@ -10,6 +10,7 @@ class Purchasing extends Component {
     console.log("params", pagination, filters, sorter, extra);
   };
   config = {
+    projectId: 2,
     title: "PURCHASING",
     show: true,
     breadcrumb: ["Home"],

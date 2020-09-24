@@ -19,6 +19,8 @@ import Warehouse from "./modules/inventory/warehouse";
 import Items from "./modules/inventory/Items";
 import StockMove from "./modules/inventory/StockMove";
 import StockOnHand from "./modules/inventory/StockOnHand";
+import ItemCreate from "./modules/inventory/ItemCreate";
+import ItemView from "./modules/inventory/ItemView";
 
 // class App extends Component {
 const App = (props) => {
@@ -60,6 +62,13 @@ const App = (props) => {
           <Route exact path="/inventory/items">
             <Items />
           </Route>
+          <Route exact path="/inventory/items/view/:id" component={ItemView} />
+          <Route exact path="/inventory/items/create" component={ItemCreate} />
+          <Route
+            exact
+            path="/inventory/items/edit/:id"
+            component={ItemCreate}
+          />
 
           {/* INVENTORY CONFIGURATION */}
           <Route exact path="/inventory/warehouse">
