@@ -6,6 +6,7 @@ import {
   InputNumber,
   AutoComplete,
   Typography,
+  Select,
 } from "antd";
 import {
   DeleteTwoTone,
@@ -14,27 +15,36 @@ import {
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import CustomAutoComplete from "./AutoComplete";
+const { Option } = Select;
+// import { columns } from "../data";
 
 const { Text } = Typography;
 
-const ItemLine = ({
-  items,
+const VendorLine = ({
   units,
-  req_item_line,
-  updateItemLine,
-  editForm,
+  itemLots,
+  items,
+  dataLine,
+  updateData,
+  readOnly,
+  columns,
 }) => {
-  const countItem = req_item_line.length;
+  // console.log(dataLine);
+  const countItem = dataLine && dataLine.length ? dataLine.length : 0;
   const [count, setCount] = useState(countItem);
-  const [lineItem, setLine] = useState([...req_item_line]);
+  const [lineItem, setLine] = useState(
+    dataLine && dataLine ? [...dataLine] : []
+  );
 
-  useEffect(() => {}, [lineItem]);
+  useEffect(() => {
+    dataLine && updateData({ req_item_line: [...lineItem] });
+  }, [lineItem]);
 
   const addLine = () => {
     setLine([
       ...lineItem,
       {
-        line_id: count,
+        id: count,
         item_name: `line_${count}`,
         item_qty: 0.0001,
         item_lot: 2,
@@ -43,23 +53,18 @@ const ItemLine = ({
       },
     ]);
     setCount(count + 1);
-    updateItemLine({ req_item_line: [...lineItem] });
   };
 
   const delLine = (id) => {
-    setLine(lineItem.filter((line) => line.line_id !== id));
-    updateItemLine({ req_item_line: [...lineItem] });
+    console.log(id);
+    setLine(lineItem.filter((line) => line.id !== id));
   };
-
-  const onChangeValue = (rowId, field, data) => {
+  const onChangeValue = (rowId, data) => {
     setLine(
-      lineItem.map((line) =>
-        line.line_id === rowId ? { ...line, item_name: data } : line
-      )
+      lineItem.map((line) => (line.id === rowId ? { ...line, ...data } : line))
     );
-    updateItemLine({ req_item_line: [...lineItem] });
   };
-
+  console.log(readOnly);
   return (
     <>
       {/* Column Header */}
@@ -70,33 +75,27 @@ const ItemLine = ({
           // paddingLeft: 10,
         }}
       >
-        <Col span={11} className="col-outline">
-          <Text strong>Item</Text>
-        </Col>
-        <Col span={3} className="col-outline">
-          <Text strong>Quantity</Text>
-        </Col>
-        <Col span={3} className="col-outline">
-          <Text strong>Lot No.</Text>
-        </Col>
-        <Col span={3} className="col-outline">
-          <Text strong>Quantity Done</Text>
-        </Col>
-        <Col span={3} className="col-outline">
-          <Text strong>Unit</Text>
-        </Col>
+        {columns &&
+          columns.map((col, key) => {
+            return (
+              <Col key={key} span={col.size} className="col-outline">
+                <Text strong>{col.name}</Text>
+              </Col>
+            );
+          })}
+
         <Col span={1} className="col-outline">
           <Text strong>
             <EllipsisOutlined />
           </Text>
         </Col>
       </Row>
-      {/* Edit Form */}
-      {editForm ? (
+      {!readOnly ? (
         <>
+          {/* Edit Form */}
           {lineItem.map((line, key) => (
             <Row
-              key={key}
+              key={line.id}
               style={{
                 marginBottom: 0,
                 border: "1px solid white",
@@ -106,77 +105,93 @@ const ItemLine = ({
               className="col-2"
             >
               <Col span={11} className="text-string">
-                <Form.Item name={`item_name_${line.line_id}`} value="item 1">
-                  <AutoComplete
-                    options={items}
-                    placeholder="Item"
-                    defaultValue={line.item_name}
-                    filterOption={(inputValue, option) =>
-                      option.value
-                        .toUpperCase()
-                        .indexOf(inputValue.toUpperCase()) !== -1
-                    }
-                    onChange={(data) =>
-                      onChangeValue(line.line_id, "item_name", data)
-                    }
-                  ></AutoComplete>
-                </Form.Item>
+                <AutoComplete
+                  style={{ width: "100%" }}
+                  options={items}
+                  placeholder="Name..."
+                  defaultValue={line.item_name}
+                  filterOption={(inputValue, option) =>
+                    option.value
+                      .toUpperCase()
+                      .indexOf(inputValue.toUpperCase()) !== -1
+                  }
+                  onChange={(data) =>
+                    onChangeValue(line.id, { item_name: data })
+                  }
+                />
               </Col>
               <Col span={3} className="text-number">
-                <Form.Item name={`qty_${line.line_id}`}>
-                  <InputNumber
-                    placeholder={"Qty : 0.0001"}
-                    min={0.0001}
-                    step={0.0001}
-                    precision={4}
-                    style={{ width: "100%" }}
-                    defaultValue={line.item_qty}
-                  />
-                </Form.Item>
+                <InputNumber
+                  placeholder={"Quantity..."}
+                  min={0.0}
+                  step={0.0001}
+                  precision={4}
+                  style={{ width: "100%" }}
+                  disabled={0}
+                  defaultValue={line.item_qty}
+                  onChange={(data) =>
+                    onChangeValue(line.id, { item_qty: data })
+                  }
+                />
               </Col>
               <Col span={3} className="text-string">
-                <Form.Item name={`lot_no_${line.line_id}`}>
-                  <CustomAutoComplete
-                    val={line.lot_no}
-                    options={""}
-                    placeholder="Lot no."
-                    disabled={true}
-                  />
-                </Form.Item>
+                <Select
+                  placeholder={"Lot/Batch No..."}
+                  onSelect={(data) =>
+                    onChangeValue(line.id, {
+                      item_lot: data,
+                    })
+                  }
+                  style={{ width: "100%" }}
+                  defaultValue={line.item_lot}
+                >
+                  <Option value="null"> </Option>
+                  {itemLots.map((lot) => {
+                    return (
+                      <Option key={lot.id} value={lot.id}>
+                        {lot.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
               </Col>
+
               <Col span={3} className="text-number">
-                <Form.Item name={`qty_done_${line.line_id}`}>
-                  <InputNumber
-                    placeholder={"Qty Done : 0.0001"}
-                    min={0.0}
-                    step={0.0001}
-                    precision={4}
-                    style={{ width: "100%" }}
-                    disabled={1}
-                    defaultValue={line.item_qty_done}
-                  />
-                </Form.Item>
+                <InputNumber
+                  placeholder={"Qty Done..."}
+                  min={0.0}
+                  step={0.0001}
+                  precision={4}
+                  style={{ width: "100%" }}
+                  disabled={0}
+                  defaultValue={line.item_qty_done}
+                  onChange={(data) =>
+                    onChangeValue(line.id, { item_qty_done: data })
+                  }
+                />
               </Col>
               <Col span={3} className="text-string">
-                <Form.Item name={`unit_${line.line_id}`}>
-                  <AutoComplete
-                    options={units}
-                    placeholder="unit"
-                    defaultValue={line.item_unit}
-                    filterOption={(inputValue, option) =>
-                      option.value
-                        .toUpperCase()
-                        .indexOf(inputValue.toUpperCase()) !== -1
-                    }
-                  ></AutoComplete>
-                </Form.Item>
+                <AutoComplete
+                  style={{ width: "100%" }}
+                  options={units}
+                  placeholder="Unit..."
+                  defaultValue={line.item_unit}
+                  filterOption={(inputValue, option) =>
+                    option.value
+                      .toUpperCase()
+                      .indexOf(inputValue.toUpperCase()) !== -1
+                  }
+                  onChange={(data) =>
+                    onChangeValue(line.id, { item_unit: data })
+                  }
+                />
               </Col>
-              <Col span={1}>
-                <DeleteTwoTone onClick={() => delLine(line.line_id)} />
+              <Col span={1} style={{ textAlign: "center" }}>
+                <DeleteTwoTone onClick={() => delLine(line.id)} />
               </Col>
             </Row>
           ))}
-          <Form.Item style={{ marginTop: 10 }}>
+          <div style={{ marginTop: 10 }}>
             <Button
               type="dashed"
               onClick={() => {
@@ -186,71 +201,45 @@ const ItemLine = ({
             >
               <PlusOutlined /> Add field
             </Button>
-          </Form.Item>
+          </div>
         </>
       ) : (
         <>
           {/* View Form */}
           {lineItem.map((line, key) => (
             <Row
-              key={line.line_id}
+              key={line.id}
               style={{
                 marginBottom: 0,
                 border: "1px solid white",
-                backgroundColor: key % 2 === 0 ? "#FCFCFC" : "#EAEAEA",
-                paddingLeft: "10px",
+                backgroundColor: "#FCFCFC",
               }}
               gutter={6}
               className="col-2"
             >
               <Col span={11} className="text-string">
-                <Form.Item
-                  name={`item_name_${line.line_id}`}
-                  // rules={[{ required: true, message: `Missing Item` }]}
-                  // onSelect={onChangeValue(line.line_id)}
-                >
-                  <Text>{line.item_name ? line.item_name : "-"}</Text>
-                </Form.Item>
+                <Text>{line.item_name}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Form.Item
-                  name={`qty_${line.line_id}`}
-                  // rules={[{ required: true, message: "Missing Quantity" }]}
-                >
-                  <Text>{line.item_qty ? line.item_qty : "-"}</Text>
-                </Form.Item>
-              </Col>
-              <Col span={3} className="text-number">
-                <Form.Item
-                  name={`lot_no_${line.line_id}`}
-                  // rules={[{ required: true, message: "Missing Lot no" }]}
-                >
-                  <Text>{line.lot_no ? line.lot_no : "-"}</Text>
-                </Form.Item>
-              </Col>
-              <Col span={3} className="text-number">
-                <Form.Item
-                  name={`qty_done_${line.line_id}`}
-                  // rules={[{ required: true, message: "Missing Qty done" }]}
-                >
-                  <Text>{line.item_qty_done ? line.item_qty_done : "-"}</Text>
-                </Form.Item>
+                <Text>{line.item_qty}</Text>
               </Col>
               <Col span={3} className="text-string">
-                <Form.Item
-                  name={`unit_${line.line_id}`}
-                  // rules={[{ required: true, message: "Missing Unit" }]}
-                >
-                  <Text>{line.item_unit ? line.item_unit : "-"}</Text>
-                </Form.Item>
+                <Text>{line.item_lot}</Text>
               </Col>
-              <Col span={1}></Col>
+
+              <Col span={3} className="text-number">
+                <Text>{line.item_qty_done}</Text>
+              </Col>
+              <Col span={1} className="text-string">
+                <Text>{line.item_unit}</Text>
+              </Col>
             </Row>
           ))}
-        </>
+        </> //close tag
       )}
+      {/* end readonly */}
     </>
   );
 };
 
-export default ItemLine;
+export default VendorLine;

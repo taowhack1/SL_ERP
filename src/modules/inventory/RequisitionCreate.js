@@ -22,7 +22,8 @@ import {
   reqItemLine,
 } from "../../data/inventoryData";
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
+import { dataComments, itemLots } from "../../data";
+import { reqItemColumns } from "../../data/requisitionData";
 import $ from "jquery";
 import axios from "axios";
 const { Option } = Select;
@@ -251,13 +252,15 @@ const RequisitionCreate = (props) => {
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
                 <ItemLine
-                  updateItemLine={updateItemLine}
                   items={autoCompleteItem}
                   units={autoCompleteUnit}
-                  req_item_line={
+                  itemLots={itemLots}
+                  columns={reqItemColumns}
+                  updateData={updateItemLine}
+                  dataLine={
                     formData.req_item_line ? formData.req_item_line : []
                   }
-                  editForm={editForm}
+                  readOnly={false}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Note" key="3">

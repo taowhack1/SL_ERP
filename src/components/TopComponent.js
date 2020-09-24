@@ -136,7 +136,7 @@ function TopContent(props) {
             )}
           </Col>
           <Col span={12}>
-            <div className="step">
+            <div className="steps">
               {props.step &&
                 props.step.step &&
                 props.step.step.map((item, index) => {

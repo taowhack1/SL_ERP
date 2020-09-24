@@ -232,3 +232,10 @@ export const dataComments = [
     datetime: "2020-09-22 10:48:39",
   },
 ];
+
+export const itemLots = [
+  { id: 0, name: "Lot 1", locationId: 0 },
+  { id: 1, name: "Lot 2", locationId: 0 },
+  { id: 2, name: "Lot 3", locationId: 1 },
+  { id: 3, name: "Lot 4", locationId: 2 },
+];

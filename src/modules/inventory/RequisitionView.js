@@ -22,7 +22,8 @@ import {
   reqItemLine,
 } from "../../data/inventoryData";
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
+import { dataComments, itemLots } from "../../data";
+import { reqItemColumns } from "../../data/requisitionData";
 import $ from "jquery";
 import axios from "axios";
 const { Option } = Select;
@@ -32,7 +33,6 @@ const { Title, Paragraph, Text } = Typography;
 const RequisitionView = (props) => {
   const data = props.location.state ? props.location.state : 0;
   const [editForm, setEdit] = useState(true);
-
   const [formData, setData] = useState(
     data && data
       ? data
@@ -169,8 +169,13 @@ const RequisitionView = (props) => {
                   <ItemLine
                     items={autoCompleteItem}
                     units={autoCompleteUnit}
-                    req_item_line={formData.req_item_line}
-                    editForm={false}
+                    itemLots={itemLots}
+                    columns={reqItemColumns}
+                    updateData={updateItemLine}
+                    dataLine={
+                      formData.req_item_line ? formData.req_item_line : []
+                    }
+                    readOnly={true}
                   />
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Note" key="3">
