@@ -175,6 +175,9 @@ button.primary:hover {
   /* padding-right: 10px; */
   text-align: left !important;
 }
+.text-center {
+  text-align: center !important;
+}
 .row-click {
   background-color: #e6e5e5;
 }

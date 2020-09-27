@@ -10,10 +10,11 @@ import {
   Select,
   AutoComplete,
   Typography,
+  Space,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
-import ItemLine from "../../components/ItemLine";
+import ItemLine from "./pr_ItemLine";
 import {
   autoCompleteUser,
   autoCompleteItem,
@@ -21,17 +22,20 @@ import {
   autoCompleteUnit,
   reqItemLine,
 } from "../../data/inventoryData";
+import { costcenter } from "../../data/costcenterData";
 import Comments from "../../components/Comments";
 import { dataComments, itemLots } from "../../data";
-import { reqItemColumns } from "../../data/requisitionData";
+import { prItemColumns } from "../../data/purchase/pr_ItemLineData";
+import { vendors } from "../../data/purchase/data";
 import $ from "jquery";
 import axios from "axios";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
 
-const RequisitionCreate = (props) => {
-  const data = props.location.state ? props.location.state : 0;
+const PurchaseRequisitionCreate = (props) => {
+  const data =
+    props.location && props.location.state ? props.location.state : 0;
   const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
@@ -39,18 +43,24 @@ const RequisitionCreate = (props) => {
       ? data
       : {
           id: 0,
-          req_code: "",
-          req_contact: "",
-          req_date: null,
-          req_to: null,
-          req_desc: "",
-          req_item_type: 0,
-          req_note: "",
-          req_step: 0,
-          req_item_line: [{}],
+          pr_code: "REQ2009-00001",
+          po_code: null,
+          po_date: moment().format("DD/MM/YYYY"),
+          po_purch_empId: "",
+          po_dueDate: "",
+          po_desc: null,
+          po_delivery_to: null,
+          vendorId: 0,
+          vendorName: "",
+          dataLine: [{}],
+          po_untax: 0,
+          po_vat: 0.07,
+          po_includeTax: 0,
+          po_total: 0,
+          po_purch_approve_empId: "",
         }
   );
-
+  console.log(formData);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
@@ -80,14 +90,14 @@ const RequisitionCreate = (props) => {
   };
 
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: 2,
+    title: "PURCHASE",
     show: true,
     breadcrumb: [
       "Home",
-      "Requisition",
-      formData.req_code ? "Edit" : "Create",
-      formData.req_code && formData.req_code,
+      "Purchase Order",
+      formData.po_code ? "Edit" : "Create",
+      formData.po_code && formData.po_code,
     ],
     search: false,
     buttonAction: editForm
@@ -101,9 +111,9 @@ const RequisitionCreate = (props) => {
     create: "",
     save: {
       data: formData,
-      path: formData && "/inventory/requisition/view/" + formData.id,
+      path: formData && "/purchase/po/view/" + formData.id,
     },
-    discard: "/inventory/requisition",
+    discard: "/purchase/po",
     onSave: (e) => {
       e.preventDefault();
       console.log("Save");
@@ -139,112 +149,68 @@ const RequisitionCreate = (props) => {
     <MainLayout {...config} data={formData}>
       <div id="form">
         <Row className="col-2">
-          <h2>
-            <strong>Purchase Requisition</strong>
-          </h2>
+          <Col span={20}>
+            <h2>
+              <strong>
+                {formData.po_code ? "Edit" : "Create"} Purchase Requisition
+              </strong>
+            </h2>
+          </Col>
+          <Col span={4}>
+            <Text strong>PR Date : </Text>
+            {formData.po_date}
+          </Col>
         </Row>
         <Row className="col-2" style={{ marginBottom: 20 }}>
-          <h3>
-            <b>Ref. Code : </b>
-            {formData.req_code}
-          </h3>
+          {formData.po_code && (
+            <h3>
+              <b>Ref. Code : </b>
+              {formData.po_code}
+            </h3>
+          )}
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <h4>Contact Name :</h4>
+            <Text strong>Cost Center :</Text>
           </Col>
 
           <Col span={8}>
             <AutoComplete
-              name={"req_contact"}
-              options={autoCompleteUser}
-              placceholder={"contact person"}
-              defaultValue={formData.req_contact}
+              name={"po_delivery_to"}
+              options={costcenter}
+              placceholder={"Costcenter..."}
+              defaultValue={formData.po_delivery_to}
               filterOption={(inputValue, option) =>
                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
                 -1
               }
-              onSelect={(data) => upDateFormValue({ req_contact: data })}
-              onChange={(data) => upDateFormValue({ req_contact: data })}
+              onSelect={(data) => upDateFormValue({ po_delivery_to: data })}
+              onChange={(data) => upDateFormValue({ po_delivery_to: data })}
               style={{ width: "100%" }}
             />
           </Col>
           <Col span={1}></Col>
-          <Col span={4}>
-            <h4>Request Date :</h4>
-          </Col>
-          <Col span={8}>
-            <DatePicker
-              name={"req_date"}
-              format={dateConfig.format}
-              style={{ width: "100%" }}
-              defaultValue={
-                formData.req_date ? moment(formData.req_date, "YYYY-MM-DD") : ""
-              }
-              onChange={(data) => {
-                upDateFormValue({
-                  req_date: data.format("YYYY-MM-DD HH:mm:ss"),
-                });
-              }}
-            />
-          </Col>
+          <Col span={4}></Col>
+          <Col span={8}></Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <h4>Description :</h4>
+            <Text strong>Vendor :</Text>
           </Col>
           <Col span={8}>
-            <Input
-              name={"req_desc"}
-              onChange={(e) => upDateFormValue({ req_desc: e.target.value })}
-              defaultValue={formData.req_desc}
-            />
-          </Col>
-
-          <Col span={1}></Col>
-          <Col span={4}>
-            <h4>Destination Location :</h4>
-          </Col>
-          <Col span={8}>
-            <Select
-              placeholder={"Select Location"}
-              onSelect={(data) =>
-                upDateFormValue({
-                  req_to: data,
-                })
+            <AutoComplete
+              name={"vendorName"}
+              options={vendors}
+              placceholder={"Vendor..."}
+              defaultValue={formData.vendorName}
+              filterOption={(inputValue, option) =>
+                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+                -1
               }
+              onSelect={(data) => upDateFormValue({ vendorName: data })}
+              onChange={(data) => upDateFormValue({ vendorName: data })}
               style={{ width: "100%" }}
-              defaultValue={formData.req_to}
-            >
-              <Option value="null"> </Option>
-              {locationData.map((location) => {
-                return (
-                  <Option key={location.id} value={location.id}>
-                    {location.name}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <h4>Item Type :</h4>
-          </Col>
-          <Col span={8}>
-            <Radio.Group
-              name={"req_item_type"}
-              onChange={(e) =>
-                upDateFormValue({ req_item_type: e.target.value })
-              }
-              defaultValue={formData.req_item_type}
-            >
-              <Radio value={0}>RM</Radio>
-              <Radio value={1}>PK</Radio>
-              <Radio value={2}>BULK</Radio>
-              <Radio value={3}>FG</Radio>
-              <Radio value={4}>Others</Radio>
-            </Radio.Group>
+            />
           </Col>
         </Row>
         <Row className="col-2 space-top-md">
@@ -255,21 +221,17 @@ const RequisitionCreate = (props) => {
                   items={autoCompleteItem}
                   units={autoCompleteUnit}
                   itemLots={itemLots}
-                  columns={reqItemColumns}
+                  columns={prItemColumns}
                   updateData={updateItemLine}
-                  dataLine={
-                    formData.req_item_line ? formData.req_item_line : []
-                  }
+                  dataLine={formData.dataLine ? formData.dataLine : []}
                   readOnly={false}
                 />
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Note" key="3">
+              <Tabs.TabPane tab="Reason & Description" key="2">
                 <TextArea
-                  rows={3}
-                  placeholder={"Remark your request"}
-                  onChange={(e) =>
-                    upDateFormValue({ req_note: e.target.value })
-                  }
+                  onChange={(e) => upDateFormValue({ po_desc: e.target.value })}
+                  defaultValue={formData.po_desc}
+                  placeholder="Reason & Description"
                 />
               </Tabs.TabPane>
             </Tabs>
@@ -281,4 +243,4 @@ const RequisitionCreate = (props) => {
   );
 };
 
-export default RequisitionCreate;
+export default PurchaseRequisitionCreate;

@@ -97,7 +97,7 @@ export const menus = [
     id: 11,
     name: "Configuration",
     projectId: 2,
-    subMenu: [{ id: 0, name: "Vendors", link: "/purchase/vendors" }],
+    subMenu: [{ id: 0, name: "Vendors", link: "/purchase/vendor" }],
   },
   {
     id: 12,

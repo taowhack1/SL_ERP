@@ -23,16 +23,16 @@ const Requisition = (props) => {
     projectId: 2,
     title: "PURCHASE",
     show: true,
-    breadcrumb: ["Home", "Requisition"],
+    breadcrumb: ["Home", "Purchase Requisition"],
     search: true,
-    create: "/purchase/requisition/create",
+    create: "/purchase/pr/create",
     buttonAction: ["Create", "Edit"],
     edit: {
       data: selectedRow,
-      path: selectedRow && "/purchase/requisition/edit/" + selectedRow.id,
+      path: selectedRow && "/purchase/pr/edit/" + selectedRow.id,
     },
     disabledEditBtn: !rowClick,
-    discard: "/purchase/requisition",
+    discard: "/purchase/pr",
     onCancel: () => {
       console.log("Cancel");
     },

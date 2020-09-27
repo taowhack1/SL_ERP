@@ -239,3 +239,10 @@ export const itemLots = [
   { id: 2, name: "Lot 3", locationId: 1 },
   { id: 3, name: "Lot 4", locationId: 2 },
 ];
+
+export const states = [
+  { id: 0, value: "ไทย" },
+  { id: 1, value: "Thailand" },
+  { id: 2, value: "England" },
+  { id: 3, value: "United States" },
+];

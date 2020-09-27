@@ -78,6 +78,7 @@ function TopContent(props) {
                     to={{
                       pathname: props.save.path,
                       state: {
+                        // data: props.save.data,
                         ...props.save.data,
                       },
                     }}
@@ -105,6 +106,7 @@ function TopContent(props) {
                       to={{
                         pathname: props.edit.path,
                         state: {
+                          // data: props.edit.data,
                           ...props.edit.data,
                         },
                       }}
@@ -115,6 +117,15 @@ function TopContent(props) {
                 ))}
               {props.buttonAction.includes("SaveConfirm") && (
                 <Button onClick={props.onConfirm}>Save & Confirm</Button>
+              )}
+              {props.buttonAction.includes("Confirm") && (
+                <Button onClick={props.onConfirm}>Confirm</Button>
+              )}
+              {props.buttonAction.includes("Approve") && (
+                <Button onClick={props.onApprove}>Approve</Button>
+              )}
+              {props.buttonAction.includes("Reject") && (
+                <Button onClick={props.onReject}>Reject</Button>
               )}
               {props.buttonAction.includes("Discard") && (
                 <Button onClick={onDiscard}>Discard</Button>

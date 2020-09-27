@@ -14,7 +14,7 @@ import {
   EllipsisOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import CustomAutoComplete from "../../components/AutoComplete";
+import CustomAutoComplete from "./AutoComplete";
 const { Option } = Select;
 // import { columns } from "../data";
 

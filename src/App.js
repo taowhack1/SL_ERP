@@ -8,7 +8,20 @@ import RequisitionView from "./modules/inventory/RequisitionView";
 import RequisitionCreate from "./modules/inventory/RequisitionCreate";
 
 import Purchase from "./modules/purchasing/Purchase";
-import PurchaseRequisition from "./modules/purchasing/PurchaseRequisition";
+import PurchPR from "./modules/purchasing/Purchase_PR";
+import PurchPRCreate from "./modules/purchasing/Purchase_PR_Create";
+import PurchPRView from "./modules/purchasing/Purchase_PR_View";
+import PurchPO from "./modules/purchasing/Purchase_PO";
+import PurchPOCreate from "./modules/purchasing/Purchase_PO_Create";
+import Vendor from "./modules/purchasing/Vendor";
+import VendorCreate from "./modules/purchasing/Vendor_Create";
+import VendorView from "./modules/purchasing/Vendor_View";
+
+import Sales from "./modules/sales/Sales";
+import Quotations from "./modules/sales/Sales_Quotations";
+import Customer from "./modules/sales/Customer";
+import CustomerView from "./modules/sales/Customer_View";
+import CustomerCreate from "./modules/sales/Customer_Create";
 
 import NotFound from "./dashboard/NotFound";
 import { Provider } from "react-redux";
@@ -91,8 +104,62 @@ const App = (props) => {
             <Purchase />
           </Route>
           <Route exact path="/purchase/pr">
-            <PurchaseRequisition />
+            <PurchPR />
           </Route>
+          <Route exact path="/purchase/pr/create">
+            <PurchPRCreate />
+          </Route>
+          <Route exact path="/purchase/pr/view/:id" component={PurchPRView} />
+          <Route exact path="/purchase/pr/edit/:id" component={PurchPRCreate} />
+
+          <Route exact path="/purchase/po">
+            <PurchPO />
+          </Route>
+          <Route exact path="/purchase/po/create">
+            <PurchPOCreate />
+          </Route>
+          <Route exact path="/purchase/vendor">
+            <Vendor />
+          </Route>
+          <Route exact path="/purchase/vendor/create">
+            <VendorCreate />
+          </Route>
+          <Route
+            exact
+            path="/purchase/vendor/view/:id"
+            component={VendorView}
+          />
+          <Route
+            exact
+            path="/purchase/vendor/edit/:id"
+            component={VendorCreate}
+          />
+
+          {/* SALES */}
+          <Route exact path="/sales">
+            <Sales />
+          </Route>
+          {/* SALES OERDERS */}
+          <Route exact path="/sales/quotations">
+            <Quotations />
+          </Route>
+          {/* SALES CONFIGURATION */}
+          <Route exact path="/sales/config/customers">
+            <Customer />
+          </Route>
+          <Route exact path="/sales/config/customers/create">
+            <CustomerCreate />
+          </Route>
+          <Route
+            exact
+            path="/sales/config/customers/view/:id"
+            component={CustomerView}
+          />
+          <Route
+            exact
+            path="/sales/config/customers/edit/:id"
+            component={CustomerCreate}
+          />
 
           <Route>
             <NotFound />
