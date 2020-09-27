@@ -42,6 +42,7 @@ const Customer = (props) => {
               dataSource={dataTable}
               onChange={onChange}
               size="small"
+              rowClassName="row-pointer"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

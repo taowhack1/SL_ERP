@@ -105,7 +105,7 @@ export const menus = [
     projectId: 3,
     subMenu: [
       { id: 0, name: "Quotations", link: "/sales/quotations" },
-      { id: 1, name: "Sale Orders", link: "/sales/sale_orders" },
+      { id: 1, name: "Sale Orders", link: "/sales/orders" },
     ],
   },
   {

@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { quotationColumns, quotationData } from "../../data/sale/data";
+import { saleOrderColumns, saleOrderData } from "../../data/sale/data";
 import $ from "jquery";
 import axios from "axios";
-const Quotations = (props) => {
+const SaleOrder = (props) => {
   console.log(props.location.state);
 
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState(quotationData && quotationData);
+  const [dataTable, setDataTable] = useState(saleOrderData && saleOrderData);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -23,16 +23,16 @@ const Quotations = (props) => {
     projectId: 3,
     title: "SALES",
     show: true,
-    breadcrumb: ["Home", "Quotations"],
+    breadcrumb: ["Home", "Sale Orders"],
     search: true,
-    create: "/sales/quotations/create",
+    create: "/sales/orders/create",
     buttonAction: ["Create", "Edit"],
     edit: {
       data: selectedRow,
-      path: selectedRow && "/sales/quotations/edit/" + selectedRow.id,
+      path: selectedRow && "/sales/orders/edit/" + selectedRow.id,
     },
     disabledEditBtn: !rowClick,
-    discard: "/sales/quotations",
+    discard: "/sales/orders",
     onCancel: () => {
       console.log("Cancel");
     },
@@ -45,7 +45,7 @@ const Quotations = (props) => {
         <Row>
           <Col span={24}>
             <Table
-              columns={quotationColumns}
+              columns={saleOrderColumns}
               dataSource={dataTable}
               onChange={onChange}
               size="small"
@@ -61,7 +61,7 @@ const Quotations = (props) => {
                     $(e.target).closest("tr").addClass("selected-row");
                     setSelectedRow(record);
                     props.history.push({
-                      pathname: "/sales/quotations/view/" + record.id,
+                      pathname: "/sales/orders/view/" + record.id,
                       state: record,
                     });
                   },
@@ -75,4 +75,4 @@ const Quotations = (props) => {
   );
 };
 
-export default withRouter(Quotations);
+export default withRouter(SaleOrder);

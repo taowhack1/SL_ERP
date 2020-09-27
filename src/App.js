@@ -19,6 +19,10 @@ import VendorView from "./modules/purchasing/Vendor_View";
 
 import Sales from "./modules/sales/Sales";
 import Quotations from "./modules/sales/Sales_Quotations";
+import QuotationsCreate from "./modules/sales/Sales_Quotations_Create";
+import QuotationsView from "./modules/sales/Sales_Quotations_View";
+import SaleOrder from "./modules/sales/Sales_Orders";
+import SaleOrderView from "./modules/sales/Sales_Orders_View";
 import Customer from "./modules/sales/Customer";
 import CustomerView from "./modules/sales/Customer_View";
 import CustomerCreate from "./modules/sales/Customer_Create";
@@ -139,10 +143,34 @@ const App = (props) => {
           <Route exact path="/sales">
             <Sales />
           </Route>
-          {/* SALES OERDERS */}
+
+          {/* SALES  Quotations */}
           <Route exact path="/sales/quotations">
             <Quotations />
           </Route>
+          <Route exact path="/sales/quotations/create">
+            <QuotationsCreate />
+          </Route>
+          <Route
+            exact
+            path="/sales/quotations/view/:id"
+            component={QuotationsView}
+          />
+          <Route
+            exact
+            path="/sales/quotations/edit/:id"
+            component={QuotationsCreate}
+          />
+          {/* SALES ORDERS */}
+          <Route exact path="/sales/orders">
+            <SaleOrder />
+          </Route>
+          <Route
+            exact
+            path="/sales/orders/view/:id"
+            component={SaleOrderView}
+          />
+
           {/* SALES CONFIGURATION */}
           <Route exact path="/sales/config/customers">
             <Customer />
