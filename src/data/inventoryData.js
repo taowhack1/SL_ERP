@@ -458,15 +458,27 @@ export const receiveData = [
     r_total: 255550,
     r_vat: 700,
     r_include_vat: 256700,
+    r_remark: "remark 1",
     dataLine: [
       {
         id: 0,
         item: "item 1",
         item_qty: 30,
         item_unit: "pc",
-        item_qty_done: 0,
+        item_qty_done: 30,
         item_unit_price: 50,
         item_subtotal: 1500,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: "20090001",
+            d_receive_date: "26/09/2020",
+            d_mfg: "01/09/2020",
+            d_exp: "01/09/2021",
+            d_qty: 30,
+            d_unit: "pc",
+          },
+        ],
       },
       {
         id: 1,
@@ -476,6 +488,17 @@ export const receiveData = [
         item_qty_done: 0,
         item_unit_price: 200,
         item_subtotal: 6000,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: null,
+            d_receive_date: null,
+            d_mfg: null,
+            d_exp: null,
+            d_qty: 0,
+            d_unit: null,
+          },
+        ],
       },
       {
         id: 2,
@@ -485,6 +508,17 @@ export const receiveData = [
         item_qty_done: 0,
         item_unit_price: 10,
         item_subtotal: 750,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: null,
+            d_receive_date: null,
+            d_mfg: null,
+            d_exp: null,
+            d_qty: 0,
+            d_unit: null,
+          },
+        ],
       },
       {
         id: 3,
@@ -494,6 +528,17 @@ export const receiveData = [
         item_qty_done: 0,
         item_unit_price: 50,
         item_subtotal: 2500,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: null,
+            d_receive_date: null,
+            d_mfg: null,
+            d_exp: null,
+            d_qty: 0,
+            d_unit: null,
+          },
+        ],
       },
     ],
   },
@@ -509,6 +554,7 @@ export const receiveData = [
     r_total: 155550,
     r_vat: 700,
     r_include_vat: 156700,
+    r_remark: "remark 2",
     dataLine: [
       {
         id: 0,
@@ -518,6 +564,26 @@ export const receiveData = [
         item_qty_done: 65,
         item_unit_price: 50,
         item_subtotal: 6000,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: "20090002",
+            d_receive_date: "26/09/2020",
+            d_mfg: "01/09/2020",
+            d_exp: "01/09/2021",
+            d_qty: 30,
+            d_unit: "pc",
+          },
+          {
+            id: 1,
+            d_batch_no: "20090003",
+            d_receive_date: "27/09/2020",
+            d_mfg: "01/09/2020",
+            d_exp: "01/09/2021",
+            d_qty: 35,
+            d_unit: "pc",
+          },
+        ],
       },
       {
         id: 1,
@@ -527,6 +593,35 @@ export const receiveData = [
         item_qty_done: 30,
         item_unit_price: 200,
         item_subtotal: 14000,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: "20090002",
+            d_receive_date: "26/09/2020",
+            d_mfg: "01/09/2020",
+            d_exp: "01/09/2021",
+            d_qty: 10,
+            d_unit: "pc",
+          },
+          {
+            id: 1,
+            d_batch_no: "20090003",
+            d_receive_date: "28/09/2020",
+            d_mfg: "01/09/2020",
+            d_exp: "01/09/2021",
+            d_qty: 10,
+            d_unit: "pc",
+          },
+          {
+            id: 2,
+            d_batch_no: "20090004",
+            d_receive_date: "29/09/2020",
+            d_mfg: "01/09/2020",
+            d_exp: "01/09/2021",
+            d_qty: 10,
+            d_unit: "pc",
+          },
+        ],
       },
     ],
   },
@@ -542,6 +637,7 @@ export const receiveData = [
     r_total: 135630,
     r_vat: 700,
     r_include_vat: 136330,
+    r_remark: "remark 3",
     dataLine: [
       {
         id: 0,
@@ -551,6 +647,17 @@ export const receiveData = [
         item_qty_done: 0,
         item_unit_price: 50,
         item_subtotal: 6000,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: null,
+            d_receive_date: null,
+            d_mfg: null,
+            d_exp: null,
+            d_qty: 0,
+            d_unit: null,
+          },
+        ],
       },
       {
         id: 1,
@@ -560,6 +667,17 @@ export const receiveData = [
         item_qty_done: 0,
         item_unit_price: 200,
         item_subtotal: 14000,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: null,
+            d_receive_date: null,
+            d_mfg: null,
+            d_exp: null,
+            d_qty: 0,
+            d_unit: null,
+          },
+        ],
       },
       {
         id: 2,
@@ -569,6 +687,17 @@ export const receiveData = [
         item_qty_done: 0,
         item_unit_price: 10,
         item_subtotal: 750,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: null,
+            d_receive_date: null,
+            d_mfg: null,
+            d_exp: null,
+            d_qty: 0,
+            d_unit: null,
+          },
+        ],
       },
       {
         id: 3,
@@ -578,6 +707,17 @@ export const receiveData = [
         item_qty_done: 0,
         item_unit_price: 50,
         item_subtotal: 2500,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: null,
+            d_receive_date: null,
+            d_mfg: null,
+            d_exp: null,
+            d_qty: 0,
+            d_unit: null,
+          },
+        ],
       },
     ],
   },
@@ -593,6 +733,7 @@ export const receiveData = [
     r_total: 335630,
     r_vat: 1200,
     r_include_vat: 336330,
+    r_remark: "remark 4",
     dataLine: [
       {
         id: 0,
@@ -602,6 +743,35 @@ export const receiveData = [
         item_qty_done: 2520,
         item_unit_price: 134,
         item_subtotal: 335630,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: "20090002",
+            d_receive_date: "26/09/2020",
+            d_mfg: "01/09/2020",
+            d_exp: "01/09/2021",
+            d_qty: 1000,
+            d_unit: "liter",
+          },
+          {
+            id: 1,
+            d_batch_no: "20090003",
+            d_receive_date: "28/09/2020",
+            d_mfg: "01/09/2020",
+            d_exp: "01/09/2021",
+            d_qty: 1000,
+            d_unit: "liter",
+          },
+          {
+            id: 2,
+            d_batch_no: "20090004",
+            d_receive_date: "29/09/2020",
+            d_mfg: "01/09/2020",
+            d_exp: "01/09/2021",
+            d_qty: 520,
+            d_unit: "liter",
+          },
+        ],
       },
     ],
   },
@@ -616,6 +786,7 @@ export const receiveData = [
     r_total: 155630,
     r_vat: 1200,
     r_include_vat: 156330,
+    r_remark: "remark 5",
     dataLine: [
       {
         id: 0,
@@ -625,6 +796,26 @@ export const receiveData = [
         item_qty_done: 7520,
         item_unit_price: 45,
         item_subtotal: 335630,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: "20090002",
+            d_receive_date: "26/09/2020",
+            d_mfg: "01/09/2020",
+            d_exp: "01/09/2021",
+            d_qty: 10,
+            d_unit: "pc",
+          },
+          {
+            id: 1,
+            d_batch_no: "20090003",
+            d_receive_date: "28/09/2020",
+            d_mfg: "01/09/2020",
+            d_exp: "01/09/2021",
+            d_qty: 35,
+            d_unit: "pc",
+          },
+        ],
       },
     ],
   },
@@ -661,7 +852,7 @@ export const receiveColumns = [
   {
     id: 4,
     title: "Scheduled Date",
-    dataIndex: "po_due_date",
+    dataIndex: "r_schedule_date",
     width: "20%",
     align: "center",
   },

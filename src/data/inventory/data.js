@@ -8,10 +8,10 @@ export const receiveLineColumns = [
 ];
 
 export const qtyDoneColumns = [
-  { id: 0, name: "To Location", size: 7 },
-  { id: 1, name: "Lot", size: 3 },
-  { id: 2, name: "Batch No.", size: 3 },
-  { id: 3, name: "MFG", size: 4 },
-  { id: 4, name: "EXP", size: 4 },
-  { id: 5, name: "Quantity", size: 3 },
+  { id: 0, name: "Batch No.", size: 5 },
+  { id: 1, name: "Receive Date", size: 4 },
+  { id: 2, name: "MFG", size: 4 },
+  { id: 3, name: "EXP", size: 4 },
+  { id: 4, name: "Quantity", size: 3 },
+  { id: 5, name: "Unit", size: 3 },
 ];

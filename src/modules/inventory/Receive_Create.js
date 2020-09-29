@@ -78,6 +78,17 @@ const Receive_Create = (props) => {
               item_qty_done: 0,
               item_unit_price: 0,
               item_subtotal: 0,
+              item_qty_done_detail: [
+                {
+                  id: 0,
+                  d_batch_no: null,
+                  d_receive_date: null,
+                  d_mfg: null,
+                  d_exp: null,
+                  d_qty: 0,
+                  d_unit: null,
+                },
+              ],
             },
           ],
         }

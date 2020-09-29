@@ -59,7 +59,7 @@ const Receive = (props) => {
                     $(e.target).closest("tr").addClass("selected-row");
                     setSelectedRow(record);
                     props.history.push({
-                      pathname: "/inventory/receive/edit/" + record.id,
+                      pathname: "/inventory/receive/view/" + record.id,
                       state: record,
                     });
                   },

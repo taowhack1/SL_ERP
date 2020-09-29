@@ -7,6 +7,7 @@ import {
   Typography,
   Select,
   Divider,
+  Modal,
 } from "antd";
 import {
   DeleteTwoTone,
@@ -14,6 +15,8 @@ import {
   EllipsisOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
+import DetailLine from "../inventory/Receive_DetailLine";
+import { qtyDoneColumns } from "../../data/inventory/data";
 import { useSelector } from "react-redux";
 import numeral from "numeral";
 const { Text } = Typography;
@@ -25,9 +28,12 @@ const ItemLine = ({
   updateData,
   readOnly,
   columns,
+  detail,
 }) => {
+  const [visible, setVisible] = useState(false);
   const [lineItem, setLine] = useState(dataLine);
-
+  const [detailQty, setDetailQty] = useState(detail);
+  const [selectLine, setSelectLine] = useState(null);
   useEffect(() => {
     dataLine && updateData({ dataLine: [...lineItem] });
   }, [lineItem]);
@@ -43,6 +49,17 @@ const ItemLine = ({
         item_qty_done: 0,
         item_unit_price: 0,
         item_subtotal: 0,
+        item_qty_done_detail: [
+          {
+            id: 0,
+            d_batch_no: null,
+            d_receive_date: null,
+            d_mfg: null,
+            d_exp: null,
+            d_qty: 0,
+            d_unit: null,
+          },
+        ],
       },
     ]);
   };
@@ -56,6 +73,20 @@ const ItemLine = ({
       dataLine.map((line) => (line.id === rowId ? { ...line, ...data } : line))
     );
   };
+  const onChangeDetailValue = (rowId, data, d_id) => {
+    console.log(data);
+    setLine(
+      dataLine.map((line) =>
+        line.id === rowId
+          ? {
+              ...line,
+              item_qty_done_detail: { ...data },
+            }
+          : line
+      )
+    );
+  };
+
   const calSubtotal = (qty, price) => {
     let copyQty = qty && qty ? qty : 0;
     let copyPrice = price && price ? price : 0;
@@ -72,6 +103,27 @@ const ItemLine = ({
       });
     });
     return temp;
+  };
+
+  const modalSave = () => {
+    setVisible(false);
+    setSelectLine(null);
+  };
+
+  const modalCancel = () => {
+    setVisible(false);
+    setSelectLine(null);
+  };
+
+  const modalConfig = {
+    width: 1100,
+    title: "Receive Detail",
+    visible: visible,
+    onOk: modalSave,
+    onCancel: modalCancel,
+    destroyOnClose: true,
+    okText: "Save",
+    cancelText: "Discard",
   };
 
   const renderItemLine = (data) => {
@@ -145,6 +197,10 @@ const ItemLine = ({
             style={{ width: "100%" }}
             disabled={0}
             defaultValue={line.item_qty_done}
+            onClick={() => {
+              setVisible(true);
+              setSelectLine(line);
+            }}
             onChange={(data) => {
               onChangeValue(line.id, {
                 item_qty_done: data,
@@ -166,7 +222,6 @@ const ItemLine = ({
                 item_subtotal: calSubtotal(line.item_qty, data),
               });
             }}
-            // onClick={() => alert("Test")}
             style={{ width: "100%" }}
             size="small"
           />
@@ -228,7 +283,7 @@ const ItemLine = ({
               }}
               block
             >
-              <PlusOutlined /> Add field
+              <PlusOutlined /> Add a line
             </Button>
           </div>
         </>
@@ -279,6 +334,55 @@ const ItemLine = ({
           marginBottom: 20,
         }}
       ></Row>
+      <Modal {...modalConfig}>
+        <Row className="row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Item</Text>
+          </Col>
+          <Col span={21}>{selectLine && selectLine.item}</Col>
+        </Row>
+        <Row className="row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Quantity</Text>
+          </Col>
+          <Col span={21}>
+            {selectLine &&
+              numeral(selectLine.item_qty).format("0,000.0000") + "  "}
+            <Text strong>{selectLine && selectLine.item_unit}</Text>
+          </Col>
+        </Row>
+        <Row className="row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Quantity Done</Text>
+          </Col>
+          <Col span={21}>
+            {selectLine &&
+              numeral(selectLine.item_qty_done).format("0,000.0000") + "  /  "}
+            {selectLine &&
+              numeral(selectLine.item_qty).format("0,000.0000") + "  "}
+            <Text strong>{selectLine && selectLine.item_unit}</Text>
+          </Col>
+        </Row>
+        <Row className="row-tab-margin-lg">
+          <Col span={24}>
+            <DetailLine
+              items={items}
+              units={units}
+              // itemLots={itemLots}
+              columns={qtyDoneColumns}
+              updateDetail={onChangeDetailValue}
+              dataLine={
+                selectLine && selectLine.item_qty_done_detail
+                // selectLine && selectLine
+                //   ? selectLine.item_qty_done_detail
+                //   : [{}]
+              }
+              readOnly={false}
+              selectLine={selectLine && selectLine.id}
+            />
+          </Col>
+        </Row>
+      </Modal>
     </>
   );
 };

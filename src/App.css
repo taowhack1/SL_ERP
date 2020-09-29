@@ -194,6 +194,9 @@ button.primary:hover {
 .row-tab-margin {
   margin-top: 15px;
 }
+.row-tab-margin-lg {
+  margin-top: 30px;
+}
 .steps {
   display: flex;
   justify-content: flex-end;
