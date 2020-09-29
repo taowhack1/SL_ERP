@@ -14,7 +14,8 @@ import moment from "moment";
 
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
-import ItemLine from "./sales_ItemLine";
+import ItemLine from "./Sales_ItemLine";
+import TotalFooter from "../../components/TotalFooter";
 import { items } from "../../data/items";
 import { units } from "../../data/units";
 import { itemLineColumns } from "../../data/sale/data";
@@ -25,6 +26,7 @@ const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 const CustomerCreate = (props) => {
+  const [tab, setTab] = useState(1);
   const data =
     props.location && props.location.state ? props.location.state : 0;
   const [editForm, setEdit] = useState(true);
@@ -40,8 +42,10 @@ const CustomerCreate = (props) => {
           c_name: null,
           c_company: null,
           q_sale_person: "Sale User 1",
-          q_payment_term: null,
+          c_payment_term: null,
           q_total: 0,
+          q_vat: 0,
+          q_include_vat: 0,
           q_status: 0,
           q_remark: null,
           dataLine: [
@@ -57,7 +61,9 @@ const CustomerCreate = (props) => {
         }
   );
   console.log(formData);
-  const callback = (key) => {};
+  const callback = (key) => {
+    setTab(key);
+  };
 
   const upDateFormValue = (data) => {
     setData({ ...formData, ...data });
@@ -148,7 +154,7 @@ const CustomerCreate = (props) => {
             <Text strong>Payment Terms</Text>
           </Col>
           <Col span={8}>
-            <Text>{formData.q_payment_term}</Text>
+            <Text>{formData.c_payment_term}</Text>
           </Col>
         </Row>
         <Row className="col-2 space-top-md">
@@ -171,6 +177,14 @@ const CustomerCreate = (props) => {
             </Tabs>
           </Col>
         </Row>
+        {tab === 1 ? (
+          <TotalFooter
+            excludeVat={formData.q_total}
+            vat={formData.q_vat}
+            includeVat={formData.q_include_vat}
+            currency={"THB"}
+          />
+        ) : null}
       </div>
       <Comments data={[...dataComments]} />
     </MainLayout>

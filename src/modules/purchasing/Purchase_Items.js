@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { reqColumns, data } from "../../data/inventoryData";
+import { columnsItem } from "../../data/inventoryData";
 import $ from "jquery";
 import axios from "axios";
-const Requisition = (props) => {
-  console.log(props.location.state);
-
+const Items = (props) => {
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const [dataTable, setDataTable] = useState([]);
+  const [copyTable, setCopy] = useState([]);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   useEffect(() => {
-    axios.get("http://localhost:3001/requisition").then((res) => {
+    axios.get("http://localhost:3001/items").then((res) => {
       setDataTable(res.data);
     });
   }, []);
@@ -23,28 +22,24 @@ const Requisition = (props) => {
     projectId: 2,
     title: "PURCHASE",
     show: true,
-    breadcrumb: ["Home", "Purchase Requisition"],
+    breadcrumb: ["Home", "Items"],
     search: true,
-    create: "/purchase/pr/create",
+    create: "/purchase/items/create",
     buttonAction: ["Create", "Edit"],
-    edit: {
-      data: selectedRow,
-      path: selectedRow && "/purchase/pr/edit/" + selectedRow.id,
-    },
+    edit: {},
     disabledEditBtn: !rowClick,
-    discard: "/purchase/pr",
+    discard: "/purchase/items",
     onCancel: () => {
       console.log("Cancel");
     },
   };
-  console.log(selectedRow);
   return (
     <div>
       <MainLayout {...config}>
         <Row>
           <Col span={24}>
             <Table
-              columns={reqColumns}
+              columns={columnsItem}
               dataSource={dataTable}
               onChange={onChange}
               size="small"
@@ -59,7 +54,7 @@ const Requisition = (props) => {
                     $(e.target).closest("tr").addClass("selected-row");
                     setSelectedRow(record);
                     props.history.push({
-                      pathname: "/purchase/pr/view/" + record.id,
+                      pathname: "/purchase/items/view/" + record.id,
                       state: record,
                     });
                   },
@@ -73,4 +68,4 @@ const Requisition = (props) => {
   );
 };
 
-export default withRouter(Requisition);
+export default withRouter(Items);

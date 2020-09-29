@@ -169,10 +169,11 @@ button.primary:hover {
 }
 .text-number {
   /* padding-left: 10px; */
+  padding-right: 5px;
   text-align: right !important;
 }
 .text-string {
-  /* padding-right: 10px; */
+  padding-left: 5px;
   text-align: left !important;
 }
 .text-center {

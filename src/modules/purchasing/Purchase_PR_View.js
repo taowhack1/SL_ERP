@@ -97,12 +97,12 @@ const PRView = (props) => {
     show: true,
     breadcrumb: [
       "Home",
-      "PR",
+      "Purchase Requisition",
       "View",
       formData.req_code && formData.req_code ? formData.req_code : "Test",
     ],
     search: false,
-    buttonAction: ["Edit", "Confirm", "Approve", "Reject"],
+    buttonAction: ["Edit", "Confirm", "Approve", "Reject", "Discard"],
     action: [{ name: "print", link: "www.google.co.th" }],
     step: {
       current: formData.req_step,

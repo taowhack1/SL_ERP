@@ -46,7 +46,10 @@ export const menus = [
     id: 4,
     name: "Operations",
     projectId: 1,
-    subMenu: [{ id: 0, name: "Requisition", link: "/inventory/requisition" }],
+    subMenu: [
+      { id: 0, name: "Requisition", link: "/inventory/requisition" },
+      { id: 1, name: "Receipts", link: "/inventory/receipts" },
+    ],
   },
   {
     id: 5,
@@ -85,7 +88,7 @@ export const menus = [
     id: 9,
     name: "Items",
     projectId: 2,
-    subMenu: [{ id: 0, name: "Items", link: "/inventory/items" }],
+    subMenu: [{ id: 0, name: "Items", link: "/purchase/items" }],
   },
   {
     id: 10,
@@ -112,7 +115,7 @@ export const menus = [
     id: 13,
     name: "Product",
     projectId: 3,
-    subMenu: [{ id: 0, name: "Items", link: "/inventory/items" }],
+    subMenu: [{ id: 0, name: "Items", link: "/sales/items" }],
   },
   {
     id: 14,

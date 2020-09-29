@@ -36,20 +36,6 @@ const Items = () => {
       console.log("Cancel");
     },
   };
-  const setFunction = () => {};
-  const getCategoryName = (id) => {
-    switch (id) {
-      case 0:
-        return "Raw Material";
-      case 1:
-        return "Packaging";
-      case 2:
-        return "Bluk";
-      case 3:
-        return "Finish Good";
-      default:
-    }
-  };
   console.log(copyTable);
   return (
     <div>

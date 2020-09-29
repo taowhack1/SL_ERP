@@ -5,10 +5,12 @@ import MainLayout from "../../components/MainLayout";
 import { poColumns, poData } from "../../data/purchase/data";
 import $ from "jquery";
 import axios from "axios";
-const Requisition = (props) => {
+const PurchaseOrders = (props) => {
+  console.log(props.location.state);
+
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState([...poData]);
+  const [dataTable, setDataTable] = useState(poData);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -21,13 +23,13 @@ const Requisition = (props) => {
     projectId: 2,
     title: "PURCHASE",
     show: true,
-    breadcrumb: ["Home", "Purchase Order"],
+    breadcrumb: ["Home", "Purchase Orders"],
     search: true,
     create: "/purchase/po/create",
     buttonAction: ["Create", "Edit"],
     edit: {
-      data: selectedRow,
-      path: selectedRow && "/purchase/po/edit/" + selectedRow.id,
+      data: dataTable,
+      path: dataTable && "/purchase/po/edit/" + dataTable.id,
     },
     disabledEditBtn: !rowClick,
     discard: "/purchase/po",
@@ -35,7 +37,6 @@ const Requisition = (props) => {
       console.log("Cancel");
     },
   };
-  console.log(dataTable);
   return (
     <div>
       <MainLayout {...config}>
@@ -56,6 +57,10 @@ const Requisition = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     setSelectedRow(record);
+                    props.history.push({
+                      pathname: "/purchase/po/view/" + record.id,
+                      state: record,
+                    });
                   },
                 };
               }}
@@ -67,4 +72,4 @@ const Requisition = (props) => {
   );
 };
 
-export default withRouter(Requisition);
+export default withRouter(PurchaseOrders);

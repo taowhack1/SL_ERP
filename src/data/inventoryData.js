@@ -49,14 +49,6 @@ export const columns = [
   },
 ];
 export const columnsItem = [
-  // "id": 3,
-  // "itemCode": "108SRLA004",
-  // "itemBarcode": "108SRLA004",
-  // "itemName": "Item 3",
-  // "itemQtyOnhand": 50.0,
-  // "itemCateg": 2,
-  // "itemDesc": "Item 3 Desc",
-  // "locationId": 2
   {
     title: "Code",
     dataIndex: "itemCode",

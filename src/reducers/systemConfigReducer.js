@@ -1,6 +1,6 @@
 import { DECIMAL_UPDATE } from "../actions/types";
 const initialState = {
-  decimalFormat: { unitDigit: 3, priceDigit: 4 },
+  decimalFormat: { unitDigit: 3, priceDigit: 4, vat: 7 },
 };
 export default (state = initialState, action) => {
   switch (action.type) {

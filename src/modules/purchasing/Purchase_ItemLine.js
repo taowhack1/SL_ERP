@@ -26,20 +26,22 @@ const ItemLine = ({
   readOnly,
   columns,
 }) => {
-  const dataLineItem = [...dataLine];
-  const countItem = dataLine && dataLine.length ? dataLine.length : 0;
-  const [count, setCount] = useState(countItem);
-  const [lineItem, setLine] = useState(dataLineItem);
+  // const countItem = dataLine && dataLine.length ? dataLine.length : 0;
+  // const [count, setCount] = useState(dataLine.length);
+
+  // const [count, setCount] = useState(dataLine.length);
+  const [lineItem, setLine] = useState(dataLine);
   // const { vat } = useSelector((state) => state.systemConfig.decimalFormat);
+
   useEffect(() => {
     dataLine && updateData({ dataLine: [...lineItem] });
   }, [lineItem]);
 
   const addLine = () => {
     setLine([
-      ...dataLine,
+      ...sortData(dataLine),
       {
-        id: count,
+        id: dataLine.length++,
         item: null,
         item_qty: 0,
         item_unit: null,
@@ -47,12 +49,11 @@ const ItemLine = ({
         item_subtotal: 0,
       },
     ]);
-    setCount(count + 1);
   };
 
   const delLine = (id) => {
     console.log(id);
-    setLine(lineItem.filter((line) => line.id !== id));
+    setLine(dataLine.filter((line) => line.id !== id));
   };
   const onChangeValue = (rowId, data, cal) => {
     setLine(
@@ -65,6 +66,18 @@ const ItemLine = ({
     let total = copyQty * copyPrice;
     return total;
   };
+  const sortData = (arrObject) => {
+    let copyData = arrObject;
+    let temp = [];
+    copyData.map((obj, key) => {
+      return temp.push({
+        ...obj,
+        id: key,
+      });
+    });
+    return temp;
+  };
+
   const renderItemLine = (data) => {
     let renderLine = data.map((line, key) => (
       <Row
@@ -163,6 +176,7 @@ const ItemLine = ({
     ));
     return renderLine;
   };
+
   return (
     <>
       {/* Column Header */}

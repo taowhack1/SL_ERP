@@ -15,7 +15,8 @@ import moment from "moment";
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
 import { states } from "../../data/index";
-import ItemLine from "./sales_ItemLine";
+import ItemLine from "./Sales_ItemLine";
+import TotalFooter from "../../components/TotalFooter";
 import { items } from "../../data/items";
 import { units } from "../../data/units";
 import { itemLineColumns } from "../../data/sale/data";
@@ -27,8 +28,11 @@ const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 const SaleOrderView = (props) => {
+  const [tab, setTab] = useState(1);
   const data =
     props.location && props.location.state ? props.location.state : 0;
+
+  // prepare autocomplete value
   let quotationsRef = [];
   quotationData.map((quo) => {
     return quotationsRef.push({
@@ -52,9 +56,8 @@ const SaleOrderView = (props) => {
       value: "[" + cus.c_code + "] " + cus.c_name,
     });
   });
-  console.log(customers);
-  const [editForm, setEdit] = useState(true);
 
+  // main data
   const [formData, setData] = useState(
     data && data
       ? data
@@ -83,7 +86,10 @@ const SaleOrderView = (props) => {
           ],
         }
   );
-  const callback = (key) => {};
+  const isEditPage = formData && formData.so_code ? 1 : 0;
+  const callback = (key) => {
+    setTab(key);
+  };
 
   const upDateFormValue = (data) => {
     setData({ ...formData, ...data });
@@ -124,7 +130,6 @@ const SaleOrderView = (props) => {
     onEdit: (e) => {
       e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
       e.preventDefault();
@@ -134,7 +139,6 @@ const SaleOrderView = (props) => {
       console.log("Confirm");
     },
   };
-
   return (
     <MainLayout {...config} data={formData}>
       <div id="form">
@@ -142,7 +146,9 @@ const SaleOrderView = (props) => {
         <Row className="col-2">
           <Col span={11}>
             <h2>
-              <strong>Sales Order #{formData.so_code}</strong>
+              <strong>
+                Sales Order {isEditPage ? "#" + formData.so_code : null}
+              </strong>
             </h2>
           </Col>
           <Col span={9}></Col>
@@ -150,14 +156,12 @@ const SaleOrderView = (props) => {
             <Text strong>Order Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            {moment(formData.so_create_date, "DD/MM/YYYY").format("DD/MM/YYYY")}
+            {moment(
+              formData.so_create_date,
+              isEditPage ? "DD/MM/YYYY" : "YYYY-MM-DD"
+            ).format("DD/MM/YYYY")}
           </Col>
         </Row>
-        {/* <Row className="col-2">
-          <Col span={24} style={{ marginBottom: 8 }}>
-            
-          </Col>
-        </Row> */}
 
         {/* Address & Information */}
         <Row className="col-2 row-margin-vertical">
@@ -165,47 +169,14 @@ const SaleOrderView = (props) => {
             <Text strong>Quotations Ref.</Text>
           </Col>
           <Col span={8}>
-            <Select
-              placeholder={"Quotations. ex.Q2009-00xx"}
-              onSelect={(data) =>
-                upDateFormValue({
-                  q_code: data,
-                })
-              }
-              style={{ width: "100%" }}
-              defaultValue={formData.q_code}
-            >
-              <Option value="null"> </Option>
-              {quotationsRef.map((quo) => {
-                return (
-                  <Option key={quo.id} value={quo.name}>
-                    {quo.value}
-                  </Option>
-                );
-              })}
-            </Select>
+            <Text>{formData.q_code}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Deliver Date </Text>
           </Col>
           <Col span={8}>
-            <DatePicker
-              name={"so_delivery_date"}
-              format={"DD/MM/YYYY"}
-              style={{ width: "100%" }}
-              placeholder="Due date..."
-              defaultValue={
-                formData.so_delivery_date
-                  ? moment(formData.so_delivery_date, "DD/MM/YYYY")
-                  : ""
-              }
-              onChange={(data) => {
-                upDateFormValue({
-                  so_delivery_date: data.format("DD/MM/YYYY"),
-                });
-              }}
-            />
+            <Text>{formData.so_delivery_date}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
@@ -214,36 +185,14 @@ const SaleOrderView = (props) => {
           </Col>
 
           <Col span={8}>
-            <AutoComplete
-              options={customers}
-              placeholder="Customer.."
-              defaultValue={formData.c_name}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ c_name: data })}
-              onChange={(data) => upDateFormValue({ c_name: data })}
-              style={{ width: "100%" }}
-            />
+            <Text>{formData.c_name}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Payment Terms</Text>
           </Col>
           <Col span={8}>
-            <AutoComplete
-              options={payment_terms}
-              placeholder="Payment Terms..."
-              defaultValue={formData.so_payment_term}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ so_payment_term: data })}
-              onChange={(data) => upDateFormValue({ so_payment_term: data })}
-              style={{ width: "100%" }}
-            />
+            <Text>{formData.so_payment_term}</Text>
           </Col>
         </Row>
         <Row className="col-2 space-top-md">
@@ -256,24 +205,25 @@ const SaleOrderView = (props) => {
                   // itemLots={itemLots}
                   columns={itemLineColumns}
                   updateData={upDateFormValue}
-                  dataLine={formData.dataLine ? formData.dataLine : []}
-                  readOnly={false}
+                  dataLine={formData.dataLine ? formData.dataLine : [{}]}
+                  readOnly={true}
+                  formData={formData}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key="2">
-                <TextArea
-                  rows={2}
-                  placeholder={"Remark..."}
-                  defaultValue={formData.so_remark}
-                  onChange={(e) =>
-                    upDateFormValue({ so_remark: e.target.value })
-                  }
-                  style={{ width: "100%" }}
-                />
+                <Text>{formData.so_remark}</Text>
               </Tabs.TabPane>
             </Tabs>
           </Col>
         </Row>
+        {tab === 1 ? (
+          <TotalFooter
+            excludeVat={formData.so_total}
+            vat={formData.so_vat}
+            includeVat={formData.so_include_vat}
+            currency={"THB"}
+          />
+        ) : null}
       </div>
       <Comments data={[...dataComments]} />
     </MainLayout>

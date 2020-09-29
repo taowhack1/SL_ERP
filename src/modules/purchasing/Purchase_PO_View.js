@@ -67,7 +67,7 @@ const PurchaseOrderCreate = (props) => {
           v_id: null,
           v_name: null,
           v_company: null,
-          po_create_date: moment().format("DD/MM/YYYY"),
+          po_create_date: null,
           po_dueDate: null,
           po_total: 0,
           po_vat: 0,
@@ -91,7 +91,6 @@ const PurchaseOrderCreate = (props) => {
         }
   );
   useEffect(() => {}, [formData.pr_code]);
-  const isEditPage = formData && formData.po_code ? 1 : 0;
   const callback = (key) => {
     console.log(key);
     setTab(key);
@@ -108,21 +107,18 @@ const PurchaseOrderCreate = (props) => {
     breadcrumb: [
       "Home",
       "Purchase Order",
-      formData.po_code ? "Edit" : "Create",
+      "View",
       formData.po_code && formData.po_code,
     ],
     search: false,
-    buttonAction: ["Save", "SaveConfirm", "Discard"],
+    buttonAction: ["Edit", "Confirm", "Approve", "Reject", "Discard"],
     action: [{ name: "print", link: "www.google.co.th" }],
     step: {
       current: formData.po_status,
       step: ["Draft", "Confirm", "Approve", "Done"],
     },
     create: "",
-    save: {
-      data: formData,
-      path: formData && "/purchase/po/view/" + formData.id,
-    },
+    save: {},
     edit: {
       data: formData,
       path: formData && "/purchase/po/edit/" + formData.id,
@@ -165,10 +161,7 @@ const PurchaseOrderCreate = (props) => {
         <Row className="col-2">
           <Col span={11}>
             <h2>
-              <strong>
-                {isEditPage ? "Edit" : "Create"} Purchase Order{" "}
-                {isEditPage ? "#" + formData.po_code : null}
-              </strong>
+              <strong>Purchase Order #{formData.po_code}</strong>
             </h2>
           </Col>
           <Col span={9}></Col>
@@ -176,10 +169,7 @@ const PurchaseOrderCreate = (props) => {
             <Text strong>PO Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            {moment(
-              formData.po_create_date,
-              isEditPage ? "DD/MM/YYYY" : "DD/MM/YYYY"
-            ).format("DD/MM/YYYY")}
+            {moment(formData.po_create_date, "DD/MM/YYYY").format("DD/MM/YYYY")}
           </Col>
         </Row>
 
@@ -189,50 +179,16 @@ const PurchaseOrderCreate = (props) => {
             <Text strong>PR Ref.</Text>
           </Col>
           <Col span={8}>
-            <Select
-              placeholder={"PR. ex.PR2009-00xx"}
-              onSelect={(data) => {
-                getDataRef(data, formData, refData);
-              }}
-              style={{ width: "100%" }}
-              defaultValue={formData.pr_code}
-            >
-              <Option value="null"> </Option>
-              {prRef.map((pr) => {
-                return (
-                  <Option key={pr.id} value={pr.pr_code}>
-                    {pr.value}
-                  </Option>
-                );
-              })}
-            </Select>
+            <Text>{formData.pr_code}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Due Date </Text>
           </Col>
           <Col span={8}>
-            <DatePicker
-              name={"po_dueDate"}
-              format={"DD/MM/YYYY"}
-              style={{ width: "100%" }}
-              placeholder="Due date..."
-              value={
-                formData.po_dueDate
-                  ? moment(formData.po_dueDate, "DD/MM/YYYY")
-                  : ""
-              }
-              defaultValue={
-                formData.po_dueDate
-                  ? moment(formData.po_dueDate, "DD/MM/YYYY")
-                  : ""
-              }
-              onChange={(data) => {
-                upDateFormValue({
-                  po_dueDate: data.format("DD/MM/YYYY"),
-                });
-              }}
-            />
+            <Text>
+              {moment(formData.po_dueDate, "DD/MM/YYYY").format("DD/MM/YYYY")}
+            </Text>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
@@ -241,38 +197,14 @@ const PurchaseOrderCreate = (props) => {
           </Col>
 
           <Col span={8}>
-            <AutoComplete
-              options={vendors}
-              placeholder="Vendor.."
-              defaultValue={formData.v_name}
-              value={formData.v_name}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ v_name: data })}
-              onChange={(data) => upDateFormValue({ v_name: data })}
-              style={{ width: "100%" }}
-            />
+            <Text>{formData.v_name}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Payment Terms</Text>
           </Col>
           <Col span={8}>
-            <AutoComplete
-              options={payment_terms}
-              placeholder="Payment Terms..."
-              defaultValue={formData.po_payment_term}
-              value={formData.po_payment_term}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ po_payment_term: data })}
-              onChange={(data) => upDateFormValue({ po_payment_term: data })}
-              style={{ width: "100%" }}
-            />
+            <Text>{formData.po_payment_term}</Text>
           </Col>
         </Row>
         <Row className="col-2 space-top-md">
@@ -286,21 +218,12 @@ const PurchaseOrderCreate = (props) => {
                   columns={itemLineColumns}
                   updateData={upDateFormValue}
                   dataLine={formData.dataLine ? formData.dataLine : [{}]}
-                  readOnly={false}
+                  readOnly={true}
                   formData={formData}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key={"2"}>
-                <TextArea
-                  rows={2}
-                  placeholder={"Remark..."}
-                  defaultValue={formData.po_remark}
-                  value={formData.po_remark}
-                  onChange={(e) =>
-                    upDateFormValue({ po_remark: e.target.value })
-                  }
-                  style={{ width: "100%" }}
-                />
+                <Text>{formData.po_remark}</Text>
               </Tabs.TabPane>
             </Tabs>
           </Col>

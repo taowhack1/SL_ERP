@@ -6,6 +6,7 @@ export const decimalUpdate = (config) => {
   const configs = {
     unitDigit: config.unitDigit,
     priceDigit: config.priceDigit,
+    vat: config.vat,
   };
   try {
     dispatch({

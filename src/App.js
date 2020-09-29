@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Dashboard from "./dashboard/Dashboard";
 
 import Inventory from "./modules/inventory/Inventory";
+import Receipts from "./modules/inventory/Receipts";
 import RequisitionView from "./modules/inventory/RequisitionView";
 import RequisitionCreate from "./modules/inventory/RequisitionCreate";
 
@@ -13,6 +14,10 @@ import PurchPRCreate from "./modules/purchasing/Purchase_PR_Create";
 import PurchPRView from "./modules/purchasing/Purchase_PR_View";
 import PurchPO from "./modules/purchasing/Purchase_PO";
 import PurchPOCreate from "./modules/purchasing/Purchase_PO_Create";
+import PurchPOView from "./modules/purchasing/Purchase_PO_View";
+import PurchaseItems from "./modules/purchasing/Purchase_Items";
+import PurchaseItemCreate from "./modules/purchasing/Purchase_ItemCreate";
+import PurchaseItemView from "./modules/purchasing/Purchase_ItemView";
 import Vendor from "./modules/purchasing/Vendor";
 import VendorCreate from "./modules/purchasing/Vendor_Create";
 import VendorView from "./modules/purchasing/Vendor_View";
@@ -23,6 +28,9 @@ import QuotationsCreate from "./modules/sales/Sales_Quotations_Create";
 import QuotationsView from "./modules/sales/Sales_Quotations_View";
 import SaleOrder from "./modules/sales/Sales_Orders";
 import SaleOrderView from "./modules/sales/Sales_Orders_View";
+import SaleOrderCreate from "./modules/sales/Sales_Orders_Create";
+import SaleItems from "./modules/sales/Sales_Items";
+import SaleItemView from "./modules/sales/Sales_ItemView";
 import Customer from "./modules/sales/Customer";
 import CustomerView from "./modules/sales/Customer_View";
 import CustomerCreate from "./modules/sales/Customer_Create";
@@ -75,6 +83,9 @@ const App = (props) => {
             component={RequisitionView}
           />
 
+          <Route exact path="/inventory/receipts">
+            <Receipts />
+          </Route>
           {/* INVENTORY MASTER DATA */}
           <Route exact path="/inventory/items">
             <Items />
@@ -122,6 +133,9 @@ const App = (props) => {
           <Route exact path="/purchase/po/create">
             <PurchPOCreate />
           </Route>
+          <Route exact path="/purchase/po/edit/:id" component={PurchPOCreate} />
+          <Route exact path="/purchase/po/view/:id" component={PurchPOView} />
+
           <Route exact path="/purchase/vendor">
             <Vendor />
           </Route>
@@ -137,6 +151,22 @@ const App = (props) => {
             exact
             path="/purchase/vendor/edit/:id"
             component={VendorCreate}
+          />
+          <Route exact path="/purchase/items">
+            <PurchaseItems />
+          </Route>
+          <Route exact path="/purchase/items/create">
+            <PurchaseItemCreate />
+          </Route>
+          <Route
+            exact
+            path="/purchase/items/view/:id"
+            component={PurchaseItemView}
+          />
+          <Route
+            exact
+            path="/purchase/items/edit/:id"
+            component={PurchaseItemCreate}
           />
 
           {/* SALES */}
@@ -165,11 +195,25 @@ const App = (props) => {
           <Route exact path="/sales/orders">
             <SaleOrder />
           </Route>
+          <Route exact path="/sales/orders/create">
+            <SaleOrderCreate />
+          </Route>
           <Route
             exact
             path="/sales/orders/view/:id"
             component={SaleOrderView}
           />
+          <Route
+            exact
+            path="/sales/orders/edit/:id"
+            component={SaleOrderCreate}
+          />
+
+          {/* SALES MASTER DATA */}
+          <Route exact path="/sales/items">
+            <SaleItems />
+          </Route>
+          <Route exact path="/sales/items/view/:id" component={SaleItemView} />
 
           {/* SALES CONFIGURATION */}
           <Route exact path="/sales/config/customers">

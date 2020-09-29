@@ -6,7 +6,7 @@
       "itemBarcode": "108SRLA001",
       "itemName": "Item 1",
       "itemQtyOnhand": 100.0,
-      "itemCateg": 0,
+      "itemCateg": "Raw Material",
       "itemDesc": "Item 1 Desc",
       "locationId": 0
     },
@@ -16,7 +16,7 @@
       "itemBarcode": "108SRLA002",
       "itemName": "Item 2",
       "itemQtyOnhand": 100.0,
-      "itemCateg": 3,
+      "itemCateg": "Finish Good",
       "itemDesc": "Item 2 Desc",
       "locationId": 1
     },
@@ -26,7 +26,7 @@
       "itemBarcode": "108SRLA003",
       "itemName": "Item 2",
       "itemQtyOnhand": 238.0,
-      "itemCateg": 1,
+      "itemCateg": "Packaging",
       "itemDesc": "Item 2 Desc",
       "locationId": 0
     },
@@ -36,7 +36,7 @@
       "itemBarcode": "108SRLA004",
       "itemName": "Item 3",
       "itemQtyOnhand": 50.0,
-      "itemCateg": 2,
+      "itemCateg": "Bluk",
       "itemDesc": "Item 3 Desc",
       "locationId": 2
     }

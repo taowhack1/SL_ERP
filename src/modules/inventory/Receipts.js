@@ -5,7 +5,7 @@ import MainLayout from "../../components/MainLayout";
 import { reqColumns, data } from "../../data/inventoryData";
 import $ from "jquery";
 import axios from "axios";
-const Requisition = (props) => {
+const Receipts = (props) => {
   console.log(props.location.state);
 
   const [selectedRow, setSelectedRow] = useState();
@@ -20,19 +20,19 @@ const Requisition = (props) => {
     });
   }, []);
   const config = {
-    projectId: 2,
-    title: "PURCHASE",
+    projectId: 1,
+    title: "INVENTORY",
     show: true,
-    breadcrumb: ["Home", "Purchase Requisition"],
+    breadcrumb: ["Home", "Receipts"],
     search: true,
-    create: "/purchase/pr/create",
+    create: "/inventory/receipts/create",
     buttonAction: ["Create", "Edit"],
     edit: {
       data: selectedRow,
-      path: selectedRow && "/purchase/pr/edit/" + selectedRow.id,
+      path: selectedRow && "/inventory/receipts/edit/" + selectedRow.id,
     },
     disabledEditBtn: !rowClick,
-    discard: "/purchase/pr",
+    discard: "/inventory/receipts",
     onCancel: () => {
       console.log("Cancel");
     },
@@ -58,10 +58,6 @@ const Requisition = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     setSelectedRow(record);
-                    props.history.push({
-                      pathname: "/purchase/pr/view/" + record.id,
-                      state: record,
-                    });
                   },
                 };
               }}
@@ -73,4 +69,4 @@ const Requisition = (props) => {
   );
 };
 
-export default withRouter(Requisition);
+export default withRouter(Receipts);

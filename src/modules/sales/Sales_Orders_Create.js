@@ -15,69 +15,68 @@ import moment from "moment";
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
 import { states } from "../../data/index";
-import ItemLine from "./Purchase_ItemLine";
+import ItemLine from "./Sales_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
 import { items } from "../../data/items";
 import { units } from "../../data/units";
 import { itemLineColumns } from "../../data/sale/data";
 import { payment_terms } from "../../data/payment_terms";
-import { vendorData, prData } from "../../data/purchase/data";
+import { customerData, quotationData } from "../../data/sale/data";
 import numeral from "numeral";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Text } = Typography;
 
-const PurchaseOrderCreate = (props) => {
-  const [tab, setTab] = useState("1");
+const SaleOrderCreate = (props) => {
+  const [tab, setTab] = useState(1);
   const data =
     props.location && props.location.state ? props.location.state : 0;
 
-  let prRef = [];
-  prData.map((pr) => {
-    return prRef.push({
-      id: pr.id,
-      name: pr.pr_code,
+  let quotationsRef = [];
+  quotationData.map((quo) => {
+    return quotationsRef.push({
+      id: quo.id,
+      name: quo.q_code,
       value:
         "[" +
-        pr.pr_code +
-        "] | Department " +
-        pr.pr_costCenter +
-        "  " +
-        pr.pr_empId,
+        quo.q_code +
+        "] " +
+        quo.c_name +
+        " ( " +
+        numeral(quo.q_include_vat).format("0,0.00") +
+        " )",
     });
   });
 
-  let vendors = [];
-  vendorData.map((ven) => {
-    return vendors.push({
-      id: ven.id,
-      name: ven.v_name,
-      value: "[" + ven.v_code + "] " + ven.v_name,
+  let customers = [];
+  customerData.map((cus) => {
+    return customers.push({
+      id: cus.id,
+      name: cus.c_name,
+      value: "[" + cus.c_code + "] " + cus.c_name,
     });
   });
+  const [refresh, setRefresh] = useState(true);
 
-  const [refData] = useState(prData && prData);
+  const [refData] = useState(quotationData && quotationData);
   const [formData, setData] = useState(
     data && data
       ? data
       : {
           id: 0,
-          pr_code: null,
-          po_code: null,
-          v_id: null,
-          v_name: null,
-          v_company: null,
-          po_create_date: moment().format("DD/MM/YYYY"),
-          po_dueDate: null,
-          po_total: 0,
-          po_vat: 0,
-          po_include_vat: 0,
-          v_currency: "THB",
-          po_purch: "Purch User 1",
-          po_status: 0,
-          po_item_status: 0,
-          po_payment_term: null,
-          po_remark: null,
+          so_code: null,
+          q_code: null,
+          so_delivery_date: null,
+          so_create_date: moment().format("YYYY-MM-DD"),
+          c_name: null,
+          c_company: null,
+          so_sale_person: "Sale User 1",
+          so_payment_term: null,
+          so_total: 0,
+          so_vat: 0,
+          so_include_vat: 0,
+          so_status: 0,
+          so_remark: null,
           dataLine: [
             {
               id: 0,
@@ -90,47 +89,44 @@ const PurchaseOrderCreate = (props) => {
           ],
         }
   );
-  useEffect(() => {}, [formData.pr_code]);
-  const isEditPage = formData && formData.po_code ? 1 : 0;
-  const callback = (key) => {
-    console.log(key);
-    setTab(key);
-  };
+  useEffect(() => {}, [formData.q_code]);
+  const isEditPage = formData && formData.so_code ? 1 : 0;
+  const callback = (key) => {};
 
   const upDateFormValue = (data) => {
     setData({ ...formData, ...data });
   };
 
   const config = {
-    projectId: 2,
-    title: "PURCHASE",
+    projectId: 3,
+    title: "SALES",
     show: true,
     breadcrumb: [
       "Home",
-      "Purchase Order",
-      formData.po_code ? "Edit" : "Create",
-      formData.po_code && formData.po_code,
+      "Sales Order",
+      formData.so_code ? "Edit" : "Create",
+      formData.so_code && formData.so_code,
     ],
     search: false,
     buttonAction: ["Save", "SaveConfirm", "Discard"],
     action: [{ name: "print", link: "www.google.co.th" }],
     step: {
-      current: formData.po_status,
+      current: formData.so_status,
       step: ["Draft", "Confirm", "Approve", "Done"],
     },
     create: "",
     save: {
       data: formData,
-      path: formData && "/purchase/po/view/" + formData.id,
+      path: formData && "/sales/orders/view/" + formData.id,
     },
     edit: {
       data: formData,
-      path: formData && "/purchase/po/edit/" + formData.id,
+      path: formData && "/sales/orders/edit/" + formData.id,
     },
-    discard: "/purchase/po",
+    discard: "/sales/orders",
     onSave: (e) => {
       e.preventDefault();
-      setData({ po_code: "PO2009-0099" });
+      setData({ so_code: "SO2002-0099" });
       console.log(formData);
     },
     onEdit: (e) => {
@@ -149,15 +145,17 @@ const PurchaseOrderCreate = (props) => {
   const getDataRef = (refId, mainData, refData) => {
     let copyMain = { ...mainData };
     let copyRef = { ...refData[refId] };
-    let copyDataLine = [{ ...mainData.dataLine }];
-    copyMain.pr_code = copyRef.pr_code;
-    copyMain.v_id = copyRef.v_id;
-    copyMain.v_name = copyRef.v_name;
-    copyMain.v_company = copyRef.v_company;
+
+    copyMain.q_code = copyRef.q_code;
+    copyMain.c_name = copyRef.c_name;
+    copyMain.c_company = copyRef.c_company;
+    copyMain.so_sale_person = copyRef.q_sale_person;
+    copyMain.so_payment_term = copyRef.c_payment_term;
+    copyMain.so_include_vat = copyRef.q_include_vat;
     copyMain.dataLine = copyRef.dataLine;
+
     setData({ ...formData, ...copyMain });
   };
-  console.log("PO formData:", formData);
   return (
     <MainLayout {...config} data={formData}>
       <div id="form">
@@ -166,19 +164,19 @@ const PurchaseOrderCreate = (props) => {
           <Col span={11}>
             <h2>
               <strong>
-                {isEditPage ? "Edit" : "Create"} Purchase Order{" "}
-                {isEditPage ? "#" + formData.po_code : null}
+                {isEditPage ? "Edit" : "Create"} Sales Order{" "}
+                {isEditPage ? "#" + formData.so_code : null}
               </strong>
             </h2>
           </Col>
           <Col span={9}></Col>
           <Col span={2}>
-            <Text strong>PO Date :</Text>
+            <Text strong>Order Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
             {moment(
-              formData.po_create_date,
-              isEditPage ? "DD/MM/YYYY" : "DD/MM/YYYY"
+              formData.so_create_date,
+              isEditPage ? "DD/MM/YYYY" : "YYYY-MM-DD"
             ).format("DD/MM/YYYY")}
           </Col>
         </Row>
@@ -186,22 +184,22 @@ const PurchaseOrderCreate = (props) => {
         {/* Address & Information */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>PR Ref.</Text>
+            <Text strong>Quotations Ref.</Text>
           </Col>
           <Col span={8}>
             <Select
-              placeholder={"PR. ex.PR2009-00xx"}
+              placeholder={"Quotations. ex.Q2009-00xx"}
               onSelect={(data) => {
                 getDataRef(data, formData, refData);
               }}
               style={{ width: "100%" }}
-              defaultValue={formData.pr_code}
+              defaultValue={formData.q_code}
             >
               <Option value="null"> </Option>
-              {prRef.map((pr) => {
+              {quotationsRef.map((quo) => {
                 return (
-                  <Option key={pr.id} value={pr.pr_code}>
-                    {pr.value}
+                  <Option key={quo.id} value={quo.id}>
+                    {quo.value}
                   </Option>
                 );
               })}
@@ -209,27 +207,27 @@ const PurchaseOrderCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Due Date </Text>
+            <Text strong>Deliver Date </Text>
           </Col>
           <Col span={8}>
             <DatePicker
-              name={"po_dueDate"}
+              name={"so_delivery_date"}
               format={"DD/MM/YYYY"}
               style={{ width: "100%" }}
               placeholder="Due date..."
               value={
-                formData.po_dueDate
-                  ? moment(formData.po_dueDate, "DD/MM/YYYY")
+                formData.so_delivery_date
+                  ? moment(formData.so_delivery_date, "DD/MM/YYYY")
                   : ""
               }
               defaultValue={
-                formData.po_dueDate
-                  ? moment(formData.po_dueDate, "DD/MM/YYYY")
+                formData.so_delivery_date
+                  ? moment(formData.so_delivery_date, "DD/MM/YYYY")
                   : ""
               }
               onChange={(data) => {
                 upDateFormValue({
-                  po_dueDate: data.format("DD/MM/YYYY"),
+                  so_delivery_date: data.format("DD/MM/YYYY"),
                 });
               }}
             />
@@ -237,21 +235,21 @@ const PurchaseOrderCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Vendor </Text>
+            <Text strong>Customer </Text>
           </Col>
 
           <Col span={8}>
             <AutoComplete
-              options={vendors}
-              placeholder="Vendor.."
-              defaultValue={formData.v_name}
-              value={formData.v_name}
+              options={customers}
+              placeholder="Customer.."
+              defaultValue={formData.c_name}
+              value={formData.c_name}
               filterOption={(inputValue, option) =>
                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
                 -1
               }
-              onSelect={(data) => upDateFormValue({ v_name: data })}
-              onChange={(data) => upDateFormValue({ v_name: data })}
+              onSelect={(data) => upDateFormValue({ c_name: data })}
+              onChange={(data) => upDateFormValue({ c_name: data })}
               style={{ width: "100%" }}
             />
           </Col>
@@ -263,22 +261,22 @@ const PurchaseOrderCreate = (props) => {
             <AutoComplete
               options={payment_terms}
               placeholder="Payment Terms..."
-              defaultValue={formData.po_payment_term}
-              value={formData.po_payment_term}
+              defaultValue={formData.so_payment_term}
+              value={formData.so_payment_term}
               filterOption={(inputValue, option) =>
                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
                 -1
               }
-              onSelect={(data) => upDateFormValue({ po_payment_term: data })}
-              onChange={(data) => upDateFormValue({ po_payment_term: data })}
+              onSelect={(data) => upDateFormValue({ so_payment_term: data })}
+              onChange={(data) => upDateFormValue({ so_payment_term: data })}
               style={{ width: "100%" }}
             />
           </Col>
         </Row>
         <Row className="col-2 space-top-md">
           <Col span={24}>
-            <Tabs defaultActiveKey={"1"} onChange={callback}>
-              <Tabs.TabPane tab="Request Detail" key={"1"}>
+            <Tabs defaultActiveKey="1" onChange={callback}>
+              <Tabs.TabPane tab="Request Detail" key="1">
                 <ItemLine
                   items={items}
                   units={units}
@@ -290,14 +288,13 @@ const PurchaseOrderCreate = (props) => {
                   formData={formData}
                 />
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Notes" key={"2"}>
+              <Tabs.TabPane tab="Notes" key="2">
                 <TextArea
                   rows={2}
                   placeholder={"Remark..."}
-                  defaultValue={formData.po_remark}
-                  value={formData.po_remark}
+                  defaultValue={formData.so_remark}
                   onChange={(e) =>
-                    upDateFormValue({ po_remark: e.target.value })
+                    upDateFormValue({ so_remark: e.target.value })
                   }
                   style={{ width: "100%" }}
                 />
@@ -305,11 +302,11 @@ const PurchaseOrderCreate = (props) => {
             </Tabs>
           </Col>
         </Row>
-        {tab === "1" ? (
+        {tab === 1 ? (
           <TotalFooter
-            excludeVat={formData.po_total}
-            vat={formData.po_vat}
-            includeVat={formData.po_include_vat}
+            excludeVat={formData.so_total}
+            vat={formData.so_vat}
+            includeVat={formData.so_include_vat}
             currency={"THB"}
           />
         ) : null}
@@ -319,4 +316,4 @@ const PurchaseOrderCreate = (props) => {
   );
 };
 
-export default PurchaseOrderCreate;
+export default SaleOrderCreate;

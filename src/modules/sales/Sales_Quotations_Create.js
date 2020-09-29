@@ -15,7 +15,8 @@ import moment from "moment";
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
 import { states } from "../../data/index";
-import ItemLine from "./sales_ItemLine";
+import ItemLine from "./Sales_ItemLine";
+import TotalFooter from "../../components/TotalFooter";
 import { items } from "../../data/items";
 import { units } from "../../data/units";
 import { itemLineColumns } from "../../data/sale/data";
@@ -26,6 +27,7 @@ const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 const CustomerCreate = (props) => {
+  const [tab, setTab] = useState(1);
   const data =
     props.location && props.location.state ? props.location.state : 0;
   let customers = [];
@@ -50,8 +52,10 @@ const CustomerCreate = (props) => {
           c_name: null,
           c_company: null,
           q_sale_person: "Sale User 1",
-          q_payment_term: null,
+          c_payment_term: null,
           q_total: 0,
+          q_vat: 0,
+          q_include_vat: 0,
           q_status: 0,
           q_remark: null,
           dataLine: [
@@ -67,7 +71,9 @@ const CustomerCreate = (props) => {
         }
   );
   console.log(formData);
-  const callback = (key) => {};
+  const callback = (key) => {
+    setTab(key);
+  };
 
   const upDateFormValue = (data) => {
     setData({ ...formData, ...data });
@@ -125,7 +131,10 @@ const CustomerCreate = (props) => {
         <Row className="col-2">
           <Col span={11}>
             <h2>
-              <strong>{formData.q_code ? "Edit" : "Create"} Quotations</strong>
+              <strong>
+                {formData.q_code ? "Edit" : "Create"} Quotations #
+                {formData.q_code && formData.q_code}
+              </strong>
             </h2>
           </Col>
           <Col span={9}></Col>
@@ -196,13 +205,13 @@ const CustomerCreate = (props) => {
             <AutoComplete
               options={payment_terms}
               placeholder="Payment Terms..."
-              defaultValue={formData.q_payment_term}
+              defaultValue={formData.c_payment_term}
               filterOption={(inputValue, option) =>
                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
                 -1
               }
-              onSelect={(data) => upDateFormValue({ q_payment_term: data })}
-              onChange={(data) => upDateFormValue({ q_payment_term: data })}
+              onSelect={(data) => upDateFormValue({ c_payment_term: data })}
+              onChange={(data) => upDateFormValue({ c_payment_term: data })}
               style={{ width: "100%" }}
             />
           </Col>
@@ -235,6 +244,14 @@ const CustomerCreate = (props) => {
             </Tabs>
           </Col>
         </Row>
+        {tab === 1 ? (
+          <TotalFooter
+            excludeVat={formData.q_total}
+            vat={formData.q_vat}
+            includeVat={formData.q_include_vat}
+            currency={"THB"}
+          />
+        ) : null}
       </div>
       <Comments data={[...dataComments]} />
     </MainLayout>
