@@ -4,7 +4,9 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Dashboard from "./dashboard/Dashboard";
 
 import Inventory from "./modules/inventory/Inventory";
-import Receipts from "./modules/inventory/Receipts";
+import Receive from "./modules/inventory/Receive";
+import ReceiveCreate from "./modules/inventory/Receive_Create";
+import ReceiveView from "./modules/inventory/Receive_View";
 import RequisitionView from "./modules/inventory/RequisitionView";
 import RequisitionCreate from "./modules/inventory/RequisitionCreate";
 
@@ -83,9 +85,23 @@ const App = (props) => {
             component={RequisitionView}
           />
 
-          <Route exact path="/inventory/receipts">
-            <Receipts />
+          <Route exact path="/inventory/receive">
+            <Receive />
           </Route>
+          <Route exact path="/inventory/receive/create">
+            <ReceiveCreate />
+          </Route>
+          <Route
+            exact
+            path="/inventory/receive/edit/:id"
+            component={ReceiveCreate}
+          />
+          <Route
+            exact
+            path="/inventory/receive/view/:id"
+            component={ReceiveView}
+          />
+
           {/* INVENTORY MASTER DATA */}
           <Route exact path="/inventory/items">
             <Items />

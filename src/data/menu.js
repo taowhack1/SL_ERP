@@ -48,7 +48,7 @@ export const menus = [
     projectId: 1,
     subMenu: [
       { id: 0, name: "Requisition", link: "/inventory/requisition" },
-      { id: 1, name: "Receipts", link: "/inventory/receipts" },
+      { id: 1, name: "Receive", link: "/inventory/receive" },
     ],
   },
   {

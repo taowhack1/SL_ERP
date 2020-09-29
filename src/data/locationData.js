@@ -28,29 +28,37 @@ export const whColumns = [
 ];
 export const locations = [
   {
+    id: 0,
     locationId: 0,
     locationName: "Location 1",
+    value: "Location 1",
     locationDesc: "โลเคชั่น 1",
     whId: 0,
     whName: "WH SiriLaboratories",
   },
   {
+    id: 1,
     locationId: 1,
     locationName: "Location 2",
+    value: "Location 2",
     locationDesc: "โลเคชั่น 2",
     whId: 0,
     whName: "WH SiriLaboratories",
   },
   {
+    id: 2,
     locationId: 2,
     locationName: "Location 3",
+    value: "Location 3",
     locationDesc: "โลเคชั่น 3",
     whId: 0,
     whName: "WH SiriLaboratories",
   },
   {
+    id: 3,
     locationId: 3,
     locationName: "Location 4",
+    value: "Location 4",
     locationDesc: "โลเคชั่น 4",
     whId: 0,
     whName: "WH SiriLaboratories",

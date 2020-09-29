@@ -5,7 +5,7 @@ import MainLayout from "../../components/MainLayout";
 import { columnsItem, data } from "../../data/inventoryData";
 import $ from "jquery";
 import axios from "axios";
-const Items = () => {
+const Items = (props) => {
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const [dataTable, setDataTable] = useState([]);
@@ -57,6 +57,10 @@ const Items = () => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     setSelectedRow(record);
+                    props.history.push({
+                      pathname: "/inventory/items/view/" + record.id,
+                      state: record,
+                    });
                   },
                 };
               }}

@@ -58,6 +58,10 @@ const Requisition = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     setSelectedRow(record);
+                    props.history.push({
+                      pathname: "/inventory/requisition/view/" + record.id,
+                      state: record,
+                    });
                   },
                 };
               }}
