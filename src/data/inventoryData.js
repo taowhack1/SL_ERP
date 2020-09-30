@@ -826,14 +826,14 @@ export const receiveColumns = [
     title: "Reference",
     dataIndex: "r_code",
     width: "10%",
-    align: "center",
+    align: "left",
   },
   {
     id: 1,
     title: "PO Reference",
     dataIndex: "po_code",
     width: "10%",
-    align: "center",
+    align: "left",
   },
   {
     id: 2,

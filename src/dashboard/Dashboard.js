@@ -12,7 +12,6 @@ const Dashboard = (props) => {
     visible: false,
   });
   const OpenModal = () => {
-    console.log("11");
     setState({ visible: true });
   };
   const handleOk = () => {

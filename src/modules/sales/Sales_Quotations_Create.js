@@ -38,7 +38,6 @@ const CustomerCreate = (props) => {
       value: "[" + cus.c_code + "] " + cus.c_name,
     });
   });
-  console.log(customers);
   const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
@@ -47,7 +46,7 @@ const CustomerCreate = (props) => {
       : {
           id: 0,
           q_code: null,
-          q_create_date: moment().format("YYYY-MM-DD"),
+          q_create_date: moment().format("DD/MM/YYYY"),
           q_expire_date: null,
           c_name: null,
           c_company: null,
@@ -70,7 +69,6 @@ const CustomerCreate = (props) => {
           ],
         }
   );
-  console.log(formData);
   const callback = (key) => {
     setTab(key);
   };
@@ -79,7 +77,6 @@ const CustomerCreate = (props) => {
     setData({ ...formData, ...data });
   };
 
-  console.log(formData);
   const config = {
     projectId: 3,
     title: "SALES",
@@ -108,7 +105,6 @@ const CustomerCreate = (props) => {
     onSave: (e) => {
       e.preventDefault();
       setData({ q_code: "Q2002-0099", c_company: "Test Company" });
-      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();
@@ -142,7 +138,7 @@ const CustomerCreate = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            {moment(formData.q_create_date).format("DD/MM/YYYY")}
+            {moment(formData.q_create_date, "DD/MM/YYYY").format("DD/MM/YYYY")}
           </Col>
         </Row>
         {/* <Row className="col-2">

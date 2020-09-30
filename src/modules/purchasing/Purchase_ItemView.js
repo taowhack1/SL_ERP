@@ -63,7 +63,6 @@ const ItemView = (props) => {
           ],
         }
   );
-  console.log(formData);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
@@ -97,7 +96,6 @@ const ItemView = (props) => {
         return id;
     }
   };
-  console.log(formData);
   const config = {
     projectId: 2,
     title: "PURCHASE",
@@ -121,7 +119,6 @@ const ItemView = (props) => {
     discard: "/purchase/items",
     onSave: (e) => {
       e.preventDefault();
-      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();

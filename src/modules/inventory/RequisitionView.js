@@ -59,7 +59,7 @@ const RequisitionView = (props) => {
     setData({ ...formData, ...data });
   };
   const submitForm = (values) => {
-    console.log(formData);
+    console.log("submit");
   };
 
   const getItemType = (typeId) => {

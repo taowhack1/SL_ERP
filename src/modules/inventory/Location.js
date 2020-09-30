@@ -53,7 +53,6 @@ const Location = () => {
       setModalTitle(title);
       resetValue();
       setVisible(true);
-      console.log("modal open");
     },
     buttonAction: ["Create", "Edit"],
     disabledEditBtn: !rowClick,
@@ -67,17 +66,13 @@ const Location = () => {
     onEdit: (title) => {
       setModalTitle(title);
       setVisible(true);
-      console.log("modal open");
     },
   };
 
   const modalSave = () => {
-    console.log(modalTitle);
     if (modalTitle === "Create") {
       setCount(count + 1);
       setLocationData([...locationData, newLo]);
-      console.log(newLo);
-      console.log(locationData);
     } else {
       setLocationData(
         locationData.map((location) =>
@@ -86,19 +81,15 @@ const Location = () => {
             : location
         )
       );
-      console.log(editRow);
     }
     resetValue();
     setVisible(false);
   };
   const onChangeValue = (data) => {
-    console.log(modalTitle);
     if (modalTitle === "Create") {
       setNewLo({ ...newLo, ...data });
-      console.log("create :", newLo);
     } else {
       setEditRow({ ...editRow, ...data });
-      console.log("edit :", editRow);
     }
   };
   const modalCancel = () => {
@@ -138,12 +129,6 @@ const Location = () => {
 
                     setRowClick(true);
                     setEditRow(record);
-                  },
-                  onDoubleClick: () => {
-                    console.log(record, rowIndex);
-                  },
-                  onContextMenu: () => {
-                    console.log(record, rowIndex);
                   },
                 };
               }}

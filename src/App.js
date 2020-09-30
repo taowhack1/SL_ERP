@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Dashboard from "./dashboard/Dashboard";
+import Settings from "./modules/settings/Settings";
 
 import Inventory from "./modules/inventory/Inventory";
 import Receive from "./modules/inventory/Receive";
@@ -58,6 +59,10 @@ const App = (props) => {
         <Switch>
           <Route exact path="/">
             <Dashboard />
+          </Route>
+
+          <Route exact path="/settings">
+            <Settings />
           </Route>
 
           {/* INVENTORY */}

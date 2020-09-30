@@ -6,8 +6,6 @@ import { poColumns, poData } from "../../data/purchase/data";
 import $ from "jquery";
 import axios from "axios";
 const PurchaseOrders = (props) => {
-  console.log(props.location.state);
-
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const [dataTable, setDataTable] = useState(poData);

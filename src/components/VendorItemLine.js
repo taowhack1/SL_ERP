@@ -127,7 +127,6 @@ const VendorLine = ({
                 />
               </Col>
               <Col span={6} className="text-string">
-                {console.log(line.itemValidate)}
                 <RangePicker
                   format={"DD/MM/YYYY"}
                   defaultValue={getValidate(line.itemValidate, "moment")}

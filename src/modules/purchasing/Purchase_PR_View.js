@@ -36,48 +36,47 @@ const { Title, Paragraph, Text } = Typography;
 const PRView = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
+  console.log(data);
   const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
-    // data && data
-    //   ? data
-    //   :
-    {
-      id: 0,
-      pr_code: "REQ2009-00001",
-      pr_date: moment().format("DD/MM/YYYY"),
-      pr_empId: "2563002 ตุลาการ สังอ่อนดี",
-      pr_dueDate: "30/09/2020",
-      pr_desc: "ขอซื้อเพื่อใช้ในการผลิต",
-      pr_costCenter: "250000 MIS",
-      vendorId: null,
-      vendorName: "บริษัท ศิริ แลบอราทอรีส์ จำกัด",
-      dataLine: [
-        {
+    data && data
+      ? data
+      : {
           id: 0,
-          item_name: `line_0`,
-          item_qty: 20.0001,
-          item_unit: "unit",
-          item_dueDate: "2020/09/30",
-        },
-        {
-          id: 1,
-          item_name: `line_1`,
-          item_qty: 120.0001,
-          item_unit: "pc",
-          item_dueDate: "2020/09/30",
-        },
-        {
-          id: 2,
-          item_name: `line_2`,
-          item_qty: 55.0001,
-          item_unit: "liter",
-          item_dueDate: "2020/09/30",
-        },
-      ],
-    }
+          pr_code: "REQ2009-00001",
+          pr_date: moment().format("DD/MM/YYYY"),
+          pr_empId: "2563002 ตุลาการ สังอ่อนดี",
+          pr_dueDate: "30/09/2020",
+          pr_desc: "ขอซื้อเพื่อใช้ในการผลิต",
+          pr_costCenter: "250000 MIS",
+          vendorId: null,
+          vendorName: "บริษัท ศิริ แลบอราทอรีส์ จำกัด",
+          dataLine: [
+            {
+              id: 0,
+              item_name: `line_0`,
+              item_qty: 20.0001,
+              item_unit: "unit",
+              item_dueDate: "2020/09/30",
+            },
+            {
+              id: 1,
+              item_name: `line_1`,
+              item_qty: 120.0001,
+              item_unit: "pc",
+              item_dueDate: "2020/09/30",
+            },
+            {
+              id: 2,
+              item_name: `line_2`,
+              item_qty: 55.0001,
+              item_unit: "liter",
+              item_dueDate: "2020/09/30",
+            },
+          ],
+        }
   );
-  console.log(formData);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
@@ -87,9 +86,7 @@ const PRView = (props) => {
   const updateItemLine = (data) => {
     setData({ ...formData, ...data });
   };
-  const submitForm = (values) => {
-    console.log(formData);
-  };
+  const submitForm = (values) => {};
 
   const config = {
     projectId: 2,
@@ -188,7 +185,7 @@ const PRView = (props) => {
             <Text strong>Vendor :</Text>
           </Col>
           <Col span={8}>
-            <Text>{formData.vendorName}</Text>
+            <Text>{formData.v_name}</Text>
           </Col>
         </Row>
         <Row className="col-2 space-top-md">

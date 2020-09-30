@@ -127,7 +127,6 @@ const PurchaseOrderCreate = (props) => {
     onSave: (e) => {
       e.preventDefault();
       setData({ po_code: "PO2009-0099" });
-      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();
@@ -153,7 +152,6 @@ const PurchaseOrderCreate = (props) => {
     copyMain.dataLine = copyRef.dataLine;
     setData({ ...formData, ...copyMain });
   };
-  console.log("PO formData:", formData);
   return (
     <MainLayout {...config} data={formData}>
       <div id="form">

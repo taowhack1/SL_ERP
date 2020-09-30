@@ -6,8 +6,6 @@ import { saleOrderColumns, saleOrderData } from "../../data/sale/data";
 import $ from "jquery";
 import axios from "axios";
 const SaleOrder = (props) => {
-  console.log(props.location.state);
-
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const [dataTable, setDataTable] = useState(saleOrderData && saleOrderData);
@@ -37,7 +35,6 @@ const SaleOrder = (props) => {
       console.log("Cancel");
     },
   };
-  console.log(selectedRow);
 
   return (
     <div>

@@ -54,7 +54,7 @@ const StockOnHand = () => {
         render: () => (
           <span>
             <Badge status="success" />
-            OK
+            PASS
           </span>
         ),
       },

@@ -31,7 +31,6 @@ const Customer = (props) => {
       console.log("Cancel");
     },
   };
-  console.log(selectedRow);
   return (
     <div>
       <MainLayout {...config}>

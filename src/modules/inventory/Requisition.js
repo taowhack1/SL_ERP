@@ -6,8 +6,6 @@ import { reqColumns, data } from "../../data/inventoryData";
 import $ from "jquery";
 import axios from "axios";
 const Requisition = (props) => {
-  console.log(props.location.state);
-
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const [dataTable, setDataTable] = useState([]);
@@ -37,7 +35,6 @@ const Requisition = (props) => {
       console.log("Cancel");
     },
   };
-  console.log(selectedRow);
   return (
     <div>
       <MainLayout {...config}>

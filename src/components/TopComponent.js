@@ -5,7 +5,6 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import Search from "./Search";
 
 function TopContent(props) {
-  // console.log(props);
   const onCreate = () => {
     props.create === "modal"
       ? props.openModal("Create")
@@ -65,30 +64,32 @@ function TopContent(props) {
                   Create
                 </Button>
               )}
-              {props.buttonAction.includes("Save") && (
-                // <Button className="primary" onClick={props.onSave}>
-                //   Save
-                // </Button>
-                <Button
-                  className="primary"
-                  // onClick={onEdit}
-                  disabled={props.saveDisabled}
-                >
-                  <Link
-                    to={{
-                      pathname: props.save.path,
-                      state: {
-                        // data: props.save.data,
-                        ...props.save.data,
-                      },
-                    }}
-                  >
+              {props.buttonAction.includes("Save") &&
+                (props.save === "function" ? (
+                  <Button className="primary" onClick={props.onSave}>
                     Save
-                  </Link>
-                </Button>
-              )}
+                  </Button>
+                ) : (
+                  <Button
+                    className="primary"
+                    // onClick={onEdit}
+                    disabled={props.saveDisabled}
+                  >
+                    <Link
+                      to={{
+                        pathname: props.save.path,
+                        state: {
+                          // data: props.save.data,
+                          ...props.save.data,
+                        },
+                      }}
+                    >
+                      Save
+                    </Link>
+                  </Button>
+                ))}
               {props.buttonAction.includes("Edit") &&
-                (props.edit == "modal" ? (
+                (props.edit === "modal" ? (
                   <Button
                     className="primary"
                     onClick={onEdit}
@@ -106,7 +107,6 @@ function TopContent(props) {
                       to={{
                         pathname: props.edit.path,
                         state: {
-                          // data: props.edit.data,
                           ...props.edit.data,
                         },
                       }}

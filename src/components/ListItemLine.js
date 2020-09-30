@@ -28,7 +28,6 @@ const ListItemLine = ({ items, units }) => {
   return (
     <Form.List name="itemLine">
       {(fields, { add, remove }) => {
-        console.log(fields);
         return (
           <div>
             {fields.map((field) => (

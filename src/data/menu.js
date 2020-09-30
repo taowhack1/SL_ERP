@@ -15,6 +15,10 @@ export const projects = [
     id: 3,
     name: "SALES",
   },
+  {
+    id: 4,
+    name: "SETTINGS",
+  },
 ];
 
 export const menus = [
@@ -94,6 +98,7 @@ export const menus = [
     id: 10,
     name: "Reporting",
     projectId: 2,
+    link: "/purchase/reporting",
     subMenu: [],
   },
   {
@@ -121,7 +126,8 @@ export const menus = [
     id: 14,
     name: "Reporting",
     projectId: 3,
-    subMenu: [{ id: 0, name: "Sales", link: "/sales/reporting/sales" }],
+    link: "/sales/reporting",
+    subMenu: [],
   },
   {
     id: 15,
@@ -131,5 +137,12 @@ export const menus = [
       { id: 0, name: "Customers", link: "/sales/config/customers" },
       { id: 1, name: "Sales Teams", link: "/sales/config/sales_teams" },
     ],
+  },
+  {
+    id: 16,
+    name: "General Settings",
+    projectId: 4,
+    link: "/settings",
+    subMenu: [],
   },
 ];

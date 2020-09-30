@@ -64,7 +64,6 @@ const ItemView = (props) => {
       ],
     }
   );
-  console.log(formData);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
@@ -98,7 +97,6 @@ const ItemView = (props) => {
         return id;
     }
   };
-  console.log(formData);
   const config = {
     projectId: 1,
     title: "INVENTORY",

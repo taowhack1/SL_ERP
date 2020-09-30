@@ -29,7 +29,6 @@ const VendorLine = ({
   readOnly,
   columns,
 }) => {
-  // console.log(dataLine);
   const countItem = dataLine && dataLine.length ? dataLine.length : 0;
   const [count, setCount] = useState(countItem);
   const [lineItem, setLine] = useState(
@@ -56,7 +55,7 @@ const VendorLine = ({
   };
 
   const delLine = (id) => {
-    console.log(id);
+    console.log("delete id : " + id);
     setLine(lineItem.filter((line) => line.id !== id));
   };
   const onChangeValue = (rowId, data) => {
@@ -64,7 +63,6 @@ const VendorLine = ({
       lineItem.map((line) => (line.id === rowId ? { ...line, ...data } : line))
     );
   };
-  console.log(readOnly);
   return (
     <>
       {/* Column Header */}

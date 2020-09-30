@@ -62,6 +62,9 @@ function MainHead(props) {
         <p>
           <Link to="/sales">SALES</Link>
         </p>
+        <p>
+          <Link to="/settings">SETTINGS</Link>
+        </p>
       </Drawer>
     </>
   );

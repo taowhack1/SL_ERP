@@ -53,7 +53,6 @@ const Warehouse = () => {
       setModalTitle(title);
       resetValue();
       setVisible(true);
-      console.log("modal open");
     },
     buttonAction: ["Create", "Edit"],
     disabledEditBtn: !rowClick,
@@ -67,17 +66,13 @@ const Warehouse = () => {
     onEdit: (title) => {
       setModalTitle(title);
       setVisible(true);
-      console.log("modal open");
     },
   };
 
   const modalSave = () => {
-    console.log(modalTitle);
     if (modalTitle === "Create") {
       setCount(count + 1);
       setwarehouseData([...warehouseData, newWh]);
-      console.log(newWh);
-      console.log(warehouseData);
     } else {
       setwarehouseData(
         warehouseData.map((warehouse) =>
@@ -86,19 +81,15 @@ const Warehouse = () => {
             : warehouse
         )
       );
-      console.log(editRow);
     }
     resetValue();
     setVisible(false);
   };
   const onChangeValue = (data) => {
-    console.log(modalTitle);
     if (modalTitle === "Create") {
       setnewWh({ ...newWh, ...data });
-      console.log("create :", newWh);
     } else {
       setEditRow({ ...editRow, ...data });
-      console.log("edit :", editRow);
     }
   };
   const modalCancel = () => {
@@ -138,12 +129,6 @@ const Warehouse = () => {
 
                     setRowClick(true);
                     setEditRow(record);
-                  },
-                  onDoubleClick: () => {
-                    console.log(record, rowIndex);
-                  },
-                  onContextMenu: () => {
-                    console.log(record, rowIndex);
                   },
                 };
               }}
@@ -189,7 +174,6 @@ const Warehouse = () => {
                   companyId: data,
                   companyName: data,
                 });
-                console.log(data);
               }}
             >
               {companys.map((company, key) => {

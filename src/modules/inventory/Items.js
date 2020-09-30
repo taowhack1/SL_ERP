@@ -36,7 +36,6 @@ const Items = (props) => {
       console.log("Cancel");
     },
   };
-  console.log(copyTable);
   return (
     <div>
       <MainLayout {...config}>

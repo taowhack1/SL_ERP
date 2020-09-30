@@ -68,7 +68,6 @@ const ItemCreate = (props) => {
   const upDateFormValue = (data) => {
     setData({ ...formData, ...data });
   };
-  console.log(formData);
   const config = {
     projectId: 1,
     title: "INVENTORY",
@@ -96,7 +95,6 @@ const ItemCreate = (props) => {
     discard: "/inventory/items",
     onSave: (e) => {
       e.preventDefault();
-      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();

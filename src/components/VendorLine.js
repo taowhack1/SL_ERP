@@ -27,7 +27,6 @@ const VendorLine = ({
   vendors,
   companys,
 }) => {
-  // console.log(dataLine);
   const countItem = dataLine.length;
   const [count, setCount] = useState(countItem);
   const [lineItem, setLine] = useState([...dataLine]);
@@ -60,7 +59,6 @@ const VendorLine = ({
       lineItem.map((line) => (line.id === rowId ? { ...line, ...data } : line))
     );
   };
-  console.log(readOnly);
   return (
     <>
       {/* Column Header */}

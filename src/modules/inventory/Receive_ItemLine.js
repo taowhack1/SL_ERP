@@ -74,7 +74,6 @@ const ItemLine = ({
     );
   };
   const onChangeDetailValue = (rowId, data, d_id) => {
-    console.log(data);
     setLine(
       dataLine.map((line) =>
         line.id === rowId

@@ -23,7 +23,6 @@ class Inventory extends Component {
   };
 
   render() {
-    console.log(localStorage.getItem("projectId"));
     return (
       <div>
         <MainLayout {...this.config}>

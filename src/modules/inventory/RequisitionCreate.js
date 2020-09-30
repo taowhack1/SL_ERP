@@ -60,9 +60,7 @@ const RequisitionCreate = (props) => {
   const updateItemLine = (data) => {
     setData({ ...formData, ...data });
   };
-  const submitForm = (values) => {
-    console.log(formData);
-  };
+  const submitForm = (values) => {};
 
   const getItemType = (typeId) => {
     switch (typeId) {

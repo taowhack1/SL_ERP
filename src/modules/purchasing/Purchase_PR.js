@@ -2,23 +2,22 @@ import React, { useState, useEffect } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { reqColumns, data } from "../../data/inventoryData";
+import { reqColumns } from "../../data/inventoryData";
+import { prData, prColumns } from "../../data/purchase/data";
 import $ from "jquery";
 import axios from "axios";
 const Requisition = (props) => {
-  console.log(props.location.state);
-
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState([]);
+  const [dataTable, setDataTable] = useState(prData);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  useEffect(() => {
-    axios.get("http://localhost:3001/requisition").then((res) => {
-      setDataTable(res.data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get("http://localhost:3001/requisition").then((res) => {
+  //     setDataTable(res.data);
+  //   });
+  // }, []);
   const config = {
     projectId: 2,
     title: "PURCHASE",
@@ -37,14 +36,13 @@ const Requisition = (props) => {
       console.log("Cancel");
     },
   };
-  console.log(selectedRow);
   return (
     <div>
       <MainLayout {...config}>
         <Row>
           <Col span={24}>
             <Table
-              columns={reqColumns}
+              columns={prColumns}
               dataSource={dataTable}
               onChange={onChange}
               size="small"
@@ -58,6 +56,7 @@ const Requisition = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     setSelectedRow(record);
+                    console.log(record);
                     props.history.push({
                       pathname: "/purchase/pr/view/" + record.id,
                       state: record,

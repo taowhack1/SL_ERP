@@ -49,12 +49,11 @@ const PurchaseRequisitionCreate = (props) => {
           pr_dueDate: "",
           pr_desc: null,
           pr_costCenter: null,
-          vendorId: 0,
-          vendorName: "",
+          v_id: 0,
+          v_name: "",
           dataLine: [{}],
         }
   );
-  console.log(formData);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
@@ -64,9 +63,7 @@ const PurchaseRequisitionCreate = (props) => {
   const updateItemLine = (data) => {
     setData({ ...formData, ...data });
   };
-  const submitForm = (values) => {
-    console.log(formData);
-  };
+  const submitForm = (values) => {};
 
   const getItemType = (typeId) => {
     switch (typeId) {
@@ -210,16 +207,16 @@ const PurchaseRequisitionCreate = (props) => {
           </Col>
           <Col span={8}>
             <AutoComplete
-              name={"vendorName"}
+              name={"v_name"}
               options={vendors}
               placceholder={"Vendor..."}
-              defaultValue={formData.vendorName}
+              defaultValue={formData.v_name}
               filterOption={(inputValue, option) =>
                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
                 -1
               }
-              onSelect={(data) => upDateFormValue({ vendorName: data })}
-              onChange={(data) => upDateFormValue({ vendorName: data })}
+              onSelect={(data) => upDateFormValue({ v_name: data })}
+              onChange={(data) => upDateFormValue({ v_name: data })}
               style={{ width: "100%" }}
             />
           </Col>

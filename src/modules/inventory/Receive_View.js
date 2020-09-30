@@ -123,7 +123,6 @@ const Receive_View = (props) => {
     onSave: (e) => {
       e.preventDefault();
       setData({ r_code: "R2009-00099" });
-      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();
@@ -151,7 +150,6 @@ const Receive_View = (props) => {
     copyMain.dataLine = copyRef.dataLine;
     setData({ ...formData, ...copyMain });
   };
-  console.log("formData:", formData);
   return (
     <MainLayout {...config} data={formData}>
       <div id="form">

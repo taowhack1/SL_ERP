@@ -220,13 +220,66 @@ export const poColumns = [
     align: "center",
   },
 ];
+
+export const prColumns = [
+  {
+    title: "PR Code",
+    dataIndex: "pr_code",
+    key: "pr_code",
+    width: "10%",
+    align: "left",
+  },
+  {
+    title: "PR Date",
+    dataIndex: "pr_date",
+    key: "pr_date",
+    width: "10%",
+    align: "center",
+  },
+  {
+    title: "Costcenter",
+    dataIndex: "pr_costCenter",
+    key: "pr_costCenter",
+    width: "15%",
+    align: "left",
+  },
+  {
+    title: "Emp. Request",
+    dataIndex: "pr_empId",
+    key: "pr_empId",
+    width: "15%",
+    align: "left",
+  },
+  {
+    title: "Vendor",
+    dataIndex: "v_name",
+    key: "v_name",
+    width: "20%",
+    align: "left",
+  },
+  {
+    title: "Vendor Company",
+    dataIndex: "v_company",
+    key: "v_company",
+    width: "20%",
+    align: "left",
+  },
+  {
+    title: "Status",
+    dataIndex: "pr_status",
+    key: "pr_status",
+    width: "10%",
+    align: "left",
+  },
+];
+
 export const prData = [
   {
     id: 0,
     pr_code: "PR2009-0001",
     pr_date: "28/09/2020",
     pr_empId: "User 4",
-    pr_desc: null,
+    pr_desc: "remarkkk",
     pr_costCenter: "[ 123400 ] QC",
     pr_status: 0,
     v_id: 1,

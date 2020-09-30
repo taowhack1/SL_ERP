@@ -21,7 +21,6 @@ const { Title, Paragraph, Text } = Typography;
 const VendorCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  console.log("data", data);
   const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
@@ -59,14 +58,12 @@ const VendorCreate = (props) => {
           ],
         }
   );
-  console.log(formData);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
     setData({ ...formData, ...data });
   };
 
-  console.log(formData);
   const config = {
     projectId: 2,
     title: "PURCHASE",
@@ -94,7 +91,6 @@ const VendorCreate = (props) => {
     discard: "/purchase/vendor",
     onSave: (e) => {
       e.preventDefault();
-      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();

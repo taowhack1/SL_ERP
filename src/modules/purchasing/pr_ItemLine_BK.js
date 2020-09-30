@@ -46,10 +46,10 @@ const VendorLine = ({
       ...lineItem,
       {
         id: count,
-        item: `line_${count}`,
+        item_name: `line_${count}`,
         item_qty: 0.0001,
         item_unit: "unit",
-        item_due_date: null,
+        item_dueDate: null,
       },
     ]);
     setCount(count + 1);
@@ -113,13 +113,15 @@ const VendorLine = ({
                   style={{ width: "100%" }}
                   options={items}
                   placeholder="Name..."
-                  defaultValue={line.item}
+                  defaultValue={line.item_name}
                   filterOption={(inputValue, option) =>
                     option.value
                       .toUpperCase()
                       .indexOf(inputValue.toUpperCase()) !== -1
                   }
-                  onChange={(data) => onChangeValue(line.id, { item: data })}
+                  onChange={(data) =>
+                    onChangeValue(line.id, { item_name: data })
+                  }
                 />
               </Col>
               <Col span={3} className="text-number">
@@ -155,18 +157,18 @@ const VendorLine = ({
 
               <Col span={5} className="text-number">
                 <DatePicker
-                  name={"item_due_date"}
+                  name={"item_dueDate"}
                   format={dateConfig.format}
                   style={{ width: "100%" }}
                   placeholder="Due date..."
                   defaultValue={
-                    line.item_due_date
-                      ? moment(line.item_due_date, "YYYY-MM-DD HH:mm:ss")
+                    line.item_dueDate
+                      ? moment(line.item_dueDate, "YYYY-MM-DD HH:mm:ss")
                       : ""
                   }
                   onChange={(data) => {
                     onChangeValue(line.id, {
-                      item_due_date: data.format("DD/MM/YYYY HH:mm:ss"),
+                      item_dueDate: data.format("DD/MM/YYYY HH:mm:ss"),
                     });
                   }}
                 />
@@ -203,7 +205,7 @@ const VendorLine = ({
               className="col-2"
             >
               <Col span={12} className="text-string">
-                <Text>{line.item}</Text>
+                <Text>{line.item_name}</Text>
               </Col>
               <Col span={3} className="text-number">
                 <Text>{line.item_qty}</Text>
@@ -214,7 +216,7 @@ const VendorLine = ({
 
               <Col span={5} className="text-number">
                 <Text>
-                  {moment(line.item_due_date, "DD/MM/YYYY").format(
+                  {moment(line.item_dueDate, "YYYY-MM-DD HH:mm:ss").format(
                     "DD/MM/YYYY"
                   )}
                 </Text>

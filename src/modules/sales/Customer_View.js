@@ -21,7 +21,6 @@ const { Title, Paragraph, Text } = Typography;
 const CustomerView = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  console.log("location state:", props.location.state);
   const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
@@ -99,7 +98,6 @@ const CustomerView = (props) => {
     discard: "/sales/config/customers",
     onSave: (e) => {
       e.preventDefault();
-      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();

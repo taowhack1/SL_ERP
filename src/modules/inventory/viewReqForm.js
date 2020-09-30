@@ -74,7 +74,6 @@ const CreateInventory = (props) => {
   };
   const submitForm = (values) => {
     // console.log(values);
-    console.log(formData);
   };
 
   const config = {
@@ -110,7 +109,6 @@ const CreateInventory = (props) => {
     },
   };
 
-  console.log(formData.req_item_line);
   return (
     <MainLayout {...config} data={formData}>
       <div id="form">

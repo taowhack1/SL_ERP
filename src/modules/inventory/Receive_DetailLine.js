@@ -30,8 +30,6 @@ const ItemLine = ({
   selectLine,
 }) => {
   const [lineItem, setLine] = useState(dataLine);
-  console.log("selectLine", selectLine);
-  console.log("dataLine", dataLine);
   useEffect(() => {
     dataLine && updateDetail(selectLine, [...lineItem]);
   }, [lineItem]);

@@ -5,7 +5,6 @@ import MainLayout from "../../components/MainLayout";
 import { columnsMove, dataMove } from "../../data/inventoryData";
 import $ from "jquery";
 const Requisition = (props) => {
-  console.log(props.location.state);
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const [dataTable, setDataTable] = useState(dataMove);
@@ -31,7 +30,6 @@ const Requisition = (props) => {
       console.log("Cancel");
     },
   };
-  console.log(selectedRow);
   return (
     <div>
       <MainLayout {...config}>

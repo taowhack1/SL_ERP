@@ -63,7 +63,6 @@ const ItemView = (props) => {
           ],
         }
   );
-  console.log(formData);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
@@ -97,10 +96,9 @@ const ItemView = (props) => {
         return id;
     }
   };
-  console.log(formData);
   const config = {
-    projectId: 2,
-    title: "PURCHASE",
+    projectId: 3,
+    title: "SALES",
     show: true,
     breadcrumb: [
       "Home",
@@ -109,19 +107,18 @@ const ItemView = (props) => {
       formData.itemCode && "[ " + formData.itemCode + " ] " + formData.itemName,
     ],
     search: false,
-    buttonAction: ["Edit", "Discard"],
+    buttonAction: ["Discard"],
     action: [{ name: "print", link: "www.google.co.th" }],
     step: {},
     create: "",
     save: {},
     edit: {
-      data: formData,
-      path: formData && "/inventory/items/edit/" + formData.id,
+      // data: formData,
+      // path: formData && "/inventory/items/edit/" + formData.id,
     },
-    discard: "/purchase/items",
+    discard: "/sales/items",
     onSave: (e) => {
       e.preventDefault();
-      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();

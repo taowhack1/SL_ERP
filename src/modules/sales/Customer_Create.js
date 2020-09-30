@@ -21,7 +21,6 @@ const { Title, Paragraph, Text } = Typography;
 const CustomerCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  console.log("data", data);
   const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
@@ -49,14 +48,12 @@ const CustomerCreate = (props) => {
           c_status: 0,
         }
   );
-  console.log(formData);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
     setData({ ...formData, ...data });
   };
 
-  console.log(formData);
   const config = {
     projectId: 3,
     title: "SALES",
@@ -84,7 +81,6 @@ const CustomerCreate = (props) => {
     discard: "/sales/config/customers",
     onSave: (e) => {
       e.preventDefault();
-      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();

@@ -32,7 +32,7 @@ export default function MainConfig(props) {
     <>
       <div>
         {projectMenu.map((menu, key) => {
-          return (
+          return menu.subMenu.length > 0 ? (
             <Dropdown
               overlay={getSubMenu(menu)}
               trigger={["click"]}
@@ -45,6 +45,12 @@ export default function MainConfig(props) {
                 ) : null}
               </Button>
             </Dropdown>
+          ) : (
+            <Link to={menu.link} key={menu.id}>
+              <Button type="text" className="ant-dropdown-link">
+                {menu.name}
+              </Button>
+            </Link>
           );
         })}
       </div>

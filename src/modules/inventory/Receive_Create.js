@@ -134,7 +134,6 @@ const Receive_Create = (props) => {
     onSave: (e) => {
       e.preventDefault();
       setData({ r_code: "R2009-00099" });
-      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();
@@ -185,7 +184,6 @@ const Receive_Create = (props) => {
               formData.r_create_date,
               isEditPage ? "DD/MM/YYYY" : "YYYY-MM-DD"
             ).format("DD/MM/YYYY")}
-            {console.log("Create Date:", formData.r_create_date)}
           </Col>
         </Row>
 

@@ -60,7 +60,6 @@ const CustomerCreate = (props) => {
           ],
         }
   );
-  console.log(formData);
   const callback = (key) => {
     setTab(key);
   };
@@ -69,7 +68,6 @@ const CustomerCreate = (props) => {
     setData({ ...formData, ...data });
   };
 
-  console.log(formData);
   const config = {
     projectId: 3,
     title: "SALES",
@@ -96,7 +94,6 @@ const CustomerCreate = (props) => {
     discard: "/sales/quotations",
     onSave: (e) => {
       e.preventDefault();
-      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();
