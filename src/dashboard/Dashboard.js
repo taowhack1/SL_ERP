@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { withRouter } from "react-router-dom";
 import MainLayout from "../components/MainLayout";
 import { Button, Modal } from "antd";
+import { Form, Input } from "antd";
 import { addSalary, delSalary } from "../actions/salaryActions";
+import { signIn2, signIn3 } from "../actions/authActions";
 const Dashboard = (props) => {
   const { salary } = useSelector((state) => state.salary);
   console.log(salary);
@@ -43,6 +46,26 @@ const Dashboard = (props) => {
       console.log("Cancel");
     },
   };
+
+  const layout = {
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 16,
+    },
+  };
+  const tailLayout = {
+    wrapperCol: {
+      offset: 8,
+      span: 16,
+    },
+  };
+  const onFinish = (data) => {
+    console.log("data", data);
+    dispatch(signIn2(data));
+  };
+
   return (
     <div>
       <MainLayout {...config}>
@@ -55,8 +78,28 @@ const Dashboard = (props) => {
         </Button>
         Salary: {salary}
         <h1>This is Dashboard</h1>
-      </MainLayout>
+        <Form
+          {...layout}
+          name="basic"
+          initialValues={{
+            remember: true,
+          }}
+          onFinish={onFinish}
+        >
+          <Form.Item label="Username" name="user_name" rules={[]}>
+            <Input />
+          </Form.Item>
 
+          <Form.Item label="Password" name="user_password" rules={[]}>
+            <Input.Password />
+          </Form.Item>
+          <Form.Item {...tailLayout}>
+            <Button type="primary" htmlType="submit">
+              Login
+            </Button>
+          </Form.Item>
+        </Form>
+      </MainLayout>
       <Modal
         title="Basic Modal"
         visible={state.visible}
@@ -71,4 +114,4 @@ const Dashboard = (props) => {
   );
 };
 
-export default Dashboard;
+export default withRouter(Dashboard);
