@@ -116,5 +116,52 @@
         }
       ]
     }
+  ],
+  "projects": [
+    {
+      "id": 0,
+      "name": "Inventory",
+      "menu": [
+        {
+          "id": 0,
+          "project_id": 0,
+          "name": "Operations",
+          "menu_level": 1,
+          "sort": 0,
+          "submenu": [
+            {
+              "id": 0,
+              "menu_parent_id": 0,
+              "project_id": 0,
+              "name": "Requisition",
+              "sort": 0
+            },
+            {
+              "id": 1,
+              "menu_parent_id": 0,
+              "project_id": 0,
+              "name": "Receive",
+              "sort": 1
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "project_id": 0,
+          "name": "Master Data",
+          "menu_level": 1,
+          "sort": 1,
+          "submenu": [
+            {
+              "id": 0,
+              "menu_parent_id": 1,
+              "project_id": 0,
+              "name": "Items",
+              "sort": 0
+            }
+          ]
+        }
+      ]
+    }
   ]
 }
