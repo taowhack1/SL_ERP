@@ -1,6 +1,8 @@
 export const AUTH_USER = "AUTH_USER";
 export const UNAUTH_USER = "UNAUTH_USER";
 export const AUTH_ERROR = "AUTH_ERROR";
+export const USER_PROJECT = "USER_PROJECT";
+export const USER_MENU = "USER_MENU";
 
 // System Config.
 export const DECIMAL_UPDATE = "DECIMAL_UPDATE";

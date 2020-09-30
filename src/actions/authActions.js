@@ -1,5 +1,11 @@
 import axios from "axios";
-import { AUTH_USER, UNAUTH_USER, AUTH_ERROR } from "../actions/types";
+import {
+  AUTH_USER,
+  UNAUTH_USER,
+  AUTH_ERROR,
+  USER_PROJECT,
+  USER_MENU,
+} from "../actions/types";
 // const url = "http://192.168.5.230:8080/upload";
 const url = "";
 export const signOut = () => {
@@ -44,4 +50,33 @@ export const signIn = (user) => async (dispatch) => {
     });
     console.log(err);
   }
+};
+
+export const signIn2 = (user) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  return function (dispatch) {
+    return axios
+      .post(`${url}/authorize/project`, user, config)
+      .then((res) => {
+        localStorage.setItem("projects", JSON.stringify(res.data[0]));
+        dispatch({
+          type: USER_PROJECT,
+          payload: res.data[0],
+        });
+      })
+      .then(() => {
+        axios.post(`${url}/authorize/menu`, user, config).then(async (res) => {
+          localStorage.setItem("menus", JSON.stringify(res.data[0]));
+
+          dispatch({
+            type: USER_MENU,
+            payload: res.data[0],
+          });
+        });
+      });
+  };
 };
