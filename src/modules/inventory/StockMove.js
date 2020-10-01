@@ -11,9 +11,11 @@ const Requisition = (props) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
+  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: projectDetail.project_id,
+    title: projectDetail.project_name,
+    home: projectDetail.project_url,
     show: true,
     breadcrumb: ["Home", "Stock move"],
     search: true,

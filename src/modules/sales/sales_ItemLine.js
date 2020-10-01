@@ -14,6 +14,7 @@ import {
   EllipsisOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
+import { sortData } from "../../include/js/function_main";
 import { useSelector } from "react-redux";
 import numeral from "numeral";
 const { Text } = Typography;
@@ -37,7 +38,7 @@ const ItemLine = ({
 
   const addLine = () => {
     setLine([
-      ...dataLine,
+      ...sortData(dataLine),
       {
         id: count,
         item: null,
@@ -65,6 +66,7 @@ const ItemLine = ({
     let total = copyQty * copyPrice;
     return total;
   };
+
   const renderItemLine = (data) => {
     let renderLine = data.map((line, key) => (
       <Row

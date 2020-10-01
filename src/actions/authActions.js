@@ -6,8 +6,9 @@ import {
   USER_PROJECT,
   USER_MENU,
 } from "../actions/types";
-// const url = "http://192.168.5.230:8080/upload";
-const url = "";
+import { api_url } from "../include/js/main_config";
+const url = api_url;
+// const url = "";
 export const signOut = () => {
   return (dispatch) => {
     localStorage.removeItem("token");

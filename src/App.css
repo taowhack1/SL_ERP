@@ -68,6 +68,9 @@
   display: block;
   text-align: right;
 }
+.ant-select {
+  width: 100%;
+}
 /* .ant-tabs .ant-row {
   border: none !important;
 }

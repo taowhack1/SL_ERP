@@ -41,9 +41,11 @@ const Location = () => {
     });
   };
 
+  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: projectDetail.project_id,
+    title: projectDetail.project_name,
+    home: projectDetail.project_url,
     show: true,
     breadcrumb: ["Home", "Location"],
     search: true,

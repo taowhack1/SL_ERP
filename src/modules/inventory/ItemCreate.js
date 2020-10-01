@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
   Col,
@@ -24,11 +25,18 @@ import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
 import Barcode from "react-barcode";
 import { vendorColumns, vendors, companys } from "../../data/itemData";
+import { getSelectDetail } from "../../actions/itemActions";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
 
 const ItemCreate = (props) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getSelectDetail());
+  }, []);
+  const select_detail = useSelector((state) => state.item.select_detail);
+
   const data = props.location.state ? props.location.state : 0;
   const [editForm, setEdit] = useState(true);
 
@@ -36,30 +44,32 @@ const ItemCreate = (props) => {
     data && data
       ? data
       : {
-          id: 0,
-          itemCode: null,
-          // itemCode: "102SLA03" + Math.floor(Math.random() * 10020),
-          itemBarcode: Math.floor(Math.random() * 12351123122122453).toString(),
-          itemName: null,
-          itemQtyOnhand: null,
-          itemUnit: 0,
-          itemCateg: "",
-          itemDesc: 0,
-          itemSold: 0,
-          itemPurchase: 1,
-          itemSalePrice: 100,
-          itemType: 0,
-          itemImg: "/",
-          vendor: [
-            {
-              id: 0,
-              vendorName: "",
-              companyName: "",
-              itemQty: 0,
-              itemUnit: "pc",
-              itemPrice: 0,
-            },
-          ],
+          item_id: 0,
+          item_no: null,
+          item_name: null,
+          item_name_th: null,
+          item_image_path: null,
+          item_sale: 0,
+          item_purchase: 0,
+          item_price: 0,
+          item_cost: 0,
+          item_barcode: null,
+          item_weight: 0,
+          item_mfd_leadtime: 0,
+          item_min: 0,
+          item_max: 0,
+          item_customer_run_no: null,
+          uom_id: null,
+          type_id: null,
+          category_id: null,
+          item_qty_tg: null,
+          branch_id: null,
+          identify_benefit_id: null,
+          item_remark: null,
+          item_actived: 1,
+          item_created_by: null,
+          item_updated_by: null,
+          vat_id: 1,
         }
   );
 
@@ -68,15 +78,17 @@ const ItemCreate = (props) => {
   const upDateFormValue = (data) => {
     setData({ ...formData, ...data });
   };
+  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: projectDetail.project_id,
+    title: projectDetail.project_name,
+    home: projectDetail.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Items",
-      formData.itemCode ? "Edit" : "Create",
-      formData.itemCode && "[ " + formData.itemCode + " ] " + formData.itemName,
+      formData.item_no ? "Edit" : "Create",
+      formData.item_no && "[ " + formData.item_no + " ] " + formData.item_name,
     ],
     search: false,
     buttonAction: editForm
@@ -88,13 +100,15 @@ const ItemCreate = (props) => {
       // step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
     },
     create: "",
-    save: {
-      data: formData,
-      path: formData && "/inventory/items/view/" + formData.id,
-    },
+    // save: {
+    //   data: formData,
+    //   path: formData && "/inventory/items/view/" + formData.id,
+    // },
+    save: "function",
     discard: "/inventory/items",
     onSave: (e) => {
       e.preventDefault();
+      console.log(formData);
     },
     onEdit: (e) => {
       e.preventDefault();
@@ -115,20 +129,27 @@ const ItemCreate = (props) => {
     value: moment(),
     disabled: 1,
   };
+  const getNameById = (id, masterData, masterField, field) => {
+    const data =
+      id && masterData.filter((data) => data[`${masterField}`] === id);
+    console.log(data);
+    const data2 = data && { ...data[0] };
+    return data2 && data2[`${field}`] ? data2[`${field}`] : "";
+  };
   return (
     <MainLayout {...config} data={formData}>
       <div id="form">
         <Row className="col-2">
           <Col span={11}>
             <h2>
-              <strong>{formData.itemCode ? "Edit" : "Create"} Item</strong>
+              <strong>{formData.item_no ? "Edit" : "Create"} Item</strong>
             </h2>
           </Col>
           <Col span={2}></Col>
           <Col span={3}></Col>
           <Col span={8} style={{ textAlign: "right" }}>
             <Barcode
-              value={formData.itemBarcode}
+              value={formData.item_barcode}
               width={1.5}
               height={30}
               fontSize={14}
@@ -139,8 +160,8 @@ const ItemCreate = (props) => {
           <Col span={24} style={{ padding: "0px 5px", marginBottom: 8 }}>
             <Title level={5}>Name </Title>
             <Input
-              onChange={(e) => upDateFormValue({ itemName: e.target.value })}
-              defaultValue={formData.itemName}
+              onChange={(e) => upDateFormValue({ item_name: e.target.value })}
+              defaultValue={formData.item_name}
             />
           </Col>
         </Row>
@@ -148,9 +169,9 @@ const ItemCreate = (props) => {
           <Col span={24} style={{ marginLeft: 5 }}>
             <Space align="baseline">
               <Checkbox
-                defaultChecked={formData.itemSold}
+                defaultChecked={formData.item_sale}
                 onChange={(e) =>
-                  upDateFormValue({ itemSold: e.target.checked })
+                  upDateFormValue({ item_sale: e.target.checked ? 1 : 0 })
                 }
               />
               <Text>Can be sold</Text>
@@ -158,9 +179,9 @@ const ItemCreate = (props) => {
             <br />
             <Space align="baseline">
               <Checkbox
-                defaultChecked={formData.itemPurchase}
+                defaultChecked={formData.item_purchase}
                 onChange={(e) =>
-                  upDateFormValue({ itemPurchase: e.target.checked })
+                  upDateFormValue({ item_purchase: e.target.checked ? 1 : 0 })
                 }
               />
               <Text>Can be purchase</Text>
@@ -179,31 +200,30 @@ const ItemCreate = (props) => {
                   <Col span={8}>
                     <Input
                       onChange={(e) =>
-                        upDateFormValue({ itemCode: e.target.value })
+                        upDateFormValue({ item_no: e.target.value })
                       }
-                      defaultValue={formData.itemCode}
+                      defaultValue={formData.item_no}
+                      value={formData.item_no}
                     />
                   </Col>
                   <Col span={2}></Col>
                   <Col span={3}>
-                    <Text strong>Category </Text>
+                    <Text strong>Item Type </Text>
                   </Col>
                   <Col span={8}>
                     <Select
-                      placeholder={"Select Location"}
-                      onSelect={(data) =>
-                        upDateFormValue({
-                          itemCateg: data,
-                        })
-                      }
-                      style={{ width: "100%" }}
-                      defaultValue={formData.itemCateg}
+                      onChange={(data) => upDateFormValue({ item_type: data })}
+                      value={getNameById(
+                        formData.item_type,
+                        select_detail.item_type,
+                        "type_id",
+                        "type_name"
+                      )}
                     >
-                      <Option value="null"> </Option>
-                      {locationData.map((location) => {
+                      {select_detail.item_type.map((type) => {
                         return (
-                          <Option key={location.id} value={location.id}>
-                            {location.name}
+                          <Option key={type.type_id} value={type.type_id}>
+                            {type.type_no}
                           </Option>
                         );
                       })}
@@ -217,24 +237,43 @@ const ItemCreate = (props) => {
                   <Col span={8}>
                     <Input
                       onChange={(e) =>
-                        upDateFormValue({ itemBarcode: e.target.value })
+                        upDateFormValue({ item_barcode: e.target.value })
                       }
-                      defaultValue={formData.itemBarcode}
+                      defaultValue={formData.item_barcode}
                     />
                   </Col>
 
                   <Col span={2}></Col>
-
                   <Col span={3}>
-                    <Text strong>Sale Price</Text>
+                    <Text strong>Category </Text>
                   </Col>
                   <Col span={8}>
-                    <InputNumber
+                    <Select
+                      placeholder={"Select Category"}
+                      onSelect={(data) =>
+                        upDateFormValue({
+                          category_id: data,
+                        })
+                      }
                       style={{ width: "100%" }}
-                      defaultValue={formData.itemSalePrice}
-                      precision={3}
-                      onChange={(data) => upDateFormValue({ itemPrice: data })}
-                    />
+                      value={getNameById(
+                        formData.category_id,
+                        select_detail.item_category,
+                        "category_id",
+                        "category_name"
+                      )}
+                    >
+                      {select_detail.item_category.map((categ) => {
+                        return (
+                          <Option
+                            key={categ.category_id}
+                            value={categ.category_id}
+                          >
+                            {categ.category_name}
+                          </Option>
+                        );
+                      })}
+                    </Select>
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -242,37 +281,41 @@ const ItemCreate = (props) => {
                     <Text strong>Unit of measure</Text>
                   </Col>
                   <Col span={8}>
-                    <AutoComplete
-                      options={autoCompleteUser}
-                      placceholder={"Unit of measure..."}
-                      defaultValue={formData.itemUnit}
-                      filterOption={(inputValue, option) =>
-                        option.value
-                          .toUpperCase()
-                          .indexOf(inputValue.toUpperCase()) !== -1
+                    <Select
+                      placeholder={"Unit of Measure"}
+                      onSelect={(data) =>
+                        upDateFormValue({
+                          uom_id: data,
+                        })
                       }
-                      onSelect={(data) => upDateFormValue({ itemUnit: data })}
-                      onChange={(data) => upDateFormValue({ itemUnit: data })}
                       style={{ width: "100%" }}
-                    />
+                      value={getNameById(
+                        formData.uom_id,
+                        select_detail.item_uom,
+                        "uom_id",
+                        "uom_no"
+                      )}
+                    >
+                      {select_detail.item_uom.map((uom) => {
+                        return (
+                          <Option key={uom.uom_id} value={uom.uom_id}>
+                            {uom.uom_no}
+                          </Option>
+                        );
+                      })}
+                    </Select>
                   </Col>
                   <Col span={2}></Col>
                   <Col span={3}>
-                    <Text strong>Item Type </Text>
+                    <Text strong>Sale Price</Text>
                   </Col>
                   <Col span={8}>
-                    <Radio.Group
-                      onChange={(e) =>
-                        upDateFormValue({ itemType: e.target.value })
-                      }
-                      defaultValue={formData.itemType}
-                    >
-                      <Radio value={0}>RM</Radio>
-                      <Radio value={1}>PK</Radio>
-                      <Radio value={2}>BULK</Radio>
-                      <Radio value={3}>FG</Radio>
-                      <Radio value={4}>Others</Radio>
-                    </Radio.Group>
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      defaultValue={formData.item_price}
+                      precision={3}
+                      onChange={(data) => upDateFormValue({ item_price: data })}
+                    />
                   </Col>
                 </Row>
                 <Row className="col-2">
@@ -281,9 +324,9 @@ const ItemCreate = (props) => {
                       <Text strong>Description </Text>
                       <TextArea
                         onChange={(e) =>
-                          upDateFormValue({ itemDesc: e.target.value })
+                          upDateFormValue({ item_remark: e.target.value })
                         }
-                        defaultValue={formData.itemDesc}
+                        defaultValue={formData.item_remark}
                       />
                     </Space>
                   </Col>
@@ -301,15 +344,6 @@ const ItemCreate = (props) => {
                   updateData={upDateFormValue}
                 />
               </Tabs.TabPane>
-              {/* <Tabs.TabPane tab="Note" key="3">
-                <TextArea
-                  rows={3}
-                  placeholder={"Remark your request"}
-                  onChange={(e) =>
-                    upDateFormValue({ req_note: e.target.value })
-                  }
-                />
-              </Tabs.TabPane> */}
             </Tabs>
           </Col>
         </Row>

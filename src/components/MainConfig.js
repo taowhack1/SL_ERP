@@ -13,14 +13,35 @@ import { projects, menus } from "../data/menu";
 
 export default function MainConfig(props) {
   const projectId = props.projectId && props.projectId ? props.projectId : 0;
-  const projectMenu = menus.filter((menu) => menu.projectId === projectId);
+  // const projectMenu = menus.filter((menu) => menu.projectId === projectId);
+  let projects = JSON.parse(localStorage.getItem("projects"));
+  let menusLocal = JSON.parse(localStorage.getItem("menus"));
+  let projectMenus = menusLocal
+    ? menusLocal.filter(
+        (menu) => menu.project_id === projectId && menu.menu_parent === 0
+      )
+    : [];
   const getSubMenu = (menu) => {
+    const menulevel2 = menusLocal.filter(
+      (menu2) =>
+        menu2.menu_parent !== 0 &&
+        menu2.menu_parent === menu.menu_level &&
+        menu2.project_id === menu.project_id
+    );
+
     let sub = (
       <Menu>
-        {menu.subMenu.map((sub, key) => {
+        {menulevel2.map((sub, key) => {
           return (
             <Menu.Item key={key}>
-              <Link to={sub.link}>{sub.name}</Link>
+              <Link
+                to={{
+                  pathname: sub.menu_url,
+                  // state: project,
+                }}
+              >
+                {sub.menu_name}
+              </Link>
             </Menu.Item>
           );
         })}
@@ -28,10 +49,24 @@ export default function MainConfig(props) {
     );
     return sub;
   };
+
   return (
     <>
       <div>
-        {projectMenu.map((menu, key) => {
+        {projectMenus.map((menu, key) => {
+          return (
+            <Dropdown
+              overlay={getSubMenu(menu)}
+              trigger={["click"]}
+              key={menu.menu_id}
+            >
+              <Button type="text" className="ant-dropdown-link">
+                {menu.menu_name} <CaretDownOutlined />
+              </Button>
+            </Dropdown>
+          );
+        })}
+        {/* {projectMenu.map((menu, key) => {
           return menu.subMenu.length > 0 ? (
             <Dropdown
               overlay={getSubMenu(menu)}
@@ -52,7 +87,7 @@ export default function MainConfig(props) {
               </Button>
             </Link>
           );
-        })}
+        })} */}
       </div>
     </>
   );

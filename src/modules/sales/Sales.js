@@ -1,24 +1,45 @@
 import React, { Component } from "react";
 import MainLayout from "../../components/MainLayout";
+import { withRouter } from "react-router-dom";
 
-const Sales = () => {
+const Sales = (props) => {
+  console.log(props.location.state);
+  const projectDetail = props.location.state && props.location.state;
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   const config = {
-    projectId: 3,
-    title: "SALES",
-    home: "/sales",
+    projectId: projectDetail.project_id,
+    title: projectDetail.project_name,
+    home: projectDetail.project_url,
     show: true,
     breadcrumb: ["Home"],
     search: true,
     create: "",
     buttonAction: [""],
-    discard: "/sales",
+    discard: projectDetail.project_url,
     onCancel: () => {
       console.log("Cancel");
     },
   };
+
+  // const onChange = (pagination, filters, sorter, extra) => {
+  //   console.log("params", pagination, filters, sorter, extra);
+  // };
+  // const config = {
+  //   projectId: 3,
+  //   title: "SALES",
+  //   home: "/sales",
+  //   show: true,
+  //   breadcrumb: ["Home"],
+  //   search: true,
+  //   create: "",
+  //   buttonAction: [""],
+  //   discard: "/sales",
+  //   onCancel: () => {
+  //     console.log("Cancel");
+  //   },
+  // };
 
   return (
     <div>
@@ -34,4 +55,4 @@ const Sales = () => {
   );
 };
 
-export default Sales;
+export default withRouter(Sales);

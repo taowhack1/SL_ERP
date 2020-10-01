@@ -10,3 +10,8 @@ export const DECIMAL_UPDATE = "DECIMAL_UPDATE";
 // Salary
 export const ADD_SALARY = "ADD_SALARY";
 export const DEL_SALARY = "DEL_SALARY";
+
+// item
+export const GET_ITEM_DETAIL = "GET_ITEM_DETAIL";
+
+export const GET_VAT = "GET_VAT";

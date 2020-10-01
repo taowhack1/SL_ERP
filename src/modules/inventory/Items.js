@@ -1,11 +1,14 @@
 import React, { Component, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { columnsItem, data } from "../../data/inventoryData";
+import { getSelectDetail } from "../../actions/itemActions";
 import $ from "jquery";
 import axios from "axios";
 const Items = (props) => {
+  const dispatch = useDispatch();
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const [dataTable, setDataTable] = useState([]);
@@ -18,9 +21,11 @@ const Items = (props) => {
       setDataTable(res.data);
     });
   }, []);
+  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: projectDetail.project_id,
+    title: projectDetail.project_name,
+    home: projectDetail.project_url,
     show: true,
     breadcrumb: ["Home", "Items"],
     search: true,

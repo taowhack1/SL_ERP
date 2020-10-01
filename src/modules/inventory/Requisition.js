@@ -6,6 +6,7 @@ import { reqColumns, data } from "../../data/inventoryData";
 import $ from "jquery";
 import axios from "axios";
 const Requisition = (props) => {
+  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const [dataTable, setDataTable] = useState([]);
@@ -18,8 +19,9 @@ const Requisition = (props) => {
     });
   }, []);
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: projectDetail.project_id,
+    title: projectDetail.project_name,
+    home: projectDetail.project_url,
     show: true,
     breadcrumb: ["Home", "Requisition"],
     search: true,

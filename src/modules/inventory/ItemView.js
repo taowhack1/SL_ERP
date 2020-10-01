@@ -34,35 +34,34 @@ const ItemView = (props) => {
   const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
-    // data && data
-    //   ? data
-    //   :
-    {
-      id: 0,
-      itemName: "TEST PRODUCT NAME",
-      itemCode: "102SLA03" + Math.floor(Math.random() * 10020),
-      itemBarcode: Math.floor(Math.random() * 12351123122122453).toString(),
-
-      itemQtyOnhand: null,
-      itemUnit: 0,
-      itemCateg: 0,
-      itemDesc: "ทดสอบบันทึก",
-      itemSold: 0,
-      itemPurchase: 1,
-      itemSalePrice: 100,
-      itemType: 0,
-      itemImg: "/",
-      vendor: [
-        {
+    data && data
+      ? data
+      : {
           id: 0,
-          vendorName: "vendorName",
-          companyName: "companyName",
-          itemQty: 0,
-          itemUnit: "pc",
-          itemPrice: 100.25,
-        },
-      ],
-    }
+          itemName: "TEST PRODUCT NAME",
+          itemCode: "102SLA03" + Math.floor(Math.random() * 10020),
+          itemBarcode: Math.floor(Math.random() * 12351123122122453).toString(),
+
+          itemQtyOnhand: null,
+          itemUnit: 0,
+          itemCateg: 0,
+          itemDesc: "ทดสอบบันทึก",
+          itemSold: 0,
+          itemPurchase: 1,
+          itemSalePrice: 100,
+          itemType: 0,
+          itemImg: "/",
+          vendor: [
+            {
+              id: 0,
+              vendorName: "vendorName",
+              companyName: "companyName",
+              itemQty: 0,
+              itemUnit: "pc",
+              itemPrice: 100.25,
+            },
+          ],
+        }
   );
   const callback = (key) => {};
 
@@ -97,9 +96,11 @@ const ItemView = (props) => {
         return id;
     }
   };
+  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: projectDetail.project_id,
+    title: projectDetail.project_name,
+    home: projectDetail.project_url,
     show: true,
     breadcrumb: [
       "Home",

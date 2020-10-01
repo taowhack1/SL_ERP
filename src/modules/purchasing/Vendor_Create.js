@@ -64,9 +64,11 @@ const VendorCreate = (props) => {
     setData({ ...formData, ...data });
   };
 
+  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
-    projectId: 2,
-    title: "PURCHASE",
+    projectId: projectDetail.project_id,
+    title: projectDetail.project_name,
+    home: projectDetail.project_url,
     show: true,
     breadcrumb: [
       "Home",
