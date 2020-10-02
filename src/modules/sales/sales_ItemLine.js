@@ -14,8 +14,6 @@ import {
   EllipsisOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import numeral from "numeral";
 const { Text } = Typography;
 
 const ItemLine = ({
