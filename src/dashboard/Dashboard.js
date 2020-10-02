@@ -47,25 +47,6 @@ const Dashboard = (props) => {
     },
   };
 
-  const layout = {
-    labelCol: {
-      span: 8,
-    },
-    wrapperCol: {
-      span: 16,
-    },
-  };
-  const tailLayout = {
-    wrapperCol: {
-      offset: 8,
-      span: 16,
-    },
-  };
-  const onFinish = (data) => {
-    console.log("data", data);
-    dispatch(signIn2(data));
-  };
-
   return (
     <div>
       <MainLayout {...config}>
@@ -78,27 +59,6 @@ const Dashboard = (props) => {
         </Button>
         Salary: {salary}
         <h1>This is Dashboard</h1>
-        <Form
-          {...layout}
-          name="basic"
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={onFinish}
-        >
-          <Form.Item label="Username" name="user_name" rules={[]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item label="Password" name="user_password" rules={[]}>
-            <Input.Password />
-          </Form.Item>
-          <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="submit">
-              Login
-            </Button>
-          </Form.Item>
-        </Form>
       </MainLayout>
       <Modal
         title="Basic Modal"

@@ -1,14 +1,23 @@
 import React, { Component, useState, useEffect } from "react";
 import { withRouter, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { customerColumns, customerData } from "../../data/sale/data";
+import { getAllCustomer } from "../../actions/saleMasterDataActions";
+import { customer_columns } from "../../page_fields/sales/customer";
 import $ from "jquery";
 import axios from "axios";
 const Customer = (props) => {
+  useEffect(() => {
+    dispatch(getAllCustomer());
+  }, []);
+  const dispatch = useDispatch();
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
+  // const [dataTable, setDataTable] = useState([...customerData]);
   const [dataTable, setDataTable] = useState([...customerData]);
+  const customers = useSelector((state) => state.sale.customers);
   const [copyTable, setCopy] = useState([]);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
@@ -37,8 +46,8 @@ const Customer = (props) => {
         <Row>
           <Col span={24}>
             <Table
-              columns={customerColumns}
-              dataSource={dataTable}
+              columns={customer_columns}
+              dataSource={customers}
               onChange={onChange}
               size="small"
               rowClassName="row-pointer"
@@ -53,7 +62,8 @@ const Customer = (props) => {
                     $(e.target).closest("tr").addClass("selected-row");
                     setSelectedRow(record);
                     props.history.push({
-                      pathname: "/sales/config/customers/view/" + record.id,
+                      pathname:
+                        "/sales/config/customers/edit/" + record.customer_id,
                       state: record,
                     });
                   },

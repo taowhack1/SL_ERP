@@ -211,9 +211,17 @@ export const menuProfile = (
       </a>
     </Menu.Item>
     <Menu.Item>
-      <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-        3rd menu item
-      </a>
+      <Link
+        to="/login"
+        onClick={() => {
+          localStorage.removeItem("user");
+          localStorage.removeItem("menus");
+          localStorage.removeItem("projects");
+          localStorage.removeItem("project_detail");
+        }}
+      >
+        Logout
+      </Link>
     </Menu.Item>
   </Menu>
 );

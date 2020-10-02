@@ -72,7 +72,7 @@ function TopContent(props) {
                 ) : (
                   <Button
                     className="primary"
-                    // onClick={onEdit}
+                    onClick={() => props.save.function()}
                     disabled={props.saveDisabled}
                   >
                     <Link

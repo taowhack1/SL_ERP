@@ -78,6 +78,16 @@ export const signIn2 = (user) => {
             payload: res.data[0],
           });
         });
+      })
+      .then(() => {
+        localStorage.setItem("authenticated", true);
+        localStorage.setItem("user", JSON.stringify(user));
+        dispatch({
+          type: AUTH_USER,
+          payload: user,
+        });
+        alert("Login Success");
+        return { status: 1 };
       });
   };
 };

@@ -12,6 +12,7 @@ import {
   InputNumber,
   Checkbox,
   Space,
+  Switch,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
@@ -25,7 +26,14 @@ import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
 import Barcode from "react-barcode";
 import { vendorColumns, vendors, companys } from "../../data/itemData";
-import { getSelectDetail } from "../../actions/itemActions";
+import {
+  getSelectDetail,
+  createNewItems,
+  upDateItem,
+} from "../../actions/itemActions";
+import { item_fields } from "../../page_fields/inventory/item";
+import { getNameById } from "../../include/js/function_main";
+import $ from "jquery";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -33,44 +41,16 @@ const { Title, Paragraph, Text } = Typography;
 const ItemCreate = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
+    // $("input").attr("readonly", true).css("border", "none");
     dispatch(getSelectDetail());
   }, []);
   const select_detail = useSelector((state) => state.item.select_detail);
-
   const data = props.location.state ? props.location.state : 0;
+
   const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          item_id: 0,
-          item_no: null,
-          item_name: null,
-          item_name_th: null,
-          item_image_path: null,
-          item_sale: 0,
-          item_purchase: 0,
-          item_price: 0,
-          item_cost: 0,
-          item_barcode: null,
-          item_weight: 0,
-          item_mfd_leadtime: 0,
-          item_min: 0,
-          item_max: 0,
-          item_customer_run_no: null,
-          uom_id: null,
-          type_id: null,
-          category_id: null,
-          item_qty_tg: null,
-          branch_id: null,
-          identify_benefit_id: null,
-          item_remark: null,
-          item_actived: 1,
-          item_created_by: null,
-          item_updated_by: null,
-          vat_id: 1,
-        }
+    data && data ? { ...data, commit: 1, user_name: "2563002" } : item_fields
   );
 
   const callback = (key) => {};
@@ -100,11 +80,15 @@ const ItemCreate = (props) => {
       // step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
     },
     create: "",
-    // save: {
-    //   data: formData,
-    //   path: formData && "/inventory/items/view/" + formData.id,
-    // },
-    save: "function",
+    save: {
+      data: formData,
+      path: formData && "/inventory/items/view/" + formData.item_id,
+      function: () =>
+        formData.item_no
+          ? dispatch(upDateItem(formData, formData.item_id))
+          : dispatch(createNewItems(formData)),
+    },
+    // save: "function",
     discard: "/inventory/items",
     onSave: (e) => {
       e.preventDefault();
@@ -129,13 +113,7 @@ const ItemCreate = (props) => {
     value: moment(),
     disabled: 1,
   };
-  const getNameById = (id, masterData, masterField, field) => {
-    const data =
-      id && masterData.filter((data) => data[`${masterField}`] === id);
-    console.log(data);
-    const data2 = data && { ...data[0] };
-    return data2 && data2[`${field}`] ? data2[`${field}`] : "";
-  };
+
   return (
     <MainLayout {...config} data={formData}>
       <div id="form">
@@ -144,6 +122,11 @@ const ItemCreate = (props) => {
             <h2>
               <strong>{formData.item_no ? "Edit" : "Create"} Item</strong>
             </h2>
+            <h3 style={{ marginBottom: 8 }}>
+              {formData.item_no && (
+                <strong>Item Code # {formData.item_no}</strong>
+              )}
+            </h3>
           </Col>
           <Col span={2}></Col>
           <Col span={3}></Col>
@@ -157,8 +140,10 @@ const ItemCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2">
-          <Col span={24} style={{ padding: "0px 5px", marginBottom: 8 }}>
-            <Title level={5}>Name </Title>
+          <Col span={24} style={{ marginBottom: 8 }}>
+            <h3>
+              <strong>Name</strong>
+            </h3>
             <Input
               onChange={(e) => upDateFormValue({ item_name: e.target.value })}
               defaultValue={formData.item_name}
@@ -186,6 +171,23 @@ const ItemCreate = (props) => {
               />
               <Text>Can be purchase</Text>
             </Space>
+            {formData.item_no && (
+              <Space
+                align="baseline"
+                style={{ float: "right", marginRight: 10 }}
+              >
+                <Text strong>Active</Text>
+                <Switch
+                  checkedChildren={""}
+                  unCheckedChildren={""}
+                  checked={formData.item_actived}
+                  style={{ width: 35 }}
+                  onClick={(data) =>
+                    upDateFormValue({ item_actived: data ? 1 : 0 })
+                  }
+                />
+              </Space>
+            )}
           </Col>
         </Row>
 
@@ -195,15 +197,17 @@ const ItemCreate = (props) => {
               <Tabs.TabPane tab="Detail" key="1">
                 <Row className="col-2 row-margin-vertical">
                   <Col span={3}>
-                    <Text strong>Item Code </Text>
+                    <Text strong>SRL </Text>
                   </Col>
                   <Col span={8}>
                     <Input
                       onChange={(e) =>
-                        upDateFormValue({ item_no: e.target.value })
+                        upDateFormValue({
+                          item_customer_run_no: e.target.value,
+                        })
                       }
-                      defaultValue={formData.item_no}
-                      value={formData.item_no}
+                      defaultValue={formData.item_customer_run_no}
+                      value={formData.item_customer_run_no}
                     />
                   </Col>
                   <Col span={2}></Col>
@@ -212,21 +216,22 @@ const ItemCreate = (props) => {
                   </Col>
                   <Col span={8}>
                     <Select
-                      onChange={(data) => upDateFormValue({ item_type: data })}
+                      onChange={(data) => upDateFormValue({ type_id: data })}
                       value={getNameById(
-                        formData.item_type,
+                        formData.type_id,
                         select_detail.item_type,
                         "type_id",
                         "type_name"
                       )}
                     >
-                      {select_detail.item_type.map((type) => {
-                        return (
-                          <Option key={type.type_id} value={type.type_id}>
-                            {type.type_no}
-                          </Option>
-                        );
-                      })}
+                      {select_detail.item_type &&
+                        select_detail.item_type.map((type) => {
+                          return (
+                            <Option key={type.type_id} value={type.type_id}>
+                              {type.type_no}
+                            </Option>
+                          );
+                        })}
                     </Select>
                   </Col>
                 </Row>
@@ -333,6 +338,47 @@ const ItemCreate = (props) => {
                 </Row>
               </Tabs.TabPane>
               <Tabs.TabPane tab="Purchase" key="2">
+                <Row
+                  className="col-2 row-margin-vertical"
+                  style={{ paddingBottom: 25 }}
+                >
+                  <Col span={2}>
+                    <Text strong>Qty. Min.</Text>
+                  </Col>
+                  <Col span={3}>
+                    <InputNumber
+                      placeholder={"Min"}
+                      min={0.0}
+                      step={0.0001}
+                      precision={4}
+                      style={{ width: "100%" }}
+                      disabled={0}
+                      defaultValue={0}
+                      value={formData.item_min}
+                      onChange={(data) => upDateFormValue({ item_min: data })}
+                      size="small"
+                    />
+                  </Col>
+                  <Col span={2}></Col>
+                  <Col span={2}>
+                    <Text strong>Qty. Max.</Text>
+                  </Col>
+                  <Col span={3}>
+                    <InputNumber
+                      placeholder={"Max"}
+                      min={0.0}
+                      step={0.0001}
+                      precision={4}
+                      style={{ width: "100%" }}
+                      disabled={0}
+                      defaultValue={0}
+                      value={formData.item_max}
+                      onChange={(data) => upDateFormValue({ item_max: data })}
+                      size="small"
+                    />
+                  </Col>
+                  <Col span={12}></Col>
+                </Row>
                 <Line
                   vendors={vendors}
                   companys={companys}

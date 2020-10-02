@@ -11,6 +11,7 @@ import {
   InputNumber,
   Checkbox,
   Space,
+  Switch,
 } from "antd";
 import { CheckSquareOutlined, BorderOutlined } from "@ant-design/icons";
 import MainLayout from "../../components/MainLayout";
@@ -24,7 +25,9 @@ import {
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
 import Barcode from "react-barcode";
+import { item_fields } from "../../page_fields/inventory/item";
 import { vendorColumns, vendors, companys } from "../../data/itemData";
+import { getNameById } from "../../include/js/function_main";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -33,69 +36,13 @@ const ItemView = (props) => {
   const data = props.location.state ? props.location.state : 0;
   const [editForm, setEdit] = useState(true);
 
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          id: 0,
-          itemName: "TEST PRODUCT NAME",
-          itemCode: "102SLA03" + Math.floor(Math.random() * 10020),
-          itemBarcode: Math.floor(Math.random() * 12351123122122453).toString(),
-
-          itemQtyOnhand: null,
-          itemUnit: 0,
-          itemCateg: 0,
-          itemDesc: "ทดสอบบันทึก",
-          itemSold: 0,
-          itemPurchase: 1,
-          itemSalePrice: 100,
-          itemType: 0,
-          itemImg: "/",
-          vendor: [
-            {
-              id: 0,
-              vendorName: "vendorName",
-              companyName: "companyName",
-              itemQty: 0,
-              itemUnit: "pc",
-              itemPrice: 100.25,
-            },
-          ],
-        }
-  );
+  const [formData, setData] = useState(data && data ? data : item_fields);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
     setData({ ...formData, ...data });
   };
-  const getCategName = (id) => {
-    switch (id) {
-      case 0:
-        return "Raw Material";
-      case 1:
-        return "Packaging";
-      case 2:
-        return "Bulk";
-      case 3:
-        return "Finish Good";
-      default:
-        break;
-    }
-  };
-  const getUnitName = (id) => {
-    switch (id) {
-      case 0:
-        return "unit";
-      case 1:
-        return "pc";
-      case 2:
-        return "liter";
-      case 3:
-        return "pack";
-      default:
-        return id;
-    }
-  };
+
   const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
     projectId: projectDetail.project_id,
@@ -106,7 +53,7 @@ const ItemView = (props) => {
       "Home",
       "Items",
       "View",
-      formData.itemCode && "[ " + formData.itemCode + " ] " + formData.itemName,
+      formData.item_no && "[ " + formData.item_no + " ] " + formData.item_name,
     ],
     search: false,
     buttonAction: ["Edit", "Discard"],
@@ -116,7 +63,7 @@ const ItemView = (props) => {
     save: {},
     edit: {
       data: formData,
-      path: formData && "/inventory/items/edit/" + formData.id,
+      path: formData && "/inventory/items/edit/" + formData.item_id,
     },
     discard: "/inventory/items",
     onSave: (e) => {
@@ -142,14 +89,22 @@ const ItemView = (props) => {
         <Row className="col-2">
           <Col span={11}>
             {/* <h2>
-              <strong>Item</strong>
+              {formData.item_no && (
+                <strong>{formData.item_no ? "Edit" : "Create"} Item</strong>
+              )}
             </h2> */}
+            <h2 style={{ marginBottom: 8 }}>
+              <strong>Item Code # {formData.item_no}</strong>
+            </h2>
+            <h3>
+              <strong>{formData.item_name}</strong>
+            </h3>
           </Col>
           <Col span={2}></Col>
           <Col span={3}></Col>
           <Col span={8} style={{ textAlign: "right" }}>
             <Barcode
-              value={formData.itemBarcode}
+              value={formData.item_barcode}
               width={1.5}
               height={30}
               fontSize={14}
@@ -159,27 +114,45 @@ const ItemView = (props) => {
         <Row className="col-2">
           <Col span={24} style={{ padding: "0px 5px", marginBottom: 8 }}>
             {/* <Input
-              onChange={(e) => upDateFormValue({ itemName: e.target.value })}
-              defaultValue={formData.itemName}
+              onChange={(e) => upDateFormValue({ item_name: e.target.value })}
+              defaultValue={formData.item_name}
             /> */}
-            <Title level={4}>{formData.itemName}</Title>
           </Col>
         </Row>
         <Row className="col-2">
           <Col span={24} style={{ marginLeft: 5 }}>
             <Space align="baseline">
-              {formData.itemSold ? <CheckSquareOutlined /> : <BorderOutlined />}
+              {formData.item_sale ? (
+                <CheckSquareOutlined />
+              ) : (
+                <BorderOutlined />
+              )}
               <Text>Can be sold</Text>
             </Space>
             <br />
             <Space align="baseline">
-              {formData.itemPurchase ? (
+              {formData.item_purchase ? (
                 <CheckSquareOutlined />
               ) : (
                 <BorderOutlined />
               )}
               <Text>Can be purchase</Text>
             </Space>
+            {formData.item_no && (
+              <Space
+                align="baseline"
+                style={{ float: "right", marginRight: 10 }}
+              >
+                <Text strong>Active</Text>
+                <Switch
+                  checkedChildren={""}
+                  unCheckedChildren={""}
+                  checked={formData.item_actived}
+                  style={{ width: 35 }}
+                  disabled
+                />
+              </Space>
+            )}
           </Col>
         </Row>
 
@@ -189,17 +162,17 @@ const ItemView = (props) => {
               <Tabs.TabPane tab="Detail" key="1">
                 <Row className="col-2 row-margin-vertical">
                   <Col span={3}>
-                    <Text strong>Item Code </Text>
+                    <Text strong>SRL </Text>
                   </Col>
                   <Col span={8}>
-                    <Text>{formData.itemCode}</Text>
+                    <Text>{formData.item_customer_run_no}</Text>
                   </Col>
                   <Col span={2}></Col>
                   <Col span={3}>
                     <Text strong>Category </Text>
                   </Col>
                   <Col span={8}>
-                    <Text>{getCategName(formData.itemCateg)}</Text>
+                    <Text>{formData.category_id}</Text>
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -207,7 +180,7 @@ const ItemView = (props) => {
                     <Text strong>Item barcode</Text>
                   </Col>
                   <Col span={8}>
-                    <Text>{formData.itemBarcode}</Text>
+                    <Text>{formData.item_barcode}</Text>
                   </Col>
 
                   <Col span={2}></Col>
@@ -216,7 +189,7 @@ const ItemView = (props) => {
                     <Text strong>Sale Price</Text>
                   </Col>
                   <Col span={8}>
-                    <Text>{formData.itemSalePrice}</Text>
+                    <Text>{formData.item_price}</Text>
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -224,14 +197,14 @@ const ItemView = (props) => {
                     <Text strong>Unit of measure</Text>
                   </Col>
                   <Col span={8}>
-                    <Text>{getUnitName(formData.itemUnit)}</Text>
+                    <Text>{formData.uom_id}</Text>
                   </Col>
                   <Col span={2}></Col>
                   <Col span={3}>
                     <Text strong>Item Type </Text>
                   </Col>
                   <Col span={8}>
-                    <Text>{getCategName(formData.itemType)}</Text>
+                    <Text>{formData.type_id}</Text>
                   </Col>
                 </Row>
                 <Row className="col-2">
@@ -244,7 +217,7 @@ const ItemView = (props) => {
                         Description
                       </Text>
                       <Text style={{ paddingLeft: 10 }}>
-                        {formData.itemDesc}
+                        {formData.item_remark}
                       </Text>
                     </Space>
                   </Col>

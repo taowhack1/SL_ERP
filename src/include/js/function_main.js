@@ -9,3 +9,10 @@ export const sortData = (arrObject) => {
   });
   return temp;
 };
+
+export const getNameById = (id, masterData, masterField, field) => {
+  // console.log(id, masterData, masterField, field);
+  const data = id && masterData.filter((data) => data[`${masterField}`] === id);
+  const data2 = data && { ...data[0] };
+  return data2 && data2[`${field}`] ? data2[`${field}`] : "";
+};

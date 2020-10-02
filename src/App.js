@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Dashboard from "./dashboard/Dashboard";
+import Login from "./modules/system/Login";
 import Settings from "./modules/settings/Settings";
 
 import Inventory from "./modules/inventory/Inventory";
@@ -57,6 +58,10 @@ const App = (props) => {
     <Provider store={store}>
       <BrowserRouter>
         <Switch>
+          <Route exact path="/login">
+            <Login />
+          </Route>
+
           <Route exact path="/">
             <Dashboard />
           </Route>

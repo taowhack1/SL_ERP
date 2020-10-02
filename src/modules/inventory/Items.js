@@ -1,10 +1,11 @@
 import React, { Component, useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { columnsItem, data } from "../../data/inventoryData";
-import { getSelectDetail } from "../../actions/itemActions";
+import { getSelectDetail, getAllItems } from "../../actions/itemActions";
+import { item_show_columns } from "../../page_fields/inventory/item";
 import $ from "jquery";
 import axios from "axios";
 const Items = (props) => {
@@ -16,11 +17,14 @@ const Items = (props) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
+  const dataItems = useSelector((state) => state.item.items);
   useEffect(() => {
-    axios.get("http://localhost:3001/items").then((res) => {
-      setDataTable(res.data);
-    });
+    // axios.get("http://localhost:3001/items").then((res) => {
+    //   setDataTable(res.data);
+    // });
+    dispatch(getAllItems());
   }, []);
+
   const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
     projectId: projectDetail.project_id,
@@ -41,14 +45,15 @@ const Items = (props) => {
       console.log("Cancel");
     },
   };
+
   return (
     <div>
       <MainLayout {...config}>
         <Row>
           <Col span={24}>
             <Table
-              columns={columnsItem}
-              dataSource={dataTable}
+              columns={item_show_columns}
+              dataSource={dataItems}
               onChange={onChange}
               size="small"
               onRow={(record, rowIndex) => {
@@ -62,7 +67,7 @@ const Items = (props) => {
                     $(e.target).closest("tr").addClass("selected-row");
                     setSelectedRow(record);
                     props.history.push({
-                      pathname: "/inventory/items/view/" + record.id,
+                      pathname: "/inventory/items/view/" + record.item_id,
                       state: record,
                     });
                   },
