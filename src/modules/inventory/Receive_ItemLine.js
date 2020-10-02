@@ -370,12 +370,7 @@ const ItemLine = ({
               // itemLots={itemLots}
               columns={qtyDoneColumns}
               updateDetail={onChangeDetailValue}
-              dataLine={
-                selectLine && selectLine.item_qty_done_detail
-                // selectLine && selectLine
-                //   ? selectLine.item_qty_done_detail
-                //   : [{}]
-              }
+              dataLine={selectLine && selectLine.item_qty_done_detail}
               readOnly={false}
               selectLine={selectLine && selectLine.id}
             />
