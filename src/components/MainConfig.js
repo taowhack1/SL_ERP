@@ -56,6 +56,7 @@ export default function MainConfig(props) {
         {projectMenus.map((menu, key) => {
           return (
             <Dropdown
+              key={key}
               overlay={getSubMenu(menu)}
               trigger={["click"]}
               key={menu.menu_id}

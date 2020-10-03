@@ -1,5 +1,5 @@
-import React, { Component, useState } from "react";
-import { Row, Col, Typography, Form, Input, InputNumber, Button } from "antd";
+import React, { useState } from "react";
+import { Row, Col, Typography, Form, InputNumber, Button } from "antd";
 import MainLayout from "../../components/MainLayout";
 import numeral from "numeral";
 import $ from "jquery";
@@ -11,9 +11,9 @@ const Settings = () => {
     price_digit: 2,
     input_vat: 7,
   });
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
+  // const onChange = (pagination, filters, sorter, extra) => {
+  //   console.log("params", pagination, filters, sorter, extra);
+  // };
   const config = {
     projectId: 4,
     title: "SETTINGS",

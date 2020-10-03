@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Row,
   Col,
-  Form,
   Input,
   Tabs,
   DatePicker,
   Radio,
   Select,
   AutoComplete,
-  Typography,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
@@ -19,17 +17,12 @@ import {
   autoCompleteItem,
   locationData,
   autoCompleteUnit,
-  reqItemLine,
 } from "../../data/inventoryData";
 import Comments from "../../components/Comments";
 import { dataComments, itemLots } from "../../data";
 import { reqItemColumns } from "../../data/requisitionData";
-import $ from "jquery";
-import axios from "axios";
-const { Option } = Select;
 const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
-
+const { Option } = Select;
 const RequisitionCreate = (props) => {
   const data = props.location.state ? props.location.state : 0;
   const [editForm, setEdit] = useState(true);
@@ -61,21 +54,6 @@ const RequisitionCreate = (props) => {
     setData({ ...formData, ...data });
   };
   const submitForm = (values) => {};
-
-  const getItemType = (typeId) => {
-    switch (typeId) {
-      case 0:
-        return "Raw Material";
-      case 1:
-        return "Packaging";
-      case 2:
-        return "Bluk";
-      case 3:
-        return "Finish Good";
-      default:
-        return "Others";
-    }
-  };
 
   const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
@@ -128,13 +106,6 @@ const RequisitionCreate = (props) => {
     disabled: 1,
   };
 
-  const formConfig = {
-    name: "req_form",
-    size: "small",
-    onFinish: (values) => {
-      submitForm(values);
-    },
-  };
   return (
     <MainLayout {...config} data={formData}>
       <div id="form">

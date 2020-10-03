@@ -1,27 +1,20 @@
 import React, { useState } from "react";
-import { Row, Col, Input, Tabs, Select, AutoComplete, Typography } from "antd";
+import { Row, Col, Tabs, Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
+
 import ItemLine from "../../components/VendorItemLine";
-import {
-  autoCompleteUser,
-  autoCompleteUnit,
-  autoCompleteItem,
-} from "../../data/inventoryData";
+import { autoCompleteUnit, autoCompleteItem } from "../../data/inventoryData";
 
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
-import { vendorColumns, vendors, companys } from "../../data/itemData";
-import { currencyData } from "../../data/currencyData";
+
 import { vendorItemColumns } from "../../data/purchase/data";
-const { Option } = Select;
-const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+
+const { Text } = Typography;
 
 const VendorView = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
     data && data
@@ -114,7 +107,6 @@ const VendorView = (props) => {
     onEdit: (e) => {
       e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
       e.preventDefault();

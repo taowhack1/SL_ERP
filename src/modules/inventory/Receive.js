@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { withRouter, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { receiveColumns, receiveData } from "../../data/inventoryData";
 import $ from "jquery";
-import axios from "axios";
 const Receive = (props) => {
   const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState(receiveData);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -44,7 +42,7 @@ const Receive = (props) => {
           <Col span={24}>
             <Table
               columns={receiveColumns}
-              dataSource={dataTable}
+              dataSource={receiveData}
               onChange={onChange}
               size="small"
               onRow={(record, rowIndex) => {

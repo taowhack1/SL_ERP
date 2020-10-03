@@ -1,5 +1,4 @@
 import {
-  Form,
   Button,
   Row,
   Col,
@@ -14,9 +13,7 @@ import {
   EllipsisOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import CustomAutoComplete from "./AutoComplete";
 const { Option } = Select;
-// import { columns } from "../data";
 
 const { Text } = Typography;
 
@@ -37,7 +34,7 @@ const VendorLine = ({
 
   useEffect(() => {
     dataLine && updateData({ req_item_line: [...lineItem] });
-  }, [lineItem]);
+  }, [lineItem, updateData, dataLine]);
 
   const addLine = () => {
     setLine([

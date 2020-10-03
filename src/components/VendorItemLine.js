@@ -1,5 +1,4 @@
 import {
-  Form,
   Button,
   Row,
   Col,
@@ -33,7 +32,7 @@ const VendorLine = ({
 
   useEffect(() => {
     updateData({ dataLine: [...lineItem] });
-  }, [lineItem]);
+  }, [lineItem, updateData]);
 
   const addLine = () => {
     setLine([
@@ -61,7 +60,7 @@ const VendorLine = ({
   const getValidate = (dateArr, type) => {
     let date = [];
     if (dateArr) {
-      if (type == "text") {
+      if (type === "text") {
         date =
           moment(dateArr[0]).format("DD/MM/YYYY") +
           "  -  " +

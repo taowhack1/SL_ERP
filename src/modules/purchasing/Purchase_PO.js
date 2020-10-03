@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { withRouter, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { poColumns, poData } from "../../data/purchase/data";
 import $ from "jquery";
-import axios from "axios";
 const PurchaseOrders = (props) => {
-  const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState(poData);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -27,10 +24,7 @@ const PurchaseOrders = (props) => {
     search: true,
     create: "/purchase/po/create",
     buttonAction: ["Create", "Edit"],
-    edit: {
-      data: dataTable,
-      path: dataTable && "/purchase/po/edit/" + dataTable.id,
-    },
+    edit: {},
     disabledEditBtn: !rowClick,
     discard: "/purchase/po",
     onCancel: () => {
@@ -44,7 +38,7 @@ const PurchaseOrders = (props) => {
           <Col span={24}>
             <Table
               columns={poColumns}
-              dataSource={dataTable}
+              dataSource={poData}
               onChange={onChange}
               size="small"
               onRow={(record, rowIndex) => {
@@ -56,7 +50,6 @@ const PurchaseOrders = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    setSelectedRow(record);
                     props.history.push({
                       pathname: "/purchase/po/view/" + record.id,
                       state: record,

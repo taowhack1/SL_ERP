@@ -1,15 +1,13 @@
-import React, { Component, useState, useEffect } from "react";
-import { withRouter, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { columnsItem } from "../../data/inventoryData";
 import $ from "jquery";
 import axios from "axios";
 const Items = (props) => {
-  const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const [dataTable, setDataTable] = useState([]);
-  const [copyTable, setCopy] = useState([]);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -52,7 +50,6 @@ const Items = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    setSelectedRow(record);
                     props.history.push({
                       pathname: "/purchase/items/view/" + record.id,
                       state: record,

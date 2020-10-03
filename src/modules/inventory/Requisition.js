@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { reqColumns, data } from "../../data/inventoryData";
+import { reqColumns } from "../../data/inventoryData";
 import $ from "jquery";
 import axios from "axios";
 const Requisition = (props) => {

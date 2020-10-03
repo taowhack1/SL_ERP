@@ -14,7 +14,6 @@ import moment from "moment";
 
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
-import { states } from "../../data/index";
 import ItemLine from "./Sales_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
 import { items } from "../../data/items";
@@ -22,9 +21,8 @@ import { units } from "../../data/units";
 import { itemLineColumns } from "../../data/sale/data";
 import { payment_terms } from "../../data/payment_terms";
 import { customerData } from "../../data/sale/data";
-const { Option } = Select;
 const { TextArea } = Input;
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const CustomerCreate = (props) => {
   const [tab, setTab] = useState(1);

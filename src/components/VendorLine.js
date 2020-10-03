@@ -1,20 +1,10 @@
-import {
-  Form,
-  Button,
-  Row,
-  Col,
-  InputNumber,
-  AutoComplete,
-  Typography,
-} from "antd";
+import { Button, Row, Col, InputNumber, AutoComplete, Typography } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import CustomAutoComplete from "./AutoComplete";
-// import { columns } from "../data";
 
 const { Text } = Typography;
 
@@ -33,7 +23,7 @@ const VendorLine = ({
 
   useEffect(() => {
     updateData({ vendor: [...lineItem] });
-  }, [lineItem]);
+  }, [lineItem, updateData]);
 
   const addLine = () => {
     setLine([

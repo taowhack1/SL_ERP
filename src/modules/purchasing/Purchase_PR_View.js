@@ -1,82 +1,36 @@
-import React, { useState, useEffect } from "react";
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Tabs,
-  DatePicker,
-  Radio,
-  Select,
-  AutoComplete,
-  Typography,
-  Space,
-} from "antd";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Row, Col, Tabs, Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import ItemLine from "./pr_ItemLine";
-import {
-  autoCompleteUser,
-  autoCompleteItem,
-  locationData,
-  autoCompleteUnit,
-  reqItemLine,
-} from "../../data/inventoryData";
-import { costcenter } from "../../data/costcenterData";
+import { autoCompleteItem, autoCompleteUnit } from "../../data/inventoryData";
+
 import Comments from "../../components/Comments";
 import { dataComments, itemLots } from "../../data";
 import { prItemColumns } from "../../data/purchase/pr_ItemLineData";
-import { vendors } from "../../data/purchase/data";
-import $ from "jquery";
-import axios from "axios";
-const { Option } = Select;
-const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+import { pr_fields, pr_detail_fields } from "./fields_config/pr";
+import { get_pr_detail } from "../../actions/Purchase/PR_Actions";
+const { Text } = Typography;
 
 const PRView = (props) => {
+  const dispatch = useDispatch();
+
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  console.log(data);
-  const [editForm, setEdit] = useState(true);
 
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          id: 0,
-          pr_code: "REQ2009-00001",
-          pr_date: moment().format("DD/MM/YYYY"),
-          pr_empId: "2563002 ตุลาการ สังอ่อนดี",
-          pr_dueDate: "30/09/2020",
-          pr_desc: "ขอซื้อเพื่อใช้ในการผลิต",
-          pr_costCenter: "250000 MIS",
-          vendorId: null,
-          vendorName: "บริษัท ศิริ แลบอราทอรีส์ จำกัด",
-          dataLine: [
-            {
-              id: 0,
-              item_name: `line_0`,
-              item_qty: 20.0001,
-              item_unit: "unit",
-              item_dueDate: "2020/09/30",
-            },
-            {
-              id: 1,
-              item_name: `line_1`,
-              item_qty: 120.0001,
-              item_unit: "pc",
-              item_dueDate: "2020/09/30",
-            },
-            {
-              id: 2,
-              item_name: `line_2`,
-              item_qty: 55.0001,
-              item_unit: "liter",
-              item_dueDate: "2020/09/30",
-            },
-          ],
-        }
+  const [formData, setData] = useState(data && data ? data : pr_fields);
+
+  useEffect(() => {
+    dispatch(get_pr_detail(formData.pr_id));
+  }, [dispatch]);
+  const pr_detail = useSelector((state) => state.purchase.pr_detail);
+
+  const [formDetail, setDetail] = useState(
+    pr_detail && pr_detail ? pr_detail : pr_detail_fields
   );
+  console.log("formDetail", formDetail);
+  console.log(formData);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
@@ -103,7 +57,7 @@ const PRView = (props) => {
     buttonAction: ["Edit", "Confirm", "Approve", "Reject", "Discard"],
     action: [{ name: "print", link: "www.google.co.th" }],
     step: {
-      current: formData.req_step,
+      current: 1,
       step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
     },
     create: "",
@@ -123,7 +77,6 @@ const PRView = (props) => {
     onEdit: (e) => {
       e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
       e.preventDefault();

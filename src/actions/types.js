@@ -22,3 +22,16 @@ export const GET_ALL_CUSTOMER = "GET_ALL_CUSTOMER";
 export const CREATE_CUSTOMER = "CREATE_CUSTOMER";
 export const UPDATE_CUSTOMER = "UPDATE_CUSTOMER";
 export const INACTIVE_CUSTOMER = "INACTIVE_CUSTOMER";
+
+//Purchase -> PR
+export const GET_ALL_PR = "GET_ALL_PR";
+export const GET_PR_DETAIL = "GET_PR_DETAIL";
+export const UPDATE_PR_DETAIL = "UPDATE_PR_DETAIL";
+export const CREATE_PR = "CREATE_PR";
+export const UPDATE_PR = "UPDATE_PR";
+export const UPDATE_PR_STATUS = "UPDATE_PR_STATUS";
+//Purchase -> PO
+export const GET_ALL_PO = "GET_ALL_PO";
+export const CREATE_PO = "CREATE_PO";
+export const UPDATE_PO = "UPDATE_PO";
+export const UPDATE_PO_STATUS = "UPDATE_PO_STATUS";

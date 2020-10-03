@@ -1,39 +1,21 @@
-import React, { useState, useEffect } from "react";
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Tabs,
-  DatePicker,
-  Radio,
-  Select,
-  AutoComplete,
-  Typography,
-  Space,
-} from "antd";
+import React, { useState } from "react";
+import { Row, Col, Input, Tabs, AutoComplete, Typography, Select } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import ItemLine from "./pr_ItemLine";
-import {
-  autoCompleteUser,
-  autoCompleteItem,
-  locationData,
-  autoCompleteUnit,
-  reqItemLine,
-} from "../../data/inventoryData";
+import { autoCompleteItem, autoCompleteUnit } from "../../data/inventoryData";
 import { costcenter } from "../../data/costcenterData";
 import Comments from "../../components/Comments";
 import { dataComments, itemLots } from "../../data";
 import { prItemColumns } from "../../data/purchase/pr_ItemLineData";
 import { vendors } from "../../data/purchase/data";
-import $ from "jquery";
-import axios from "axios";
-const { Option } = Select;
+import { pr_fields } from "./fields_config/pr";
 const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+const { Text } = Typography;
+const { Option } = Select;
 
 const PurchaseRequisitionCreate = (props) => {
+  const auth = JSON.parse(localStorage.getItem("user"));
   const data =
     props.location && props.location.state ? props.location.state : 0;
   const [editForm, setEdit] = useState(true);
@@ -42,16 +24,10 @@ const PurchaseRequisitionCreate = (props) => {
     data && data
       ? data
       : {
-          id: 0,
-          pr_code: null,
-          pr_date: moment().format("DD/MM/YYYY"),
-          pr_empId: "",
-          pr_dueDate: "",
-          pr_desc: null,
-          pr_costCenter: null,
-          v_id: 0,
-          v_name: "",
-          dataLine: [{}],
+          ...pr_fields,
+          pr_cost_center: auth.dep,
+          pr_created_by: auth.user_name,
+          pr_updated_by: auth.user_name,
         }
   );
   const callback = (key) => {};
@@ -65,21 +41,6 @@ const PurchaseRequisitionCreate = (props) => {
   };
   const submitForm = (values) => {};
 
-  const getItemType = (typeId) => {
-    switch (typeId) {
-      case 0:
-        return "Raw Material";
-      case 1:
-        return "Packaging";
-      case 2:
-        return "Bluk";
-      case 3:
-        return "Finish Good";
-      default:
-        return "Others";
-    }
-  };
-
   const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
     projectId: projectDetail.project_id,
@@ -89,8 +50,8 @@ const PurchaseRequisitionCreate = (props) => {
     breadcrumb: [
       "Home",
       "Purchase Requisition",
-      formData.pr_code ? "Edit" : "Create",
-      formData.pr_code && formData.pr_code,
+      formData.po_no ? "Edit" : "Create",
+      formData.po_no && formData.po_no,
     ],
     search: false,
     buttonAction: editForm
@@ -98,13 +59,13 @@ const PurchaseRequisitionCreate = (props) => {
       : ["Edit", "Approve", "Reject"],
     action: [{ name: "print", link: "www.google.co.th" }],
     step: {
-      current: formData.req_step,
+      current: formData.process_id,
       step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
     },
     create: "",
     save: {
       data: formData,
-      path: formData && "/purchase/pr/view/" + formData.id,
+      path: formData && "/purchase/pr/view/" + formData.pr_id,
     },
     discard: "/purchase/pr",
     onSave: (e) => {
@@ -125,19 +86,6 @@ const PurchaseRequisitionCreate = (props) => {
     },
   };
 
-  const dateConfig = {
-    format: "DD/MM/YYYY HH:mm:ss",
-    value: moment(),
-    disabled: 1,
-  };
-
-  const formConfig = {
-    name: "req_form",
-    size: "small",
-    onFinish: (values) => {
-      submitForm(values);
-    },
-  };
   return (
     <MainLayout {...config} data={formData}>
       <div id="form">
@@ -145,7 +93,7 @@ const PurchaseRequisitionCreate = (props) => {
           <Col span={20}>
             <h2>
               <strong>
-                {formData.pr_code ? "Edit" : "Create"} Purchase Requisition
+                {formData.po_no ? "Edit" : "Create"} Purchase Requisition
               </strong>
             </h2>
           </Col>
@@ -155,72 +103,46 @@ const PurchaseRequisitionCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2" style={{ marginBottom: 20 }}>
-          {formData.pr_code && (
+          {formData.po_no && (
             <h3>
               <b>Ref. Code : </b>
-              {formData.pr_code}
+              {formData.po_no}
             </h3>
           )}
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Cost Center :</Text>
+            <Text strong>Request by :</Text>
           </Col>
 
-          <Col span={8}>
-            <AutoComplete
-              name={"pr_costCenter"}
-              options={costcenter}
-              placceholder={"Costcenter..."}
-              defaultValue={formData.pr_costCenter}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ pr_costCenter: data })}
-              onChange={(data) => upDateFormValue({ pr_costCenter: data })}
-              style={{ width: "100%" }}
-            />
+          <Col span={8}>{auth.user_name + " " + auth.name}</Col>
+          <Col span={2}></Col>
+          <Col span={3}>
+            <Text strong>Cost center :</Text>
           </Col>
-          <Col span={1}></Col>
-          <Col span={4}>{/* <Text strong>Due Date :</Text> */}</Col>
-          <Col span={8}>
-            {/* <DatePicker
-              name={"pr_dueDate"}
-              format={dateConfig.format}
-              style={{ width: "100%" }}
-              placeholder="Due date..."
-              defaultValue={
-                formData.pr_dueDate
-                  ? moment(formData.pr_dueDate, "YYYY-MM-DD HH:mm:ss")
-                  : ""
-              }
-              onChange={(data) => {
-                upDateFormValue({
-                  pr_dueDate: data.format("YYYY-MM-DD HH:mm:ss"),
-                });
-              }}
-            /> */}
-          </Col>
+          <Col span={8}>{formData.pr_cost_center}</Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>Vendor :</Text>
           </Col>
           <Col span={8}>
-            <AutoComplete
-              name={"v_name"}
-              options={vendors}
+            <Select
+              allowClear
+              showSearch
               placceholder={"Vendor..."}
-              defaultValue={formData.v_name}
+              value={formData.vendor_id}
               filterOption={(inputValue, option) =>
                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
                 -1
               }
-              onSelect={(data) => upDateFormValue({ v_name: data })}
-              onChange={(data) => upDateFormValue({ v_name: data })}
+              onSelect={(data) => upDateFormValue({ vendor_id: data })}
+              onChange={(data) => upDateFormValue({ vendor_id: data })}
               style={{ width: "100%" }}
-            />
+            >
+              <Option value={0}>A</Option>
+              <Option value={1}>B</Option>
+            </Select>
           </Col>
         </Row>
         <Row className="col-2 space-top-md">
@@ -235,12 +157,15 @@ const PurchaseRequisitionCreate = (props) => {
                   updateData={updateItemLine}
                   dataLine={formData.dataLine ? formData.dataLine : []}
                   readOnly={false}
+                  pr_id={formData.pr_id}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Reason & Description" key="2">
                 <TextArea
-                  onChange={(e) => upDateFormValue({ pr_desc: e.target.value })}
-                  defaultValue={formData.pr_desc}
+                  onChange={(e) =>
+                    upDateFormValue({ pr_description: e.target.value })
+                  }
+                  defaultValue={formData.pr_description}
                   placeholder="Reason & Description"
                 />
               </Tabs.TabPane>

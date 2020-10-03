@@ -13,13 +13,8 @@ import {
   Space,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
 import Line from "../../components/VendorLine";
-import {
-  autoCompleteUser,
-  locationData,
-  autoCompleteUnit,
-} from "../../data/inventoryData";
+import { autoCompleteUnit } from "../../data/inventoryData";
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
 import { units } from "../../data/units";
@@ -28,12 +23,11 @@ import Barcode from "react-barcode";
 import { vendorColumns, vendors, companys } from "../../data/itemData";
 const { Option } = Select;
 const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+const { Title, Text } = Typography;
 
 const ItemCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
     data && data
@@ -41,7 +35,6 @@ const ItemCreate = (props) => {
       : {
           id: 0,
           itemCode: null,
-          // itemCode: "102SLA03" + Math.floor(Math.random() * 10020),
           itemBarcode: Math.floor(Math.random() * 12351123122122453).toString(),
           itemName: null,
           itemQtyOnhand: null,
@@ -103,7 +96,6 @@ const ItemCreate = (props) => {
     onEdit: (e) => {
       e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
       e.preventDefault();
@@ -114,11 +106,6 @@ const ItemCreate = (props) => {
     },
   };
 
-  const dateConfig = {
-    format: "DD/MM/YYYY HH:mm:ss",
-    value: moment(),
-    disabled: 1,
-  };
   return (
     <MainLayout {...config} data={formData}>
       <div id="form">
@@ -312,15 +299,6 @@ const ItemCreate = (props) => {
                   updateData={upDateFormValue}
                 />
               </Tabs.TabPane>
-              {/* <Tabs.TabPane tab="Note" key="3">
-                <TextArea
-                  rows={3}
-                  placeholder={"Remark your request"}
-                  onChange={(e) =>
-                    upDateFormValue({ req_note: e.target.value })
-                  }
-                />
-              </Tabs.TabPane> */}
             </Tabs>
           </Col>
         </Row>

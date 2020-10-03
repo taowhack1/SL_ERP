@@ -1,13 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
 import MainLayout from "../../components/MainLayout";
 import { withRouter } from "react-router-dom";
 
 const Purchase = (props) => {
-  console.log(props.location.state);
   const projectDetail = props.location.state && props.location.state;
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
+  // const onChange = (pagination, filters, sorter, extra) => {
+  //   console.log("params", pagination, filters, sorter, extra);
+  // };
   const config = {
     projectId: projectDetail.project_id,
     title: projectDetail.project_name,

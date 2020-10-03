@@ -14,16 +14,13 @@ import moment from "moment";
 
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
-import { states } from "../../data/index";
 import ItemLine from "./Receive_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
 import { items } from "../../data/items";
 import { units } from "../../data/units";
 import { receiveLineColumns } from "../../data/inventory/data";
-import { payment_terms } from "../../data/payment_terms";
 import { vendorData, poData } from "../../data/purchase/data";
 import { locations } from "../../data/locationData";
-import numeral from "numeral";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Text } = Typography;

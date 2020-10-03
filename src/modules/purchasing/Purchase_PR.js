@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { reqColumns } from "../../data/inventoryData";
-import { prData, prColumns } from "../../data/purchase/data";
+import { pr_list_columns } from "./fields_config/pr";
 import $ from "jquery";
-import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { get_pr_list } from "../../actions/Purchase/PR_Actions";
 const Requisition = (props) => {
+  const dispatch = useDispatch();
+
   const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
-  const [selectedRow, setSelectedRow] = useState();
+  const data = useSelector((state) => state.purchase.pr_list);
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState(prData);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  // useEffect(() => {
-  //   axios.get("http://localhost:3001/requisition").then((res) => {
-  //     setDataTable(res.data);
-  //   });
-  // }, []);
+  useEffect(() => {
+    function getList() {
+      dispatch(get_pr_list());
+    }
+    getList();
+  }, [dispatch]);
   const config = {
     projectId: projectDetail.project_id,
     title: projectDetail.project_name,
@@ -28,10 +30,7 @@ const Requisition = (props) => {
     search: true,
     create: "/purchase/pr/create",
     buttonAction: ["Create", "Edit"],
-    edit: {
-      data: selectedRow,
-      path: selectedRow && "/purchase/pr/edit/" + selectedRow.id,
-    },
+    edit: {},
     disabledEditBtn: !rowClick,
     discard: "/purchase/pr",
     onCancel: () => {
@@ -44,8 +43,8 @@ const Requisition = (props) => {
         <Row>
           <Col span={24}>
             <Table
-              columns={prColumns}
-              dataSource={dataTable}
+              columns={pr_list_columns}
+              dataSource={data}
               onChange={onChange}
               size="small"
               onRow={(record, rowIndex) => {
@@ -57,10 +56,8 @@ const Requisition = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    setSelectedRow(record);
-                    console.log(record);
                     props.history.push({
-                      pathname: "/purchase/pr/view/" + record.id,
+                      pathname: "/purchase/pr/edit/" + record.pr_id,
                       state: record,
                     });
                   },

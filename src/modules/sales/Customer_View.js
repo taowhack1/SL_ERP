@@ -1,29 +1,16 @@
 import React, { useState } from "react";
-import { Row, Col, Input, Tabs, Select, AutoComplete, Typography } from "antd";
+import { Row, Col, Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
-import ItemLine from "../../components/VendorItemLine";
-import {
-  autoCompleteUser,
-  autoCompleteUnit,
-  autoCompleteItem,
-} from "../../data/inventoryData";
-
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
-import { customersColumns, customerss, companys } from "../../data/itemData";
-import { currencyData } from "../../data/currencyData";
-import { customersItemColumns } from "../../data/sale/data";
-const { Option } = Select;
-const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+
+const { Text } = Typography;
 
 const CustomerView = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  const [editForm, setEdit] = useState(true);
 
-  const [formData, setData] = useState(
+  const [formData] = useState(
     data && data
       ? data
       : {
@@ -48,11 +35,6 @@ const CustomerView = (props) => {
           c_status: 0,
         }
   );
-  const callback = (key) => {};
-
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
-  };
   const getButton = (status) => {
     switch (status) {
       // case 0:
@@ -102,7 +84,6 @@ const CustomerView = (props) => {
     onEdit: (e) => {
       e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
       e.preventDefault();

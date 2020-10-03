@@ -54,6 +54,11 @@ export const signIn = (user) => async (dispatch) => {
 };
 
 export const signIn2 = (user) => {
+  localStorage.setItem("authenticated", true);
+  localStorage.setItem(
+    "user",
+    JSON.stringify({ ...user, name: "กิตติกานต์", dep: "[250000] MIS" })
+  );
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -80,14 +85,14 @@ export const signIn2 = (user) => {
         });
       })
       .then(() => {
-        localStorage.setItem("authenticated", true);
-        localStorage.setItem("user", JSON.stringify(user));
         dispatch({
           type: AUTH_USER,
           payload: user,
         });
         alert("Login Success");
-        return { status: 1 };
+      })
+      .then(() => {
+        return 1;
       });
   };
 };

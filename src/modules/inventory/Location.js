@@ -143,7 +143,7 @@ const Location = () => {
           {...layout}
           preserve={false}
           name="nest-messages"
-          initialValues={modalTitle == "Create" ? newLo : editRow}
+          initialValues={modalTitle === "Create" ? newLo : editRow}
         >
           <Form.Item
             name={"locationName"}

@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { withRouter, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { saleOrderColumns, saleOrderData } from "../../data/sale/data";
 import $ from "jquery";
-import axios from "axios";
 const SaleOrder = (props) => {
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState(saleOrderData && saleOrderData);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -43,7 +41,7 @@ const SaleOrder = (props) => {
           <Col span={24}>
             <Table
               columns={saleOrderColumns}
-              dataSource={dataTable}
+              dataSource={saleOrderData}
               onChange={onChange}
               size="small"
               rowClassName="row-pointer"

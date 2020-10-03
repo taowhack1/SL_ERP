@@ -14,7 +14,6 @@ import moment from "moment";
 
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
-import { states } from "../../data/index";
 import ItemLine from "./Sales_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
 import { items } from "../../data/items";
@@ -28,7 +27,7 @@ const { TextArea } = Input;
 const { Text } = Typography;
 
 const SaleOrderCreate = (props) => {
-  const [tab, setTab] = useState(1);
+  const [tabId] = useState(1);
   const data =
     props.location && props.location.state ? props.location.state : 0;
 
@@ -56,7 +55,6 @@ const SaleOrderCreate = (props) => {
       value: "[" + cus.c_code + "] " + cus.c_name,
     });
   });
-  const [refresh, setRefresh] = useState(true);
 
   const [refData] = useState(quotationData && quotationData);
   const [formData, setData] = useState(
@@ -302,7 +300,7 @@ const SaleOrderCreate = (props) => {
             </Tabs>
           </Col>
         </Row>
-        {tab === 1 ? (
+        {tabId === 1 ? (
           <TotalFooter
             excludeVat={formData.so_total}
             vat={formData.so_vat}

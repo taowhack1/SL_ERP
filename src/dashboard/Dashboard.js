@@ -7,6 +7,11 @@ import { Form, Input } from "antd";
 import { addSalary, delSalary } from "../actions/salaryActions";
 import { signIn2, signIn3 } from "../actions/authActions";
 const Dashboard = (props) => {
+  const auth = localStorage.getItem("user");
+  if (!auth) {
+    alert("Authentication required\nPlase Login.");
+    props.history.push("/login");
+  }
   const { salary } = useSelector((state) => state.salary);
   console.log(salary);
   const dispatch = useDispatch();

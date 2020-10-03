@@ -1,38 +1,15 @@
-import React, { useState, useEffect } from "react";
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Tabs,
-  DatePicker,
-  Radio,
-  Select,
-  AutoComplete,
-  Typography,
-} from "antd";
+import React, { useState } from "react";
+import { Row, Col, Form, Tabs, Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
 import ItemLine from "../../components/ItemLine";
-import {
-  autoCompleteUser,
-  autoCompleteItem,
-  locationData,
-  autoCompleteUnit,
-  reqItemLine,
-} from "../../data/inventoryData";
+import { autoCompleteItem, autoCompleteUnit } from "../../data/inventoryData";
 import Comments from "../../components/Comments";
 import { dataComments, itemLots } from "../../data";
 import { reqItemColumns } from "../../data/requisitionData";
-import $ from "jquery";
-import axios from "axios";
-const { Option } = Select;
-const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+const { Paragraph, Text } = Typography;
 
 const RequisitionView = (props) => {
   const data = props.location.state ? props.location.state : 0;
-  const [editForm, setEdit] = useState(true);
   const [formData, setData] = useState(
     data && data
       ? data
@@ -50,10 +27,6 @@ const RequisitionView = (props) => {
   );
 
   const callback = (key) => {};
-
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
-  };
 
   const updateItemLine = (data) => {
     setData({ ...formData, ...data });
@@ -113,13 +86,6 @@ const RequisitionView = (props) => {
       console.log("Confirm");
     },
   };
-
-  const dateConfig = {
-    format: "DD/MM/YYYY HH:mm:ss",
-    value: moment(),
-    disabled: 1,
-  };
-
   const formConfig = {
     name: "req_form",
     size: "small",

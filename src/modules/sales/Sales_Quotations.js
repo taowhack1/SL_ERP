@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { withRouter, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { quotationColumns, quotationData } from "../../data/sale/data";
 import $ from "jquery";
-import axios from "axios";
 const Quotations = (props) => {
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState(quotationData && quotationData);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -45,7 +43,7 @@ const Quotations = (props) => {
           <Col span={24}>
             <Table
               columns={quotationColumns}
-              dataSource={dataTable}
+              dataSource={quotationData}
               onChange={onChange}
               size="small"
               rowClassName="row-pointer"

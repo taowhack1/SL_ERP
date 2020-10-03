@@ -143,7 +143,7 @@ const Warehouse = () => {
           {...layout}
           preserve={false}
           name="nest-messages"
-          initialValues={modalTitle == "Create" ? newWh : editRow}
+          initialValues={modalTitle === "Create" ? newWh : editRow}
         >
           <Form.Item
             name={"whName"}

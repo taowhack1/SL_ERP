@@ -20,7 +20,7 @@ export const item_fields = {
   type_name: null,
   category_id: 1,
   category_name: null,
-  item_qty_tg: null,
+  tg_item_qty: null,
   branch_id: 1,
   branch_name: null,
   identify_benefit_id: 1,
@@ -50,7 +50,7 @@ export const item_fields = {
   // uom_id: null,
   // type_id: null,
   // category_id: null,
-  // item_qty_tg: null,
+  // tg_item_qty: null,
   // branch_id: 1,
   // identify_benefit_id: 1,
   // item_remark: null,
@@ -77,7 +77,7 @@ export const item_show_columns = [
   },
   {
     title: "Qty On Hand",
-    dataIndex: "item_qty_tg",
+    dataIndex: "tg_item_qty",
   },
   {
     title: "Category",

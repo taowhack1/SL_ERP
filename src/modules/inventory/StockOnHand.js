@@ -1,16 +1,8 @@
 import React, { useState } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { Badge, Menu, Dropdown, Space } from "antd";
-import { DownOutlined } from "@ant-design/icons";
-
-const menu = (
-  <Menu>
-    <Menu.Item>Action 1</Menu.Item>
-    <Menu.Item>Action 2</Menu.Item>
-  </Menu>
-);
+import { Badge } from "antd";
 
 const StockOnHand = () => {
   const [selectedRow, setSelectedRow] = useState();

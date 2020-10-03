@@ -1,29 +1,21 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { columnsItem, data } from "../../data/inventoryData";
-import { getSelectDetail, getAllItems } from "../../actions/itemActions";
+import { getAllItems } from "../../actions/itemActions";
 import { item_show_columns } from "../../page_fields/inventory/item";
 import $ from "jquery";
-import axios from "axios";
 const Items = (props) => {
   const dispatch = useDispatch();
-  const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState([]);
-  const [copyTable, setCopy] = useState([]);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  const dataItems = useSelector((state) => state.item.items);
   useEffect(() => {
-    // axios.get("http://localhost:3001/items").then((res) => {
-    //   setDataTable(res.data);
-    // });
     dispatch(getAllItems());
-  }, []);
+  }, [dispatch]);
+  const dataItems = useSelector((state) => state.item.items);
 
   const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
@@ -35,10 +27,7 @@ const Items = (props) => {
     search: true,
     create: "/inventory/items/create",
     buttonAction: ["Create", "Edit"],
-    edit: {
-      data: selectedRow,
-      path: selectedRow && "/inventory/items/edit/" + selectedRow.key,
-    },
+    edit: {},
     disabledEditBtn: !rowClick,
     discard: "/inventory/items",
     onCancel: () => {
@@ -65,7 +54,6 @@ const Items = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    setSelectedRow(record);
                     props.history.push({
                       pathname: "/inventory/items/view/" + record.item_id,
                       state: record,

@@ -14,7 +14,6 @@ import moment from "moment";
 
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
-import { states } from "../../data/index";
 import ItemLine from "./Purchase_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
 import { items } from "../../data/items";
@@ -22,7 +21,6 @@ import { units } from "../../data/units";
 import { itemLineColumns } from "../../data/sale/data";
 import { payment_terms } from "../../data/payment_terms";
 import { vendorData, prData } from "../../data/purchase/data";
-import numeral from "numeral";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -149,7 +147,6 @@ const PurchaseOrderCreate = (props) => {
   const getDataRef = (refId, mainData, refData) => {
     let copyMain = { ...mainData };
     let copyRef = { ...refData[refId] };
-    let copyDataLine = [{ ...mainData.dataLine }];
     copyMain.pr_code = copyRef.pr_code;
     copyMain.v_id = copyRef.v_id;
     copyMain.v_name = copyRef.v_name;

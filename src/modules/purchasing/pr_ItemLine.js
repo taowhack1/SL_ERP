@@ -1,5 +1,4 @@
 import {
-  Form,
   Button,
   Row,
   Col,
@@ -14,44 +13,39 @@ import {
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-const { Option } = Select;
-// import { columns } from "../data";
-
+import { get_pr_detail } from "../../actions/Purchase/PR_Actions";
+import { pr_detail_fields } from "./fields_config/pr";
 const { Text } = Typography;
 
 const VendorLine = ({
   units,
-  itemLots,
   items,
   dataLine,
   updateData,
   readOnly,
   columns,
+  pr_id,
 }) => {
-  // console.log(dataLine);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(get_pr_detail(pr_id));
+  }, [dispatch]);
+  const pr_detail = useSelector((state) => state.purchase.pr_detail);
   const countItem = dataLine && dataLine.length ? dataLine.length : 0;
   const [count, setCount] = useState(countItem);
   const [lineItem, setLine] = useState(
-    dataLine && dataLine ? [...dataLine] : []
+    dataLine && dataLine ? [...pr_detail] : []
   );
 
   useEffect(() => {
-    dataLine && updateData({ dataLine: [...lineItem] });
+    // dataLine && updateData({ dataLine: [...lineItem] });
   }, [lineItem]);
 
   const addLine = () => {
-    setLine([
-      ...lineItem,
-      {
-        id: count,
-        item: `line_${count}`,
-        item_qty: 0.0001,
-        item_unit: "unit",
-        item_due_date: null,
-      },
-    ]);
+    setLine([...lineItem, pr_detail_fields]);
     setCount(count + 1);
   };
 
@@ -97,7 +91,7 @@ const VendorLine = ({
       {!readOnly ? (
         <>
           {/* Edit Form */}
-          {lineItem.map((line, key) => (
+          {pr_detail.map((line, key) => (
             <Row
               key={line.id}
               style={{
@@ -113,13 +107,13 @@ const VendorLine = ({
                   style={{ width: "100%" }}
                   options={items}
                   placeholder="Name..."
-                  defaultValue={line.item}
-                  filterOption={(inputValue, option) =>
-                    option.value
-                      .toUpperCase()
-                      .indexOf(inputValue.toUpperCase()) !== -1
-                  }
-                  onChange={(data) => onChangeValue(line.id, { item: data })}
+                  defaultValue={line.item_id}
+                  // filterOption={(inputValue, option) =>
+                  //   option.value
+                  //     .toUpperCase()
+                  //     .indexOf(inputValue.toUpperCase()) !== -1
+                  // }
+                  onChange={(data) => onChangeValue(line.id, { item_id: data })}
                 />
               </Col>
               <Col span={3} className="text-number">
@@ -130,9 +124,9 @@ const VendorLine = ({
                   precision={4}
                   style={{ width: "100%" }}
                   disabled={0}
-                  defaultValue={line.item_qty}
+                  defaultValue={line.pr_detail_qty}
                   onChange={(data) =>
-                    onChangeValue(line.id, { item_qty: data })
+                    onChangeValue(line.id, { pr_detail_qty: data })
                   }
                 />
               </Col>
@@ -141,32 +135,34 @@ const VendorLine = ({
                   style={{ width: "100%" }}
                   options={units}
                   placeholder="Unit..."
-                  defaultValue={line.item_unit}
-                  filterOption={(inputValue, option) =>
-                    option.value
-                      .toUpperCase()
-                      .indexOf(inputValue.toUpperCase()) !== -1
-                  }
-                  onChange={(data) =>
-                    onChangeValue(line.id, { item_unit: data })
-                  }
+                  defaultValue={line.uom_id}
+                  // filterOption={(inputValue, option) =>
+                  //   option.value
+                  //     .toUpperCase()
+                  //     .indexOf(inputValue.toUpperCase()) !== -1
+                  // }
+                  onChange={(data) => onChangeValue(line.id, { uom_id: data })}
                 />
               </Col>
 
               <Col span={5} className="text-number">
+                {console.log(line.pr_detail_due_date)}
                 <DatePicker
-                  name={"item_due_date"}
+                  name={"pr_detail_due_date"}
                   format={dateConfig.format}
                   style={{ width: "100%" }}
                   placeholder="Due date..."
                   defaultValue={
-                    line.item_due_date
-                      ? moment(line.item_due_date, "YYYY-MM-DD HH:mm:ss")
+                    line.pr_detail_due_date
+                      ? moment(
+                          line.pr_detail_due_date,
+                          "YYYY-MM-DD HH:mm:ss"
+                        ).add(7, "hours")
                       : ""
                   }
                   onChange={(data) => {
                     onChangeValue(line.id, {
-                      item_due_date: data.format("DD/MM/YYYY HH:mm:ss"),
+                      pr_detail_due_date: data.format("DD/MM/YYYY HH:mm:ss"),
                     });
                   }}
                 />
@@ -203,18 +199,18 @@ const VendorLine = ({
               className="col-2"
             >
               <Col span={12} className="text-string">
-                <Text>{line.item}</Text>
+                <Text>{line.item_id}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{line.item_qty}</Text>
+                <Text>{line.pr_detail_qty}</Text>
               </Col>
               <Col span={3} className="text-string">
-                <Text>{line.item_unit}</Text>
+                <Text>{line.uom_id}</Text>
               </Col>
 
               <Col span={5} className="text-number">
                 <Text>
-                  {moment(line.item_due_date, "DD/MM/YYYY").format(
+                  {moment(line.pr_detail_due_date, "DD/MM/YYYY").format(
                     "DD/MM/YYYY"
                   )}
                 </Text>
