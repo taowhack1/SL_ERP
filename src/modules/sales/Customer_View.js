@@ -63,7 +63,7 @@ const CustomerView = (props) => {
     ],
     search: false,
     buttonAction: getButton(formData.c_status),
-    action: [{ name: "print", link: "www.google.co.th" }],
+    action: [{ name: "Print", link: "www.google.co.th" }],
     step: {
       current: formData.c_status,
       step: ["Draft", "Confirm", "Verify", "Approve", "Done"],

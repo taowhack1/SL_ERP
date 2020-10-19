@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
@@ -16,11 +17,11 @@ const StockOnHand = () => {
   //     setDataTable(res.data);
   //   });
   // }, []);
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Stock on hand"],
     search: true,
@@ -45,12 +46,18 @@ const StockOnHand = () => {
       {
         title: "Item Status",
         key: "state",
-        render: () => (
-          <span>
-            <Badge status="success" />
-            PASS
-          </span>
-        ),
+        render: () =>
+          Math.round(Math.random() * 100) % 2 ? (
+            <span>
+              <Badge status="success" />
+              PASS
+            </span>
+          ) : (
+            <span>
+              <Badge status="warning" />
+              HOLD
+            </span>
+          ),
       },
     ];
 
@@ -71,9 +78,25 @@ const StockOnHand = () => {
   };
 
   const mainColumns = [
-    { title: "Item Code", dataIndex: "itemCode", key: "itemCode" },
-    { title: "Name", dataIndex: "itemName", key: "itemName" },
-    { title: "Quantity on hand", dataIndex: "itemQty", key: "itemOnHand" },
+    {
+      title: "Item Code",
+      dataIndex: "itemCode",
+      key: "itemCode",
+      align: "left",
+    },
+    { title: "Name", dataIndex: "itemName", key: "itemName", align: "left" },
+    {
+      title: "Quantity on hand",
+      dataIndex: "itemQty",
+      key: "itemOnHand",
+      align: "right",
+    },
+    {
+      title: "Quantity on QC",
+      dataIndex: "itemQty_qc",
+      key: "itemQty_qc",
+      align: "right",
+    },
   ];
 
   const mainData = [];
@@ -83,6 +106,7 @@ const StockOnHand = () => {
       itemCode: "[102SLA030001]",
       itemName: "Item " + i + 1,
       itemQty: Math.round(Math.random() * 100),
+      itemQty_qc: Math.round(Math.random() * 100),
     });
   }
 

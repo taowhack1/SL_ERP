@@ -15,7 +15,7 @@ const Customer = (props) => {
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   // const [dataTable, setDataTable] = useState([...customerData]);
-  const customers = useSelector((state) => state.sale.customers);
+  const customers = useSelector((state) => state.sales.master.customers);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };

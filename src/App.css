@@ -38,7 +38,8 @@
 }
 .ant-input-number-input {
   text-align: right;
-  padding-right: 25px;
+  /* right: 25px; */
+  padding-right: 25px !important;
 }
 .col-2 .ant-form-item {
   margin-bottom: 5px;
@@ -198,6 +199,9 @@ button.primary:hover {
 .row-margin-vertical {
   margin: 5px 0px !important;
 }
+.row-margin-vertical-lg {
+  margin: 15px 0px !important;
+}
 .row-tab-margin {
   margin-top: 15px;
 }
@@ -211,9 +215,12 @@ button.primary:hover {
 }
 .step-item.pass {
   color: rgba(0, 0, 0, 0.45);
+  /* color: red; */
 }
 .step-item:not(:last-of-type)::after {
-  content: "/";
+  content: " > ";
+  /* color: red; */
+  font-weight: bold;
   margin-left: 8px;
   margin-right: 8px;
 }
@@ -242,4 +249,13 @@ button.primary:hover {
 }
 .ant-form-item-label {
   margin-right: 10px;
+}
+.total-number {
+  padding-right: 10px;
+  border: 1px solid #cccccc;
+  width: 100%;
+  background-color: #f2f2f2;
+}
+.text-view {
+  color: #666666;
 }

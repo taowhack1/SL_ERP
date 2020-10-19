@@ -1,21 +1,12 @@
 import React from "react";
 import { Dropdown, Button, Menu } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
-import {
-  operationsMenu,
-  masterDataMenu,
-  menuConfig,
-  menuLevel1,
-  menuReport,
-} from "../data";
 import { Link } from "react-router-dom";
-import { projects, menus } from "../data/menu";
+import { useSelector } from "react-redux";
 
 export default function MainConfig(props) {
   const projectId = props.projectId && props.projectId ? props.projectId : 0;
-  // const projectMenu = menus.filter((menu) => menu.projectId === projectId);
-  let projects = JSON.parse(localStorage.getItem("projects"));
-  let menusLocal = JSON.parse(localStorage.getItem("menus"));
+  const menusLocal = useSelector((state) => state.auth.menus);
   let projectMenus = menusLocal
     ? menusLocal.filter(
         (menu) => menu.project_id === projectId && menu.menu_parent === 0
@@ -67,28 +58,6 @@ export default function MainConfig(props) {
             </Dropdown>
           );
         })}
-        {/* {projectMenu.map((menu, key) => {
-          return menu.subMenu.length > 0 ? (
-            <Dropdown
-              overlay={getSubMenu(menu)}
-              trigger={["click"]}
-              key={menu.id}
-            >
-              <Button type="text" className="ant-dropdown-link">
-                {menu.name}{" "}
-                {menu.subMenu && menu.subMenu.length > 0 ? (
-                  <CaretDownOutlined />
-                ) : null}
-              </Button>
-            </Dropdown>
-          ) : (
-            <Link to={menu.link} key={menu.id}>
-              <Button type="text" className="ant-dropdown-link">
-                {menu.name}
-              </Button>
-            </Link>
-          );
-        })} */}
       </div>
     </>
   );

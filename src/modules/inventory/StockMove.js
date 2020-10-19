@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
@@ -9,11 +10,11 @@ const Requisition = (props) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Stock move"],
     search: true,

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Row,
   Col,
@@ -33,6 +34,7 @@ const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
 
 const ItemView = (props) => {
+  const master_data = useSelector((state) => state.inventory.master_data);
   const data = props.location.state ? props.location.state : 0;
   const [editForm, setEdit] = useState(true);
 
@@ -43,11 +45,11 @@ const ItemView = (props) => {
     setData({ ...formData, ...data });
   };
 
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -57,7 +59,7 @@ const ItemView = (props) => {
     ],
     search: false,
     buttonAction: ["Edit", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    action: [{ name: "Print", link: "www.google.co.th" }],
     step: {},
     create: "",
     save: {},
@@ -172,7 +174,14 @@ const ItemView = (props) => {
                     <Text strong>Category </Text>
                   </Col>
                   <Col span={8}>
-                    <Text>{formData.category_id}</Text>
+                    <Text>
+                      {getNameById(
+                        formData.category_id,
+                        master_data.item_category,
+                        "category_id",
+                        "category_name"
+                      )}
+                    </Text>
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -184,12 +193,18 @@ const ItemView = (props) => {
                   </Col>
 
                   <Col span={2}></Col>
-
                   <Col span={3}>
-                    <Text strong>Sale Price</Text>
+                    <Text strong>Item Type </Text>
                   </Col>
                   <Col span={8}>
-                    <Text>{formData.item_price}</Text>
+                    <Text>
+                      {getNameById(
+                        formData.type_id,
+                        master_data.item_type,
+                        "type_id",
+                        "type_name"
+                      )}
+                    </Text>
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -197,14 +212,22 @@ const ItemView = (props) => {
                     <Text strong>Unit of measure</Text>
                   </Col>
                   <Col span={8}>
-                    <Text>{formData.uom_id}</Text>
+                    <Text>
+                      {getNameById(
+                        formData.uom_id,
+                        master_data.item_uom,
+                        "uom_id",
+                        "uom_no"
+                      )}
+                    </Text>
                   </Col>
                   <Col span={2}></Col>
+
                   <Col span={3}>
-                    <Text strong>Item Type </Text>
+                    <Text strong>Sale Price</Text>
                   </Col>
                   <Col span={8}>
-                    <Text>{formData.type_id}</Text>
+                    <Text>{formData.item_price}</Text>
                   </Col>
                 </Row>
                 <Row className="col-2">

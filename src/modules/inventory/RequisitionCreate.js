@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Row,
   Col,
@@ -8,6 +9,7 @@ import {
   Radio,
   Select,
   AutoComplete,
+  Typography,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
@@ -21,10 +23,14 @@ import {
 import Comments from "../../components/Comments";
 import { dataComments, itemLots } from "../../data";
 import { reqItemColumns } from "../../data/requisitionData";
+import { getNameById } from "../../include/js/function_main";
+const { Text } = Typography;
 const { TextArea } = Input;
 const { Option } = Select;
 const RequisitionCreate = (props) => {
+  const auth = useSelector((state) => state.auth.authData[0]);
   const data = props.location.state ? props.location.state : 0;
+  const master_data = useSelector((state) => state.inventory.master_data);
   const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
@@ -55,11 +61,11 @@ const RequisitionCreate = (props) => {
   };
   const submitForm = (values) => {};
 
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -71,7 +77,7 @@ const RequisitionCreate = (props) => {
     buttonAction: editForm
       ? ["Save", "SaveConfirm", "Discard"]
       : ["Edit", "Approve", "Reject"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    action: [{ name: "Print", link: "www.google.co.th" }],
     step: {
       current: formData.req_step,
       step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
@@ -110,71 +116,42 @@ const RequisitionCreate = (props) => {
     <MainLayout {...config} data={formData}>
       <div id="form">
         <Row className="col-2">
-          <h2>
-            <strong>Purchase Requisition</strong>
-          </h2>
+          <Col span={20}>
+            <h2>
+              <strong>
+                {/* {data_head.pr_no ? "Edit" : "Create"}  */}
+                Requisition
+              </strong>
+            </h2>
+          </Col>
+          <Col span={4}>
+            <Text strong>PR Date : </Text>
+            {moment().format("DD/MM/YYYY")}
+          </Col>
         </Row>
         <Row className="col-2" style={{ marginBottom: 20 }}>
-          <h3>
-            <b>Ref. Code : </b>
-            {formData.req_code}
-          </h3>
+          <h3>{/* <b>Ref. Code : </b>
+            {formData.req_code} */}</h3>
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className="col-2 row-margin-vertical" style={{ paddingBottom: 8 }}>
           <Col span={3}>
-            <h4>Contact Name :</h4>
+            <Text strong>Request By :</Text>
           </Col>
 
           <Col span={8}>
-            <AutoComplete
-              name={"req_contact"}
-              options={autoCompleteUser}
-              placceholder={"contact person"}
-              defaultValue={formData.req_contact}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ req_contact: data })}
-              onChange={(data) => upDateFormValue({ req_contact: data })}
-              style={{ width: "100%" }}
-            />
+            <Text>{auth.employee_no_name_eng}</Text>
           </Col>
           <Col span={1}></Col>
           <Col span={4}>
-            <h4>Request Date :</h4>
+            <Text strong>Cost Center :</Text>
           </Col>
           <Col span={8}>
-            <DatePicker
-              name={"req_date"}
-              format={dateConfig.format}
-              style={{ width: "100%" }}
-              defaultValue={
-                formData.req_date ? moment(formData.req_date, "YYYY-MM-DD") : ""
-              }
-              onChange={(data) => {
-                upDateFormValue({
-                  req_date: data.format("YYYY-MM-DD HH:mm:ss"),
-                });
-              }}
-            />
+            <Text>{auth.department_no_name}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <h4>Description :</h4>
-          </Col>
-          <Col span={8}>
-            <Input
-              name={"req_desc"}
-              onChange={(e) => upDateFormValue({ req_desc: e.target.value })}
-              defaultValue={formData.req_desc}
-            />
-          </Col>
-
-          <Col span={1}></Col>
-          <Col span={4}>
-            <h4>Destination Location :</h4>
+            <Text strong>Destination Location :</Text>
           </Col>
           <Col span={8}>
             <Select
@@ -197,26 +174,91 @@ const RequisitionCreate = (props) => {
               })}
             </Select>
           </Col>
+
+          <Col span={1}></Col>
+          <Col span={4}>
+            <Text strong>Item Type </Text>
+          </Col>
+          <Col span={8}>
+            <Select
+              placeholder={"Select Item Type"}
+              onChange={(data) => upDateFormValue({ type_id: data })}
+              // value={}
+              style={{ width: "100%" }}
+            >
+              {master_data.item_type &&
+                master_data.item_type.map((type) => {
+                  return (
+                    <Option key={type.type_id} value={type.type_id}>
+                      {type.type_no}
+                    </Option>
+                  );
+                })}
+            </Select>
+          </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <h4>Item Type :</h4>
+            <Text strong>Due Date :</Text>
           </Col>
           <Col span={8}>
-            <Radio.Group
-              name={"req_item_type"}
-              onChange={(e) =>
-                upDateFormValue({ req_item_type: e.target.value })
+            <DatePicker
+              name={"req_date"}
+              format={dateConfig.format}
+              style={{ width: "100%" }}
+              defaultValue={
+                formData.req_date ? moment(formData.req_date, "YYYY-MM-DD") : ""
               }
-              defaultValue={formData.req_item_type}
-            >
-              <Radio value={0}>RM</Radio>
-              <Radio value={1}>PK</Radio>
-              <Radio value={2}>BULK</Radio>
-              <Radio value={3}>FG</Radio>
-              <Radio value={4}>Others</Radio>
-            </Radio.Group>
+              onChange={(data) => {
+                upDateFormValue({
+                  req_date: data.format("YYYY-MM-DD HH:mm:ss"),
+                });
+              }}
+            />
           </Col>
+          <Col span={1}></Col>
+          <Col span={4}>
+            <Text strong>Category </Text>
+          </Col>
+          <Col span={8}>
+            <Select
+              placeholder={"Select Category"}
+              onSelect={(data) =>
+                upDateFormValue({
+                  category_id: data,
+                })
+              }
+              style={{ width: "100%" }}
+              // value={getNameById(
+              //   formData.category_id,
+              //   master_data.item_category,
+              //   "category_id",
+              //   "category_name"
+              // )}
+            >
+              {master_data.item_category.map((categ) => {
+                return (
+                  <Option key={categ.category_id} value={categ.category_id}>
+                    {categ.category_name}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Col>
+        </Row>
+        {/*  */}
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Description :</Text>
+          </Col>
+          <Col span={8}>
+            <Input
+              name={"req_desc"}
+              onChange={(e) => upDateFormValue({ req_desc: e.target.value })}
+              defaultValue={formData.req_desc}
+            />
+          </Col>
+          <Col span={1}></Col>
         </Row>
         <Row className="col-2 space-top-md">
           <Col span={24}>

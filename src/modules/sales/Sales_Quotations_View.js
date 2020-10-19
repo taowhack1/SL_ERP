@@ -1,157 +1,234 @@
-import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Select,
-  AutoComplete,
-  Typography,
-  DatePicker,
-} from "antd";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Row, Col, Tabs, Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
-
-import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
 import ItemLine from "./Sales_ItemLine";
+import Comments from "../../components/Comments";
 import TotalFooter from "../../components/TotalFooter";
-import { items } from "../../data/items";
-import { units } from "../../data/units";
-import { itemLineColumns } from "../../data/sale/data";
-import { payment_terms } from "../../data/payment_terms";
-import { customerData } from "../../data/sale/data";
-const { Option } = Select;
-const { TextArea } = Input;
-const { Title, Text } = Typography;
+import ModalRemark from "../../components/Modal_Remark";
+import { qn_actions } from "../../actions/sales";
+import { get_log_by_id } from "../../actions/comment&log";
+import { quotation_detail_fields } from "./configs";
+import { sortData } from "../../include/js/function_main";
 
-const CustomerCreate = (props) => {
-  const [tab, setTab] = useState(1);
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
-  const [editForm, setEdit] = useState(true);
+const { Text } = Typography;
 
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          id: 0,
-          q_code: null,
-          q_create_date: moment().format("YYYY-MM-DD"),
-          q_expire_date: null,
-          c_name: null,
-          c_company: null,
-          q_sale_person: "Sale User 1",
-          c_payment_term: null,
-          q_total: 0,
-          q_vat: 0,
-          q_include_vat: 0,
-          q_status: 0,
-          q_remark: null,
-          dataLine: [
-            {
-              id: 0,
-              item: null,
-              item_qty: 0,
-              item_unit: null,
-              item_unit_price: 0,
-              item_subtotal: 0,
-            },
-          ],
-        }
-  );
+const Sales_Quotations = (props) => {
+  const dispatch = useDispatch();
+  const [tab, setTab] = useState("1");
+  const auth = useSelector((state) => state.auth.authData[0]);
+  const data_head = useSelector((state) => state.sales.qn.qn_head);
+  const data_detail = useSelector((state) => state.sales.qn.qn_detail);
+  const dataComment = useSelector((state) => state.log.comment_log);
+  console.log(data_detail);
+  const [remark, setRemark] = useState("");
+  const [openRemarkModal, setOpenRemarkModal] = useState({
+    visible: false,
+    loading: false,
+  });
+  const flow =
+    data_head &&
+    data_head.data_flow_process &&
+    data_head.data_flow_process.map((step) => {
+      return step.all_group_in_node;
+    });
   const callback = (key) => {
     setTab(key);
   };
+  console.log("data_head.process_id", data_head.process_id);
+  useEffect(() => {
+    data_head &&
+      data_head.process_id &&
+      dispatch(get_log_by_id(data_head.process_id));
+  }, [data_head]);
 
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
+  const current_project = useSelector((state) => state.auth.currentProject);
+  const changeProcessStatus = (process_status_id) => {
+    if (remark.trim() === "") {
+      alert("Plase write remark");
+      return false;
+    }
+    setOpenRemarkModal({ visible: false, loading: false });
+    const app_detail = {
+      //6 = reject
+      process_status_id: process_status_id,
+      user_name: auth.user_name,
+      process_id: data_head.process_id,
+      process_member_remark: remark,
+    };
+    dispatch(qn_actions(app_detail, data_head.qn_id));
   };
-
   const config = {
-    projectId: 3,
-    title: "SALES",
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Quotations",
-      "View",
-      formData.q_code && formData.q_code,
+      data_head && data_head.qn_no ? "Edit" : "Create",
+      data_head && data_head.qn_no,
     ],
     search: false,
-    buttonAction: ["Edit", "Approve", "Reject", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    buttonAction: [
+      data_head && data_head.button_edit && "Edit",
+      data_head && data_head.button_confirm && "Confirm",
+      data_head && data_head.button_approve && "Approve",
+      data_head && data_head.button_reject && "Reject",
+      "Discard",
+    ],
+    action: [
+      {
+        name: "Print",
+        link: `http://192.168.5.207:80/Report_purch/report_pr.aspx?pr_no=${
+          data_head && data_head.pr_no
+        }`,
+      },
+      data_head &&
+        data_head.button_cancel && {
+          name: "Cancel",
+          cancel: true,
+          link: ``,
+        },
+    ],
     step: {
-      current: formData.c_status,
-      step: ["Draft", "Confirm", "Approve", "Done"],
+      current: data_head && data_head.node_stay - 1,
+      step: flow,
     },
     create: "",
-    save: {},
+    save: {
+      data: data_head,
+      path: data_head && "/sales/quotations/view/" + data_head.qn_id,
+    },
     edit: {
-      data: formData,
-      path: formData && "/sales/quotations/edit/" + formData.id,
+      data: data_head,
+      path: data_head && "/sales/quotations/edit/" + data_head.qn_id,
     },
     discard: "/sales/quotations",
+    onDiscard: (e) => {
+      console.log("Discard");
+    },
     onSave: (e) => {
       e.preventDefault();
+      console.log("Save");
     },
     onEdit: (e) => {
       e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
       e.preventDefault();
       console.log("Approve");
+      const app_detail = {
+        process_status_id: 5,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+        process_member_remark: remark,
+      };
+      dispatch(qn_actions(app_detail, data_head.qn_id));
     },
     onConfirm: () => {
       console.log("Confirm");
+      const app_detail = {
+        process_status_id: 2,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+      };
+      dispatch(qn_actions(app_detail, data_head.qn_id));
+    },
+    onReject: () => {
+      console.log("Reject");
+      setOpenRemarkModal({
+        visible: true,
+        loading: false,
+      });
+    },
+    onCancel: () => {
+      console.log("Cancel");
+      const app_detail = {
+        process_status_id: 3,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+      };
+      dispatch(qn_actions(app_detail, data_head.qn_id));
     },
   };
-
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config} data={data_head}>
       <div id="form">
-        {/* Head */}
         <Row className="col-2">
-          <Col span={11}>
+          <Col span={8}>
             <h2>
-              <strong>Quotations #{formData.q_code && formData.q_code}</strong>
+              <strong>
+                {data_head && data_head.qn_no ? "Edit" : "Create"} Quotations #
+                {data_head && data_head.qn_no}
+              </strong>
             </h2>
           </Col>
-          <Col span={9}></Col>
+          <Col span={1}></Col>
+          <Col span={10} className="text-center">
+            {data_head.branch_name}
+          </Col>
+          <Col span={1}></Col>
           <Col span={2}>
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            {moment(formData.q_create_date, "DD/MM/YYYY").format("DD/MM/YYYY")}
+            {moment(data_head && data_head.qn_created, "DD/MM/YYYY").format(
+              "DD/MM/YYYY"
+            )}
           </Col>
         </Row>
+        {/* Address & Information */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>Customer </Text>
           </Col>
           <Col span={8}>
-            <Text>{formData.c_name}</Text>
+            <Text className="text-view">
+              {data_head && data_head.customer_no_name}
+            </Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Expire Date </Text>
           </Col>
           <Col span={8}>
-            <Text>{formData.q_expire_date}</Text>
+            <Text className="text-view">
+              {data_head && data_head.qn_exp_date}
+            </Text>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}></Col>
+          <Col span={3}>
+            <Text strong>Description :</Text>
+          </Col>
 
-          <Col span={8}></Col>
+          <Col span={8}>
+            <Text className="text-view">
+              {data_head && data_head.qn_description}
+            </Text>
+          </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Payment Terms</Text>
           </Col>
           <Col span={8}>
-            <Text>{formData.c_payment_term}</Text>
+            <Text className="text-view">
+              {data_head && data_head.payment_term_no_name}
+            </Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Agreement :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Text className="text-view">
+              {data_head && data_head.qn_agreement}
+            </Text>
           </Col>
         </Row>
         <Row className="col-2 space-top-md">
@@ -159,33 +236,43 @@ const CustomerCreate = (props) => {
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
                 <ItemLine
-                  items={items}
-                  units={units}
-                  // itemLots={itemLots}
-                  columns={itemLineColumns}
-                  updateData={upDateFormValue}
-                  dataLine={formData.dataLine ? formData.dataLine : []}
+                  qn_id={data_head && data_head.qn_id}
                   readOnly={true}
+                  data_detail={data_detail}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key="2">
-                <Text style={{ paddingLeft: 15 }}>{formData.q_remark}</Text>
+                <Text className="text-view">
+                  {data_head && data_head.qn_remark}
+                </Text>
               </Tabs.TabPane>
             </Tabs>
           </Col>
         </Row>
-        {tab === 1 ? (
+        {tab === "1" ? (
           <TotalFooter
-            excludeVat={formData.q_total}
-            vat={formData.q_vat}
-            includeVat={formData.q_include_vat}
-            currency={"THB"}
+            excludeVat={data_head && data_head.tg_qn_sum_amount}
+            vat={data_head && data_head.tg_qn_vat_amount}
+            includeVat={data_head && data_head.tg_qn_total_amount}
+            currency={data_head && data_head.currency_no}
           />
         ) : null}
       </div>
-      <Comments data={[...dataComments]} />
+      <ModalRemark
+        title={"Reject Remark"}
+        state={openRemarkModal}
+        onChange={setRemark}
+        onOk={() => {
+          changeProcessStatus(6);
+        }}
+        onCancel={() => {
+          setOpenRemarkModal({ visible: false, loading: false });
+          setRemark("");
+        }}
+      />
+      <Comments data={dataComment} />
     </MainLayout>
   );
 };
 
-export default CustomerCreate;
+export default Sales_Quotations;

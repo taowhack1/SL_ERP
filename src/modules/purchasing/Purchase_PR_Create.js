@@ -1,148 +1,239 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Input, Tabs, AutoComplete, Typography, Select } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import ItemLine from "./pr_ItemLine";
-import { autoCompleteItem, autoCompleteUnit } from "../../data/inventoryData";
-import { costcenter } from "../../data/costcenterData";
+import { sumArrObj } from "../../include/js/function_main";
 import Comments from "../../components/Comments";
-import { dataComments, itemLots } from "../../data";
-import { prItemColumns } from "../../data/purchase/pr_ItemLineData";
-import { vendors } from "../../data/purchase/data";
-import { pr_fields } from "./fields_config/pr";
+import { pr_fields, prItemColumns } from "./fields_config/pr";
+import {
+  reset_pr_data,
+  create_pr,
+  update_pr,
+  update_pr_head,
+  pr_actions,
+} from "../../actions/purchase/PR_Actions";
+import CustomSelect from "../../components/CustomSelect";
+import TotalFooter from "../../components/TotalFooter";
+
 const { TextArea } = Input;
 const { Text } = Typography;
-const { Option } = Select;
-
 const PurchaseRequisitionCreate = (props) => {
-  const auth = JSON.parse(localStorage.getItem("user"));
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
-  const [editForm, setEdit] = useState(true);
+  const dispatch = useDispatch();
+  const [tab, setTab] = useState("1");
 
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          ...pr_fields,
-          pr_cost_center: auth.dep,
-          pr_created_by: auth.user_name,
-          pr_updated_by: auth.user_name,
-        }
-  );
-  const callback = (key) => {};
+  const auth = useSelector((state) => state.auth.authData[0]);
+  const dataComments = useSelector((state) => state.log.comment_log);
+  const cost_centers = useSelector((state) => state.hrm.cost_center);
+  const vendors = useSelector((state) => state.purchase.vendors);
+  const data_detail = useSelector((state) => state.purchase.pr_detail);
+  const data_head = useSelector((state) => state.purchase.pr_head);
+  const flow =
+    data_head &&
+    data_head.data_flow_process &&
+    data_head.data_flow_process.map((step) => {
+      return step.all_group_in_node;
+    });
+  useEffect(() => {
+    data_head && data_head.pr_id
+      ? dispatch(
+          update_pr_head({
+            commit: 1,
+            user_name: auth.user_name,
+          })
+        )
+      : dispatch(
+          update_pr_head({
+            pr_created: moment().format("DD/MM/YYYY"),
+            pr_created_by_no_name: auth.employee_no_name_eng,
+            user_name: auth.user_name,
+            cost_center_id: auth.cost_center_id,
+            cost_center_no_name: auth.cost_center_no_name,
+          })
+        );
+  }, [dispatch]);
+
+  const callback = (key) => {
+    setTab(key);
+  };
 
   const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
+    dispatch(update_pr_head(data));
   };
-
-  const updateItemLine = (data) => {
-    setData({ ...formData, ...data });
-  };
-  const submitForm = (values) => {};
-
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+  const current_project = useSelector((state) => state.auth.currentProject);
+  console.log("data_head.pr_no", data_head.pr_no);
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Purchase Requisition",
-      formData.po_no ? "Edit" : "Create",
-      formData.po_no && formData.po_no,
+      data_head.pr_no ? "Edit" : "Create",
+      data_head.pr_no && data_head.pr_no,
     ],
     search: false,
-    buttonAction: editForm
-      ? ["Save", "SaveConfirm", "Discard"]
-      : ["Edit", "Approve", "Reject"],
-    action: [{ name: "print", link: "www.google.co.th" }],
-    step: {
-      current: formData.process_id,
-      step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
-    },
+    buttonAction: ["Save", data_head.pr_id && "SaveConfirm", "Discard"],
+    // action: [{ name: "Print", link: "www.google.co.th" }],
+    step: !data_head.pr_no
+      ? {}
+      : {
+          current: data_head && data_head.node_stay - 1,
+          step: flow,
+        },
     create: "",
     save: {
-      data: formData,
-      path: formData && "/purchase/pr/view/" + formData.pr_id,
+      data: data_head,
+      path:
+        data_head &&
+        "/purchase/pr/view/" + (data_head.pr_id ? data_head.pr_id : "new"),
     },
     discard: "/purchase/pr",
+    onDiscard: (e) => {
+      dispatch(reset_pr_data());
+    },
     onSave: (e) => {
       e.preventDefault();
       console.log("Save");
-    },
-    onEdit: (e) => {
-      e.preventDefault();
-      console.log("Edit");
-      setEdit(true);
-    },
-    onApprove: (e) => {
-      e.preventDefault();
-      console.log("Approve");
+      data_head.pr_id
+        ? dispatch(
+            update_pr(data_head.pr_id, auth.user_name, data_head, data_detail)
+          )
+        : dispatch(create_pr(auth.user_name, data_head, data_detail));
+      // data_head.pr_id
+      //   ? dispatch(update_pr(data_head.pr_id, data_head, data_detail))
+      //   : dispatch(create_pr(data_head, data_detail));
     },
     onConfirm: () => {
       console.log("Confirm");
+      const app_detail = {
+        process_status_id: 2,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+      };
+      dispatch(update_pr(data_head.pr_id, data_head, data_detail));
+      dispatch(pr_actions(app_detail, data_head.pr_id));
     },
   };
 
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config} data={data_head}>
       <div id="form">
+        {/* Head */}
         <Row className="col-2">
-          <Col span={20}>
+          <Col span={8}>
             <h2>
               <strong>
-                {formData.po_no ? "Edit" : "Create"} Purchase Requisition
+                <Text strong>
+                  {data_head.pr_no ? "Edit" : "Create"} Purchase Requisition
+                </Text>
               </strong>
             </h2>
           </Col>
-          <Col span={4}>
+          <Col span={1}></Col>
+          <Col span={10} className="text-center">
+            <Text> {data_head.branch_name}</Text>
+          </Col>
+          <Col span={1}></Col>
+          <Col span={2}>
             <Text strong>PR Date : </Text>
-            {formData.pr_date}
+          </Col>
+          <Col span={2} className="text-center">
+            <Text>{data_head.pr_created}</Text>
           </Col>
         </Row>
         <Row className="col-2" style={{ marginBottom: 20 }}>
-          {formData.po_no && (
+          {data_head.pr_no && (
             <h3>
-              <b>Ref. Code : </b>
-              {formData.po_no}
+              <b>PR No. : </b>
+              {data_head.pr_no}
             </h3>
           )}
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className="col-2 row-margin-vertical-lg">
           <Col span={3}>
             <Text strong>Request by :</Text>
           </Col>
 
-          <Col span={8}>{auth.user_name + " " + auth.name}</Col>
+          <Col span={8}>{data_head.pr_created_by_no_name}</Col>
           <Col span={2}></Col>
+        </Row>
+
+        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>Cost center :</Text>
           </Col>
-          <Col span={8}>{formData.pr_cost_center}</Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
+          <Col span={8}>
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"Cost Center"}
+              field_id="cost_center_id"
+              field_name="cost_center_no_name"
+              value={data_head.cost_center_no_name}
+              data={cost_centers}
+              onChange={(data, option) => {
+                data && data
+                  ? upDateFormValue({
+                      cost_center_id: data,
+                      cost_center_no_name: option.title,
+                    })
+                  : upDateFormValue({
+                      cost_center_id: null,
+                      cost_center_no_name: null,
+                    });
+              }}
+            />
+          </Col>
+          <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Vendor :</Text>
           </Col>
           <Col span={8}>
-            <Select
+            <CustomSelect
               allowClear
               showSearch
-              placceholder={"Vendor..."}
-              value={formData.vendor_id}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
+              placeholder={"Vendor"}
+              field_id="vendor_id"
+              field_name="vendor_no_name"
+              value={data_head.vendor_no_name}
+              data={vendors}
+              onChange={(data, option) => {
+                data && data
+                  ? upDateFormValue({
+                      vendor_id: data,
+                      vendor_no_name: option.title,
+                    })
+                  : upDateFormValue({
+                      vendor_id: null,
+                      vendor_no_name: null,
+                    });
+              }}
+            />
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Description :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Input
+              onChange={(e) =>
+                upDateFormValue({ pr_description: e.target.value })
               }
-              onSelect={(data) => upDateFormValue({ vendor_id: data })}
-              onChange={(data) => upDateFormValue({ vendor_id: data })}
-              style={{ width: "100%" }}
-            >
-              <Option value={0}>A</Option>
-              <Option value={1}>B</Option>
-            </Select>
+              value={data_head.pr_description}
+              placeholder="Description"
+            ></Input>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}>
+            <Text strong>Currency :</Text>
+          </Col>
+          <Col span={8}>
+            {data_head.currency_no ? data_head.currency_no : "THB"}
           </Col>
         </Row>
         <Row className="col-2 space-top-md">
@@ -150,29 +241,35 @@ const PurchaseRequisitionCreate = (props) => {
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
                 <ItemLine
-                  items={autoCompleteItem}
-                  units={autoCompleteUnit}
-                  itemLots={itemLots}
                   columns={prItemColumns}
-                  updateData={updateItemLine}
-                  dataLine={formData.dataLine ? formData.dataLine : []}
                   readOnly={false}
-                  pr_id={formData.pr_id}
+                  pr_id={data_head.pr_id}
+                  upDateFormData={upDateFormValue}
+                  vat_rate={data_head.vat_rate}
                 />
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Reason & Description" key="2">
+              <Tabs.TabPane tab="Notes" key="2">
                 <TextArea
                   onChange={(e) =>
-                    upDateFormValue({ pr_description: e.target.value })
+                    upDateFormValue({ pr_remark: e.target.value })
                   }
-                  defaultValue={formData.pr_description}
-                  placeholder="Reason & Description"
+                  value={data_head.pr_remark}
+                  placeholder="Remark"
                 />
               </Tabs.TabPane>
             </Tabs>
           </Col>
         </Row>
+        {tab === "1" && (
+          <TotalFooter
+            excludeVat={data_head.tg_pr_sum_amount}
+            vat={data_head.tg_pr_vat_amount}
+            includeVat={data_head.tg_pr_total_amount}
+            currency={data_head.currency_no}
+          />
+        )}
       </div>
+
       <Comments data={[...dataComments]} />
     </MainLayout>
   );

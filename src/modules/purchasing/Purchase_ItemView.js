@@ -108,7 +108,7 @@ const ItemView = (props) => {
     ],
     search: false,
     buttonAction: ["Edit", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    action: [{ name: "Print", link: "www.google.co.th" }],
     step: {},
     create: "",
     save: {},

@@ -78,7 +78,7 @@ const ItemCreate = (props) => {
     search: false,
     buttonAction: ["Save", "SaveConfirm", "Discard"],
 
-    action: [{ name: "print", link: "www.google.co.th" }],
+    action: [{ name: "Print", link: "www.google.co.th" }],
     step: {
       // current: formData.req_step,
       // step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],

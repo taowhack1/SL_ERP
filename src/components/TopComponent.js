@@ -1,8 +1,18 @@
 import React from "react";
 import { withRouter, Link } from "react-router-dom";
-import { Col, Row, Button, Breadcrumb, Steps, Dropdown, Menu } from "antd";
+import {
+  Col,
+  Row,
+  Button,
+  Breadcrumb,
+  Steps,
+  Dropdown,
+  Menu,
+  Typography,
+} from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import Search from "./Search";
+const { Text } = Typography;
 
 function TopContent(props) {
   const onCreate = () => {
@@ -11,6 +21,7 @@ function TopContent(props) {
       : props.history.push(props.create);
   };
   const onDiscard = () => {
+    props.onDiscard && props.onDiscard();
     props.history.push(props.discard);
   };
   const onEdit = () => {
@@ -24,11 +35,20 @@ function TopContent(props) {
         {props.action &&
           props.action.map((item, index) => {
             return (
-              <Menu.Item key={index}>
-                <a rel="noopener noreferrer" target="_blank" href={item.link}>
-                  {item.name}
-                </a>
-              </Menu.Item>
+              item &&
+              (item.cancel ? (
+                <Menu.Item key={index}>
+                  <Text onClick={() => props.onCancel && props.onCancel()}>
+                    {item.name}
+                  </Text>
+                </Menu.Item>
+              ) : (
+                <Menu.Item key={index}>
+                  <a rel="noopener noreferrer" target="_blank" href={item.link}>
+                    {item.name}
+                  </a>
+                </Menu.Item>
+              ))
             );
           })}
       </Menu>
@@ -53,7 +73,7 @@ function TopContent(props) {
             </div>
           </Col>
           <Col span={12}>
-            <div>{props.search && <Search />}</div>
+            <div>{props.search && <Search onSearch={props.onSearch} />}</div>
           </Col>
         </Row>
         <Row>
@@ -72,7 +92,7 @@ function TopContent(props) {
                 ) : (
                   <Button
                     className="primary"
-                    onClick={() => props.save.function()}
+                    onClick={props.onSave && props.onSave}
                     disabled={props.saveDisabled}
                   >
                     <Link
@@ -122,18 +142,23 @@ function TopContent(props) {
                 <Button onClick={props.onConfirm}>Confirm</Button>
               )}
               {props.buttonAction.includes("Approve") && (
-                <Button onClick={props.onApprove}>Approve</Button>
+                <Button onClick={props.onApprove} className="primary">
+                  Approve
+                </Button>
               )}
               {props.buttonAction.includes("Reject") && (
-                <Button onClick={props.onReject}>Reject</Button>
+                <Button onClick={props.onReject} danger>
+                  Reject
+                </Button>
               )}
-              {props.buttonAction.includes("Discard") && (
-                <Button onClick={onDiscard}>Discard</Button>
-              )}
+
               {props.buttonAction.includes("Cancel") && (
                 <Button type="primary" danger onClick={props.onCancel}>
                   Cancel
                 </Button>
+              )}
+              {props.buttonAction.includes("Discard") && (
+                <Button onClick={onDiscard}>Discard</Button>
               )}
             </div>
           </Col>
@@ -141,7 +166,7 @@ function TopContent(props) {
             {props.action && (
               <Dropdown overlay={menuAction()} trigger={["click"]}>
                 <Button type="text">
-                  Action <CaretDownOutlined />
+                  Actions <CaretDownOutlined />
                 </Button>
               </Dropdown>
             )}
@@ -166,4 +191,4 @@ function TopContent(props) {
   );
 }
 
-export default withRouter(TopContent);
+export default React.memo(withRouter(TopContent));

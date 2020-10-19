@@ -1,14 +1,6 @@
-import React, { useEffect, useState } from "react";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Select,
-  AutoComplete,
-  Typography,
-  DatePicker,
-} from "antd";
+import React, { useEffect, useReducer, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Row, Col, Input, Tabs, Select, AutoComplete, Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 
@@ -21,118 +13,112 @@ import { units } from "../../data/units";
 import { receiveLineColumns } from "../../data/inventory/data";
 import { vendorData, poData } from "../../data/purchase/data";
 import { locations } from "../../data/locationData";
+import { reducer } from "./reducers";
+import { receive_fields, receive_detail_fields } from "./config";
+import { get_po_receive_list } from "../../actions/inventory/receiveActions";
+import CustomSelect from "../../components/CustomSelect";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Text } = Typography;
 
+const initialStateHead = receive_fields;
+const initialStateDetail = [receive_detail_fields];
 const Receive_Create = (props) => {
+  const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
-
-  let poRef = [];
-  poData.map((po) => {
-    return poRef.push({
-      id: po.id,
-      name: po.po_code,
-      value: "[" + po.po_code + "] Due date: " + po.po_dueDate,
+  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
+  const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
+  const auth = useSelector((state) => state.auth.authData[0]);
+  const dataComment = useSelector((state) => state.log.comment_log);
+  const current_project = useSelector((state) => state.auth.currentProject);
+  const masterData = useSelector((state) => state.inventory.master_data);
+  const vendors = useSelector((state) => state.purchase.vendors);
+  const po_list = useSelector((state) => state.inventory.receive.po_ref);
+  const flow =
+    data_head &&
+    data_head.data_flow_process &&
+    data_head.data_flow_process.map((step) => {
+      return step.all_group_in_node;
     });
-  });
-
-  let vendors = [];
-  vendorData.map((ven) => {
-    return vendors.push({
-      id: ven.id,
-      name: ven.v_name,
-      value: "[" + ven.v_code + "] " + ven.v_name,
-    });
-  });
-
-  const [refData] = useState(poData && poData);
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          id: 0,
-          r_code: null,
-          po_code: null,
-          v_name: null,
-          v_company: null,
-          r_location: null,
-          r_create_date: moment().format("YYYY-MM-DD"),
-          r_schedule_date: null,
-          r_status: 0,
-          r_total: 0,
-          r_vat: 0,
-          r_include_vat: 0,
-          r_remark: null,
-          dataLine: [
-            {
-              id: 0,
-              item: null,
-              item_qty: 0,
-              item_unit: null,
-              item_qty_done: 0,
-              item_unit_price: 0,
-              item_subtotal: 0,
-              item_qty_done_detail: [
-                {
-                  id: 0,
-                  d_batch_no: null,
-                  d_receive_date: null,
-                  d_mfg: null,
-                  d_exp: null,
-                  d_qty: 0,
-                  d_unit: null,
-                },
-              ],
-            },
-          ],
-        }
-  );
-  useEffect(() => {}, [formData.po_code]);
-  const isEditPage = formData && formData.r_code ? 1 : 0;
   const callback = (key) => {
     setTab(key);
   };
 
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
-  };
+  const data =
+    props.location && props.location.state ? props.location.state : 0;
+  console.log("data", data);
+  useEffect(() => {
+    headDispatch({
+      type: "SET_HEAD",
+      payload: data.data_head
+        ? {
+            ...data.data_head,
+            commit: 1,
+            user_name: auth.user_name,
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+          }
+        : {
+            ...receive_fields,
+            commit: 1,
+            user_name: auth.user_name,
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+            qn_created: moment().format("DD/MM/YYYY"),
+          },
+    });
+    detailDispatch({
+      type: "SET_DETAIL",
+      payload: data.data_detail ? data.data_detail : [receive_detail_fields],
+    });
+  }, []);
 
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+  useEffect(() => {
+    dispatch(get_po_receive_list());
+  }, []);
+  // useEffect(() => {
+  //   data_head.po_id &&
+  //     !data_head.receive_id &&
+  //     axios
+  //       .get(`${api_qn_detail}/ref/${data_head.po_id}`, header_config)
+  //       .then((res) => {
+  //         detailDispatch({ type: "SET_DETAIL", payload: res.data[0] });
+  //       });
+  // }, [data_head.po_id]);
+
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Inventory",
       "Receive",
-      formData.r_code ? "Edit" : "Create",
-      formData.r_code && formData.r_code,
+      data_head.receive_no ? "Edit" : "Create",
+      data_head.receive_no && data_head.receive_no,
     ],
     search: false,
     buttonAction: ["Save", "SaveConfirm", "Validate", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
-    step: {
-      current: formData.r_status,
-      step: ["Draft", "Confirm", "Validate", "Done"],
-    },
+    action: [{ name: "Print", link: "www.google.co.th" }],
+    step: !data_head.so_no
+      ? {}
+      : {
+          current: data_head && data_head.node_stay - 1,
+          step: flow,
+        },
     create: "",
     save: {
-      data: formData,
-      path: formData && "/inventory/receive/view/" + formData.id,
-    },
-    edit: {
-      data: formData,
-      path: formData && "/inventory/receive/edit/" + formData.id,
+      data: data_head,
+      path:
+        data_head &&
+        "/inventory/receive/view/" +
+          (data_head.receive_id ? data_head.receive_id : "new"),
     },
     discard: "/inventory/receive",
     onSave: (e) => {
       e.preventDefault();
-      setData({ r_code: "R2009-00099" });
+      console.log("Save");
     },
     onEdit: (e) => {
       e.preventDefault();
@@ -158,19 +144,40 @@ const Receive_Create = (props) => {
     copyMain.r_schedule_date = copyRef.po_dueDate;
     copyMain.r_include_vat = copyRef.po_include_vat;
     copyMain.dataLine = copyRef.dataLine;
-    setData({ ...formData, ...copyMain });
+    return copyMain;
   };
-  console.log("formData:", formData);
+  const resetForm = () => {
+    headDispatch({
+      type: "RESET_DATA",
+      payload: {
+        ...initialStateHead,
+        commit: 1,
+        user_name: auth.user_name,
+        branch_id: auth.branch_id,
+        branch_name: auth.branch_name,
+        receive_created: moment().format("DD/MM/YYYY"),
+      },
+    });
+    detailDispatch({
+      type: "RESET_DATA",
+      payload: initialStateDetail,
+    });
+  };
+  const upDateFormValue = (data) => {
+    dispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
+  };
+  console.log("data_head", data_head);
+  console.log("data_detail", data_detail);
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config} data={data_head}>
       <div id="form">
         {/* Head */}
         <Row className="col-2">
           <Col span={11}>
             <h2>
               <strong>
-                {isEditPage ? "Edit" : "Create"} Receive{" "}
-                {isEditPage ? "#" + formData.r_code : null}
+                {data_head.receive_no ? "Edit" : "Create"} Receive{" "}
+                {data_head.receive_no ? "#" + data_head.receive_no : null}
               </strong>
             </h2>
           </Col>
@@ -179,84 +186,61 @@ const Receive_Create = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            {moment(
-              formData.r_create_date,
-              isEditPage ? "DD/MM/YYYY" : "YYYY-MM-DD"
-            ).format("DD/MM/YYYY")}
+            {moment(data_head.receive_created, "DD/MM/YYYY").format(
+              "DD/MM/YYYY"
+            )}
           </Col>
         </Row>
 
-        {/* Address & Information */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>PO Ref.</Text>
+            <Text strong>PO Ref. :</Text>
           </Col>
           <Col span={8}>
-            <Select
-              placeholder={"PO. ex.PO2009-00xx"}
-              onSelect={(data) => {
-                getDataRef(data, formData, refData);
+            {/* PO Ref */}
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"PO No. ex.PO2009000x"}
+              field_id="po_id"
+              field_name="po_no_description"
+              value={data_head.po_no_description}
+              data={po_list}
+              onChange={(data, option) => {
+                if (data) {
+                  headDispatch({
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: getDataRef(data, data_head, po_list),
+                  });
+                } else {
+                  resetForm();
+                }
               }}
-              style={{ width: "100%" }}
-              defaultValue={formData.po_code}
-            >
-              <Option value="null"> </Option>
-              {poRef.map((po) => {
-                return (
-                  <Option key={po.id} value={po.po_code}>
-                    {po.value}
-                  </Option>
-                );
-              })}
-            </Select>
+            />
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Schedule Date </Text>
+            <Text strong>Vendor :</Text>
           </Col>
-          <Col span={8}>
-            <DatePicker
-              name={"r_schedule_date"}
-              format={"DD/MM/YYYY"}
-              style={{ width: "100%" }}
-              placeholder="Due date..."
-              value={
-                formData.r_schedule_date
-                  ? moment(formData.r_schedule_date, "DD/MM/YYYY")
-                  : ""
-              }
-              defaultValue={
-                formData.r_schedule_date
-                  ? moment(formData.r_schedule_date, "DD/MM/YYYY")
-                  : ""
-              }
-              onChange={(data) => {
-                upDateFormValue({
-                  r_schedule_date: data.format("DD/MM/YYYY"),
-                });
-              }}
-            />
-          </Col>
+
+          <Col span={8}></Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Form Vendor </Text>
+            <Text strong>Description :</Text>
           </Col>
 
           <Col span={8}>
-            <AutoComplete
-              options={vendors}
-              placeholder="Vendor.."
-              defaultValue={formData.v_name}
-              value={formData.v_name}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
+            <Input
+              onChange={(e) =>
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: { receive_description: e.target.value },
+                })
               }
-              onSelect={(data) => upDateFormValue({ v_name: data })}
-              onChange={(data) => upDateFormValue({ v_name: data })}
-              style={{ width: "100%" }}
-            />
+              value={data_head.receive_description}
+              placeholder="Description"
+            ></Input>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -266,8 +250,8 @@ const Receive_Create = (props) => {
             <AutoComplete
               options={locations}
               placeholder="Location..."
-              defaultValue={formData.r_location}
-              value={formData.r_location}
+              defaultValue={data_head.r_location}
+              value={data_head.r_location}
               filterOption={(inputValue, option) =>
                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
                 -1
@@ -278,6 +262,25 @@ const Receive_Create = (props) => {
             />
           </Col>
         </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Agreement :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Input
+              onChange={(e) =>
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: { receive_agreement: e.target.value },
+                })
+              }
+              value={data_head.receive_agreement}
+              placeholder="Agreement"
+            ></Input>
+          </Col>
+        </Row>
+
         <Row className="col-2 space-top-md">
           <Col span={24}>
             <Tabs defaultActiveKey={"1"} onChange={callback}>
@@ -288,17 +291,17 @@ const Receive_Create = (props) => {
                   // itemLots={itemLots}
                   columns={receiveLineColumns}
                   updateData={upDateFormValue}
-                  dataLine={formData.dataLine ? formData.dataLine : [{}]}
+                  dataLine={data_head.dataLine ? data_head.dataLine : [{}]}
                   readOnly={false}
-                  formData={formData}
+                  data_head={data_head}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key={"2"}>
                 <TextArea
                   rows={2}
                   placeholder={"Remark..."}
-                  defaultValue={formData.r_remark}
-                  value={formData.r_remark}
+                  defaultValue={data_head.r_remark}
+                  value={data_head.r_remark}
                   onChange={(e) =>
                     upDateFormValue({ r_remark: e.target.value })
                   }
@@ -310,9 +313,9 @@ const Receive_Create = (props) => {
         </Row>
         {tab === "1" ? (
           <TotalFooter
-            excludeVat={formData.r_total}
-            vat={formData.r_vat}
-            includeVat={formData.r_include_vat}
+            excludeVat={data_head.r_total}
+            vat={data_head.r_vat}
+            includeVat={data_head.r_include_vat}
             currency={"THB"}
           />
         ) : null}

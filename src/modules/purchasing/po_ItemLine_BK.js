@@ -18,6 +18,13 @@ import { useSelector } from "react-redux";
 import numeral from "numeral";
 const { Text } = Typography;
 
+const calSubtotal = (qty, price) => {
+  let copyQty = qty && qty ? qty : 0;
+  let copyPrice = price && price ? price : 0;
+  let total = copyQty * copyPrice;
+  return total;
+};
+
 const ItemLine = ({
   items,
   units,
@@ -26,10 +33,6 @@ const ItemLine = ({
   readOnly,
   columns,
 }) => {
-  // const countItem = dataLine && dataLine.length ? dataLine.length : 0;
-  // const [count, setCount] = useState(dataLine.length);
-
-  // const [count, setCount] = useState(dataLine.length);
   const [lineItem, setLine] = useState(dataLine);
   // const { vat } = useSelector((state) => state.systemConfig.decimalFormat);
 
@@ -59,12 +62,6 @@ const ItemLine = ({
     setLine(
       dataLine.map((line) => (line.id === rowId ? { ...line, ...data } : line))
     );
-  };
-  const calSubtotal = (qty, price) => {
-    let copyQty = qty && qty ? qty : 0;
-    let copyPrice = price && price ? price : 0;
-    let total = copyQty * copyPrice;
-    return total;
   };
   const sortData = (arrObject) => {
     let copyData = arrObject;

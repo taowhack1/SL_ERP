@@ -21,9 +21,9 @@ const VendorLine = ({
   const [count, setCount] = useState(countItem);
   const [lineItem, setLine] = useState([...dataLine]);
 
-  useEffect(() => {
-    updateData({ vendor: [...lineItem] });
-  }, [lineItem, updateData]);
+  // useEffect(() => {
+  //   updateData({ vendor: [...lineItem] });
+  // }, [lineItem, updateData]);
 
   const addLine = () => {
     setLine([
@@ -102,6 +102,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { vendorName: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={7} className="text-string">
@@ -118,6 +119,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { companyName: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={3} className="text-number">
@@ -130,6 +132,7 @@ const VendorLine = ({
                   disabled={0}
                   defaultValue={line.itemPrice}
                   onChange={(data) => onChangeValue(line.id, { itemQty: data })}
+                  size="small"
                 />
               </Col>
 
@@ -147,6 +150,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { itemUnit: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={3} className="text-number">
@@ -161,6 +165,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { itemPrice: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={1} style={{ textAlign: "center" }}>
@@ -203,7 +208,6 @@ const VendorLine = ({
               <Col span={3} className="text-number">
                 <Text>{line.itemQty}</Text>
               </Col>
-
               <Col span={2} className="text-string">
                 <Text>{line.itemUnit}</Text>
               </Col>

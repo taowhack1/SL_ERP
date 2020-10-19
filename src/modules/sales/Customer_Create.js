@@ -57,7 +57,7 @@ const CustomerCreate = (props) => {
     buttonAction: editForm
       ? ["Save", "SaveConfirm", "Discard"]
       : ["Edit", "Approve", "Reject"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    action: [{ name: "Print", link: "www.google.co.th" }],
 
     create: "",
     save: {

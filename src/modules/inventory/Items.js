@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { getAllItems } from "../../actions/itemActions";
+import { getAllItems } from "../../actions/inventory/itemActions";
 import { item_show_columns } from "../../page_fields/inventory/item";
 import $ from "jquery";
 const Items = (props) => {
@@ -15,13 +15,13 @@ const Items = (props) => {
   useEffect(() => {
     dispatch(getAllItems());
   }, [dispatch]);
-  const dataItems = useSelector((state) => state.item.items);
+  const dataItems = useSelector((state) => state.inventory.items);
 
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Items"],
     search: true,
@@ -45,6 +45,7 @@ const Items = (props) => {
               dataSource={dataItems}
               onChange={onChange}
               size="small"
+              rowKey="item_id"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

@@ -2,17 +2,22 @@ import { Form, Input, Button, Space, Typography } from "antd";
 import { withRouter } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signIn2, signIn } from "../../actions/authActions";
 const { Title, Text } = Typography;
 
 const LoginForm = (props) => {
   const dispatch = useDispatch();
   const onFinish = (values) => {
-    if (dispatch(signIn2(values))) {
-      props.history.push("/");
-    }
+    dispatch(signIn2(values));
   };
+  const authData = useSelector((state) => state.auth.authData);
+  if (authData) {
+    console.log("Logged-in");
+    props.history.push("/");
+  } else {
+    console.log("Else");
+  }
 
   return (
     <div

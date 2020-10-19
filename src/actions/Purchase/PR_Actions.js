@@ -1,14 +1,19 @@
 import {
   GET_ALL_PR,
   CREATE_PR,
-  UPDATE_PR,
-  UPDATE_PR_STATUS,
   GET_PR_DETAIL,
-  UPDATE_PR_DETAIL,
+  RESET_PR_DATA,
+  SET_PR_HEAD,
+  UPDATE_PR_HEAD,
 } from "../types";
-import { api_url } from "../../include/js/main_config";
+import { api_purchase, api_get_pr_detail } from "../../include/js/main_config";
+import {
+  pr_detail_fields,
+  pr_fields,
+} from "../../modules/purchasing/fields_config/pr";
+import { api_approve } from "../../include/js/main_config";
 import axios from "axios";
-const api_query = api_url + "/query/sql";
+import $ from "jquery";
 
 const header_config = {
   headers: {
@@ -17,86 +22,123 @@ const header_config = {
 };
 
 export const get_pr_list = () => (dispatch) => {
-  const query = {
-    query_sql: `
-    SELECT
-    p.pr_id,
-    p.pr_no,
-    CONVERT (VARCHAR, p.pr_due_date, 103) AS pr_due_date,
-    CONVERT (VARCHAR, p.pr_created, 103) AS pr_created,
-    p.pr_description,
-    p.pr_contact_description,
-    p.pr_remark,
-    p.pr_created_by,
-    p.branch_id,
-    p.vendor_id,
-      v.vendor_name,
-    p.vat_id,
-    p.process_id,
-    CASE
-    	WHEN process_id = 0 THEN 'Create' 
-WHEN process_id = 1 THEN 'Confirm' 
-WHEN process_id = 2 THEN 'Approve' 
-WHEN process_id = 3 THEN 'Approve 2' 
-WHEN process_id = 4 THEN 'Done' 
-    ELSE 'N/A'
-END AS process_name,
-    p.tg_trans_status_id,
-    p.tg_pr_amount,
-    p.tg_pr_discount,
-    p.tg_pr_sum_amount,
-    p.tg_pr_vat_amount
-    FROM
-      [PURCHASE].[dbo].[tb_pr] p
-    LEFT JOIN [PURCHASE].[dbo].[tb_vendor] v ON p.vendor_id = v.vendor_id`,
-  };
-  axios.post(api_query, query, header_config).then((res) => {
-    console.log(res.data);
+  axios.get(`${api_purchase}/pr`, header_config).then((res) => {
     dispatch({
       type: GET_ALL_PR,
       payload: res.data[0],
     });
   });
 };
-export const create_pr = (data) => (dispatch) => {
-  axios.post(api_query, data, header_config).then((res) => {
-    dispatch({
-      type: CREATE_PR,
-      payload: res.data[0],
+export const update_pr = (pr_id, user_name, data_head, data_detail) => (
+  dispatch
+) => {
+  console.log(1, "start", data_head, data_detail);
+  axios
+    .put(`${api_purchase}/pr/${pr_id}`, data_head, header_config)
+    .then(async (res) => {
+      console.log(2, "clear detail");
+      axios
+        .post(`${api_purchase}/pr_detail/${pr_id}`, data_detail, header_config)
+        .then(() => {
+          console.log(3, "get head and detail");
+          dispatch(get_pr_detail(pr_id));
+          dispatch(get_pr_by_id(pr_id, user_name));
+          console.log(4, "done..");
+        });
     });
-    // do respone here
-  });
-};
-export const update_pr = (data) => (dispatch) => {
-  axios.put(api_query, data, header_config).then((res) => {
-    dispatch({
-      type: UPDATE_PR,
-      payload: res.data[0],
-    });
-    // do respone here
-  });
-};
-export const update_pr_status = (data) => (dispatch) => {
-  axios.put(api_query, data, header_config).then((res) => {
-    dispatch({
-      type: UPDATE_PR_STATUS,
-      payload: res.data[0],
-    });
-    // do respone here
-  });
 };
 
-export const get_pr_detail = (pr_id) => (dispatch) => {
-  const query = {
-    query_sql: `SELECT * from PURCHASE.dbo.tb_pr_detail WHERE pr_id = ${pr_id}`,
-  };
-  console.log(query);
-  axios.post(api_query, query, header_config).then((res) => {
-    console.log(res);
-    dispatch({
-      type: GET_PR_DETAIL,
-      payload: res.data[0],
+export const create_pr = (user_name, data_head, data_detail) => (dispatch) => {
+  console.log(data_head);
+  axios
+    .post(`${api_purchase}/pr`, data_head, header_config)
+    .then(async (res) => {
+      dispatch({
+        type: CREATE_PR,
+        payload: res.data[0][0],
+      });
+      console.log(2, "clear detail");
+      console.log("data_detail", data_detail);
+      const pr_id = res.data[0][0].pr_id;
+      axios
+        .post(`${api_purchase}/pr_detail/${pr_id}`, data_detail, header_config)
+        .then(() => {
+          console.log(3, "get head and detail");
+          dispatch(get_pr_detail(pr_id));
+          dispatch(get_pr_by_id(pr_id, user_name));
+          console.log(4, "done..");
+        });
     });
-    // do respone here
-  });
+};
+export const get_pr_by_id = (id, user_name) => (dispatch) => {
+  console.log("Getting PR Head..");
+  try {
+    axios
+      .get(`${api_purchase}/pr/${id}&${user_name}`, header_config)
+      .then((res) => {
+        dispatch({
+          type: SET_PR_HEAD,
+          payload: res.data.main_master,
+        });
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const set_pr_head = (id, pr_list) => (dispatch) => {
+  try {
+    dispatch({
+      type: SET_PR_HEAD,
+      payload: pr_list.filter((pr) => pr.pr_id === id)[0],
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const pr_actions = (data, pr_id) => (dispatch) => {
+  data.commit = 1;
+  // data = {process_status_id : '3', user_name : '2563003', process_id : '30', commit : 1}
+  axios
+    .put(`${api_approve}/${data.process_id}`, data, header_config)
+    .then((res) => {
+      console.log(res);
+      dispatch(get_pr_by_id(pr_id, data.user_name));
+    });
+};
+
+export const update_pr_head = (data) => (dispatch) => {
+  try {
+    dispatch({
+      type: UPDATE_PR_HEAD,
+      payload: data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const get_pr_detail = (pr_id) => (dispatch) => {
+  console.log("Getting PR Detail..");
+  pr_id &&
+    axios.get(`${api_get_pr_detail}/${pr_id}`, header_config).then((res) => {
+      console.log("Done Getting PR Detail..");
+      dispatch({
+        type: GET_PR_DETAIL,
+        payload: res.data[0],
+      });
+    });
+};
+export const reset_pr_data = () => (dispatch) => {
+  try {
+    dispatch({
+      type: RESET_PR_DATA,
+      payload: {
+        pr_fields: pr_fields,
+        pr_detail: [pr_detail_fields],
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

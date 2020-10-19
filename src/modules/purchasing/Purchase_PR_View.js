@@ -4,72 +4,106 @@ import { Row, Col, Tabs, Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import ItemLine from "./pr_ItemLine";
-import { autoCompleteItem, autoCompleteUnit } from "../../data/inventoryData";
-
-import Comments from "../../components/Comments";
 import { dataComments, itemLots } from "../../data";
-import { prItemColumns } from "../../data/purchase/pr_ItemLineData";
-import { pr_fields, pr_detail_fields } from "./fields_config/pr";
-import { get_pr_detail } from "../../actions/Purchase/PR_Actions";
+import { prItemColumns } from "./fields_config/pr";
+import Comments from "../../components/Comments";
+import TotalFooter from "../../components/TotalFooter";
+import ModalRemark from "../../components/Modal_Remark";
+import { pr_actions } from "../../actions/purchase/PR_Actions";
+import { get_log_by_id, reset_comments } from "../../actions/comment&log";
+
 const { Text } = Typography;
 
 const PRView = (props) => {
   const dispatch = useDispatch();
-
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
-
-  const [formData, setData] = useState(data && data ? data : pr_fields);
+  const [tab, setTab] = useState("1");
+  const auth = useSelector((state) => state.auth.authData[0]);
+  const data_head = useSelector((state) => state.purchase.pr_head);
+  const dataComment = useSelector((state) => state.log.comment_log);
+  const [remark, setRemark] = useState("");
+  const [openRemarkModal, setOpenRemarkModal] = useState({
+    visible: false,
+    loading: false,
+  });
+  const flow =
+    data_head.data_flow_process &&
+    data_head.data_flow_process.map((step) => {
+      return step.all_group_in_node;
+    });
+  const callback = (key) => {
+    setTab(key);
+  };
 
   useEffect(() => {
-    dispatch(get_pr_detail(formData.pr_id));
-  }, [dispatch]);
-  const pr_detail = useSelector((state) => state.purchase.pr_detail);
+    data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
+    return () => {
+      dispatch(reset_comments());
+    };
+  }, [data_head]);
 
-  const [formDetail, setDetail] = useState(
-    pr_detail && pr_detail ? pr_detail : pr_detail_fields
-  );
-  console.log("formDetail", formDetail);
-  console.log(formData);
-  const callback = (key) => {};
-
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
+  const current_project = useSelector((state) => state.auth.currentProject);
+  const changeProcessStatus = (process_status_id) => {
+    if (remark.trim() === "") {
+      alert("Plase write remark");
+      return false;
+    }
+    setOpenRemarkModal({ visible: false, loading: false });
+    const app_detail = {
+      //6 = reject
+      process_status_id: process_status_id,
+      user_name: auth.user_name,
+      process_id: data_head.process_id,
+      process_member_remark: remark,
+    };
+    dispatch(pr_actions(app_detail, data_head.pr_id));
   };
-
-  const updateItemLine = (data) => {
-    setData({ ...formData, ...data });
-  };
-  const submitForm = (values) => {};
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Purchase Requisition",
       "View",
-      formData.req_code && formData.req_code ? formData.req_code : "Test",
+      data_head.pr_no && data_head.pr_no,
     ],
     search: false,
-    buttonAction: ["Edit", "Confirm", "Approve", "Reject", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    buttonAction: [
+      data_head.button_edit && "Edit",
+      data_head.button_confirm && "Confirm",
+      data_head.button_approve && "Approve",
+      data_head.button_reject && "Reject",
+      "Discard",
+    ],
+    action: [
+      {
+        name: "Print",
+        link: `http://192.168.5.207:80/Report_purch/report_pr.aspx?pr_no=${data_head.pr_no}`,
+      },
+      data_head.button_cancel && {
+        name: "Cancel",
+        cancel: true,
+        link: ``,
+      },
+    ],
     step: {
-      current: 1,
-      step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
+      current: data_head.node_stay - 1,
+      step: flow,
     },
     create: "",
     save: {
-      data: formData,
-      path: formData && "/purchase/pr/view/" + formData.id,
+      data: data_head,
+      path: data_head && "/purchase/pr/view/" + data_head.pr_id,
     },
     edit: {
-      data: formData,
-      path: formData && "/purchase/pr/edit/" + formData.id,
+      data: data_head,
+      path: data_head && "/purchase/pr/edit/" + data_head.pr_id,
     },
     discard: "/purchase/pr",
+    onDiscard: (e) => {
+      console.log("Discard");
+    },
     onSave: (e) => {
       e.preventDefault();
       console.log("Save");
@@ -81,89 +115,162 @@ const PRView = (props) => {
     onApprove: (e) => {
       e.preventDefault();
       console.log("Approve");
+      const app_detail = {
+        process_status_id: 5,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+        process_member_remark: remark,
+      };
+      dispatch(pr_actions(app_detail, data_head.pr_id));
     },
     onConfirm: () => {
       console.log("Confirm");
+      const app_detail = {
+        process_status_id: 2,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+      };
+      dispatch(pr_actions(app_detail, data_head.pr_id));
     },
-  };
-
-  const dateConfig = {
-    format: "DD/MM/YYYY HH:mm:ss",
-    value: moment(),
-    disabled: 1,
-  };
-
-  const formConfig = {
-    name: "req_form",
-    size: "small",
-    onFinish: (values) => {
-      submitForm(values);
+    onReject: () => {
+      console.log("Reject");
+      setOpenRemarkModal({
+        visible: true,
+        loading: false,
+      });
+    },
+    onCancel: () => {
+      console.log("Cancel");
+      const app_detail = {
+        process_status_id: 3,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+      };
+      dispatch(pr_actions(app_detail, data_head.pr_id));
     },
   };
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config} data={data_head}>
       <div id="form">
         <Row className="col-2">
-          <Col span={20}>
+          <Col span={8}>
             <h2>
-              <strong>Purchase Requisition</strong>
+              <strong>
+                Purchase Requisition{" "}
+                {data_head.tg_trans_status_id === 3 && (
+                  <Text strong type="danger">
+                    #{data_head.trans_status_name}
+                  </Text>
+                )}
+              </strong>
             </h2>
           </Col>
-          <Col span={4}>
+          <Col span={1}></Col>
+          <Col span={10} className="text-center">
+            <Text> {data_head.branch_name}</Text>
+          </Col>
+          <Col span={1}></Col>
+          <Col span={2}>
             <Text strong>PR Date : </Text>
-            {formData.pr_date}
+          </Col>
+          <Col span={2} className="text-center">
+            <Text className="text-view">{data_head.pr_created}</Text>
           </Col>
         </Row>
+
         <Row className="col-2" style={{ marginBottom: 20 }}>
-          {formData.pr_code && (
-            <h3>
-              <b>Ref. Code : </b>
-              {formData.pr_code}
-            </h3>
-          )}
+          <h3>
+            <b>PR No. : </b>
+            {data_head.pr_no}
+          </h3>
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Cost Center :</Text>
+            <Text strong>Due Date :</Text>
           </Col>
 
-          <Col span={8}>
-            <Text>{formData.pr_costCenter}</Text>
+          <Col span={8} className="text-view">
+            {data_head.tg_pr_due_date}
           </Col>
-          <Col span={1}></Col>
-          <Col span={4}>{/* <Text strong>Due Date :</Text> */}</Col>
-          <Col span={8}>{/* <Text>{formData.pr_dueDate}</Text> */}</Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Request by :</Text>
+          </Col>
+
+          <Col span={8} className="text-view">
+            {data_head.pr_created_by_no_name}
+          </Col>
+          <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Vendor :</Text>
           </Col>
           <Col span={8}>
-            <Text>{formData.v_name}</Text>
+            <Text className="text-view">{data_head.vendor_no_name}</Text>
           </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Cost center :</Text>
+          </Col>
+          <Col span={8} className="text-view">
+            {data_head.cost_center_no_name}
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}>
+            <Text strong>Currency :</Text>
+          </Col>
+          <Col span={8} className="text-view">
+            {data_head.currency_no ? data_head.currency_no : "THB"}
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Description :</Text>
+          </Col>
+          <Col span={8} className="text-view">
+            {data_head.pr_description}
+          </Col>
+          <Col span={2}></Col>
         </Row>
         <Row className="col-2 space-top-md">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
                 <ItemLine
-                  items={autoCompleteItem}
-                  units={autoCompleteUnit}
-                  itemLots={itemLots}
+                  pr_id={data_head.pr_id}
                   columns={prItemColumns}
-                  updateData={updateItemLine}
-                  dataLine={formData.dataLine ? formData.dataLine : []}
                   readOnly={true}
                 />
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Reason & Description" key="2">
-                <Text>{formData.pr_desc}</Text>
+              <Tabs.TabPane tab="Notes" key="2">
+                <Text className="text-view">{data_head.pr_remark}</Text>
               </Tabs.TabPane>
             </Tabs>
           </Col>
         </Row>
+        {tab === "1" ? (
+          <TotalFooter
+            excludeVat={data_head.tg_pr_sum_amount}
+            vat={data_head.tg_pr_vat_amount}
+            includeVat={data_head.tg_pr_total_amount}
+            currency={data_head.currency_no}
+          />
+        ) : null}
       </div>
-      <Comments data={[...dataComments]} />
+      <ModalRemark
+        title={"Remark"}
+        state={openRemarkModal}
+        onChange={setRemark}
+        onOk={() => {
+          changeProcessStatus(6);
+        }}
+        onCancel={() => {
+          setOpenRemarkModal({ visible: false, loading: false });
+          setRemark("");
+        }}
+      />
+      <Comments data={dataComment} />
     </MainLayout>
   );
 };

@@ -34,7 +34,7 @@ const VendorLine = ({
 
   useEffect(() => {
     dataLine && updateData({ req_item_line: [...lineItem] });
-  }, [lineItem, updateData, dataLine]);
+  }, [lineItem]);
 
   const addLine = () => {
     setLine([
@@ -113,6 +113,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { item_name: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={3} className="text-number">
@@ -127,6 +128,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { item_qty: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={3} className="text-string">
@@ -139,6 +141,7 @@ const VendorLine = ({
                   }
                   style={{ width: "100%" }}
                   defaultValue={line.item_lot}
+                  size="small"
                 >
                   <Option value="null"> </Option>
                   {itemLots.map((lot) => {
@@ -163,6 +166,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { item_qty_done: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={3} className="text-string">
@@ -179,6 +183,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { item_unit: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={1} style={{ textAlign: "center" }}>

@@ -1,81 +1,7 @@
-// import React, { useState } from "react";
-// import { Link } from "react-router-dom";
-// import { Drawer, Row, Col, Avatar, Dropdown, Button } from "antd";
-// import {
-//   UserOutlined,
-//   MenuOutlined,
-//   CaretDownOutlined,
-// } from "@ant-design/icons";
-// import { menuProfile } from "../data";
-// import MainConfig from "./MainConfig";
-
-// function MainHead(props) {
-//   const [visible, setVisible] = useState(false);
-//   const onCloseDrawer = () => {
-//     setVisible(false);
-//   };
-//   const onOpenDrawer = () => {
-//     setVisible(true);
-//   };
-//   return (
-//     <>
-//       <Row>
-//         <Col span={12}>
-//           <Row>
-//             <Col span={6}>
-//               <MenuOutlined onClick={onOpenDrawer} />{" "}
-//               <Link to="/" style={{ color: "white" }}>
-//                 {props.title}
-//               </Link>
-//             </Col>
-//             <Col span={18}>
-//               <MainConfig projectId={props.projectId} />
-//             </Col>
-//           </Row>
-//         </Col>
-//         <Col span={12} id="column-right">
-//           <Avatar icon={<UserOutlined />} />
-//           <Dropdown overlay={menuProfile} trigger={["click"]}>
-//             <Button type="text" className="ant-dropdown-link">
-//               Administrator <CaretDownOutlined />
-//             </Button>
-//           </Dropdown>
-//         </Col>
-//       </Row>
-
-//       <Drawer
-//         title="PROJECTS"
-//         placement="left"
-//         closable={false}
-//         onClose={onCloseDrawer}
-//         visible={visible}
-//       >
-//         <p>
-//           <Link to="/">DASHBOARD</Link>
-//         </p>
-//         <p>
-//           <Link to="/inventory">INVERTORY</Link>
-//         </p>
-//         <p>
-//           <Link to="/purchase">PURCHASE</Link>
-//         </p>
-//         <p>
-//           <Link to="/sales">SALES</Link>
-//         </p>
-//         <p>
-//           <Link to="/settings">SETTINGS</Link>
-//         </p>
-//       </Drawer>
-//     </>
-//   );
-// }
-
-// export default MainHead;
-
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import { Drawer, Row, Col, Avatar, Dropdown, Button } from "antd";
+import { Drawer, Row, Col, Avatar, Dropdown, Button, Menu } from "antd";
 import {
   UserOutlined,
   MenuOutlined,
@@ -83,10 +9,14 @@ import {
 } from "@ant-design/icons";
 import { menuProfile } from "../data";
 import MainConfig from "./MainConfig";
-
+import { signOut, change_working_project } from "../actions/authActions";
+import { useDispatch } from "react-redux";
 const MainHead = (props) => {
+  const dispatch = useDispatch();
+  const projects = useSelector((state) => state.auth.projects);
+  const auth = useSelector((state) => state.auth.authData[0]);
+  const currentProject = useSelector((state) => state.auth.currentProject);
   const [visible, setVisible] = useState(false);
-  let projects = JSON.parse(localStorage.getItem("projects"));
 
   const onCloseDrawer = () => {
     setVisible(false);
@@ -94,6 +24,35 @@ const MainHead = (props) => {
   const onOpenDrawer = () => {
     setVisible(true);
   };
+  const userMenu = () => {
+    return (
+      <Menu>
+        <Menu.Item>
+          <Link
+            to="/login"
+            onClick={() => {
+              dispatch(signOut());
+              localStorage.removeItem("state");
+            }}
+          >
+            Change Password
+          </Link>
+        </Menu.Item>
+        <Menu.Item>
+          <Link
+            to="/login"
+            onClick={() => {
+              dispatch(signOut());
+              localStorage.removeItem("state");
+            }}
+          >
+            Logout
+          </Link>
+        </Menu.Item>
+      </Menu>
+    );
+  };
+
   return (
     <>
       <Row>
@@ -101,7 +60,10 @@ const MainHead = (props) => {
           <Row>
             <Col span={6}>
               <MenuOutlined onClick={onOpenDrawer} />{" "}
-              <Link to="/" style={{ color: "white" }}>
+              <Link
+                to={currentProject && currentProject.project_url}
+                style={{ color: "white" }}
+              >
                 {props.title}
               </Link>
             </Col>
@@ -112,9 +74,9 @@ const MainHead = (props) => {
         </Col>
         <Col span={12} id="column-right">
           <Avatar icon={<UserOutlined />} />
-          <Dropdown overlay={menuProfile} trigger={["click"]}>
+          <Dropdown overlay={userMenu()} trigger={["click"]}>
             <Button type="text" className="ant-dropdown-link">
-              Administrator <CaretDownOutlined />
+              {auth.employee_name_eng} <CaretDownOutlined />
             </Button>
           </Dropdown>
         </Col>
@@ -137,10 +99,7 @@ const MainHead = (props) => {
                     state: project,
                   }}
                   onClick={() => {
-                    localStorage.setItem(
-                      "project_detail",
-                      JSON.stringify(project)
-                    );
+                    dispatch(change_working_project(project));
                   }}
                 >
                   {project.project_name}
@@ -156,4 +115,4 @@ const MainHead = (props) => {
   );
 };
 
-export default withRouter(MainHead);
+export default React.memo(withRouter(MainHead));

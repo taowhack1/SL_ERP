@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Row, Col, Form, Tabs, Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
 import ItemLine from "../../components/ItemLine";
@@ -50,16 +51,16 @@ const RequisitionView = (props) => {
     }
   };
 
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Requisition", "View", formData.req_code],
     search: false,
     buttonAction: ["Edit", "Approve", "Reject", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    action: [{ name: "Print", link: "www.google.co.th" }],
     step: {
       current: 2,
       step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],

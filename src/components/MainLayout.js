@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Layout } from "antd";
 import TopContent from "./TopComponent";
 import MainHeader from "./MainHeader";
 import MainFooter from "./MainFooter";
-
 const { Header, Content } = Layout;
 
 function MainLayout(props) {
@@ -21,4 +20,4 @@ function MainLayout(props) {
   );
 }
 
-export default MainLayout;
+export default React.memo(MainLayout);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MainLayout from "../components/MainLayout";
@@ -7,8 +7,8 @@ import { Form, Input } from "antd";
 import { addSalary, delSalary } from "../actions/salaryActions";
 import { signIn2, signIn3 } from "../actions/authActions";
 const Dashboard = (props) => {
-  const auth = localStorage.getItem("user");
-  if (!auth) {
+  const authData = useSelector((state) => state.auth.authData);
+  if (!authData) {
     alert("Authentication required\nPlase Login.");
     props.history.push("/login");
   }
@@ -39,7 +39,7 @@ const Dashboard = (props) => {
     show: true,
     breadcrumb: ["Home"],
     search: false,
-    action: ["print"],
+    action: ["Print"],
     step: {
       current: 2,
       step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],

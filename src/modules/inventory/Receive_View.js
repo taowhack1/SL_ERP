@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Row,
   Col,
@@ -92,11 +93,11 @@ const Receive_View = (props) => {
     setData({ ...formData, ...data });
   };
 
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -107,7 +108,7 @@ const Receive_View = (props) => {
     ],
     search: false,
     buttonAction: ["Edit", "Confirm", "Validate", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    action: [{ name: "Print", link: "www.google.co.th" }],
     step: {
       current: formData.r_status,
       step: ["Draft", "Confirm", "Validate", "Done"],

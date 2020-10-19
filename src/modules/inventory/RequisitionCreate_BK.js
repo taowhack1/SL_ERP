@@ -90,7 +90,7 @@ const RequisitionCreate = (props) => {
     buttonAction: editForm
       ? ["Save", "SaveConfirm", "Discard"]
       : ["Edit", "Approve", "Reject"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    action: [{ name: "Print", link: "www.google.co.th" }],
     step: {
       current: 2,
       step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],

@@ -1,41 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { quotationColumns, quotationData } from "../../data/sale/data";
-import $ from "jquery";
+import { quotationColumns } from "./configs";
+import {
+  get_master_data2,
+  get_quotation_by_id,
+  get_quotation_list,
+  reset_qn,
+} from "../../actions/sales";
+import { reset_comments } from "../../actions/comment&log";
+import { getSelectItem, getSelectUOM } from "../../actions/inventory";
 const Quotations = (props) => {
-  const [selectedRow, setSelectedRow] = useState();
-  const [rowClick, setRowClick] = useState(false);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(reset_qn());
+    dispatch(reset_comments());
+    dispatch(get_master_data2());
+    dispatch(get_quotation_list());
+    dispatch(getSelectItem());
+    dispatch(getSelectUOM());
+  }, []);
+  const getData = (qn_id, user_name) => {
+    dispatch(get_quotation_by_id(qn_id, user_name));
+  };
+  const dataTable = useSelector((state) => state.sales.qn.qn_list);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  // useEffect(() => {
-  //   axios.get("http://localhost:3001/requisition").then((res) => {
-  //     setDataTable(res.data);
-  //   });
-  // }, []);
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+  const auth = useSelector((state) => state.auth.authData[0]);
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Quotations"],
     search: true,
     create: "/sales/quotations/create",
-    buttonAction: ["Create", "Edit"],
-    edit: {
-      data: selectedRow,
-      path: selectedRow && "/sales/quotations/edit/" + selectedRow.id,
-    },
-    disabledEditBtn: !rowClick,
+    buttonAction: ["Create"],
     discard: "/sales/quotations",
     onCancel: () => {
       console.log("Cancel");
     },
   };
-
   return (
     <div>
       <MainLayout {...config}>
@@ -43,23 +52,18 @@ const Quotations = (props) => {
           <Col span={24}>
             <Table
               columns={quotationColumns}
-              dataSource={quotationData}
+              dataSource={dataTable}
               onChange={onChange}
+              rowKey="qn_id"
               size="small"
               rowClassName="row-pointer"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
-                    setRowClick(true);
-                    $(e.target)
-                      .closest("tbody")
-                      .find("tr")
-                      .removeClass("selected-row");
-                    $(e.target).closest("tr").addClass("selected-row");
-                    setSelectedRow(record);
+                    getData(record.qn_id, auth.user_name);
                     props.history.push({
-                      pathname: "/sales/quotations/view/" + record.id,
-                      state: record,
+                      pathname: "/sales/quotations/view/" + record.qn_id,
+                      // state: record.qn_id,
                     });
                   },
                 };

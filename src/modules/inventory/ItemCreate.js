@@ -30,7 +30,7 @@ import {
   getSelectDetail,
   createNewItems,
   upDateItem,
-} from "../../actions/itemActions";
+} from "../../actions/inventory/itemActions";
 import { item_fields } from "../../page_fields/inventory/item";
 import { getNameById } from "../../include/js/function_main";
 import $ from "jquery";
@@ -44,7 +44,7 @@ const ItemCreate = (props) => {
     // $("input").attr("readonly", true).css("border", "none");
     dispatch(getSelectDetail());
   }, []);
-  const select_detail = useSelector((state) => state.item.select_detail);
+  const master_data = useSelector((state) => state.inventory.master_data);
   const data = props.location.state ? props.location.state : 0;
 
   const [editForm, setEdit] = useState(true);
@@ -58,11 +58,12 @@ const ItemCreate = (props) => {
   const upDateFormValue = (data) => {
     setData({ ...formData, ...data });
   };
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -74,7 +75,7 @@ const ItemCreate = (props) => {
     buttonAction: editForm
       ? ["Save", "SaveConfirm", "Discard"]
       : ["Edit", "Approve", "Reject"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    action: [{ name: "Print", link: "www.google.co.th" }],
     step: {
       // current: formData.req_step,
       // step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
@@ -83,16 +84,15 @@ const ItemCreate = (props) => {
     save: {
       data: formData,
       path: formData && "/inventory/items/view/" + formData.item_id,
-      function: () =>
-        formData.item_no
-          ? dispatch(upDateItem(formData, formData.item_id))
-          : dispatch(createNewItems(formData)),
     },
     // save: "function",
     discard: "/inventory/items",
     onSave: (e) => {
       e.preventDefault();
-      console.log(formData);
+      console.log("Save");
+      formData.item_no
+        ? dispatch(upDateItem(formData, formData.item_id))
+        : dispatch(createNewItems(formData));
     },
     onEdit: (e) => {
       e.preventDefault();
@@ -219,13 +219,13 @@ const ItemCreate = (props) => {
                       onChange={(data) => upDateFormValue({ type_id: data })}
                       value={getNameById(
                         formData.type_id,
-                        select_detail.item_type,
+                        master_data.item_type,
                         "type_id",
                         "type_name"
                       )}
                     >
-                      {select_detail.item_type &&
-                        select_detail.item_type.map((type) => {
+                      {master_data.item_type &&
+                        master_data.item_type.map((type) => {
                           return (
                             <Option key={type.type_id} value={type.type_id}>
                               {type.type_no}
@@ -263,12 +263,12 @@ const ItemCreate = (props) => {
                       style={{ width: "100%" }}
                       value={getNameById(
                         formData.category_id,
-                        select_detail.item_category,
+                        master_data.item_category,
                         "category_id",
                         "category_name"
                       )}
                     >
-                      {select_detail.item_category.map((categ) => {
+                      {master_data.item_category.map((categ) => {
                         return (
                           <Option
                             key={categ.category_id}
@@ -296,12 +296,12 @@ const ItemCreate = (props) => {
                       style={{ width: "100%" }}
                       value={getNameById(
                         formData.uom_id,
-                        select_detail.item_uom,
+                        master_data.item_uom,
                         "uom_id",
                         "uom_no"
                       )}
                     >
-                      {select_detail.item_uom.map((uom) => {
+                      {master_data.item_uom.map((uom) => {
                         return (
                           <Option key={uom.uom_id} value={uom.uom_id}>
                             {uom.uom_no}

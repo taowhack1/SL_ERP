@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Row, Col, Table, Modal } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { whColumns, warehouses, companys } from "../../data/locationData";
@@ -41,11 +42,11 @@ const Warehouse = () => {
     });
   };
 
-  const projectDetail = JSON.parse(localStorage.getItem("project_detail"));
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: projectDetail.project_id,
-    title: projectDetail.project_name,
-    home: projectDetail.project_url,
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Warehouse"],
     search: true,

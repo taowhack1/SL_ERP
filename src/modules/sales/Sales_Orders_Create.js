@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import {
   Row,
   Col,
@@ -22,110 +22,124 @@ import { itemLineColumns } from "../../data/sale/data";
 import { payment_terms } from "../../data/payment_terms";
 import { customerData, quotationData } from "../../data/sale/data";
 import numeral from "numeral";
+import { useDispatch, useSelector } from "react-redux";
+import CustomSelect from "../../components/CustomSelect";
+import {
+  create_so,
+  get_qn_open_so,
+  get_quotation_list,
+  get_so_by_id,
+  so_get_qn_ref,
+  update_so,
+} from "../../actions/sales";
+import { action_type, header_config } from "../../include/js/main_config";
+import { sortData } from "../../include/js/function_main";
+import { so_detail_fields, so_fields } from "./configs";
+import { api_qn_detail } from "../../actions/sales/config";
+import Detail from "./Sales_Order_Detail";
+import { reducer } from "./reducers";
+import axios from "axios";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Text } = Typography;
 
+const initialStateHead = so_fields;
+const initialStateDetail = [so_detail_fields];
 const SaleOrderCreate = (props) => {
-  const [tabId] = useState(1);
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
-
-  let quotationsRef = [];
-  quotationData.map((quo) => {
-    return quotationsRef.push({
-      id: quo.id,
-      name: quo.q_code,
-      value:
-        "[" +
-        quo.q_code +
-        "] " +
-        quo.c_name +
-        " ( " +
-        numeral(quo.q_include_vat).format("0,0.00") +
-        " )",
+  const dispatch = useDispatch();
+  const [tab, setTab] = useState("1");
+  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
+  const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
+  const auth = useSelector((state) => state.auth.authData[0]);
+  const dataComment = useSelector((state) => state.log.comment_log);
+  const current_project = useSelector((state) => state.auth.currentProject);
+  const masterData = useSelector((state) => state.sales.master_data);
+  const quotation_list = useSelector((state) => state.sales.so.qn_ref);
+  const flow =
+    data_head &&
+    data_head.data_flow_process &&
+    data_head.data_flow_process.map((step) => {
+      return step.all_group_in_node;
     });
-  });
-
-  let customers = [];
-  customerData.map((cus) => {
-    return customers.push({
-      id: cus.id,
-      name: cus.c_name,
-      value: "[" + cus.c_code + "] " + cus.c_name,
-    });
-  });
-
-  const [refData] = useState(quotationData && quotationData);
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          id: 0,
-          so_code: null,
-          q_code: null,
-          so_delivery_date: null,
-          so_create_date: moment().format("YYYY-MM-DD"),
-          c_name: null,
-          c_company: null,
-          so_sale_person: "Sale User 1",
-          so_payment_term: null,
-          so_total: 0,
-          so_vat: 0,
-          so_include_vat: 0,
-          so_status: 0,
-          so_remark: null,
-          dataLine: [
-            {
-              id: 0,
-              item: null,
-              item_qty: 0,
-              item_unit: null,
-              item_unit_price: 0,
-              item_subtotal: 0,
-            },
-          ],
-        }
-  );
-  useEffect(() => {}, [formData.q_code]);
-  const isEditPage = formData && formData.so_code ? 1 : 0;
-  const callback = (key) => {};
-
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
+  const callback = (key) => {
+    setTab(key);
   };
 
+  const data =
+    props.location && props.location.state ? props.location.state : 0;
+  console.log("data", data);
+  useEffect(() => {
+    headDispatch({
+      type: "SET_HEAD",
+      payload: data.data_head
+        ? {
+            ...data.data_head,
+            commit: 1,
+            user_name: auth.user_name,
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+          }
+        : {
+            ...so_fields,
+            commit: 1,
+            user_name: auth.user_name,
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+            qn_created: moment().format("DD/MM/YYYY"),
+          },
+    });
+    detailDispatch({
+      type: "SET_DETAIL",
+      payload: data.data_detail ? data.data_detail : [so_detail_fields],
+    });
+  }, []);
+
+  useEffect(() => {
+    dispatch(get_qn_open_so());
+  }, []);
+  useEffect(() => {
+    data_head.qn_id &&
+      !data_head.so_id &&
+      axios
+        .get(`${api_qn_detail}/ref/${data_head.qn_id}`, header_config)
+        .then((res) => {
+          detailDispatch({ type: "SET_DETAIL", payload: res.data[0] });
+        });
+  }, [data_head.qn_id]);
+
   const config = {
-    projectId: 3,
-    title: "SALES",
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Sales Order",
-      formData.so_code ? "Edit" : "Create",
-      formData.so_code && formData.so_code,
+      data_head.so_no ? "Edit" : "Create",
+      data_head.so_no && data_head.so_no,
     ],
     search: false,
     buttonAction: ["Save", "SaveConfirm", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
-    step: {
-      current: formData.so_status,
-      step: ["Draft", "Confirm", "Approve", "Done"],
-    },
+    step: !data_head.so_no
+      ? {}
+      : {
+          current: data_head && data_head.node_stay - 1,
+          step: flow,
+        },
     create: "",
     save: {
-      data: formData,
-      path: formData && "/sales/orders/view/" + formData.id,
-    },
-    edit: {
-      data: formData,
-      path: formData && "/sales/orders/edit/" + formData.id,
+      data: data_head,
+      path:
+        data_head &&
+        "/sales/orders/view/" + (data_head.so_id ? data_head.so_id : "new"),
     },
     discard: "/sales/orders",
     onSave: (e) => {
       e.preventDefault();
-      setData({ so_code: "SO2002-0099" });
-      console.log(formData);
+      console.log("SAVE");
+      !data_head.so_id
+        ? dispatch(create_so(data_head, data_detail))
+        : dispatch(update_so(data_head.so_id, data_head, data_detail));
     },
     onEdit: (e) => {
       e.preventDefault();
@@ -141,41 +155,80 @@ const SaleOrderCreate = (props) => {
   };
 
   const getDataRef = (refId, mainData, refData) => {
-    let copyMain = { ...mainData };
-    let copyRef = { ...refData[refId] };
-
-    copyMain.q_code = copyRef.q_code;
-    copyMain.c_name = copyRef.c_name;
-    copyMain.c_company = copyRef.c_company;
-    copyMain.so_sale_person = copyRef.q_sale_person;
-    copyMain.so_payment_term = copyRef.c_payment_term;
-    copyMain.so_include_vat = copyRef.q_include_vat;
-    copyMain.dataLine = copyRef.dataLine;
-
-    setData({ ...formData, ...copyMain });
+    console.log("GET REF");
+    let copyMain = {};
+    let copyRef = refData.filter((data) => data.qn_id === refId)[0];
+    copyMain.qn_id = copyRef.qn_id;
+    copyMain.so_description = copyRef.qn_description;
+    copyMain.so_no_description = copyRef.qn_no_description;
+    copyMain.qn_no_description = copyRef.qn_no_description;
+    copyMain.so_agreement = copyRef.qn_agreement;
+    copyMain.so_remark = copyRef.qn_remark;
+    copyMain.vat_id = copyRef.vat_id;
+    copyMain.currency_id = copyRef.currency_id;
+    copyMain.tg_so_amount = copyRef.tg_qn_amount;
+    copyMain.tg_so_discount = copyRef.tg_qn_discount;
+    copyMain.tg_so_sum_amount = copyRef.tg_qn_sum_amount;
+    copyMain.tg_so_vat_amount = copyRef.tg_qn_vat_amount;
+    copyMain.tg_so_total_amount = copyRef.tg_qn_total_amount;
+    copyMain.customer_id = copyRef.customer_id;
+    copyMain.payment_term_id = copyRef.payment_term_id;
+    copyMain.payment_term_name = copyRef.payment_term_name;
+    copyMain.payment_term_no_name = copyRef.payment_term_no_name;
+    copyMain.currency_no = copyRef.currency_no;
+    copyMain.currency_name = copyRef.currency_name;
+    copyMain.customer_no_name = copyRef.customer_no_name;
+    copyMain.currency_no_name = copyRef.currency_no_name;
+    copyMain.vat_rate = copyRef.vat_rate;
+    console.log("copyMain", copyMain);
+    return copyMain;
   };
+  const resetForm = () => {
+    headDispatch({
+      type: "RESET_DATA",
+      payload: {
+        ...initialStateHead,
+        commit: 1,
+        user_name: auth.user_name,
+        branch_id: auth.branch_id,
+        branch_name: auth.branch_name,
+        qn_created: moment().format("DD/MM/YYYY"),
+      },
+    });
+    detailDispatch({
+      type: "RESET_DATA",
+      payload: initialStateDetail,
+    });
+  };
+  console.log("data_head", data_head);
+  console.log("data_detail", data_detail);
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config}>
       <div id="form">
         {/* Head */}
         <Row className="col-2">
-          <Col span={11}>
+          <Col span={8}>
             <h2>
               <strong>
-                {isEditPage ? "Edit" : "Create"} Sales Order{" "}
-                {isEditPage ? "#" + formData.so_code : null}
+                {data_head.so_no ? "Edit" : "Create"} Sales Order{" "}
+                {data_head.so_no ? "#" + data_head.so_no : null}
               </strong>
             </h2>
           </Col>
-          <Col span={9}></Col>
+          <Col span={1}></Col>
+          <Col span={10} className="text-center">
+            {data_head.branch_name}
+          </Col>
+          <Col span={1}></Col>
           <Col span={2}>
-            <Text strong>Order Date :</Text>
+            <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            {moment(
-              formData.so_create_date,
-              isEditPage ? "DD/MM/YYYY" : "YYYY-MM-DD"
-            ).format("DD/MM/YYYY")}
+            {data_head.so_id
+              ? moment(data_head.so_create_date, "DD/MM/YYYY").format(
+                  "DD/MM/YYYY"
+                )
+              : moment().format("DD/MM/YYYY")}
           </Col>
         </Row>
 
@@ -185,47 +238,53 @@ const SaleOrderCreate = (props) => {
             <Text strong>Quotations Ref.</Text>
           </Col>
           <Col span={8}>
-            <Select
-              placeholder={"Quotations. ex.Q2009-00xx"}
-              onSelect={(data) => {
-                getDataRef(data, formData, refData);
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"Quotation ref."}
+              field_id="qn_id"
+              field_name="qn_no_description"
+              value={data_head.qn_no_description}
+              data={quotation_list}
+              onChange={(data, option) => {
+                if (data) {
+                  headDispatch({
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: getDataRef(data, data_head, quotation_list),
+                  });
+                } else {
+                  resetForm();
+                }
               }}
-              style={{ width: "100%" }}
-              defaultValue={formData.q_code}
-            >
-              <Option value="null"> </Option>
-              {quotationsRef.map((quo) => {
-                return (
-                  <Option key={quo.id} value={quo.id}>
-                    {quo.value}
-                  </Option>
-                );
-              })}
-            </Select>
+            />
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Deliver Date </Text>
+            <Text strong>Order Date</Text>
           </Col>
           <Col span={8}>
             <DatePicker
-              name={"so_delivery_date"}
+              name={"so_order_date"}
               format={"DD/MM/YYYY"}
               style={{ width: "100%" }}
-              placeholder="Due date..."
+              placeholder="Order date"
+              required
               value={
-                formData.so_delivery_date
-                  ? moment(formData.so_delivery_date, "DD/MM/YYYY")
+                data_head.so_order_date
+                  ? moment(data_head.so_order_date, "DD/MM/YYYY")
                   : ""
               }
               defaultValue={
-                formData.so_delivery_date
-                  ? moment(formData.so_delivery_date, "DD/MM/YYYY")
+                data_head.so_order_date
+                  ? moment(data_head.so_order_date, "DD/MM/YYYY")
                   : ""
               }
               onChange={(data) => {
-                upDateFormValue({
-                  so_delivery_date: data.format("DD/MM/YYYY"),
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: {
+                    so_order_date: data ? data.format("DD/MM/YYYY") : "",
+                  },
                 });
               }}
             />
@@ -233,41 +292,102 @@ const SaleOrderCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
+            <Text strong>Description :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Input
+              onChange={(e) =>
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: { so_description: e.target.value },
+                })
+              }
+              value={data_head.so_description}
+              placeholder="Description"
+            ></Input>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}>
             <Text strong>Customer </Text>
           </Col>
 
           <Col span={8}>
-            <AutoComplete
-              options={customers}
-              placeholder="Customer.."
-              defaultValue={formData.c_name}
-              value={formData.c_name}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ c_name: data })}
-              onChange={(data) => upDateFormValue({ c_name: data })}
-              style={{ width: "100%" }}
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"Customer"}
+              field_id="customer_id"
+              field_name="customer_no_name"
+              value={data_head.customer_no_name}
+              data={masterData.customers}
+              onChange={(data, option) => {
+                data && data
+                  ? headDispatch({
+                      type: "CHANGE_HEAD_VALUE",
+                      payload: {
+                        customer_id: data,
+                        customer_no_name: option.title,
+                      },
+                    })
+                  : headDispatch({
+                      type: "CHANGE_HEAD_VALUE",
+                      payload: {
+                        customer_id: null,
+                        customer_no_name: null,
+                      },
+                    });
+              }}
             />
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Agreement :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Input
+              onChange={(e) =>
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: { so_agreement: e.target.value },
+                })
+              }
+              value={data_head.so_agreement}
+              placeholder="Agreement"
+            ></Input>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Payment Terms</Text>
           </Col>
           <Col span={8}>
-            <AutoComplete
-              options={payment_terms}
-              placeholder="Payment Terms..."
-              defaultValue={formData.so_payment_term}
-              value={formData.so_payment_term}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ so_payment_term: data })}
-              onChange={(data) => upDateFormValue({ so_payment_term: data })}
-              style={{ width: "100%" }}
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"Payment term"}
+              field_id="payment_term_id"
+              field_name="payment_term_no_name"
+              value={data_head.payment_term_no_name}
+              data={masterData.payment_terms}
+              onChange={(data, option) => {
+                data && data
+                  ? headDispatch({
+                      type: "CHANGE_HEAD_VALUE",
+                      payload: {
+                        payment_term_id: data,
+                        payment_term_no_name: option.title,
+                      },
+                    })
+                  : headDispatch({
+                      type: "CHANGE_HEAD_VALUE",
+                      payload: {
+                        payment_term_id: null,
+                        payment_term_no_name: null,
+                      },
+                    });
+              }}
             />
           </Col>
         </Row>
@@ -275,24 +395,24 @@ const SaleOrderCreate = (props) => {
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
-                <ItemLine
-                  items={items}
-                  units={units}
-                  // itemLots={itemLots}
-                  columns={itemLineColumns}
-                  updateData={upDateFormValue}
-                  dataLine={formData.dataLine ? formData.dataLine : [{}]}
+                <Detail
                   readOnly={false}
-                  formData={formData}
+                  data_detail={data_detail}
+                  detailDispatch={detailDispatch}
+                  headDispatch={headDispatch}
+                  vat_rate={data_head.vat_rate}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key="2">
                 <TextArea
                   rows={2}
                   placeholder={"Remark..."}
-                  defaultValue={formData.so_remark}
+                  defaultValue={data_head.so_remark}
                   onChange={(e) =>
-                    upDateFormValue({ so_remark: e.target.value })
+                    headDispatch({
+                      type: "CHANGE_HEAD_VALUE",
+                      payload: { so_remark: e.target.value },
+                    })
                   }
                   style={{ width: "100%" }}
                 />
@@ -300,16 +420,16 @@ const SaleOrderCreate = (props) => {
             </Tabs>
           </Col>
         </Row>
-        {tabId === 1 ? (
+        {tab === "1" ? (
           <TotalFooter
-            excludeVat={formData.so_total}
-            vat={formData.so_vat}
-            includeVat={formData.so_include_vat}
+            excludeVat={data_head.tg_so_sum_amount}
+            vat={data_head.tg_so_vat_amount}
+            includeVat={data_head.tg_so_total_amount}
             currency={"THB"}
           />
         ) : null}
       </div>
-      <Comments data={[...dataComments]} />
+      <Comments data={dataComment} />
     </MainLayout>
   );
 };
