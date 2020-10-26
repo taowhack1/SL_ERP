@@ -6,9 +6,10 @@ import { Button, Modal } from "antd";
 import { Form, Input } from "antd";
 import { addSalary, delSalary } from "../actions/salaryActions";
 import { signIn2, signIn3 } from "../actions/authActions";
+import { get_select_cost_center } from "../actions/hrm";
 const Dashboard = (props) => {
-  const authData = useSelector((state) => state.auth.authData);
-  if (!authData) {
+  const auth = useSelector((state) => state.auth.authData[0]);
+  if (!auth) {
     alert("Authentication required\nPlase Login.");
     props.history.push("/login");
   }
@@ -30,6 +31,10 @@ const Dashboard = (props) => {
     console.log("Handle Cancel Button");
     setState({ visible: false });
   };
+
+  useEffect(() => {
+    dispatch(get_select_cost_center(auth.department_id));
+  }, []);
   // const onChange = (pagination, filters, sorter, extra) => {
   //   console.log("params", pagination, filters, sorter, extra);
   // };

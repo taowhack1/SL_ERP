@@ -4,15 +4,18 @@ import { Row, Col, Tabs, Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
 
 import Comments from "../../components/Comments";
-import Detail from "./Receive_Detail";
+import Detail from "./Issue_Detail";
 import TotalFooter from "../../components/TotalFooter";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
-import { receive_actions } from "../../actions/inventory/receiveActions";
+import { issue_actions } from "../../actions/inventory/issueActions";
 import ModalRemark from "../../components/Modal_Remark";
 const { Text } = Typography;
 
-const Receive_View = (props) => {
+const Issue_View = (props) => {
   const dispatch = useDispatch();
+  const dataComments = useSelector((state) => state.log.comment_log);
+  const current_project = useSelector((state) => state.auth.currentProject);
+  const auth = useSelector((state) => state.auth.authData[0]);
   const [tab, setTab] = useState("1");
   const [remark, setRemark] = useState("");
   const [openRemarkModal, setOpenRemarkModal] = useState({
@@ -20,22 +23,16 @@ const Receive_View = (props) => {
     loading: false,
   });
 
-  const data_head = useSelector(
-    (state) => state.inventory.receive.receive_head
-  );
+  const data_head = useSelector((state) => state.inventory.issue.issue_head);
   const data_detail = useSelector(
-    (state) => state.inventory.receive.receive_detail
+    (state) => state.inventory.issue.issue_detail
   );
-  const data_sub_detail = useSelector(
-    (state) => state.inventory.receive.receive_sub_detail
-  );
-  const dataComments = useSelector((state) => state.log.comment_log);
-  const current_project = useSelector((state) => state.auth.currentProject);
-  const auth = useSelector((state) => state.auth.authData[0]);
 
   useEffect(() => {
     console.log("get_log");
-    data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
+    data_head &&
+      data_head.process_id &&
+      dispatch(get_log_by_id(data_head.process_id));
     return () => {
       dispatch(reset_comments());
     };
@@ -59,9 +56,9 @@ const Receive_View = (props) => {
     breadcrumb: [
       "Home",
       "Inventory",
-      "Receive",
+      "Issue",
       "View",
-      data_head.receive_no && data_head.receive_no,
+      data_head && data_head.issue_no,
     ],
     search: false,
     buttonAction: [
@@ -75,7 +72,7 @@ const Receive_View = (props) => {
       {
         name: "Print",
         link: `http://192.168.5.207:80/Report_purch/report_pr.aspx?pr_no=${
-          data_head && data_head.so_no
+          data_head && data_head.issue_no
         }`,
       },
       data_head &&
@@ -94,11 +91,10 @@ const Receive_View = (props) => {
       data: {
         data_head: data_head,
         data_detail: data_detail,
-        data_sub_detail: data_sub_detail,
       },
-      path: data_head && "/inventory/receive/edit/" + data_head.receive_id,
+      path: data_head && "/inventory/issue/edit/" + data_head.issue_id,
     },
-    discard: "/inventory/receive",
+    discard: "/inventory/issue",
     onSave: (e) => {
       e.preventDefault();
       console.log("Save");
@@ -116,7 +112,7 @@ const Receive_View = (props) => {
         process_id: data_head.process_id,
         process_member_remark: "Approve",
       };
-      dispatch(receive_actions(app_detail, data_head.receive_id));
+      dispatch(issue_actions(app_detail, data_head.issue_id));
     },
     onConfirm: () => {
       console.log("Confirm");
@@ -126,7 +122,7 @@ const Receive_View = (props) => {
         process_id: data_head.process_id,
         process_member_remark: "Confirm",
       };
-      dispatch(receive_actions(app_detail, data_head.receive_id));
+      dispatch(issue_actions(app_detail, data_head.issue_id));
     },
     onReject: () => {
       console.log("Reject");
@@ -143,7 +139,7 @@ const Receive_View = (props) => {
         process_id: data_head.process_id,
         process_member_remark: "Cancel",
       };
-      dispatch(receive_actions(app_detail, data_head.receive_id));
+      dispatch(issue_actions(app_detail, data_head.issue_id));
     },
   };
   const changeProcessStatus = (process_status_id) => {
@@ -159,7 +155,7 @@ const Receive_View = (props) => {
       process_id: data_head.process_id,
       process_member_remark: remark,
     };
-    dispatch(receive_actions(app_detail, data_head.receive_id));
+    dispatch(issue_actions(app_detail, data_head.issue_id));
   };
 
   console.log("data_head", data_head);
@@ -171,39 +167,39 @@ const Receive_View = (props) => {
         <Row className="col-2">
           <Col span={8}>
             <h2>
-              <strong>
-                Receive{" "}
-                {data_head.receive_no ? "#" + data_head.receive_no : null}
-              </strong>
+              <strong>Issue {data_head && "#" + data_head.issue_no}</strong>
             </h2>
           </Col>
           <Col span={1}></Col>
           <Col span={10} className="text-center">
-            {data_head.branch_name}
+            {data_head && data_head.branch_name}
           </Col>
           <Col span={1}></Col>
           <Col span={2}>
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{data_head.receive_created}</Text>
+            <Text className="text-view">
+              {data_head && data_head.issue_created}
+            </Text>
           </Col>
         </Row>
-
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>PO Ref. :</Text>
+            <Text strong>Request By :</Text>
           </Col>
+
           <Col span={8}>
-            <Text className="text-view">{data_head.po_no_description}</Text>
+            <Text>{data_head && data_head.issue_created_by_no_name}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Vendor :</Text>
+            <Text strong>Cost Center :</Text>
           </Col>
-
           <Col span={8}>
-            <Text className="text-view">{data_head.vendor_no_name}</Text>
+            <Text className="text-view">
+              {data_head && data_head.cost_center_no_name}
+            </Text>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
@@ -211,29 +207,18 @@ const Receive_View = (props) => {
             <Text strong>Description :</Text>
           </Col>
           <Col span={8}>
-            <Text className="text-view">{data_head.receive_description}</Text>
+            <Text className="text-view">
+              {data_head && data_head.issue_description}
+            </Text>
           </Col>
           <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Currency :</Text>
-          </Col>
-          <Col span={8}>
-            <Text className="text-view">{data_head.currency_no}</Text>
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>Agreement :</Text>
           </Col>
           <Col span={8}>
-            <Text className="text-view">{data_head.receive_agreement}</Text>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Order date :</Text>
-          </Col>
-          <Col span={8}>
-            <Text className="text-view">{data_head.receive_order_date}</Text>
+            <Text className="text-view">
+              {data_head && data_head.issue_agreement}
+            </Text>
           </Col>
         </Row>
 
@@ -242,26 +227,19 @@ const Receive_View = (props) => {
             <Tabs defaultActiveKey={"1"} onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key={"1"}>
                 <Detail
+                  data_detail={data_detail && data_detail}
                   readOnly={true}
-                  po_id={data_head.po_id}
-                  data_detail={data_detail}
-                  data_sub_detail={data_sub_detail}
+                  category_id={data_head && data_head.category_id}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key={"2"}>
-                <Text className="text-view">{data_head.receive_remark}</Text>
+                <Text className="text-view">
+                  {data_head && data_head.issue_remark}
+                </Text>
               </Tabs.TabPane>
             </Tabs>
           </Col>
         </Row>
-        {/* {tab === "1" ? (
-          <TotalFooter
-            excludeVat={data_head.tg_receive_sum_amount}
-            vat={data_head.tg_receive_vat_amount}
-            includeVat={data_head.tg_receive_total_amount}
-            currency={data_head.currency_no}
-          />
-        ) : null} */}
       </div>
       <ModalRemark
         title={"Remark"}
@@ -280,4 +258,4 @@ const Receive_View = (props) => {
   );
 };
 
-export default Receive_View;
+export default Issue_View;

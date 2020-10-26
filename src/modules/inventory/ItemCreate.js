@@ -34,6 +34,7 @@ import {
 import { item_fields } from "../../page_fields/inventory/item";
 import { getNameById } from "../../include/js/function_main";
 import $ from "jquery";
+import { getMasterDataItem } from "../../actions/inventory";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -42,7 +43,7 @@ const ItemCreate = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
     // $("input").attr("readonly", true).css("border", "none");
-    dispatch(getSelectDetail());
+    dispatch(getMasterDataItem());
   }, []);
   const master_data = useSelector((state) => state.inventory.master_data);
   const data = props.location.state ? props.location.state : 0;

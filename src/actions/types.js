@@ -17,9 +17,29 @@ export const DEL_SALARY = "DEL_SALARY";
 //Inventory
 export const GET_SELECT_UOM = "GET_SELECT_UOM";
 export const GET_SELECT_ITEM = "GET_SELECT_ITEM";
+export const GET_ALL_SHELF = "GET_ALL_SHELF";
+
+//Inventory -> Issue
+export const GET_ISSUE_LIST = "GET_ISSUE_LIST";
+export const RESET_ISSUE = "RESET_ISSUE";
+export const GET_ISSUE_BY_ID = "GET_ISSUE_BY_ID";
+
+//Inventory -> DISBURSE
+export const RESET_DISBURSE = "RESET_DISBURSE";
+export const GET_DISBURSE_LIST = "GET_DISBURSE_LIST";
+export const GET_ISSUE_REF_LIST = "GET_ISSUE_DISBURSE_LIST";
+export const GET_ISSUE_DETAIL_REF = "GET_ISSUE_DETAIL_REF";
+export const GET_DISBURSE_BY_ID = "GET_DISBURSE_BY_ID";
+
+export const GET_DISBURSE_HEAD = "GET_DISBURSE_HEAD";
+export const GET_DISBURSE_DETAIL = "GET_DISBURSE_DETAIL";
+export const GET_DISBURSE_SUB_DETAIL = "GET_DISBURSE_SUB_DETAIL";
+
 //Inventory -> Receive
+export const RESET_RECEIVE = "RESET_RECEIVE";
 export const GET_RECEIVE_LIST = "GET_RECEIVE_LIST";
 export const GET_PO_RECEIVE_LIST = "GET_PO_RECEIVE_LIST";
+export const GET_PO_DETAIL_REF = "GET_PO_DETAIL_REF";
 export const GET_RECEIVE_HEAD = "GET_RECEIVE_HEAD";
 export const GET_RECEIVE_DETAIL = "GET_RECEIVE_DETAIL";
 export const GET_RECEIVE_SUB_DETAIL = "GET_RECEIVE_SUB_DETAIL";
@@ -29,6 +49,7 @@ export const GET_ITEM_DETAIL = "GET_ITEM_DETAIL";
 export const GET_ALL_ITEMS = "GET_ALL_ITEMS";
 export const CREATE_ITEM = "CREATE_ITEM";
 export const UPDATE_ITEM = "UPDATE_ITEM";
+export const GET_MASTER_DATA_ITEM = "GET_MASTER_DATA_ITEM";
 
 // Sales
 export const GET_ALL_CUSTOMER = "GET_ALL_CUSTOMER";

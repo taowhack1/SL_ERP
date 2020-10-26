@@ -53,8 +53,12 @@ const ItemLine = ({ readOnly, columns, pr_id, upDateFormData, vat_rate }) => {
       })
     );
   }, [pr_detail, dispatch]);
-  const select_items = useSelector((state) => state.inventory.select_box_item);
-  const select_uoms = useSelector((state) => state.inventory.select_box_uom);
+  const select_items = useSelector(
+    (state) => state.inventory.master_data.item_list
+  );
+  const select_uoms = useSelector(
+    (state) => state.inventory.master_data.item_uom
+  );
 
   // state
   const [count, setCount] = useState(pr_detail.length);
@@ -83,13 +87,7 @@ const ItemLine = ({ readOnly, columns, pr_id, upDateFormData, vat_rate }) => {
   return (
     <>
       {/* Column Header */}
-      <Row
-        style={{
-          backgroundColor: "#C6C6C6",
-          textAlign: "center",
-        }}
-        gutter={2}
-      >
+      <Row gutter={2} className="detail-table-head">
         {columns &&
           columns.map((col, key) => {
             return (

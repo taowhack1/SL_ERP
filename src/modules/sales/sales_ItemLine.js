@@ -47,8 +47,12 @@ const ItemLine = ({
   project,
 }) => {
   // state
-  const select_items = useSelector((state) => state.inventory.select_box_item);
-  const select_uoms = useSelector((state) => state.inventory.select_box_uom);
+  const select_items = useSelector(
+    (state) => state.inventory.master_data.item_list
+  );
+  const select_uoms = useSelector(
+    (state) => state.inventory.master_data.item_uom
+  );
 
   const updateAmount = () => {
     const obj = sumArrObj(data_detail, "qn_detail_total_price", vat_rate);
@@ -90,13 +94,7 @@ const ItemLine = ({
   return (
     <>
       {/* Column Header */}
-      <Row
-        style={{
-          backgroundColor: "#C6C6C6",
-          textAlign: "center",
-        }}
-        gutter={2}
-      >
+      <Row gutter={2} className="detail-table-head">
         {quotation_detail_columns &&
           quotation_detail_columns.map((col, key) => {
             return (

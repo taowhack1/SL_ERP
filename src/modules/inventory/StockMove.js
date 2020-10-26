@@ -5,7 +5,7 @@ import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { columnsMove, dataMove } from "../../data/inventoryData";
 import $ from "jquery";
-const Requisition = (props) => {
+const StockMove = (props) => {
   const [rowClick, setRowClick] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
@@ -61,4 +61,4 @@ const Requisition = (props) => {
   );
 };
 
-export default withRouter(Requisition);
+export default withRouter(StockMove);

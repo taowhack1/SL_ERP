@@ -3,51 +3,54 @@ import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { getAllItems } from "../../actions/inventory/itemActions";
-import { item_show_columns } from "../../page_fields/inventory/item";
+import { reqColumns } from "../../data/inventoryData";
 import $ from "jquery";
-const Items = (props) => {
+import axios from "axios";
+import { getMasterDataItem } from "../../actions/inventory";
+import { issue_columns } from "./config";
+import {
+  get_issue_by_id,
+  get_issue_list,
+} from "../../actions/inventory/issueActions";
+const Issue = (props) => {
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
+  const auth = useSelector((state) => state.auth.authData[0]);
+  const issue_list = useSelector((state) => state.inventory.issue.issue_list);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   useEffect(() => {
-    dispatch(getAllItems());
-  }, [dispatch]);
-  const dataItems = useSelector(
-    (state) => state.inventory.master_data.item_list
-  );
-
+    dispatch(get_issue_list());
+    dispatch(getMasterDataItem());
+  }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project.project_id,
     title: current_project.project_name,
     home: current_project.project_url,
     show: true,
-    breadcrumb: ["Home", "Items"],
+    breadcrumb: ["Home", "Issue"],
     search: true,
-    create: "/inventory/items/create",
-    buttonAction: ["Create", "Edit"],
-    edit: {},
+    create: "/inventory/issue/create",
+    buttonAction: ["Create"],
     disabledEditBtn: !rowClick,
-    discard: "/inventory/items",
+    discard: "/inventory/issue",
     onCancel: () => {
       console.log("Cancel");
     },
   };
-
   return (
     <div>
       <MainLayout {...config}>
         <Row>
           <Col span={24}>
             <Table
-              columns={item_show_columns}
-              dataSource={dataItems}
+              columns={issue_columns}
+              dataSource={issue_list}
               onChange={onChange}
+              rowKey={"issue_id"}
               size="small"
-              rowKey="item_id"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
@@ -57,9 +60,10 @@ const Items = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
+                    dispatch(get_issue_by_id(record.issue_id, auth.user_name));
                     props.history.push({
-                      pathname: "/inventory/items/view/" + record.item_id,
-                      state: record,
+                      pathname: "/inventory/issue/view/" + record.issue_id,
+                      // state: record,
                     });
                   },
                 };
@@ -72,4 +76,4 @@ const Items = (props) => {
   );
 };
 
-export default withRouter(Items);
+export default withRouter(Issue);

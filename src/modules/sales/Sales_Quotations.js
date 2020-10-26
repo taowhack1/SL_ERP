@@ -5,22 +5,21 @@ import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { quotationColumns } from "./configs";
 import {
-  get_master_data2,
+  get_sale_master_data,
   get_quotation_by_id,
   get_quotation_list,
   reset_qn,
 } from "../../actions/sales";
 import { reset_comments } from "../../actions/comment&log";
-import { getSelectItem, getSelectUOM } from "../../actions/inventory";
+import { getMasterDataItem } from "../../actions/inventory";
 const Quotations = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(reset_qn());
     dispatch(reset_comments());
-    dispatch(get_master_data2());
+    dispatch(get_sale_master_data());
     dispatch(get_quotation_list());
-    dispatch(getSelectItem());
-    dispatch(getSelectUOM());
+    dispatch(getMasterDataItem());
   }, []);
   const getData = (qn_id, user_name) => {
     dispatch(get_quotation_by_id(qn_id, user_name));

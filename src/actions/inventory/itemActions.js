@@ -30,35 +30,35 @@ export const getAllItems = () => async (dispatch) => {
   });
 };
 
-export const getSelectDetail = () => async (dispatch) => {
-  let master_data = {
-    item_uom: [],
-    item_type: [],
-    item_benefit: [],
-    item_category: [],
-  };
-  await axios.post(api_path, query_select_uom, header_config).then((res) => {
-    master_data.item_uom.push(...res.data[0]);
-  });
-  await axios
-    .post(api_path, query_select_item_type, header_config)
-    .then((res) => {
-      master_data.item_type.push(...res.data[0]);
-    });
-  await axios
-    .post(api_path, query_select_benefit, header_config)
-    .then((res) => {
-      master_data.item_benefit.push(...res.data[0]);
-    });
-  await axios.post(api_path, query_select_categ, header_config).then((res) => {
-    master_data.item_category.push(...res.data[0]);
-  });
+// export const getSelectDetail = () => async (dispatch) => {
+//   let master_data = {
+//     item_uom: [],
+//     item_type: [],
+//     item_benefit: [],
+//     item_category: [],
+//   };
+//   await axios.post(api_path, query_select_uom, header_config).then((res) => {
+//     master_data.item_uom.push(...res.data[0]);
+//   });
+//   await axios
+//     .post(api_path, query_select_item_type, header_config)
+//     .then((res) => {
+//       master_data.item_type.push(...res.data[0]);
+//     });
+//   await axios
+//     .post(api_path, query_select_benefit, header_config)
+//     .then((res) => {
+//       master_data.item_benefit.push(...res.data[0]);
+//     });
+//   await axios.post(api_path, query_select_categ, header_config).then((res) => {
+//     master_data.item_category.push(...res.data[0]);
+//   });
 
-  dispatch({
-    type: GET_ITEM_DETAIL,
-    payload: master_data,
-  });
-};
+//   dispatch({
+//     type: GET_ITEM_DETAIL,
+//     payload: master_data,
+//   });
+// };
 
 export const createNewItems = (data) => async (dispatch) => {
   console.log("Create item...");

@@ -177,12 +177,7 @@ const ItemLine = ({
   return (
     <>
       {/* Column Header */}
-      <Row
-        style={{
-          backgroundColor: "#C6C6C6",
-          textAlign: "center",
-        }}
-      >
+      <Row gutter={2} className="detail-table-head">
         {columns &&
           columns.map((col, key) => {
             return (

@@ -86,7 +86,7 @@ export const get_so_by_id = (id, user_name) => (dispatch) => {
     });
 };
 
-export const get_master_data2 = () => (dispatch) => {
+export const get_sale_master_data = () => (dispatch) => {
   let master = {};
   axios
     .get(api_get_select_list_customers, header_config)

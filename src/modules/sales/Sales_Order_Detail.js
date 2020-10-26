@@ -41,8 +41,12 @@ const SO_Detail = ({
   vat_rate,
 }) => {
   // state
-  const select_items = useSelector((state) => state.inventory.select_box_item);
-  const select_uoms = useSelector((state) => state.inventory.select_box_uom);
+  const select_items = useSelector(
+    (state) => state.inventory.master_data.item_list
+  );
+  const select_uoms = useSelector(
+    (state) => state.inventory.master_data.item_uom
+  );
 
   const updateAmount = () => {
     const obj = sumArrObj(data_detail, "so_detail_total_price", vat_rate);
@@ -82,13 +86,7 @@ const SO_Detail = ({
   return (
     <>
       {/* Column Header */}
-      <Row
-        style={{
-          backgroundColor: "#C6C6C6",
-          textAlign: "center",
-        }}
-        gutter={2}
-      >
+      <Row gutter={2} className="detail-table-head">
         {so_detail_columns &&
           so_detail_columns.map((col, key) => {
             return (

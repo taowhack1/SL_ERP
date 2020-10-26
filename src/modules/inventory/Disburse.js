@@ -1,39 +1,45 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { reqColumns } from "../../data/inventoryData";
 import $ from "jquery";
 import axios from "axios";
-const Requisition = (props) => {
-  const [selectedRow, setSelectedRow] = useState();
+import { getMasterDataItem } from "../../actions/inventory";
+import { disburse_columns } from "./config";
+import {
+  get_issue_by_id,
+  get_issue_list,
+} from "../../actions/inventory/issueActions";
+import { get_disburse_list } from "../../actions/inventory/disburseActions";
+
+const Disburse = (props) => {
+  const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState([]);
+  const auth = useSelector((state) => state.auth.authData[0]);
+  const disburse_list = useSelector(
+    (state) => state.inventory.disburse.disburse_list
+  );
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  // useEffect(() => {
-  //   axios.get("http://localhost:3001/requisition").then((res) => {
-  //     setDataTable(res.data);
-  //   });
-  // }, []);
+  useEffect(() => {
+    dispatch(get_disburse_list());
+    dispatch(getMasterDataItem());
+  }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project.project_id,
     title: current_project.project_name,
     home: current_project.project_url,
     show: true,
-    breadcrumb: ["Home", "Requisition"],
+    breadcrumb: ["Home", "Disburse"],
     search: true,
-    create: "/inventory/requisition/create",
-    buttonAction: ["Create", "Edit"],
-    edit: {
-      data: selectedRow,
-      path: selectedRow && "/inventory/requisition/edit/" + selectedRow.id,
-    },
+    create: "/inventory/disburse/create",
+    buttonAction: ["Create"],
     disabledEditBtn: !rowClick,
-    discard: "/inventory/requisition",
+    discard: "/inventory/disburse",
     onCancel: () => {
       console.log("Cancel");
     },
@@ -44,9 +50,10 @@ const Requisition = (props) => {
         <Row>
           <Col span={24}>
             <Table
-              columns={reqColumns}
-              dataSource={dataTable}
+              columns={disburse_columns}
+              dataSource={disburse_list}
               onChange={onChange}
+              rowKey={"disburse_id"}
               size="small"
               onRow={(record, rowIndex) => {
                 return {
@@ -57,10 +64,13 @@ const Requisition = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    setSelectedRow(record);
+                    dispatch(
+                      get_issue_by_id(record.disburse_id, auth.user_name)
+                    );
                     props.history.push({
-                      pathname: "/inventory/requisition/view/" + record.id,
-                      state: record,
+                      pathname:
+                        "/inventory/disburse/view/" + record.disburse_id,
+                      // state: record,
                     });
                   },
                 };
@@ -73,4 +83,4 @@ const Requisition = (props) => {
   );
 };
 
-export default withRouter(Requisition);
+export default withRouter(Disburse);

@@ -69,6 +69,7 @@ const SaleOrderCreate = (props) => {
     props.location && props.location.state ? props.location.state : 0;
   console.log("data", data);
   useEffect(() => {
+    dispatch(get_qn_open_so());
     headDispatch({
       type: "SET_HEAD",
       payload: data.data_head
@@ -85,17 +86,13 @@ const SaleOrderCreate = (props) => {
             user_name: auth.user_name,
             branch_id: auth.branch_id,
             branch_name: auth.branch_name,
-            qn_created: moment().format("DD/MM/YYYY"),
+            so_create_date: moment().format("DD/MM/YYYY"),
           },
     });
     detailDispatch({
       type: "SET_DETAIL",
       payload: data.data_detail ? data.data_detail : [so_detail_fields],
     });
-  }, []);
-
-  useEffect(() => {
-    dispatch(get_qn_open_so());
   }, []);
   useEffect(() => {
     data_head.qn_id &&
@@ -192,7 +189,7 @@ const SaleOrderCreate = (props) => {
         user_name: auth.user_name,
         branch_id: auth.branch_id,
         branch_name: auth.branch_name,
-        qn_created: moment().format("DD/MM/YYYY"),
+        so_create_date: moment().format("DD/MM/YYYY"),
       },
     });
     detailDispatch({
@@ -305,7 +302,7 @@ const SaleOrderCreate = (props) => {
               }
               value={data_head.so_description}
               placeholder="Description"
-            ></Input>
+            />
           </Col>
           <Col span={2}></Col>
           <Col span={3}>

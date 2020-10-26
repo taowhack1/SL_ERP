@@ -1,24 +1,24 @@
 import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import MainLayout from "../../components/MainLayout";
 import { withRouter } from "react-router-dom";
-import { getAllVendor } from "../../actions/purchase";
-import { getMasterDataItem } from "../../actions/inventory";
-import { get_select_dep, get_select_cost_center } from "../../actions/hrm";
-import { useDispatch, useSelector } from "react-redux";
 import { reset_comments } from "../../actions/comment&log";
-const Purchase = (props) => {
-  const dispatch = useDispatch();
-  const current_project = useSelector((state) => state.auth.currentProject);
-  const auth = useSelector((state) => state.auth.authData[0]);
-  useEffect(() => {
-    dispatch(getAllVendor());
-    dispatch(getMasterDataItem());
-    dispatch(reset_comments());
-  }, [dispatch]);
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
+import { RESET_ALL_SALES } from "../../actions/types";
 
+const QualityAssurance = (props) => {
+  const dispatch = useDispatch();
+  console.log(props.location.state);
+  // const onChange = (pagination, filters, sorter, extra) => {
+  //   console.log("params", pagination, filters, sorter, extra);
+  // };
+  // useEffect(() => {
+  //   dispatch(reset_comments());
+  //   return () => {
+  //     dispatch({ type: RESET_ALL_SALES });
+  //   };
+  // }, [dispatch]);
+
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project.project_id,
     title: current_project.project_name,
@@ -33,19 +33,20 @@ const Purchase = (props) => {
       console.log("Cancel");
     },
   };
+
   // const onChange = (pagination, filters, sorter, extra) => {
   //   console.log("params", pagination, filters, sorter, extra);
   // };
   // const config = {
-  //   projectId: 2,
-  //   title: "PURCHASE",
-  //   home: "/purchase",
+  //   projectId: 3,
+  //   title: "SALES",
+  //   home: "/sales",
   //   show: true,
   //   breadcrumb: ["Home"],
   //   search: true,
   //   create: "",
   //   buttonAction: [""],
-  //   discard: "/purchase",
+  //   discard: "/sales",
   //   onCancel: () => {
   //     console.log("Cancel");
   //   },
@@ -54,7 +55,7 @@ const Purchase = (props) => {
   return (
     <div>
       <MainLayout {...config}>
-        <h1>Home Purchase</h1>
+        <h1>Home Quality Assurance</h1>
         {/* <Row>
                <Col span={24}>
                  <Table columns={columns} dataSource={data} onChange={this.onChange} size='small'/>
@@ -65,4 +66,4 @@ const Purchase = (props) => {
   );
 };
 
-export default withRouter(Purchase);
+export default withRouter(QualityAssurance);

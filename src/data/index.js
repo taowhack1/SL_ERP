@@ -178,7 +178,7 @@ export const menuConfig = (
 export const operationsMenu = (
   <Menu>
     <Menu.Item>
-      <Link to="/inventory/requisition">Requisition</Link>
+      <Link to="/inventory/issue">Issue</Link>
     </Menu.Item>
   </Menu>
 );

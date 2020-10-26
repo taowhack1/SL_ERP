@@ -5,8 +5,13 @@ import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { receiveColumns, receiveData } from "../../data/inventoryData";
 import $ from "jquery";
-import { get_receive_list } from "../../actions/inventory/receiveActions";
+import {
+  get_receive_by_id,
+  get_receive_list,
+  reset_receive,
+} from "../../actions/inventory/receiveActions";
 import { receive_columns } from "./config";
+import { reset_comments } from "../../actions/comment&log";
 const Receive = (props) => {
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
@@ -14,7 +19,14 @@ const Receive = (props) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   const data = useSelector((state) => state.inventory.receive.receive_list);
+  const auth = useSelector((state) => state.auth.authData[0]);
+  const getData = (receive_id, user_name) => {
+    dispatch(get_receive_by_id(receive_id, user_name));
+  };
+
   useEffect(() => {
+    dispatch(reset_comments());
+    dispatch(reset_receive());
     dispatch(get_receive_list());
   }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -42,7 +54,7 @@ const Receive = (props) => {
               columns={receive_columns}
               dataSource={data}
               onChange={onChange}
-              rowKey={data.receive_id}
+              rowKey={"receive_id"}
               size="small"
               onRow={(record, rowIndex) => {
                 return {
@@ -53,9 +65,9 @@ const Receive = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
+                    getData(record.receive_id, auth.user_name);
                     props.history.push({
-                      pathname: "/inventory/receive/view/" + record.id,
-                      state: record,
+                      pathname: "/inventory/receive/view/" + record.receive_id,
                     });
                   },
                 };

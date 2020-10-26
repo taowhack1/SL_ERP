@@ -43,3 +43,19 @@ export const sumArrObj = (arrObj = [], field, vat = 0.07) => {
   };
   return total ? summary : 0;
 };
+
+export const sumArrOdjWithField = (arrObj = [], field) => {
+  let numbers = [];
+  arrObj &&
+    arrObj.map((line) => {
+      numbers.push(line[field]);
+    });
+  let total = numbers.length
+    ? numbers.reduce((prev, current) => prev + current)
+    : 0;
+  return total;
+};
+
+export const calDiscount = (discount = 0, total_qty = 0, qty = 0) => {
+  return (discount / total_qty) * qty;
+};

@@ -17,7 +17,7 @@ import {
   reset_pr_data,
 } from "../../actions/purchase/PR_Actions";
 import { reset_comments } from "../../actions/comment&log";
-import { getSelectItem, getSelectUOM } from "../../actions/inventory";
+import { getMasterDataItem } from "../../actions/inventory";
 const Requisition = (props) => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth.authData[0]);
@@ -28,8 +28,7 @@ const Requisition = (props) => {
   useEffect(() => {
     dispatch(get_pr_list());
     dispatch(reset_pr_data());
-    dispatch(getSelectItem());
-    dispatch(getSelectUOM());
+    dispatch(getMasterDataItem());
     return () => {
       dispatch(reset_comments());
     };

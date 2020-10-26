@@ -49,8 +49,12 @@ const ItemLine = ({ readOnly, columns, pr_id, po_id, vat_rate }) => {
   }, [pr_id]);
   const [tricker, setTricker] = useState(false);
   const po_detail = useSelector((state) => state.purchase.po.po_detail);
-  const select_items = useSelector((state) => state.inventory.select_box_item);
-  const select_uoms = useSelector((state) => state.inventory.select_box_uom);
+  const select_items = useSelector(
+    (state) => state.inventory.master_data.item_list
+  );
+  const select_uoms = useSelector(
+    (state) => state.inventory.master_data.item_uom
+  );
 
   useEffect(() => {
     console.log("Cal_po_head");
@@ -279,12 +283,7 @@ const ItemLine = ({ readOnly, columns, pr_id, po_id, vat_rate }) => {
   return (
     <>
       {/* Column Header */}
-      <Row
-        style={{
-          backgroundColor: "#C6C6C6",
-          textAlign: "center",
-        }}
-      >
+      <Row gutter={2} className="detail-table-head">
         {columns &&
           columns.map((col, key) => {
             return (

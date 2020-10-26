@@ -1,6 +1,6 @@
 import React from "react";
 import { Input } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 
 export default function Search(props) {
   return (
@@ -10,7 +10,7 @@ export default function Search(props) {
         onChange={(e) => {
           props && props.onSearch(e.target.value);
         }}
-        prefix={<SearchOutlined />}
+        prefix={props.loading ? <LoadingOutlined /> : <SearchOutlined />}
       />
     </>
   );

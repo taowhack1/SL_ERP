@@ -29,12 +29,7 @@ import { itemLineColumns } from "../../data/sale/data";
 import { payment_terms } from "../../data/payment_terms";
 import { quotation_detail_fields, quotation_fields } from "./configs";
 import CustomSelect from "../../components/CustomSelect";
-import {
-  get_customers_list,
-  get_payment_term_list,
-  get_master_data,
-  update_quotation,
-} from "../../actions/sales";
+import { update_quotation } from "../../actions/sales";
 import { create_quotation } from "../../actions/sales";
 import axios from "axios";
 import { header_config } from "../../include/js/main_config";

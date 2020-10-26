@@ -5,12 +5,22 @@ import Dashboard from "./dashboard/Dashboard";
 import Login from "./modules/system/Login";
 import Settings from "./modules/settings/Settings";
 
+import QualityAssurance from "./modules/qualityAssurance/Quality_Assurance";
+import QCReceive from "./modules/inventory/Stock_QC";
+
 import Inventory from "./modules/inventory/Inventory";
+
 import Receive from "./modules/inventory/Receive";
 import ReceiveCreate from "./modules/inventory/Receive_Create";
 import ReceiveView from "./modules/inventory/Receive_View";
-import RequisitionView from "./modules/inventory/RequisitionView";
-import RequisitionCreate from "./modules/inventory/RequisitionCreate";
+
+import Issue from "./modules/inventory/Issue";
+import IssueView from "./modules/inventory/Issue_View";
+import IssueCreate from "./modules/inventory/Issue_Create";
+
+import Disburse from "./modules/inventory/Disburse";
+// import DisburseView from "./modules/inventory/Disburse_View";
+import DisburseCreate from "./modules/inventory/Disburse_Create";
 
 import Purchase from "./modules/purchasing/Purchase";
 import PurchPR from "./modules/purchasing/Purchase_PR";
@@ -43,7 +53,7 @@ import NotFound from "./dashboard/NotFound";
 import { Provider } from "react-redux";
 import store from "./store";
 import Location from "./modules/inventory/Location";
-import Requisition from "./modules/inventory/Requisition";
+
 import Warehouse from "./modules/inventory/warehouse";
 import Items from "./modules/inventory/Items";
 import StockMove from "./modules/inventory/StockMove";
@@ -76,25 +86,35 @@ const App = (props) => {
           </Route>
 
           {/* INVENTORY OPERATIONS */}
-          <Route exact path="/inventory/requisition">
-            <Requisition />
+          {/* ISSUE */}
+          <Route exact path="/inventory/issue">
+            <Issue />
+          </Route>
+          <Route exact path="/inventory/issue/create" component={IssueCreate} />
+          <Route
+            exact
+            path="/inventory/issue/edit/:id"
+            component={IssueCreate}
+          />
+          <Route exact path="/inventory/issue/view/:id" component={IssueView} />
+
+          {/* DISBURSE */}
+          <Route exact path="/inventory/disburse">
+            <Disburse />
           </Route>
           <Route
             exact
-            path="/inventory/requisition/create"
-            component={RequisitionCreate}
+            path="/inventory/disburse/create"
+            component={DisburseCreate}
           />
           <Route
             exact
-            path="/inventory/requisition/edit/:id"
-            component={RequisitionCreate}
+            path="/inventory/disburse/edit/:id"
+            component={DisburseCreate}
           />
-          <Route
-            exact
-            path="/inventory/requisition/view/:id"
-            component={RequisitionView}
-          />
+          {/* <Route exact path="/inventory/disburse/view/:id" component={DisburseView} /> */}
 
+          {/* RECEIVE */}
           <Route exact path="/inventory/receive">
             <Receive />
           </Route>
@@ -258,6 +278,14 @@ const App = (props) => {
             path="/sales/config/customers/edit/:id"
             component={CustomerCreate}
           />
+
+          {/* QA QC */}
+          <Route exact path="/qa">
+            <QualityAssurance />
+          </Route>
+          <Route exact path="/qa/qc/receive">
+            <QCReceive />
+          </Route>
 
           <Route>
             <NotFound />

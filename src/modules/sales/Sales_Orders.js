@@ -6,24 +6,23 @@ import { saleOrderColumns, saleOrderData } from "../../data/sale/data";
 import $ from "jquery";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  get_master_data2,
+  get_sale_master_data,
   get_so_by_id,
   get_so_list,
   reset_so,
 } from "../../actions/sales";
 import { so_columns } from "./configs";
 import { reset_comments } from "../../actions/comment&log";
-import { getSelectItem, getSelectUOM } from "../../actions/inventory";
+import { getMasterDataItem } from "../../actions/inventory";
 const SaleOrder = (props) => {
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   useEffect(() => {
-    dispatch(get_master_data2());
+    dispatch(get_sale_master_data());
     dispatch(reset_so());
     dispatch(reset_comments());
     dispatch(get_so_list());
-    dispatch(getSelectItem());
-    dispatch(getSelectUOM());
+    dispatch(getMasterDataItem());
   }, []);
   const getData = (so_id, user_name) => {
     dispatch(get_so_by_id(so_id, user_name));

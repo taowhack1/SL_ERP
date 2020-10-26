@@ -29,8 +29,6 @@ export const api_get_pr_open_po = "http://192.168.5.222:3009/api/list/pr";
 // inventory
 export const api_get_uom_list = "http://192.168.5.222:3009/api/list/uom";
 export const api_get_item_list = "http://192.168.5.222:3009/api/list/item";
-export const api_get_receive_list =
-  "http://192.168.5.222:3009/api/inventory/receive";
 
 export const header_config = {
   headers: {

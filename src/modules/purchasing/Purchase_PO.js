@@ -12,15 +12,14 @@ import {
 } from "../../actions/purchase/PO_Actions";
 import { reset_comments } from "../../actions/comment&log";
 import $ from "jquery";
-import { getSelectItem, getSelectUOM } from "../../actions/inventory";
+import { getMasterDataItem } from "../../actions/inventory";
 const PurchaseOrders = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(get_po_list());
     dispatch(reset_po_data());
     dispatch(get_payment_term_list());
-    dispatch(getSelectItem());
-    dispatch(getSelectUOM());
+    dispatch(getMasterDataItem());
     return () => {
       dispatch(reset_comments());
     };

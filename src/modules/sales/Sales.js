@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import MainLayout from "../../components/MainLayout";
 import { withRouter } from "react-router-dom";
 import { reset_comments } from "../../actions/comment&log";
-import { get_master_data2 } from "../../actions/sales";
 import { RESET_ALL_SALES } from "../../actions/types";
 
 const Sales = (props) => {

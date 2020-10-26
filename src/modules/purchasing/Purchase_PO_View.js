@@ -149,14 +149,6 @@ const PurchaseOrderCreate = (props) => {
         visible: true,
         loading: false,
       });
-      // console.log("Reject");
-      // const app_detail = {
-      //   process_status_id: 6,
-      //   user_name: auth.user_name,
-      //   process_id: data_head.process_id,
-      //   process_member_remark: "Reject",
-      // };
-      // dispatch(po_actions(app_detail, data_head.po_id));
     },
     onCancel: () => {
       console.log("Cancel");
@@ -288,7 +280,7 @@ const PurchaseOrderCreate = (props) => {
           setRemark("");
         }}
       />
-      <Comments data={[...dataComments]} />
+      <Comments data={dataComments} />
     </MainLayout>
   );
 };
