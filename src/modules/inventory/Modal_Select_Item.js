@@ -80,25 +80,25 @@ const Modal_Select_Item = (props) => {
     });
   };
 
-  // useEffect(() => {
-  //   console.log("change first select");
-  //   if (selected_item[0]) {
-  //     setState({
-  //       type_id: selected_item[0].type_id,
-  //       type_no_name: selected_item[0].type_no_name,
-  //       category_id: selected_item[0].category_id,
-  //       category_no_name: selected_item[0].category_no_name,
-  //     });
-  //     headDispatch({
-  //       type_id: selected_item[0].type_id,
-  //       type_no_name: selected_item[0].type_no_name,
-  //       category_id: selected_item[0].category_id,
-  //       category_no_name: selected_item[0].category_no_name,
-  //     });
-  //   }
+  useEffect(() => {
+    console.log("change first select");
+    if (selected_item[0]) {
+      setState({
+        type_id: selected_item[0].type_id,
+        type_no_name: selected_item[0].type_no_name,
+        category_id: selected_item[0].category_id,
+        category_no_name: selected_item[0].category_no_name,
+      });
+      headDispatch({
+        type_id: selected_item[0].type_id,
+        type_no_name: selected_item[0].type_no_name,
+        category_id: selected_item[0].category_id,
+        category_no_name: selected_item[0].category_no_name,
+      });
+    }
 
-  //   // : reset_state();
-  // }, [selected_item[0]]);
+    // : reset_state();
+  }, [selected_item[0]]);
 
   const rowSelection = {
     selectedRowKeys: selected_key,
