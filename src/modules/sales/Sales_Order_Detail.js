@@ -292,7 +292,7 @@ const SO_Detail = ({
               }}
               block
             >
-              <PlusOutlined /> Add field
+              <PlusOutlined /> Add a line
             </Button>
           </div>
         </>

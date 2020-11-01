@@ -17,17 +17,23 @@ import {
   EllipsisOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect, useReducer } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import numeral from "numeral";
-import { calSubtotal, sumArrObj } from "../../include/js/function_main";
+import {
+  calSubtotal,
+  sortData,
+  sumArrObj,
+} from "../../include/js/function_main";
 import {
   receive_detail_fields,
   receive_sub_detail_fields,
   disburse_sub_detail_columns,
+  disburse_sub_detail_fields,
 } from "./config";
 import moment from "moment";
 import { reducer } from "./reducers";
 import CustomSelect from "../../components/CustomSelect";
+import { get_lot_batch_by_item_id_shelf } from "../../actions/inventory";
 const { Text } = Typography;
 const numberFormat = {
   precision: 3,
@@ -42,7 +48,12 @@ const SubDetail = ({
   temp_sub_detail,
   tempSubDetailDispatch,
 }) => {
-  const location_list = [{ location_id: 0, location_name: "Location 1" }];
+  const location_shelf_list = useSelector(
+    (state) => state.inventory.stock.item_location_shelf
+  );
+  const lot_batch_list = useSelector(
+    (state) => state.inventory.stock.item_lot_batch
+  );
   // function
   useEffect(() => {
     !temp_sub_detail.length && addLine();
@@ -51,14 +62,14 @@ const SubDetail = ({
     tempSubDetailDispatch({
       type: "ADD_ROW",
       payload: {
-        ...receive_sub_detail_fields,
+        ...disburse_sub_detail_fields,
         disburse_detail_id: disburse_detail_id,
-        shelf_id: data_detail.shelf_id,
-        shelf_no: data_detail.shelf_no,
-        shelf_name: data_detail.shelf_name,
-        location_id: data_detail.location_id,
-        location_name: data_detail.location_name,
-        location_no: data_detail.location_no,
+        shelf_id: null,
+        shelf_no: null,
+        shelf_name: null,
+        location_id: null,
+        location_name: null,
+        location_no: null,
       },
     });
   };
@@ -72,12 +83,38 @@ const SubDetail = ({
       type: "CHANGE_DETAIL_VALUE",
       payload: {
         id: rowId,
-        data: data,
+        data: { ...data, commit: 1 },
       },
     });
   };
+  const getLotBatchList = (line) => {
+    console.log(line);
+    if (lot_batch_list) {
+      if (line && line.shelf_id) {
+        return sortData(
+          lot_batch_list.filter((lot) => lot.shelf_id === line.shelf_id)
+        );
+      } else if (line && !line.shelf_id) {
+        return sortData(lot_batch_list);
+      } else {
+        return [];
+      }
+    }
+  };
+  const getLocationShelf = (shelf_id) => {
+    if (location_shelf_list) {
+      if (shelf_id) {
+        return location_shelf_list.filter(
+          (location) => location.shelf_id === shelf_id
+        );
+      } else {
+        return location_shelf_list;
+      }
+    }
+  };
   console.log("sub detail page 2", temp_sub_detail);
   console.log("data_detail", data_detail);
+  console.log("location_shelf_list", location_shelf_list);
   return (
     <>
       {/* Column Header */}
@@ -112,53 +149,74 @@ const SubDetail = ({
                 gutter={2}
                 className="col-2"
               >
-                <Col span={5} className="text-string">
+                <Col span={7} className="text-string">
                   <CustomSelect
                     allowClear
                     showSearch
                     placeholder={"Source Location"}
-                    field_id="location_id"
-                    field_name="location_name"
-                    value={line.location_name}
-                    defaultValue={data_detail.location_name}
-                    data={location_list}
+                    field_id="shelf_id"
+                    field_name="location_shelf_no_name"
+                    value={line.location_shelf_no_name}
+                    data={getLocationShelf(line.shelf_id)}
                     size={"small"}
                     onChange={(data, option) => {
-                      onChangeValue(line.id, {
-                        location_id: data,
-                        location_name: option.title,
-                        shelf_id: option.data.shelf_id,
-                        shelf_name: option.data.shelf_name,
-                      });
+                      console.log("selected data", option);
+                      data
+                        ? onChangeValue(line.id, {
+                            location_id: option.data.location_id,
+                            location_shelf_no_name:
+                              option.data.location_shelf_no_name,
+                            shelf_id: option.data.shelf_id,
+                            shelf_name: option.data.shelf_name,
+                          })
+                        : onChangeValue(line.id, {
+                            location_id: null,
+                            location_shelf_no_name: null,
+                            shelf_id: null,
+                            shelf_name: null,
+
+                            stock_batch: null,
+                            stock_lot_no: null,
+                            stock_lot_no_batch_qty_balance: null,
+                          });
                     }}
                   />
                 </Col>
-                <Col span={4} className="text-string">
+                <Col span={8} className="text-string">
                   <CustomSelect
                     allowClear
                     showSearch
-                    placeholder={"Shelf"}
-                    field_id="location_id"
-                    field_name="location_name"
-                    value={line.location_name}
-                    defaultValue={data_detail.location_name}
-                    data={location_list}
+                    placeholder={"Lot / Batch no."}
                     size={"small"}
+                    field_id="stock_id"
+                    field_name="stock_lot_no_batch_qty_balance"
+                    value={line.stock_lot_no_batch_qty_balance}
+                    data={getLotBatchList(line)}
                     onChange={(data, option) => {
-                      onChangeValue(line.id, {
-                        location_id: data,
-                        location_name: option.title,
-                        shelf_id: option.data.shelf_id,
-                        shelf_name: option.data.shelf_name,
-                      });
+                      data
+                        ? onChangeValue(line.id, {
+                            stock_id: option.data.stock_id,
+                            stock_batch: option.data.stock_batch,
+                            stock_lot_no: option.data.stock_lot_no,
+                            stock_lot_no_batch_qty_balance:
+                              option.data.stock_lot_no_batch_qty_balance,
+
+                            location_id: option.data.location_id,
+                            location_shelf_no_name:
+                              option.data.location_shelf_no_name,
+                            shelf_id: option.data.shelf_id,
+                            shelf_name: option.data.shelf_name,
+                            stock_mfg_date: option.data.stock_mfg_date,
+                            stock_exp_date: option.data.stock_exp_date,
+                          })
+                        : onChangeValue(line.id, {
+                            stock_id: null,
+                            stock_batch: null,
+                            stock_lot_no: null,
+                            stock_lot_no_batch_qty_balance: null,
+                          });
                     }}
                   />
-                </Col>
-                <Col span={3} className="text-string">
-                  Lot No.
-                </Col>
-                <Col span={3} className="text-number">
-                  Batch No.
                 </Col>
                 <Col span={3} className="text-number">
                   <InputNumber
@@ -169,12 +227,11 @@ const SubDetail = ({
                     size="small"
                     style={{ width: "100%" }}
                     disabled={0}
-                    value={line.receive_detail_sub_qty}
+                    value={line.disburse_detail_sub_qty}
                     onChange={(data) => {
                       onChangeValue(line.id, {
-                        receive_detail_sub_qty: data,
+                        disburse_detail_sub_qty: data,
                       });
-                      // updateAmount();
                     }}
                   />
                 </Col>
@@ -188,20 +245,25 @@ const SubDetail = ({
                 </Col>
                 <Col span={3} className="text-string">
                   <DatePicker
-                    name={"receive_detail_sub_exp_date"}
+                    name={"disburse_detail_sub_disburse_date"}
                     format={"DD/MM/YYYY"}
                     size="small"
                     style={{ width: "100%" }}
                     placeholder="Disburse date..."
                     value={
-                      line.receive_detail_sub_exp_date &&
-                      line.receive_detail_sub_exp_date
-                        ? moment(line.receive_detail_sub_exp_date, "DD/MM/YYYY")
+                      line.disburse_detail_sub_disburse_date &&
+                      line.disburse_detail_sub_disburse_date
+                        ? moment(
+                            line.disburse_detail_sub_disburse_date,
+                            "DD/MM/YYYY"
+                          )
                         : ""
                     }
                     onChange={(data) => {
                       onChangeValue(line.id, {
-                        receive_detail_sub_exp_date: data.format("DD/MM/YYYY"),
+                        disburse_detail_sub_disburse_date: data.format(
+                          "DD/MM/YYYY"
+                        ),
                       });
                     }}
                   />
@@ -230,7 +292,7 @@ const SubDetail = ({
         <>
           {/* View Form */}
           {data_detail &&
-            data_detail.receive_sub_detail.map((line, key) => (
+            data_detail.disburse_sub_detail.map((line, key) => (
               <Row
                 key={key}
                 style={{
@@ -241,34 +303,19 @@ const SubDetail = ({
                 gutter={2}
                 className="col-2"
               >
-                <Col span={5} className="text-string">
+                <Col span={7} className="text-string">
                   <Text className="text-view text-string">
-                    {line.location_name}
+                    {line.location_shelf_no_name}
                   </Text>
                 </Col>
-                <Col span={4} className="text-string">
+                <Col span={8} className="text-string">
                   <Text className="text-view text-string">
-                    {line.receive_detail_sub_lot_no}
-                  </Text>
-                </Col>
-                <Col span={4} className="text-center">
-                  <Text className="text-view text-center">
-                    {line.receive_detail_sub_receive_date}
-                  </Text>
-                </Col>
-                <Col span={3} className="text-center">
-                  <Text className="text-view text-center">
-                    {line.receive_detail_sub_mfg_date}
-                  </Text>
-                </Col>
-                <Col span={3} className="text-center">
-                  <Text className="text-view text-center">
-                    {line.receive_detail_sub_exp_date}
+                    {line.stock_lot_no_batch_qty_balance}
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.receive_detail_sub_qty).format("0,0.000")}
+                    {numeral(line.disburse_detail_sub_qty).format("0,0.000")}
                   </Text>
                 </Col>
                 <Col span={2} className="text-string">
@@ -276,6 +323,12 @@ const SubDetail = ({
                     {data_detail.uom_no}
                   </Text>
                 </Col>
+                <Col span={3} className="text-number">
+                  <Text className="text-view text-number">
+                    {line.disburse_detail_sub_disburse_date}
+                  </Text>
+                </Col>
+
                 <Col span={1} className="text-center"></Col>
               </Row>
             ))}

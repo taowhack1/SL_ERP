@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, withRouter } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import { Drawer, Row, Col, Avatar, Dropdown, Button, Menu } from "antd";
 import {
   UserOutlined,
@@ -11,10 +11,20 @@ import { menuProfile } from "../data";
 import MainConfig from "./MainConfig";
 import { signOut, change_working_project } from "../actions/authActions";
 import { useDispatch } from "react-redux";
+import Text from "antd/lib/typography/Text";
 const MainHead = (props) => {
+  const auth = useSelector(
+    (state) => state.auth.authData && state.auth.authData[0]
+  );
+  console.log("auth", auth);
+  const redirect_fn = () => {
+    return <Redirect to="/login" />;
+  };
+  if (!auth) {
+    redirect_fn();
+  }
   const dispatch = useDispatch();
   const projects = useSelector((state) => state.auth.projects);
-  const auth = useSelector((state) => state.auth.authData[0]);
   const currentProject = useSelector((state) => state.auth.currentProject);
   const [visible, setVisible] = useState(false);
 
@@ -73,12 +83,21 @@ const MainHead = (props) => {
           </Row>
         </Col>
         <Col span={12} id="column-right">
-          <Avatar icon={<UserOutlined />} />
-          <Dropdown overlay={userMenu()} trigger={["click"]}>
-            <Button type="text" className="ant-dropdown-link">
-              {auth.employee_name_eng} <CaretDownOutlined />
-            </Button>
-          </Dropdown>
+          <Row>
+            <Col span={11}></Col>
+            <Col span={5}>
+              <Text style={{ color: "white" }}>{auth && auth.branch_name}</Text>
+            </Col>
+
+            <Col span={8}>
+              <Avatar icon={<UserOutlined />} />
+              <Dropdown overlay={userMenu()} trigger={["click"]}>
+                <Button type="text" className="ant-dropdown-link">
+                  {auth && auth.employee_name_eng} <CaretDownOutlined />
+                </Button>
+              </Dropdown>
+            </Col>
+          </Row>
         </Col>
       </Row>
 
@@ -107,9 +126,9 @@ const MainHead = (props) => {
               </p>
             );
           })}
-        <p>
+        {/* <p>
           <Link to="/settings">SETTINGS</Link>
-        </p>
+        </p> */}
       </Drawer>
     </>
   );

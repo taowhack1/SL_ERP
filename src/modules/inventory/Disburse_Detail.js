@@ -29,7 +29,11 @@ import {
   disburse_sub_detail_fields,
 } from "./config";
 import { reducer } from "./reducers";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  get_location_shelf_by_item_id,
+  get_lot_batch_by_item_id_shelf,
+} from "../../actions/inventory";
 const { Text } = Typography;
 
 const DisburseDetail = ({
@@ -40,6 +44,7 @@ const DisburseDetail = ({
   detailDispatch,
   vat_rate,
 }) => {
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const [temp_detail, setTempDetail] = useState(null);
   const [temp_sub_detail, tempSubDetailDispatch] = useReducer(reducer, [
@@ -87,14 +92,15 @@ const DisburseDetail = ({
       payload: [disburse_sub_detail_fields],
     });
   };
-  const onChangeValue = (rowId, data) => {
-    detailDispatch({
-      type: "CHANGE_DETAIL_VALUE",
-      payload: {
-        id: rowId,
-        data: data,
-      },
+  const openModalSubDetail = (data_detail, data_sub_detail, item_id) => {
+    setVisible(true);
+    tempSubDetailDispatch({
+      type: "SET_DETAIL",
+      payload: data_sub_detail,
     });
+    setTempDetail(data_detail);
+    dispatch(get_location_shelf_by_item_id(item_id));
+    dispatch(get_lot_batch_by_item_id_shelf(item_id));
   };
 
   console.log("data_detail 2", data_detail);
@@ -185,23 +191,22 @@ const DisburseDetail = ({
                     className="input-string-disabled text-center"
                     placeholder="Due Date"
                   >
-                    {line.tg_disburse_due_date}
+                    {line.disburse_detail_due_date}
                   </div>
                 </Col>
                 <Col span={1} style={{ textAlign: "center" }}>
-                  {/* {line.tg_disburse_detail_qty_balance_temp > 0 && ( */}
-                  <FormOutlined
-                    onClick={() => {
-                      setVisible(true);
-                      tempSubDetailDispatch({
-                        type: "SET_DETAIL",
-                        payload: line.disburse_sub_detail,
-                      });
-                      setTempDetail(line);
-                    }}
-                    className="button-icon"
-                  />
-                  {/* )} */}
+                  {line.tg_disburse_detail_qty_balance_temp > 0 && (
+                    <FormOutlined
+                      onClick={() => {
+                        openModalSubDetail(
+                          line,
+                          line.disburse_sub_detail,
+                          line.item_id
+                        );
+                      }}
+                      className="button-icon"
+                    />
+                  )}
                 </Col>
               </Row>
             ))}
@@ -264,21 +269,20 @@ const DisburseDetail = ({
                 <Col span={2} className="text-string">
                   <Text className="text-view text-string">{line.uom_no}</Text>
                 </Col>
-                <Col span={3} className="text-center">
+                <Col span={2} className="text-center">
                   <Text className="text-view text-string">
-                    {line.tg_disburse_due_date}
+                    {line.disburse_detail_due_date}
                   </Text>
                 </Col>
                 <Col span={1} className="text-center">
                   <InfoCircleTwoTone
                     className="button-icon"
                     onClick={() => {
-                      setVisible(true);
-                      tempSubDetailDispatch({
-                        type: "SET_DETAIL",
-                        payload: line.disburse_sub_detail,
-                      });
-                      setTempDetail(line);
+                      openModalSubDetail(
+                        line,
+                        line.disburse_sub_detail,
+                        line.item_id
+                      );
                     }}
                   />
                 </Col>
@@ -368,7 +372,7 @@ const DisburseDetail = ({
             {"  /  "}
             <Text strong>
               {temp_detail &&
-                numeral(temp_detail.tg_disburse_detail_qty_balance).format(
+                numeral(temp_detail.tg_disburse_detail_qty_balance_temp).format(
                   "0,000.000"
                 ) + "  "}
             </Text>

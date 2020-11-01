@@ -19,6 +19,9 @@ import {
   GET_ISSUE_REF_LIST,
   GET_DISBURSE_LIST,
   GET_DISBURSE_BY_ID,
+  GET_LOCATION_SHELF_BY_ITEM_ID,
+  GET_LOT_BATCH_BY_ITEM_ID_SHELF,
+  GET_REPORT_STOCK,
 } from "../actions/types";
 const initialState = {
   master_data: {
@@ -28,6 +31,10 @@ const initialState = {
     item_category: [],
     item_list: [],
     shelf: [],
+  },
+  stock: {
+    item_location_shelf: [],
+    item_lot_batch: [],
   },
   receive: {
     po_ref: [],
@@ -48,6 +55,9 @@ const initialState = {
     disburse_detail: [],
     disburse_sub_detail: [],
   },
+  report: {
+    stock_on_hand: [],
+  },
 };
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -57,7 +67,10 @@ export default (state = initialState, action) => {
         master_data: action.payload,
       };
     case GET_ALL_ITEMS:
-      return { ...state, items: action.payload };
+      return {
+        ...state,
+        master_data: { ...state.master_data, item_list: action.payload },
+      };
     case CREATE_ITEM:
       return {
         ...state,
@@ -68,7 +81,18 @@ export default (state = initialState, action) => {
         ...state,
         items: [action.payload, ...state["items"]],
       };
+    case GET_LOCATION_SHELF_BY_ITEM_ID:
+      return {
+        ...state,
+        stock: { ...state.stock, item_location_shelf: action.payload },
+      };
+    case GET_LOT_BATCH_BY_ITEM_ID_SHELF:
+      return {
+        ...state,
+        stock: { ...state.stock, item_lot_batch: action.payload },
+      };
 
+    // RECEIVE
     case GET_RECEIVE_LIST:
       return {
         ...state,
@@ -135,6 +159,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         disburse: { ...state.disburse, ...action.payload },
+      };
+
+    //REPORT
+    case GET_REPORT_STOCK:
+      return {
+        ...state,
+        report: { ...state.report, stock_on_hand: action.payload },
       };
     default:
       return state;

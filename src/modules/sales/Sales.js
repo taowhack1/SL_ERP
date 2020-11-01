@@ -4,6 +4,7 @@ import MainLayout from "../../components/MainLayout";
 import { withRouter } from "react-router-dom";
 import { reset_comments } from "../../actions/comment&log";
 import { RESET_ALL_SALES } from "../../actions/types";
+import { get_customer_payment_term_list } from "../../actions/accounting";
 
 const Sales = (props) => {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const Sales = (props) => {
   // };
   useEffect(() => {
     dispatch(reset_comments());
+    dispatch(get_customer_payment_term_list());
     return () => {
       dispatch({ type: RESET_ALL_SALES });
     };

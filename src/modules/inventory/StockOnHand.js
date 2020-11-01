@@ -1,22 +1,26 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { Badge } from "antd";
-
-const StockOnHand = () => {
-  const [selectedRow, setSelectedRow] = useState();
+import { columnsMove, dataMove } from "../../data/inventoryData";
+import $ from "jquery";
+import { get_report_stock } from "../../actions/inventory";
+import { stock_on_hand_columns } from "./config/report";
+const StockMove = (props) => {
+  const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState([]);
+  const [loading, setLoading] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1200);
     console.log("params", pagination, filters, sorter, extra);
   };
-  // useEffect(() => {
-  //   axios.get("http://localhost:3001/items").then((res) => {
-  //     setDataTable(res.data);
-  //   });
-  // }, []);
+  const stock_on_hand = useSelector(
+    (state) => state.inventory.report.stock_on_hand
+  );
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project.project_id,
@@ -25,102 +29,49 @@ const StockOnHand = () => {
     show: true,
     breadcrumb: ["Home", "Stock on hand"],
     search: true,
-    create: "/inventory/items/create",
+    create: "",
     buttonAction: [],
     edit: {
-      data: selectedRow,
-      path: selectedRow && "/inventory/items/edit/" + selectedRow.key,
+      data: {},
+      path: "",
     },
     disabledEditBtn: !rowClick,
-    discard: "/inventory/items",
+    discard: "/inventory",
     onCancel: () => {
       console.log("Cancel");
     },
   };
-  const expandedRowRender = () => {
-    const subColumns = [
-      { title: "Location", dataIndex: "locationName", key: "loName" },
-      { title: "Lot/Batch No.", dataIndex: "locationLot", key: "loLot" },
-      { title: "Qty on hand", dataIndex: "locationOnHand", key: "loOnHand" },
-      { title: "Unit", dataIndex: "locationUnit", key: "loUnit" },
-      {
-        title: "Item Status",
-        key: "state",
-        render: () =>
-          Math.round(Math.random() * 100) % 2 ? (
-            <span>
-              <Badge status="success" />
-              PASS
-            </span>
-          ) : (
-            <span>
-              <Badge status="warning" />
-              HOLD
-            </span>
-          ),
-      },
-    ];
-
-    const subData = [];
-    for (let i = 0; i < 3; ++i) {
-      subData.push({
-        key: i,
-        locationName: "Location " + i,
-        locationLot: "L20090000" + i * 3,
-        locationOnHand: Math.round(Math.random() * 100),
-        locationUnit: "pc",
-        locationItemStatus: "OK",
-      });
-    }
-    return (
-      <Table columns={subColumns} dataSource={subData} pagination={false} />
-    );
-  };
-
-  const mainColumns = [
-    {
-      title: "Item Code",
-      dataIndex: "itemCode",
-      key: "itemCode",
-      align: "left",
-    },
-    { title: "Name", dataIndex: "itemName", key: "itemName", align: "left" },
-    {
-      title: "Quantity on hand",
-      dataIndex: "itemQty",
-      key: "itemOnHand",
-      align: "right",
-    },
-    {
-      title: "Quantity on QC",
-      dataIndex: "itemQty_qc",
-      key: "itemQty_qc",
-      align: "right",
-    },
-  ];
-
-  const mainData = [];
-  for (let i = 0; i < 3; ++i) {
-    mainData.push({
-      key: i,
-      itemCode: "[102SLA030001]",
-      itemName: "Item " + i + 1,
-      itemQty: Math.round(Math.random() * 100),
-      itemQty_qc: Math.round(Math.random() * 100),
-    });
-  }
-
+  useEffect(() => {
+    dispatch(get_report_stock());
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1200);
+  }, []);
   return (
     <div>
       <MainLayout {...config}>
         <Row>
           <Col span={24}>
             <Table
-              columns={mainColumns}
-              dataSource={mainData}
-              expandable={{ expandedRowRender }}
+              loading={loading}
+              columns={stock_on_hand_columns}
+              dataSource={stock_on_hand}
               onChange={onChange}
+              rowKey={"item_id"}
               size="small"
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: (e) => {
+                    setRowClick(true);
+                    $(e.target)
+                      .closest("tbody")
+                      .find("tr")
+                      .removeClass("selected-row");
+                    $(e.target).closest("tr").addClass("selected-row");
+                  },
+                };
+              }}
             />
           </Col>
         </Row>
@@ -129,4 +80,4 @@ const StockOnHand = () => {
   );
 };
 
-export default withRouter(StockOnHand);
+export default withRouter(StockMove);

@@ -10,10 +10,7 @@ export const api_approve = "http://192.168.5.222:3009/api/approve/process";
 export const api_authen = "http://192.168.5.222:3009/api/authorize/login";
 export const api_cost_center = "http://192.168.5.222:3009/api/list/cost_center";
 export const api_comments_log = "http://192.168.5.222:3009/api/approve/process";
-export const api_payment_term_vendor =
-  "http://192.168.5.222:3009/api/list/payment_term/vendor";
-export const api_payment_term_customer =
-  "http://192.168.5.222:3009/api/list/payment_term/customer";
+
 export const api_quo_list = "http://192.168.5.222:3009/api/sales/qn";
 
 export const api_get_select_list_customers =

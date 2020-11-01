@@ -11,6 +11,18 @@ export const sortData = (arrObject) => {
   return temp;
 };
 
+export const sortDataWithoutCommit = (arrObject) => {
+  let copyData = arrObject;
+  let temp = [];
+  copyData.map((obj, key) => {
+    return temp.push({
+      ...obj,
+      id: key,
+    });
+  });
+  return temp;
+};
+
 export const getNameById = (id, masterData, masterField, field) => {
   // console.log(id, masterData, masterField, field);
   const data = id && masterData.filter((data) => data[`${masterField}`] === id);

@@ -1,4 +1,12 @@
-import { Button, Row, Col, InputNumber, AutoComplete, Typography } from "antd";
+import {
+  Button,
+  Row,
+  Col,
+  InputNumber,
+  AutoComplete,
+  Typography,
+  Input,
+} from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
@@ -82,11 +90,11 @@ const VendorLine = ({
               gutter={6}
               className="col-2"
             >
-              <Col span={8} className="text-string">
+              <Col span={7} className="text-string">
                 <AutoComplete
                   style={{ width: "100%" }}
                   options={vendors}
-                  placeholder="Name..."
+                  placeholder="Vendor Name"
                   defaultValue={line.vendorName}
                   filterOption={(inputValue, option) =>
                     option.value
@@ -99,26 +107,24 @@ const VendorLine = ({
                   size="small"
                 />
               </Col>
-              <Col span={7} className="text-string">
-                <AutoComplete
+              <Col span={3} className="text-string">
+                <InputNumber
+                  placeholder={"Lead time"}
+                  min={0}
+                  step={1}
+                  precision={0}
                   style={{ width: "100%" }}
-                  options={companys}
-                  placeholder="Company..."
-                  defaultValue={line.companyName}
-                  filterOption={(inputValue, option) =>
-                    option.value
-                      .toUpperCase()
-                      .indexOf(inputValue.toUpperCase()) !== -1
-                  }
+                  disabled={0}
+                  defaultValue={line.vendor_lead_time}
                   onChange={(data) =>
-                    onChangeValue(line.id, { companyName: data })
+                    onChangeValue(line.id, { vendor_lead_time: data })
                   }
                   size="small"
                 />
               </Col>
               <Col span={3} className="text-number">
                 <InputNumber
-                  placeholder={"Quantity..."}
+                  placeholder={"Min Quantity"}
                   min={0.0}
                   step={0.0001}
                   precision={4}
@@ -149,7 +155,7 @@ const VendorLine = ({
               </Col>
               <Col span={3} className="text-number">
                 <InputNumber
-                  placeholder={"Price..."}
+                  placeholder={"Unit/Price"}
                   min={0.0}
                   step={50.0}
                   precision={3}
@@ -158,6 +164,20 @@ const VendorLine = ({
                   defaultValue={line.itemPrice}
                   onChange={(data) =>
                     onChangeValue(line.id, { itemPrice: data })
+                  }
+                  size="small"
+                />
+              </Col>
+              <Col span={5} className="text-number">
+                <Input
+                  placeholder={"Remark"}
+                  style={{ width: "100%" }}
+                  disabled={0}
+                  defaultValue={line.vendor_item_remark}
+                  onChange={(e) =>
+                    onChangeValue(line.id, {
+                      vendor_item_remark: e.target.value,
+                    })
                   }
                   size="small"
                 />
@@ -175,7 +195,7 @@ const VendorLine = ({
               }}
               block
             >
-              <PlusOutlined /> Add field
+              <PlusOutlined /> Add a line
             </Button>
           </div>
         </>
@@ -193,11 +213,11 @@ const VendorLine = ({
               gutter={6}
               className="col-2"
             >
-              <Col span={8} className="text-string">
+              <Col span={7} className="text-string">
                 <Text>{line.vendorName}</Text>
               </Col>
-              <Col span={8} className="text-string">
-                <Text>{line.companyName}</Text>
+              <Col span={3} className="text-number">
+                <Text>{line.vendor_lead_time}</Text>
               </Col>
               <Col span={3} className="text-number">
                 <Text>{line.itemQty}</Text>
@@ -207,6 +227,9 @@ const VendorLine = ({
               </Col>
               <Col span={3} className="text-number">
                 <Text>{line.itemPrice}</Text>
+              </Col>
+              <Col span={5} className="text-number">
+                <Text>{line.vendor_item_remark}</Text>
               </Col>
             </Row>
           ))}

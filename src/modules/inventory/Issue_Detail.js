@@ -27,6 +27,7 @@ const IssueDetail = ({
   headDispatch,
   detailDispatch,
   category_id,
+  type_id,
   filter,
 }) => {
   console.log("Render : IssueDetail");
@@ -40,10 +41,10 @@ const IssueDetail = ({
   );
   const select_location = useSelector((state) =>
     state.inventory.master_data.shelf.filter(
-      (shelf) => shelf.shelf_status_id === 3
+      (shelf) => shelf.shelf_status_id === 4
     )
   );
-
+  console.log("filter_location", select_location);
   // function
   const selectMultiItem = () => {
     setVisible(true);
@@ -138,9 +139,9 @@ const IssueDetail = ({
                     size="small"
                     placeholder={"Item"}
                     data={
-                      category_id
+                      type_id
                         ? select_items.filter(
-                            (item) => item.category_id === category_id
+                            (item) => item.type_id === type_id
                           )
                         : select_items
                     }
@@ -154,12 +155,14 @@ const IssueDetail = ({
                             uom_id: option.data.uom_id,
                             item_no_name: option.title,
                             uom_no: option.data.uom_no,
+                            item_control_id: option.data.item_control_id,
                           })
                         : onChangeValue(line.id, {
                             item_id: null,
                             uom_id: null,
                             item_no_name: null,
                             uom_no: null,
+                            item_control_id: null,
                           })
                     }
                   />
@@ -174,26 +177,29 @@ const IssueDetail = ({
                     data={
                       line.item_id
                         ? select_location.filter(
-                            (location) => location.type_id === line.type_id
+                            (location) =>
+                              location.type_id === line.type_id &&
+                              location.item_control_id === line.item_control_id
                           )
                         : select_location
                     }
                     field_id="location_id"
-                    field_name="shelf_no_name"
-                    value={line.shelf_no_name}
+                    field_name="location_shelf_no_name"
+                    value={line.location_shelf_no_name}
                     onChange={(data, option) =>
                       data && data
                         ? onChangeValue(line.id, {
                             shelf_id: option.data.shelf_id,
                             shelf_no_name: option.data.shelf_no_name,
                             location_id: option.data.location_id,
-                            location_no_name: option.data.location_no_name,
+                            location_shelf_no_name:
+                              option.data.location_shelf_no_name,
                           })
                         : onChangeValue(line.id, {
                             shelf_id: null,
                             shelf_no_name: null,
                             location_id: null,
-                            location_no_name: null,
+                            location_shelf_no_name: null,
                           })
                     }
                   />
@@ -274,7 +280,7 @@ const IssueDetail = ({
               }}
               block
             >
-              <PlusOutlined /> Add field
+              <PlusOutlined /> Add a line
             </Button>
           </div> */}
           <div style={{ marginTop: 10 }}>
@@ -308,14 +314,16 @@ const IssueDetail = ({
                   <Text className="text-view">{line.item_no_name}</Text>
                 </Col>
                 <Col span={5} className="text-string">
-                  <Text className="text-view">{line.location_no_name}</Text>
+                  <Text className="text-view">
+                    {line.location_shelf_no_name}
+                  </Text>
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view">
                     {numeral(line.issue_detail_qty).format("0,0.000")}
                   </Text>
                 </Col>
-                <Col span={3} className="text-number">
+                <Col span={3} className="text-string">
                   <Text className="text-view">{line.uom_no}</Text>
                 </Col>
                 <Col span={3} className="text-center">
@@ -332,7 +340,7 @@ const IssueDetail = ({
         style={{
           width: "100%",
           height: "5px",
-          background: "#c6c6c6",
+          backgroundColor: "#c6c6c6",
           background:
             "linear-gradient(180deg,rgba(198,198,198,1) 0%, rgba(198,198,198,1) 55%,rgba(255,255,255,1) 100%)",
           marginBottom: 20,

@@ -71,7 +71,7 @@ const Issue_View = (props) => {
     action: [
       {
         name: "Print",
-        link: `http://192.168.5.207:80/Report_purch/report_pr.aspx?pr_no=${
+        link: `http://192.168.5.207/Report_purch/report_ream1.aspx?issue_no=${
           data_head && data_head.issue_no
         }`,
       },
@@ -170,11 +170,7 @@ const Issue_View = (props) => {
               <strong>Issue {data_head && "#" + data_head.issue_no}</strong>
             </h2>
           </Col>
-          <Col span={1}></Col>
-          <Col span={10} className="text-center">
-            {data_head && data_head.branch_name}
-          </Col>
-          <Col span={1}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>Create Date :</Text>
           </Col>

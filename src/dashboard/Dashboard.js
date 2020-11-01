@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { Redirect, useHistory, withRouter } from "react-router-dom";
 import MainLayout from "../components/MainLayout";
 import { Button, Modal } from "antd";
 import { Form, Input } from "antd";
 import { addSalary, delSalary } from "../actions/salaryActions";
 import { signIn2, signIn3 } from "../actions/authActions";
 import { get_select_cost_center } from "../actions/hrm";
+import { get_currency_list } from "../actions/accounting";
 const Dashboard = (props) => {
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const history = useHistory();
+  const auth = useSelector(
+    (state) => state.auth.authData && state.auth.authData[0]
+  );
+  console.log("auth", auth);
   if (!auth) {
     alert("Authentication required\nPlase Login.");
-    props.history.push("/login");
+    history.push("/login");
   }
+
   const { salary } = useSelector((state) => state.salary);
   console.log(salary);
   const dispatch = useDispatch();
@@ -33,7 +39,8 @@ const Dashboard = (props) => {
   };
 
   useEffect(() => {
-    dispatch(get_select_cost_center(auth.department_id));
+    auth && dispatch(get_select_cost_center(auth.department_id));
+    dispatch(get_currency_list());
   }, []);
   // const onChange = (pagination, filters, sorter, extra) => {
   //   console.log("params", pagination, filters, sorter, extra);

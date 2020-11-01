@@ -1,78 +1,18 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Row, Col, Tabs, Typography } from "antd";
+import { Row, Col, Input, Tabs, Select, Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
-
-import ItemLine from "../../components/VendorItemLine";
-import { autoCompleteUnit, autoCompleteItem } from "../../data/inventoryData";
 
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
-
-import { vendorItemColumns } from "../../data/purchase/data";
-
-const { Text } = Typography;
+const { Option } = Select;
+const { TextArea } = Input;
+const { Title, Text } = Typography;
 
 const VendorView = (props) => {
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
-
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          id: 0,
-          v_code: null,
-          v_name: null,
-          v_company: null,
-          v_phone: null,
-          v_mobile: null,
-          v_email: null,
-          v_tax_id: null,
-          v_type: null,
-          v_desc: null,
-          v_adr_street: null,
-          v_adr_street2: null,
-          v_adr_city: null,
-          v_adr_state: null,
-          v_adr_zip: null,
-          v_adr_country: null,
-          v_payment_term: null,
-          v_currency: null,
-          v_status: 0,
-          dataLine: [
-            {
-              id: 0,
-              item: null,
-              itemValidate: null,
-              itemQty: 0,
-              itemUnit: "pc",
-              itemPrice: 0,
-            },
-          ],
-        }
-  );
+  const data_head = useSelector((state) => state.purchase.vendor.vendor);
   const callback = (key) => {};
 
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
-  };
-  const getButton = (status) => {
-    switch (status) {
-      // case 0:
-      //   return ["Edit", "Confirm", "Discard"];
-      case 0:
-        return ["Edit", "Confirm", "Discard"];
-      case 1:
-        return ["Edit", "Verify", "Discard"];
-      case 2:
-        return ["Edit", "Approve", "Discard"];
-      case 3:
-        return ["Edit", "Discard"];
-      default:
-        return [];
-    }
-  };
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project.project_id,
@@ -83,23 +23,15 @@ const VendorView = (props) => {
       "Home",
       "Vendor",
       "View",
-      formData.v_code && "[ " + formData.v_code + " ] " + formData.v_name,
+      data_head.vendor_no &&
+        "[ " + data_head.vendor_no + " ] " + data_head.vendor_name,
     ],
     search: false,
-    buttonAction: getButton(formData.v_status),
-    action: [{ name: "Print", link: "www.google.co.th" }],
-    step: {
-      current: formData.v_status,
-      step: ["Draft", "Confirm", "Verify", "Approve", "Done"],
-    },
+    buttonAction: ["Edit", "Discard"],
     create: "",
     edit: {
-      data: formData,
-      path: formData && "/purchase/vendor/edit/" + formData.id,
-    },
-    save: {
-      data: formData,
-      path: formData && "/purchase/vendor/view/" + formData.id,
+      data: data_head,
+      path: data_head && "/purchase/vendor/edit/" + data_head.vendor_id,
     },
     discard: "/purchase/vendor",
     onSave: (e) => {
@@ -119,98 +51,29 @@ const VendorView = (props) => {
   };
 
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config}>
       <div id="form">
         {/* Head */}
         <Row className="col-2">
-          <Col span={11}>
+          <Col span={8}>
             <h2>
-              <strong>Vendor #{formData.v_code}</strong>
+              <strong>
+                Vendor {data_head.vendor_no && "#" + data_head.vendor_no}
+              </strong>
             </h2>
           </Col>
-          <Col span={2}></Col>
-          <Col span={3}></Col>
-          <Col span={8} style={{ textAlign: "right" }}></Col>
+          <Col span={12}></Col>
+          <Col span={2}>
+            <Text strong>Create Date :</Text>
+          </Col>
+          <Col span={2} style={{ textAlign: "right" }}>
+            <Text className="text-view">{data_head.cnv_vendor_created}</Text>
+          </Col>
         </Row>
         <Row className="col-2">
           <Col span={24} style={{ marginBottom: 8 }}>
-            <h3>
-              <strong>{formData.v_name}</strong>
-            </h3>
-          </Col>
-        </Row>
-
-        {/* Address & Information */}
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Phone </Text>
-          </Col>
-          <Col span={8}>
-            <Text>{formData.v_phone}</Text>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Company Address </Text>
-          </Col>
-          <Col span={8}>
-            <Text>{formData.v_adr_street}</Text>
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Mobile</Text>
-          </Col>
-          <Col span={8}>
-            <Text>{formData.v_mobile}</Text>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong></Text>
-          </Col>
-          <Col span={8}>
-            <Text>{formData.v_adr_street2}</Text>
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Email</Text>
-          </Col>
-          <Col span={8}>
-            <Text>{formData.v_email}</Text>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong></Text>
-          </Col>
-          <Col span={8}>
-            <Row>
-              <Col span={8}>
-                <Text>{formData.v_adr_city}</Text>
-              </Col>
-              <Col span={1}></Col>
-              <Col span={8}>
-                <Text>{formData.v_adr_country}</Text>
-              </Col>
-              <Col span={1}></Col>
-              <Col span={6}>
-                <Text>{formData.v_adr_zip}</Text>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={3}>
-            <Text strong>Currency</Text>
-          </Col>
-          <Col span={8}>
-            <Text>{formData.v_currency}</Text>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Tax ID</Text>
-          </Col>
-          <Col span={8}>
-            <Text>{formData.v_tax_id}</Text>
+            <Title level={5}>Name </Title>
+            <Text className="text-view">{data_head.vendor_name}</Text>
           </Col>
         </Row>
 
@@ -218,24 +81,130 @@ const VendorView = (props) => {
         <Row className="col-2 row-tab-margin">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
-              <Tabs.TabPane tab="Products" key="1">
-                <ItemLine
-                  items={autoCompleteItem}
-                  units={autoCompleteUnit}
-                  dataLine={formData.dataLine ? formData.dataLine : [{}]}
-                  columns={vendorItemColumns}
-                  readOnly={true}
-                  updateData={upDateFormValue}
-                />
+              <Tabs.TabPane tab="Contact" key="1">
+                {/* Address & Information */}
+
+                <Row className="col-2 row-margin-vertical">
+                  <Col span={12}>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Short Name</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {data_head.vendor_name_short}
+                        </Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Phone</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {data_head.vendor_phone}
+                        </Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Mobile</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {data_head.vendor_mobile}
+                        </Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Email</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {data_head.vendor_email}
+                        </Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Currency</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {data_head.currency_no}
+                        </Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                  </Col>
+                  <Col span={12}>
+                    <Row className="row-margin">
+                      <Col span={1}></Col>
+                      <Col span={5}>
+                        <Text strong>Address</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {data_head.vendor_address}
+                        </Text>
+                      </Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={1}></Col>
+                      <Col span={5}>
+                        <Text strong>Tax ID</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {data_head.vendor_tax_no}
+                        </Text>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Notes" key="2">
-                <Text>{formData.v_desc}</Text>
+              <Tabs.TabPane tab="Purchase" key="2">
+                <Row className="col-2 row-margin-vertical">
+                  <Col span={12}>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Payment Terms</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {data_head.payment_term_no_name}
+                        </Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                  </Col>
+                  <Col span={12}>
+                    <Row className="row-margin">
+                      <Col span={1}></Col>
+                      <Col span={5}></Col>
+                      <Col span={18}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={1}></Col>
+                      <Col span={5}></Col>
+                      <Col span={18}></Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Notes" key="3">
+                <Text className="text-view">{data_head.vendor_remark}</Text>
               </Tabs.TabPane>
             </Tabs>
           </Col>
         </Row>
       </div>
-      <Comments data={[...dataComments]} />
+      {/* <Comments data={dataComments} /> */}
     </MainLayout>
   );
 };

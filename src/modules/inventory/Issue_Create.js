@@ -166,11 +166,7 @@ const IssueCreate = (props) => {
               </strong>
             </h2>
           </Col>
-          <Col span={1}></Col>
-          <Col span={10} className="text-center">
-            {data_head.branch_name}
-          </Col>
-          <Col span={1}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>Create Date :</Text>
           </Col>
@@ -251,6 +247,7 @@ const IssueCreate = (props) => {
                   data_detail={data_detail}
                   readOnly={false}
                   category_id={data_head.category_id}
+                  type_id={data_head.type_id}
                   headDispatch={upDateFormValue}
                   filter={filter && filter}
                 />

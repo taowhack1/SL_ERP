@@ -149,7 +149,7 @@ const ListItemLine = ({ items, units }) => {
                 }}
                 block
               >
-                <PlusOutlined /> Add field
+                <PlusOutlined /> Add a line
               </Button>
             </Form.Item>
           </div>

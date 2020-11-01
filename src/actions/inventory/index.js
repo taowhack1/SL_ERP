@@ -1,4 +1,9 @@
-import { GET_MASTER_DATA_ITEM } from "../types";
+import {
+  GET_MASTER_DATA_ITEM,
+  GET_LOCATION_SHELF_BY_ITEM_ID,
+  GET_LOT_BATCH_BY_ITEM_ID_SHELF,
+  GET_REPORT_STOCK,
+} from "../types";
 import {
   api_get_item_list,
   api_get_uom_list,
@@ -12,7 +17,10 @@ import {
   api_get_item_identify_benefit,
   api_get_item_type,
   api_get_item_uom,
+  api_get_location_shelf_by_item_id,
+  api_get_lot_batch_by_item_id_shelf,
   api_shelf,
+  get_stock_on_hand,
 } from "../api";
 
 export const getMasterDataItem = () => async (dispatch) => {
@@ -54,4 +62,38 @@ export const getMasterDataItem = () => async (dispatch) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const get_location_shelf_by_item_id = (item_id) => async (dispatch) => {
+  console.log(`${api_get_location_shelf_by_item_id}/${item_id}`);
+  try {
+    await axios
+      .get(`${api_get_location_shelf_by_item_id}/${item_id}`, header_config)
+      .then((res) => {
+        dispatch({ type: GET_LOCATION_SHELF_BY_ITEM_ID, payload: res.data[0] });
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const get_lot_batch_by_item_id_shelf = (item_id) => async (dispatch) => {
+  try {
+    await axios
+      .get(`${api_get_lot_batch_by_item_id_shelf}/${item_id}`, header_config)
+      .then((res) => {
+        dispatch({
+          type: GET_LOT_BATCH_BY_ITEM_ID_SHELF,
+          payload: res.data[0],
+        });
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const get_report_stock = () => (dispatch) => {
+  axios.get(get_stock_on_hand, header_config).then((res) => {
+    dispatch({ type: GET_REPORT_STOCK, payload: res.data[0] });
+  });
 };

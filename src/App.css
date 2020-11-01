@@ -281,6 +281,7 @@ button.primary:hover {
 }
 .text-view {
   color: #666666;
+  padding-left: 10px;
 }
 .detail-table-head {
   background: rgb(241, 239, 239);
@@ -298,13 +299,6 @@ button.primary:hover {
 .ant-select-selector:not(.input-string-disabled) {
   background-color: #fdf9f4 !important;
 }*/
-.ant-input-number-input {
-  /* background-color: #e6ffe6; */
-}
-.ant-picker,
-.ant-picker-small {
-  /* background-color: #ddddff; */
-}
 .button-icon {
   color: #1890ff;
   cursor: pointer;
@@ -340,4 +334,8 @@ div:empty:before {
 }
 .section-top {
   border-top: 1px solid #f0f0f0;
+}
+.row-margin {
+  margin-top: 8px;
+  margin-bottom: 8px;
 }

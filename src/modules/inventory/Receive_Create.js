@@ -1,5 +1,6 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { withRouter } from "react-router";
 import { Row, Col, Input, Tabs, Typography } from "antd";
 import { reducer } from "./reducers";
 import { receive_fields, receive_detail_fields } from "./config";
@@ -25,8 +26,8 @@ const { Text } = Typography;
 
 const initialStateHead = receive_fields;
 const initialStateDetail = [receive_detail_fields];
-
 const Receive_Create = (props) => {
+  const { history } = props;
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
@@ -97,7 +98,7 @@ const Receive_Create = (props) => {
       console.log("Save");
       data_head.receive_id
         ? dispatch(update_receive(data_head.receive_id, data_head, data_detail))
-        : dispatch(create_receive(data_head, data_detail));
+        : dispatch(create_receive(data_head, data_detail, history));
     },
     onEdit: (e) => {
       e.preventDefault();
@@ -200,11 +201,7 @@ const Receive_Create = (props) => {
               </strong>
             </h2>
           </Col>
-          <Col span={1}></Col>
-          <Col span={10} className="text-center">
-            {data_head.branch_name}
-          </Col>
-          <Col span={1}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>Create Date :</Text>
           </Col>

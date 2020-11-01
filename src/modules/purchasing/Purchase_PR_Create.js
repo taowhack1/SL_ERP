@@ -26,7 +26,7 @@ const PurchaseRequisitionCreate = (props) => {
   const auth = useSelector((state) => state.auth.authData[0]);
   const dataComments = useSelector((state) => state.log.comment_log);
   const cost_centers = useSelector((state) => state.hrm.cost_center);
-  const vendors = useSelector((state) => state.purchase.vendors);
+  const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const data_detail = useSelector((state) => state.purchase.pr_detail);
   const data_head = useSelector((state) => state.purchase.pr_head);
   const flow =
@@ -132,11 +132,7 @@ const PurchaseRequisitionCreate = (props) => {
               </strong>
             </h2>
           </Col>
-          <Col span={1}></Col>
-          <Col span={10} className="text-center">
-            <Text> {data_head.branch_name}</Text>
-          </Col>
-          <Col span={1}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>PR Date : </Text>
           </Col>

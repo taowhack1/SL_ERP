@@ -4,6 +4,7 @@ import {
   SET_QN_HEAD,
   RESET_QN,
   GET_ALL_CUSTOMER,
+  GET_CUSTOMER_BY_ID,
   GET_SO_LIST,
   SET_SO_HEAD,
   SET_SO_DETAIL,
@@ -25,10 +26,12 @@ const inititalState = {
     so_head: {},
     so_detail: [],
   },
-  customers: [],
+  customer: {
+    customer_list: [],
+    customer: {},
+  },
   master_data: {
     customers: [],
-    payment_terms: [],
   },
 };
 
@@ -45,7 +48,15 @@ export default (state = inititalState, action) => {
     case RESET_SO:
       return { ...state, so: { ...inititalState.so } };
     case GET_ALL_CUSTOMER:
-      return { ...state, customers: action.payload };
+      return {
+        ...state,
+        customer: { ...state.customer, customer_list: action.payload },
+      };
+    case GET_CUSTOMER_BY_ID:
+      return {
+        ...state,
+        customer: { ...state.customer, customer: action.payload },
+      };
 
     case GET_SO_LIST:
       return { ...state, so: { ...state.so, so_list: action.payload } };

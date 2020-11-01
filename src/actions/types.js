@@ -18,7 +18,8 @@ export const DEL_SALARY = "DEL_SALARY";
 export const GET_SELECT_UOM = "GET_SELECT_UOM";
 export const GET_SELECT_ITEM = "GET_SELECT_ITEM";
 export const GET_ALL_SHELF = "GET_ALL_SHELF";
-
+//Inventory Report
+export const GET_REPORT_STOCK = "GET_REPORT_STOCK";
 //Inventory -> Issue
 export const GET_ISSUE_LIST = "GET_ISSUE_LIST";
 export const RESET_ISSUE = "RESET_ISSUE";
@@ -50,18 +51,22 @@ export const GET_ALL_ITEMS = "GET_ALL_ITEMS";
 export const CREATE_ITEM = "CREATE_ITEM";
 export const UPDATE_ITEM = "UPDATE_ITEM";
 export const GET_MASTER_DATA_ITEM = "GET_MASTER_DATA_ITEM";
+export const GET_LOCATION_SHELF_BY_ITEM_ID = "GET_LOCATION_SHELF_BY_ITEM_ID";
+export const GET_LOT_BATCH_BY_ITEM_ID_SHELF = "GET_LOT_BATCH_BY_ITEM_ID_SHELF";
 
 // Sales
 export const GET_ALL_CUSTOMER = "GET_ALL_CUSTOMER";
+export const GET_CUSTOMER_BY_ID = "GET_CUSTOMER_BY_ID";
 export const CREATE_CUSTOMER = "CREATE_CUSTOMER";
 export const UPDATE_CUSTOMER = "UPDATE_CUSTOMER";
 export const INACTIVE_CUSTOMER = "INACTIVE_CUSTOMER";
 
 //Purchase Main
-export const GET_ALL_VENDOR = "GET_ALL_VENDOR";
 export const GET_COST_CENTER_LIST = "GET_COST_CENTER_LIST";
-export const GET_PAYMENT_TERM_LIST = "GET_PAYMENT_TERM_LIST";
 export const RESET_COMMENTS = "RESET_COMMENTS";
+//Purchase -> Vendor
+export const GET_ALL_VENDOR = "GET_ALL_VENDOR";
+export const GET_VENDOR_BY_ID = "GET_VENDOR_BY_ID";
 //Purchase -> PR
 export const GET_ALL_PR = "GET_ALL_PR";
 export const GET_PR_DETAIL = "GET_PR_DETAIL";
@@ -111,3 +116,12 @@ export const GET_SO_LIST = "GET_SO_LIST";
 export const SET_SO_HEAD = "SET_SO_HEAD";
 export const SET_SO_DETAIL = "SET_SO_DETAIL";
 export const RESET_SO = "RESET_SO";
+
+//QC
+export const GET_QC_RECEIVE_LIST = "GET_QC_RECEIVE_LIST";
+export const GET_QC_RECEIVE_DETAIL_LIST = "GET_QC_RECEIVE_DETAIL_LIST";
+
+//ACCOUNTING
+export const GET_VENDOR_PAYMENT_TERM_LIST = "GET_VENDOR_PAYMENT_TERM_LIST";
+export const GET_CUSTOMER_PAYMENT_TERM_LIST = "GET_CUSTOMER_PAYMENT_TERM_LIST";
+export const GET_CURRENCY = "GET_CURRENCY";

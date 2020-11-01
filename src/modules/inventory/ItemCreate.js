@@ -13,6 +13,9 @@ import {
   Checkbox,
   Space,
   Switch,
+  message,
+  Upload,
+  Button,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
@@ -35,10 +38,29 @@ import { item_fields } from "../../page_fields/inventory/item";
 import { getNameById } from "../../include/js/function_main";
 import $ from "jquery";
 import { getMasterDataItem } from "../../actions/inventory";
+import { UploadOutlined } from "@ant-design/icons";
+import CustomSelect from "../../components/CustomSelect";
+import { item_vendor_columns } from "./config/item";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
-
+const props = {
+  name: "file",
+  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
+  headers: {
+    authorization: "authorization-text",
+  },
+  onChange(info) {
+    if (info.file.status !== "uploading") {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === "done") {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === "error") {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};
 const ItemCreate = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -143,7 +165,7 @@ const ItemCreate = (props) => {
         <Row className="col-2">
           <Col span={24} style={{ marginBottom: 8 }}>
             <h3>
-              <strong>Name</strong>
+              <strong>Trade Name</strong>
             </h3>
             <Input
               onChange={(e) => upDateFormValue({ item_name: e.target.value })}
@@ -198,17 +220,18 @@ const ItemCreate = (props) => {
               <Tabs.TabPane tab="Detail" key="1">
                 <Row className="col-2 row-margin-vertical">
                   <Col span={3}>
-                    <Text strong>SRL </Text>
+                    <Text strong>Description </Text>
                   </Col>
                   <Col span={8}>
                     <Input
+                      placeholder="Description"
                       onChange={(e) =>
                         upDateFormValue({
                           item_customer_run_no: e.target.value,
                         })
                       }
-                      defaultValue={formData.item_customer_run_no}
-                      value={formData.item_customer_run_no}
+                      defaultValue={""}
+                      value={""}
                     />
                   </Col>
                   <Col span={2}></Col>
@@ -216,24 +239,28 @@ const ItemCreate = (props) => {
                     <Text strong>Item Type </Text>
                   </Col>
                   <Col span={8}>
-                    <Select
-                      onChange={(data) => upDateFormValue({ type_id: data })}
-                      value={getNameById(
-                        formData.type_id,
-                        master_data.item_type,
-                        "type_id",
-                        "type_name"
-                      )}
-                    >
-                      {master_data.item_type &&
-                        master_data.item_type.map((type) => {
-                          return (
-                            <Option key={type.type_id} value={type.type_id}>
-                              {type.type_no}
-                            </Option>
-                          );
-                        })}
-                    </Select>
+                    <CustomSelect
+                      allowClear
+                      showSearch
+                      placeholder={"Item Type"}
+                      field_id="type_id"
+                      field_name="type_no_name"
+                      value={formData.type_no_name}
+                      data={master_data.item_type}
+                      onChange={(data, option) => {
+                        data && data
+                          ? upDateFormValue({
+                              type_id: data,
+                              type_no_name: option.title,
+                              category_id: null,
+                              category_no_name: null,
+                            })
+                          : upDateFormValue({
+                              category_id: null,
+                              category_no_name: null,
+                            });
+                      }}
+                    />
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -254,32 +281,32 @@ const ItemCreate = (props) => {
                     <Text strong>Category </Text>
                   </Col>
                   <Col span={8}>
-                    <Select
-                      placeholder={"Select Category"}
-                      onSelect={(data) =>
-                        upDateFormValue({
-                          category_id: data,
-                        })
+                    <CustomSelect
+                      allowClear
+                      showSearch
+                      placeholder={"Category"}
+                      field_id="category_id"
+                      field_name="category_no_name"
+                      value={formData.category_no_name}
+                      data={
+                        formData.type_id
+                          ? master_data.item_category.filter(
+                              (categ) => categ.type_id === formData.type_id
+                            )
+                          : master_data.item_category
                       }
-                      style={{ width: "100%" }}
-                      value={getNameById(
-                        formData.category_id,
-                        master_data.item_category,
-                        "category_id",
-                        "category_name"
-                      )}
-                    >
-                      {master_data.item_category.map((categ) => {
-                        return (
-                          <Option
-                            key={categ.category_id}
-                            value={categ.category_id}
-                          >
-                            {categ.category_name}
-                          </Option>
-                        );
-                      })}
-                    </Select>
+                      onChange={(data, option) => {
+                        data && data
+                          ? upDateFormValue({
+                              category_id: data,
+                              category_no_name: option.title,
+                            })
+                          : upDateFormValue({
+                              category_id: null,
+                              category_no_name: null,
+                            });
+                      }}
+                    />
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -313,6 +340,258 @@ const ItemCreate = (props) => {
                   </Col>
                   <Col span={2}></Col>
                   <Col span={3}>
+                    <Text strong>SRL </Text>
+                  </Col>
+                  <Col span={8}>
+                    <Input
+                      onChange={(e) =>
+                        upDateFormValue({
+                          item_customer_run_no: e.target.value,
+                        })
+                      }
+                      defaultValue={formData.item_customer_run_no}
+                      value={formData.item_customer_run_no}
+                    />
+                  </Col>
+                </Row>
+                <Row className="col-2">
+                  <Col span={24}>
+                    <Space direction="vertical" style={{ width: "100%" }}>
+                      <Text strong>Notes </Text>
+                      <TextArea
+                        onChange={(e) =>
+                          upDateFormValue({ item_remark: e.target.value })
+                        }
+                        defaultValue={formData.item_remark}
+                      />
+                    </Space>
+                  </Col>
+                </Row>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="R&D" key="2">
+                <Row className="col-2 row-margin-vertical">
+                  <Col span={3}>
+                    <Text strong>Trade Name</Text>
+                  </Col>
+                  <Col span={8}>
+                    <Input
+                      placeholder="Item Trade Name"
+                      onChange={(e) =>
+                        upDateFormValue({
+                          item_trade_name: e.target.value,
+                        })
+                      }
+                      defaultValue={formData.item_trade_name}
+                      value={formData.item_trade_name}
+                    />
+                  </Col>
+                  <Col span={2}></Col>
+                  <Col span={2}>
+                    <Text strong>Sale to</Text>
+                  </Col>
+                  <Col span={9}>
+                    <Row>
+                      <Col span={24}>
+                        <Space align="baseline">
+                          <Checkbox
+                            defaultChecked={formData.item_sale_to_local}
+                            onChange={(e) =>
+                              upDateFormValue({
+                                item_sale_to_local: e.target.checked ? 1 : 0,
+                              })
+                            }
+                          />
+                          <Text>Local</Text>
+                        </Space>
+                        <br />
+                        <Space align="baseline">
+                          <Checkbox
+                            defaultChecked={formData.item_sale_to_export}
+                            onChange={(e) =>
+                              upDateFormValue({
+                                item_sale_to_export: e.target.checked ? 1 : 0,
+                              })
+                            }
+                          />
+                          <Text>Export</Text>
+                        </Space>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+                <Row className="col-2 row-margin-vertical">
+                  <Col span={3}>
+                    <Text strong>Shelf life (day) </Text>
+                  </Col>
+                  <Col span={8}>
+                    <InputNumber
+                      placeholder={"Shelf life (day)"}
+                      min={0}
+                      step={1}
+                      precision={0}
+                      style={{ width: "100%" }}
+                      disabled={0}
+                      defaultValue={formData.item_shelf_life}
+                      onChange={(data) =>
+                        upDateFormValue(formData.id, { item_shelf_life: data })
+                      }
+                    />
+                  </Col>
+                </Row>
+                <Row className="col-2 row-margin-vertical">
+                  <Col
+                    span={12}
+                    style={{
+                      borderRight: "1px solid #c4c4c4",
+                    }}
+                  >
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> Specification.</Text>
+                      </Col>
+                      <Col span={10}>
+                        <Upload {...props}>
+                          {/* <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button> */}
+                        </Upload>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> MSDS.</Text>
+                      </Col>
+                      <Col span={10}>
+                        <Upload {...props}>
+                          {/* <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button> */}
+                        </Upload>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> Quotation.</Text>
+                      </Col>
+                      <Col span={10}>
+                        <Upload {...props}>
+                          {/* <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button> */}
+                        </Upload>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                  </Col>
+                  {/* Right Row */}
+                  <Col span={12}>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={1}></Col>
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> Halal Cert.</Text>
+                      </Col>
+                      <Col span={10}>
+                        <Upload {...props}>
+                          {/* <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button> */}
+                        </Upload>
+                      </Col>
+                    </Row>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={1}></Col>
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> Non-Haram Statement.</Text>
+                      </Col>
+                      <Col span={10}>
+                        <Upload {...props}>
+                          {/* <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button> */}
+                        </Upload>
+                      </Col>
+                    </Row>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={1}></Col>
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> Non-Halal.</Text>
+                      </Col>
+                      <Col span={10}></Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Purchase" key="3">
+                <Row className="col-2 row-margin-vertical">
+                  <Col span={3}>
                     <Text strong>Sale Price</Text>
                   </Col>
                   <Col span={8}>
@@ -324,69 +603,14 @@ const ItemCreate = (props) => {
                     />
                   </Col>
                 </Row>
-                <Row className="col-2">
-                  <Col span={24}>
-                    <Space direction="vertical" style={{ width: "100%" }}>
-                      <Text strong>Description </Text>
-                      <TextArea
-                        onChange={(e) =>
-                          upDateFormValue({ item_remark: e.target.value })
-                        }
-                        defaultValue={formData.item_remark}
-                      />
-                    </Space>
-                  </Col>
-                </Row>
-              </Tabs.TabPane>
-              <Tabs.TabPane tab="Purchase" key="2">
-                <Row
-                  className="col-2 row-margin-vertical"
-                  style={{ paddingBottom: 25 }}
-                >
-                  <Col span={2}>
-                    <Text strong>Qty. Min.</Text>
-                  </Col>
-                  <Col span={3}>
-                    <InputNumber
-                      placeholder={"Min"}
-                      min={0.0}
-                      step={0.0001}
-                      precision={4}
-                      style={{ width: "100%" }}
-                      disabled={0}
-                      defaultValue={0}
-                      value={formData.item_min}
-                      onChange={(data) => upDateFormValue({ item_min: data })}
-                      size="small"
-                    />
-                  </Col>
-                  <Col span={2}></Col>
-                  <Col span={2}>
-                    <Text strong>Qty. Max.</Text>
-                  </Col>
-                  <Col span={3}>
-                    <InputNumber
-                      placeholder={"Max"}
-                      min={0.0}
-                      step={0.0001}
-                      precision={4}
-                      style={{ width: "100%" }}
-                      disabled={0}
-                      defaultValue={0}
-                      value={formData.item_max}
-                      onChange={(data) => upDateFormValue({ item_max: data })}
-                      size="small"
-                    />
-                  </Col>
-                  <Col span={12}></Col>
-                </Row>
+                <Row className="col-2 row-tab-margin-lg"></Row>
                 <Line
                   vendors={vendors}
                   companys={companys}
                   units={autoCompleteUnit}
                   dataLine={formData.vendor ? formData.vendor : []}
                   // autoData={autoCompleteItem}
-                  columns={vendorColumns}
+                  columns={item_vendor_columns}
                   // readOnly={false}
                   updateData={upDateFormValue}
                 />
@@ -395,7 +619,7 @@ const ItemCreate = (props) => {
           </Col>
         </Row>
       </div>
-      <Comments data={[...dataComments]} />
+      <Comments data={dataComments} />
     </MainLayout>
   );
 };

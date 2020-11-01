@@ -142,6 +142,7 @@ export const receive_fields = {
   tg_receive_total_amount: 0,
   tg_trans_status_id: 1,
   tg_trans_close_id: null,
+  commit: 1,
 };
 
 export const receive_detail_fields = {
@@ -159,6 +160,7 @@ export const receive_detail_fields = {
   receive_detail_remark: null,
   receive_detail_due_date: null,
   receive_sub_detail: [],
+  commit: 1,
 };
 
 export const receive_sub_detail_fields = {
@@ -167,6 +169,7 @@ export const receive_sub_detail_fields = {
   // receive_detail_sub_mfg_date: "15/10/2020",
   // receive_detail_sub_exp_date: "28/10/2020",
   // receive_detail_sub_qty: 100,
+  receive_detail_sub_id: null,
   receive_detail_sub_lot_no: null,
   receive_detail_sub_receive_date: null,
   receive_detail_sub_mfg_date: null,
@@ -188,6 +191,7 @@ export const receive_sub_detail_fields = {
   uom_no: null,
   uom_name: null,
   uom_no_name: null,
+  commit: 1,
 };
 // ISSUE
 export const issue_columns = [
@@ -283,6 +287,7 @@ export const issue_fields = {
   process_id: null,
   tg_trans_status_id: 1,
   tg_trans_close_id: null,
+  commit: 1,
 };
 export const issue_detail_fields = {
   issue_detail_id: null,
@@ -295,6 +300,7 @@ export const issue_detail_fields = {
   uom_id: null,
   shelf_id: null,
   tg_issue_detail_qty_balance: null,
+  commit: 1,
 };
 
 export const select_item_columns = [
@@ -393,8 +399,8 @@ export const disburse_columns = [
   },
   {
     title: "Issue Due Date",
-    dataIndex: "tg_disburse_due_date",
-    key: "tg_disburse_due_date",
+    dataIndex: "disburse_due_date",
+    key: "disburse_due_date",
     width: "10%",
     align: "center",
   },
@@ -475,13 +481,11 @@ export const disburse_detail_columns = [
 ];
 
 export const disburse_sub_detail_columns = [
-  { id: 0, name: "Source Location", size: 5 },
-  { id: 1, name: "Shelf", size: 4 },
-  { id: 2, name: "Lot No.", size: 3 },
-  { id: 3, name: "Batch No.", size: 3 },
-  { id: 4, name: "Disburse Qty.", size: 3 },
-  { id: 5, name: "Unit", size: 2 },
-  { id: 6, name: "Disburse Date", size: 3 },
+  { id: 0, name: "Source Location/Shelf", size: 7 },
+  { id: 1, name: "Lot / Batch No.", size: 8 },
+  { id: 2, name: "Disburse Qty.", size: 3 },
+  { id: 3, name: "Unit", size: 2 },
+  { id: 4, name: "Disburse Date", size: 3 },
 ];
 
 export const disburse_fields = {
@@ -497,7 +501,7 @@ export const disburse_fields = {
   disburse_lock: 0,
   disburse_rows: null,
   disburse_actived: 1,
-  tg_disburse_due_date: null,
+  disburse_due_date: null,
   disburse_created: null,
   disburse_created_by: null,
   disburse_updated: null,
@@ -518,6 +522,7 @@ export const disburse_fields = {
   disburse_created_by_no_name: null,
   node_stay: null,
   tg_flow_max_node_id: null,
+  commit: 1,
 };
 
 export const disburse_detail_fields = {
@@ -548,6 +553,7 @@ export const disburse_detail_fields = {
   shelf_name: null,
   shelf_no_name: null,
   disburse_sub_detail: [],
+  commit: 1,
 };
 
 export const disburse_sub_detail_fields = {
@@ -556,12 +562,13 @@ export const disburse_sub_detail_fields = {
   disburse_detail_sub_qty: null,
   disburse_detail_sub_remark: null,
   disburse_detail_id: null,
-  stock_in_lot_no: null,
-  stock_in_batch: null,
-  stock_in_mfg_date: null,
-  stock_in_exp_date: null,
+  stock_lot_no: null,
+  stock_batch: null,
+  stock_mfg_date: null,
+  stock_exp_date: null,
   shelf_id: null,
   shelf_no_name: null,
   location_id: null,
   location_no_name: null,
+  commit: 1,
 };

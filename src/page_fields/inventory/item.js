@@ -66,11 +66,13 @@ export const item_show_columns = [
   {
     title: "Code",
     dataIndex: "item_no",
+    width: "10%",
+    align: "left",
   },
-  {
-    title: "Barcode",
-    dataIndex: "item_barcode",
-  },
+  // {
+  //   title: "Barcode",
+  //   dataIndex: "item_barcode",
+  // },
   {
     title: "Item Name",
     dataIndex: "item_name",
@@ -78,10 +80,18 @@ export const item_show_columns = [
   {
     title: "Qty On Hand",
     dataIndex: "tg_item_qty",
+    width: "10%",
+    align: "right",
+  },
+  {
+    title: "Unit",
+    dataIndex: "uom_name",
+    width: "10%",
+    align: "left",
   },
   {
     title: "Category",
-    dataIndex: "category_id",
+    dataIndex: "category_name",
     ellipsis: true,
   },
   {

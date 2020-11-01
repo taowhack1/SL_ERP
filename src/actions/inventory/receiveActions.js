@@ -8,6 +8,7 @@ import {
   RESET_RECEIVE,
 } from "../types";
 import axios from "axios";
+import { sortData } from "../../include/js/function_main";
 import { api_approve, header_config } from "../../include/js/main_config";
 import {
   api_receive_get_ref_po_detail,
@@ -16,6 +17,8 @@ import {
   api_receive,
   api_receive_sub_detail,
 } from "../api";
+import { Redirect } from "react-router-dom";
+import { browserHistory } from "react-router";
 
 export const get_receive_list = () => async (dispatch) => {
   axios.get(api_receive, header_config).then((res) => {
@@ -74,9 +77,12 @@ export const get_receive_by_id = (id, user_name) => async (dispatch) => {
             .then((res) => {
               const sub_detail = res.data[0];
               details.map((detail) => {
-                detail.receive_sub_detail = sub_detail.filter(
-                  (sub) => sub.receive_detail_id === detail.receive_detail_id
+                detail.receive_sub_detail = sortData(
+                  sub_detail.filter(
+                    (sub) => sub.receive_detail_id === detail.receive_detail_id
+                  )
                 );
+                // sortData(detail.receive_sub_detail)
               });
 
               dispatch({
@@ -96,7 +102,9 @@ export const get_receive_by_id = (id, user_name) => async (dispatch) => {
     });
 };
 
-export const create_receive = (data_head, data_detail) => async (dispatch) => {
+export const create_receive = (data_head, data_detail, history) => async (
+  dispatch
+) => {
   let temp_sub_detail = [];
   let temp_detail = data_detail;
   temp_detail.map((detail) => temp_sub_detail.push(detail.receive_sub_detail));
@@ -107,35 +115,41 @@ export const create_receive = (data_head, data_detail) => async (dispatch) => {
 
   await axios.post(api_receive, data_head, header_config).then(async (res) => {
     console.log("INSERT_HEAD", res);
-    const receive_id = res.data[0][0].receive_id;
 
-    await axios
-      .post(`${api_receive_detail}/${receive_id}`, data_detail, header_config)
-      .then((res) => {
-        const data_detail = res.data[0];
-        let data_sub_detail = [];
+    if (res.data[0][0]) {
+      const receive_id = res.data[0][0].receive_id;
+      await axios
+        .post(`${api_receive_detail}/${receive_id}`, data_detail, header_config)
+        .then((res) => {
+          const data_detail = res.data[0];
+          let data_sub_detail = [];
 
-        data_detail.map((detail, index) => {
-          temp_sub_detail[index].map((sub) => {
-            sub.receive_detail_id = detail.receive_detail_id;
-            data_sub_detail.push(sub);
+          data_detail.map((detail, index) => {
+            temp_sub_detail[index].map((sub) => {
+              sub.receive_detail_id = detail.receive_detail_id;
+              data_sub_detail.push(sub);
+            });
           });
+
+          console.log("data_sub_detail", data_sub_detail);
+          console.log("INSERT_DETAIL", res);
+
+          axios
+            .post(
+              `${agi_post_sub_detail}/${receive_id}`,
+              data_sub_detail,
+              header_config
+            )
+            .then((res) => {
+              console.log("INSERT SUB DETAIL", res);
+              dispatch(get_receive_by_id(receive_id, data_head.user_name));
+            });
         });
-
-        console.log("data_sub_detail", data_sub_detail);
-        console.log("INSERT_DETAIL", res);
-
-        axios
-          .post(
-            `${agi_post_sub_detail}/${receive_id}`,
-            data_sub_detail,
-            header_config
-          )
-          .then((res) => {
-            console.log("INSERT SUB DETAIL", res);
-            dispatch(get_receive_by_id(receive_id, data_head.user_name));
-          });
-      });
+    } else {
+      alert("Sorry. Something went wrong please contact programmer");
+      // history.push("/inventory/receive");
+      history.push("/inventory/receive");
+    }
   });
 };
 

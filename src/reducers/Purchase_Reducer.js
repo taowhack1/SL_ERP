@@ -22,10 +22,11 @@ import {
   SET_PR_HEAD,
   UPDATE_PR_HEAD,
   GET_PO_HEAD,
-  GET_PAYMENT_TERM_LIST,
   GET_PO_DETAIL,
   UPDATE_PO_HEAD,
   GET_PR_OPEN_PO,
+  GET_VENDOR_BY_ID,
+  GET_CURRENCY,
 } from "../actions/types";
 import { sortData } from "../include/js/function_main";
 const initialState = {
@@ -38,13 +39,29 @@ const initialState = {
     po_head: {},
     po_detail: [],
   },
-  payment_terms: [],
-  vendors: [],
+  vendor: {
+    vendor_list: [],
+    vendor: {},
+  },
+  currency: [],
 };
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_ALL_VENDOR:
-      return { ...state, vendors: action.payload };
+      return {
+        ...state,
+        vendor: { ...state.vendor, vendor_list: action.payload },
+      };
+    case GET_VENDOR_BY_ID:
+      return {
+        ...state,
+        vendor: { ...state.vendor, vendor: action.payload },
+      };
+    case GET_CURRENCY:
+      return {
+        ...state,
+        currency: action.payload,
+      };
     case GET_ALL_PR:
       return { ...state, pr_list: action.payload };
 
@@ -157,11 +174,6 @@ export default (state = initialState, action) => {
           po_head: {},
           po_detail: [],
         },
-      };
-    case GET_PAYMENT_TERM_LIST:
-      return {
-        ...state,
-        payment_terms: action.payload,
       };
     default:
       return state;

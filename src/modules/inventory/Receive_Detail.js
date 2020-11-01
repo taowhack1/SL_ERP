@@ -29,9 +29,11 @@ import {
   receive_sub_detail_fields,
 } from "./config";
 import { reducer } from "./reducers";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
 import moment from "moment";
+import { get } from "jquery";
+import { get_location_shelf_by_item_id } from "../../actions/inventory";
 const { Text } = Typography;
 const numberFormat = {
   precision: 3,
@@ -47,6 +49,7 @@ const ReceiveDetail = ({
   detailDispatch,
   vat_rate,
 }) => {
+  const dispatch = useDispatch();
   const select_items = useSelector(
     (state) => state.inventory.master_data.item_list
   );
@@ -142,7 +145,9 @@ const ReceiveDetail = ({
       },
     });
   };
-
+  const get_location_shelf = (item_id) => {
+    dispatch(get_location_shelf_by_item_id(item_id));
+  };
   console.log("data_detail 2", data_detail);
   console.log("temp_sub_detail", temp_sub_detail);
   return (
@@ -254,6 +259,7 @@ const ReceiveDetail = ({
                               payload: line.receive_sub_detail,
                             });
                             setTempDetail(line);
+                            get_location_shelf(line.item_id);
                           }}
                           className="button-icon"
                         />
@@ -515,6 +521,7 @@ const ReceiveDetail = ({
                         payload: line.receive_sub_detail,
                       });
                       setTempDetail(line);
+                      get_location_shelf(line.item_id);
                     }}
                   />
                 </Col>
@@ -602,7 +609,7 @@ const ReceiveDetail = ({
             {"  /  "}
             <Text strong>
               {temp_detail &&
-                numeral(temp_detail.tg_receive_detail_qty_balance).format(
+                numeral(temp_detail.tg_receive_detail_qty_balance_temp).format(
                   "0,000.000"
                 ) + "  "}
             </Text>

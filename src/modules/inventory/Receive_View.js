@@ -146,6 +146,7 @@ const Receive_View = (props) => {
       dispatch(receive_actions(app_detail, data_head.receive_id));
     },
   };
+
   const changeProcessStatus = (process_status_id) => {
     if (remark.trim() === "") {
       alert("Plase write remark");
@@ -177,11 +178,7 @@ const Receive_View = (props) => {
               </strong>
             </h2>
           </Col>
-          <Col span={1}></Col>
-          <Col span={10} className="text-center">
-            {data_head.branch_name}
-          </Col>
-          <Col span={1}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>Create Date :</Text>
           </Col>

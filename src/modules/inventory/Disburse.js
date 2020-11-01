@@ -12,7 +12,10 @@ import {
   get_issue_by_id,
   get_issue_list,
 } from "../../actions/inventory/issueActions";
-import { get_disburse_list } from "../../actions/inventory/disburseActions";
+import {
+  get_disburse_by_id,
+  get_disburse_list,
+} from "../../actions/inventory/disburseActions";
 
 const Disburse = (props) => {
   const dispatch = useDispatch();
@@ -65,7 +68,7 @@ const Disburse = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     dispatch(
-                      get_issue_by_id(record.disburse_id, auth.user_name)
+                      get_disburse_by_id(record.disburse_id, auth.user_name)
                     );
                     props.history.push({
                       pathname:

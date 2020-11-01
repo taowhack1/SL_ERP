@@ -42,7 +42,9 @@ const SubDetail = ({
   temp_sub_detail,
   tempSubDetailDispatch,
 }) => {
-  const location_list = [{ location_id: 0, location_name: "Location 1" }];
+  const location_list = useSelector(
+    (state) => state.inventory.stock.item_location_shelf
+  );
   // function
   useEffect(() => {
     !temp_sub_detail.length && addLine();
@@ -56,8 +58,10 @@ const SubDetail = ({
         shelf_id: data_detail.shelf_id,
         shelf_no: data_detail.shelf_no,
         shelf_name: data_detail.shelf_name,
+        shelf_no_name: data_detail.shelf_no_name,
+
         location_id: data_detail.location_id,
-        location_name: data_detail.location_name,
+        location_no_name: data_detail.location_no_name,
         location_no: data_detail.location_no,
       },
     });
@@ -78,6 +82,7 @@ const SubDetail = ({
   };
   console.log("sub detail page 2", temp_sub_detail);
   console.log("data_detail", data_detail);
+  console.log("location_list", location_list);
   return (
     <>
       {/* Column Header */}
@@ -113,25 +118,31 @@ const SubDetail = ({
                 className="col-2"
               >
                 <Col span={5} className="text-string">
-                  <CustomSelect
+                  {/* <CustomSelect
                     allowClear
                     showSearch
                     placeholder={"Location"}
                     field_id="location_id"
-                    field_name="location_name"
-                    value={line.location_name}
-                    defaultValue={data_detail.location_name}
+                    field_name="location_no_name"
+                    value={line.location_no_name}
                     data={location_list}
                     size={"small"}
                     onChange={(data, option) => {
                       onChangeValue(line.id, {
                         location_id: data,
-                        location_name: option.title,
+                        location_no_name: option.data.location_no_name,
                         shelf_id: option.data.shelf_id,
                         shelf_name: option.data.shelf_name,
+                        shelf_no_name: option.data.shelf_no_name,
                       });
                     }}
-                  />
+                  /> */}
+                  <div
+                    className="input-string-disabled text-value"
+                    placeholder="Location"
+                  >
+                    {line.location_no_name}
+                  </div>
                 </Col>
                 <Col span={4} className="text-string">
                   <Input
@@ -281,7 +292,7 @@ const SubDetail = ({
                     {line.receive_detail_sub_lot_no}
                   </Text>
                 </Col>
-                <Col span={4} className="text-center">
+                <Col span={3} className="text-center">
                   <Text className="text-view text-center">
                     {line.receive_detail_sub_receive_date}
                   </Text>

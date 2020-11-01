@@ -23,10 +23,6 @@ import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
 import ItemLine from "./Sales_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
-import { items } from "../../data/items";
-import { units } from "../../data/units";
-import { itemLineColumns } from "../../data/sale/data";
-import { payment_terms } from "../../data/payment_terms";
 import { quotation_detail_fields, quotation_fields } from "./configs";
 import CustomSelect from "../../components/CustomSelect";
 import { update_quotation } from "../../actions/sales";
@@ -50,6 +46,9 @@ const CustomerCreate = (props) => {
   const dataComment = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
   const masterData = useSelector((state) => state.sales.master_data);
+  const customer_payment_terms = useSelector(
+    (state) => state.accounting.master_data.customer_payment_terms
+  );
   const data =
     props.location && props.location.state ? props.location.state : 0;
   useEffect(() => {
@@ -176,11 +175,7 @@ const CustomerCreate = (props) => {
               </strong>
             </h2>
           </Col>
-          <Col span={1}></Col>
-          <Col span={10} className="text-center">
-            {data_head.branch_name}
-          </Col>
-          <Col span={1}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>Create Date :</Text>
           </Col>
@@ -268,7 +263,7 @@ const CustomerCreate = (props) => {
               field_id="payment_term_id"
               field_name="payment_term_no_name"
               value={data_head.payment_term_no_name}
-              data={masterData.payment_terms}
+              data={customer_payment_terms}
               onChange={(data, option) => {
                 data && data
                   ? upDateFormValue({

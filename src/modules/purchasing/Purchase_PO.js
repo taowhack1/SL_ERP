@@ -8,17 +8,17 @@ import {
   get_po_list,
   reset_po_data,
   get_po_by_id,
-  get_payment_term_list,
 } from "../../actions/purchase/PO_Actions";
 import { reset_comments } from "../../actions/comment&log";
 import $ from "jquery";
 import { getMasterDataItem } from "../../actions/inventory";
+import { get_vendor_payment_term_list } from "../../actions/accounting";
 const PurchaseOrders = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(get_po_list());
     dispatch(reset_po_data());
-    dispatch(get_payment_term_list());
+    dispatch(get_vendor_payment_term_list());
     dispatch(getMasterDataItem());
     return () => {
       dispatch(reset_comments());

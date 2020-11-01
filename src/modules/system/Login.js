@@ -1,5 +1,6 @@
 import { Form, Input, Button, Space, Typography } from "antd";
-import { withRouter } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,16 +8,18 @@ import { signIn2, signIn } from "../../actions/authActions";
 const { Title, Text } = Typography;
 
 const LoginForm = (props) => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const onFinish = (values) => {
     dispatch(signIn2(values));
   };
-  const authData = useSelector((state) => state.auth.authData);
-  if (authData) {
-    console.log("Logged-in");
-    props.history.push("/");
-  } else {
-    console.log("Else");
+  const auth = useSelector((state) => state.auth.authData);
+  const redirect_fn = () => {
+    history.push("/");
+  };
+  console.log("auth", auth);
+  if (auth.length) {
+    redirect_fn();
   }
 
   return (
@@ -29,7 +32,8 @@ const LoginForm = (props) => {
         border: "1px dashed gray",
       }}
     >
-      <Title level={3}>Login Form</Title>
+      <Title level={3}>SL ERP</Title>
+      <Title level={4}>Login</Title>
       <Form
         name="normal_login"
         className="login-form"
@@ -86,7 +90,6 @@ const LoginForm = (props) => {
             >
               Log in
             </Button>
-            Or <a href="">register now!</a>
           </Space>
         </Form.Item>
       </Form>

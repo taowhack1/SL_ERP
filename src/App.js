@@ -6,7 +6,7 @@ import Login from "./modules/system/Login";
 import Settings from "./modules/settings/Settings";
 
 import QualityAssurance from "./modules/qualityAssurance/Quality_Assurance";
-import QCReceive from "./modules/inventory/Stock_QC";
+import QCReceive from "./modules/qualityAssurance/QC_Receive";
 
 import Inventory from "./modules/inventory/Inventory";
 
@@ -19,7 +19,7 @@ import IssueView from "./modules/inventory/Issue_View";
 import IssueCreate from "./modules/inventory/Issue_Create";
 
 import Disburse from "./modules/inventory/Disburse";
-// import DisburseView from "./modules/inventory/Disburse_View";
+import DisburseView from "./modules/inventory/Disburse_View";
 import DisburseCreate from "./modules/inventory/Disburse_Create";
 
 import Purchase from "./modules/purchasing/Purchase";
@@ -50,7 +50,7 @@ import CustomerView from "./modules/sales/Customer_View";
 import CustomerCreate from "./modules/sales/Customer_Create";
 
 import NotFound from "./dashboard/NotFound";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import store from "./store";
 import Location from "./modules/inventory/Location";
 
@@ -63,6 +63,13 @@ import ItemView from "./modules/inventory/ItemView";
 
 // class App extends Component {
 const App = (props) => {
+  // const auth = useSelector((state) =>
+  //   typeof state.auth === "undefined" ? 0 : 1
+  // );
+  // if (!auth) {
+  //   alert("Authentication required\nPlase Login.");
+  //   props.history.push("/login");
+  // }
   // render() {
   return (
     <Provider store={store}>
@@ -112,7 +119,11 @@ const App = (props) => {
             path="/inventory/disburse/edit/:id"
             component={DisburseCreate}
           />
-          {/* <Route exact path="/inventory/disburse/view/:id" component={DisburseView} /> */}
+          <Route
+            exact
+            path="/inventory/disburse/view/:id"
+            component={DisburseView}
+          />
 
           {/* RECEIVE */}
           <Route exact path="/inventory/receive">

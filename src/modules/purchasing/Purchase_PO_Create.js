@@ -32,10 +32,10 @@ const PurchaseOrderCreate = (props) => {
   const dataComments = useSelector((state) => state.log.comment_log);
   const auth = useSelector((state) => state.auth.authData[0]);
   const current_project = useSelector((state) => state.auth.currentProject);
-  const vendors = useSelector((state) => state.purchase.vendors);
+  const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const select_box_pr = useSelector((state) => state.purchase.po.pr_ref);
-  const select_box_payment_term = useSelector(
-    (state) => state.purchase.payment_terms
+  const vendor_payment_terms = useSelector(
+    (state) => state.accounting.master_data.vendor_payment_terms
   );
   const data_head = useSelector((state) => state.purchase.po.po_head);
   const data_detail = useSelector((state) => state.purchase.po.po_detail);
@@ -162,11 +162,7 @@ const PurchaseOrderCreate = (props) => {
               </strong>
             </h2>
           </Col>
-          <Col span={1}></Col>
-          <Col span={10} className="text-center">
-            <Text> {data_head.branch_name}</Text>
-          </Col>
-          <Col span={1}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>Create Date : </Text>
           </Col>
@@ -258,7 +254,7 @@ const PurchaseOrderCreate = (props) => {
               field_id="payment_term_id"
               field_name="payment_term_no_name"
               value={data_head.payment_term_no_name}
-              data={select_box_payment_term}
+              data={vendor_payment_terms}
               onChange={(data, option) =>
                 data
                   ? upDateFormValue({

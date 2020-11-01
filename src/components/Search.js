@@ -7,6 +7,7 @@ export default function Search(props) {
     <>
       <Input
         placeholder="search"
+        value={props.search}
         onChange={(e) => {
           props && props.onSearch(e.target.value);
         }}

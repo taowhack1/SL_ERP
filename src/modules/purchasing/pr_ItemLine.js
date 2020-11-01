@@ -284,9 +284,13 @@ const ItemLine = ({ readOnly, columns, pr_id, upDateFormData, vat_rate }) => {
                         : ""
                     }
                     onChange={(data) => {
-                      onChangeValue(line.id, {
-                        pr_detail_due_date: data.format("DD/MM/YYYY"),
-                      });
+                      data
+                        ? onChangeValue(line.id, {
+                            pr_detail_due_date: data.format("DD/MM/YYYY"),
+                          })
+                        : onChangeValue(line.id, {
+                            pr_detail_due_date: null,
+                          });
                     }}
                   />
                 </Col>
@@ -303,7 +307,7 @@ const ItemLine = ({ readOnly, columns, pr_id, upDateFormData, vat_rate }) => {
               }}
               block
             >
-              <PlusOutlined /> Add field
+              <PlusOutlined /> Add a line
             </Button>
           </div>
         </>

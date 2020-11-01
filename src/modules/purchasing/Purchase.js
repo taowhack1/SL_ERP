@@ -1,18 +1,20 @@
 import React, { useEffect } from "react";
 import MainLayout from "../../components/MainLayout";
 import { withRouter } from "react-router-dom";
-import { getAllVendor } from "../../actions/purchase";
+import { get_all_vendor } from "../../actions/purchase/vendorActions";
 import { getMasterDataItem } from "../../actions/inventory";
 import { get_select_dep, get_select_cost_center } from "../../actions/hrm";
 import { useDispatch, useSelector } from "react-redux";
 import { reset_comments } from "../../actions/comment&log";
+import { get_vendor_payment_term_list } from "../../actions/accounting";
 const Purchase = (props) => {
   const dispatch = useDispatch();
   const current_project = useSelector((state) => state.auth.currentProject);
   const auth = useSelector((state) => state.auth.authData[0]);
   useEffect(() => {
-    dispatch(getAllVendor());
+    dispatch(get_all_vendor());
     dispatch(getMasterDataItem());
+    dispatch(get_vendor_payment_term_list());
     dispatch(reset_comments());
   }, [dispatch]);
   const onChange = (pagination, filters, sorter, extra) => {

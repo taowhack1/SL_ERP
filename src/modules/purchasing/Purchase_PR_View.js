@@ -165,11 +165,7 @@ const PRView = (props) => {
               </strong>
             </h2>
           </Col>
-          <Col span={1}></Col>
-          <Col span={10} className="text-center">
-            <Text> {data_head.branch_name}</Text>
-          </Col>
-          <Col span={1}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>PR Date : </Text>
           </Col>

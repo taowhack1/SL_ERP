@@ -2,7 +2,6 @@ import {
   api_quo_list,
   header_config,
   api_get_select_list_customers,
-  api_payment_term_customer,
   api_create_quotation,
   api_create_quotation_detail,
   api_approve,
@@ -27,6 +26,7 @@ import {
   RESET_SO,
 } from "../types";
 import axios from "axios";
+import { api_currency, api_customer } from "../api";
 export const get_quotation_list = () => (dispatch) => {
   axios.get(api_quo_list, header_config).then((res) => {
     dispatch({ type: SET_QN_LIST, payload: res.data[0] });
@@ -92,19 +92,10 @@ export const get_sale_master_data = () => (dispatch) => {
     .get(api_get_select_list_customers, header_config)
     .then((res) => {
       master.customers = res.data[0];
-      axios
-        .get(api_payment_term_customer, header_config)
-        .then((res) => {
-          master.payment_terms = res.data[0];
-          dispatch({
-            type: GET_MASTER_DATA,
-            payload: master,
-          });
-          console.log("master data", master);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      dispatch({
+        type: GET_MASTER_DATA,
+        payload: master,
+      });
     })
     .catch((error) => {
       console.log(error);

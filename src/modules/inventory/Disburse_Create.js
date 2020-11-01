@@ -144,6 +144,7 @@ const DisburseCreate = (props) => {
   useEffect(() => {
     if (data_head.issue_id && !data_head.disburse_id) {
       // Create Disburse Only GET PO Reference
+      console.log(`${api_disburse_get_ref_issue_detail}/${data_head.issue_id}`);
       axios
         .get(
           `${api_disburse_get_ref_issue_detail}/${data_head.issue_id}`,
@@ -163,7 +164,7 @@ const DisburseCreate = (props) => {
     return () => {
       dispatch(reset_comments());
     };
-  }, [data_head]);
+  }, [data_head.node_stay]);
 
   const resetForm = () => {
     headDispatch({
@@ -202,11 +203,7 @@ const DisburseCreate = (props) => {
               </strong>
             </h2>
           </Col>
-          <Col span={1}></Col>
-          <Col span={10} className="text-center">
-            {data_head.branch_name}
-          </Col>
-          <Col span={1}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>Create Date :</Text>
           </Col>
@@ -245,10 +242,10 @@ const DisburseCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Empty 1 :</Text>
+            <Text strong>Due date :</Text>
           </Col>
           <Col span={8}>
-            {/* <Text className="text-view">{data_head.vendor_no_name}</Text> */}
+            <Text className="text-view">{data_head.disburse_due_date}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical ">
@@ -268,14 +265,6 @@ const DisburseCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Empty 2 :</Text>
-          </Col>
-          <Col span={8}>
-            {/* <Text className="text-view">{data_head.currency_no}</Text> */}
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
             <Text strong>Agreement :</Text>
           </Col>
           <Col span={8}>
@@ -289,13 +278,6 @@ const DisburseCreate = (props) => {
               value={data_head.disburse_agreement}
               placeholder="Agreement"
             />
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Due date :</Text>
-          </Col>
-          <Col span={8}>
-            <Text className="text-view">{data_head.tg_disburse_due_date}</Text>
           </Col>
         </Row>
 

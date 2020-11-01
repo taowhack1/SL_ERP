@@ -1,4 +1,4 @@
-import { Button, Col, Row, Table } from "antd";
+import { Button, Col, Popconfirm, Row, Space, Table } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect, useReducer, useState } from "react";
@@ -9,6 +9,7 @@ import { issue_detail_fields, select_item_columns } from "./config";
 import { useSelector } from "react-redux";
 import Search from "../../components/Search";
 import { ConsoleSqlOutlined } from "@ant-design/icons";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 const initialState = [issue_detail_fields];
 const Modal_Select_Item = (props) => {
@@ -17,6 +18,7 @@ const Modal_Select_Item = (props) => {
   const master_data = useSelector((state) => state.inventory.master_data);
   const [temp_detail, tempDetailDispatch] = useReducer(reducer, initialState);
   const { detailDispatch, visible, setVisible, readOnly } = props;
+  const [search, setSearch] = useState("");
   const [disable_category, setDisableCategory] = useState(true);
   const [selected_item, set_selected_item] = useState(
     data_detail.length && data_detail[0]["item_id"] ? data_detail : []
@@ -73,37 +75,32 @@ const Modal_Select_Item = (props) => {
     setItemList(getItemList(master_data.item_list));
   }, [state]);
 
-  const changeState = (stateKeyValue, stateKey) => {
-    setState({
-      ...state,
-      ...stateKeyValue,
-    });
-  };
-
   useEffect(() => {
     console.log("change first select");
     if (selected_item[0]) {
       setState({
         type_id: selected_item[0].type_id,
         type_no_name: selected_item[0].type_no_name,
-        category_id: selected_item[0].category_id,
-        category_no_name: selected_item[0].category_no_name,
+        // category_id: selected_item[0].category_id,
+        // category_no_name: selected_item[0].category_no_name,
       });
       headDispatch({
         type_id: selected_item[0].type_id,
         type_no_name: selected_item[0].type_no_name,
-        category_id: selected_item[0].category_id,
-        category_no_name: selected_item[0].category_no_name,
+        // category_id: selected_item[0].category_id,
+        // category_no_name: selected_item[0].category_no_name,
       });
     }
-
-    // : reset_state();
   }, [selected_item[0]]);
 
   const rowSelection = {
     selectedRowKeys: selected_key,
     hideSelectAll: true,
     onSelect: (record, selected, selectedRows, e) => {
+      // if (selected_item.length && record.type_id !== selected_item[0].type_id) {
+      //   reset_selected();
+      // }
+
       if (selected) {
         set_selected_item([...selected_item, record]);
         set_selected_key([...selected_key, record.item_id]);
@@ -113,11 +110,26 @@ const Modal_Select_Item = (props) => {
         );
         set_selected_key(selected_key.filter((key) => key !== record.item_id));
       }
+
+      // if (record.category_id !== filter.category_id) {
+      //   state.category_id &&
+      //     changeState({
+      //       category_id: null,
+      //       category_no_name: null,
+      //     });
+      // }
     },
     //disabled checkbox empty stock
     // getCheckboxProps: (record) => ({
     //   disabled: record.tg_item_qty === 0, // Column configuration not to be checked
     // }),
+  };
+
+  const changeState = (stateKeyValue, stateKey) => {
+    setState({
+      ...state,
+      ...stateKeyValue,
+    });
   };
 
   const reset_state = () => {
@@ -127,11 +139,17 @@ const Modal_Select_Item = (props) => {
       category_id: null,
       category_no_name: null,
     });
+    setSearch("");
+    reset_selected();
+  };
+
+  const reset_selected = () => {
     set_selected_key([]);
     set_selected_item([]);
   };
 
   const onSearch = (word) => {
+    setSearch(word);
     setLoading(true);
     if (state.type_id) {
       if (state.category_id) {
@@ -166,6 +184,7 @@ const Modal_Select_Item = (props) => {
       setLoading(false);
     }, 1200);
   };
+
   return (
     <Modal
       style={{ top: 50 }}
@@ -177,27 +196,6 @@ const Modal_Select_Item = (props) => {
       onCancel={props.modalCancel && props.modalCancel}
       footer={null}
       destroyOnClose
-      // footer={[
-      //   <Text style={{ color: "blue", marginRight: 40 }}>
-      //     Your Select [ {selected_item.length} ] Item.
-      //   </Text>,
-      //   <Button
-      //     key="back"
-      //     className={readOnly ? "primary" : ""}
-      //     onClick={props.modalCancel}
-      //   >
-      //     {props.cancelTitle}
-      //   </Button>,
-      //   !readOnly && (
-      //     <Button
-      //       key="submit"
-      //       className="primary"
-      //       onClick={() => props.modalSave(selected_item)}
-      //     >
-      //       {props.okTitle}
-      //     </Button>
-      //   ),
-      // ]}
     >
       <Row className="row-margin-vertical">
         <Col span={3}>
@@ -230,7 +228,7 @@ const Modal_Select_Item = (props) => {
         </Col>
         <Col span={1}></Col>
         <Col span={12}>
-          <Search onSearch={onSearch} loading={loading} />
+          <Search onSearch={onSearch} search={search} loading={loading} />
         </Col>
       </Row>
       <Row className="row-margin-vertical">
@@ -307,14 +305,36 @@ const Modal_Select_Item = (props) => {
           </Text>
         </Col>
         <Col span={3}>
-          <Button
-            key="back"
-            // className={readOnly ? "primary" : ""}
-            onClick={() => reset_state()}
-            style={{ float: "right" }}
-          >
-            Clear Filter
-          </Button>
+          <Space style={{ float: "right" }}>
+            <ConfirmDialog onConfirm={reset_selected}>
+              <Button
+                key="clear_selected_item"
+                // className={readOnly ? "primary" : ""}
+                // onClick={() => {}}
+                danger
+              >
+                Clear Selected Item
+              </Button>
+            </ConfirmDialog>
+            <Button
+              key="clear_filter"
+              // className={readOnly ? "primary" : ""}
+              onClick={() => {
+                if (selected_item.length) {
+                  changeState({
+                    category_id: null,
+                    category_no_name: null,
+                  });
+                  setSearch("");
+                } else {
+                  reset_state();
+                }
+              }}
+              // style={{ float: "right" }}
+            >
+              Clear Filter
+            </Button>
+          </Space>
         </Col>
       </Row>
       <Row className="row-tab-margin">

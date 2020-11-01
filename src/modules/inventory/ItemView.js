@@ -13,8 +13,14 @@ import {
   Checkbox,
   Space,
   Switch,
+  Upload,
+  Button,
 } from "antd";
-import { CheckSquareOutlined, BorderOutlined } from "@ant-design/icons";
+import {
+  CheckSquareOutlined,
+  BorderOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import Line from "../../components/VendorLine";
@@ -99,18 +105,18 @@ const ItemView = (props) => {
               <strong>Item Code # {formData.item_no}</strong>
             </h2>
             <h3>
-              <strong>{formData.item_name}</strong>
+              <strong>Trade Name : {formData.item_name}</strong>
             </h3>
           </Col>
           <Col span={2}></Col>
           <Col span={3}></Col>
           <Col span={8} style={{ textAlign: "right" }}>
-            <Barcode
-              value={formData.item_barcode}
+            {/* <Barcode
+              value={formData.item_barcode && formData.item_barcode}
               width={1.5}
               height={30}
               fontSize={14}
-            />
+            /> */}
           </Col>
         </Row>
         <Row className="col-2">
@@ -246,7 +252,165 @@ const ItemView = (props) => {
                   </Col>
                 </Row>
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Purchase" key="2">
+              <Tabs.TabPane tab="R&D" key="2">
+                <Row className="col-2 row-margin-vertical">
+                  <Col
+                    span={12}
+                    style={{
+                      borderRight: "1px solid #c4c4c4",
+                    }}
+                  >
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> Specification.</Text>
+                      </Col>
+                      <Col span={10}>
+                        <Upload {...props}>
+                          <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button>
+                        </Upload>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> MSDS.</Text>
+                      </Col>
+                      <Col span={10}>
+                        <Upload {...props}>
+                          <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button>
+                        </Upload>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> Quotation.</Text>
+                      </Col>
+                      <Col span={10}>
+                        <Upload {...props}>
+                          <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button>
+                        </Upload>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                  </Col>
+                  {/* Right Row */}
+                  <Col span={12}>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={1}></Col>
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> Halal Cert.</Text>
+                      </Col>
+                      <Col span={10}>
+                        <Upload {...props}>
+                          <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button>
+                        </Upload>
+                      </Col>
+                    </Row>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={1}></Col>
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> Non-Haran Statement.</Text>
+                      </Col>
+                      <Col span={10}>
+                        <Upload {...props}>
+                          <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button>
+                        </Upload>
+                      </Col>
+                    </Row>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={1}></Col>
+                      <Col span={2}></Col>
+                      <Col span={2}>
+                        <Checkbox
+                          defaultChecked={formData.item_purchase}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_purchase: e.target.checked ? 1 : 0,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={9}>
+                        <Text strong> Non-Halal.</Text>
+                      </Col>
+                      <Col span={10}>
+                        <Upload {...props}>
+                          <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button>
+                        </Upload>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Purchase" key="3">
                 <Line
                   vendors={vendors}
                   companys={companys}

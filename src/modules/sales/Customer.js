@@ -4,34 +4,38 @@ import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { customerData } from "../../data/sale/data";
-import { getAllCustomer } from "../../actions/saleMasterDataActions";
+import {
+  get_customer_by_id,
+  get_customer_list,
+} from "../../actions/sales/customerActions";
 import { customer_columns } from "../../page_fields/sales/customer";
 import $ from "jquery";
+import {
+  get_currency_list,
+  get_customer_payment_term_list,
+} from "../../actions/accounting";
 const Customer = (props) => {
-  useEffect(() => {
-    dispatch(getAllCustomer());
-  }, []);
   const dispatch = useDispatch();
-  const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   // const [dataTable, setDataTable] = useState([...customerData]);
-  const customers = useSelector((state) => state.sales.master.customers);
+  const customers = useSelector((state) => state.sales.customer.customer_list);
+  useEffect(() => {
+    dispatch(get_customer_list());
+    dispatch(get_customer_payment_term_list());
+  }, []);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: 3,
-    title: "SALES",
+    projectId: current_project.project_id,
+    title: current_project.project_name,
+    home: current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Customers"],
     search: true,
     create: "/sales/config/customers/create",
-    buttonAction: ["Create", "Edit"],
-    edit: {
-      data: selectedRow,
-      path: selectedRow && "/sales/config/customers/edit/" + selectedRow.id,
-    },
-    disabledEditBtn: !rowClick,
+    buttonAction: ["Create"],
     discard: "/sales/config/customers",
     onCancel: () => {
       console.log("Cancel");
@@ -47,6 +51,7 @@ const Customer = (props) => {
               dataSource={customers}
               onChange={onChange}
               size="small"
+              rowKey={"customer_id"}
               rowClassName="row-pointer"
               onRow={(record, rowIndex) => {
                 return {
@@ -57,11 +62,10 @@ const Customer = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    setSelectedRow(record);
+                    dispatch(get_customer_by_id(record.customer_id));
                     props.history.push({
                       pathname:
-                        "/sales/config/customers/edit/" + record.customer_id,
-                      state: record,
+                        "/sales/config/customers/view/" + record.customer_id,
                     });
                   },
                 };

@@ -5,29 +5,19 @@ import {
   UPDATE_ITEM_LINE,
   PO_ADD_ITEM_LINE,
   PO_DEL_ITEM_LINE,
+  GET_CURRENCY,
   PO_UPDATE_ITEM_LINE,
 } from "../types";
 import { api_query } from "../../include/js/main_config";
 import { query_select_pr } from "../query_sql";
 import axios from "axios";
+import { api_currency } from "../api";
 const header_config = {
   headers: {
     "Content-Type": "application/json",
   },
 };
 
-export const getAllVendor = () => (dispatch) => {
-  const query = {
-    query_sql: `SELECT vendor_id, vendor_no, vendor_name, vendor_no +' : ' +vendor_name AS vendor_no_name 
-      FROM [PURCHASE].[dbo].[tb_vendor]`,
-  };
-  axios.post(api_query, query, header_config).then((res) =>
-    dispatch({
-      type: GET_ALL_VENDOR,
-      payload: res.data[0],
-    })
-  );
-};
 // PR Item
 export const addItemLine = (data) => (dispatch) => {
   dispatch({

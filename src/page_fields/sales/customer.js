@@ -60,8 +60,8 @@ export const customer_columns = [
   },
   {
     title: "Tax ID",
-    dataIndex: "customer_tax",
-    key: "customer_tax",
+    dataIndex: "customer_tax_no",
+    key: "customer_tax_no",
     width: "20%",
     align: "left",
   },

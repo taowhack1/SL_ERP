@@ -6,10 +6,10 @@ import {
   CURRENT_PROJECT,
 } from "../actions/types";
 const initialState = {
-  authData: null,
-  authenticated: null,
-  projects: null,
-  menus: null,
+  authData: [],
+  authenticated: false,
+  projects: [],
+  menus: [],
   currentProject: null,
 };
 export default (state = initialState, action) => {

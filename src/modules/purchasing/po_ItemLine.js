@@ -312,7 +312,7 @@ const ItemLine = ({ readOnly, columns, pr_id, po_id, vat_rate }) => {
               }}
               block
             >
-              <PlusOutlined /> Add field
+              <PlusOutlined /> Add a line
             </Button>
           </div>
         </>

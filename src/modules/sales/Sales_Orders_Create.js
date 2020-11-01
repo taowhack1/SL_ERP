@@ -16,22 +16,10 @@ import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
 import ItemLine from "./Sales_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
-import { items } from "../../data/items";
-import { units } from "../../data/units";
-import { itemLineColumns } from "../../data/sale/data";
-import { payment_terms } from "../../data/payment_terms";
-import { customerData, quotationData } from "../../data/sale/data";
 import numeral from "numeral";
 import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
-import {
-  create_so,
-  get_qn_open_so,
-  get_quotation_list,
-  get_so_by_id,
-  so_get_qn_ref,
-  update_so,
-} from "../../actions/sales";
+import { create_so, get_qn_open_so, update_so } from "../../actions/sales";
 import { action_type, header_config } from "../../include/js/main_config";
 import { sortData } from "../../include/js/function_main";
 import { so_detail_fields, so_fields } from "./configs";
@@ -54,6 +42,9 @@ const SaleOrderCreate = (props) => {
   const dataComment = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
   const masterData = useSelector((state) => state.sales.master_data);
+  const customer_payment_terms = useSelector(
+    (state) => state.accounting.master_data.customer_payment_terms
+  );
   const quotation_list = useSelector((state) => state.sales.so.qn_ref);
   const flow =
     data_head &&
@@ -212,11 +203,7 @@ const SaleOrderCreate = (props) => {
               </strong>
             </h2>
           </Col>
-          <Col span={1}></Col>
-          <Col span={10} className="text-center">
-            {data_head.branch_name}
-          </Col>
-          <Col span={1}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>Create Date :</Text>
           </Col>
@@ -367,7 +354,7 @@ const SaleOrderCreate = (props) => {
               field_id="payment_term_id"
               field_name="payment_term_no_name"
               value={data_head.payment_term_no_name}
-              data={masterData.payment_terms}
+              data={customer_payment_terms}
               onChange={(data, option) => {
                 data && data
                   ? headDispatch({

@@ -1,17 +1,30 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { vendorColumns, vendorData } from "../../data/purchase/data";
 import $ from "jquery";
+import {
+  get_all_vendor,
+  get_vendor_by_id,
+} from "../../actions/purchase/vendorActions";
+import { vendor_columns } from "./config/vendor";
+import {
+  get_currency_list,
+  get_vendor_payment_term_list,
+} from "../../actions/accounting";
 const Vendor = (props) => {
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-
+  const dispatch = useDispatch();
+  const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
+  useEffect(() => {
+    dispatch(get_all_vendor());
+    dispatch(get_vendor_payment_term_list());
+  }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project.project_id,
@@ -21,12 +34,7 @@ const Vendor = (props) => {
     breadcrumb: ["Home", "Vendors"],
     search: true,
     create: "/purchase/vendor/create",
-    buttonAction: ["Create", "Edit"],
-    edit: {
-      data: selectedRow,
-      path: selectedRow && "/purchase/vendor/edit/" + selectedRow.id,
-    },
-    disabledEditBtn: !rowClick,
+    buttonAction: ["Create"],
     discard: "/purchase/vendor",
     onCancel: () => {
       console.log("Cancel");
@@ -38,9 +46,10 @@ const Vendor = (props) => {
         <Row>
           <Col span={24}>
             <Table
-              columns={vendorColumns}
-              dataSource={vendorData}
+              columns={vendor_columns}
+              dataSource={vendors}
               onChange={onChange}
+              rowKey={"vendor_id"}
               size="small"
               onRow={(record, rowIndex) => {
                 return {
@@ -51,9 +60,9 @@ const Vendor = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
+                    dispatch(get_vendor_by_id(record.vendor_id));
                     props.history.push({
-                      pathname: "/purchase/vendor/view/" + record.id,
-                      state: record,
+                      pathname: "/purchase/vendor/view/" + record.vendor_id,
                     });
                   },
                 };
