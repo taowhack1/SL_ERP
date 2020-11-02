@@ -65,10 +65,10 @@ export const createNewItems = (data) => async (dispatch) => {
   try {
     axios.post(api_url + "/inventory/item", data, header_config).then((res) => {
       if (res.status === 200) {
-        dispatch({
-          type: CREATE_ITEM,
-          payload: res.data[0][0],
-        });
+        // dispatch({
+        //   type: CREATE_ITEM,
+        //   payload: res.data[0][0],
+        // });
         return true;
       } else {
         alert("Something went wrong please try again...");
@@ -87,10 +87,10 @@ export const upDateItem = (data, id) => async (dispatch) => {
       .put(api_url + "/inventory/item/" + id, data, header_config)
       .then((res) => {
         if (res.status === 200) {
-          dispatch({
-            type: UPDATE_ITEM,
-            payload: res.data[0][0],
-          });
+          // dispatch({
+          //   type: UPDATE_ITEM,
+          //   payload: res.data[0][0],
+          // });
           return true;
         } else {
           alert("Something went wrong please try again...");
@@ -100,6 +100,39 @@ export const upDateItem = (data, id) => async (dispatch) => {
   } catch (error) {
     console.log("error", error);
   }
+};
+
+export const get_item_by_id = (issue_id, user_name) => async (dispatch) => {
+  console.log("get_item_by_id");
+  // try {
+  //   if (user_name) {
+  //     console.log(`${api_issue}/${issue_id}&${user_name}`);
+  //     const res_head = axios.get(
+  //       `${api_issue}/${issue_id}&${user_name}`,
+  //       header_config
+  //     );
+  //     const res_detail = axios.get(
+  //       `${api_issue_detail}/${issue_id}`,
+  //       header_config
+  //     );
+  //     const item = {
+  //       issue_head:
+  //         res_head &&
+  //         (await res_head.then((res) => {
+  //           return res.data.main_master;
+  //         })),
+  //       issue_detail:
+  //         res_detail &&
+  //         (await res_detail.then((res) => {
+  //           return res.data[0];
+  //         })),
+  //     };
+  //     console.log(`GET_ISSUE_BY_ID ${issue_id}/${user_name}`);
+  //     await dispatch({ type: GET_ITEM_BY_ID, payload: item });
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  // }
 };
 
 // --EXEC [INVENTORY].[dbo].[sp_ups_ins_tb_item]

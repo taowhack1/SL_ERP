@@ -22,8 +22,13 @@ import {
   GET_LOCATION_SHELF_BY_ITEM_ID,
   GET_LOT_BATCH_BY_ITEM_ID_SHELF,
   GET_REPORT_STOCK,
+  GET_ITEM_BY_ID,
 } from "../actions/types";
 const initialState = {
+  item: {
+    item_head: {},
+    item_detail: [],
+  },
   master_data: {
     item_uom: [],
     item_type: [],
@@ -71,15 +76,20 @@ export default (state = initialState, action) => {
         ...state,
         master_data: { ...state.master_data, item_list: action.payload },
       };
-    case CREATE_ITEM:
+    // case CREATE_ITEM:
+    //   return {
+    //     ...state,
+    //     items: [action.payload, ...state["items"]],
+    //   };
+    // case UPDATE_ITEM:
+    //   return {
+    //     ...state,
+    //     items: [action.payload, ...state["items"]],
+    //   };
+    case GET_ITEM_BY_ID:
       return {
         ...state,
-        items: [action.payload, ...state["items"]],
-      };
-    case UPDATE_ITEM:
-      return {
-        ...state,
-        items: [action.payload, ...state["items"]],
+        item: action.payload,
       };
     case GET_LOCATION_SHELF_BY_ITEM_ID:
       return {

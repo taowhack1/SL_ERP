@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
@@ -34,52 +34,50 @@ import {
   createNewItems,
   upDateItem,
 } from "../../actions/inventory/itemActions";
-import { item_fields } from "../../page_fields/inventory/item";
+import { item_detail_fields, item_fields } from "./config/item";
 import { getNameById } from "../../include/js/function_main";
 import $ from "jquery";
 import { getMasterDataItem } from "../../actions/inventory";
 import { UploadOutlined } from "@ant-design/icons";
 import CustomSelect from "../../components/CustomSelect";
 import { item_vendor_columns } from "./config/item";
+import { reducer } from "./reducers";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
-const props = {
-  name: "file",
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
+const initialStateHead = item_fields;
+const initialStateDetail = [item_detail_fields];
+
 const ItemCreate = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    // $("input").attr("readonly", true).css("border", "none");
     dispatch(getMasterDataItem());
   }, []);
   const master_data = useSelector((state) => state.inventory.master_data);
+  const auth = useSelector((state) => state.auth.authData[0]);
   const data = props.location.state ? props.location.state : 0;
 
-  const [editForm, setEdit] = useState(true);
-
-  const [formData, setData] = useState(
-    data && data ? { ...data, commit: 1, user_name: "2563002" } : item_fields
-  );
+  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
+  const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
 
   const callback = (key) => {};
 
+  useEffect(() => {
+    headDispatch({
+      type: "SET_HEAD",
+      payload: data.data_head
+        ? { ...data, commit: 1, user_name: auth.user_name }
+        : { ...item_fields, commit: 1, user_name: auth.user_name },
+    });
+
+    detailDispatch({
+      type: "SET_DETAIL",
+      payload: data.data_detail ? data.data_detail : [item_detail_fields],
+    });
+  }, []);
+
   const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
+    headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
 
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -91,36 +89,32 @@ const ItemCreate = (props) => {
     breadcrumb: [
       "Home",
       "Items",
-      formData.item_no ? "Edit" : "Create",
-      formData.item_no && "[ " + formData.item_no + " ] " + formData.item_name,
+      data_head.item_no ? "Edit" : "Create",
+      data_head.item_no &&
+        "[ " + data_head.item_no + " ] " + data_head.item_name,
     ],
     search: false,
-    buttonAction: editForm
-      ? ["Save", "SaveConfirm", "Discard"]
-      : ["Edit", "Approve", "Reject"],
-    action: [{ name: "Print", link: "www.google.co.th" }],
-    step: {
-      // current: formData.req_step,
-      // step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
-    },
+    buttonAction: ["Save", "Discard"],
     create: "",
     save: {
-      data: formData,
-      path: formData && "/inventory/items/view/" + formData.item_id,
+      data: data_head,
+      path:
+        data_head &&
+        "/inventory/items/view/" +
+          (data_head.item_id ? data_head.item_id : "new"),
     },
     // save: "function",
     discard: "/inventory/items",
     onSave: (e) => {
       e.preventDefault();
       console.log("Save");
-      formData.item_no
-        ? dispatch(upDateItem(formData, formData.item_id))
-        : dispatch(createNewItems(formData));
+      data_head.item_no
+        ? dispatch(upDateItem(data_head, data_head.item_id))
+        : dispatch(createNewItems(data_head));
     },
     onEdit: (e) => {
       e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
       e.preventDefault();
@@ -130,24 +124,18 @@ const ItemCreate = (props) => {
       console.log("Confirm");
     },
   };
-
-  const dateConfig = {
-    format: "DD/MM/YYYY HH:mm:ss",
-    value: moment(),
-    disabled: 1,
-  };
-
+  console.log("data_head", data_head);
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config} data={data_head}>
       <div id="form">
         <Row className="col-2">
           <Col span={11}>
             <h2>
-              <strong>{formData.item_no ? "Edit" : "Create"} Item</strong>
+              <strong>{data_head.item_no ? "Edit" : "Create"} Item</strong>
             </h2>
             <h3 style={{ marginBottom: 8 }}>
-              {formData.item_no && (
-                <strong>Item Code # {formData.item_no}</strong>
+              {data_head.item_no && (
+                <strong>Item Code # {data_head.item_no}</strong>
               )}
             </h3>
           </Col>
@@ -155,7 +143,7 @@ const ItemCreate = (props) => {
           <Col span={3}></Col>
           <Col span={8} style={{ textAlign: "right" }}>
             <Barcode
-              value={formData.item_barcode}
+              value={data_head.item_barcode}
               width={1.5}
               height={30}
               fontSize={14}
@@ -165,11 +153,12 @@ const ItemCreate = (props) => {
         <Row className="col-2">
           <Col span={24} style={{ marginBottom: 8 }}>
             <h3>
-              <strong>Trade Name</strong>
+              <strong>Description Name</strong>
             </h3>
             <Input
               onChange={(e) => upDateFormValue({ item_name: e.target.value })}
-              defaultValue={formData.item_name}
+              value={data_head.item_name}
+              defaultValue={data_head.item_name}
             />
           </Col>
         </Row>
@@ -177,7 +166,7 @@ const ItemCreate = (props) => {
           <Col span={24} style={{ marginLeft: 5 }}>
             <Space align="baseline">
               <Checkbox
-                defaultChecked={formData.item_sale}
+                defaultChecked={data_head.item_sale}
                 onChange={(e) =>
                   upDateFormValue({ item_sale: e.target.checked ? 1 : 0 })
                 }
@@ -187,14 +176,14 @@ const ItemCreate = (props) => {
             <br />
             <Space align="baseline">
               <Checkbox
-                defaultChecked={formData.item_purchase}
+                defaultChecked={data_head.item_purchase}
                 onChange={(e) =>
                   upDateFormValue({ item_purchase: e.target.checked ? 1 : 0 })
                 }
               />
               <Text>Can be purchase</Text>
             </Space>
-            {formData.item_no && (
+            {data_head.item_no && (
               <Space
                 align="baseline"
                 style={{ float: "right", marginRight: 10 }}
@@ -203,7 +192,7 @@ const ItemCreate = (props) => {
                 <Switch
                   checkedChildren={""}
                   unCheckedChildren={""}
-                  checked={formData.item_actived}
+                  checked={data_head.item_actived}
                   style={{ width: 35 }}
                   onClick={(data) =>
                     upDateFormValue({ item_actived: data ? 1 : 0 })
@@ -220,18 +209,17 @@ const ItemCreate = (props) => {
               <Tabs.TabPane tab="Detail" key="1">
                 <Row className="col-2 row-margin-vertical">
                   <Col span={3}>
-                    <Text strong>Description </Text>
+                    <Text strong>SRL</Text>
                   </Col>
                   <Col span={8}>
                     <Input
-                      placeholder="Description"
+                      placeholder="Customer or vendor short name"
                       onChange={(e) =>
                         upDateFormValue({
                           item_customer_run_no: e.target.value,
                         })
                       }
-                      defaultValue={""}
-                      value={""}
+                      value={data_head.item_customer_run_no}
                     />
                   </Col>
                   <Col span={2}></Col>
@@ -245,7 +233,7 @@ const ItemCreate = (props) => {
                       placeholder={"Item Type"}
                       field_id="type_id"
                       field_name="type_no_name"
-                      value={formData.type_no_name}
+                      value={data_head.type_no_name}
                       data={master_data.item_type}
                       onChange={(data, option) => {
                         data && data
@@ -272,7 +260,7 @@ const ItemCreate = (props) => {
                       onChange={(e) =>
                         upDateFormValue({ item_barcode: e.target.value })
                       }
-                      defaultValue={formData.item_barcode}
+                      value={data_head.item_barcode}
                     />
                   </Col>
 
@@ -287,19 +275,19 @@ const ItemCreate = (props) => {
                       placeholder={"Category"}
                       field_id="category_id"
                       field_name="category_no_name"
-                      value={formData.category_no_name}
+                      value={data_head.category_no_name}
                       data={
-                        formData.type_id
+                        data_head.type_id
                           ? master_data.item_category.filter(
-                              (categ) => categ.type_id === formData.type_id
+                              (categ) => categ.type_id === data_head.type_id
                             )
                           : master_data.item_category
                       }
                       onChange={(data, option) => {
                         data && data
                           ? upDateFormValue({
-                              category_id: data,
-                              category_no_name: option.title,
+                              category_id: option.data.category_id,
+                              category_no_name: option.data.category_no_name,
                             })
                           : upDateFormValue({
                               category_id: null,
@@ -314,55 +302,41 @@ const ItemCreate = (props) => {
                     <Text strong>Unit of measure</Text>
                   </Col>
                   <Col span={8}>
-                    <Select
-                      placeholder={"Unit of Measure"}
-                      onSelect={(data) =>
-                        upDateFormValue({
-                          uom_id: data,
-                        })
-                      }
-                      style={{ width: "100%" }}
-                      value={getNameById(
-                        formData.uom_id,
-                        master_data.item_uom,
-                        "uom_id",
-                        "uom_no"
-                      )}
-                    >
-                      {master_data.item_uom.map((uom) => {
-                        return (
-                          <Option key={uom.uom_id} value={uom.uom_id}>
-                            {uom.uom_no}
-                          </Option>
-                        );
-                      })}
-                    </Select>
-                  </Col>
-                  <Col span={2}></Col>
-                  <Col span={3}>
-                    <Text strong>SRL </Text>
-                  </Col>
-                  <Col span={8}>
-                    <Input
-                      onChange={(e) =>
-                        upDateFormValue({
-                          item_customer_run_no: e.target.value,
-                        })
-                      }
-                      defaultValue={formData.item_customer_run_no}
-                      value={formData.item_customer_run_no}
+                    <CustomSelect
+                      allowClear
+                      showSearch
+                      placeholder={"Unit of measure"}
+                      field_id="uom_id"
+                      field_name="uom_no"
+                      value={data_head.uom_no}
+                      data={master_data.item_uom}
+                      onChange={(data, option) => {
+                        data && data
+                          ? upDateFormValue({
+                              uom_id: option.data.uom_id,
+                              uom_no: option.data.uom_no,
+                            })
+                          : upDateFormValue({
+                              uom_id: null,
+                              uom_no: null,
+                            });
+                      }}
                     />
                   </Col>
+                  <Col span={2}></Col>
+                  <Col span={3}></Col>
+                  <Col span={8}></Col>
                 </Row>
                 <Row className="col-2">
                   <Col span={24}>
                     <Space direction="vertical" style={{ width: "100%" }}>
                       <Text strong>Notes </Text>
                       <TextArea
+                        placeholder="Notes"
                         onChange={(e) =>
                           upDateFormValue({ item_remark: e.target.value })
                         }
-                        defaultValue={formData.item_remark}
+                        defaultValue={data_head.item_remark}
                       />
                     </Space>
                   </Col>
@@ -370,34 +344,66 @@ const ItemCreate = (props) => {
               </Tabs.TabPane>
               <Tabs.TabPane tab="R&D" key="2">
                 <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>Trade Name</Text>
+                  <Col
+                    span={12}
+                    // style={{
+                    //   borderRight: "1px solid #c4c4c4",
+                    // }}
+                  >
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={6}>
+                        <Text strong>Trade Name</Text>
+                      </Col>
+                      <Col span={16}>
+                        <Input
+                          placeholder="Item Trade Name"
+                          onChange={(e) =>
+                            upDateFormValue({
+                              item_trade_name: e.target.value,
+                            })
+                          }
+                          defaultValue={data_head.item_trade_name}
+                          value={data_head.item_trade_name}
+                        />
+                      </Col>
+                      <Col span={2}></Col>
+                    </Row>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={6}>
+                        <Text strong>Shelf life (day) </Text>
+                      </Col>
+                      <Col span={16}>
+                        <InputNumber
+                          placeholder={"Shelf life (day)"}
+                          min={0}
+                          step={1}
+                          precision={0}
+                          style={{ width: "100%" }}
+                          disabled={0}
+                          defaultValue={data_head.item_shelf_life}
+                          onChange={(data) =>
+                            upDateFormValue(data_head.id, {
+                              item_shelf_life: data,
+                            })
+                          }
+                        />
+                      </Col>
+                      <Col span={2}></Col>
+                    </Row>
                   </Col>
-                  <Col span={8}>
-                    <Input
-                      placeholder="Item Trade Name"
-                      onChange={(e) =>
-                        upDateFormValue({
-                          item_trade_name: e.target.value,
-                        })
-                      }
-                      defaultValue={formData.item_trade_name}
-                      value={formData.item_trade_name}
-                    />
-                  </Col>
-                  <Col span={2}></Col>
-                  <Col span={2}>
-                    <Text strong>Sale to</Text>
-                  </Col>
-                  <Col span={9}>
-                    <Row>
-                      <Col span={24}>
+                  <Col span={12}>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={2}></Col>
+                      <Col span={4}>
+                        <Text strong>Sale to</Text>
+                      </Col>
+                      <Col span={18}>
                         <Space align="baseline">
                           <Checkbox
-                            defaultChecked={formData.item_sale_to_local}
+                            defaultChecked={data_head.item_sale_local}
                             onChange={(e) =>
                               upDateFormValue({
-                                item_sale_to_local: e.target.checked ? 1 : 0,
+                                item_sale_local: e.target.checked ? 1 : 0,
                               })
                             }
                           />
@@ -406,10 +412,10 @@ const ItemCreate = (props) => {
                         <br />
                         <Space align="baseline">
                           <Checkbox
-                            defaultChecked={formData.item_sale_to_export}
+                            defaultChecked={data_head.item_sale_export}
                             onChange={(e) =>
                               upDateFormValue({
-                                item_sale_to_export: e.target.checked ? 1 : 0,
+                                item_sale_export: e.target.checked ? 1 : 0,
                               })
                             }
                           />
@@ -419,26 +425,18 @@ const ItemCreate = (props) => {
                     </Row>
                   </Col>
                 </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>Shelf life (day) </Text>
-                  </Col>
-                  <Col span={8}>
-                    <InputNumber
-                      placeholder={"Shelf life (day)"}
-                      min={0}
-                      step={1}
-                      precision={0}
-                      style={{ width: "100%" }}
-                      disabled={0}
-                      defaultValue={formData.item_shelf_life}
-                      onChange={(data) =>
-                        upDateFormValue(formData.id, { item_shelf_life: data })
-                      }
-                    />
+                <Row
+                  className="col-2 row-margin-vertical"
+                  style={{
+                    borderBottom: "1px solid #E5E5E5",
+                    paddingBottom: 10,
+                  }}
+                >
+                  <Col span={24}>
+                    <Text strong>Documents</Text>
                   </Col>
                 </Row>
-                <Row className="col-2 row-margin-vertical">
+                <Row className="col-2 row-tab-margin">
                   <Col
                     span={12}
                     style={{
@@ -449,10 +447,10 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={formData.item_purchase}
+                          defaultChecked={data_head.item_specification}
                           onChange={(e) =>
                             upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
+                              item_specification: e.target.checked ? 1 : 0,
                             })
                           }
                         />
@@ -473,10 +471,10 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={formData.item_purchase}
+                          defaultChecked={data_head.item_msds}
                           onChange={(e) =>
                             upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
+                              item_msds: e.target.checked ? 1 : 0,
                             })
                           }
                         />
@@ -497,10 +495,10 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={formData.item_purchase}
+                          defaultChecked={data_head.item_quotation}
                           onChange={(e) =>
                             upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
+                              item_quotation: e.target.checked ? 1 : 0,
                             })
                           }
                         />
@@ -525,10 +523,10 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={formData.item_purchase}
+                          defaultChecked={data_head.item_halal_cert}
                           onChange={(e) =>
                             upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
+                              item_halal_cert: e.target.checked ? 1 : 0,
                             })
                           }
                         />
@@ -549,10 +547,10 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={formData.item_purchase}
+                          defaultChecked={data_head.item_non_haram}
                           onChange={(e) =>
                             upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
+                              item_non_haram: e.target.checked ? 1 : 0,
                             })
                           }
                         />
@@ -573,10 +571,10 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={formData.item_purchase}
+                          defaultChecked={data_head.item_non_halal}
                           onChange={(e) =>
                             upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
+                              item_non_halal: e.target.checked ? 1 : 0,
                             })
                           }
                         />
@@ -597,7 +595,7 @@ const ItemCreate = (props) => {
                   <Col span={8}>
                     <InputNumber
                       style={{ width: "100%" }}
-                      defaultValue={formData.item_price}
+                      defaultValue={data_head.item_price}
                       precision={3}
                       onChange={(data) => upDateFormValue({ item_price: data })}
                     />
@@ -605,14 +603,9 @@ const ItemCreate = (props) => {
                 </Row>
                 <Row className="col-2 row-tab-margin-lg"></Row>
                 <Line
-                  vendors={vendors}
-                  companys={companys}
-                  units={autoCompleteUnit}
-                  dataLine={formData.vendor ? formData.vendor : []}
-                  // autoData={autoCompleteItem}
-                  columns={item_vendor_columns}
-                  // readOnly={false}
-                  updateData={upDateFormValue}
+                  readOnly={false}
+                  detailDispatch={detailDispatch}
+                  data_detail={data_detail}
                 />
               </Tabs.TabPane>
             </Tabs>

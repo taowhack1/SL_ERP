@@ -54,3 +54,7 @@ export const api_currency = "http://192.168.5.222:3009/api/list/currency";
 //stock
 export const get_stock_on_hand =
   "http://192.168.5.222:3009/api/inventory/stock";
+
+//Authen
+export const api_change_password =
+  "http://192.168.5.222:3009/api/authorize/change_password";

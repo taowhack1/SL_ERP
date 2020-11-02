@@ -3,6 +3,7 @@ import "./App.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Dashboard from "./dashboard/Dashboard";
 import Login from "./modules/system/Login";
+import ChangePassword from "./modules/system/Change_Password";
 import Settings from "./modules/settings/Settings";
 
 import QualityAssurance from "./modules/qualityAssurance/Quality_Assurance";
@@ -77,6 +78,9 @@ const App = (props) => {
         <Switch>
           <Route exact path="/login">
             <Login />
+          </Route>
+          <Route exact path="/change_password">
+            <ChangePassword />
           </Route>
 
           <Route exact path="/">

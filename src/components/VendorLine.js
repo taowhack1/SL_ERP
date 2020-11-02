@@ -13,56 +13,43 @@ import {
   EllipsisOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
+import {
+  item_detail_fields,
+  item_vendor_columns,
+} from "../modules/inventory/config/item";
+import { useSelector } from "react-redux";
+import CustomSelect from "./CustomSelect";
+import numeral from "numeral";
 
 const { Text } = Typography;
 
-const VendorLine = ({
-  units,
-  dataLine,
-  updateData,
-  readOnly,
-  columns,
-  vendors,
-  companys,
-}) => {
-  const countItem = dataLine.length;
-  const [count, setCount] = useState(countItem);
-  const [lineItem, setLine] = useState([...dataLine]);
-
-  // useEffect(() => {
-  //   updateData({ vendor: [...lineItem] });
-  // }, [lineItem, updateData]);
-
+const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
+  const units = useSelector((state) => state.inventory.master_data.item_uom);
+  const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const addLine = () => {
-    setLine([
-      ...lineItem,
-      {
-        id: count,
-        vendorName: `Vendor ${count}`,
-        companyName: `Company ${count}`,
-        itemQty: 0,
-        itemUnit: "pc",
-        itemPrice: 0,
-      },
-    ]);
-    setCount(count + 1);
+    detailDispatch({ type: "ADD_ROW", payload: item_detail_fields });
   };
 
   const delLine = (id) => {
-    console.log(id);
-    setLine(lineItem.filter((line) => line.id !== id));
+    detailDispatch({ type: "DEL_ROW", payload: { id: id } });
   };
+
   const onChangeValue = (rowId, data) => {
-    setLine(
-      lineItem.map((line) => (line.id === rowId ? { ...line, ...data } : line))
-    );
+    detailDispatch({
+      type: "CHANGE_DETAIL_VALUE",
+      payload: {
+        id: rowId,
+        data: data,
+      },
+    });
   };
+  console.log(data_detail);
   return (
     <>
       {/* Column Header */}
       <Row gutter={2} className="detail-table-head">
-        {columns &&
-          columns.map((col, key) => {
+        {item_vendor_columns &&
+          item_vendor_columns.map((col, key) => {
             return (
               <Col key={col.id} span={col.size} className="col-outline">
                 <Text strong>{col.name}</Text>
@@ -79,7 +66,7 @@ const VendorLine = ({
       {!readOnly ? (
         <>
           {/* Edit Form */}
-          {lineItem.map((line, key) => (
+          {data_detail.map((line, key) => (
             <Row
               key={line.id}
               style={{
@@ -91,20 +78,26 @@ const VendorLine = ({
               className="col-2"
             >
               <Col span={7} className="text-string">
-                <AutoComplete
-                  style={{ width: "100%" }}
-                  options={vendors}
-                  placeholder="Vendor Name"
-                  defaultValue={line.vendorName}
-                  filterOption={(inputValue, option) =>
-                    option.value
-                      .toUpperCase()
-                      .indexOf(inputValue.toUpperCase()) !== -1
-                  }
-                  onChange={(data) =>
-                    onChangeValue(line.id, { vendorName: data })
-                  }
-                  size="small"
+                <CustomSelect
+                  allowClear
+                  showSearch
+                  size={"small"}
+                  placeholder={"Vendor"}
+                  field_id="vendor_id"
+                  field_name="vendor_no_name"
+                  value={line.vendor_no_name}
+                  data={vendors}
+                  onChange={(data, option) => {
+                    data && data
+                      ? onChangeValue(line.id, {
+                          vendor_id: option.data.vendor_id,
+                          vendor_no_name: option.data.vendor_no_name,
+                        })
+                      : onChangeValue(line.id, {
+                          vendor_id: null,
+                          vendor_no_name: null,
+                        });
+                  }}
                 />
               </Col>
               <Col span={3} className="text-string">
@@ -115,9 +108,9 @@ const VendorLine = ({
                   precision={0}
                   style={{ width: "100%" }}
                   disabled={0}
-                  defaultValue={line.vendor_lead_time}
+                  defaultValue={line.item_vendor_lead_time}
                   onChange={(data) =>
-                    onChangeValue(line.id, { vendor_lead_time: data })
+                    onChangeValue(line.id, { item_vendor_lead_time: data })
                   }
                   size="small"
                 />
@@ -130,27 +123,35 @@ const VendorLine = ({
                   precision={4}
                   style={{ width: "100%" }}
                   disabled={0}
-                  defaultValue={line.itemPrice}
-                  onChange={(data) => onChangeValue(line.id, { itemQty: data })}
+                  value={line.item_vendor_min_qty}
+                  onChange={(data) =>
+                    onChangeValue(line.id, { item_vendor_min_qty: data })
+                  }
                   size="small"
                 />
               </Col>
 
               <Col span={2} className="text-string">
-                <AutoComplete
-                  style={{ width: "100%" }}
-                  options={units}
-                  placeholder="Unit"
-                  defaultValue={line.itemUnit}
-                  filterOption={(inputValue, option) =>
-                    option.value
-                      .toUpperCase()
-                      .indexOf(inputValue.toUpperCase()) !== -1
-                  }
-                  onChange={(data) =>
-                    onChangeValue(line.id, { itemUnit: data })
-                  }
-                  size="small"
+                <CustomSelect
+                  allowClear
+                  showSearch
+                  size={"small"}
+                  placeholder={"Select UOM"}
+                  field_id="uom_id"
+                  field_name="uom_no"
+                  value={line.uom_no}
+                  data={units}
+                  onChange={(data, option) => {
+                    data && data
+                      ? onChangeValue(line.id, {
+                          uom_id: option.data.uom_id,
+                          uom_no: option.data.uom_no,
+                        })
+                      : onChangeValue(line.id, {
+                          uom_id: null,
+                          uom_no: null,
+                        });
+                  }}
                 />
               </Col>
               <Col span={3} className="text-number">
@@ -161,9 +162,9 @@ const VendorLine = ({
                   precision={3}
                   style={{ width: "100%" }}
                   disabled={0}
-                  defaultValue={line.itemPrice}
+                  defaultValue={line.item_vendor_price}
                   onChange={(data) =>
-                    onChangeValue(line.id, { itemPrice: data })
+                    onChangeValue(line.id, { item_vendor_price: data })
                   }
                   size="small"
                 />
@@ -173,10 +174,10 @@ const VendorLine = ({
                   placeholder={"Remark"}
                   style={{ width: "100%" }}
                   disabled={0}
-                  defaultValue={line.vendor_item_remark}
+                  defaultValue={line.item_vendor_remark}
                   onChange={(e) =>
                     onChangeValue(line.id, {
-                      vendor_item_remark: e.target.value,
+                      item_vendor_remark: e.target.value,
                     })
                   }
                   size="small"
@@ -202,7 +203,7 @@ const VendorLine = ({
       ) : (
         <>
           {/* View Form */}
-          {lineItem.map((line, key) => (
+          {data_detail.map((line, key) => (
             <Row
               key={line.id}
               style={{
@@ -214,22 +215,24 @@ const VendorLine = ({
               className="col-2"
             >
               <Col span={7} className="text-string">
-                <Text>{line.vendorName}</Text>
+                <Text>{line.vendor_no_name}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{line.vendor_lead_time}</Text>
+                <Text>{line.item_vendor_lead_time}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{line.itemQty}</Text>
+                <Text>
+                  {numeral(line.item_vendor_min_qty).format("0,0.000")}
+                </Text>
               </Col>
               <Col span={2} className="text-string">
-                <Text>{line.itemUnit}</Text>
+                <Text>{line.uom_no}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{line.itemPrice}</Text>
+                <Text>{numeral(line.item_vendor_price).format("0,0.000")}</Text>
               </Col>
               <Col span={5} className="text-number">
-                <Text>{line.vendor_item_remark}</Text>
+                <Text>{line.item_vendor_remark}</Text>
               </Col>
             </Row>
           ))}

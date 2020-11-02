@@ -13,6 +13,7 @@ import {
   api_authen,
   header_config,
 } from "../include/js/main_config";
+import { api_change_password } from "./api";
 import { getVat } from "./systemConfigActions";
 const url = api_url;
 // const url = "";
@@ -93,4 +94,24 @@ export const change_working_project = (project) => (dispatch) => {
   } catch (error) {
     console.log(error);
   }
+};
+export const change_password = (value, redirect_fn) => async (dispatch) => {
+  console.log(value);
+  let status = false;
+  try {
+    const res = await axios.put(api_change_password, value, header_config);
+    console.log(res);
+    if (res.data[0].length) {
+      alert("Your password has been updated !");
+      redirect_fn();
+      // return true;
+    } else {
+      alert("Old password incorrect !");
+      return false;
+    }
+  } catch (error) {
+    alert("Somethings went wrong. Please contact programmer. !");
+  }
+  console.log("status", status);
+  // return status;
 };

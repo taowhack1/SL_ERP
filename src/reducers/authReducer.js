@@ -24,9 +24,9 @@ export default (state = initialState, action) => {
       return {
         ...state,
         authenticated: false,
-        authData: null,
-        projects: null,
-        menus: null,
+        authData: [],
+        projects: [],
+        menus: [],
       };
     case CURRENT_PROJECT:
       return { ...state, authenticated: true, currentProject: action.payload };

@@ -4,8 +4,8 @@ import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { getAllItems } from "../../actions/inventory/itemActions";
-import { item_show_columns } from "../../page_fields/inventory/item";
 import $ from "jquery";
+import { item_show_columns } from "./config/item";
 const Items = (props) => {
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);

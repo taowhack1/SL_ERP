@@ -46,6 +46,7 @@ export const GET_RECEIVE_DETAIL = "GET_RECEIVE_DETAIL";
 export const GET_RECEIVE_SUB_DETAIL = "GET_RECEIVE_SUB_DETAIL";
 
 // item
+export const GET_ITEM_BY_ID = "GET_ITEM_BY_ID";
 export const GET_ITEM_DETAIL = "GET_ITEM_DETAIL";
 export const GET_ALL_ITEMS = "GET_ALL_ITEMS";
 export const CREATE_ITEM = "CREATE_ITEM";

@@ -32,36 +32,3 @@ export const header_config = {
     "Content-Type": "application/json",
   },
 };
-
-export const action_type = [
-  {
-    id: 1,
-    value: 1,
-    name: "Decision",
-  },
-  {
-    id: 2,
-    value: 2,
-    name: "Create",
-  },
-  {
-    id: 3,
-    value: 3,
-    name: "Cancel",
-  },
-  {
-    id: 4,
-    value: 4,
-    name: "Complete",
-  },
-  {
-    id: 5,
-    value: 5,
-    name: "Approve",
-  },
-  {
-    id: 6,
-    value: 6,
-    name: "Reject",
-  },
-];

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
   Col,
@@ -13,14 +13,10 @@ import {
   Checkbox,
   Space,
   Switch,
+  message,
   Upload,
   Button,
 } from "antd";
-import {
-  CheckSquareOutlined,
-  BorderOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import Line from "../../components/VendorLine";
@@ -32,24 +28,40 @@ import {
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
 import Barcode from "react-barcode";
-import { item_fields } from "../../page_fields/inventory/item";
 import { vendorColumns, vendors, companys } from "../../data/itemData";
+import {
+  getSelectDetail,
+  createNewItems,
+  upDateItem,
+} from "../../actions/inventory/itemActions";
+import { item_fields } from "./config/item";
 import { getNameById } from "../../include/js/function_main";
+import $ from "jquery";
+import { getMasterDataItem } from "../../actions/inventory";
+import {
+  BorderOutlined,
+  CheckSquareOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import CustomSelect from "../../components/CustomSelect";
+import { item_vendor_columns } from "./config/item";
+import numeral from "numeral";
+
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
-
 const ItemView = (props) => {
-  const master_data = useSelector((state) => state.inventory.master_data);
-  const data = props.location.state ? props.location.state : 0;
-  const [editForm, setEdit] = useState(true);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getMasterDataItem());
+  }, []);
+  const data_head = useSelector((state) => state.inventory.item.item_head);
+  const data_detail = useSelector((state) => state.inventory.item.item_detail);
 
-  const [formData, setData] = useState(data && data ? data : item_fields);
+  // const data_head = useSelector(state=>state.inventory.item.item_head);
+  // const data_detail = useSelector(state=>state.inventory.item.item_detail);
+
   const callback = (key) => {};
-
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
-  };
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
@@ -61,27 +73,29 @@ const ItemView = (props) => {
       "Home",
       "Items",
       "View",
-      formData.item_no && "[ " + formData.item_no + " ] " + formData.item_name,
+      data_head.item_no &&
+        "[ " + data_head.item_no + " ] " + data_head.item_name,
     ],
     search: false,
     buttonAction: ["Edit", "Discard"],
-    action: [{ name: "Print", link: "www.google.co.th" }],
-    step: {},
     create: "",
-    save: {},
     edit: {
-      data: formData,
-      path: formData && "/inventory/items/edit/" + formData.item_id,
+      data: {
+        data_head: data_head,
+        data_detail: data_detail,
+      },
+      path: data_head && "/inventory/items/edit/" + data_head.item_id,
     },
+
+    // save: "function",
     discard: "/inventory/items",
     onSave: (e) => {
       e.preventDefault();
-      console.log(formData);
+      console.log("Save");
     },
     onEdit: (e) => {
       e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
       e.preventDefault();
@@ -91,28 +105,28 @@ const ItemView = (props) => {
       console.log("Confirm");
     },
   };
+
   return (
     <MainLayout {...config}>
       <div id="form">
         <Row className="col-2">
           <Col span={11}>
             {/* <h2>
-              {formData.item_no && (
-                <strong>{formData.item_no ? "Edit" : "Create"} Item</strong>
-              )}
+              <strong>{data_head.item_no ? "Edit" : "Create"} Item</strong>
             </h2> */}
-            <h2 style={{ marginBottom: 8 }}>
-              <strong>Item Code # {formData.item_no}</strong>
-            </h2>
-            <h3>
-              <strong>Trade Name : {formData.item_name}</strong>
+            <h3 style={{ marginBottom: 8 }}>
+              {data_head.item_no && (
+                <strong>
+                  Item Code {data_head.item_no ? "#" + data_head.item_no : "-"}
+                </strong>
+              )}
             </h3>
           </Col>
           <Col span={2}></Col>
           <Col span={3}></Col>
           <Col span={8} style={{ textAlign: "right" }}>
             {/* <Barcode
-              value={formData.item_barcode && formData.item_barcode}
+              value={data_head.item_barcode}
               width={1.5}
               height={30}
               fontSize={14}
@@ -120,17 +134,19 @@ const ItemView = (props) => {
           </Col>
         </Row>
         <Row className="col-2">
-          <Col span={24} style={{ padding: "0px 5px", marginBottom: 8 }}>
-            {/* <Input
-              onChange={(e) => upDateFormValue({ item_name: e.target.value })}
-              defaultValue={formData.item_name}
-            /> */}
+          <Col span={24} style={{ marginBottom: 15 }}>
+            <h3>
+              <strong>Description Name</strong>
+            </h3>
+            <Text className="text-view">
+              {data_head.item_name ? data_head.item_name : "-"}
+            </Text>
           </Col>
         </Row>
         <Row className="col-2">
           <Col span={24} style={{ marginLeft: 5 }}>
             <Space align="baseline">
-              {formData.item_sale ? (
+              {data_head.item_sale ? (
                 <CheckSquareOutlined />
               ) : (
                 <BorderOutlined />
@@ -139,14 +155,15 @@ const ItemView = (props) => {
             </Space>
             <br />
             <Space align="baseline">
-              {formData.item_purchase ? (
+              {data_head.item_purchase ? (
                 <CheckSquareOutlined />
               ) : (
                 <BorderOutlined />
               )}
               <Text>Can be purchase</Text>
             </Space>
-            {formData.item_no && (
+
+            {data_head.item_no && (
               <Space
                 align="baseline"
                 style={{ float: "right", marginRight: 10 }}
@@ -155,9 +172,9 @@ const ItemView = (props) => {
                 <Switch
                   checkedChildren={""}
                   unCheckedChildren={""}
-                  checked={formData.item_actived}
-                  style={{ width: 35 }}
                   disabled
+                  checked={data_head.item_actived}
+                  style={{ width: 35 }}
                 />
               </Space>
             )}
@@ -170,23 +187,22 @@ const ItemView = (props) => {
               <Tabs.TabPane tab="Detail" key="1">
                 <Row className="col-2 row-margin-vertical">
                   <Col span={3}>
-                    <Text strong>SRL </Text>
+                    <Text strong>SRL</Text>
                   </Col>
-                  <Col span={8}>
-                    <Text>{formData.item_customer_run_no}</Text>
+                  <Col span={8} className="text-string">
+                    <Text className="text-view">
+                      {data_head.item_customer_run_no
+                        ? data_head.item_customer_run_no
+                        : "-"}
+                    </Text>
                   </Col>
                   <Col span={2}></Col>
                   <Col span={3}>
-                    <Text strong>Category </Text>
+                    <Text strong>Item Type </Text>
                   </Col>
-                  <Col span={8}>
-                    <Text>
-                      {getNameById(
-                        formData.category_id,
-                        master_data.item_category,
-                        "category_id",
-                        "category_name"
-                      )}
+                  <Col span={8} className="text-string">
+                    <Text className="text-view">
+                      {data_head.type_name ? data_head.type_name : "-"}
                     </Text>
                   </Col>
                 </Row>
@@ -194,22 +210,19 @@ const ItemView = (props) => {
                   <Col span={3}>
                     <Text strong>Item barcode</Text>
                   </Col>
-                  <Col span={8}>
-                    <Text>{formData.item_barcode}</Text>
+                  <Col span={8} className="text-string">
+                    <Text className="text-view">
+                      {data_head.item_barcode ? data_head.item_barcode : "-"}
+                    </Text>
                   </Col>
 
                   <Col span={2}></Col>
                   <Col span={3}>
-                    <Text strong>Item Type </Text>
+                    <Text strong>Category </Text>
                   </Col>
-                  <Col span={8}>
-                    <Text>
-                      {getNameById(
-                        formData.type_id,
-                        master_data.item_type,
-                        "type_id",
-                        "type_name"
-                      )}
+                  <Col span={8} className="text-string">
+                    <Text className="text-view">
+                      {data_head.category_name ? data_head.category_name : "-"}
                     </Text>
                   </Col>
                 </Row>
@@ -217,36 +230,21 @@ const ItemView = (props) => {
                   <Col span={3}>
                     <Text strong>Unit of measure</Text>
                   </Col>
-                  <Col span={8}>
-                    <Text>
-                      {getNameById(
-                        formData.uom_id,
-                        master_data.item_uom,
-                        "uom_id",
-                        "uom_no"
-                      )}
+                  <Col span={8} className="text-string">
+                    <Text className="text-view">
+                      {data_head.uom_no ? data_head.uom_no : "-"}
                     </Text>
                   </Col>
                   <Col span={2}></Col>
-
-                  <Col span={3}>
-                    <Text strong>Sale Price</Text>
-                  </Col>
-                  <Col span={8}>
-                    <Text>{formData.item_price}</Text>
-                  </Col>
+                  <Col span={3}></Col>
+                  <Col span={8}></Col>
                 </Row>
                 <Row className="col-2">
                   <Col span={24}>
-                    <Space
-                      direction="vertical"
-                      style={{ width: "100%", marginTop: 10 }}
-                    >
-                      <Text strong type="warning">
-                        Description
-                      </Text>
-                      <Text style={{ paddingLeft: 10 }}>
-                        {formData.item_remark}
+                    <Space direction="vertical" style={{ width: "100%" }}>
+                      <Text strong>Notes </Text>
+                      <Text className="text-view">
+                        {data_head.item_remark ? data_head.item_remark : "-"}
                       </Text>
                     </Space>
                   </Col>
@@ -254,6 +252,75 @@ const ItemView = (props) => {
               </Tabs.TabPane>
               <Tabs.TabPane tab="R&D" key="2">
                 <Row className="col-2 row-margin-vertical">
+                  <Col span={12}>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={6}>
+                        <Text strong>Trade Name</Text>
+                      </Col>
+                      <Col span={16} className="text-string">
+                        <Text className="text-view">
+                          {data_head.item_trade_name
+                            ? data_head.item_trade_name
+                            : "-"}
+                        </Text>
+                      </Col>
+                      <Col span={2}></Col>
+                    </Row>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={6}>
+                        <Text strong>Shelf life (day) </Text>
+                      </Col>
+                      <Col span={5} className="text-number">
+                        <Text className="text-view">
+                          {data_head.item_shelf_life
+                            ? data_head.item_shelf_life
+                            : "-"}
+                        </Text>
+                        <Text strong> Days</Text>
+                      </Col>
+                      <Col span={13}></Col>
+                    </Row>
+                  </Col>
+                  <Col span={12}>
+                    <Row className="col-2 row-margin-vertical">
+                      <Col span={2}></Col>
+                      <Col span={4}>
+                        <Text strong>Sale to</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Space align="baseline">
+                          {data_head.item_sale_local ? (
+                            <CheckSquareOutlined />
+                          ) : (
+                            <BorderOutlined />
+                          )}
+                          <Text>Local</Text>
+                        </Space>
+                        <br />
+                        <Space align="baseline">
+                          {data_head.item_sale_export ? (
+                            <CheckSquareOutlined />
+                          ) : (
+                            <BorderOutlined />
+                          )}
+                          <Text>Export</Text>
+                        </Space>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+                <Row
+                  className="col-2 row-margin-vertical"
+                  style={{
+                    borderBottom: "1px solid #E5E5E5",
+                    paddingBottom: 10,
+                  }}
+                >
+                  <Col span={24}>
+                    <Text strong>Documents</Text>
+                  </Col>
+                </Row>
+                <Row className="col-2 row-tab-margin">
                   <Col
                     span={12}
                     style={{
@@ -263,23 +330,20 @@ const ItemView = (props) => {
                     <Row className="col-2 row-margin-vertical">
                       <Col span={2}></Col>
                       <Col span={2}>
-                        <Checkbox
-                          defaultChecked={formData.item_purchase}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
+                        {data_head.item_specification ? (
+                          <CheckSquareOutlined />
+                        ) : (
+                          <BorderOutlined />
+                        )}
                       </Col>
                       <Col span={9}>
                         <Text strong> Specification.</Text>
                       </Col>
                       <Col span={10}>
                         <Upload {...props}>
-                          <Button icon={<UploadOutlined />}>
+                          {/* <Button icon={<UploadOutlined />}>
                             Click to Upload
-                          </Button>
+                          </Button> */}
                         </Upload>
                       </Col>
                       <Col span={1}></Col>
@@ -287,23 +351,20 @@ const ItemView = (props) => {
                     <Row className="col-2 row-margin-vertical">
                       <Col span={2}></Col>
                       <Col span={2}>
-                        <Checkbox
-                          defaultChecked={formData.item_purchase}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
+                        {data_head.item_msds ? (
+                          <CheckSquareOutlined />
+                        ) : (
+                          <BorderOutlined />
+                        )}
                       </Col>
                       <Col span={9}>
                         <Text strong> MSDS.</Text>
                       </Col>
                       <Col span={10}>
                         <Upload {...props}>
-                          <Button icon={<UploadOutlined />}>
+                          {/* <Button icon={<UploadOutlined />}>
                             Click to Upload
-                          </Button>
+                          </Button> */}
                         </Upload>
                       </Col>
                       <Col span={1}></Col>
@@ -311,23 +372,20 @@ const ItemView = (props) => {
                     <Row className="col-2 row-margin-vertical">
                       <Col span={2}></Col>
                       <Col span={2}>
-                        <Checkbox
-                          defaultChecked={formData.item_purchase}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
+                        {data_head.item_quotation ? (
+                          <CheckSquareOutlined />
+                        ) : (
+                          <BorderOutlined />
+                        )}
                       </Col>
                       <Col span={9}>
                         <Text strong> Quotation.</Text>
                       </Col>
                       <Col span={10}>
                         <Upload {...props}>
-                          <Button icon={<UploadOutlined />}>
+                          {/* <Button icon={<UploadOutlined />}>
                             Click to Upload
-                          </Button>
+                          </Button> */}
                         </Upload>
                       </Col>
                       <Col span={1}></Col>
@@ -339,23 +397,20 @@ const ItemView = (props) => {
                       <Col span={1}></Col>
                       <Col span={2}></Col>
                       <Col span={2}>
-                        <Checkbox
-                          defaultChecked={formData.item_purchase}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
+                        {data_head.item_halal_cert ? (
+                          <CheckSquareOutlined />
+                        ) : (
+                          <BorderOutlined />
+                        )}
                       </Col>
                       <Col span={9}>
                         <Text strong> Halal Cert.</Text>
                       </Col>
                       <Col span={10}>
                         <Upload {...props}>
-                          <Button icon={<UploadOutlined />}>
+                          {/* <Button icon={<UploadOutlined />}>
                             Click to Upload
-                          </Button>
+                          </Button> */}
                         </Upload>
                       </Col>
                     </Row>
@@ -363,23 +418,20 @@ const ItemView = (props) => {
                       <Col span={1}></Col>
                       <Col span={2}></Col>
                       <Col span={2}>
-                        <Checkbox
-                          defaultChecked={formData.item_purchase}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
+                        {data_head.item_non_haram ? (
+                          <CheckSquareOutlined />
+                        ) : (
+                          <BorderOutlined />
+                        )}
                       </Col>
                       <Col span={9}>
-                        <Text strong> Non-Haran Statement.</Text>
+                        <Text strong> Non-Haram Statement.</Text>
                       </Col>
                       <Col span={10}>
                         <Upload {...props}>
-                          <Button icon={<UploadOutlined />}>
+                          {/* <Button icon={<UploadOutlined />}>
                             Click to Upload
-                          </Button>
+                          </Button> */}
                         </Upload>
                       </Col>
                     </Row>
@@ -387,55 +439,39 @@ const ItemView = (props) => {
                       <Col span={1}></Col>
                       <Col span={2}></Col>
                       <Col span={2}>
-                        <Checkbox
-                          defaultChecked={formData.item_purchase}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_purchase: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
+                        {data_head.item_non_halal ? (
+                          <CheckSquareOutlined />
+                        ) : (
+                          <BorderOutlined />
+                        )}
                       </Col>
                       <Col span={9}>
                         <Text strong> Non-Halal.</Text>
                       </Col>
-                      <Col span={10}>
-                        <Upload {...props}>
-                          <Button icon={<UploadOutlined />}>
-                            Click to Upload
-                          </Button>
-                        </Upload>
-                      </Col>
+                      <Col span={10}></Col>
                     </Row>
                   </Col>
                 </Row>
               </Tabs.TabPane>
               <Tabs.TabPane tab="Purchase" key="3">
-                <Line
-                  vendors={vendors}
-                  companys={companys}
-                  units={autoCompleteUnit}
-                  dataLine={formData.vendor ? formData.vendor : []}
-                  // autoData={autoCompleteItem}
-                  columns={vendorColumns}
-                  readOnly={true}
-                  updateData={upDateFormValue}
-                />
+                <Row className="col-2 row-margin-vertical">
+                  <Col span={3}>
+                    <Text strong>Sale Price</Text>
+                  </Col>
+                  <Col span={3} className="text-number">
+                    <Text className="text-view">
+                      {numeral(data_head.item_price).format("0,0.000")}
+                    </Text>
+                  </Col>
+                </Row>
+                <Row className="col-2 row-tab-margin-lg"></Row>
+                <Line data_detail={data_detail} readOnly={true} />
               </Tabs.TabPane>
-              {/* <Tabs.TabPane tab="Note" key="3">
-                <TextArea
-                  rows={3}
-                  placeholder={"Remark your request"}
-                  onChange={(e) =>
-                    upDateFormValue({ req_note: e.target.value })
-                  }
-                />
-              </Tabs.TabPane> */}
             </Tabs>
           </Col>
         </Row>
       </div>
-      <Comments data={[...dataComments]} />
+      <Comments data={dataComments} />
     </MainLayout>
   );
 };

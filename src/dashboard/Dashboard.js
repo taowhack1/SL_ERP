@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory, withRouter } from "react-router-dom";
 import MainLayout from "../components/MainLayout";
-import { Button, Modal } from "antd";
+import { Typography, Modal } from "antd";
 import { Form, Input } from "antd";
 import { addSalary, delSalary } from "../actions/salaryActions";
 import { signIn2, signIn3 } from "../actions/authActions";
 import { get_select_cost_center } from "../actions/hrm";
 import { get_currency_list } from "../actions/accounting";
+import { MenuOutlined } from "@ant-design/icons";
+// import logo from "../../public/res_company_logo.png";
+const { Text, Title } = Typography;
 const Dashboard = (props) => {
   const history = useHistory();
   const auth = useSelector(
@@ -49,15 +52,15 @@ const Dashboard = (props) => {
     projectId: 0,
     title: "DASHBOARD",
     show: true,
-    breadcrumb: ["Home"],
+    breadcrumb: ["Welcome to SiriLaboratories ERP System"],
     search: false,
-    action: ["Print"],
-    step: {
-      current: 2,
-      step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
-    },
+    // action: ["Print"],
+    // step: {
+    //   current: 2,
+    //   step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
+    // },
     create: "",
-    buttonAction: ["Cancel"],
+    buttonAction: [],
     discard: "",
     onCancel: () => {
       console.log("Cancel");
@@ -67,15 +70,21 @@ const Dashboard = (props) => {
   return (
     <div>
       <MainLayout {...config}>
-        <Button onClick={OpenModal}>Popup</Button>
-        <Button onClick={() => dispatch(addSalary(salary))}>
-          ADD SALARY + 1000
-        </Button>
-        <Button onClick={() => dispatch(delSalary(salary))}>
-          DEL SALARY - 1000
-        </Button>
-        Salary: {salary}
-        <h1>This is Dashboard</h1>
+        <div className="sl-logo" />
+        <div style={{ textAlign: "center", marginTop: 50 }}>
+          <Title level={3}>
+            Click icon
+            <MenuOutlined
+              style={{
+                color: "white",
+                backgroundColor: "#7B7BAD",
+                padding: 5,
+                margin: "10px 10px",
+              }}
+            />
+            to select your program.
+          </Title>
+        </div>
       </MainLayout>
       <Modal
         title="Basic Modal"

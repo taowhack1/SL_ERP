@@ -8,12 +8,12 @@ import {
   get_customer_by_id,
   get_customer_list,
 } from "../../actions/sales/customerActions";
-import { customer_columns } from "../../page_fields/sales/customer";
 import $ from "jquery";
 import {
   get_currency_list,
   get_customer_payment_term_list,
 } from "../../actions/accounting";
+import { customer_columns } from "./configs/customer";
 const Customer = (props) => {
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);

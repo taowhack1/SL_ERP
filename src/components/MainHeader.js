@@ -38,15 +38,7 @@ const MainHead = (props) => {
     return (
       <Menu>
         <Menu.Item>
-          <Link
-            to="/login"
-            onClick={() => {
-              dispatch(signOut());
-              localStorage.removeItem("state");
-            }}
-          >
-            Change Password
-          </Link>
+          <Link to="/change_password">Change Password</Link>
         </Menu.Item>
         <Menu.Item>
           <Link

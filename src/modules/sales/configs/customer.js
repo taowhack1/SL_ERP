@@ -62,3 +62,41 @@ export const customer_fields = {
   currency_no: "THB",
   commit: 1,
 };
+
+export const customer_columns = [
+  {
+    title: "Name",
+    dataIndex: "customer_name",
+    key: "customer_name",
+    width: "30%",
+    align: "left",
+  },
+  {
+    title: "Phone",
+    dataIndex: "customer_phone",
+    key: "customer_phone",
+    width: "15%",
+    align: "left",
+  },
+  {
+    title: "Mobile",
+    dataIndex: "customer_mobile",
+    key: "customer_mobile",
+    width: "15%",
+    align: "left",
+  },
+  {
+    title: "Email",
+    dataIndex: "customer_email",
+    key: "customer_email",
+    width: "20%",
+    align: "left",
+  },
+  {
+    title: "Tax ID",
+    dataIndex: "customer_tax_no",
+    key: "customer_tax_no",
+    width: "20%",
+    align: "left",
+  },
+];
