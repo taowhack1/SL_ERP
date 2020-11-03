@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Dashboard from "./dashboard/Dashboard";
+import Dashboard from "./modules/dashboard/Dashboard";
 import Login from "./modules/system/Login";
 import ChangePassword from "./modules/system/Change_Password";
 import Settings from "./modules/settings/Settings";
@@ -50,7 +50,7 @@ import Customer from "./modules/sales/Customer";
 import CustomerView from "./modules/sales/Customer_View";
 import CustomerCreate from "./modules/sales/Customer_Create";
 
-import NotFound from "./dashboard/NotFound";
+import NotFound from "./modules/dashboard/NotFound";
 import { Provider, useSelector } from "react-redux";
 import store from "./store";
 import Location from "./modules/inventory/Location";
@@ -64,14 +64,6 @@ import ItemView from "./modules/inventory/ItemView";
 
 // class App extends Component {
 const App = (props) => {
-  // const auth = useSelector((state) =>
-  //   typeof state.auth === "undefined" ? 0 : 1
-  // );
-  // if (!auth) {
-  //   alert("Authentication required\nPlase Login.");
-  //   props.history.push("/login");
-  // }
-  // render() {
   return (
     <Provider store={store}>
       <BrowserRouter>

@@ -1,8 +1,5 @@
-import {
-  action_type,
-  api_comments_log,
-  header_config,
-} from "../../include/js/main_config";
+import { action_type, api_comments_log } from "../../include/js/api";
+import { header_config } from "../../include/js/main_config";
 import { GET_LOG_BY_ID, RESET_COMMENTS } from "../types";
 import axios from "axios";
 

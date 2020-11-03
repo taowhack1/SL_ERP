@@ -1,6 +1,6 @@
 import axios from "axios";
-import { api_approve, header_config } from "../../include/js/main_config";
-import { api_issue, api_issue_detail } from "../api";
+import { header_config } from "../../include/js/main_config";
+import { api_approve, api_issue, api_issue_detail } from "../../include/js/api";
 import { GET_ISSUE_LIST, RESET_ISSUE, GET_ISSUE_BY_ID } from "../types";
 
 export const get_issue_list = () => (dispatch) => {

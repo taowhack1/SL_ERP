@@ -1,6 +1,6 @@
 import axios from "axios";
 import { sortData } from "../../include/js/function_main";
-import { api_approve, header_config } from "../../include/js/main_config";
+import { header_config } from "../../include/js/main_config";
 import {
   api_disburse,
   api_disburse_detail,
@@ -8,7 +8,8 @@ import {
   api_disburse_sub_detail_by_disburse_id,
   api_issue,
   api_issue_ref_list,
-} from "../api";
+  api_approve,
+} from "../../include/js/api";
 import {
   GET_DISBURSE_LIST,
   RESET_DISBURSE,

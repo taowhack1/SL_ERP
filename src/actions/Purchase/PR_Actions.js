@@ -6,12 +6,11 @@ import {
   SET_PR_HEAD,
   UPDATE_PR_HEAD,
 } from "../types";
-import { api_purchase, api_get_pr_detail } from "../../include/js/main_config";
+import { api_purchase, api_get_pr_detail,api_approve } from "../../include/js/api";
 import {
   pr_detail_fields,
   pr_fields,
 } from "../../modules/purchasing/fields_config/pr";
-import { api_approve } from "../../include/js/main_config";
 import axios from "axios";
 import $ from "jquery";
 

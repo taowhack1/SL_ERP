@@ -11,9 +11,9 @@ import {
   api_url,
   api_query,
   api_authen,
-  header_config,
-} from "../include/js/main_config";
-import { api_change_password } from "./api";
+  api_change_password,
+} from "../include/js/api";
+import { header_config } from "../include/js/main_config";
 import { getVat } from "./systemConfigActions";
 const url = api_url;
 // const url = "";

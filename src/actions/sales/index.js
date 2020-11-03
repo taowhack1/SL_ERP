@@ -1,11 +1,11 @@
 import {
   api_quo_list,
-  header_config,
   api_get_select_list_customers,
   api_create_quotation,
   api_create_quotation_detail,
   api_approve,
-} from "../../include/js/main_config";
+} from "../../include/js/api";
+import { header_config } from "../../include/js/main_config";
 import {
   api_get_qn_by_id,
   api_qn_detail,
@@ -26,7 +26,6 @@ import {
   RESET_SO,
 } from "../types";
 import axios from "axios";
-import { api_currency, api_customer } from "../api";
 export const get_quotation_list = () => (dispatch) => {
   axios.get(api_quo_list, header_config).then((res) => {
     dispatch({ type: SET_QN_LIST, payload: res.data[0] });

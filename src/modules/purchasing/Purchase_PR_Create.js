@@ -119,7 +119,7 @@ const PurchaseRequisitionCreate = (props) => {
   };
 
   return (
-    <MainLayout {...config} data={data_head}>
+    <MainLayout {...config}>
       <div id="form">
         {/* Head */}
         <Row className="col-2">

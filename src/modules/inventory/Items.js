@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { getAllItems } from "../../actions/inventory/itemActions";
+import {
+  getAllItems,
+  get_item_by_id,
+} from "../../actions/inventory/itemActions";
 import $ from "jquery";
 import { item_show_columns } from "./config/item";
 const Items = (props) => {
@@ -57,9 +60,9 @@ const Items = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
+                    dispatch(get_item_by_id(record.item_id));
                     props.history.push({
                       pathname: "/inventory/items/view/" + record.item_id,
-                      state: record,
                     });
                   },
                 };

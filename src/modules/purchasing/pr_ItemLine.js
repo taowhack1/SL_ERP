@@ -378,4 +378,4 @@ const ItemLine = ({ readOnly, columns, pr_id, upDateFormData, vat_rate }) => {
   );
 };
 
-export default ItemLine;
+export default React.memo(ItemLine);

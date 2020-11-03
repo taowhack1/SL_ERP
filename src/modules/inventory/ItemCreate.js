@@ -42,6 +42,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import CustomSelect from "../../components/CustomSelect";
 import { item_vendor_columns } from "./config/item";
 import { reducer } from "./reducers";
+import { numberFormat } from "../../include/js/main_config";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -66,7 +67,7 @@ const ItemCreate = (props) => {
     headDispatch({
       type: "SET_HEAD",
       payload: data.data_head
-        ? { ...data, commit: 1, user_name: auth.user_name }
+        ? { ...data.data_head, commit: 1, user_name: auth.user_name }
         : { ...item_fields, commit: 1, user_name: auth.user_name },
     });
 
@@ -109,8 +110,8 @@ const ItemCreate = (props) => {
       e.preventDefault();
       console.log("Save");
       data_head.item_no
-        ? dispatch(upDateItem(data_head, data_head.item_id))
-        : dispatch(createNewItems(data_head));
+        ? dispatch(upDateItem(data_head.item_id, data_head, data_detail))
+        : dispatch(createNewItems(data_head, data_detail));
     },
     onEdit: (e) => {
       e.preventDefault();
@@ -142,12 +143,14 @@ const ItemCreate = (props) => {
           <Col span={2}></Col>
           <Col span={3}></Col>
           <Col span={8} style={{ textAlign: "right" }}>
-            <Barcode
-              value={data_head.item_barcode}
-              width={1.5}
-              height={30}
-              fontSize={14}
-            />
+            {data_head.item_no && (
+              <Barcode
+                value={data_head.item_barcode}
+                width={1.5}
+                height={30}
+                fontSize={14}
+              />
+            )}
           </Col>
         </Row>
         <Row className="col-2">
@@ -156,9 +159,9 @@ const ItemCreate = (props) => {
               <strong>Description Name</strong>
             </h3>
             <Input
+              placeholder={"Description Name"}
               onChange={(e) => upDateFormValue({ item_name: e.target.value })}
               value={data_head.item_name}
-              defaultValue={data_head.item_name}
             />
           </Col>
         </Row>
@@ -166,7 +169,7 @@ const ItemCreate = (props) => {
           <Col span={24} style={{ marginLeft: 5 }}>
             <Space align="baseline">
               <Checkbox
-                defaultChecked={data_head.item_sale}
+                checked={data_head.item_sale}
                 onChange={(e) =>
                   upDateFormValue({ item_sale: e.target.checked ? 1 : 0 })
                 }
@@ -176,7 +179,7 @@ const ItemCreate = (props) => {
             <br />
             <Space align="baseline">
               <Checkbox
-                defaultChecked={data_head.item_purchase}
+                checked={data_head.item_purchase}
                 onChange={(e) =>
                   upDateFormValue({ item_purchase: e.target.checked ? 1 : 0 })
                 }
@@ -213,6 +216,7 @@ const ItemCreate = (props) => {
                   </Col>
                   <Col span={8}>
                     <Input
+                      disabled={data_head.item_id ? 1 : 0}
                       placeholder="Customer or vendor short name"
                       onChange={(e) =>
                         upDateFormValue({
@@ -224,28 +228,29 @@ const ItemCreate = (props) => {
                   </Col>
                   <Col span={2}></Col>
                   <Col span={3}>
-                    <Text strong>Item Type </Text>
+                    <Text strong>Item type </Text>
                   </Col>
                   <Col span={8}>
                     <CustomSelect
                       allowClear
+                      disabled={data_head.item_id ? 1 : 0}
                       showSearch
-                      placeholder={"Item Type"}
+                      placeholder={"Item type"}
                       field_id="type_id"
-                      field_name="type_no_name"
-                      value={data_head.type_no_name}
+                      field_name="type_name"
+                      value={data_head.type_name}
                       data={master_data.item_type}
                       onChange={(data, option) => {
                         data && data
                           ? upDateFormValue({
                               type_id: data,
-                              type_no_name: option.title,
+                              type_name: option.title,
                               category_id: null,
-                              category_no_name: null,
+                              category_name: null,
                             })
                           : upDateFormValue({
                               category_id: null,
-                              category_no_name: null,
+                              category_name: null,
                             });
                       }}
                     />
@@ -257,6 +262,8 @@ const ItemCreate = (props) => {
                   </Col>
                   <Col span={8}>
                     <Input
+                      disabled
+                      placeholder={"Barcode"}
                       onChange={(e) =>
                         upDateFormValue({ item_barcode: e.target.value })
                       }
@@ -272,10 +279,11 @@ const ItemCreate = (props) => {
                     <CustomSelect
                       allowClear
                       showSearch
+                      disabled={data_head.item_id ? 1 : 0}
                       placeholder={"Category"}
                       field_id="category_id"
-                      field_name="category_no_name"
-                      value={data_head.category_no_name}
+                      field_name="category_name"
+                      value={data_head.category_name}
                       data={
                         data_head.type_id
                           ? master_data.item_category.filter(
@@ -287,11 +295,11 @@ const ItemCreate = (props) => {
                         data && data
                           ? upDateFormValue({
                               category_id: option.data.category_id,
-                              category_no_name: option.data.category_no_name,
+                              category_name: option.data.category_name,
                             })
                           : upDateFormValue({
                               category_id: null,
-                              category_no_name: null,
+                              category_name: null,
                             });
                       }}
                     />
@@ -336,7 +344,7 @@ const ItemCreate = (props) => {
                         onChange={(e) =>
                           upDateFormValue({ item_remark: e.target.value })
                         }
-                        defaultValue={data_head.item_remark}
+                        value={data_head.item_remark}
                       />
                     </Space>
                   </Col>
@@ -352,17 +360,16 @@ const ItemCreate = (props) => {
                   >
                     <Row className="col-2 row-margin-vertical">
                       <Col span={6}>
-                        <Text strong>Trade Name</Text>
+                        <Text strong>Trade name</Text>
                       </Col>
                       <Col span={16}>
                         <Input
-                          placeholder="Item Trade Name"
+                          placeholder="Item Trade name"
                           onChange={(e) =>
                             upDateFormValue({
                               item_trade_name: e.target.value,
                             })
                           }
-                          defaultValue={data_head.item_trade_name}
                           value={data_head.item_trade_name}
                         />
                       </Col>
@@ -380,9 +387,9 @@ const ItemCreate = (props) => {
                           precision={0}
                           style={{ width: "100%" }}
                           disabled={0}
-                          defaultValue={data_head.item_shelf_life}
+                          value={data_head.item_shelf_life}
                           onChange={(data) =>
-                            upDateFormValue(data_head.id, {
+                            upDateFormValue({
                               item_shelf_life: data,
                             })
                           }
@@ -400,7 +407,7 @@ const ItemCreate = (props) => {
                       <Col span={18}>
                         <Space align="baseline">
                           <Checkbox
-                            defaultChecked={data_head.item_sale_local}
+                            checked={data_head.item_sale_local}
                             onChange={(e) =>
                               upDateFormValue({
                                 item_sale_local: e.target.checked ? 1 : 0,
@@ -412,7 +419,7 @@ const ItemCreate = (props) => {
                         <br />
                         <Space align="baseline">
                           <Checkbox
-                            defaultChecked={data_head.item_sale_export}
+                            checked={data_head.item_sale_export}
                             onChange={(e) =>
                               upDateFormValue({
                                 item_sale_export: e.target.checked ? 1 : 0,
@@ -447,7 +454,7 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={data_head.item_specification}
+                          checked={data_head.item_specification}
                           onChange={(e) =>
                             upDateFormValue({
                               item_specification: e.target.checked ? 1 : 0,
@@ -471,7 +478,7 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={data_head.item_msds}
+                          checked={data_head.item_msds}
                           onChange={(e) =>
                             upDateFormValue({
                               item_msds: e.target.checked ? 1 : 0,
@@ -495,7 +502,7 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={data_head.item_quotation}
+                          checked={data_head.item_quotation}
                           onChange={(e) =>
                             upDateFormValue({
                               item_quotation: e.target.checked ? 1 : 0,
@@ -523,7 +530,7 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={data_head.item_halal_cert}
+                          checked={data_head.item_halal_cert}
                           onChange={(e) =>
                             upDateFormValue({
                               item_halal_cert: e.target.checked ? 1 : 0,
@@ -547,7 +554,7 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={data_head.item_non_haram}
+                          checked={data_head.item_non_haram}
                           onChange={(e) =>
                             upDateFormValue({
                               item_non_haram: e.target.checked ? 1 : 0,
@@ -571,7 +578,7 @@ const ItemCreate = (props) => {
                       <Col span={2}></Col>
                       <Col span={2}>
                         <Checkbox
-                          defaultChecked={data_head.item_non_halal}
+                          checked={data_head.item_non_halal}
                           onChange={(e) =>
                             upDateFormValue({
                               item_non_halal: e.target.checked ? 1 : 0,
@@ -590,12 +597,13 @@ const ItemCreate = (props) => {
               <Tabs.TabPane tab="Purchase" key="3">
                 <Row className="col-2 row-margin-vertical">
                   <Col span={3}>
-                    <Text strong>Sale Price</Text>
+                    <Text strong>Sale price</Text>
                   </Col>
                   <Col span={8}>
                     <InputNumber
+                      {...numberFormat}
                       style={{ width: "100%" }}
-                      defaultValue={data_head.item_price}
+                      value={data_head.item_price}
                       precision={3}
                       onChange={(data) => upDateFormValue({ item_price: data })}
                     />

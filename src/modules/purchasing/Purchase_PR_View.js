@@ -35,10 +35,8 @@ const PRView = (props) => {
   };
 
   useEffect(() => {
+    console.log("GET_LOG");
     data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
-    return () => {
-      dispatch(reset_comments());
-    };
   }, [data_head]);
 
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -150,7 +148,7 @@ const PRView = (props) => {
     },
   };
   return (
-    <MainLayout {...config} data={data_head}>
+    <MainLayout {...config}>
       <div id="form">
         <Row className="col-2">
           <Col span={8}>
@@ -271,4 +269,4 @@ const PRView = (props) => {
   );
 };
 
-export default PRView;
+export default React.memo(PRView);

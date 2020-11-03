@@ -2,7 +2,7 @@ import {
   api_currency,
   api_payment_term_customer,
   api_payment_term_vendor,
-} from "../api";
+} from "../../include/js/api";
 import {
   GET_CURRENCY,
   GET_CUSTOMER_PAYMENT_TERM_LIST,

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { api_query, header_config } from "../../include/js/main_config";
-import { api_vendor } from "../api";
+import { header_config } from "../../include/js/main_config";
+import { api_vendor } from "../../include/js/api";
 import { GET_ALL_VENDOR, GET_VENDOR_BY_ID } from "../types";
 
 export const get_all_vendor = () => (dispatch) => {

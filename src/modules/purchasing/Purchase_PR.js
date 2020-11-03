@@ -29,9 +29,7 @@ const Requisition = (props) => {
     dispatch(get_pr_list());
     dispatch(reset_pr_data());
     dispatch(getMasterDataItem());
-    return () => {
-      dispatch(reset_comments());
-    };
+    dispatch(reset_comments());
   }, [dispatch]);
 
   const getData = (pr_id, user_name) => {

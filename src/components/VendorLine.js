@@ -108,7 +108,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
                   precision={0}
                   style={{ width: "100%" }}
                   disabled={0}
-                  defaultValue={line.item_vendor_lead_time}
+                  value={line.item_vendor_lead_time}
                   onChange={(data) =>
                     onChangeValue(line.id, { item_vendor_lead_time: data })
                   }
@@ -162,7 +162,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
                   precision={3}
                   style={{ width: "100%" }}
                   disabled={0}
-                  defaultValue={line.item_vendor_price}
+                  value={line.item_vendor_price}
                   onChange={(data) =>
                     onChangeValue(line.id, { item_vendor_price: data })
                   }
@@ -174,7 +174,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
                   placeholder={"Remark"}
                   style={{ width: "100%" }}
                   disabled={0}
-                  defaultValue={line.item_vendor_remark}
+                  value={line.item_vendor_remark}
                   onChange={(e) =>
                     onChangeValue(line.id, {
                       item_vendor_remark: e.target.value,
@@ -205,7 +205,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
           {/* View Form */}
           {data_detail.map((line, key) => (
             <Row
-              key={line.id}
+              key={line.item_vendor_id}
               style={{
                 marginBottom: 0,
                 border: "1px solid white",

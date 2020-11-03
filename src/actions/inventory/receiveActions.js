@@ -9,14 +9,15 @@ import {
 } from "../types";
 import axios from "axios";
 import { sortData } from "../../include/js/function_main";
-import { api_approve, header_config } from "../../include/js/main_config";
+import { header_config } from "../../include/js/main_config";
 import {
   api_receive_get_ref_po_detail,
   api_receive_get_ref_po_head,
   api_receive_detail,
   api_receive,
   api_receive_sub_detail,
-} from "../api";
+  api_approve,
+} from "../../include/js/api";
 import { Redirect } from "react-router-dom";
 import { browserHistory } from "react-router";
 

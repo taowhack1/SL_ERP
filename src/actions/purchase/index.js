@@ -8,10 +8,10 @@ import {
   GET_CURRENCY,
   PO_UPDATE_ITEM_LINE,
 } from "../types";
-import { api_query } from "../../include/js/main_config";
+import { api_query } from "../../include/js/api";
 import { query_select_pr } from "../query_sql";
 import axios from "axios";
-import { api_currency } from "../api";
+import { api_currency } from "../../include/js/api";
 const header_config = {
   headers: {
     "Content-Type": "application/json",

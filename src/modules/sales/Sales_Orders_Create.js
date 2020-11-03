@@ -20,7 +20,7 @@ import numeral from "numeral";
 import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
 import { create_so, get_qn_open_so, update_so } from "../../actions/sales";
-import { action_type, header_config } from "../../include/js/main_config";
+import { header_config } from "../../include/js/main_config";
 import { sortData } from "../../include/js/function_main";
 import { so_detail_fields, so_fields } from "./configs";
 import { api_qn_detail } from "../../actions/sales/config";

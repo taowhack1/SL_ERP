@@ -1,0 +1,16 @@
+export const pr_require_fields = {
+  pr_description: true,
+  pr_remark: false,
+  pr_created: true,
+  pr_created_by: true,
+  pr_cost_center: true,
+  branch_id: true,
+  vendor_id: true,
+  vendor_name: true,
+  vendor_no_name: true,
+  currency_id: true,
+  currency_no: true,
+  vat_id: true,
+  process_id: true,
+  commit: true,
+};

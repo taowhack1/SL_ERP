@@ -1,11 +1,8 @@
 import { query_select_dep } from "../query_sql";
 import { GET_SELECT_DEP, GET_COST_CENTER_LIST } from "../types";
 import axios from "axios";
-import {
-  api_query,
-  header_config,
-  api_cost_center,
-} from "../../include/js/main_config";
+import { api_query, api_cost_center } from "../../include/js/api";
+import { header_config } from "../../include/js/main_config";
 
 export const get_select_dep = () => (dispatch) => {
   try {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import MainLayout from "../components/MainLayout";
+import MainLayout from "../../../components/MainLayout";
 import { connect } from "react-redux";
 import { Button, Modal } from "antd";
 

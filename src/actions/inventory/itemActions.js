@@ -3,15 +3,15 @@ import {
   GET_ALL_ITEMS,
   CREATE_ITEM,
   UPDATE_ITEM,
+  GET_ITEM_BY_ID,
 } from "../types";
-import { api_url, header_config } from "../../include/js/main_config";
-import axios from "axios";
+import { header_config } from "../../include/js/main_config";
 import {
-  query_select_benefit,
-  query_select_categ,
-  query_select_item_type,
-  query_select_uom,
-} from "../query_sql";
+  api_get_item_by_id,
+  api_url,
+  api_get_item_detail,
+} from "../../include/js/api";
+import axios from "axios";
 const api_path = api_url + "/query/sql";
 export const getAllItems = () => async (dispatch) => {
   const query_items = {
@@ -30,67 +30,24 @@ export const getAllItems = () => async (dispatch) => {
   });
 };
 
-// export const getSelectDetail = () => async (dispatch) => {
-//   let master_data = {
-//     item_uom: [],
-//     item_type: [],
-//     item_benefit: [],
-//     item_category: [],
-//   };
-//   await axios.post(api_path, query_select_uom, header_config).then((res) => {
-//     master_data.item_uom.push(...res.data[0]);
-//   });
-//   await axios
-//     .post(api_path, query_select_item_type, header_config)
-//     .then((res) => {
-//       master_data.item_type.push(...res.data[0]);
-//     });
-//   await axios
-//     .post(api_path, query_select_benefit, header_config)
-//     .then((res) => {
-//       master_data.item_benefit.push(...res.data[0]);
-//     });
-//   await axios.post(api_path, query_select_categ, header_config).then((res) => {
-//     master_data.item_category.push(...res.data[0]);
-//   });
-
-//   dispatch({
-//     type: GET_ITEM_DETAIL,
-//     payload: master_data,
-//   });
-// };
-
-export const createNewItems = (data) => async (dispatch) => {
+export const createNewItems = (data_head, data_detail) => async (dispatch) => {
   console.log("Create item...");
   try {
-    axios.post(api_url + "/inventory/item", data, header_config).then((res) => {
-      if (res.status === 200) {
-        // dispatch({
-        //   type: CREATE_ITEM,
-        //   payload: res.data[0][0],
-        // });
-        return true;
-      } else {
-        alert("Something went wrong please try again...");
-        return false;
-      }
-    });
-  } catch (error) {
-    console.log("error", error);
-  }
-};
-
-export const upDateItem = (data, id) => async (dispatch) => {
-  console.log("Update item...");
-  try {
     axios
-      .put(api_url + "/inventory/item/" + id, data, header_config)
+      .post(api_url + "/inventory/item", data_head, header_config)
       .then((res) => {
-        if (res.status === 200) {
-          // dispatch({
-          //   type: UPDATE_ITEM,
-          //   payload: res.data[0][0],
-          // });
+        if (res.status === 200 && res.data[0].length) {
+          const item_id = res.data[0][0].item_id;
+          axios
+            .post(
+              `${api_get_item_detail}/${item_id}`,
+              data_detail,
+              header_config
+            )
+            .then((res) => {
+              dispatch(get_item_by_id(item_id));
+            });
+
           return true;
         } else {
           alert("Something went wrong please try again...");
@@ -102,37 +59,68 @@ export const upDateItem = (data, id) => async (dispatch) => {
   }
 };
 
-export const get_item_by_id = (issue_id, user_name) => async (dispatch) => {
+export const upDateItem = (item_id, data_head, data_detail) => async (
+  dispatch
+) => {
+  console.log("Update item...");
+  try {
+    axios
+      .put(api_url + "/inventory/item/" + item_id, data_head, header_config)
+      .then((res) => {
+        if (res.status === 200 && res.data[0].length) {
+          axios
+            .post(
+              `${api_get_item_detail}/${item_id}`,
+              data_detail,
+              header_config
+            )
+            .then((res) => {
+              dispatch(get_item_by_id(item_id));
+            });
+
+          return true;
+        } else {
+          alert("Something went wrong please try again...");
+          return false;
+        }
+      });
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const get_item_by_id = (item_id) => async (dispatch) => {
   console.log("get_item_by_id");
-  // try {
-  //   if (user_name) {
-  //     console.log(`${api_issue}/${issue_id}&${user_name}`);
-  //     const res_head = axios.get(
-  //       `${api_issue}/${issue_id}&${user_name}`,
-  //       header_config
-  //     );
-  //     const res_detail = axios.get(
-  //       `${api_issue_detail}/${issue_id}`,
-  //       header_config
-  //     );
-  //     const item = {
-  //       issue_head:
-  //         res_head &&
-  //         (await res_head.then((res) => {
-  //           return res.data.main_master;
-  //         })),
-  //       issue_detail:
-  //         res_detail &&
-  //         (await res_detail.then((res) => {
-  //           return res.data[0];
-  //         })),
-  //     };
-  //     console.log(`GET_ISSUE_BY_ID ${issue_id}/${user_name}`);
-  //     await dispatch({ type: GET_ITEM_BY_ID, payload: item });
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
+
+  try {
+    if (item_id) {
+      console.log(`${api_get_item_by_id}/${item_id}`);
+      const res_head = axios.get(
+        `${api_get_item_by_id}/${item_id}`,
+        header_config
+      );
+      const res_detail = axios.get(
+        `${api_get_item_detail}/${item_id}`,
+        header_config
+      );
+      const item = {
+        item_head:
+          res_head &&
+          (await res_head.then((res) => {
+            return res.data[0][0];
+          })),
+        item_detail:
+          res_detail &&
+          (await res_detail.then((res) => {
+            return res.data[0];
+          })),
+      };
+      console.log(`GET_ITEM_BY_ID ${item_id}`, item);
+      await dispatch({ type: GET_ITEM_BY_ID, payload: item });
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // --EXEC [INVENTORY].[dbo].[sp_ups_ins_tb_item]

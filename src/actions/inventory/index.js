@@ -8,9 +8,8 @@ import {
   api_get_item_list,
   api_get_uom_list,
   api_query,
-  header_config,
-} from "../../include/js/main_config";
-import { query_select_uom, query_select_item } from "../query_sql";
+} from "../../include/js/api";
+import { header_config } from "../../include/js/main_config";
 import axios from "axios";
 import {
   api_get_item_category,
@@ -21,7 +20,7 @@ import {
   api_get_lot_batch_by_item_id_shelf,
   api_shelf,
   get_stock_on_hand,
-} from "../api";
+} from "../../include/js/api";
 
 export const getMasterDataItem = () => async (dispatch) => {
   try {

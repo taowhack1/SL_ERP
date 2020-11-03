@@ -23,7 +23,32 @@ const LoginForm = (props) => {
   } else {
     localStorage.removeItem("state");
   }
-
+  const manual_columns = [
+    {
+      id: 0,
+      title: "รายการคู่มือ",
+      dataIndex: "manual_purch",
+      width: "80%",
+    },
+  ];
+  // {
+  //   id:0,
+  //   title:"คู่มือระบบ Purchase",
+  //   dataIndex:"manual_purch",
+  //   width:"80%"
+  // },
+  // {
+  //   id:1,
+  //   title:"คู่มือระบบ Sales",
+  //   dataIndex:"manual_sales",
+  //   width:"80%"
+  // },
+  // {
+  //   id:2,
+  //   title:"คู่มือระบบ QA",
+  //   dataIndex:"manual_QA",
+  //   width:"80%"
+  // },
   return (
     <div
       style={{
@@ -73,15 +98,6 @@ const LoginForm = (props) => {
             placeholder="Password"
           />
         </Form.Item>
-        {/* <Form.Item>
-        <Form.Item name="remember" valuePropName="checked" noStyle>
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item>
-
-        <a className="login-form-forgot" href="">
-          Forgot password
-        </a>
-      </Form.Item> */}
 
         <Form.Item>
           <Space align="baseline">
@@ -95,6 +111,31 @@ const LoginForm = (props) => {
           </Space>
         </Form.Item>
       </Form>
+      {/* <Table
+              columns={manual_columns}
+              dataSource={data}
+              onChange={onChange}
+              size="small"
+              rowKey="pr_id"
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: (e) => {
+                    $(e.target)
+                      .closest("tbody")
+                      .find("tr")
+                      .removeClass("selected-row");
+                    $(e.target).closest("tr").addClass("selected-row");
+                    // dispatch(set_pr_head(record.pr_id, data));
+                    getData(record.pr_id, auth.user_name);
+
+                    props.history.push({
+                      pathname: "/purchase/pr/view/" + record.pr_id,
+                      // state: record,
+                    });
+                  },
+                };
+              }}
+            /> */}
     </div>
   );
 };

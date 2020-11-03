@@ -1,5 +1,5 @@
 import { DECIMAL_UPDATE, GET_VAT } from "../actions/types";
-import { api_query } from "../include/js/main_config";
+import { api_query } from "../include/js/api";
 import axios from "axios";
 // const url = "http://192.168.5.230:8080/upload";
 export const decimalUpdate = (config) => (dispatch) => {

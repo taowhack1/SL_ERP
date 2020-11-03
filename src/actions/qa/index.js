@@ -1,6 +1,9 @@
 import axios from "axios";
 import { header_config } from "../../include/js/main_config";
-import { api_qc_receive_detail_list, api_qc_receive_list } from "../api";
+import {
+  api_qc_receive_detail_list,
+  api_qc_receive_list,
+} from "../../include/js/api";
 import { GET_QC_RECEIVE_LIST, GET_QC_RECEIVE_DETAIL_LIST } from "../types";
 
 export const get_qc_receive_list = () => (dispatch) => {

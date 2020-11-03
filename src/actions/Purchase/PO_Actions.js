@@ -12,14 +12,14 @@ import {
 import {
   api_query,
   api_purchase,
-  header_config,
   api_approve,
   api_payment_term_vendor,
   api_get_po_detail,
   api_purchase_po_list,
   api_get_pr_detail_ref,
   api_get_pr_open_po,
-} from "../../include/js/main_config";
+} from "../../include/js/api";
+import { header_config } from "../../include/js/main_config";
 import axios from "axios";
 
 export const get_open_po_list = () => (dispatch) => {

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { header_config } from "../../include/js/main_config";
-import { api_customer } from "../api";
+import { api_customer } from "../../include/js/api";
 import { GET_ALL_CUSTOMER, GET_CUSTOMER_BY_ID } from "../types";
 
 export const get_customer_list = () => (dispatch) => {

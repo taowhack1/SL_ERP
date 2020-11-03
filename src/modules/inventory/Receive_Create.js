@@ -10,7 +10,7 @@ import {
   update_receive,
 } from "../../actions/inventory/receiveActions";
 import { header_config } from "../../include/js/main_config";
-import { api_receive_get_ref_po_detail } from "../../actions/api";
+import { api_receive_get_ref_po_detail } from "../../include/js/api";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
 
 import MainLayout from "../../components/MainLayout";

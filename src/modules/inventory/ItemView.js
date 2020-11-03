@@ -198,7 +198,7 @@ const ItemView = (props) => {
                   </Col>
                   <Col span={2}></Col>
                   <Col span={3}>
-                    <Text strong>Item Type </Text>
+                    <Text strong>Item type </Text>
                   </Col>
                   <Col span={8} className="text-string">
                     <Text className="text-view">
@@ -255,7 +255,7 @@ const ItemView = (props) => {
                   <Col span={12}>
                     <Row className="col-2 row-margin-vertical">
                       <Col span={6}>
-                        <Text strong>Trade Name</Text>
+                        <Text strong>Trade name</Text>
                       </Col>
                       <Col span={16} className="text-string">
                         <Text className="text-view">
@@ -456,7 +456,7 @@ const ItemView = (props) => {
               <Tabs.TabPane tab="Purchase" key="3">
                 <Row className="col-2 row-margin-vertical">
                   <Col span={3}>
-                    <Text strong>Sale Price</Text>
+                    <Text strong>Sale price</Text>
                   </Col>
                   <Col span={3} className="text-number">
                     <Text className="text-view">
