@@ -37,16 +37,19 @@ export const createNewItems = (data_head, data_detail) => async (dispatch) => {
       .post(api_url + "/inventory/item", data_head, header_config)
       .then((res) => {
         if (res.status === 200 && res.data[0].length) {
+          console.log("res", res);
           const item_id = res.data[0][0].item_id;
-          axios
-            .post(
-              `${api_get_item_detail}/${item_id}`,
-              data_detail,
-              header_config
-            )
-            .then((res) => {
-              dispatch(get_item_by_id(item_id));
-            });
+          data_detail[0].item_id
+            ? axios
+                .post(
+                  `${api_get_item_detail}/${item_id}`,
+                  data_detail,
+                  header_config
+                )
+                .then((res) => {
+                  dispatch(get_item_by_id(item_id));
+                })
+            : dispatch(get_item_by_id(item_id));
 
           return true;
         } else {
