@@ -21,12 +21,13 @@ import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
 import { create_so, get_qn_open_so, update_so } from "../../actions/sales";
 import { header_config } from "../../include/js/main_config";
-import { sortData } from "../../include/js/function_main";
+import { api_qn_detail } from "../../include/js/api";
 import { so_detail_fields, so_fields } from "./configs";
-import { api_qn_detail } from "../../actions/sales/config";
 import Detail from "./Sales_Order_Detail";
 import { reducer } from "./reducers";
 import axios from "axios";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -34,11 +35,14 @@ const { Text } = Typography;
 const initialStateHead = so_fields;
 const initialStateDetail = [so_detail_fields];
 const SaleOrderCreate = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const dataComment = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
   const masterData = useSelector((state) => state.sales.master_data);
@@ -96,9 +100,9 @@ const SaleOrderCreate = (props) => {
   }, [data_head.qn_id]);
 
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -108,12 +112,11 @@ const SaleOrderCreate = (props) => {
     ],
     search: false,
     buttonAction: ["Save", "SaveConfirm", "Discard"],
-    step: !data_head.so_no
-      ? {}
-      : {
-          current: data_head && data_head.node_stay - 1,
-          step: flow,
-        },
+    step: {
+      current: data_head.node_stay - 1,
+      step: flow,
+      process_complete: data_head.process_complete,
+    },
     create: "",
     save: {
       data: data_head,
@@ -123,18 +126,18 @@ const SaleOrderCreate = (props) => {
     },
     discard: "/sales/orders",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("SAVE");
       !data_head.so_id
         ? dispatch(create_so(data_head, data_detail))
         : dispatch(update_so(data_head.so_id, data_head, data_detail));
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

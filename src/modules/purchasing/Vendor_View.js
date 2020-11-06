@@ -5,19 +5,22 @@ import MainLayout from "../../components/MainLayout";
 
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
+import Authorize from "../system/Authorize";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 const VendorView = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const data_head = useSelector((state) => state.purchase.vendor.vendor);
   const callback = (key) => {};
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -35,14 +38,14 @@ const VendorView = (props) => {
     },
     discard: "/purchase/vendor",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

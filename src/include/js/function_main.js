@@ -1,3 +1,4 @@
+import $ from "jquery";
 export const sortData = (arrObject) => {
   let copyData = arrObject;
   let temp = [];
@@ -70,4 +71,58 @@ export const sumArrOdjWithField = (arrObj = [], field) => {
 
 export const calDiscount = (discount = 0, total_qty = 0, qty = 0) => {
   return (discount / total_qty) * qty;
+};
+
+export const validateFormHead = (obj_data, require_field) => {
+  if (typeof obj_data === "object" && Array.isArray(require_field)) {
+    $("*").removeClass("require-field-alert");
+    let validate = true;
+    let objKey = [];
+    require_field.map((req_field) => {
+      if (
+        obj_data[req_field] === null ||
+        (typeof obj_data[req_field] === "string" &&
+          obj_data[req_field].trim() === "") ||
+        !obj_data[req_field]
+      ) {
+        objKey.push(`[name=${req_field}]`);
+        validate = false;
+      }
+    });
+    const require_fields = `${objKey.toString()}`;
+    $(`${require_fields}`).addClass("require-field-alert");
+    $(`${require_fields}`).focus();
+    return { validate: validate, objKey: objKey };
+  } else {
+    console.log("Wrong type of parameter.");
+  }
+};
+
+export const validateFormDetail = (ArrayObj, require_field) => {
+  if (Array.isArray(ArrayObj) && Array.isArray(require_field)) {
+    $("*").removeClass("require-row-field-alert");
+    let validate = true;
+    let objKey = [];
+    ArrayObj.map((obj_data, key) => {
+      require_field.map((req_field) => {
+        if (
+          !obj_data[req_field] ||
+          obj_data[req_field] === null ||
+          (typeof obj_data[req_field] === "string" &&
+            obj_data[req_field].trim() === "") ||
+          obj_data[req_field] <= 0
+        ) {
+          objKey.push(`[name=row-${key}]`);
+          validate = false;
+        }
+      });
+    });
+
+    const require_fields = `${objKey.toString()}`;
+    $(`${require_fields}`).addClass("require-row-field-alert");
+    $(`${require_fields}`).focus();
+    return { validate: validate, objKey: objKey };
+  } else {
+    console.log("Wrong type of parameter.");
+  }
 };

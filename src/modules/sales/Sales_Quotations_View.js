@@ -11,13 +11,17 @@ import { qn_actions } from "../../actions/sales";
 import { get_log_by_id } from "../../actions/comment&log";
 import { quotation_detail_fields } from "./configs";
 import { sortData } from "../../include/js/function_main";
+import { report_server } from "../../include/js/main_config";
+import Authorize from "../system/Authorize";
 
 const { Text } = Typography;
 
 const Sales_Quotations = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const data_head = useSelector((state) => state.sales.qn.qn_head);
   const data_detail = useSelector((state) => state.sales.qn.qn_detail);
   const dataComment = useSelector((state) => state.log.comment_log);
@@ -60,9 +64,9 @@ const Sales_Quotations = (props) => {
     dispatch(qn_actions(app_detail, data_head.qn_id));
   };
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -81,7 +85,7 @@ const Sales_Quotations = (props) => {
     action: [
       {
         name: "Print",
-        link: `http://192.168.5.207/Report_purch/report_quotation.aspx?qn_no=${
+        link: `${report_server}/Report_purch/report_quotation.aspx?qn_no=${
           data_head && data_head.qn_no
         }`,
       },
@@ -93,8 +97,9 @@ const Sales_Quotations = (props) => {
         },
     ],
     step: {
-      current: data_head && data_head.node_stay - 1,
+      current: data_head.node_stay - 1,
       step: flow,
+      process_complete: data_head.process_complete,
     },
     create: "",
     save: {
@@ -110,15 +115,15 @@ const Sales_Quotations = (props) => {
       console.log("Discard");
     },
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
       const app_detail = {
         process_status_id: 5,

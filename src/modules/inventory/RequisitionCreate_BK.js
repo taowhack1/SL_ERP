@@ -102,16 +102,16 @@ const RequisitionCreate = (props) => {
     },
     discard: "/inventory/requisition",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
       setEdit(true);
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

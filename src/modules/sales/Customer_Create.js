@@ -19,6 +19,8 @@ import {
   create_customer,
   update_customer,
 } from "../../actions/sales/customerActions";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -36,8 +38,11 @@ const require_field = {
 };
 
 const CustomerCreate = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const customer_payment_terms = useSelector(
     (state) => state.accounting.master_data.customer_payment_terms
   );
@@ -65,9 +70,9 @@ const CustomerCreate = (props) => {
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -88,17 +93,17 @@ const CustomerCreate = (props) => {
     },
     discard: "/sales/config/customers",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       data_head.customer_id
         ? dispatch(update_customer(data_head.customer_id, data_head))
         : dispatch(create_customer(data_head));
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

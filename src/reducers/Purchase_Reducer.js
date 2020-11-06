@@ -1,16 +1,9 @@
 import {
   GET_ALL_PR,
-  CREATE_PR,
   UPDATE_PR,
   UPDATE_PR_STATUS,
   GET_ALL_PO,
   CREATE_PO,
-  UPDATE_PO,
-  UPDATE_PO_STATUS,
-  GET_PR_DETAIL,
-  UPDATE_PR_DETAIL,
-  ADD_ITEM_LINE,
-  DEL_ITEM_LINE,
   GET_ALL_VENDOR,
   UPDATE_ITEM_LINE,
   PR_TO_PO_DETAIL,
@@ -19,20 +12,19 @@ import {
   PO_UPDATE_ITEM_LINE,
   RESET_PR_DATA,
   RESET_PO_DATA,
-  SET_PR_HEAD,
-  UPDATE_PR_HEAD,
-  GET_PO_HEAD,
-  GET_PO_DETAIL,
-  UPDATE_PO_HEAD,
   GET_PR_OPEN_PO,
   GET_VENDOR_BY_ID,
   GET_CURRENCY,
+  GET_PR_BY_ID,
+  GET_PO_BY_ID,
 } from "../actions/types";
 import { sortData } from "../include/js/function_main";
 const initialState = {
-  pr_list: [],
-  pr_head: {},
-  pr_detail: [],
+  pr: {
+    pr_list: [],
+    pr_head: {},
+    pr_detail: [],
+  },
   po: {
     pr_ref: [],
     po_list: [],
@@ -62,11 +54,10 @@ export default (state = initialState, action) => {
         ...state,
         currency: action.payload,
       };
+    case GET_PR_BY_ID:
+      return { ...state, pr: { ...state.pr, ...action.payload } };
     case GET_ALL_PR:
-      return { ...state, pr_list: action.payload };
-
-    case CREATE_PR:
-      return { ...state, pr_list: [...state.pr_list, action.payload] };
+      return { ...state, pr: { ...state.pr, pr_list: action.payload } };
     case GET_ALL_PO:
       return { ...state, po: { ...state.po, po_list: action.payload } };
     case GET_PR_OPEN_PO:
@@ -76,57 +67,13 @@ export default (state = initialState, action) => {
         ...state,
         po: { ...state.po, po_list: [...state.po.po_list, action.payloa] },
       };
-    case GET_PO_HEAD:
-      return { ...state, po: { ...state.po, po_head: action.payload } };
-    case UPDATE_PO_HEAD:
-      return {
-        ...state,
-        po: {
-          ...state.po,
-          po_head: { ...state.po.po_head, ...action.payload },
-        },
-      };
-    case GET_PO_DETAIL:
-      return {
-        ...state,
-        po: { ...state.po, po_detail: sortData(action.payload) },
-      };
+    case GET_PO_BY_ID:
+      return { ...state, po: { ...state.po, ...action.payload } };
     // PR
-    case SET_PR_HEAD:
-      return { ...state, pr_head: action.payload };
-    case UPDATE_PR_HEAD:
-      return {
-        ...state,
-        pr_head: { ...state.pr_head, ...action.payload },
-      };
     case PR_TO_PO_DETAIL:
       return {
         ...state,
         po: { ...state.po, po_detail: sortData(action.payload) },
-      };
-    case GET_PR_DETAIL:
-      return { ...state, pr_detail: sortData(action.payload) };
-    // pr item
-    case ADD_ITEM_LINE:
-      return {
-        ...state,
-        pr_detail: sortData([...state.pr_detail, action.payload]),
-      };
-    case DEL_ITEM_LINE:
-      return {
-        ...state,
-        pr_detail: state.pr_detail.filter(
-          (line) => line.id !== action.payload.id
-        ),
-      };
-    case UPDATE_ITEM_LINE:
-      return {
-        ...state,
-        pr_detail: state.pr_detail.map((line) =>
-          line.id === action.payload.id
-            ? { ...line, ...action.payload.data }
-            : line
-        ),
       };
 
     // po item
@@ -163,8 +110,7 @@ export default (state = initialState, action) => {
     case RESET_PR_DATA:
       return {
         ...state,
-        pr_head: action.payload.pr_fields,
-        pr_detail: action.payload.pr_detail,
+        pr: initialState.pr,
       };
     case RESET_PO_DATA:
       return {

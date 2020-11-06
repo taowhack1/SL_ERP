@@ -43,6 +43,7 @@ import CustomSelect from "../../components/CustomSelect";
 import { item_vendor_columns } from "./config/item";
 import { reducer } from "./reducers";
 import { numberFormat } from "../../include/js/main_config";
+import Authorize from "../system/Authorize";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -50,12 +51,14 @@ const initialStateHead = item_fields;
 const initialStateDetail = [item_detail_fields];
 
 const ItemCreate = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getMasterDataItem());
   }, []);
   const master_data = useSelector((state) => state.inventory.master_data);
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const data = props.location.state ? props.location.state : 0;
 
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
@@ -83,9 +86,9 @@ const ItemCreate = (props) => {
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -107,18 +110,18 @@ const ItemCreate = (props) => {
     // save: "function",
     discard: "/inventory/items",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
       data_head.item_no
         ? dispatch(upDateItem(data_head.item_id, data_head, data_detail))
         : dispatch(createNewItems(data_head, data_detail));
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

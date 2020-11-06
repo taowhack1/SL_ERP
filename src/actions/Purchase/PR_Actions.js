@@ -1,18 +1,18 @@
+import { GET_ALL_PR, RESET_PR_DATA, GET_PR_BY_ID } from "../types";
 import {
-  GET_ALL_PR,
-  CREATE_PR,
-  GET_PR_DETAIL,
-  RESET_PR_DATA,
-  SET_PR_HEAD,
-  UPDATE_PR_HEAD,
-} from "../types";
-import { api_purchase, api_get_pr_detail,api_approve } from "../../include/js/api";
+  api_purchase,
+  api_get_pr_detail,
+  api_approve,
+  api_purchase_get_all_pr,
+} from "../../include/js/api";
 import {
   pr_detail_fields,
   pr_fields,
-} from "../../modules/purchasing/fields_config/pr";
+} from "../../modules/purchasing/config/pr";
 import axios from "axios";
 import $ from "jquery";
+import { sortData } from "../../include/js/function_main";
+import { message } from "antd";
 
 const header_config = {
   headers: {
@@ -20,77 +20,127 @@ const header_config = {
   },
 };
 
-export const get_pr_list = () => (dispatch) => {
-  axios.get(`${api_purchase}/pr`, header_config).then((res) => {
-    dispatch({
-      type: GET_ALL_PR,
-      payload: res.data[0],
-    });
-  });
-};
-export const update_pr = (pr_id, user_name, data_head, data_detail) => (
-  dispatch
-) => {
-  console.log(1, "start", data_head, data_detail);
+export const get_pr_list = (user_name) => (dispatch) => {
+  console.log(`${api_purchase_get_all_pr}/${user_name}`);
   axios
-    .put(`${api_purchase}/pr/${pr_id}`, data_head, header_config)
-    .then(async (res) => {
-      console.log(2, "clear detail");
-      axios
-        .post(`${api_purchase}/pr_detail/${pr_id}`, data_detail, header_config)
-        .then(() => {
-          console.log(3, "get head and detail");
-          dispatch(get_pr_detail(pr_id));
-          dispatch(get_pr_by_id(pr_id, user_name));
-          console.log(4, "done..");
-        });
-    });
-};
-
-export const create_pr = (user_name, data_head, data_detail) => (dispatch) => {
-  console.log(data_head);
-  axios
-    .post(`${api_purchase}/pr`, data_head, header_config)
-    .then(async (res) => {
+    .get(`${api_purchase_get_all_pr}/${user_name}`, header_config)
+    .then((res) => {
       dispatch({
-        type: CREATE_PR,
-        payload: res.data[0][0],
+        type: GET_ALL_PR,
+        payload: res.data[0],
       });
-      console.log(2, "clear detail");
-      console.log("data_detail", data_detail);
-      const pr_id = res.data[0][0].pr_id;
-      axios
-        .post(`${api_purchase}/pr_detail/${pr_id}`, data_detail, header_config)
-        .then(() => {
-          console.log(3, "get head and detail");
-          dispatch(get_pr_detail(pr_id));
-          dispatch(get_pr_by_id(pr_id, user_name));
-          console.log(4, "done..");
-        });
     });
 };
-export const get_pr_by_id = (id, user_name) => (dispatch) => {
-  console.log("Getting PR Head..");
+export const update_pr = (
+  pr_id,
+  user_name,
+  data_head,
+  data_detail,
+  redirect
+) => (dispatch) => {
+  console.log(1, "start", data_head, data_detail);
   try {
     axios
-      .get(`${api_purchase}/pr/${id}&${user_name}`, header_config)
-      .then((res) => {
-        dispatch({
-          type: SET_PR_HEAD,
-          payload: res.data.main_master,
-        });
+      .put(`${api_purchase}/pr/${pr_id}`, data_head, header_config)
+      .then(async (res) => {
+        console.log(2, "clear detail");
+        axios
+          .post(
+            `${api_purchase}/pr_detail/${pr_id}`,
+            data_detail,
+            header_config
+          )
+          .then(() => {
+            console.log(3, "get head and detail");
+            dispatch(get_pr_by_id(pr_id, user_name));
+            console.log(4, "done..");
+            message.success({
+              content: "PR Updated.",
+              key: "validate",
+              duration: 2,
+            });
+            redirect();
+          });
       });
   } catch (error) {
     console.log(error);
+    message.error({
+      content: "Somethings went wrong. \n" + error,
+      key: "validate",
+      duration: 2,
+    });
   }
 };
 
-export const set_pr_head = (id, pr_list) => (dispatch) => {
+export const create_pr = (user_name, data_head, data_detail, redirect) => (
+  dispatch
+) => {
+  console.log(data_head);
   try {
-    dispatch({
-      type: SET_PR_HEAD,
-      payload: pr_list.filter((pr) => pr.pr_id === id)[0],
-    });
+    axios
+      .post(`${api_purchase}/pr`, data_head, header_config)
+      .then(async (res) => {
+        console.log(2, "clear detail");
+        console.log("data_detail", data_detail);
+        const pr_id = res.data[0][0].pr_id;
+        axios
+          .post(
+            `${api_purchase}/pr_detail/${pr_id}`,
+            data_detail,
+            header_config
+          )
+          .then(() => {
+            console.log(3, "get head and detail");
+            dispatch(get_pr_by_id(pr_id, user_name));
+            console.log(4, "done..");
+            return_response(true, "Create PR Succesful.");
+            message.success({
+              content: "PR Created.",
+              key: "validate",
+              duration: 2,
+            });
+            redirect();
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+        return_response(true, error);
+      });
+  } catch (error) {
+    console.log(error);
+    return_response(true, error);
+  }
+};
+export const get_pr_by_id = (pr_id, user_name) => async (dispatch) => {
+  console.log("get_pr_by_id");
+
+  try {
+    if (pr_id) {
+      console.log(`${api_purchase}/pr/${pr_id}`);
+      const res_head = axios.get(
+        `${api_purchase}/pr/${pr_id}&${user_name}`,
+        header_config
+      );
+
+      const res_detail = axios.get(
+        `${api_get_pr_detail}/${pr_id}`,
+        header_config
+      );
+      const pr_data = {
+        pr_head:
+          res_head &&
+          (await res_head.then((res) => {
+            return res.data.main_master;
+          })),
+        pr_detail:
+          res_detail &&
+          (await res_detail.then((res) => {
+            return sortData(res.data[0]);
+          })),
+      };
+      console.log(`GET_PR_BY_ID ${pr_id}`, pr_data);
+      await dispatch({ type: GET_PR_BY_ID, payload: pr_data });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -98,36 +148,44 @@ export const set_pr_head = (id, pr_list) => (dispatch) => {
 
 export const pr_actions = (data, pr_id) => (dispatch) => {
   data.commit = 1;
-  // data = {process_status_id : '3', user_name : '2563003', process_id : '30', commit : 1}
   axios
     .put(`${api_approve}/${data.process_id}`, data, header_config)
     .then((res) => {
+      let msg = "";
+      switch (data.process_status_id) {
+        case 2:
+          // Confirm
+          msg = "Confirm.";
+          break;
+        case 3:
+          msg = "Cancel.";
+          break;
+        // Cancel
+        case 4:
+          msg = "Complete.";
+          break;
+        // Complete
+        case 5:
+          msg = "Approve.";
+          break;
+        // Approve
+        case 6:
+          msg = "Reject.";
+          break;
+        // Reject
+        default:
+          break;
+      }
+      message.success({
+        content: msg,
+        key: "validate",
+        duration: 2,
+      });
       console.log(res);
       dispatch(get_pr_by_id(pr_id, data.user_name));
     });
 };
 
-export const update_pr_head = (data) => (dispatch) => {
-  try {
-    dispatch({
-      type: UPDATE_PR_HEAD,
-      payload: data,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-export const get_pr_detail = (pr_id) => (dispatch) => {
-  console.log("Getting PR Detail..");
-  pr_id &&
-    axios.get(`${api_get_pr_detail}/${pr_id}`, header_config).then((res) => {
-      console.log("Done Getting PR Detail..");
-      dispatch({
-        type: GET_PR_DETAIL,
-        payload: res.data[0],
-      });
-    });
-};
 export const reset_pr_data = () => (dispatch) => {
   try {
     dispatch({
@@ -140,4 +198,12 @@ export const reset_pr_data = () => (dispatch) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const return_response = (status, message) => {
+  const return_data = {
+    status: status,
+    message: message,
+  };
+  return return_data;
 };

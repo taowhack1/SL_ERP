@@ -30,8 +30,8 @@ export const get_issue_ref_list = () => async (dispatch) => {
     });
 };
 
-export const get_disburse_list = () => (dispatch) => {
-  axios.get(api_disburse, header_config).then((res) => {
+export const get_disburse_list = (user_name) => (dispatch) => {
+  axios.get(`${api_disburse}/all/${user_name}`, header_config).then((res) => {
     dispatch({ type: GET_DISBURSE_LIST, payload: res.data[0] });
   });
 };

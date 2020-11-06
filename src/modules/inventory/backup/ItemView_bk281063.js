@@ -47,9 +47,9 @@ const ItemView = (props) => {
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -69,16 +69,16 @@ const ItemView = (props) => {
     },
     discard: "/inventory/items",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log(formData);
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
       setEdit(true);
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

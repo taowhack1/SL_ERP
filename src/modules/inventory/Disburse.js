@@ -16,11 +16,17 @@ import {
   get_disburse_by_id,
   get_disburse_list,
 } from "../../actions/inventory/disburseActions";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 
 const Disburse = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const current_menu = useSelector((state) => state.auth.currentMenu);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const disburse_list = useSelector(
     (state) => state.inventory.disburse.disburse_list
   );
@@ -33,14 +39,14 @@ const Disburse = (props) => {
   }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Disburse"],
     search: true,
     create: "/inventory/disburse/create",
-    buttonAction: ["Create"],
+    buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     disabledEditBtn: !rowClick,
     discard: "/inventory/disburse",
     onCancel: () => {
@@ -70,6 +76,7 @@ const Disburse = (props) => {
                     dispatch(
                       get_disburse_by_id(record.disburse_id, auth.user_name)
                     );
+                    keepLog.keep_log_action(record.disburse_no);
                     props.history.push({
                       pathname:
                         "/inventory/disburse/view/" + record.disburse_id,

@@ -6,6 +6,8 @@ import MainLayout from "../../components/MainLayout";
 import numeral from "numeral";
 import { reducer } from "./reducers";
 import { get_qc_receive_list, update_qc_receive_list } from "../../actions/qa";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 
 const numberFormat = {
   precision: 3,
@@ -14,10 +16,13 @@ const numberFormat = {
 };
 
 const QCReceive = () => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   const [qc_list, qcListDispatch] = useReducer(reducer, []);
   const [update, setUpdate] = useState(0);
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const current_project = useSelector((state) => state.auth.currentProject);
   const qc_receive_list = useSelector((state) => state.qa.qc_receive_list);
   const qc_receive_detail_list = useSelector(
@@ -28,9 +33,9 @@ const QCReceive = () => {
   };
 
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "QC Receive"],
     search: true,
@@ -41,11 +46,11 @@ const QCReceive = () => {
       console.log("Cancel");
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
       setUpdate(!update);
       const data_update = qc_list.filter((row) => row.commit === 1);

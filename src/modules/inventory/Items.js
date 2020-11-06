@@ -9,7 +9,13 @@ import {
 } from "../../actions/inventory/itemActions";
 import $ from "jquery";
 import { item_show_columns } from "./config/item";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 const Items = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const current_menu = useSelector((state) => state.auth.currentMenu);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
@@ -24,14 +30,14 @@ const Items = (props) => {
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Items"],
     search: true,
     create: "/inventory/items/create",
-    buttonAction: ["Create", "Edit"],
+    buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     edit: {},
     disabledEditBtn: !rowClick,
     discard: "/inventory/items",

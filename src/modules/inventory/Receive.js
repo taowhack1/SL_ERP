@@ -12,14 +12,20 @@ import {
 } from "../../actions/inventory/receiveActions";
 import { receive_columns } from "./config";
 import { reset_comments } from "../../actions/comment&log";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 const Receive = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const current_menu = useSelector((state) => state.auth.currentMenu);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   const data = useSelector((state) => state.inventory.receive.receive_list);
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const getData = (receive_id, user_name) => {
     dispatch(get_receive_by_id(receive_id, user_name));
   };
@@ -27,18 +33,18 @@ const Receive = (props) => {
   useEffect(() => {
     dispatch(reset_comments());
     dispatch(reset_receive());
-    dispatch(get_receive_list());
+    dispatch(get_receive_list(auth.user_name));
   }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Receive"],
     search: true,
     create: "/inventory/receive/create",
-    buttonAction: ["Create"],
+    buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     disabledEditBtn: !rowClick,
     discard: "/inventory/receive",
     onCancel: () => {

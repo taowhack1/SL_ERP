@@ -14,7 +14,12 @@ import {
   get_customer_payment_term_list,
 } from "../../actions/accounting";
 import { customer_columns } from "./configs/customer";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 const Customer = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   // const [dataTable, setDataTable] = useState([...customerData]);
@@ -28,9 +33,9 @@ const Customer = (props) => {
   };
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Customers"],
     search: true,

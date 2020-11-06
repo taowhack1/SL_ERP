@@ -8,7 +8,7 @@ import {
   disburse_actions,
   update_disburse,
 } from "../../actions/inventory/disburseActions";
-import { header_config } from "../../include/js/main_config";
+import { header_config, report_server } from "../../include/js/main_config";
 import { api_disburse_get_ref_issue_detail } from "../../include/js/api";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
 
@@ -21,6 +21,7 @@ import CustomSelect from "../../components/CustomSelect";
 import axios from "axios";
 import { get_issue_ref_list } from "../../actions/inventory/disburseActions";
 import ModalRemark from "../../components/Modal_Remark";
+import Authorize from "../system/Authorize";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -29,6 +30,8 @@ const initialStateHead = disburse_fields;
 const initialStateDetail = [disburse_detail_fields];
 
 const DisburseView = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
 
@@ -49,7 +52,7 @@ const DisburseView = (props) => {
   );
   const dataComments = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
 
   useEffect(() => {
     // GET LOG
@@ -74,9 +77,9 @@ const DisburseView = (props) => {
     props.location && props.location.state ? props.location.state : 0;
 
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -96,7 +99,7 @@ const DisburseView = (props) => {
     action: [
       {
         name: "Print",
-        link: `http://192.168.5.207:80/Report_purch/report_pr.aspx?pr_no=${
+        link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${
           data_head && data_head.disburse_id
         }`,
       },
@@ -110,6 +113,7 @@ const DisburseView = (props) => {
     step: {
       current: data_head && data_head.node_stay - 1,
       step: flow,
+      process_complete: data_head.process_complete,
     },
     create: "",
     edit: {
@@ -122,15 +126,15 @@ const DisburseView = (props) => {
     },
     discard: "/inventory/disburse",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
       const app_detail = {
         process_status_id: 5,

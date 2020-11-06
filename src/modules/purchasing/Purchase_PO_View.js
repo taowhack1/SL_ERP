@@ -8,16 +8,24 @@ import moment from "moment";
 import Comments from "../../components/Comments";
 import ItemLine from "./po_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
-import { poItemColumns } from "./fields_config/po";
-import { po_actions, get_po_by_id } from "../../actions/purchase/PO_Actions";
+import { poItemColumns } from "./config/po";
+import {
+  po_actions,
+  get_po_by_id,
+  get_pr_detail,
+} from "../../actions/purchase/PO_Actions";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
 import ModalRemark from "../../components/Modal_Remark";
 import numeral from "numeral";
+import { report_server } from "../../include/js/main_config";
+import Authorize from "../system/Authorize";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Text } = Typography;
 
 const PurchaseOrderCreate = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   const [remark, setRemark] = useState("");
   const [openRemarkModal, setOpenRemarkModal] = useState({
@@ -25,23 +33,14 @@ const PurchaseOrderCreate = (props) => {
     loading: false,
   });
   const po_id = useParams().id;
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const dataComments = useSelector((state) => state.log.comment_log);
   const [tab, setTab] = useState("1");
   const data_head = useSelector((state) => state.purchase.po.po_head);
-  // useEffect(() => {
-  //   if (po_id !== "new") {
-  //     dispatch(get_po_by_id(po_id, auth.user_name));
-  //     data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
-  //   }
-  // }, [dispatch, data_head.process_id]);
+  const data_detail = useSelector((state) => state.purchase.po.po_detail);
 
   useEffect(() => {
-    console.log("get_log");
     data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
-    return () => {
-      dispatch(reset_comments());
-    };
   }, [data_head]);
 
   const flow =
@@ -51,9 +50,9 @@ const PurchaseOrderCreate = (props) => {
     });
 
   const callback = (key) => {
-    console.log(key);
     setTab(key);
   };
+
   const changeProcessStatus = (process_status_id) => {
     if (remark.trim() === "") {
       alert("Plase write remark");
@@ -69,11 +68,12 @@ const PurchaseOrderCreate = (props) => {
     };
     dispatch(po_actions(app_detail, data_head.po_id));
   };
+
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -92,7 +92,7 @@ const PurchaseOrderCreate = (props) => {
     action: [
       {
         name: "Print",
-        link: `http://192.168.5.207:80/Report_purch/report_po.aspx?po_no=${data_head.po_no}`,
+        link: `${report_server}/Report_purch/report_po.aspx?po_no=${data_head.po_no}`,
       },
       data_head.button_cancel && {
         name: "Cancel",
@@ -103,11 +103,15 @@ const PurchaseOrderCreate = (props) => {
     step: {
       current: data_head.node_stay - 1,
       step: flow,
+      process_complete: data_head.process_complete,
     },
     create: "",
     save: {},
     edit: {
-      data: data_head,
+      data: {
+        data_head: data_head,
+        data_detail: data_detail,
+      },
       path: data_head && "/purchase/po/edit/" + data_head.po_id,
     },
     discard: "/purchase/po",
@@ -115,15 +119,12 @@ const PurchaseOrderCreate = (props) => {
       console.log("Discard");
     },
     onSave: (e) => {
-      e.preventDefault();
       console.log("Save");
     },
     onEdit: (e) => {
-      e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
       console.log("Approve");
       const app_detail = {
         process_status_id: 5,
@@ -162,13 +163,20 @@ const PurchaseOrderCreate = (props) => {
     },
   };
   return (
-    <MainLayout {...config} data={data_head}>
+    <MainLayout {...config}>
       <div id="form">
         {/* Head */}
         <Row className="col-2">
           <Col span={8}>
             <h2>
-              <strong>Purchase Order #{data_head.po_no}</strong>
+              <strong>
+                Purchase Order{" "}
+                {data_head.tg_trans_status_id === 3 && (
+                  <Text strong type="danger">
+                    #{data_head.trans_status_name}
+                  </Text>
+                )}
+              </strong>
             </h2>
           </Col>
           <Col span={12}></Col>
@@ -179,16 +187,13 @@ const PurchaseOrderCreate = (props) => {
             <Text className="text-view">{data_head.po_created}</Text>
           </Col>
         </Row>
-
-        {/* Address & Information */}
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Due Date :</Text>
-          </Col>
-          <Col span={8}>
-            <Text className="text-view">{data_head.tg_po_due_date}</Text>
-          </Col>
+        <Row className="col-2" style={{ marginBottom: 20 }}>
+          <h3>
+            <b>PO No. :</b>
+            <Text className="text-view">{data_head.po_no}</Text>
+          </h3>
         </Row>
+        {/* Head */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>PR Ref. :</Text>
@@ -245,8 +250,9 @@ const PurchaseOrderCreate = (props) => {
                 <ItemLine
                   pr_id={data_head.pr_id}
                   po_id={data_head.po_id}
-                  columns={poItemColumns}
+                  data_detail={data_detail}
                   readOnly={true}
+                  vat_rate={data_head.vat_rate}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key={"2"}>

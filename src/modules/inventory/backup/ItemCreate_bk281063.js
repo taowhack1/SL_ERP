@@ -35,11 +35,14 @@ import { item_fields } from "../../page_fields/inventory/item";
 import { getNameById } from "../../include/js/function_main";
 import $ from "jquery";
 import { getMasterDataItem } from "../../actions/inventory";
+import Authorize from "../../system/Authorize";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
 
 const ItemCreate = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   useEffect(() => {
     // $("input").attr("readonly", true).css("border", "none");
@@ -62,9 +65,9 @@ const ItemCreate = (props) => {
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -89,19 +92,19 @@ const ItemCreate = (props) => {
     // save: "function",
     discard: "/inventory/items",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
       formData.item_no
         ? dispatch(upDateItem(formData, formData.item_id))
         : dispatch(createNewItems(formData));
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
       setEdit(true);
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

@@ -9,9 +9,13 @@ import TotalFooter from "../../components/TotalFooter";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
 import { receive_actions } from "../../actions/inventory/receiveActions";
 import ModalRemark from "../../components/Modal_Remark";
+import { report_server } from "../../include/js/main_config";
+import Authorize from "../system/Authorize";
 const { Text } = Typography;
 
 const Receive_View = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
   const [remark, setRemark] = useState("");
@@ -31,9 +35,11 @@ const Receive_View = (props) => {
   );
   const dataComments = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
 
   useEffect(() => {
+    const authorize = Authorize();
+    authorize.check_authorize();
     console.log("get_log");
     data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
     return () => {
@@ -52,9 +58,9 @@ const Receive_View = (props) => {
   };
 
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -74,7 +80,7 @@ const Receive_View = (props) => {
     action: [
       {
         name: "Print",
-        link: `http://192.168.5.207:80/Report_purch/report_pr.aspx?pr_no=${
+        link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${
           data_head && data_head.so_no
         }`,
       },
@@ -88,6 +94,7 @@ const Receive_View = (props) => {
     step: {
       current: data_head && data_head.node_stay - 1,
       step: flow,
+      process_complete: data_head.process_complete,
     },
     create: "",
     edit: {
@@ -100,15 +107,15 @@ const Receive_View = (props) => {
     },
     discard: "/inventory/receive",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
       const app_detail = {
         process_status_id: 5,

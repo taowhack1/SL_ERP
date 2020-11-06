@@ -13,6 +13,8 @@ import {
   create_issue,
   update_issue,
 } from "../../actions/inventory/issueActions";
+import { report_server } from "../../include/js/main_config";
+import Authorize from "../system/Authorize";
 const { Text } = Typography;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -21,10 +23,12 @@ const initialStateHead = issue_fields;
 const initialStateDetail = [issue_detail_fields];
 
 const IssueCreate = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   console.log("Render : IssueCreate");
   const dispatch = useDispatch();
   const data = props.location.state ? props.location.state : 0;
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const current_project = useSelector((state) => state.auth.currentProject);
   const cost_centers = useSelector((state) => state.hrm.cost_center);
   const dataComments = useSelector((state) => state.log.comment_log);
@@ -42,9 +46,9 @@ const IssueCreate = (props) => {
   const callback = (key) => {};
 
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -57,7 +61,7 @@ const IssueCreate = (props) => {
     action: [
       {
         name: "Print",
-        link: `http://192.168.5.207:80/Report_purch/report_pr.aspx?pr_no=${
+        link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${
           data_head && data_head.issue_id
         }`,
       },
@@ -71,6 +75,7 @@ const IssueCreate = (props) => {
     step: {
       current: data_head && data_head.node_stay - 1,
       step: flow,
+      process_complete: data_head.process_complete,
     },
     create: "",
     save: {
@@ -82,18 +87,18 @@ const IssueCreate = (props) => {
     },
     discard: "/inventory/issue",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
       data_head.issue_id
         ? dispatch(update_issue(data_head.issue_id, data_head, data_detail))
         : dispatch(create_issue(data_head, data_detail));
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

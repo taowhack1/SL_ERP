@@ -103,9 +103,9 @@ const Receive_Create = (props) => {
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -132,15 +132,15 @@ const Receive_Create = (props) => {
     },
     discard: "/inventory/receive",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       setData({ r_code: "R2009-00099" });
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

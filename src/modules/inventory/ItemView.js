@@ -46,11 +46,14 @@ import {
 import CustomSelect from "../../components/CustomSelect";
 import { item_vendor_columns } from "./config/item";
 import numeral from "numeral";
+import Authorize from "../system/Authorize";
 
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
 const ItemView = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getMasterDataItem());
@@ -65,9 +68,9 @@ const ItemView = (props) => {
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -90,15 +93,15 @@ const ItemView = (props) => {
     // save: "function",
     discard: "/inventory/items",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

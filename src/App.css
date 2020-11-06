@@ -213,13 +213,21 @@ button.primary:hover {
   justify-content: flex-end;
   align-items: center;
 }
+
 .step-item.pass {
   color: rgba(0, 0, 0, 0.45);
   /* color: red; */
 }
+
+.step-item.current-step {
+  color: #1890ff !important;
+  font-weight: bold !important;
+}
+
 .step-item:not(:last-of-type)::after {
   content: " > ";
   /* color: red; */
+  color: rgba(0, 0, 0, 0.45);
   font-weight: bold;
   margin-left: 8px;
   margin-right: 8px;
@@ -338,4 +346,17 @@ div:empty:before {
 .row-margin {
   margin-top: 8px;
   margin-bottom: 8px;
+}
+.require-field-alert {
+  box-shadow: 0 0 5px rgb(238, 104, 81);
+  border: 1px solid rgb(236, 79, 51);
+}
+.require-row-field-alert {
+  /* box-shadow: 0 0 5px rgb(238, 104, 81); */
+  border: 2px solid rgb(236, 79, 51, 0.5) !important;
+  background-color: rgb(236, 79, 51, 0.3) !important;
+}
+span.require {
+  color: red;
+  font-weight: bold;
 }

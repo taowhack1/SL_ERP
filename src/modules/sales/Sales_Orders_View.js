@@ -10,16 +10,22 @@ import { get_so_by_id, so_actions } from "../../actions/sales";
 import Detail from "./Sales_Order_Detail";
 import ModalRemark from "../../components/Modal_Remark";
 import { get_log_by_id } from "../../actions/comment&log";
+import { report_server } from "../../include/js/main_config";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 const SaleOrderView = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
   const data_head = useSelector((state) => state.sales.so.so_head);
   const data_detail = useSelector((state) => state.sales.so.so_detail);
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const dataComment = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
   const [remark, setRemark] = useState("");
@@ -60,9 +66,9 @@ const SaleOrderView = (props) => {
   };
 
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -81,7 +87,7 @@ const SaleOrderView = (props) => {
     action: [
       {
         name: "Print",
-        link: `http://192.168.5.207/Report_purch/report_so.aspx?so_no=${
+        link: `${report_server}/Report_purch/report_so.aspx?so_no=${
           data_head && data_head.so_no
         }`,
       },
@@ -93,8 +99,9 @@ const SaleOrderView = (props) => {
         },
     ],
     step: {
-      current: data_head && data_head.node_stay - 1,
+      current: data_head.node_stay - 1,
       step: flow,
+      process_complete: data_head.process_complete,
     },
     create: "",
     edit: {
@@ -103,15 +110,15 @@ const SaleOrderView = (props) => {
     },
     discard: "/sales/orders",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
       const app_detail = {
         process_status_id: 5,

@@ -12,11 +12,12 @@ import MainConfig from "./MainConfig";
 import { signOut, change_working_project } from "../actions/authActions";
 import { useDispatch } from "react-redux";
 import Text from "antd/lib/typography/Text";
+import useKeepLogs from "../modules/logs/useKeepLogs";
 const MainHead = (props) => {
+  const keepLog = useKeepLogs();
   const auth = useSelector(
-    (state) => state.auth.authData && state.auth.authData[0]
+    (state) => state.auth.authData && state.auth.authData
   );
-  console.log("auth", auth);
   const redirect_fn = () => {
     return <Redirect to="/login" />;
   };
@@ -38,14 +39,21 @@ const MainHead = (props) => {
     return (
       <Menu>
         <Menu.Item>
-          <Link to="/change_password">Change Password</Link>
+          <Link
+            to="/change_password"
+            onClick={() => {
+              // keepLog.keep_log_action(`Click Change Password`);
+            }}
+          >
+            Change Password
+          </Link>
         </Menu.Item>
         <Menu.Item>
           <Link
             to="/login"
             onClick={() => {
+              // keepLog.keep_log_action(`Click Logout`);
               dispatch(signOut());
-              localStorage.removeItem("state");
             }}
           >
             Logout
@@ -76,12 +84,10 @@ const MainHead = (props) => {
         </Col>
         <Col span={12} id="column-right">
           <Row>
-            <Col span={11}></Col>
-            <Col span={5}>
-              <Text style={{ color: "white" }}>{auth && auth.branch_name}</Text>
-            </Col>
-
-            <Col span={8}>
+            <Col span={24}>
+              <Text style={{ color: "white", marginRight: 30 }}>
+                {auth && auth.branch_name}
+              </Text>
               <Avatar icon={<UserOutlined />} />
               <Dropdown overlay={userMenu()} trigger={["click"]}>
                 <Button type="text" className="ant-dropdown-link">

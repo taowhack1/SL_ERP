@@ -11,7 +11,6 @@ import {
   Typography,
 } from "antd";
 import moment from "moment";
-import { set_pr_head } from "../actions/purchase/PR_Actions";
 const { Text, Title } = Typography;
 const Comments = (props) => {
   const getActionColor = (id) => {

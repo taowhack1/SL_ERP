@@ -13,7 +13,12 @@ import {
   get_currency_list,
   get_vendor_payment_term_list,
 } from "../../actions/accounting";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 const Vendor = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const [selectedRow, setSelectedRow] = useState();
   const [rowClick, setRowClick] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
@@ -27,9 +32,9 @@ const Vendor = (props) => {
   }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Vendors"],
     search: true,

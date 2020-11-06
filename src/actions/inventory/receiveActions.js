@@ -9,7 +9,7 @@ import {
 } from "../types";
 import axios from "axios";
 import { sortData } from "../../include/js/function_main";
-import { header_config } from "../../include/js/main_config";
+import { api_server, header_config } from "../../include/js/main_config";
 import {
   api_receive_get_ref_po_detail,
   api_receive_get_ref_po_head,
@@ -21,8 +21,8 @@ import {
 import { Redirect } from "react-router-dom";
 import { browserHistory } from "react-router";
 
-export const get_receive_list = () => async (dispatch) => {
-  axios.get(api_receive, header_config).then((res) => {
+export const get_receive_list = (user_name) => async (dispatch) => {
+  axios.get(`${api_receive}/all/${user_name}`, header_config).then((res) => {
     console.log("GET_RECEIVE_LIST");
     dispatch({ type: GET_RECEIVE_LIST, payload: res.data[0] });
   });
@@ -111,8 +111,7 @@ export const create_receive = (data_head, data_detail, history) => async (
   temp_detail.map((detail) => temp_sub_detail.push(detail.receive_sub_detail));
 
   console.log("Create Receive", data_head, data_detail);
-  const agi_post_sub_detail =
-    "http://192.168.5.222:3009/api/inventory/receive_detail_sub/receive_detail";
+  const agi_post_sub_detail = `${api_server}/api/inventory/receive_detail_sub/receive_detail`;
 
   await axios.post(api_receive, data_head, header_config).then(async (res) => {
     console.log("INSERT_HEAD", res);
@@ -160,8 +159,7 @@ export const update_receive = (receive_id, data_head, data_detail) => async (
   let temp_sub_detail = [];
   let temp_detail = data_detail;
   temp_detail.map((detail) => temp_sub_detail.push(detail.receive_sub_detail));
-  const agi_post_sub_detail =
-    "http://192.168.5.222:3009/api/inventory/receive_detail_sub/receive_detail";
+  const agi_post_sub_detail = `${api_server}/api/inventory/receive_detail_sub/receive_detail`;
 
   console.log("update_receive_data", receive_id, data_head, data_detail);
   await axios

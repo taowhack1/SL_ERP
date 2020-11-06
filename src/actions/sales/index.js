@@ -4,15 +4,13 @@ import {
   api_create_quotation,
   api_create_quotation_detail,
   api_approve,
-} from "../../include/js/api";
-import { header_config } from "../../include/js/main_config";
-import {
   api_get_qn_by_id,
   api_qn_detail,
   api_so,
   api_so_detail,
   api_get_qn_open_so,
-} from "./config";
+} from "../../include/js/api";
+import { header_config } from "../../include/js/main_config";
 import {
   SET_QN_HEAD,
   SET_QN_DETAIL,
@@ -26,14 +24,15 @@ import {
   RESET_SO,
 } from "../types";
 import axios from "axios";
-export const get_quotation_list = () => (dispatch) => {
-  axios.get(api_quo_list, header_config).then((res) => {
+export const get_quotation_list = (user_name) => (dispatch) => {
+  axios.get(`${api_quo_list}/all/${user_name}`, header_config).then((res) => {
     dispatch({ type: SET_QN_LIST, payload: res.data[0] });
   });
 };
 
-export const get_so_list = () => (dispatch) => {
-  axios.get(api_so, header_config).then((res) => {
+export const get_so_list = (user_name) => (dispatch) => {
+  axios.get(`${api_so}/all/${user_name}`, header_config).then((res) => {
+    console.log(res);
     dispatch({
       type: GET_SO_LIST,
       payload: res.data[0],

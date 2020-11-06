@@ -115,6 +115,7 @@ const SO_Detail = ({
                   backgroundColor: "#FCFCFC",
                 }}
                 gutter={2}
+                name={`row-${key}`}
                 className="col-2"
               >
                 <Col span={6} className="text-string">
@@ -309,6 +310,7 @@ const SO_Detail = ({
                   backgroundColor: "#FCFCFC",
                 }}
                 gutter={2}
+                name={`row-${key}`}
                 className="col-2"
               >
                 <Col span={6} className="text-string">

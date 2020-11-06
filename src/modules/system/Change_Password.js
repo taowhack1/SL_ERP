@@ -5,13 +5,15 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signIn2, signIn, change_password } from "../../actions/authActions";
+import useKeepLogs from "../logs/useKeepLogs";
 const { Title, Text } = Typography;
 
 const ChangePassword = (props) => {
+  const keepLog = useKeepLogs();
   const history = useHistory();
   const dispatch = useDispatch();
   const auth = useSelector(
-    (state) => state.auth.authData && state.auth.authData[0]
+    (state) => state.auth.authData && state.auth.authData
   );
   const redirect_fn = () => {
     history.push("/");
@@ -27,6 +29,7 @@ const ChangePassword = (props) => {
     }
 
     if (validate) {
+      keepLog.keep_log_action(`Change Password`);
       dispatch(
         change_password({ ...values, user_name: auth.user_name }, redirect_fn)
       );

@@ -49,11 +49,14 @@ export const get_stock_on_hand = `${api_server}/api/inventory/stock`;
 
 //Authen
 export const api_change_password = `${api_server}/api/authorize/change_password`;
+export const api_keep_log = `${api_server}/api/log/keeplog`;
 
 export const api_url = `${api_server}/api`;
 export const api_query = `${api_server}/api/query/sql`;
 export const api_purchase = `${api_server}/api/purchase`;
 export const api_purchase_po_list = `${api_server}/api/purchase/po`;
+export const api_purchase_get_all_po = `${api_server}/api/purchase/po/all`;
+export const api_purchase_get_all_pr = `${api_server}/api/purchase/pr/all`;
 export const api_get_po_detail = `${api_server}/api/purchase/po_detail`;
 export const api_get_pr_detail = `${api_server}/api/purchase/pr_detail`;
 export const api_approve = `${api_server}/api/approve/process`;

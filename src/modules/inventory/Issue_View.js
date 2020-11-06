@@ -9,13 +9,17 @@ import TotalFooter from "../../components/TotalFooter";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
 import { issue_actions } from "../../actions/inventory/issueActions";
 import ModalRemark from "../../components/Modal_Remark";
+import { report_server } from "../../include/js/main_config";
+import Authorize from "../system/Authorize";
 const { Text } = Typography;
 
 const Issue_View = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   const dataComments = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const [tab, setTab] = useState("1");
   const [remark, setRemark] = useState("");
   const [openRemarkModal, setOpenRemarkModal] = useState({
@@ -49,9 +53,9 @@ const Issue_View = (props) => {
   };
 
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -71,7 +75,7 @@ const Issue_View = (props) => {
     action: [
       {
         name: "Print",
-        link: `http://192.168.5.207/Report_purch/report_ream1.aspx?issue_no=${
+        link: `${report_server}/Report_purch/report_ream1.aspx?issue_no=${
           data_head && data_head.issue_no
         }`,
       },
@@ -85,6 +89,7 @@ const Issue_View = (props) => {
     step: {
       current: data_head && data_head.node_stay - 1,
       step: flow,
+      process_complete: data_head.process_complete,
     },
     create: "",
     edit: {
@@ -96,15 +101,15 @@ const Issue_View = (props) => {
     },
     discard: "/inventory/issue",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
       const app_detail = {
         process_status_id: 5,

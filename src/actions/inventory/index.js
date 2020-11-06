@@ -54,10 +54,6 @@ export const getMasterDataItem = () => async (dispatch) => {
       }),
     };
     await dispatch({ type: GET_MASTER_DATA_ITEM, payload: master_data });
-
-    // http://192.168.5.222:3009/api/list/category/1
-    // http://192.168.5.222:3009/api/list/uom
-    // http://192.168.5.222:3009/api/list/identify_benefit
   } catch (error) {
     console.log(error);
   }

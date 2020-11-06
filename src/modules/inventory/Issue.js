@@ -12,28 +12,34 @@ import {
   get_issue_by_id,
   get_issue_list,
 } from "../../actions/inventory/issueActions";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 const Issue = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const current_menu = useSelector((state) => state.auth.currentMenu);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const issue_list = useSelector((state) => state.inventory.issue.issue_list);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   useEffect(() => {
-    dispatch(get_issue_list());
+    dispatch(get_issue_list(auth.user_name));
     dispatch(getMasterDataItem());
   }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Issue"],
     search: true,
     create: "/inventory/issue/create",
-    buttonAction: ["Create"],
+    buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     disabledEditBtn: !rowClick,
     discard: "/inventory/issue",
     onCancel: () => {

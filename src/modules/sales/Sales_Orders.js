@@ -14,34 +14,39 @@ import {
 import { so_columns } from "./configs";
 import { reset_comments } from "../../actions/comment&log";
 import { getMasterDataItem } from "../../actions/inventory";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 const SaleOrder = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const current_menu = useSelector((state) => state.auth.currentMenu);
+  const auth = useSelector((state) => state.auth.authData);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   useEffect(() => {
     dispatch(get_sale_master_data());
     dispatch(reset_so());
     dispatch(reset_comments());
-    dispatch(get_so_list());
+    dispatch(get_so_list(auth.user_name));
     dispatch(getMasterDataItem());
   }, []);
-  const getData = (so_id, user_name) => {
-    dispatch(get_so_by_id(so_id, user_name));
-  };
+
   const data = useSelector((state) => state.sales.so.so_list);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  const auth = useSelector((state) => state.auth.authData[0]);
+
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Sale Orders"],
     search: true,
     create: "/sales/orders/create",
-    buttonAction: ["Create"],
+    buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     disabledEditBtn: !rowClick,
     discard: "/sales/orders",
     onCancel: () => {
@@ -71,7 +76,7 @@ const SaleOrder = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
 
-                    getData(record.so_id, auth.user_name);
+                    dispatch(get_so_by_id(record.so_id, auth.user_name));
                     props.history.push({
                       pathname: "/sales/orders/view/" + record.so_id,
                       state: record,

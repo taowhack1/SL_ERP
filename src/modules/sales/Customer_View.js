@@ -6,17 +6,22 @@ import { dataComments } from "../../data";
 import { useSelector } from "react-redux";
 import Title from "antd/lib/skeleton/Title";
 import numeral from "numeral";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 
 const { Text } = Typography;
 
 const CustomerView = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const data_head = useSelector((state) => state.sales.customer.customer);
   const current_project = useSelector((state) => state.auth.currentProject);
   const callback = (key) => {};
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -35,14 +40,14 @@ const CustomerView = (props) => {
     },
     discard: "/sales/config/customers",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

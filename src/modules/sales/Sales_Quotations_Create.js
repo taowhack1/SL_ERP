@@ -28,9 +28,11 @@ import CustomSelect from "../../components/CustomSelect";
 import { update_quotation } from "../../actions/sales";
 import { create_quotation } from "../../actions/sales";
 import axios from "axios";
-import { header_config } from "../../include/js/main_config";
+import { api_server, header_config } from "../../include/js/main_config";
 import { sortData, sumArrObj } from "../../include/js/function_main";
 import { reducer } from "./reducers";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 const { TextArea } = Input;
 const { Text } = Typography;
 
@@ -38,9 +40,11 @@ const initialStateHead = quotation_fields;
 const initialStateDetail = [quotation_detail_fields];
 
 const CustomerCreate = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const dataComment = useSelector((state) => state.log.comment_log);
@@ -76,10 +80,7 @@ const CustomerCreate = (props) => {
   useEffect(() => {
     function getDetail() {
       axios
-        .get(
-          `http://192.168.5.222:3009/api/sales/qn_detail/${data.qn_id}`,
-          header_config
-        )
+        .get(`${api_server}/api/sales/qn_detail/${data.qn_id}`, header_config)
         .then((res) => {
           // set_qn_detail(res.data[0]);
           detailDispatch({ type: "SET_DETAIL", payload: res.data[0] });
@@ -92,9 +93,9 @@ const CustomerCreate = (props) => {
   }, []);
 
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -119,18 +120,18 @@ const CustomerCreate = (props) => {
     },
     discard: "/sales/quotations",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
       data_head.qn_id && data_head.qn_id
         ? dispatch(update_quotation(data_head.qn_id, data_head, data_detail))
         : dispatch(create_quotation(data_head, data_detail));
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

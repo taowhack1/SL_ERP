@@ -137,6 +137,7 @@ const DisburseDetail = ({
                   backgroundColor: "#FCFCFC",
                 }}
                 gutter={2}
+                name={`row-${key}`}
                 className="col-2"
               >
                 <Col span={6} className="text-string">
@@ -237,6 +238,7 @@ const DisburseDetail = ({
                   backgroundColor: "#FCFCFC",
                 }}
                 gutter={2}
+                name={`row-${key}`}
                 className="col-2"
               >
                 <Col span={6} className="text-string">

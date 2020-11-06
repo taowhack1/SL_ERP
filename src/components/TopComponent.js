@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { withRouter, Link } from "react-router-dom";
 import {
   Col,
@@ -9,26 +9,76 @@ import {
   Dropdown,
   Menu,
   Typography,
+  message,
 } from "antd";
-import { CaretDownOutlined } from "@ant-design/icons";
+import { CaretDownOutlined, RollbackOutlined } from "@ant-design/icons";
 import Search from "./Search";
+import { useSelector } from "react-redux";
+import { Context } from "../include/js/context";
+import useKeepLogs from "../modules/logs/useKeepLogs";
 const { Text } = Typography;
 
 function TopContent(props) {
+  const keepLog = useKeepLogs();
+
+  const [btnLoading, setBtnLoading] = useState(false);
   const onCreate = () => {
+    keepLog.keep_log_action("Click Create Button");
     props.create === "modal"
       ? props.openModal("Create")
       : props.history.push(props.create);
   };
   const onDiscard = () => {
+    keepLog.keep_log_action("Click Discard Button");
     props.onDiscard && props.onDiscard();
     props.history.push(props.discard);
   };
   const onEdit = () => {
+    keepLog.keep_log_action("Click Edit Button");
     props.edit === "modal"
       ? props.openModal("Edit")
       : props.history.push(props.edit.path);
   };
+  const onSave = () => {
+    keepLog.keep_log_action("Click Save Button");
+    setBtnLoading(true);
+    message.loading({ content: "Validating...", key: "validate", duration: 1 });
+    setTimeout(() => {
+      props.onSave();
+      setBtnLoading(false);
+    }, 1000);
+  };
+  const onApprove = () => {
+    keepLog.keep_log_action("Click Approve Button");
+    setBtnLoading(true);
+    setTimeout(() => {
+      props.onApprove();
+      setBtnLoading(false);
+    }, 1000);
+  };
+  const onConfirm = () => {
+    keepLog.keep_log_action("Click Confirm Button");
+    setBtnLoading(true);
+    setTimeout(() => {
+      props.onConfirm();
+      setBtnLoading(false);
+    }, 1000);
+  };
+
+  const onReject = () => {
+    keepLog.keep_log_action("Click Reject Button");
+    props.onReject();
+  };
+  const onBack = () => {
+    keepLog.keep_log_action("Click Back Button");
+    props.onBack();
+    props.history.push(props.back);
+  };
+  const onCancel = () => {
+    keepLog.keep_log_action("Click Cancel Button");
+    props.onCancel();
+  };
+
   const menuAction = () => {
     const a = (
       <Menu>
@@ -38,13 +88,22 @@ function TopContent(props) {
               item &&
               (item.cancel ? (
                 <Menu.Item key={index}>
-                  <Text onClick={() => props.onCancel && props.onCancel()}>
+                  <Text onClick={() => props.onCancel && onCancel()}>
                     {item.name}
                   </Text>
                 </Menu.Item>
               ) : (
                 <Menu.Item key={index}>
-                  <a rel="noopener noreferrer" target="_blank" href={item.link}>
+                  <a
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href={item.link}
+                    onClick={() => {
+                      keepLog.keep_log_action(
+                        `Click ${item.name + " Link : " + item.link} `
+                      );
+                    }}
+                  >
                     {item.name}
                   </a>
                 </Menu.Item>
@@ -86,7 +145,12 @@ function TopContent(props) {
               )}
               {props.buttonAction.includes("Save") &&
                 (props.save === "function" ? (
-                  <Button className="primary" onClick={props.onSave}>
+                  <Button
+                    className="primary"
+                    onClick={onSave}
+                    loading={btnLoading}
+                    disabled={btnLoading}
+                  >
                     Save
                   </Button>
                 ) : (
@@ -94,6 +158,8 @@ function TopContent(props) {
                     className="primary"
                     onClick={props.onSave && props.onSave}
                     disabled={props.saveDisabled}
+                    loading={btnLoading}
+                    disabled={btnLoading}
                   >
                     <Link
                       to={{
@@ -120,8 +186,9 @@ function TopContent(props) {
                 ) : (
                   <Button
                     className="primary"
-                    // onClick={onEdit}
                     disabled={props.disabledEditBtn}
+                    disabled={btnLoading}
+                    onClick={() => keepLog.keep_log_action("Click Edit Button")}
                   >
                     <Link
                       to={{
@@ -135,19 +202,35 @@ function TopContent(props) {
                     </Link>
                   </Button>
                 ))}
-              {props.buttonAction.includes("SaveConfirm") && (
+              {/* {props.buttonAction.includes("SaveConfirm") && (
                 <Button onClick={props.onConfirm}>Save & Confirm</Button>
-              )}
+              )} */}
               {props.buttonAction.includes("Confirm") && (
-                <Button onClick={props.onConfirm}>Confirm</Button>
+                <Button
+                  onClick={onConfirm}
+                  loading={btnLoading}
+                  disabled={btnLoading}
+                >
+                  Confirm
+                </Button>
               )}
               {props.buttonAction.includes("Approve") && (
-                <Button onClick={props.onApprove} className="primary">
+                <Button
+                  onClick={onApprove}
+                  className="primary"
+                  loading={btnLoading}
+                  disabled={btnLoading}
+                >
                   Approve
                 </Button>
               )}
               {props.buttonAction.includes("Reject") && (
-                <Button onClick={props.onReject} danger>
+                <Button
+                  onClick={onReject}
+                  danger
+                  // loading={btnLoading}
+                  disabled={btnLoading}
+                >
                   Reject
                 </Button>
               )}
@@ -158,7 +241,23 @@ function TopContent(props) {
                 </Button>
               )}
               {props.buttonAction.includes("Discard") && (
-                <Button onClick={onDiscard}>Discard</Button>
+                <Button
+                  onClick={onDiscard}
+                  // loading={btnLoading}
+                  disabled={btnLoading}
+                >
+                  Discard
+                </Button>
+              )}
+              {props.buttonAction.includes("Back") && (
+                <Button
+                  onClick={onBack}
+                  // loading={btnLoading}
+                  disabled={btnLoading}
+                >
+                  <RollbackOutlined />
+                  Back
+                </Button>
               )}
             </div>
           </Col>
@@ -176,9 +275,19 @@ function TopContent(props) {
               {props.step &&
                 props.step.step &&
                 props.step.step.map((item, index) => {
-                  const pass = props.step.current >= index ? "pass" : "";
+                  const pass =
+                    props.step.current > index || props.step.process_complete
+                      ? "pass"
+                      : "";
+                  const current =
+                    props.step.current === index && !props.step.process_complete
+                      ? "current-step"
+                      : "";
                   return (
-                    <span className={`step-item ${pass}`} key={index}>
+                    <span
+                      className={`step-item ${pass} ${current}`}
+                      key={index}
+                    >
                       {item}
                     </span>
                   );

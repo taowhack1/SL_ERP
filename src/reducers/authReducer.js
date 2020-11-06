@@ -4,15 +4,17 @@ import {
   USER_MENU,
   UNAUTH_USER,
   CURRENT_PROJECT,
+  CURRENT_MENU,
 } from "../actions/types";
-const initialState = {
+export const initialStateAuth = {
   authData: [],
   authenticated: false,
   projects: [],
   menus: [],
   currentProject: null,
+  currentMenu: {},
 };
-export default (state = initialState, action) => {
+export default (state = initialStateAuth, action) => {
   switch (action.type) {
     case AUTH_USER:
       return { ...state, authenticated: true, authData: action.payload };
@@ -30,6 +32,8 @@ export default (state = initialState, action) => {
       };
     case CURRENT_PROJECT:
       return { ...state, authenticated: true, currentProject: action.payload };
+    case CURRENT_MENU:
+      return { ...state, authenticated: true, currentMenu: action.payload };
     default:
       return state;
   }

@@ -1,3 +1,20 @@
+export const po_require_fields = [
+  "pr_id",
+  "vendor_id",
+  "po_description",
+  "branch_id",
+  "currency_id",
+  "payment_term_id",
+];
+
+export const po_require_fields_detail = [
+  "item_id",
+  "uom_id",
+  "po_detail_qty",
+  "po_detail_due_date",
+  "po_detail_price",
+];
+
 export const po_list_columns = [
   {
     title: "PO No",
@@ -74,6 +91,7 @@ export const po_fields = {
   po_created_by: null,
   po_updated: null,
   po_updated_by: null,
+  payment_term_id: null,
   branch_id: 1,
   vendor_id: null,
   vat_id: 1,
@@ -102,6 +120,7 @@ export const po_fields = {
   pr_id: null,
   pr_no: null,
   pr_no_description: null,
+  commit: 1,
 };
 export const po_detail_fields = {
   id: 0,
@@ -126,6 +145,7 @@ export const po_detail_fields = {
   //show Only
   uom_no: null,
   item_no_name: null,
+  commit: 1,
 };
 
 export const poItemColumns = [
@@ -133,21 +153,25 @@ export const poItemColumns = [
     id: 0,
     name: "Item",
     size: 6,
+    require: true,
   },
   {
     id: 1,
     name: "Quantity",
     size: 3,
+    require: true,
   },
   {
     id: 2,
     name: "Unit",
     size: 2,
+    require: true,
   },
   {
     id: 3,
     name: "Unit Price",
     size: 3,
+    require: true,
   },
   {
     id: 4,
@@ -163,5 +187,6 @@ export const poItemColumns = [
     id: 6,
     name: "Due Date",
     size: 3,
+    require: true,
   },
 ];

@@ -6,6 +6,8 @@ import {
   USER_PROJECT,
   USER_MENU,
   CURRENT_PROJECT,
+  CURRENT_MENU,
+  USER_LOGOUT,
 } from "../actions/types";
 import {
   api_url,
@@ -14,6 +16,7 @@ import {
   api_change_password,
 } from "../include/js/api";
 import { header_config } from "../include/js/main_config";
+import Authorize from "../modules/system/Authorize";
 import { getVat } from "./systemConfigActions";
 const url = api_url;
 // const url = "";
@@ -21,33 +24,15 @@ export const signOut = () => {
   return (dispatch) => {
     localStorage.removeItem("state");
     console.log("signout");
-    dispatch({ type: UNAUTH_USER });
+    dispatch({ type: USER_LOGOUT });
   };
 };
 export const signIn2 = (user) => async (dispatch) => {
   let status = 0;
-  const query = {
-    query_sql: `SELECT
-    A.user_name,
-    emp.employee_id,
-    emp.employee_no,
-    emp.employee_firstname_eng + ' ' + emp.employee_lastname_eng AS employee_name,
-    '[ ' + emp.employee_no + ' ] ' + emp.employee_firstname_eng + ' ' + emp.employee_lastname_eng AS create_by,
-    emp.employee_nickname_eng as employee_nickname,
-    dep.department_id,
-  dep.department_no,
-  '[ ' +dep.department_no+ ' ] ' + department_name as department_name
-  FROM
-    HRM.dbo.tb_user A
-  LEFT JOIN HRM.dbo.tb_employee emp ON 	A.employee_id = emp.employee_id
-  LEFT JOIN HRM.dbo.tb_department  dep ON emp.department_id = dep.department_no
-  WHERE 1=1  AND ( user_name = '${user.user_name}' AND user_password = '${user.user_password}' ) AND user_actived = 1
-  
-  `,
-  };
   try {
     const response = await axios.post(api_authen, user, header_config);
-    if (response.data[0].length) {
+    // console.log(response);
+    if (response.data[0].user_name) {
       status = 1;
       dispatch({
         type: AUTH_USER,
@@ -90,6 +75,17 @@ export const change_working_project = (project) => (dispatch) => {
     dispatch({
       type: CURRENT_PROJECT,
       payload: project,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const set_working_menu = (menu_detail) => (dispatch) => {
+  console.log("set_working_menu", menu_detail);
+  try {
+    dispatch({
+      type: CURRENT_MENU,
+      payload: menu_detail,
     });
   } catch (error) {
     console.log(error);

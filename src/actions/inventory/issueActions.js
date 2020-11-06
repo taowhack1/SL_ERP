@@ -3,8 +3,8 @@ import { header_config } from "../../include/js/main_config";
 import { api_approve, api_issue, api_issue_detail } from "../../include/js/api";
 import { GET_ISSUE_LIST, RESET_ISSUE, GET_ISSUE_BY_ID } from "../types";
 
-export const get_issue_list = () => (dispatch) => {
-  axios.get(api_issue, header_config).then((res) => {
+export const get_issue_list = (user_name) => (dispatch) => {
+  axios.get(`${api_issue}/all/${user_name}`, header_config).then((res) => {
     dispatch({ type: GET_ISSUE_LIST, payload: res.data[0] });
   });
 };

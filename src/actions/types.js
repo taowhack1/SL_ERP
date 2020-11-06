@@ -4,6 +4,7 @@ export const AUTH_ERROR = "AUTH_ERROR";
 export const USER_PROJECT = "USER_PROJECT";
 export const USER_MENU = "USER_MENU";
 export const CURRENT_PROJECT = "CURRENT_PROJECT";
+export const CURRENT_MENU = "CURRENT_MENU";
 //HRM
 export const GET_SELECT_DEP = "GET_SELECT_DEP";
 
@@ -69,10 +70,9 @@ export const RESET_COMMENTS = "RESET_COMMENTS";
 export const GET_ALL_VENDOR = "GET_ALL_VENDOR";
 export const GET_VENDOR_BY_ID = "GET_VENDOR_BY_ID";
 //Purchase -> PR
+export const GET_PR_BY_ID = "GET_PR_BY_ID";
 export const GET_ALL_PR = "GET_ALL_PR";
-export const GET_PR_DETAIL = "GET_PR_DETAIL";
 export const UPDATE_PR_DETAIL = "UPDATE_PR_DETAIL";
-export const CREATE_PR = "CREATE_PR";
 export const UPDATE_PR = "UPDATE_PR";
 export const UPDATE_PR_STATUS = "UPDATE_PR_STATUS";
 export const ADD_ITEM_LINE = "ADD_ITEM_LINE";
@@ -80,17 +80,12 @@ export const DEL_ITEM_LINE = "DEL_ITEM_LINE";
 export const UPDATE_ITEM_LINE = "UPDATE_ITEM_LINE";
 export const RESET_PR_DATA = "RESET_PR_DATA";
 
-export const SET_PR_HEAD = "SET_PR_HEAD";
-export const UPDATE_PR_HEAD = "UPDATE_PR_HEAD";
-
 //Purchase -> PO
 export const GET_ALL_PO = "GET_ALL_PO";
+export const GET_PO_BY_ID = "GET_PO_BY_ID";
 export const GET_PR_OPEN_PO = "GET_PR_OPEN_PO";
-export const GET_PO_HEAD = "GET_PO_HEAD";
-export const GET_PO_DETAIL = "GET_PO_DETAIL";
 export const CREATE_PO = "CREATE_PO";
 export const UPDATE_PO = "UPDATE_PO";
-export const UPDATE_PO_HEAD = "UPDATE_PO_HEAD";
 export const UPDATE_PO_STATUS = "UPDATE_PO_STATUS";
 export const PR_TO_PO_DETAIL = "PR_TO_PO_DETAIL";
 
@@ -126,3 +121,14 @@ export const GET_QC_RECEIVE_DETAIL_LIST = "GET_QC_RECEIVE_DETAIL_LIST";
 export const GET_VENDOR_PAYMENT_TERM_LIST = "GET_VENDOR_PAYMENT_TERM_LIST";
 export const GET_CUSTOMER_PAYMENT_TERM_LIST = "GET_CUSTOMER_PAYMENT_TERM_LIST";
 export const GET_CURRENCY = "GET_CURRENCY";
+
+export const RESET_AUTHEN = "RESET_AUTHEN";
+export const RESET_SYSTEM = "RESET_SYSTEM";
+export const RESET_INVENTORY = "RESET_INVENTORY";
+export const RESET_SALES = "RESET_SALES";
+export const RESET_PURCHASE = "RESET_PURCHASE";
+export const RESET_QA = "RESET_QA";
+export const RESET_HRM = "RESET_HRM";
+export const RESET_LOG = "RESET_LOG";
+export const RESET_ACCOUNTING = "RESET_ACCOUNTING";
+export const USER_LOGOUT = "USER_LOGOUT";

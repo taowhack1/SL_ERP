@@ -182,6 +182,7 @@ const ReceiveDetail = ({
                   backgroundColor: "#FCFCFC",
                 }}
                 gutter={2}
+                name={`row-${key}`}
                 className="col-2"
               >
                 {po_id ? (
@@ -464,6 +465,7 @@ const ReceiveDetail = ({
                   backgroundColor: "#FCFCFC",
                 }}
                 gutter={2}
+                name={`row-${key}`}
                 className="col-2"
               >
                 <Col span={7} className="text-string">

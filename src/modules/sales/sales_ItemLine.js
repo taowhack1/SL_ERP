@@ -123,6 +123,7 @@ const ItemLine = ({
                   backgroundColor: "#FCFCFC",
                 }}
                 gutter={2}
+                name={`row-${key}`}
                 className="col-2"
               >
                 <Col span={9} className="text-string">
@@ -298,6 +299,7 @@ const ItemLine = ({
                   backgroundColor: "#FCFCFC",
                 }}
                 gutter={2}
+                name={`row-${key}`}
                 className="col-2"
               >
                 <Col span={9} className="text-string">

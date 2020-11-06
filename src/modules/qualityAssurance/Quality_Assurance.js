@@ -4,8 +4,13 @@ import MainLayout from "../../components/MainLayout";
 import { withRouter } from "react-router-dom";
 import { reset_comments } from "../../actions/comment&log";
 import { RESET_ALL_SALES } from "../../actions/types";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 
 const QualityAssurance = (props) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
   console.log(props.location.state);
   // const onChange = (pagination, filters, sorter, extra) => {
@@ -20,9 +25,9 @@ const QualityAssurance = (props) => {
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home"],
     search: true,

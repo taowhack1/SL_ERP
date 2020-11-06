@@ -1,4 +1,8 @@
-import { action_type, api_comments_log } from "../../include/js/api";
+import {
+  action_type,
+  api_comments_log,
+  api_keep_log,
+} from "../../include/js/api";
 import { header_config } from "../../include/js/main_config";
 import { GET_LOG_BY_ID, RESET_COMMENTS } from "../types";
 import axios from "axios";
@@ -15,8 +19,19 @@ export const get_log_by_id = (process_id) => async (dispatch) => {
     });
   }
 };
+
 export const reset_comments = () => (dispatch) => {
   dispatch({
     type: RESET_COMMENTS,
+  });
+};
+// export const set_log_detail = (setContext, data) => {
+//   setContext({ log_detail: { ...context.log_detail, ...data } });
+// };
+
+export const keep_log = (log) => {
+  console.log("context.log_detail", log.log_detail);
+  axios.post(api_keep_log, log.log_detail, header_config).then((res) => {
+    console.log("Keep Log.", res);
   });
 };

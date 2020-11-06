@@ -5,16 +5,19 @@ import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { columnsMove, dataMove } from "../../data/inventoryData";
 import $ from "jquery";
+import Authorize from "../system/Authorize";
 const StockMove = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const [rowClick, setRowClick] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Stock move"],
     search: true,

@@ -19,6 +19,7 @@ import {
 } from "../../actions/purchase/vendorActions";
 import { vendor_fields } from "./config/vendor";
 import CustomSelect from "../../components/CustomSelect";
+import Authorize from "../system/Authorize";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -31,8 +32,10 @@ const require_field = {
 };
 
 const VendorCreate = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const vendor_payment_terms = useSelector(
     (state) => state.accounting.master_data.vendor_payment_terms
   );
@@ -60,9 +63,9 @@ const VendorCreate = (props) => {
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -83,17 +86,17 @@ const VendorCreate = (props) => {
     },
     discard: "/purchase/vendor",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       data_head.vendor_id
         ? dispatch(update_vendor(data_head.vendor_id, data_head))
         : dispatch(create_vendor(data_head));
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

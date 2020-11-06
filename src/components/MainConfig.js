@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Dropdown, Button, Menu } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { set_working_menu } from "../actions/authActions";
+import { Context } from "../include/js/context";
+import { keep_log } from "../actions/comment&log";
+import useKeepLogs from "../modules/logs/useKeepLogs";
 
 export default function MainConfig(props) {
+  const keepLog = useKeepLogs();
+  const dispatch = useDispatch();
   const projectId = props.projectId && props.projectId ? props.projectId : 0;
   const menusLocal = useSelector((state) => state.auth.menus);
   let projectMenus = menusLocal
@@ -12,6 +18,11 @@ export default function MainConfig(props) {
         (menu) => menu.project_id === projectId && menu.menu_parent === 0
       )
     : [];
+
+  const set_log_detail = (data) => {
+    keepLog.keep_log_action(data);
+  };
+
   const getSubMenu = (menu) => {
     const menulevel2 = menusLocal.filter(
       (menu2) =>
@@ -28,7 +39,10 @@ export default function MainConfig(props) {
               <Link
                 to={{
                   pathname: sub.menu_url,
-                  // state: project,
+                }}
+                onClick={() => {
+                  dispatch(set_working_menu(sub));
+                  set_log_detail(`Click Menu ${sub.menu_name}`);
                 }}
               >
                 {sub.menu_name}

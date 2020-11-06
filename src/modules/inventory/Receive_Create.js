@@ -9,7 +9,7 @@ import {
   get_po_receive_list,
   update_receive,
 } from "../../actions/inventory/receiveActions";
-import { header_config } from "../../include/js/main_config";
+import { header_config, report_server } from "../../include/js/main_config";
 import { api_receive_get_ref_po_detail } from "../../include/js/api";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
 
@@ -20,6 +20,7 @@ import Detail from "./Receive_Detail";
 import TotalFooter from "../../components/TotalFooter";
 import CustomSelect from "../../components/CustomSelect";
 import axios from "axios";
+import Authorize from "../system/Authorize";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -27,13 +28,15 @@ const { Text } = Typography;
 const initialStateHead = receive_fields;
 const initialStateDetail = [receive_detail_fields];
 const Receive_Create = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
   const { history } = props;
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
 
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const dataComments = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
   const po_list = useSelector((state) => state.inventory.receive.po_ref);
@@ -53,9 +56,9 @@ const Receive_Create = (props) => {
     props.location && props.location.state ? props.location.state : 0;
 
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -69,7 +72,7 @@ const Receive_Create = (props) => {
     action: [
       {
         name: "Print",
-        link: `http://192.168.5.207:80/Report_purch/report_pr.aspx?pr_no=${
+        link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${
           data_head && data_head.receive_id
         }`,
       },
@@ -83,6 +86,7 @@ const Receive_Create = (props) => {
     step: {
       current: data_head && data_head.node_stay - 1,
       step: flow,
+      process_complete: data_head.process_complete,
     },
     create: "",
     save: {
@@ -94,18 +98,18 @@ const Receive_Create = (props) => {
     },
     discard: "/inventory/receive",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
       data_head.receive_id
         ? dispatch(update_receive(data_head.receive_id, data_head, data_detail))
         : dispatch(create_receive(data_head, data_detail, history));
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {

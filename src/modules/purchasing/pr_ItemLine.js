@@ -24,7 +24,7 @@ import {
   delItemLine,
   updateValueItemLine,
 } from "../../actions/purchase";
-import { pr_detail_fields } from "./fields_config/pr";
+import { prItemColumns, pr_detail_fields } from "./config/pr";
 import CustomSelect from "../../components/CustomSelect";
 import { calSubtotal, sumArrObj } from "../../include/js/function_main";
 import numeral from "numeral";
@@ -38,21 +38,14 @@ const numberFormat = {
   parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
 };
 
-const ItemLine = ({ readOnly, columns, pr_id, upDateFormData, vat_rate }) => {
+const ItemLine = ({
+  data_detail,
+  readOnly,
+  detailDispatch,
+  headDispatch,
+  vat_rate,
+}) => {
   const dispatch = useDispatch();
-
-  // master data
-  const pr_detail = useSelector((state) => state.purchase.pr_detail);
-  useEffect(() => {
-    const obj = sumArrObj(pr_detail, "pr_detail_total_price", vat_rate);
-    dispatch(
-      update_pr_head({
-        tg_pr_sum_amount: obj.exclude_vat,
-        tg_pr_vat_amount: obj.vat,
-        tg_pr_total_amount: obj.include_vat,
-      })
-    );
-  }, [pr_detail, dispatch]);
   const select_items = useSelector(
     (state) => state.inventory.master_data.item_list
   );
@@ -60,21 +53,39 @@ const ItemLine = ({ readOnly, columns, pr_id, upDateFormData, vat_rate }) => {
     (state) => state.inventory.master_data.item_uom
   );
 
-  // state
-  const [count, setCount] = useState(pr_detail.length);
+  const updateAmount = () => {
+    const obj = sumArrObj(data_detail, "pr_detail_total_price", vat_rate);
+    headDispatch({
+      type: "CHANGE_HEAD_VALUE",
+      payload: {
+        tg_pr_sum_amount: obj.exclude_vat,
+        tg_pr_vat_amount: obj.vat,
+        tg_pr_total_amount: obj.include_vat,
+      },
+    });
+  };
+
+  useEffect(() => {
+    !readOnly && updateAmount();
+  }, [data_detail]);
 
   // function
   const addLine = () => {
-    dispatch(addItemLine({ ...pr_detail_fields, id: count }));
-    setCount(count + 1);
+    detailDispatch({ type: "ADD_ROW", payload: pr_detail_fields });
   };
 
   const delLine = (id) => {
-    dispatch(delItemLine(id));
+    detailDispatch({ type: "DEL_ROW", payload: { id: id } });
   };
 
-  const onChangeValue = (rowId, data, isUpdateCost = false) => {
-    dispatch(updateValueItemLine(rowId, data));
+  const onChangeValue = (rowId, data) => {
+    detailDispatch({
+      type: "CHANGE_DETAIL_VALUE",
+      payload: {
+        id: rowId,
+        data: data,
+      },
+    });
   };
 
   const dateConfig = {
@@ -82,17 +93,21 @@ const ItemLine = ({ readOnly, columns, pr_id, upDateFormData, vat_rate }) => {
     value: moment(),
     disabled: 1,
   };
-  !pr_detail.length && addLine();
-
+  // !data_detail.length && addLine();
   return (
     <>
       {/* Column Header */}
       <Row gutter={2} className="detail-table-head">
-        {columns &&
-          columns.map((col, key) => {
+        {prItemColumns &&
+          prItemColumns.map((col, key) => {
             return (
               <Col key={key} span={col.size} className="col-outline">
-                <Text strong>{col.name}</Text>
+                <Text strong>
+                  {col.require && !readOnly && (
+                    <span className="require">* </span>
+                  )}
+                  {col.name}
+                </Text>
               </Col>
             );
           })}
@@ -106,16 +121,17 @@ const ItemLine = ({ readOnly, columns, pr_id, upDateFormData, vat_rate }) => {
       {!readOnly ? (
         <>
           {/* Edit Form */}
-          {pr_detail.length &&
-            pr_detail.map((line, key) => (
+          {data_detail.length &&
+            data_detail.map((line, key) => (
               <Row
-                key={line.id}
+                key={key}
                 style={{
                   marginBottom: 0,
                   border: "1px solid white",
                   backgroundColor: "#FCFCFC",
                 }}
                 gutter={2}
+                name={`row-${key}`}
                 className="col-2"
               >
                 <Col span={6} className="text-string">
@@ -303,7 +319,7 @@ const ItemLine = ({ readOnly, columns, pr_id, upDateFormData, vat_rate }) => {
             <Button
               type="dashed"
               onClick={() => {
-                addLine(pr_detail);
+                addLine();
               }}
               block
             >
@@ -314,9 +330,9 @@ const ItemLine = ({ readOnly, columns, pr_id, upDateFormData, vat_rate }) => {
       ) : (
         <>
           {/* View Form */}
-          {pr_detail.map((line, key) => (
+          {data_detail.map((line, key) => (
             <Row
-              key={line.id}
+              key={key}
               style={{
                 marginBottom: 0,
                 border: "1px solid white",

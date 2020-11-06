@@ -1,12 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Col, Input, Tabs, AutoComplete, Typography, Select } from "antd";
+import {
+  Row,
+  Col,
+  Input,
+  Tabs,
+  AutoComplete,
+  Typography,
+  Select,
+  Alert,
+  message,
+} from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import ItemLine from "./pr_ItemLine";
-import { sumArrObj } from "../../include/js/function_main";
+import {
+  validateFormDetail,
+  validateFormHead,
+} from "../../include/js/function_main";
 import Comments from "../../components/Comments";
-import { pr_fields, prItemColumns } from "./fields_config/pr";
+import {
+  pr_fields,
+  prItemColumns,
+  pr_detail_fields,
+  pr_require_fields,
+  pr_require_fields_detail,
+} from "./config/pr";
 import {
   reset_pr_data,
   create_pr,
@@ -16,19 +35,35 @@ import {
 } from "../../actions/purchase/PR_Actions";
 import CustomSelect from "../../components/CustomSelect";
 import TotalFooter from "../../components/TotalFooter";
+import { reducer } from "./reducers";
+import { Redirect, withRouter } from "react-router-dom";
+import { keep_log } from "../../actions/comment&log";
+import { log_detail } from "../system/configs/log";
+import useKeepLogs from "../logs/useKeepLogs";
+import Authorize from "../system/Authorize";
 
 const { TextArea } = Input;
 const { Text } = Typography;
+
+const initialStateHead = pr_fields;
+const initialStateDetail = [pr_detail_fields];
+
 const PurchaseRequisitionCreate = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const keepLog = useKeepLogs();
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
-
-  const auth = useSelector((state) => state.auth.authData[0]);
+  const auth = useSelector((state) => state.auth.authData);
   const dataComments = useSelector((state) => state.log.comment_log);
   const cost_centers = useSelector((state) => state.hrm.cost_center);
   const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
-  const data_detail = useSelector((state) => state.purchase.pr_detail);
-  const data_head = useSelector((state) => state.purchase.pr_head);
+
+  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
+  const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
+  const data =
+    props.location && props.location.state ? props.location.state : 0;
+
   const flow =
     data_head &&
     data_head.data_flow_process &&
@@ -36,22 +71,30 @@ const PurchaseRequisitionCreate = (props) => {
       return step.all_group_in_node;
     });
   useEffect(() => {
-    data_head && data_head.pr_id
-      ? dispatch(
-          update_pr_head({
+    headDispatch({
+      type: "SET_HEAD",
+      payload: data.data_head
+        ? {
+            ...data.data_head,
             commit: 1,
             user_name: auth.user_name,
-          })
-        )
-      : dispatch(
-          update_pr_head({
-            pr_created: moment().format("DD/MM/YYYY"),
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+          }
+        : {
+            ...pr_fields,
+            commit: 1,
             pr_created_by_no_name: auth.employee_no_name_eng,
             user_name: auth.user_name,
-            cost_center_id: auth.cost_center_id,
-            cost_center_no_name: auth.cost_center_no_name,
-          })
-        );
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+            pr_created: moment().format("DD/MM/YYYY"),
+          },
+    });
+    detailDispatch({
+      type: "SET_DETAIL",
+      payload: data.data_detail ? data.data_detail : [pr_detail_fields],
+    });
   }, [dispatch]);
 
   const callback = (key) => {
@@ -59,14 +102,13 @@ const PurchaseRequisitionCreate = (props) => {
   };
 
   const upDateFormValue = (data) => {
-    dispatch(update_pr_head(data));
+    headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
   const current_project = useSelector((state) => state.auth.currentProject);
-  console.log("data_head.pr_no", data_head.pr_no);
   const config = {
-    projectId: current_project.project_id,
-    title: current_project.project_name,
-    home: current_project.project_url,
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -75,49 +117,64 @@ const PurchaseRequisitionCreate = (props) => {
       data_head.pr_no && data_head.pr_no,
     ],
     search: false,
-    buttonAction: ["Save", data_head.pr_id && "SaveConfirm", "Discard"],
-    // action: [{ name: "Print", link: "www.google.co.th" }],
-    step: !data_head.pr_no
-      ? {}
-      : {
-          current: data_head && data_head.node_stay - 1,
-          step: flow,
-        },
-    create: "",
-    save: {
-      data: data_head,
-      path:
-        data_head &&
-        "/purchase/pr/view/" + (data_head.pr_id ? data_head.pr_id : "new"),
+    buttonAction: ["Save", "Discard"],
+    step: {
+      current: data_head.node_stay - 1,
+      step: flow,
+      process_complete: data_head.process_complete,
     },
+    create: "",
+    save: "function",
     discard: "/purchase/pr",
     onDiscard: (e) => {
       dispatch(reset_pr_data());
     },
     onSave: (e) => {
-      e.preventDefault();
       console.log("Save");
-      data_head.pr_id
-        ? dispatch(
-            update_pr(data_head.pr_id, auth.user_name, data_head, data_detail)
-          )
-        : dispatch(create_pr(auth.user_name, data_head, data_detail));
-      // data_head.pr_id
-      //   ? dispatch(update_pr(data_head.pr_id, data_head, data_detail))
-      //   : dispatch(create_pr(data_head, data_detail));
+      const key = "validate";
+      message.loading({ content: "Validating...", key });
+      const validate = validateFormHead(data_head, pr_require_fields);
+      const validate_detail = validateFormDetail(
+        data_detail,
+        pr_require_fields_detail
+      );
+      if (validate.validate && validate_detail.validate) {
+        data_head.pr_id
+          ? dispatch(
+              update_pr(
+                data_head.pr_id,
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            )
+          : dispatch(
+              create_pr(
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            );
+      } else {
+        message.warning({
+          content: "Please fill your request completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
     onConfirm: () => {
       console.log("Confirm");
-      const app_detail = {
-        process_status_id: 2,
-        user_name: auth.user_name,
-        process_id: data_head.process_id,
-      };
-      dispatch(update_pr(data_head.pr_id, data_head, data_detail));
-      dispatch(pr_actions(app_detail, data_head.pr_id));
     },
   };
-
+  const redirect_to_view = () => {
+    props.history.push(
+      "/purchase/pr/view/" + (data_head.pr_id ? data_head.pr_id : "new")
+    );
+  };
+  console.log(data_head, data_detail);
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -159,13 +216,16 @@ const PurchaseRequisitionCreate = (props) => {
 
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Cost center :</Text>
+            <Text strong>
+              <span className="require">* </span>Cost center :
+            </Text>
           </Col>
           <Col span={8}>
             <CustomSelect
               allowClear
               showSearch
               placeholder={"Cost Center"}
+              name="cost_center_id"
               field_id="cost_center_id"
               field_name="cost_center_no_name"
               value={data_head.cost_center_no_name}
@@ -192,6 +252,7 @@ const PurchaseRequisitionCreate = (props) => {
               allowClear
               showSearch
               placeholder={"Vendor"}
+              name="vendor_id"
               field_id="vendor_id"
               field_name="vendor_no_name"
               value={data_head.vendor_no_name}
@@ -212,7 +273,9 @@ const PurchaseRequisitionCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Description :</Text>
+            <Text strong>
+              <span className="require">* </span>Description :
+            </Text>
           </Col>
 
           <Col span={8}>
@@ -220,6 +283,7 @@ const PurchaseRequisitionCreate = (props) => {
               onChange={(e) =>
                 upDateFormValue({ pr_description: e.target.value })
               }
+              name={"pr_description"}
               value={data_head.pr_description}
               placeholder="Description"
             ></Input>
@@ -237,10 +301,10 @@ const PurchaseRequisitionCreate = (props) => {
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
                 <ItemLine
-                  columns={prItemColumns}
+                  data_detail={data_detail}
                   readOnly={false}
-                  pr_id={data_head.pr_id}
-                  upDateFormData={upDateFormValue}
+                  detailDispatch={detailDispatch}
+                  headDispatch={headDispatch}
                   vat_rate={data_head.vat_rate}
                 />
               </Tabs.TabPane>
@@ -266,9 +330,9 @@ const PurchaseRequisitionCreate = (props) => {
         )}
       </div>
 
-      <Comments data={[...dataComments]} />
+      <Comments data={dataComments} />
     </MainLayout>
   );
 };
 
-export default PurchaseRequisitionCreate;
+export default withRouter(PurchaseRequisitionCreate);
