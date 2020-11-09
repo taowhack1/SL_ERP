@@ -87,23 +87,23 @@ export const receive_columns = [
   },
 ];
 export const recieve_detail_columns = [
-  { id: 0, name: "Item", size: 7 },
-  { id: 1, name: "Qty.( PO )", size: 3 },
+  { id: 0, name: "Item", size: 7, require: true },
+  { id: 1, name: "Qty.( PO )", size: 3, require: true },
   { id: 2, name: "Qty. Balance", size: 3 },
-  { id: 3, name: "Qty. Done", size: 3 },
-  { id: 4, name: "Unit", size: 2 },
-  { id: 5, name: "Unit Price", size: 2 },
+  { id: 3, name: "Qty. Done", size: 3, require: true },
+  { id: 4, name: "Unit", size: 2, require: true },
+  { id: 5, name: "Unit Price", size: 2, require: true },
   { id: 6, name: "Due Date", size: 3 },
 ];
 
 export const receive_sub_detail_columns = [
-  { id: 1, name: "Destination Location", size: 5 },
+  { id: 1, name: "Destination Location", size: 5, require: true },
   { id: 2, name: "Lot No.", size: 4 },
-  { id: 3, name: "Receive Date", size: 3 },
-  { id: 4, name: "MFG Date", size: 3 },
-  { id: 5, name: "EXP Date", size: 3 },
-  { id: 6, name: "Quantity Done", size: 3 },
-  { id: 7, name: "Unit", size: 2 },
+  { id: 3, name: "Receive Date", size: 3, require: true },
+  { id: 4, name: "MFG Date", size: 3, require: true },
+  { id: 5, name: "EXP Date", size: 3, require: true },
+  { id: 6, name: "Quantity Done", size: 3, require: true },
+  { id: 7, name: "Unit", size: 2, require: true },
 ];
 
 export const receive_fields = {
@@ -164,11 +164,6 @@ export const receive_detail_fields = {
 };
 
 export const receive_sub_detail_fields = {
-  // receive_detail_sub_lot_no: "lot1",
-  // receive_detail_sub_receive_date: "22/10/2020",
-  // receive_detail_sub_mfg_date: "15/10/2020",
-  // receive_detail_sub_exp_date: "28/10/2020",
-  // receive_detail_sub_qty: 100,
   receive_detail_sub_id: null,
   receive_detail_sub_lot_no: null,
   receive_detail_sub_receive_date: null,
@@ -193,6 +188,16 @@ export const receive_sub_detail_fields = {
   uom_no_name: null,
   commit: 1,
 };
+
+export const receive_require_fields = ["receive_description", "po_id"];
+// export const receive_detail_require_fields = ["item_id"];
+export const receive_sub_detail_require_fields = [
+  "location_id",
+  "receive_detail_sub_receive_date",
+  "receive_detail_sub_mfg_date",
+  "receive_detail_sub_exp_date",
+  "receive_detail_sub_qty",
+];
 // ISSUE
 export const issue_columns = [
   {

@@ -123,6 +123,7 @@ const SO_Detail = ({
                     allowClear
                     showSearch
                     placeholder="Item"
+                    name="item_id"
                     field_id="item_id"
                     field_name="item_name"
                     value={line.item_no_name}
@@ -169,6 +170,7 @@ const SO_Detail = ({
                 <Col span={3} className="text-number">
                   <InputNumber
                     {...numberFormat}
+                    name="so_detail_qty"
                     placeholder={"Qty"}
                     min={0.0}
                     step={0.001}
@@ -193,6 +195,7 @@ const SO_Detail = ({
                   <CustomSelect
                     allowClear
                     showSearch
+                    name="uom_id"
                     size="small"
                     placeholder={"Unit"}
                     data={select_uoms}

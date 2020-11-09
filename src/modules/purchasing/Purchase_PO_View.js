@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Row, Col, Input, Tabs, Select, Typography } from "antd";
+import { Row, Col, Input, Tabs, Select, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 
@@ -58,6 +58,7 @@ const PurchaseOrderCreate = (props) => {
       alert("Plase write remark");
       return false;
     }
+    message.success({ content: "Reject", key: "validate", duration: 1 });
     setOpenRemarkModal({ visible: false, loading: false });
     const app_detail = {
       //6 = reject
@@ -78,7 +79,7 @@ const PurchaseOrderCreate = (props) => {
     breadcrumb: [
       "Home",
       "Purchase Order",
-      "View",
+      "Back",
       data_head.po_no && data_head.po_no,
     ],
     search: false,
@@ -87,7 +88,7 @@ const PurchaseOrderCreate = (props) => {
       data_head.button_confirm && "Confirm",
       data_head.button_approve && "Approve",
       data_head.button_reject && "Reject",
-      "Discard",
+      "Back",
     ],
     action: [
       {
@@ -115,8 +116,12 @@ const PurchaseOrderCreate = (props) => {
       path: data_head && "/purchase/po/edit/" + data_head.po_id,
     },
     discard: "/purchase/po",
+    back: "/purchase/po",
     onDiscard: (e) => {
       console.log("Discard");
+    },
+    onBack: (e) => {
+      console.log("Back");
     },
     onSave: (e) => {
       console.log("Save");

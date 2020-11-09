@@ -94,7 +94,7 @@ const DisburseView = (props) => {
       data_head && data_head.button_confirm && "Confirm",
       data_head && data_head.button_approve && "Approve",
       data_head && data_head.button_reject && "Reject",
-      "Discard",
+      "Back",
     ],
     action: [
       {
@@ -125,6 +125,10 @@ const DisburseView = (props) => {
       path: data_head && "/inventory/disburse/edit/" + data_head.disburse_id,
     },
     discard: "/inventory/disburse",
+    back: "/inventory/disburse",
+    onBack: (e) => {
+      console.log("Back");
+    },
     onSave: (e) => {
       //e.preventDefault();
       console.log("Save");

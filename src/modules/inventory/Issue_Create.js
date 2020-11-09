@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Select, Typography } from "antd";
+import { Row, Col, Input, Tabs, Select, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import Detail from "./Issue_Detail";
@@ -15,6 +15,15 @@ import {
 } from "../../actions/inventory/issueActions";
 import { report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
+import {
+  validateFormDetail,
+  validateFormHead,
+} from "../../include/js/function_main";
+import {
+  issue_detail_require_fields,
+  issue_require_fields,
+} from "./config/issue";
+import { useHistory } from "react-router-dom";
 const { Text } = Typography;
 const { TextArea } = Input;
 const { Option } = Select;
@@ -23,16 +32,15 @@ const initialStateHead = issue_fields;
 const initialStateDetail = [issue_detail_fields];
 
 const IssueCreate = (props) => {
+  const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
-  console.log("Render : IssueCreate");
   const dispatch = useDispatch();
   const data = props.location.state ? props.location.state : 0;
   const auth = useSelector((state) => state.auth.authData);
   const current_project = useSelector((state) => state.auth.currentProject);
   const cost_centers = useSelector((state) => state.hrm.cost_center);
   const dataComments = useSelector((state) => state.log.comment_log);
-  const master_data = useSelector((state) => state.inventory.master_data);
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
 
@@ -78,20 +86,44 @@ const IssueCreate = (props) => {
       process_complete: data_head.process_complete,
     },
     create: "",
-    save: {
-      data: data_head,
-      path:
-        data_head &&
-        "/inventory/issue/view/" +
-          (data_head.issue_id ? data_head.issue_id : "new"),
-    },
+    save: "function",
     discard: "/inventory/issue",
     onSave: (e) => {
       //e.preventDefault();
       console.log("Save");
-      data_head.issue_id
-        ? dispatch(update_issue(data_head.issue_id, data_head, data_detail))
-        : dispatch(create_issue(data_head, data_detail));
+      const key = "validate";
+      const validate = validateFormHead(data_head, issue_require_fields);
+      const validate_detail = validateFormDetail(
+        data_detail,
+        issue_detail_require_fields
+      );
+      if (validate.validate && validate_detail.validate) {
+        console.log("pass");
+        data_head.issue_id
+          ? dispatch(
+              update_issue(
+                data_head.issue_id,
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            )
+          : dispatch(
+              create_issue(
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            );
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -158,6 +190,9 @@ const IssueCreate = (props) => {
     category_id: data_head && data_head.category_id,
     category_no_name: data_head && data_head.category_no_name,
   };
+  const redirect_to_view = (id) => {
+    history.push("/inventory/issue/view/" + (id ? id : "new"));
+  };
   console.log("head filter", filter);
   return (
     <MainLayout {...config}>
@@ -197,6 +232,7 @@ const IssueCreate = (props) => {
               allowClear
               showSearch
               placeholder={"Cost Center"}
+              name="cost_center_id"
               field_id="cost_center_id"
               field_name="cost_center_no_name"
               value={data_head.cost_center_no_name}
@@ -221,6 +257,7 @@ const IssueCreate = (props) => {
           </Col>
           <Col span={8}>
             <Input
+              name="issue_description"
               value={data_head.issue_description}
               placeholder="Description"
               onChange={(e) =>

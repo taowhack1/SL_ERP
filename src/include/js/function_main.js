@@ -90,7 +90,7 @@ export const validateFormHead = (obj_data, require_field) => {
       }
     });
     const require_fields = `${objKey.toString()}`;
-    $(`${require_fields}`).addClass("require-field-alert");
+    $(`${require_fields}`).closest(".ant-col").addClass("require-field-alert");
     $(`${require_fields}`).focus();
     return { validate: validate, objKey: objKey };
   } else {
@@ -112,15 +112,20 @@ export const validateFormDetail = (ArrayObj, require_field) => {
             obj_data[req_field].trim() === "") ||
           obj_data[req_field] <= 0
         ) {
+          console.log(req_field);
           objKey.push(`[name=row-${key}]`);
+          // objKey.push(`[name=${req_field}]`);
           validate = false;
         }
       });
     });
 
     const require_fields = `${objKey.toString()}`;
+    console.log(require_fields);
+    // $(`${require_fields}`).addClass("require-field-alert");
     $(`${require_fields}`).addClass("require-row-field-alert");
     $(`${require_fields}`).focus();
+
     return { validate: validate, objKey: objKey };
   } else {
     console.log("Wrong type of parameter.");

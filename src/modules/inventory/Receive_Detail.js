@@ -6,6 +6,7 @@ import {
   Modal,
   InputNumber,
   DatePicker,
+  message,
 } from "antd";
 import {
   PlusOutlined,
@@ -22,11 +23,13 @@ import {
   calSubtotal,
   sumArrObj,
   sumArrOdjWithField,
+  validateFormDetail,
 } from "../../include/js/function_main";
 import {
   receive_detail_fields,
   recieve_detail_columns,
   receive_sub_detail_fields,
+  receive_sub_detail_require_fields,
 } from "./config";
 import { reducer } from "./reducers";
 import { useDispatch, useSelector } from "react-redux";
@@ -88,43 +91,55 @@ const ReceiveDetail = ({
   };
 
   const modalSave = () => {
-    setVisible(false);
     console.log("Confirm Modal", "id", temp_detail.id, temp_sub_detail);
-
-    const receive_qty = sumArrOdjWithField(
+    const key = "validate";
+    const validate_detail = validateFormDetail(
       temp_sub_detail,
-      "receive_detail_sub_qty"
+      receive_sub_detail_require_fields
     );
+    if (validate_detail.validate) {
+      setVisible(false);
+      const receive_qty = sumArrOdjWithField(
+        temp_sub_detail,
+        "receive_detail_sub_qty"
+      );
 
-    const discount = calDiscount(
-      temp_detail.receive_detail_discount,
-      temp_detail.tg_receive_detail_qty_balance,
-      receive_qty
-    );
-    console.log(
-      "balance",
-      temp_detail.tg_receive_detail_qty_balance_temp,
-      receive_qty,
-      temp_detail.tg_receive_detail_qty_balance_temp - receive_qty
-    );
-    detailDispatch({
-      type: "CHANGE_DETAIL_VALUE",
-      payload: {
-        id: temp_detail.id,
-        data: {
-          receive_sub_detail: temp_sub_detail,
-          tg_receive_detail_qty: receive_qty,
-          receive_detail_total_price: calSubtotal(
-            receive_qty,
-            temp_detail.receive_detail_price
-            // discount
-          ),
-          tg_receive_detail_qty_balance:
-            temp_detail.tg_receive_detail_qty_balance_temp - receive_qty,
+      // const discount = calDiscount(
+      //   temp_detail.receive_detail_discount,
+      //   temp_detail.tg_receive_detail_qty_balance,
+      //   receive_qty
+      // );
+      console.log(
+        "balance",
+        temp_detail.tg_receive_detail_qty_balance_temp,
+        receive_qty,
+        temp_detail.tg_receive_detail_qty_balance_temp - receive_qty
+      );
+      detailDispatch({
+        type: "CHANGE_DETAIL_VALUE",
+        payload: {
+          id: temp_detail.id,
+          data: {
+            receive_sub_detail: temp_sub_detail,
+            tg_receive_detail_qty: receive_qty,
+            receive_detail_total_price: calSubtotal(
+              receive_qty,
+              temp_detail.receive_detail_price
+              // discount
+            ),
+            tg_receive_detail_qty_balance:
+              temp_detail.tg_receive_detail_qty_balance_temp - receive_qty,
+          },
         },
-      },
-    });
-    setTempDetail(null);
+      });
+      setTempDetail(null);
+    } else {
+      message.warning({
+        content: "Please fill your form completely.",
+        key,
+        duration: 2,
+      });
+    }
   };
 
   const modalCancel = () => {
@@ -158,6 +173,9 @@ const ReceiveDetail = ({
           recieve_detail_columns.map((col, key) => {
             return (
               <Col key={key} span={col.size} className="col-outline">
+                {col.require && !readOnly && (
+                  <span className="require">* </span>
+                )}
                 <Text strong>{col.name}</Text>
               </Col>
             );

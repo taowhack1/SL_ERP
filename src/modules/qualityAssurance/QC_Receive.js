@@ -16,10 +16,10 @@ const numberFormat = {
 };
 
 const QCReceive = () => {
-  const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
   const [qc_list, qcListDispatch] = useReducer(reducer, []);
   const [update, setUpdate] = useState(0);
   const auth = useSelector((state) => state.auth.authData);
@@ -40,8 +40,12 @@ const QCReceive = () => {
     breadcrumb: ["Home", "QC Receive"],
     search: true,
     buttonAction: ["Save", "Discard"],
-    save: {},
+    save: "table_loading",
     discard: "/qa",
+    back: "/qa",
+    onBack: (e) => {
+      console.log("Back");
+    },
     onCancel: () => {
       console.log("Cancel");
     },
@@ -51,10 +55,12 @@ const QCReceive = () => {
     },
     onSave: (e) => {
       //e.preventDefault();
+
+      setLoading(true);
       console.log("Save");
       setUpdate(!update);
       const data_update = qc_list.filter((row) => row.commit === 1);
-      dispatch(update_qc_receive_list(data_update));
+      dispatch(update_qc_receive_list(data_update, setLoading));
     },
   };
 
@@ -146,13 +152,20 @@ const QCReceive = () => {
           {...numberFormat}
           placeholder={"Quantity Done"}
           min={0.0}
+          max={record.stock_detail_qty_hold}
           step={0.001}
           size="small"
           style={{ width: "100%", backgroundColor: "#e6feff" }}
           disabled={0}
           value={record.stock_qty_pass}
           onChange={(data) => {
-            onChangeValue(record.id, { stock_qty_pass: data });
+            console.log(data);
+            let usable = record.stock_detail_qty_hold - record.stock_qty_reject;
+            if (usable > 0 && data <= usable) {
+              onChangeValue(record.id, { stock_qty_pass: data });
+            } else {
+              onChangeValue(record.id, { stock_qty_pass: usable });
+            }
           }}
         />
       ),
@@ -169,13 +182,19 @@ const QCReceive = () => {
           {...numberFormat}
           placeholder={"Quantity Done"}
           min={0.0}
+          max={record.stock_detail_qty_hold}
           step={0.001}
           size="small"
           style={{ width: "100%", backgroundColor: "#FFE6E6" }}
           disabled={0}
           value={record.stock_qty_reject}
           onChange={(data) => {
-            onChangeValue(record.id, { stock_qty_reject: data });
+            let usable = record.stock_detail_qty_hold - record.stock_qty_pass;
+            if (usable > 0 && data <= usable) {
+              onChangeValue(record.id, { stock_qty_reject: data });
+            } else {
+              onChangeValue(record.id, { stock_qty_reject: usable });
+            }
           }}
         />
       ),
@@ -198,6 +217,9 @@ const QCReceive = () => {
 
   useEffect(() => {
     dispatch(get_qc_receive_list());
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }, []);
 
   useEffect(() => {
@@ -215,6 +237,7 @@ const QCReceive = () => {
           <Col span={24}>
             <Table
               bordered
+              loading={loading}
               columns={mainColumns}
               rowKey={"item_id"}
               dataSource={qc_receive_list}

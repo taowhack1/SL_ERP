@@ -146,6 +146,7 @@ const IssueDetail = ({
                           )
                         : select_items
                     }
+                    name="item_id"
                     field_id="item_id"
                     field_name="item_no_name"
                     value={line.item_no_name}
@@ -184,6 +185,7 @@ const IssueDetail = ({
                           )
                         : select_location
                     }
+                    name="location_id"
                     field_id="location_id"
                     field_name="location_shelf_no_name"
                     value={line.location_shelf_no_name}
@@ -206,12 +208,12 @@ const IssueDetail = ({
                   />
                 </Col>
                 <Col span={3} className="text-number">
-                  {console.log("line.item_id", line.item_id)}
                   <InputNumber
                     {...numberFormat}
                     placeholder={"Qty"}
                     min={0.0}
                     step={0.001}
+                    name="issue_detail_qty"
                     disabled={line.item_id ? false : true}
                     size="small"
                     style={{ width: "100%" }}
@@ -232,6 +234,7 @@ const IssueDetail = ({
                     size="small"
                     placeholder={"Unit"}
                     data={select_uoms}
+                    name="uom_id"
                     field_id="uom_id"
                     field_name="uom_no"
                     value={line.uom_no}

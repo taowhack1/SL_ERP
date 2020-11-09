@@ -155,6 +155,7 @@ const SubDetail = ({
                     allowClear
                     showSearch
                     placeholder={"Source Location"}
+                    name="location_id"
                     field_id="shelf_id"
                     field_name="location_shelf_no_name"
                     value={line.location_shelf_no_name}
@@ -189,6 +190,7 @@ const SubDetail = ({
                     showSearch
                     placeholder={"Lot / Batch no."}
                     size={"small"}
+                    name="stock_batch"
                     field_id="stock_id"
                     field_name="stock_lot_no_batch_qty_balance"
                     value={line.stock_lot_no_batch_qty_balance}
@@ -226,6 +228,7 @@ const SubDetail = ({
                     min={0.0}
                     step={0.001}
                     size="small"
+                    name="disburse_detail_sub_qty"
                     style={{ width: "100%" }}
                     disabled={0}
                     value={line.disburse_detail_sub_qty}

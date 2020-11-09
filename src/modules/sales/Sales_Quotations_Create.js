@@ -15,6 +15,7 @@ import {
   AutoComplete,
   Typography,
   DatePicker,
+  message,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
@@ -23,16 +24,28 @@ import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
 import ItemLine from "./Sales_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
-import { quotation_detail_fields, quotation_fields } from "./configs";
+import {
+  quotation_detail_fields,
+  quotation_fields,
+  quotation_require_fields,
+  quotation_require_fields_detail,
+} from "./configs";
 import CustomSelect from "../../components/CustomSelect";
 import { update_quotation } from "../../actions/sales";
 import { create_quotation } from "../../actions/sales";
 import axios from "axios";
 import { api_server, header_config } from "../../include/js/main_config";
-import { sortData, sumArrObj } from "../../include/js/function_main";
+import {
+  sortData,
+  sumArrObj,
+  validateFormDetail,
+  validateFormHead,
+} from "../../include/js/function_main";
 import { reducer } from "./reducers";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
+import $ from "jquery";
+import { useHistory } from "react-router-dom";
 const { TextArea } = Input;
 const { Text } = Typography;
 
@@ -40,6 +53,7 @@ const initialStateHead = quotation_fields;
 const initialStateDetail = [quotation_detail_fields];
 
 const CustomerCreate = (props) => {
+  const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -82,7 +96,6 @@ const CustomerCreate = (props) => {
       axios
         .get(`${api_server}/api/sales/qn_detail/${data.qn_id}`, header_config)
         .then((res) => {
-          // set_qn_detail(res.data[0]);
           detailDispatch({ type: "SET_DETAIL", payload: res.data[0] });
         })
         .catch((error) => {
@@ -112,19 +125,44 @@ const CustomerCreate = (props) => {
         }
       : {},
     create: "",
-    save: {
-      data: data_head,
-      path:
-        data_head &&
-        "/sales/quotations/view/" + (data_head.qn_id ? data_head.qn_id : "new"),
-    },
+    save: "function",
     discard: "/sales/quotations",
     onSave: (e) => {
       //e.preventDefault();
       console.log("Save");
-      data_head.qn_id && data_head.qn_id
-        ? dispatch(update_quotation(data_head.qn_id, data_head, data_detail))
-        : dispatch(create_quotation(data_head, data_detail));
+      const key = "validate";
+      const validate = validateFormHead(data_head, quotation_require_fields);
+      const validate_detail = validateFormDetail(
+        data_detail,
+        quotation_require_fields_detail
+      );
+      if (validate.validate && validate_detail.validate) {
+        console.log("pass");
+        data_head.qn_id
+          ? dispatch(
+              update_quotation(
+                data_head.qn_id,
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            )
+          : dispatch(
+              create_quotation(
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            );
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -162,6 +200,9 @@ const CustomerCreate = (props) => {
       payload: initialStateDetail,
     });
   };
+  const redirect_to_view = (id) => {
+    history.push("/sales/quotations/view/" + (id ? id : "new"));
+  };
 
   return (
     <MainLayout {...config}>
@@ -187,7 +228,9 @@ const CustomerCreate = (props) => {
         {/* Address & Information */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Customer </Text>
+            <Text strong>
+              <span className="require">* </span>Customer{" "}
+            </Text>
           </Col>
           <Col span={8}>
             <CustomSelect
@@ -195,6 +238,7 @@ const CustomerCreate = (props) => {
               showSearch
               placeholder={"Customer"}
               field_id="customer_id"
+              name="customer_id"
               field_name="customer_no_name"
               value={data_head.customer_no_name}
               data={masterData.customers}
@@ -218,12 +262,15 @@ const CustomerCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Expire Date </Text>
+            <Text strong>
+              <span className="require">* </span>Expire Date{" "}
+            </Text>
           </Col>
           <Col span={8}>
             <DatePicker
               format={"DD/MM/YYYY"}
               style={{ width: "100%" }}
+              name="qn_exp_date"
               placeholder="Expire Date"
               value={
                 data_head.qn_exp_date
@@ -240,11 +287,14 @@ const CustomerCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Description :</Text>
+            <Text strong>
+              <span className="require">* </span>Description :
+            </Text>
           </Col>
 
           <Col span={8}>
             <Input
+              name="qn_description"
               onChange={(e) =>
                 upDateFormValue({ qn_description: e.target.value })
               }
@@ -254,12 +304,15 @@ const CustomerCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Payment Terms</Text>
+            <Text strong>
+              <span className="require">* </span>Payment Terms
+            </Text>
           </Col>
           <Col span={8}>
             <CustomSelect
               allowClear
               showSearch
+              name="payment_term_id"
               placeholder={"Payment Term"}
               field_id="payment_term_id"
               field_name="payment_term_no_name"
@@ -282,11 +335,14 @@ const CustomerCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Agreement :</Text>
+            <Text strong>
+              <span className="require">* </span>Agreement :
+            </Text>
           </Col>
 
           <Col span={8}>
             <Input
+              name="qn_agreement"
               onChange={(e) =>
                 upDateFormValue({ qn_agreement: e.target.value })
               }
@@ -320,6 +376,7 @@ const CustomerCreate = (props) => {
               <Tabs.TabPane tab="Notes" key="2">
                 <TextArea
                   rows={2}
+                  name="qn_remark"
                   placeholder={"Remark..."}
                   defaultValue={data_head.qn_remark}
                   onChange={(e) =>

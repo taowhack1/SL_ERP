@@ -8,6 +8,7 @@ import {
   AutoComplete,
   Typography,
   DatePicker,
+  message,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
@@ -22,12 +23,22 @@ import CustomSelect from "../../components/CustomSelect";
 import { create_so, get_qn_open_so, update_so } from "../../actions/sales";
 import { header_config } from "../../include/js/main_config";
 import { api_qn_detail } from "../../include/js/api";
-import { so_detail_fields, so_fields } from "./configs";
+import {
+  so_detail_fields,
+  so_fields,
+  so_require_fields,
+  so_require_fields_detail,
+} from "./configs";
 import Detail from "./Sales_Order_Detail";
 import { reducer } from "./reducers";
 import axios from "axios";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
+import { useHistory } from "react-router-dom";
+import {
+  validateFormDetail,
+  validateFormHead,
+} from "../../include/js/function_main";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -35,7 +46,7 @@ const { Text } = Typography;
 const initialStateHead = so_fields;
 const initialStateDetail = [so_detail_fields];
 const SaleOrderCreate = (props) => {
-  const keepLog = useKeepLogs();
+  const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -111,26 +122,55 @@ const SaleOrderCreate = (props) => {
       data_head.so_no && data_head.so_no,
     ],
     search: false,
-    buttonAction: ["Save", "SaveConfirm", "Discard"],
+    buttonAction: ["Save", "Discard"],
     step: {
       current: data_head.node_stay - 1,
       step: flow,
       process_complete: data_head.process_complete,
     },
     create: "",
-    save: {
-      data: data_head,
-      path:
-        data_head &&
-        "/sales/orders/view/" + (data_head.so_id ? data_head.so_id : "new"),
-    },
+    save: "function",
     discard: "/sales/orders",
     onSave: (e) => {
       //e.preventDefault();
       console.log("SAVE");
-      !data_head.so_id
-        ? dispatch(create_so(data_head, data_detail))
-        : dispatch(update_so(data_head.so_id, data_head, data_detail));
+      const message_key = "validate";
+      const validate = validateFormHead(data_head, so_require_fields);
+      const validate_detail = validateFormDetail(
+        data_detail,
+        so_require_fields_detail
+      );
+      if (validate.validate && validate_detail.validate) {
+        console.log("pass");
+        data_head.so_id
+          ? dispatch(
+              update_so(
+                data_head.so_id,
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            )
+          : dispatch(
+              create_so(
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            );
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          message_key,
+          duration: 2,
+        });
+      }
+
+      // !data_head.so_id
+      //   ? dispatch(create_so(data_head, data_detail))
+      //   : dispatch(update_so(data_head.so_id, data_head, data_detail));
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -191,8 +231,10 @@ const SaleOrderCreate = (props) => {
       payload: initialStateDetail,
     });
   };
-  console.log("data_head", data_head);
-  console.log("data_detail", data_detail);
+
+  const redirect_to_view = (id) => {
+    history.push("/sales/orders/view/" + (id ? id : "new"));
+  };
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -228,6 +270,7 @@ const SaleOrderCreate = (props) => {
             <CustomSelect
               allowClear
               showSearch
+              name="qn_id"
               placeholder={"Quotation ref."}
               field_id="qn_id"
               field_name="qn_no_description"
@@ -284,6 +327,7 @@ const SaleOrderCreate = (props) => {
 
           <Col span={8}>
             <Input
+              name="so_description"
               onChange={(e) =>
                 headDispatch({
                   type: "CHANGE_HEAD_VALUE",
@@ -304,6 +348,7 @@ const SaleOrderCreate = (props) => {
               allowClear
               showSearch
               placeholder={"Customer"}
+              name="customer_id"
               field_id="customer_id"
               field_name="customer_no_name"
               value={data_head.customer_no_name}
@@ -335,6 +380,7 @@ const SaleOrderCreate = (props) => {
 
           <Col span={8}>
             <Input
+              name="so_agreement"
               onChange={(e) =>
                 headDispatch({
                   type: "CHANGE_HEAD_VALUE",
@@ -354,6 +400,7 @@ const SaleOrderCreate = (props) => {
               allowClear
               showSearch
               placeholder={"Payment term"}
+              name="payment_term_id"
               field_id="payment_term_id"
               field_name="payment_term_no_name"
               value={data_head.payment_term_no_name}

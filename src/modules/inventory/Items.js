@@ -37,7 +37,8 @@ const Items = (props) => {
     breadcrumb: ["Home", "Items"],
     search: true,
     create: "/inventory/items/create",
-    buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
+    // buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
+    buttonAction: ["Create"],
     edit: {},
     disabledEditBtn: !rowClick,
     discard: "/inventory/items",
@@ -66,6 +67,7 @@ const Items = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
+                    keepLog.keep_log_action(record.item_no);
                     dispatch(get_item_by_id(record.item_id));
                     props.history.push({
                       pathname: "/inventory/items/view/" + record.item_id,

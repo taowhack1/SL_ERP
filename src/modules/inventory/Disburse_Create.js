@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Typography } from "antd";
+import { Row, Col, Input, Tabs, Typography, message } from "antd";
 import { reducer } from "./reducers";
 import { disburse_fields, disburse_detail_fields } from "./config";
 import {
@@ -20,6 +20,12 @@ import CustomSelect from "../../components/CustomSelect";
 import axios from "axios";
 import { get_issue_ref_list } from "../../actions/inventory/disburseActions";
 import Authorize from "../system/Authorize";
+import { useHistory } from "react-router-dom";
+import { validateFormHead } from "../../include/js/function_main";
+import {
+  disburse_require_fields,
+  disburse_sub_detail_require_fields,
+} from "./config/disburse";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -28,6 +34,7 @@ const initialStateHead = disburse_fields;
 const initialStateDetail = [disburse_detail_fields];
 
 const DisburseCreate = (props) => {
+  const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -88,22 +95,51 @@ const DisburseCreate = (props) => {
       process_complete: data_head.process_complete,
     },
     create: "",
-    save: {
-      data: data_head,
-      path:
-        data_head &&
-        "/inventory/disburse/view/" +
-          (data_head.disburse_id ? data_head.disburse_id : "new"),
-    },
+    save: "function",
     discard: "/inventory/disburse",
     onSave: (e) => {
       //e.preventDefault();
       console.log("Save");
-      data_head.disburse_id
-        ? dispatch(
-            update_disburse(data_head.disburse_id, data_head, data_detail)
-          )
-        : dispatch(create_disburse(data_head, data_detail));
+      const key = "validate";
+
+      const validate = validateFormHead(data_head, disburse_require_fields);
+      // const validate_detail = validateFormDetail(
+      //   data_detail,
+      //   receive_detail_require_fields
+      // );
+      if (validate.validate) {
+        console.log("pass");
+        data_head.disburse_id
+          ? dispatch(
+              update_disburse(
+                data_head.disburse_id,
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            )
+          : dispatch(
+              create_disburse(
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            );
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
+
+      // data_head.disburse_id
+      //   ? dispatch(
+      //       update_disburse(data_head.disburse_id, data_head, data_detail)
+      //     )
+      //   : dispatch(create_disburse(data_head, data_detail));
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -191,9 +227,9 @@ const DisburseCreate = (props) => {
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
-
-  console.log("data_head 1", data_head);
-  console.log("data_detail 1", data_detail);
+  const redirect_to_view = (id) => {
+    history.push("/inventory/disburse/view/" + (id ? id : "new"));
+  };
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -226,6 +262,7 @@ const DisburseCreate = (props) => {
               allowClear
               showSearch
               placeholder={"Issue No. ex.ISS2009000x"}
+              name="issue_id"
               field_id="issue_id"
               field_name="issue_no_description"
               value={data_head.issue_no_description}
@@ -258,6 +295,7 @@ const DisburseCreate = (props) => {
           </Col>
           <Col span={8}>
             <Input
+              name="disburse_description"
               onChange={(e) =>
                 upDateFormValue({
                   disburse_description: e.target.value,
@@ -273,6 +311,7 @@ const DisburseCreate = (props) => {
           </Col>
           <Col span={8}>
             <Input
+              name="disburse_agreement"
               value={data_head.disburse_agreement}
               onChange={(e) =>
                 upDateFormValue({
@@ -300,6 +339,7 @@ const DisburseCreate = (props) => {
               <Tabs.TabPane tab="Notes" key={"2"}>
                 <TextArea
                   rows={2}
+                  name="disburse_remark"
                   placeholder={"Remark"}
                   defaultValue={data_head.disburse_remark}
                   value={data_head.disburse_remark}

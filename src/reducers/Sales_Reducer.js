@@ -1,17 +1,15 @@
 import {
   SET_QN_LIST,
-  SET_QN_DETAIL,
-  SET_QN_HEAD,
   RESET_QN,
   GET_ALL_CUSTOMER,
   GET_CUSTOMER_BY_ID,
   GET_SO_LIST,
-  SET_SO_HEAD,
-  SET_SO_DETAIL,
   GET_MASTER_DATA,
   RESET_ALL_SALES,
   RESET_SO,
   GET_QN_OPEN_SO,
+  GET_QN_BY_ID,
+  GET_SO_BY_ID,
 } from "../actions/types";
 
 const inititalState = {
@@ -39,10 +37,8 @@ export default (state = inititalState, action) => {
   switch (action.type) {
     case SET_QN_LIST:
       return { ...state, qn: { ...state.qn, qn_list: action.payload } };
-    case SET_QN_HEAD:
-      return { ...state, qn: { ...state.qn, qn_head: action.payload } };
-    case SET_QN_DETAIL:
-      return { ...state, qn: { ...state.qn, qn_detail: action.payload } };
+    case GET_QN_BY_ID:
+      return { ...state, qn: { ...state.qn, ...action.payload } };
     case RESET_QN:
       return { ...state, qn: { ...inititalState.qn } };
     case RESET_SO:
@@ -62,10 +58,8 @@ export default (state = inititalState, action) => {
       return { ...state, so: { ...state.so, so_list: action.payload } };
     case GET_QN_OPEN_SO:
       return { ...state, so: { ...state.so, qn_ref: action.payload } };
-    case SET_SO_HEAD:
-      return { ...state, so: { ...state.so, so_head: action.payload } };
-    case SET_SO_DETAIL:
-      return { ...state, so: { ...state.so, so_detail: action.payload } };
+    case GET_SO_BY_ID:
+      return { ...state, so: { ...state.so, ...action.payload } };
     case GET_MASTER_DATA:
       return { ...state, master_data: { ...action.payload } };
 

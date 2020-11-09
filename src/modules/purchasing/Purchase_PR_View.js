@@ -61,6 +61,7 @@ const PRView = (props) => {
       process_id: data_head.process_id,
       process_member_remark: remark,
     };
+    message.success({ content: "Reject", key: "validate", duration: 1 });
     dispatch(pr_actions(app_detail, data_head.pr_id));
     setRemark("");
   };

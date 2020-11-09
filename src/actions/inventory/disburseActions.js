@@ -18,6 +18,7 @@ import {
   GET_DISBURSE_DETAIL,
   GET_ISSUE_REF_LIST,
 } from "../types";
+import { message } from "antd";
 export const get_issue_ref_list = () => async (dispatch) => {
   axios
     .get(api_issue_ref_list, header_config)
@@ -36,7 +37,7 @@ export const get_disburse_list = (user_name) => (dispatch) => {
   });
 };
 
-export const get_disburse_by_id = (disburse_id, user_name) => async (
+export const get_disburse_by_id = (disburse_id, user_name, redirect) => async (
   dispatch
 ) => {
   try {
@@ -84,13 +85,19 @@ export const get_disburse_by_id = (disburse_id, user_name) => async (
       });
       console.log(`GET_DISBURSE_BY_ID ${disburse_id}/${user_name}`, disburse);
       await dispatch({ type: GET_DISBURSE_BY_ID, payload: disburse });
+      await redirect(disburse_id);
     }
   } catch (error) {
     console.log(error);
   }
 };
 
-export const create_disburse = (data_head, data_detail) => async (dispatch) => {
+export const create_disburse = (
+  user_name,
+  data_head,
+  data_detail,
+  redirect
+) => async (dispatch) => {
   let temp_sub_detail = [];
   let temp_detail = data_detail;
   temp_detail.map((detail) => temp_sub_detail.push(detail.disburse_sub_detail));
@@ -110,7 +117,7 @@ export const create_disburse = (data_head, data_detail) => async (dispatch) => {
               data_detail,
               header_config
             )
-            .then((res) => {
+            .then(async (res) => {
               const data_detail = res.data[0];
               let data_sub_detail = [];
 
@@ -125,7 +132,7 @@ export const create_disburse = (data_head, data_detail) => async (dispatch) => {
               console.log("data_sub_detail", data_sub_detail);
               console.log("INSERT_DETAIL", res);
 
-              axios
+              await axios
                 .post(
                   `${api_disburse_sub_detail_by_disburse_id}/${disburse_id}`,
                   data_sub_detail,
@@ -133,21 +140,44 @@ export const create_disburse = (data_head, data_detail) => async (dispatch) => {
                 )
                 .then((res) => {
                   console.log("INSERT SUB DETAIL", res);
-                  dispatch(
-                    get_disburse_by_id(disburse_id, data_head.user_name)
-                  );
                 });
+
+              message.success({
+                content: "Disburse Created.",
+                key: "validate",
+                duration: 2,
+              });
+              await dispatch(
+                get_disburse_by_id(disburse_id, user_name, redirect)
+              );
             });
+        })
+        .catch((error) => {
+          console.log(error);
+          message.error({
+            content: "Somethings went wrong. \n" + error,
+            key: "validate",
+            duration: 2,
+          });
         });
     }
   } catch (error) {
     console.log(error);
+    message.error({
+      content: "Somethings went wrong. \n" + error,
+      key: "validate",
+      duration: 2,
+    });
   }
 };
 
-export const update_disburse = (disburse_id, data_head, data_detail) => async (
-  dispatch
-) => {
+export const update_disburse = (
+  disburse_id,
+  user_name,
+  data_head,
+  data_detail,
+  redirect
+) => async (dispatch) => {
   let temp_sub_detail = [];
   let temp_detail = data_detail;
   temp_detail.map((detail) => temp_sub_detail.push(detail.disburse_sub_detail));
@@ -166,7 +196,7 @@ export const update_disburse = (disburse_id, data_head, data_detail) => async (
               data_detail,
               header_config
             )
-            .then((res) => {
+            .then(async (res) => {
               const data_detail = res.data[0];
               let data_sub_detail = [];
 
@@ -181,7 +211,7 @@ export const update_disburse = (disburse_id, data_head, data_detail) => async (
               console.log("data_sub_detail", data_sub_detail);
               console.log("UPDATE_DETAIL", res);
 
-              axios
+              await axios
                 .post(
                   `${api_disburse_sub_detail_by_disburse_id}/${disburse_id}`,
                   data_sub_detail,
@@ -189,15 +219,33 @@ export const update_disburse = (disburse_id, data_head, data_detail) => async (
                 )
                 .then((res) => {
                   console.log("UPDATE SUB DETAIL", res);
-                  dispatch(
-                    get_disburse_by_id(disburse_id, data_head.user_name)
-                  );
                 });
+              message.success({
+                content: "Disburse Updated.",
+                key: "validate",
+                duration: 2,
+              });
+              await dispatch(
+                get_disburse_by_id(disburse_id, user_name, redirect)
+              );
             });
+        })
+        .catch((error) => {
+          console.log(error);
+          message.error({
+            content: "Somethings went wrong. \n" + error,
+            key: "validate",
+            duration: 2,
+          });
         });
     }
   } catch (error) {
     console.log(error);
+    message.error({
+      content: "Somethings went wrong. \n" + error,
+      key: "validate",
+      duration: 2,
+    });
   }
 };
 

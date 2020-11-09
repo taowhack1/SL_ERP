@@ -166,26 +166,45 @@ export const quotation_detail_fields = {
   commit: 1,
 };
 
+export const quotation_require_fields = [
+  "qn_exp_date",
+  "qn_description",
+  "qn_agreement",
+  "payment_term_id",
+  "customer_id",
+];
+
+export const quotation_require_fields_detail = [
+  "item_id",
+  "uom_id",
+  "qn_detail_qty",
+  "qn_detail_price",
+];
+
 export const quotation_detail_columns = [
   {
     id: 0,
     name: "Item",
     size: 9,
+    require: true,
   },
   {
     id: 1,
     name: "Quantity",
     size: 3,
+    require: true,
   },
   {
     id: 2,
     name: "Unit",
     size: 2,
+    require: true,
   },
   {
     id: 3,
     name: "Unit Price",
     size: 3,
+    require: true,
   },
   {
     id: 4,
@@ -291,21 +310,25 @@ export const so_detail_columns = [
     id: 0,
     name: "Item",
     size: 6,
+    require: true,
   },
   {
     id: 1,
     name: "Quantity",
     size: 3,
+    require: true,
   },
   {
     id: 2,
     name: "Unit",
     size: 2,
+    require: true,
   },
   {
     id: 3,
     name: "Unit Price",
     size: 3,
+    require: true,
   },
   {
     id: 4,
@@ -316,11 +339,13 @@ export const so_detail_columns = [
     id: 5,
     name: "Total Price",
     size: 3,
+    require: true,
   },
   {
     id: 6,
     name: "Delivery Date",
     size: 3,
+    require: true,
   },
 ];
 export const so_fields = {
@@ -400,3 +425,20 @@ export const so_detail_fields = {
   uom_name: null,
   uom_no_name: null,
 };
+
+export const so_require_fields = [
+  "so_order_date",
+  "so_description",
+  "so_agreement",
+  "qn_id",
+  "payment_term_id",
+  "customer_id",
+];
+
+export const so_require_fields_detail = [
+  "item_id",
+  "uom_id",
+  "so_detail_qty",
+  "so_detail_price",
+  "so_detail_delivery_date",
+];

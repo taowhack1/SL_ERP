@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Tabs, Typography } from "antd";
+import { Row, Col, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 
 import Comments from "../../components/Comments";
@@ -38,13 +38,8 @@ const Receive_View = (props) => {
   const auth = useSelector((state) => state.auth.authData);
 
   useEffect(() => {
-    const authorize = Authorize();
-    authorize.check_authorize();
     console.log("get_log");
     data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
-    return () => {
-      dispatch(reset_comments());
-    };
   }, [data_head]);
 
   const flow =
@@ -75,7 +70,7 @@ const Receive_View = (props) => {
       data_head && data_head.button_confirm && "Confirm",
       data_head && data_head.button_approve && "Approve",
       data_head && data_head.button_reject && "Reject",
-      "Discard",
+      "Back",
     ],
     action: [
       {
@@ -106,6 +101,10 @@ const Receive_View = (props) => {
       path: data_head && "/inventory/receive/edit/" + data_head.receive_id,
     },
     discard: "/inventory/receive",
+    back: "/inventory/receive",
+    onBack: (e) => {
+      console.log("Back");
+    },
     onSave: (e) => {
       //e.preventDefault();
       console.log("Save");
@@ -167,6 +166,7 @@ const Receive_View = (props) => {
       process_id: data_head.process_id,
       process_member_remark: remark,
     };
+    message.success({ content: "Reject", key: "validate", duration: 1 });
     dispatch(receive_actions(app_detail, data_head.receive_id));
   };
 
@@ -182,6 +182,11 @@ const Receive_View = (props) => {
               <strong>
                 Receive{" "}
                 {data_head.receive_no ? "#" + data_head.receive_no : null}
+                {data_head.tg_trans_status_id === 3 && (
+                  <Text strong type="danger">
+                    #{data_head.trans_status_name}
+                  </Text>
+                )}
               </strong>
             </h2>
           </Col>

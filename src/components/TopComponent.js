@@ -43,16 +43,24 @@ function TopContent(props) {
     keepLog.keep_log_action("Click Save Button");
     setBtnLoading(true);
     message.loading({ content: "Validating...", key: "validate", duration: 1 });
-    setTimeout(() => {
-      props.onSave();
-      setBtnLoading(false);
-    }, 1000);
+    if (props.save === "table_loading") {
+      props.onSave && props.onSave();
+      setTimeout(() => {
+        setBtnLoading(false);
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        props.onSave && props.onSave();
+        setBtnLoading(false);
+      }, 1000);
+    }
   };
   const onApprove = () => {
     keepLog.keep_log_action("Click Approve Button");
     setBtnLoading(true);
     setTimeout(() => {
-      props.onApprove();
+      message.success({ content: "Approve", key: "validate", duration: 1 });
+      props.onApprove && props.onApprove();
       setBtnLoading(false);
     }, 1000);
   };
@@ -60,23 +68,25 @@ function TopContent(props) {
     keepLog.keep_log_action("Click Confirm Button");
     setBtnLoading(true);
     setTimeout(() => {
-      props.onConfirm();
+      message.success({ content: "Confirm", key: "validate", duration: 1 });
+      props.onConfirm && props.onConfirm();
       setBtnLoading(false);
     }, 1000);
   };
 
   const onReject = () => {
     keepLog.keep_log_action("Click Reject Button");
-    props.onReject();
+    props.onReject && props.onReject();
   };
   const onBack = () => {
     keepLog.keep_log_action("Click Back Button");
-    props.onBack();
+    props.onBack && props.onBack();
     props.history.push(props.back);
   };
   const onCancel = () => {
+    message.success({ content: "Cancel", key: "validate", duration: 1 });
     keepLog.keep_log_action("Click Cancel Button");
-    props.onCancel();
+    props.onCancel && props.onCancel();
   };
 
   const menuAction = () => {
@@ -144,7 +154,7 @@ function TopContent(props) {
                 </Button>
               )}
               {props.buttonAction.includes("Save") &&
-                (props.save === "function" ? (
+                (props.save === "function" || props.save === "table_loading" ? (
                   <Button
                     className="primary"
                     onClick={onSave}

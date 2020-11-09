@@ -52,6 +52,9 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
           item_vendor_columns.map((col, key) => {
             return (
               <Col key={col.id} span={col.size} className="col-outline">
+                {col.require && !readOnly && (
+                  <span className="require">* </span>
+                )}
                 <Text strong>{col.name}</Text>
               </Col>
             );
@@ -74,6 +77,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
                 border: "1px solid white",
                 backgroundColor: "#FCFCFC",
               }}
+              name={`row-${key}`}
               gutter={6}
               className="col-2"
             >
@@ -83,6 +87,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
                   showSearch
                   size={"small"}
                   placeholder={"Vendor"}
+                  name="vendor_id"
                   field_id="vendor_id"
                   field_name="vendor_no_name"
                   value={line.vendor_no_name}
@@ -108,6 +113,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
                   precision={0}
                   style={{ width: "100%" }}
                   disabled={0}
+                  name="item_vendor_lead_time"
                   value={line.item_vendor_lead_time}
                   onChange={(data) =>
                     onChangeValue(line.id, { item_vendor_lead_time: data })
@@ -123,6 +129,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
                   precision={4}
                   style={{ width: "100%" }}
                   disabled={0}
+                  name="item_vendor_min_qty"
                   value={line.item_vendor_min_qty}
                   onChange={(data) =>
                     onChangeValue(line.id, { item_vendor_min_qty: data })
@@ -137,6 +144,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
                   showSearch
                   size={"small"}
                   placeholder={"Select UOM"}
+                  name="uom_id"
                   field_id="uom_id"
                   field_name="uom_no"
                   value={line.uom_no}
@@ -162,6 +170,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
                   precision={3}
                   style={{ width: "100%" }}
                   disabled={0}
+                  name="item_vendor_price"
                   value={line.item_vendor_price}
                   onChange={(data) =>
                     onChangeValue(line.id, { item_vendor_price: data })
@@ -174,6 +183,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
                   placeholder={"Remark"}
                   style={{ width: "100%" }}
                   disabled={0}
+                  name="item_vendor_remark"
                   value={line.item_vendor_remark}
                   onChange={(e) =>
                     onChangeValue(line.id, {

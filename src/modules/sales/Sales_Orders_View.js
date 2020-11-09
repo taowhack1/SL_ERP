@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Input, Tabs, Select, Typography } from "antd";
+import { Row, Col, Input, Tabs, Select, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 
@@ -62,6 +62,7 @@ const SaleOrderView = (props) => {
       process_id: data_head.process_id,
       process_member_remark: remark,
     };
+    message.success({ content: "Reject", key: "validate", duration: 1 });
     dispatch(so_actions(app_detail, data_head.so_id));
   };
 
@@ -82,7 +83,7 @@ const SaleOrderView = (props) => {
       data_head && data_head.button_confirm && "Confirm",
       data_head && data_head.button_approve && "Approve",
       data_head && data_head.button_reject && "Reject",
-      "Discard",
+      "Back",
     ],
     action: [
       {
@@ -109,6 +110,14 @@ const SaleOrderView = (props) => {
       path: data_head && "/sales/orders/edit/" + data_head.so_id,
     },
     discard: "/sales/orders",
+    back: "/sales/orders",
+    onDiscard: (e) => {
+      console.log("Discard");
+    },
+    onBack: (e) => {
+      console.log("Back");
+    },
+
     onSave: (e) => {
       //e.preventDefault();
       console.log("Save");
@@ -163,6 +172,11 @@ const SaleOrderView = (props) => {
             <h2>
               <strong>
                 Sales Order {data_head.so_no ? "#" + data_head.so_no : null}
+                {data_head.tg_trans_status_id === 3 && (
+                  <Text strong type="danger">
+                    #{data_head.trans_status_name}
+                  </Text>
+                )}
               </strong>
             </h2>
           </Col>

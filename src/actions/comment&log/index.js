@@ -30,8 +30,12 @@ export const reset_comments = () => (dispatch) => {
 // };
 
 export const keep_log = (log) => {
-  console.log("context.log_detail", log.log_detail);
-  axios.post(api_keep_log, log.log_detail, header_config).then((res) => {
-    console.log("Keep Log.", res);
-  });
+  if (log.log_detail.db_all_log_menu && log.log_detail.database_id) {
+    console.log("context.log_detail", log.log_detail);
+    axios.post(api_keep_log, log.log_detail, header_config).then((res) => {
+      console.log("Keep Log.", res);
+    });
+  } else {
+    console.log("Missing log detail...");
+  }
 };

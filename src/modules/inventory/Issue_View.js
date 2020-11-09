@@ -70,7 +70,7 @@ const Issue_View = (props) => {
       data_head && data_head.button_confirm && "Confirm",
       data_head && data_head.button_approve && "Approve",
       data_head && data_head.button_reject && "Reject",
-      "Discard",
+      "Back",
     ],
     action: [
       {
@@ -89,7 +89,7 @@ const Issue_View = (props) => {
     step: {
       current: data_head && data_head.node_stay - 1,
       step: flow,
-      process_complete: data_head.process_complete,
+      process_complete: data_head && data_head.process_complete,
     },
     create: "",
     edit: {
@@ -100,6 +100,10 @@ const Issue_View = (props) => {
       path: data_head && "/inventory/issue/edit/" + data_head.issue_id,
     },
     discard: "/inventory/issue",
+    back: "/inventory/issue",
+    onBack: (e) => {
+      console.log("Back");
+    },
     onSave: (e) => {
       //e.preventDefault();
       console.log("Save");

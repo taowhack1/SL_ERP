@@ -153,6 +153,7 @@ const PurchaseOrderCreate = (props) => {
     create: "",
     save: "function",
     discard: "/purchase/po",
+    back: "/purchase/po",
     onDiscard: (e) => {
       console.log("Discard");
     },
@@ -187,7 +188,7 @@ const PurchaseOrderCreate = (props) => {
             );
       } else {
         message.warning({
-          content: "Please fill your request completely.",
+          content: "Please fill your form completely.",
           key,
           duration: 2,
         });
@@ -343,7 +344,7 @@ const PurchaseOrderCreate = (props) => {
               }
               value={data_head.po_description}
               placeholder="Description"
-            ></Input>
+            />
           </Col>
           <Col span={2}></Col>
           <Col span={3}>

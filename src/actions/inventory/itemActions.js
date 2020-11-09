@@ -12,6 +12,7 @@ import {
   api_get_item_detail,
 } from "../../include/js/api";
 import axios from "axios";
+import { message } from "antd";
 const api_path = api_url + "/query/sql";
 export const getAllItems = () => async (dispatch) => {
   const query_items = {
@@ -30,27 +31,29 @@ export const getAllItems = () => async (dispatch) => {
   });
 };
 
-export const createNewItems = (data_head, data_detail) => async (dispatch) => {
+export const createNewItems = (data_head, data_detail, redirect) => async (
+  dispatch
+) => {
   console.log("Create item...");
   try {
     axios
       .post(api_url + "/inventory/item", data_head, header_config)
-      .then((res) => {
+      .then(async (res) => {
         if (res.status === 200 && res.data[0].length) {
           console.log("res", res);
           const item_id = res.data[0][0].item_id;
-          data_detail[0].item_id
-            ? axios
-                .post(
-                  `${api_get_item_detail}/${item_id}`,
-                  data_detail,
-                  header_config
-                )
-                .then((res) => {
-                  dispatch(get_item_by_id(item_id));
-                })
-            : dispatch(get_item_by_id(item_id));
-
+          await axios.post(
+            `${api_get_item_detail}/${item_id}`,
+            data_detail,
+            header_config
+          );
+          await dispatch(get_item_by_id(item_id));
+          message.success({
+            content: "Item Created.",
+            key: "validate",
+            duration: 2,
+          });
+          redirect(item_id);
           return true;
         } else {
           alert("Something went wrong please try again...");
@@ -62,25 +65,27 @@ export const createNewItems = (data_head, data_detail) => async (dispatch) => {
   }
 };
 
-export const upDateItem = (item_id, data_head, data_detail) => async (
+export const upDateItem = (item_id, data_head, data_detail, redirect) => async (
   dispatch
 ) => {
   console.log("Update item...");
   try {
     axios
       .put(api_url + "/inventory/item/" + item_id, data_head, header_config)
-      .then((res) => {
+      .then(async (res) => {
         if (res.status === 200 && res.data[0].length) {
-          axios
-            .post(
-              `${api_get_item_detail}/${item_id}`,
-              data_detail,
-              header_config
-            )
-            .then((res) => {
-              dispatch(get_item_by_id(item_id));
-            });
-
+          await axios.post(
+            `${api_get_item_detail}/${item_id}`,
+            data_detail,
+            header_config
+          );
+          await dispatch(get_item_by_id(item_id));
+          message.success({
+            content: "Item Update.",
+            key: "validate",
+            duration: 2,
+          });
+          redirect(item_id);
           return true;
         } else {
           alert("Something went wrong please try again...");

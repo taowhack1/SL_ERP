@@ -75,7 +75,7 @@ const SaleOrder = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-
+                    keepLog.keep_log_action(record.so_no);
                     dispatch(get_so_by_id(record.so_id, auth.user_name));
                     props.history.push({
                       pathname: "/sales/orders/view/" + record.so_id,

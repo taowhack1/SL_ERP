@@ -66,6 +66,7 @@ const Issue = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
+                    keepLog.keep_log_action(record.issue_no);
                     dispatch(get_issue_by_id(record.issue_id, auth.user_name));
                     props.history.push({
                       pathname: "/inventory/issue/view/" + record.issue_id,

@@ -1,9 +1,14 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withRouter } from "react-router";
-import { Row, Col, Input, Tabs, Typography } from "antd";
+import { useHistory, withRouter } from "react-router";
+import { Row, Col, Input, Tabs, Typography, message } from "antd";
 import { reducer } from "./reducers";
-import { receive_fields, receive_detail_fields } from "./config";
+import {
+  receive_fields,
+  receive_detail_fields,
+  receive_detail_require_fields,
+  receive_require_fields,
+} from "./config";
 import {
   create_receive,
   get_po_receive_list,
@@ -21,6 +26,10 @@ import TotalFooter from "../../components/TotalFooter";
 import CustomSelect from "../../components/CustomSelect";
 import axios from "axios";
 import Authorize from "../system/Authorize";
+import {
+  validateFormDetail,
+  validateFormHead,
+} from "../../include/js/function_main";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -28,9 +37,9 @@ const { Text } = Typography;
 const initialStateHead = receive_fields;
 const initialStateDetail = [receive_detail_fields];
 const Receive_Create = (props) => {
+  const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
-  const { history } = props;
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
@@ -89,20 +98,44 @@ const Receive_Create = (props) => {
       process_complete: data_head.process_complete,
     },
     create: "",
-    save: {
-      data: data_head,
-      path:
-        data_head &&
-        "/inventory/receive/view/" +
-          (data_head.receive_id ? data_head.receive_id : "new"),
-    },
+    save: "function",
     discard: "/inventory/receive",
     onSave: (e) => {
-      //e.preventDefault();
       console.log("Save");
-      data_head.receive_id
-        ? dispatch(update_receive(data_head.receive_id, data_head, data_detail))
-        : dispatch(create_receive(data_head, data_detail, history));
+      const key = "validate";
+
+      const validate = validateFormHead(data_head, receive_require_fields);
+      // const validate_detail = validateFormDetail(
+      //   data_detail,
+      //   receive_detail_require_fields
+      // );
+      if (validate.validate) {
+        console.log("pass");
+        data_head.receive_id
+          ? dispatch(
+              update_receive(
+                data_head.receive_id,
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            )
+          : dispatch(
+              create_receive(
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            );
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -189,9 +222,9 @@ const Receive_Create = (props) => {
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
-
-  console.log("data_head 1", data_head);
-  console.log("data_detail 1", data_detail);
+  const redirect_to_view = (id) => {
+    history.push("/inventory/receive/view/" + (id ? id : "new"));
+  };
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -216,7 +249,9 @@ const Receive_Create = (props) => {
 
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>PO Ref. :</Text>
+            <Text strong>
+              <span className="require">* </span>PO Ref. :
+            </Text>
           </Col>
           <Col span={8}>
             {/* PO Ref */}
@@ -224,6 +259,7 @@ const Receive_Create = (props) => {
               allowClear
               showSearch
               placeholder={"PO No. ex.PO2009000x"}
+              name="po_id"
               field_id="po_id"
               field_name="po_no_description"
               value={data_head.po_no_description}
@@ -249,10 +285,13 @@ const Receive_Create = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical ">
           <Col span={3}>
-            <Text strong>Description :</Text>
+            <Text strong>
+              <span className="require">* </span>Description :
+            </Text>
           </Col>
           <Col span={8}>
             <Input
+              name="receive_description"
               onChange={(e) =>
                 upDateFormValue({
                   receive_description: e.target.value,
@@ -276,6 +315,7 @@ const Receive_Create = (props) => {
           </Col>
           <Col span={8}>
             <Input
+              name="receive_agreement"
               value={data_head.receive_agreement}
               onChange={(e) =>
                 upDateFormValue({
@@ -311,6 +351,7 @@ const Receive_Create = (props) => {
               <Tabs.TabPane tab="Notes" key={"2"}>
                 <TextArea
                   rows={2}
+                  name="receive_remark"
                   placeholder={"Remark"}
                   defaultValue={data_head.receive_remark}
                   value={data_head.receive_remark}

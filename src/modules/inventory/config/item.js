@@ -3,26 +3,31 @@ export const item_vendor_columns = [
     id: 0,
     name: "Vendor Name",
     size: 7,
+    require: true,
   },
   {
     id: 1,
     name: "Lead time(day)",
     size: 3,
+    require: true,
   },
   {
     id: 2,
     name: "Quantity",
     size: 3,
+    require: true,
   },
   {
     id: 3,
     name: "Unit",
     size: 2,
+    require: true,
   },
   {
     id: 4,
     name: "Price per unit",
     size: 3,
+    require: true,
   },
   {
     id: 5,
@@ -47,11 +52,11 @@ export const item_fields = {
   item_min: 0,
   item_max: 0,
   item_customer_run_no: "SRL",
-  uom_id: 1,
+  uom_id: null,
   uom_name: null,
-  type_id: 1,
+  type_id: null,
   type_name: null,
-  category_id: 1,
+  category_id: null,
   category_name: null,
   tg_item_qty: null,
   branch_id: 1,
@@ -119,4 +124,21 @@ export const item_show_columns = [
     dataIndex: "item_remark",
     ellipsis: true,
   },
+];
+
+export const item_require_fields = [
+  "item_name",
+  "item_customer_run_no",
+  "uom_id",
+  "type_id",
+  "category_id",
+];
+export const item_vendor_require_fields = [
+  "vendor_id",
+  "item_vendor_lead_time",
+  "item_vendor_min_qty",
+  "item_vendor_price",
+  "uom_id",
+  "type_id",
+  "category_id",
 ];

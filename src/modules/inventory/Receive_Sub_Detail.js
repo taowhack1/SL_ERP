@@ -91,6 +91,9 @@ const SubDetail = ({
           receive_sub_detail_columns.map((col, key) => {
             return (
               <Col key={key} span={col.size} className="col-outline">
+                {col.require && !readOnly && (
+                  <span className="require">* </span>
+                )}
                 <Text strong>{col.name}</Text>
               </Col>
             );
@@ -163,7 +166,7 @@ const SubDetail = ({
                     format={"DD/MM/YYYY"}
                     size="small"
                     style={{ width: "100%" }}
-                    placeholder="Delivery date..."
+                    placeholder="Receive date..."
                     value={
                       line.receive_detail_sub_receive_date &&
                       line.receive_detail_sub_receive_date
@@ -188,7 +191,7 @@ const SubDetail = ({
                     format={"DD/MM/YYYY"}
                     size="small"
                     style={{ width: "100%" }}
-                    placeholder="Delivery date..."
+                    placeholder="MFG date..."
                     value={
                       line.receive_detail_sub_mfg_date &&
                       line.receive_detail_sub_mfg_date
@@ -208,7 +211,7 @@ const SubDetail = ({
                     format={"DD/MM/YYYY"}
                     size="small"
                     style={{ width: "100%" }}
-                    placeholder="Delivery date..."
+                    placeholder="EXP date..."
                     value={
                       line.receive_detail_sub_exp_date &&
                       line.receive_detail_sub_exp_date

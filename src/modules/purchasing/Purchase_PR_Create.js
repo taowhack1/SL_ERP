@@ -159,7 +159,7 @@ const PurchaseRequisitionCreate = (props) => {
             );
       } else {
         message.warning({
-          content: "Please fill your request completely.",
+          content: "Please fill your form completely.",
           key,
           duration: 2,
         });

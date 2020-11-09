@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Tabs, Typography } from "antd";
+import { Row, Col, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import ItemLine from "./Sales_ItemLine";
@@ -61,6 +61,7 @@ const Sales_Quotations = (props) => {
       process_id: data_head.process_id,
       process_member_remark: remark,
     };
+    message.success({ content: "Reject", key: "validate", duration: 1 });
     dispatch(qn_actions(app_detail, data_head.qn_id));
   };
   const config = {
@@ -80,7 +81,7 @@ const Sales_Quotations = (props) => {
       data_head && data_head.button_confirm && "Confirm",
       data_head && data_head.button_approve && "Approve",
       data_head && data_head.button_reject && "Reject",
-      "Discard",
+      "Back",
     ],
     action: [
       {
@@ -111,8 +112,12 @@ const Sales_Quotations = (props) => {
       path: data_head && "/sales/quotations/edit/" + data_head.qn_id,
     },
     discard: "/sales/quotations",
+    back: "/sales/quotations",
     onDiscard: (e) => {
       console.log("Discard");
+    },
+    onBack: (e) => {
+      console.log("Back");
     },
     onSave: (e) => {
       //e.preventDefault();
@@ -168,6 +173,11 @@ const Sales_Quotations = (props) => {
               <strong>
                 {data_head && data_head.qn_no ? "Edit" : "Create"} Quotations #
                 {data_head && data_head.qn_no}
+                {data_head.tg_trans_status_id === 3 && (
+                  <Text strong type="danger">
+                    #{data_head.trans_status_name}
+                  </Text>
+                )}
               </strong>
             </h2>
           </Col>

@@ -23,6 +23,7 @@ import {
   GET_LOT_BATCH_BY_ITEM_ID_SHELF,
   GET_REPORT_STOCK,
   GET_ITEM_BY_ID,
+  GET_RECEIVE_BY_ID,
 } from "../actions/types";
 const initialState = {
   item: {
@@ -76,16 +77,6 @@ export default (state = initialState, action) => {
         ...state,
         master_data: { ...state.master_data, item_list: action.payload },
       };
-    // case CREATE_ITEM:
-    //   return {
-    //     ...state,
-    //     items: [action.payload, ...state["items"]],
-    //   };
-    // case UPDATE_ITEM:
-    //   return {
-    //     ...state,
-    //     items: [action.payload, ...state["items"]],
-    //   };
     case GET_ITEM_BY_ID:
       return {
         ...state,
@@ -112,6 +103,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         receive: { ...state.receive, po_ref: action.payload },
+      };
+    case GET_RECEIVE_BY_ID:
+      return {
+        ...state,
+        receive: { ...state.receive, ...action.payload },
       };
     case GET_RECEIVE_HEAD:
       return {

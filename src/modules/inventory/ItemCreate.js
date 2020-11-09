@@ -34,8 +34,17 @@ import {
   createNewItems,
   upDateItem,
 } from "../../actions/inventory/itemActions";
-import { item_detail_fields, item_fields } from "./config/item";
-import { getNameById } from "../../include/js/function_main";
+import {
+  item_detail_fields,
+  item_fields,
+  item_require_fields,
+  item_vendor_require_fields,
+} from "./config/item";
+import {
+  getNameById,
+  validateFormDetail,
+  validateFormHead,
+} from "../../include/js/function_main";
 import $ from "jquery";
 import { getMasterDataItem } from "../../actions/inventory";
 import { UploadOutlined } from "@ant-design/icons";
@@ -44,6 +53,7 @@ import { item_vendor_columns } from "./config/item";
 import { reducer } from "./reducers";
 import { numberFormat } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
+import { useHistory } from "react-router-dom";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -51,6 +61,7 @@ const initialStateHead = item_fields;
 const initialStateDetail = [item_detail_fields];
 
 const ItemCreate = (props) => {
+  const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -100,21 +111,41 @@ const ItemCreate = (props) => {
     search: false,
     buttonAction: ["Save", "Discard"],
     create: "",
-    save: {
-      data: data_head,
-      path:
-        data_head &&
-        "/inventory/items/view/" +
-          (data_head.item_id ? data_head.item_id : "new"),
-    },
-    // save: "function",
+
+    save: "function",
     discard: "/inventory/items",
     onSave: (e) => {
-      //e.preventDefault();
       console.log("Save");
-      data_head.item_no
-        ? dispatch(upDateItem(data_head.item_id, data_head, data_detail))
-        : dispatch(createNewItems(data_head, data_detail));
+      const key = "validate";
+
+      const validate = validateFormHead(data_head, item_require_fields);
+      // const validate_detail = validateFormDetail(
+      //   data_detail,
+      //   item_vendor_require_fields
+      // );
+      if (validate.validate) {
+        console.log("pass");
+        data_head.item_id
+          ? dispatch(
+              upDateItem(
+                data_head.item_id,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            )
+          : dispatch(createNewItems(data_head, data_detail, redirect_to_view));
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
+
+      // data_head.item_no
+      //   ? dispatch(upDateItem(data_head.item_id, data_head, data_detail))
+      //   : dispatch(createNewItems(data_head, data_detail));
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -127,6 +158,9 @@ const ItemCreate = (props) => {
     onConfirm: () => {
       console.log("Confirm");
     },
+  };
+  const redirect_to_view = (id) => {
+    history.push("/inventory/items/view/" + (id ? id : "new"));
   };
   console.log("data_head", data_head);
   return (
@@ -159,9 +193,12 @@ const ItemCreate = (props) => {
         <Row className="col-2">
           <Col span={24} style={{ marginBottom: 8 }}>
             <h3>
-              <strong>Description Name</strong>
+              <strong>
+                <span className="require">* </span>Description Name
+              </strong>
             </h3>
             <Input
+              name="item_name"
               placeholder={"Description Name"}
               onChange={(e) => upDateFormValue({ item_name: e.target.value })}
               value={data_head.item_name}
@@ -172,6 +209,7 @@ const ItemCreate = (props) => {
           <Col span={24} style={{ marginLeft: 5 }}>
             <Space align="baseline">
               <Checkbox
+                name="item_sale"
                 checked={data_head.item_sale}
                 onChange={(e) =>
                   upDateFormValue({ item_sale: e.target.checked ? 1 : 0 })
@@ -182,6 +220,7 @@ const ItemCreate = (props) => {
             <br />
             <Space align="baseline">
               <Checkbox
+                name="item_purchase"
                 checked={data_head.item_purchase}
                 onChange={(e) =>
                   upDateFormValue({ item_purchase: e.target.checked ? 1 : 0 })
@@ -196,6 +235,7 @@ const ItemCreate = (props) => {
               >
                 <Text strong>Active</Text>
                 <Switch
+                  name="item_actived"
                   checkedChildren={""}
                   unCheckedChildren={""}
                   checked={data_head.item_actived}
@@ -215,10 +255,13 @@ const ItemCreate = (props) => {
               <Tabs.TabPane tab="Detail" key="1">
                 <Row className="col-2 row-margin-vertical">
                   <Col span={3}>
-                    <Text strong>SRL</Text>
+                    <Text strong>
+                      <span className="require">* </span>SRL
+                    </Text>
                   </Col>
                   <Col span={8}>
                     <Input
+                      name="item_customer_run_no"
                       disabled={data_head.item_id ? 1 : 0}
                       placeholder="Customer or vendor short name"
                       onChange={(e) =>
@@ -231,7 +274,9 @@ const ItemCreate = (props) => {
                   </Col>
                   <Col span={2}></Col>
                   <Col span={3}>
-                    <Text strong>Item type </Text>
+                    <Text strong>
+                      <span className="require">* </span>Item type{" "}
+                    </Text>
                   </Col>
                   <Col span={8}>
                     <CustomSelect
@@ -239,6 +284,7 @@ const ItemCreate = (props) => {
                       disabled={data_head.item_id ? 1 : 0}
                       showSearch
                       placeholder={"Item type"}
+                      name="type_id"
                       field_id="type_id"
                       field_name="type_name"
                       value={data_head.type_name}
@@ -276,7 +322,9 @@ const ItemCreate = (props) => {
 
                   <Col span={2}></Col>
                   <Col span={3}>
-                    <Text strong>Category </Text>
+                    <Text strong>
+                      <span className="require">* </span>Category{" "}
+                    </Text>
                   </Col>
                   <Col span={8}>
                     <CustomSelect
@@ -284,6 +332,7 @@ const ItemCreate = (props) => {
                       showSearch
                       disabled={data_head.item_id ? 1 : 0}
                       placeholder={"Category"}
+                      name="category_id"
                       field_id="category_id"
                       field_name="category_name"
                       value={data_head.category_name}
@@ -310,13 +359,16 @@ const ItemCreate = (props) => {
                 </Row>
                 <Row className="col-2 row-margin-vertical">
                   <Col span={3}>
-                    <Text strong>Unit of measure</Text>
+                    <Text strong>
+                      <span className="require">* </span>Unit of measure
+                    </Text>
                   </Col>
                   <Col span={8}>
                     <CustomSelect
                       allowClear
                       showSearch
                       placeholder={"Unit of measure"}
+                      name="uom_id"
                       field_id="uom_id"
                       field_name="uom_no"
                       value={data_head.uom_no}
@@ -343,6 +395,7 @@ const ItemCreate = (props) => {
                     <Space direction="vertical" style={{ width: "100%" }}>
                       <Text strong>Notes </Text>
                       <TextArea
+                        name="item_remark"
                         placeholder="Notes"
                         onChange={(e) =>
                           upDateFormValue({ item_remark: e.target.value })
@@ -367,6 +420,7 @@ const ItemCreate = (props) => {
                       </Col>
                       <Col span={16}>
                         <Input
+                          name="item_trade_name"
                           placeholder="Item Trade name"
                           onChange={(e) =>
                             upDateFormValue({
@@ -384,6 +438,7 @@ const ItemCreate = (props) => {
                       </Col>
                       <Col span={16}>
                         <InputNumber
+                          name="item_shelf_life"
                           placeholder={"Shelf life (day)"}
                           min={0}
                           step={1}
@@ -597,7 +652,7 @@ const ItemCreate = (props) => {
                   </Col>
                 </Row>
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Purchase" key="3">
+              <Tabs.TabPane tab={"Purchase"} key="3">
                 <Row className="col-2 row-margin-vertical">
                   <Col span={3}>
                     <Text strong>Sale price</Text>

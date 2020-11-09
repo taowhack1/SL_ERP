@@ -6,6 +6,7 @@ import {
   Modal,
   InputNumber,
   DatePicker,
+  message,
 } from "antd";
 import {
   PlusOutlined,
@@ -22,6 +23,7 @@ import {
   calSubtotal,
   sumArrObj,
   sumArrOdjWithField,
+  validateFormDetail,
 } from "../../include/js/function_main";
 import {
   disburse_detail_fields,
@@ -34,6 +36,7 @@ import {
   get_location_shelf_by_item_id,
   get_lot_batch_by_item_id_shelf,
 } from "../../actions/inventory";
+import { disburse_sub_detail_require_fields } from "./config/disburse";
 const { Text } = Typography;
 
 const DisburseDetail = ({
@@ -60,27 +63,39 @@ const DisburseDetail = ({
   };
 
   const modalSave = () => {
-    setVisible(false);
     console.log("Confirm Modal", "id", temp_detail.id, temp_sub_detail);
-
-    const disburse_qty = sumArrOdjWithField(
+    const key = "validate";
+    const validate_detail = validateFormDetail(
       temp_sub_detail,
-      "disburse_detail_sub_qty"
+      disburse_sub_detail_require_fields
     );
+    if (validate_detail.validate) {
+      setVisible(false);
+      const disburse_qty = sumArrOdjWithField(
+        temp_sub_detail,
+        "disburse_detail_sub_qty"
+      );
 
-    detailDispatch({
-      type: "CHANGE_DETAIL_VALUE",
-      payload: {
-        id: temp_detail.id,
-        data: {
-          disburse_sub_detail: temp_sub_detail,
-          tg_disburse_detail_qty: disburse_qty,
-          tg_disburse_detail_qty_balance:
-            temp_detail.tg_disburse_detail_qty_balance_temp - disburse_qty,
+      detailDispatch({
+        type: "CHANGE_DETAIL_VALUE",
+        payload: {
+          id: temp_detail.id,
+          data: {
+            disburse_sub_detail: temp_sub_detail,
+            tg_disburse_detail_qty: disburse_qty,
+            tg_disburse_detail_qty_balance:
+              temp_detail.tg_disburse_detail_qty_balance_temp - disburse_qty,
+          },
         },
-      },
-    });
-    setTempDetail(null);
+      });
+      setTempDetail(null);
+    } else {
+      message.warning({
+        content: "Please fill your form completely.",
+        key,
+        duration: 2,
+      });
+    }
   };
 
   const modalCancel = () => {

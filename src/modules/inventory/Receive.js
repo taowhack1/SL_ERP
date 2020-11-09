@@ -71,7 +71,10 @@ const Receive = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    getData(record.receive_id, auth.user_name);
+                    keepLog.keep_log_action(record.receive_no);
+                    dispatch(
+                      get_receive_by_id(record.receive_id, auth.user_name)
+                    );
                     props.history.push({
                       pathname: "/inventory/receive/view/" + record.receive_id,
                     });

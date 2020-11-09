@@ -42,6 +42,7 @@ export const RESET_RECEIVE = "RESET_RECEIVE";
 export const GET_RECEIVE_LIST = "GET_RECEIVE_LIST";
 export const GET_PO_RECEIVE_LIST = "GET_PO_RECEIVE_LIST";
 export const GET_PO_DETAIL_REF = "GET_PO_DETAIL_REF";
+export const GET_RECEIVE_BY_ID = "GET_RECEIVE_BY_ID";
 export const GET_RECEIVE_HEAD = "GET_RECEIVE_HEAD";
 export const GET_RECEIVE_DETAIL = "GET_RECEIVE_DETAIL";
 export const GET_RECEIVE_SUB_DETAIL = "GET_RECEIVE_SUB_DETAIL";
@@ -103,14 +104,13 @@ export const GET_MASTER_DATA = "GET_MASTER_DATA";
 export const GET_QN_OPEN_SO = "GET_QN_OPEN_SO";
 
 export const CREATE_QUOTATION = "CREATE_QUOTATION";
-export const SET_QN_HEAD = "SET_QN_HEAD";
-export const SET_QN_DETAIL = "SET_QN_DETAIL";
+export const GET_QN_BY_ID = "GET_QN_BY_ID";
 export const RESET_QN = "RESET_QN";
 export const SET_QN_LIST = "SET_QN_LIST";
 
 export const GET_SO_LIST = "GET_SO_LIST";
-export const SET_SO_HEAD = "SET_SO_HEAD";
-export const SET_SO_DETAIL = "SET_SO_DETAIL";
+export const GET_SO_BY_ID = "GET_SO_BY_ID";
+
 export const RESET_SO = "RESET_SO";
 
 //QC
