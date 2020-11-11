@@ -129,6 +129,7 @@ export const item_show_columns = [
 export const item_require_fields = [
   "item_name",
   "item_customer_run_no",
+
   "uom_id",
   "type_id",
   "category_id",

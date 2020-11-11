@@ -34,7 +34,7 @@ const Disburse = (props) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   useEffect(() => {
-    dispatch(get_disburse_list());
+    dispatch(get_disburse_list(auth.user_name));
     dispatch(getMasterDataItem());
   }, []);
   const current_project = useSelector((state) => state.auth.currentProject);

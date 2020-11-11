@@ -112,3 +112,9 @@ export const vendor_fields = {
   currency_no: "THB",
   commit: 1,
 };
+export const vendor_require_fields = [
+  "vendor_name",
+  "vendor_address",
+  "currency_id",
+  "payment_term_id",
+];

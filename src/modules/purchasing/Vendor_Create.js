@@ -9,6 +9,7 @@ import {
   AutoComplete,
   Typography,
   Space,
+  message,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
@@ -17,9 +18,11 @@ import {
   update_vendor,
   vendor_create,
 } from "../../actions/purchase/vendorActions";
-import { vendor_fields } from "./config/vendor";
+import { vendor_fields, vendor_require_fields } from "./config/vendor";
 import CustomSelect from "../../components/CustomSelect";
 import Authorize from "../system/Authorize";
+import { validateFormHead } from "../../include/js/function_main";
+import { useHistory } from "react-router-dom";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -32,6 +35,7 @@ const require_field = {
 };
 
 const VendorCreate = (props) => {
+  const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -77,19 +81,27 @@ const VendorCreate = (props) => {
     search: false,
     buttonAction: ["Save", "Discard"],
     create: "",
-    save: {
-      data: data_head,
-      path:
-        data_head &&
-        "/purchase/vendor/view/" +
-          (data_head.vendor_id ? data_head.vendor_id : "new"),
-    },
+    save: "function",
     discard: "/purchase/vendor",
     onSave: (e) => {
       //e.preventDefault();
-      data_head.vendor_id
-        ? dispatch(update_vendor(data_head.vendor_id, data_head))
-        : dispatch(create_vendor(data_head));
+      console.log("Save");
+      const key = "validate";
+      const validate = validateFormHead(data_head, vendor_require_fields);
+      if (validate.validate) {
+        console.log("pass");
+        data_head.vendor_id
+          ? dispatch(
+              update_vendor(data_head.vendor_id, data_head, redirect_to_view)
+            )
+          : dispatch(create_vendor(data_head, redirect_to_view));
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -102,6 +114,9 @@ const VendorCreate = (props) => {
     onConfirm: () => {
       console.log("Confirm");
     },
+  };
+  const redirect_to_view = (id) => {
+    history.push("/purchase/vendor/view/" + (id ? id : "new"));
   };
 
   return (
@@ -127,19 +142,34 @@ const VendorCreate = (props) => {
         </Row>
         <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
-            <Title level={5}>Name </Title>
-            <Input
-              onChange={(e) => upDateFormValue({ vendor_name: e.target.value })}
-              value={data_head.vendor_name}
-              placeholder="Name"
-            />
+            <Title level={5}>
+              <span className="require">* </span>Name{" "}
+            </Title>
+            <Col span={24}>
+              <Input
+                name="vendor_name"
+                onChange={(e) =>
+                  upDateFormValue({ vendor_name: e.target.value })
+                }
+                value={data_head.vendor_name}
+                placeholder="Name"
+              />
+            </Col>
           </Col>
         </Row>
 
         <Row className="col-2">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
-              <Tabs.TabPane tab="Contact" key="1">
+              <Tabs.TabPane
+                tab={
+                  <span>
+                    <span className="require">* </span>
+                    Contact & Detail
+                  </span>
+                }
+                key="1"
+              >
                 {/* Address & Information */}
                 <Row className="col-2 row-margin-vertical">
                   <Col span={12}>
@@ -149,6 +179,7 @@ const VendorCreate = (props) => {
                       </Col>
                       <Col span={18}>
                         <Input
+                          name="vendor_name_short"
                           onChange={(e) =>
                             upDateFormValue({
                               vendor_name_short: e.target.value,
@@ -166,6 +197,7 @@ const VendorCreate = (props) => {
                       </Col>
                       <Col span={18}>
                         <Input
+                          name="vendor_phone"
                           onChange={(e) =>
                             upDateFormValue({ vendor_phone: e.target.value })
                           }
@@ -181,6 +213,7 @@ const VendorCreate = (props) => {
                       </Col>
                       <Col span={18}>
                         <Input
+                          name="vendor_mobile"
                           onChange={(e) =>
                             upDateFormValue({ vendor_mobile: e.target.value })
                           }
@@ -196,6 +229,7 @@ const VendorCreate = (props) => {
                       </Col>
                       <Col span={18}>
                         <Input
+                          name="vendor_email"
                           onChange={(e) =>
                             upDateFormValue({ vendor_email: e.target.value })
                           }
@@ -207,13 +241,16 @@ const VendorCreate = (props) => {
                     </Row>
                     <Row className="row-margin">
                       <Col span={5}>
-                        <Text strong>Currency</Text>
+                        <Text strong>
+                          <span className="require">* </span>Currency
+                        </Text>
                       </Col>
                       <Col span={18}>
                         <CustomSelect
                           placeholder={"Currency"}
                           allowClear
                           showSearch
+                          name="currency_id"
                           field_id="currency_id"
                           field_name="currency_no"
                           value={data_head.currency_no}
@@ -238,10 +275,13 @@ const VendorCreate = (props) => {
                     <Row className="row-margin">
                       <Col span={1}></Col>
                       <Col span={5}>
-                        <Text strong>Address</Text>
+                        <Text strong>
+                          <span className="require">* </span>Address
+                        </Text>
                       </Col>
                       <Col span={18}>
                         <TextArea
+                          name="vendor_address"
                           placeholder="Address"
                           style={{ width: "100%", height: "110px" }}
                           value={data_head.vendor_address}
@@ -258,6 +298,7 @@ const VendorCreate = (props) => {
                       </Col>
                       <Col span={18}>
                         <Input
+                          name="vendor_tax_no"
                           placeholder="Tax ID"
                           style={{ width: "100%" }}
                           value={data_head.vendor_tax_no}
@@ -270,18 +311,29 @@ const VendorCreate = (props) => {
                   </Col>
                 </Row>
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Purchase" key="2">
+              <Tabs.TabPane
+                tab={
+                  <span>
+                    <span className="require">* </span>
+                    Purchase
+                  </span>
+                }
+                key="2"
+              >
                 <Row className="col-2 row-margin-vertical">
                   <Col span={12}>
                     <Row className="row-margin">
                       <Col span={5}>
-                        <Text strong>Payment Terms</Text>
+                        <Text strong>
+                          <span className="require">* </span>Payment Terms
+                        </Text>
                       </Col>
                       <Col span={18}>
                         <CustomSelect
                           placeholder={"Payment Term"}
                           allowClear
                           showSearch
+                          name="payment_term_id"
                           field_id="payment_term_id"
                           field_name="payment_term_no_name"
                           value={data_head.payment_term_no_name}
@@ -319,6 +371,7 @@ const VendorCreate = (props) => {
               <Tabs.TabPane tab="Notes" key="3">
                 <TextArea
                   rows={3}
+                  name="vendor_remark"
                   placeholder={"Notes"}
                   value={data_head.vendor_remark}
                   onChange={(e) =>

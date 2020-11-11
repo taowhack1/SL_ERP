@@ -33,6 +33,7 @@ export const get_issue_ref_list = () => async (dispatch) => {
 
 export const get_disburse_list = (user_name) => (dispatch) => {
   axios.get(`${api_disburse}/all/${user_name}`, header_config).then((res) => {
+    console.log("get all disburse", `${api_disburse}/all/${user_name}`);
     dispatch({ type: GET_DISBURSE_LIST, payload: res.data[0] });
   });
 };

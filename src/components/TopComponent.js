@@ -187,7 +187,7 @@ function TopContent(props) {
               {props.buttonAction.includes("Edit") &&
                 (props.edit === "modal" ? (
                   <Button
-                    className="primary"
+                    // className="primary"
                     onClick={onEdit}
                     disabled={props.disabledEditBtn}
                   >

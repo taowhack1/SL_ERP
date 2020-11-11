@@ -217,7 +217,9 @@ const IssueCreate = (props) => {
 
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Request By :</Text>
+            <Text strong>
+              <span className="require">* </span>Request By :
+            </Text>
           </Col>
 
           <Col span={8}>
@@ -225,7 +227,9 @@ const IssueCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Cost Center :</Text>
+            <Text strong>
+              <span className="require">* </span>Cost Center :
+            </Text>
           </Col>
           <Col span={8}>
             <CustomSelect
@@ -253,7 +257,9 @@ const IssueCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Description :</Text>
+            <Text strong>
+              <span className="require">* </span>Description :
+            </Text>
           </Col>
           <Col span={8}>
             <Input
@@ -283,7 +289,15 @@ const IssueCreate = (props) => {
         <Row className="col-2 space-top-md">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
-              <Tabs.TabPane tab="Request Detail" key="1">
+              <Tabs.TabPane
+                tab={
+                  <span>
+                    <span className="require">* </span>
+                    Request Detail
+                  </span>
+                }
+                key="1"
+              >
                 <Detail
                   detailDispatch={detailDispatch}
                   data_detail={data_detail}

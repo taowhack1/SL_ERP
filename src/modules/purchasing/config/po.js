@@ -1,3 +1,5 @@
+import { getSelfStepStatus } from "../../../include/js/function_main";
+
 export const po_require_fields = [
   "pr_id",
   "vendor_id",
@@ -64,7 +66,7 @@ export const po_list_columns = [
     title: "Description",
     dataIndex: "po_description",
     key: "po_description",
-    width: "15%",
+    width: "18%",
     align: "left",
     ellipsis: true,
   },
@@ -72,8 +74,12 @@ export const po_list_columns = [
     title: "Status",
     dataIndex: "trans_status_name",
     key: "trans_status_name",
-    width: "10%",
-    align: "left",
+    width: "7%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record, index) => {
+      return getSelfStepStatus(record);
+    },
   },
 ];
 

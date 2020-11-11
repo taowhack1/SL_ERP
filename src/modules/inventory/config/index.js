@@ -1,4 +1,8 @@
 import numeral from "numeral";
+import {
+  getRefStatus,
+  getSelfStepStatus,
+} from "../../../include/js/function_main";
 export const receive_columns = [
   {
     title: "Receive No.",
@@ -78,12 +82,15 @@ export const receive_columns = [
     dataIndex: "trans_status_name",
     key: "trans_status_name",
     width: "8%",
-    align: "left",
+    align: "center",
     sorter: {
       compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
       multiple: 3,
     },
     ellipsis: true,
+    render: (value, record, index) => {
+      return getSelfStepStatus(record);
+    },
   },
 ];
 export const recieve_detail_columns = [
@@ -260,18 +267,24 @@ export const issue_columns = [
       multiple: 3,
     },
     ellipsis: true,
+    render: (value, record, index) => {
+      return getSelfStepStatus(record);
+    },
   },
   {
     title: "Disburse Status ",
     dataIndex: "trans_close_name",
     key: "trans_close_name",
     width: "10%",
-    align: "left",
+    align: "center",
     sorter: {
       compare: (a, b) => a.tg_trans_close_id - b.tg_trans_close_id,
       multiple: 3,
     },
     ellipsis: true,
+    render: (value, record, index) => {
+      return getRefStatus(record);
+    },
   },
 ];
 
@@ -438,12 +451,15 @@ export const disburse_columns = [
     dataIndex: "trans_status_name",
     key: "trans_status_name",
     width: "10%",
-    align: "left",
+    align: "center",
     sorter: {
       compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
       multiple: 3,
     },
     ellipsis: true,
+    render: (value, record, index) => {
+      return getSelfStepStatus(record);
+    },
   },
 ];
 

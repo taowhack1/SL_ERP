@@ -67,6 +67,7 @@ const Customer = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
+                    keepLog.keep_log_action(record.customer_no);
                     dispatch(get_customer_by_id(record.customer_id));
                     props.history.push({
                       pathname:

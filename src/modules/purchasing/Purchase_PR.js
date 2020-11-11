@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
-
+import { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table } from "antd";
+import { Row, Col, Table, Button } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { pr_list_columns } from "./config/pr";
 import $ from "jquery";
@@ -20,6 +20,7 @@ import { getMasterDataItem } from "../../actions/inventory";
 import { Context } from "../../include/js/context";
 import useKeepLogs from "../logs/useKeepLogs";
 import Authorize from "../system/Authorize";
+import { getStepStatus } from "../../include/js/function_main";
 const Requisition = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
@@ -57,35 +58,39 @@ const Requisition = (props) => {
       data = data.filter((pr) => pr.pr_no.indexOf(value) >= 0);
     },
   };
+
+  const getTable = () => {
+    return (
+      <Table
+        columns={pr_list_columns}
+        dataSource={data}
+        onChange={onChange}
+        size="small"
+        rowKey="pr_id"
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: (e) => {
+              $(e.target)
+                .closest("tbody")
+                .find("tr")
+                .removeClass("selected-row");
+              $(e.target).closest("tr").addClass("selected-row");
+              dispatch(get_pr_by_id(record.pr_id, auth.user_name));
+              keepLog.keep_log_action(record.pr_no);
+              props.history.push({
+                pathname: "/purchase/pr/view/" + record.pr_id,
+              });
+            },
+          };
+        }}
+      />
+    );
+  };
   return (
     <div>
       <MainLayout {...config}>
         <Row>
-          <Col span={24}>
-            <Table
-              columns={pr_list_columns}
-              dataSource={data}
-              onChange={onChange}
-              size="small"
-              rowKey="pr_id"
-              onRow={(record, rowIndex) => {
-                return {
-                  onClick: (e) => {
-                    $(e.target)
-                      .closest("tbody")
-                      .find("tr")
-                      .removeClass("selected-row");
-                    $(e.target).closest("tr").addClass("selected-row");
-                    dispatch(get_pr_by_id(record.pr_id, auth.user_name));
-                    keepLog.keep_log_action(record.pr_no);
-                    props.history.push({
-                      pathname: "/purchase/pr/view/" + record.pr_id,
-                    });
-                  },
-                };
-              }}
-            />
-          </Col>
+          <Col span={24}>{getTable()}</Col>
         </Row>
       </MainLayout>
     </div>

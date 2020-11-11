@@ -10,10 +10,11 @@ import {
   Typography,
   Space,
   InputNumber,
+  message,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
-import { customer_fields } from "./configs/customer";
+import { customer_fields, customer_require_fields } from "./configs/customer";
 import CustomSelect from "../../components/CustomSelect";
 import {
   create_customer,
@@ -21,6 +22,8 @@ import {
 } from "../../actions/sales/customerActions";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
+import { validateFormHead } from "../../include/js/function_main";
+import { useHistory } from "react-router-dom";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -38,7 +41,7 @@ const require_field = {
 };
 
 const CustomerCreate = (props) => {
-  const keepLog = useKeepLogs();
+  const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -61,7 +64,6 @@ const CustomerCreate = (props) => {
           cnv_customer_created: moment().format("DD/MM/YYYY"),
         }
   );
-  console.log(data_head);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
@@ -84,19 +86,30 @@ const CustomerCreate = (props) => {
     search: false,
     buttonAction: ["Save", "Discard"],
     create: "",
-    save: {
-      data: data_head,
-      path:
-        data_head &&
-        "/sales/config/customers/view/" +
-          (data_head.customer_id ? data_head.customer_id : "new"),
-    },
+    save: "function",
     discard: "/sales/config/customers",
     onSave: (e) => {
       //e.preventDefault();
-      data_head.customer_id
-        ? dispatch(update_customer(data_head.customer_id, data_head))
-        : dispatch(create_customer(data_head));
+      const key = "validate";
+      const validate = validateFormHead(data_head, customer_require_fields);
+      if (validate.validate) {
+        console.log("pass");
+        data_head.customer_id
+          ? dispatch(
+              update_customer(
+                data_head.customer_id,
+                data_head,
+                redirect_to_view
+              )
+            )
+          : dispatch(create_customer(data_head, redirect_to_view));
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -109,6 +122,9 @@ const CustomerCreate = (props) => {
     onConfirm: () => {
       console.log("Confirm");
     },
+  };
+  const redirect_to_view = (id) => {
+    history.push("/sales/config/customers/view/" + (id ? id : "new"));
   };
 
   return (
@@ -134,30 +150,46 @@ const CustomerCreate = (props) => {
         </Row>
         <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
-            <Title level={5}>Name </Title>
-            <Input
-              onChange={(e) =>
-                upDateFormValue({ customer_name: e.target.value })
-              }
-              value={data_head.customer_name}
-              placeholder="Name"
-            />
+            <Title level={5}>
+              <span className="require">* </span>Name{" "}
+            </Title>
+            <Col span={24}>
+              <Input
+                name="customer_name"
+                onChange={(e) =>
+                  upDateFormValue({ customer_name: e.target.value })
+                }
+                value={data_head.customer_name}
+                placeholder="Name"
+              />
+            </Col>
           </Col>
         </Row>
 
         <Row className="col-2">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
-              <Tabs.TabPane tab="Contact" key="1">
+              <Tabs.TabPane
+                tab={
+                  <span>
+                    <span className="require">* </span>
+                    Contact & Detail
+                  </span>
+                }
+                key="1"
+              >
                 {/* Address & Information */}
                 <Row className="col-2 row-margin-vertical">
                   <Col span={12}>
                     <Row className="row-margin">
                       <Col span={5}>
-                        <Text strong>Short Name</Text>
+                        <Text strong>
+                          <span className="require">* </span>Short Name
+                        </Text>
                       </Col>
                       <Col span={18}>
                         <Input
+                          name="customer_name_short"
                           onChange={(e) =>
                             upDateFormValue({
                               customer_name_short: e.target.value,
@@ -175,6 +207,7 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={18}>
                         <Input
+                          name="customer_phone"
                           onChange={(e) =>
                             upDateFormValue({ customer_phone: e.target.value })
                           }
@@ -190,6 +223,7 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={18}>
                         <Input
+                          name="customer_mobile"
                           onChange={(e) =>
                             upDateFormValue({ customer_mobile: e.target.value })
                           }
@@ -205,6 +239,7 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={18}>
                         <Input
+                          name="customer_email"
                           onChange={(e) =>
                             upDateFormValue({ customer_email: e.target.value })
                           }
@@ -223,6 +258,7 @@ const CustomerCreate = (props) => {
                           placeholder={"Currency"}
                           allowClear
                           showSearch
+                          name="currency_id"
                           field_id="currency_id"
                           field_name="currency_no"
                           value={data_head.currency_no}
@@ -247,10 +283,13 @@ const CustomerCreate = (props) => {
                     <Row className="row-margin">
                       <Col span={1}></Col>
                       <Col span={5}>
-                        <Text strong>Address</Text>
+                        <Text strong>
+                          <span className="require">* </span>Address
+                        </Text>
                       </Col>
                       <Col span={18}>
                         <TextArea
+                          name="customer_address"
                           placeholder="Address"
                           style={{ width: "100%", height: "110px" }}
                           value={data_head.customer_address}
@@ -269,6 +308,7 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={18}>
                         <Input
+                          name="customer_tax_no"
                           placeholder="Tax ID"
                           style={{ width: "100%" }}
                           value={data_head.customer_tax_no}
@@ -281,18 +321,29 @@ const CustomerCreate = (props) => {
                   </Col>
                 </Row>
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Sales" key="2">
+              <Tabs.TabPane
+                tab={
+                  <span>
+                    <span className="require">* </span>
+                    Sales
+                  </span>
+                }
+                key="2"
+              >
                 <Row className="col-2 row-margin-vertical">
                   <Col span={12}>
                     <Row className="row-margin">
                       <Col span={5}>
-                        <Text strong>Payment Terms</Text>
+                        <Text strong>
+                          <span className="require">* </span>Payment Terms
+                        </Text>
                       </Col>
                       <Col span={18}>
                         <CustomSelect
                           placeholder={"Payment Term"}
                           allowClear
                           showSearch
+                          name="payment_term_id"
                           field_id="payment_term_id"
                           field_name="payment_term_no_name"
                           value={data_head.payment_term_no_name}
@@ -314,27 +365,41 @@ const CustomerCreate = (props) => {
                     </Row>
                     <Row className="row-margin">
                       <Col span={5}>
-                        <Text strong>Credit Limit</Text>
+                        <Text strong>
+                          <span className="require">* </span>Credit Limit
+                        </Text>
                       </Col>
                       <Col span={18}>
-                        <InputNumber
-                          name="customer_limit_credit"
-                          placeholder="Credit Limit"
-                          value={data_head.customer_limit_credit}
-                          precision={3}
-                          {...numberFormat}
-                          step={5}
-                          onChange={(data) => {
-                            upDateFormValue({
-                              customer_limit_credit: data,
-                            });
-                          }}
-                          style={{ width: "50%" }}
-                          // size="small"
-                        />
-                        <Text strong style={{ paddingLeft: 10 }}>
-                          {data_head.currency_no}
-                        </Text>
+                        <Row>
+                          <Col span={12}>
+                            <InputNumber
+                              name="customer_limit_credit"
+                              placeholder="Credit Limit"
+                              value={data_head.customer_limit_credit}
+                              precision={3}
+                              {...numberFormat}
+                              step={5}
+                              onChange={(data) => {
+                                upDateFormValue({
+                                  customer_limit_credit: data,
+                                });
+                              }}
+                              style={{ width: "100%" }}
+                              // size="small"
+                            />
+                          </Col>
+                          <Col span={12}>
+                            <Text
+                              strong
+                              style={{
+                                verticalAlign: "middle",
+                                paddingLeft: 10,
+                              }}
+                            >
+                              {data_head.currency_no}
+                            </Text>
+                          </Col>
+                        </Row>
                       </Col>
                       <Col span={1}></Col>
                     </Row>
@@ -356,6 +421,7 @@ const CustomerCreate = (props) => {
               <Tabs.TabPane tab="Notes" key="3">
                 <TextArea
                   rows={3}
+                  name="customer_remark"
                   placeholder={"Notes"}
                   value={data_head.customer_remark}
                   onChange={(e) =>

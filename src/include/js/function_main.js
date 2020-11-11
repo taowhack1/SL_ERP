@@ -1,4 +1,12 @@
+import { Tag } from "antd";
+import React from "react";
 import $ from "jquery";
+import {
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  CloseCircleOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
 export const sortData = (arrObject) => {
   let copyData = arrObject;
   let temp = [];
@@ -129,5 +137,95 @@ export const validateFormDetail = (ArrayObj, require_field) => {
     return { validate: validate, objKey: objKey };
   } else {
     console.log("Wrong type of parameter.");
+  }
+};
+
+export const getSelfStepStatus = ({
+  button_confirm,
+  button_approve,
+  button_reject,
+  process_complete,
+  trans_status_name,
+}) => {
+  if (!process_complete) {
+    if (button_approve || button_reject || button_confirm) {
+      return (
+        <Tag
+          color="processing"
+          icon={<SyncOutlined spin />}
+          className="tag-status"
+        >
+          {"Pending"}
+        </Tag>
+      );
+    } else if (trans_status_name !== "Cancel") {
+      return (
+        <Tag
+          color="warning"
+          icon={<ClockCircleOutlined />}
+          className="tag-status"
+        >
+          {"Waiting"}
+        </Tag>
+      );
+    } else {
+      return (
+        <Tag
+          color="error"
+          icon={<CloseCircleOutlined />}
+          className="tag-status"
+        >
+          {trans_status_name}
+        </Tag>
+      );
+    }
+  } else {
+    return (
+      <Tag
+        color="success"
+        icon={<CheckCircleOutlined />}
+        className="tag-status"
+      >
+        {trans_status_name}
+      </Tag>
+    );
+  }
+};
+
+export const getRefStatus = ({
+  trans_close_id,
+  trans_close_name,
+  trans_status_name,
+  process_complete,
+}) => {
+  if (trans_status_name === "Cancel" || !process_complete) {
+    return "-";
+  } else {
+    switch (trans_close_id) {
+      case 1:
+        return (
+          <Tag color="purple" className="tag-status">
+            {trans_close_name}
+          </Tag>
+        );
+      case 2:
+      case 3:
+        return (
+          <Tag
+            color="success"
+            icon={<CheckCircleOutlined />}
+            className="tag-status"
+          >
+            {trans_close_name}
+          </Tag>
+        );
+
+      default:
+        return (
+          <Tag color="default" className="tag-status">
+            {trans_close_name}
+          </Tag>
+        );
+    }
   }
 };

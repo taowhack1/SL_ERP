@@ -67,9 +67,10 @@ const Comments = (props) => {
                       </span>
                       <span>
                         ({" "}
-                        {moment
-                          .utc(item.process_member_created, "DD/MM/YYYY HH:mm")
-                          .fromNow()}{" "}
+                        {moment(
+                          item.process_member_created,
+                          "DD/MM/YYYY HH:mm"
+                        ).fromNow()}{" "}
                         )
                       </span>
                     </Tooltip>

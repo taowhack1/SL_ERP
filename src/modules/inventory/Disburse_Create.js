@@ -254,7 +254,9 @@ const DisburseCreate = (props) => {
 
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Issue Ref. :</Text>
+            <Text strong>
+              <span className="require">* </span>Issue Ref. :
+            </Text>
           </Col>
           <Col span={8}>
             {/* Issue Ref */}
@@ -291,7 +293,9 @@ const DisburseCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical ">
           <Col span={3}>
-            <Text strong>Description :</Text>
+            <Text strong>
+              <span className="require">* </span>Description :
+            </Text>
           </Col>
           <Col span={8}>
             <Input

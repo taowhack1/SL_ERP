@@ -203,6 +203,11 @@ const DisburseView = (props) => {
             <h2>
               <strong>
                 Disburse {data_head.disburse_no && "#" + data_head.disburse_no}
+                {data_head && data_head.tg_trans_status_id === 3 && (
+                  <Text strong type="danger">
+                    #{data_head.trans_status_name}
+                  </Text>
+                )}
               </strong>
             </h2>
           </Col>

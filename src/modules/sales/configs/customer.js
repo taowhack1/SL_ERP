@@ -100,3 +100,12 @@ export const customer_columns = [
     align: "left",
   },
 ];
+
+export const customer_require_fields = [
+  "customer_name",
+  "customer_name_short",
+  "customer_address",
+  "currency_id",
+  "payment_term_id",
+  "customer_limit_credit",
+];

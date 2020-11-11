@@ -197,12 +197,14 @@ const ItemCreate = (props) => {
                 <span className="require">* </span>Description Name
               </strong>
             </h3>
-            <Input
-              name="item_name"
-              placeholder={"Description Name"}
-              onChange={(e) => upDateFormValue({ item_name: e.target.value })}
-              value={data_head.item_name}
-            />
+            <Col span={24}>
+              <Input
+                name="item_name"
+                placeholder={"Description Name"}
+                onChange={(e) => upDateFormValue({ item_name: e.target.value })}
+                value={data_head.item_name}
+              />
+            </Col>
           </Col>
         </Row>
         <Row className="col-2">
@@ -252,7 +254,15 @@ const ItemCreate = (props) => {
         <Row className="col-2 row-tab-margin">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
-              <Tabs.TabPane tab="Detail" key="1">
+              <Tabs.TabPane
+                tab={
+                  <span>
+                    <span className="require">* </span>
+                    Detail
+                  </span>
+                }
+                key="1"
+              >
                 <Row className="col-2 row-margin-vertical">
                   <Col span={3}>
                     <Text strong>

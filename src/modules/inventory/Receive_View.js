@@ -75,8 +75,8 @@ const Receive_View = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${
-          data_head && data_head.so_no
+        link: `${report_server}/Report_purch/report_receive2.aspx?receive_no=${
+          data_head && data_head.receive_no
         }`,
       },
       data_head &&

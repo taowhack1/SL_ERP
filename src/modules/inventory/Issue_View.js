@@ -176,7 +176,15 @@ const Issue_View = (props) => {
         <Row className="col-2">
           <Col span={8}>
             <h2>
-              <strong>Issue {data_head && "#" + data_head.issue_no}</strong>
+              <strong>
+                Issue {data_head && "#" + data_head.issue_no}
+                {"  "}
+                {data_head && data_head.tg_trans_status_id === 3 && (
+                  <Text strong type="danger">
+                    #{data_head.trans_status_name}
+                  </Text>
+                )}
+              </strong>
             </h2>
           </Col>
           <Col span={12}></Col>

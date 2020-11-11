@@ -1,4 +1,8 @@
 import numeral from "numeral";
+import {
+  getRefStatus,
+  getSelfStepStatus,
+} from "../../../include/js/function_main";
 export const quotationColumns = [
   {
     title: "Reference",
@@ -68,20 +72,26 @@ export const quotationColumns = [
     dataIndex: "trans_status_name",
     key: "trans_status_name",
     width: "8%",
-    align: "left",
+    align: "center",
     sorter: {
       compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
       multiple: 3,
     },
     ellipsis: true,
+    render: (value, record, index) => {
+      return getSelfStepStatus(record);
+    },
   },
   {
     title: "S/O Status",
     dataIndex: "trans_close_name",
     key: "trans_close_name",
     width: "8%",
-    align: "left",
+    align: "center",
     ellipsis: true,
+    render: (value, record, index) => {
+      return getRefStatus(record);
+    },
   },
 ];
 
@@ -284,7 +294,7 @@ export const so_columns = [
     dataIndex: "tg_so_total_amount",
     key: "tg_so_total_amount",
     width: "10%",
-    align: "right",
+    align: "center",
     sorter: {
       compare: (a, b) => a.tg_so_total_amount - b.tg_so_total_amount,
       multiple: 3,
@@ -297,12 +307,15 @@ export const so_columns = [
     dataIndex: "trans_status_name",
     key: "trans_status_name",
     width: "8%",
-    align: "left",
+    align: "center",
     sorter: {
       compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
       multiple: 3,
     },
     ellipsis: true,
+    render: (value, record, index) => {
+      return getSelfStepStatus(record);
+    },
   },
 ];
 export const so_detail_columns = [

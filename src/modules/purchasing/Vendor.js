@@ -65,6 +65,7 @@ const Vendor = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
+                    keepLog.keep_log_action(record.vendor_no);
                     dispatch(get_vendor_by_id(record.vendor_id));
                     props.history.push({
                       pathname: "/purchase/vendor/view/" + record.vendor_id,

@@ -1,3 +1,9 @@
+import {
+  getSelfStepStatus,
+  getRefStatus,
+} from "../../../include/js/function_main";
+import React from "react";
+import { Tag } from "antd";
 export const pr_require_fields = [
   "pr_description",
   "user_name",
@@ -72,16 +78,22 @@ export const pr_list_columns = [
     dataIndex: "trans_status_name",
     key: "trans_status_name",
     width: "7%",
-    align: "left",
+    align: "center",
     ellipsis: true,
+    render: (value, record, index) => {
+      return getSelfStepStatus(record);
+    },
   },
   {
     title: "PO Status",
     dataIndex: "trans_close_name",
     key: "trans_close_name",
     width: "7%",
-    align: "left",
+    align: "center",
     ellipsis: true,
+    render: (value, record, index) => {
+      return getRefStatus(record);
+    },
   },
 ];
 

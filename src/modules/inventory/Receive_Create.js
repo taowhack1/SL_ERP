@@ -338,7 +338,15 @@ const Receive_Create = (props) => {
         <Row className="col-2 space-top-md">
           <Col span={24}>
             <Tabs defaultActiveKey={"1"} onChange={callback}>
-              <Tabs.TabPane tab="Request Detail" key={"1"}>
+              <Tabs.TabPane
+                tab={
+                  <span>
+                    <span className="require">* </span>
+                    Receive Detail
+                  </span>
+                }
+                key={"1"}
+              >
                 <Detail
                   readOnly={false}
                   po_id={data_head.po_id}

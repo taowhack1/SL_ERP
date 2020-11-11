@@ -10,6 +10,7 @@ import Settings from "./modules/settings/Settings";
 
 import QualityAssurance from "./modules/qualityAssurance/Quality_Assurance";
 import QCReceive from "./modules/qualityAssurance/QC_Receive";
+import QualityTest from "./modules/qualityAssurance/QC_Quality_Test";
 
 import Inventory from "./modules/inventory/Inventory";
 
@@ -307,6 +308,9 @@ const App = (props) => {
             </Route>
             <Route exact path="/qa/qc/receive">
               <QCReceive />
+            </Route>
+            <Route exact path="/qa/qc/qualitytest">
+              <QualityTest />
             </Route>
 
             <Route>
