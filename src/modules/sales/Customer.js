@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
@@ -17,6 +17,7 @@ import { customer_columns } from "./configs/customer";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 const Customer = (props) => {
+  const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
@@ -46,6 +47,9 @@ const Customer = (props) => {
       console.log("Cancel");
     },
   };
+  const redirect_to_view = (id) => {
+    history.push("/sales/config/customers/view/" + (id ? id : "new"));
+  };
   return (
     <div>
       <MainLayout {...config}>
@@ -68,11 +72,13 @@ const Customer = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     keepLog.keep_log_action(record.customer_no);
-                    dispatch(get_customer_by_id(record.customer_id));
-                    props.history.push({
-                      pathname:
-                        "/sales/config/customers/view/" + record.customer_id,
-                    });
+                    dispatch(
+                      get_customer_by_id(record.customer_id, redirect_to_view)
+                    );
+                    // props.history.push({
+                    //   pathname:
+                    //     "/sales/config/customers/view/" + record.customer_id,
+                    // });
                   },
                 };
               }}

@@ -4,7 +4,7 @@ const { Footer } = Layout;
 function MainFooter() {
   return (
     <>
-      <Footer>System v1.0 Sirilaboratories co.,ltd.</Footer>
+      <Footer>System v1.1 Sirilaboratories co.,ltd.</Footer>
     </>
   );
 }

@@ -16,12 +16,22 @@ import { message } from "antd";
 const api_path = api_url + "/query/sql";
 export const getAllItems = () => async (dispatch) => {
   const query_items = {
-    query_sql: `SELECT A.*,B.uom_name, C.type_name, D.category_name, E.vat_name, 
-      F.branch_name, G.identify_benefit_name FROM [INVENTORY].[dbo].[tb_item] A 
-      LEFT JOIN [INVENTORY].[dbo].[tb_uom] B ON A.uom_id = B.uom_id 
-      LEFT JOIN [INVENTORY].[dbo].[tb_type] C ON A.type_id = C.type_id 
-      LEFT JOIN [INVENTORY].[dbo].[tb_category] D ON A.category_id = D.category_id 
-      LEFT JOIN [PURCHASE].[dbo].[tb_vat] E ON A.vat_id = E.vat_id LEFT JOIN [HRM].[dbo].[tb_branch] F ON A.branch_id = F.branch_id LEFT JOIN [INVENTORY].[dbo].[tb_identify_benefit] G ON A.identify_benefit_id = G.identify_benefit_id`,
+    query_sql: `SELECT
+    A.*, 
+    '( '+B.uom_no+' ) '+B.uom_name as uom_name,
+    '( '+C.type_no+' ) '+C.type_name as type_name,
+    D.category_name,
+    E.vat_name,
+    F.branch_name,
+    G.identify_benefit_name
+  FROM
+    [INVENTORY].[dbo].[tb_item] A
+  LEFT JOIN [INVENTORY].[dbo].[tb_uom] B ON A.uom_id = B.uom_id
+  LEFT JOIN [INVENTORY].[dbo].[tb_type] C ON A.type_id = C.type_id
+  LEFT JOIN [INVENTORY].[dbo].[tb_category] D ON A.category_id = D.category_id
+  LEFT JOIN [PURCHASE].[dbo].[tb_vat] E ON A.vat_id = E.vat_id
+  LEFT JOIN [HRM].[dbo].[tb_branch] F ON A.branch_id = F.branch_id
+  LEFT JOIN [INVENTORY].[dbo].[tb_identify_benefit] G ON A.identify_benefit_id = G.identify_benefit_id`,
   };
   await axios.post(api_path, query_items).then((res) => {
     dispatch({

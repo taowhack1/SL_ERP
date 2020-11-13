@@ -7,13 +7,13 @@ export const item_vendor_columns = [
   },
   {
     id: 1,
-    name: "Lead time(day)",
+    name: "Lead Time(Day)",
     size: 3,
     require: true,
   },
   {
     id: 2,
-    name: "Quantity",
+    name: "Min. Quantity",
     size: 3,
     require: true,
   },
@@ -25,7 +25,7 @@ export const item_vendor_columns = [
   },
   {
     id: 4,
-    name: "Price per unit",
+    name: "Price / Unit",
     size: 3,
     require: true,
   },
@@ -83,6 +83,7 @@ export const item_fields = {
 
   commit: 1,
 };
+
 export const item_detail_fields = {
   id: null,
   item_vendor_lead_time: 0,
@@ -102,22 +103,31 @@ export const item_show_columns = [
     dataIndex: "item_no",
     width: "10%",
     align: "left",
+    ellipsis: true,
   },
   {
     title: "Item Name",
     dataIndex: "item_name",
+    ellipsis: true,
   },
   {
     title: "Unit",
     dataIndex: "uom_name",
     width: "10%",
     align: "left",
+    ellipsis: true,
+  },
+  {
+    title: "Type",
+    dataIndex: "type_name",
+    width: "10%",
+    ellipsis: true,
   },
   {
     title: "Category",
     dataIndex: "category_name",
-    ellipsis: true,
     width: "10%",
+    ellipsis: true,
   },
   {
     title: "Description",
@@ -129,7 +139,6 @@ export const item_show_columns = [
 export const item_require_fields = [
   "item_name",
   "item_customer_run_no",
-
   "uom_id",
   "type_id",
   "category_id",

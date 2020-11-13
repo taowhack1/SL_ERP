@@ -6,6 +6,7 @@ import {
   UserOutlined,
   MenuOutlined,
   CaretDownOutlined,
+  DatabaseOutlined,
 } from "@ant-design/icons";
 import { menuProfile } from "../data";
 import MainConfig from "./MainConfig";
@@ -13,6 +14,7 @@ import { signOut, change_working_project } from "../actions/authActions";
 import { useDispatch } from "react-redux";
 import Text from "antd/lib/typography/Text";
 import useKeepLogs from "../modules/logs/useKeepLogs";
+import { api_server } from "../include/js/main_config";
 const MainHead = (props) => {
   const keepLog = useKeepLogs();
   const auth = useSelector(
@@ -85,6 +87,20 @@ const MainHead = (props) => {
         <Col span={12} id="column-right">
           <Row>
             <Col span={24}>
+              {api_server === `http://192.168.5.222:3009` ? (
+                <>
+                  <Text className="server-status status-dev" strong>
+                    <DatabaseOutlined /> Development
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Text className="server-status status-production" strong>
+                    <DatabaseOutlined /> Production
+                  </Text>
+                </>
+              )}
+
               <Text style={{ color: "white", marginRight: 30 }}>
                 {auth && auth.branch_name}
               </Text>

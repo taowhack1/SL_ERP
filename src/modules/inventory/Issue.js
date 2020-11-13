@@ -70,7 +70,6 @@ const Issue = (props) => {
                     dispatch(get_issue_by_id(record.issue_id, auth.user_name));
                     props.history.push({
                       pathname: "/inventory/issue/view/" + record.issue_id,
-                      // state: record,
                     });
                   },
                 };

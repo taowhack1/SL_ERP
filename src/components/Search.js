@@ -3,13 +3,17 @@ import { Input } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 
 export default function Search(props) {
+  const onChange = (value) => {
+    props && props.onSearch(value);
+  };
   return (
     <>
       <Input
-        placeholder="search"
+        placeholder="Search"
         value={props.search}
+        allowClear
         onChange={(e) => {
-          props && props.onSearch(e.target.value);
+          e.target.value ? onChange(e.target.value) : onChange("");
         }}
         prefix={props.loading ? <LoadingOutlined /> : <SearchOutlined />}
       />

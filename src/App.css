@@ -381,3 +381,51 @@ span.require {
   width: 100%;
   text-align: center;
 }
+span.ant-typography .server-status,
+span.server-status {
+  color: white;
+  font-weight: bold;
+  margin-right: 50px;
+  border: 1px solid white;
+
+  padding: 5px 10px;
+  text-align: center;
+  border-radius: 3px;
+}
+span.ant-typography .server-status .status-production,
+span.status-production {
+  background-color: #00ed10 !important;
+}
+span.ant-typography .server-status .status-dev,
+span.status-dev {
+  background-color: #ffa31a !important;
+}
+div.search-table {
+  /* margin-top: 15px; */
+  /* margin-bottom: 10px; */
+  border-radius: 10px 0px;
+  padding-bottom: 20px;
+  border: 1px solid #ddd;
+  box-shadow: 0px 0px 5px #ccc;
+}
+.search-title {
+  margin-left: 30px;
+}
+.search-button {
+  width: 100%;
+}
+.search-header {
+  /* border-radius: 10px 10px 0px 0px; */
+  /* background-color: #f0f2f5; */
+  padding: 7px 0px;
+  /* border: 1px solid #dadada; */
+  background: #f2f2f2;
+  margin-bottom: 15px;
+}
+.search-button-clear {
+  margin: 0px auto;
+}
+.search-footer {
+  margin: 0px auto;
+  margin-top: 15px;
+}

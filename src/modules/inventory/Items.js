@@ -11,6 +11,7 @@ import $ from "jquery";
 import { item_show_columns } from "./config/item";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
+import SearchTable from "../../components/SearchTable";
 const Items = (props) => {
   const keepLog = useKeepLogs();
   const authorize = Authorize();
@@ -18,16 +19,15 @@ const Items = (props) => {
   const current_menu = useSelector((state) => state.auth.currentMenu);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
+  const [loading, setLoading] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  useEffect(() => {
-    dispatch(getAllItems());
-  }, [dispatch]);
+
   const dataItems = useSelector(
     (state) => state.inventory.master_data.item_list
   );
-
+  const [items, setItems] = useState(dataItems);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -35,7 +35,7 @@ const Items = (props) => {
     home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Items"],
-    search: true,
+    search: false,
     create: "/inventory/items/create",
     // buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     buttonAction: ["Create"],
@@ -46,16 +46,50 @@ const Items = (props) => {
       console.log("Cancel");
     },
   };
+  const onChangeSeach = ({ type_id, category_id, search_text }) => {
+    console.log("search_text", search_text);
+    let search_data = dataItems;
 
+    if (type_id) {
+      category_id
+        ? (search_data = search_data.filter(
+            (item) => item.category_id === category_id
+          ))
+        : (search_data = search_data.filter(
+            (item) => item.type_id === type_id
+          ));
+    }
+    setItems(
+      search_data.filter(
+        (item) =>
+          item.item_name.indexOf(search_text) >= 0 ||
+          item.item_no.indexOf(search_text) >= 0
+      )
+    );
+  };
+
+  useEffect(() => {
+    dispatch(getAllItems());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1200);
+  }, [items]);
   return (
     <div>
       <MainLayout {...config}>
-        <Row>
+        <Row className="row-tab-margin-lg">
           <Col span={24}>
             <Table
+              title={() => <SearchTable onChangeSeach={onChangeSeach} />}
+              loading={loading}
               columns={item_show_columns}
-              dataSource={dataItems}
+              dataSource={items}
               onChange={onChange}
+              bordered
               size="small"
               rowKey="item_id"
               onRow={(record, rowIndex) => {
