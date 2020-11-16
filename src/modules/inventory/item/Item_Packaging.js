@@ -26,6 +26,7 @@ import {
 } from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
 import { numberFormat } from "../../../include/js/main_config";
+import ItemPreview from "./Item_Preview";
 
 const { Text } = Typography;
 
@@ -52,7 +53,12 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
       },
     });
   };
-
+  const test_image = {
+    uid: "-1",
+    name: "no_image.svg",
+    status: "done",
+    url: null,
+  };
   console.log(data_detail);
   return (
     <>
@@ -207,20 +213,15 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
               </Col>
               <Col span={3} className="text-center">
                 {/* Item Image */}
-                <div className="input-center-disabled">
-                  <Space size={24}>
-                    <EditTwoTone
-                      className="button-icon"
-                      title="Edit Image"
-                      onClick={() => console.log("Edit Image")}
-                    />
-                    <EyeOutlined
-                      className="button-icon"
-                      title="View Image"
-                      onClick={() => console.log("View Image")}
-                    />
-                  </Space>
-                </div>
+                <ItemPreview image_file={test_image} />
+                {/* <div className="input-center-disabled">
+                  <EyeOutlined
+                    className="button-icon"
+                    title="View Image"
+                    onClick={() => console.log("View Image")}
+                  />
+                  View
+                </div> */}
               </Col>
 
               <Col span={1} style={{ textAlign: "center" }}>

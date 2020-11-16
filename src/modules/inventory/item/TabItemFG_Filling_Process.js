@@ -365,7 +365,7 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <div></div>
+                  <CustomSelect style={{ width: "100%" }} size="small" />
                 </Col>
               </Row>
             </Col>
