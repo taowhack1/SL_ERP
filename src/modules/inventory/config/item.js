@@ -232,3 +232,84 @@ export const item_formula_detail_fields = {
   item_formula_remark: null,
   commit: 1,
 };
+
+// Filling Process
+export const item_filling_weight_columns = [
+  {
+    id: 0,
+    name: "Standard",
+    size: 5,
+    require: true,
+  },
+  {
+    id: 1,
+    name: "Unit",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 2,
+    name: "Min",
+    size: 5,
+    require: true,
+  },
+  {
+    id: 3,
+    name: "Unit",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 4,
+    name: "Max",
+    size: 5,
+    require: true,
+  },
+  {
+    id: 5,
+    name: "Unit",
+    size: 3,
+    require: true,
+  },
+];
+
+// Packaging
+
+export const item_packaging_process_columns = [
+  {
+    id: 0,
+    name: "Item Code",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 1,
+    name: "Description",
+    size: 5,
+    require: true,
+  },
+  {
+    id: 2,
+    name: "Qty / 1 Piece",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 3,
+    name: "Method",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 4,
+    name: "Remark",
+    size: 6,
+    require: false,
+  },
+  {
+    id: 5,
+    name: "Image",
+    size: 3,
+    require: false,
+  },
+];

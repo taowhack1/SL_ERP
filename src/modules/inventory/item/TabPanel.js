@@ -36,12 +36,12 @@ const TabPanel = ({
   const master_data = useSelector((state) => state.inventory.master_data);
   return (
     <>
-      <Tabs defaultActiveKey={"1"} onChange={callback}>
+      <Tabs defaultActiveKey={"6"} onChange={callback}>
         <Tabs.TabPane
           tab={
             <span>
               <span className="require">* </span>
-              Detail
+              General Detail
             </span>
           }
           key={"1"}
@@ -53,7 +53,7 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="R&D" key={"2"}>
+        <Tabs.TabPane tab="R&D Detail" key={"2"}>
           <TabItemRD
             data_head={data_head}
             data_detail={data_detail}
@@ -62,7 +62,7 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="R&D Formula" key={"3"}>
+        <Tabs.TabPane tab="Bulk Formula" key={"3"}>
           <TabBulkFormula
             data_head={data_head}
             data_detail={data_detail}
@@ -80,7 +80,7 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
-        <Tabs.TabPane tab={"Purchase"} key="5">
+        <Tabs.TabPane tab={"Purchase Vendor"} key="5">
           <TabItemPurchase
             data_head={data_head}
             data_detail={data_detail}
@@ -89,7 +89,7 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
-        <Tabs.TabPane tab={"R&D Filling Process"} key="6">
+        <Tabs.TabPane tab={"FG Filling Process"} key="6">
           <TabFillingProcess
             data_head={data_head}
             data_detail={data_detail}

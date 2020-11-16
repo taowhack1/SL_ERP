@@ -295,6 +295,14 @@ tr.selected-row:hover {
   background-color: #f2f2f2;
   padding-left: 5px;
 }
+.input-center-disabled {
+  text-align: center;
+  border: 1px solid #cccccc;
+  width: 100%;
+  height: 100%;
+  /* background-color: #f2f2f2; */
+  padding-left: 5px;
+}
 .input-modal {
   background-color: #ffffff;
   cursor: pointer;
@@ -394,7 +402,8 @@ span.server-status {
 }
 span.ant-typography .server-status .status-production,
 span.status-production {
-  background-color: #00ed10 !important;
+  /* background-color: #00ed10 !important; */
+  background-color: #2ecc71 !important;
 }
 span.ant-typography .server-status .status-dev,
 span.status-dev {
@@ -448,3 +457,19 @@ div.search-table {
   height: 25px;
   line-height: 25px;
 }
+
+span.ant-typography .detail-tab-header {
+  padding: 5px 5px 0px 5px;
+  border: 1px solid gray !important;
+  background-color: gray;
+}
+/* .filling-process-input {
+  width: 100% !important;
+  height: 100px !important;
+  vertical-align: middle !important;
+} */
+/* div.filling-process-input > .ant-select-selector {
+  width: 100% !important;
+  height: 100px !important;
+  vertical-align: middle !important;
+} */

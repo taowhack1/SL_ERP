@@ -75,6 +75,19 @@ const BulkFormula = ({ data_detail, readOnly, detailDispatch }) => {
   console.log(data_detail);
   return (
     <>
+      <Row
+        className="col-2 row-margin-vertical"
+        style={{
+          borderBottom: "1px solid #E5E5E5",
+          paddingBottom: 10,
+        }}
+      >
+        <Col span={24}>
+          <Text strong className="detail-tab-header">
+            Formula
+          </Text>
+        </Col>
+      </Row>
       {/* Column Header */}
       <Row gutter={2} className="detail-table-head">
         {item_formula_columns &&

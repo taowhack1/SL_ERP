@@ -6,23 +6,35 @@ import {
   AutoComplete,
   Typography,
   Input,
+  Space,
 } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
   EllipsisOutlined,
+  EyeOutlined,
+  EditTwoTone,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import numeral from "numeral";
-import { item_qa_columns, item_qa_detail_fields } from "../config/item";
+import {
+  item_formula_columns,
+  item_packaging_process_columns,
+  item_qa_columns,
+  item_qa_detail_fields,
+} from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
+import { numberFormat } from "../../../include/js/main_config";
 
 const { Text } = Typography;
 
-const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
-  const units = useSelector((state) => state.inventory.master_data.item_uom);
-  const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
+const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
+  const item_list = useSelector((state) =>
+    state.inventory.master_data.item_list.filter(
+      (item) => item.type_id === 1 || item.type_id === 3
+    )
+  );
   const addLine = () => {
     detailDispatch({ type: "ADD_ROW", payload: item_qa_detail_fields });
   };
@@ -40,26 +52,14 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
       },
     });
   };
+
   console.log(data_detail);
   return (
     <>
-      <Row
-        className="col-2 row-margin-vertical"
-        style={{
-          borderBottom: "1px solid #E5E5E5",
-          paddingBottom: 10,
-        }}
-      >
-        <Col span={24}>
-          <Text strong className="detail-tab-header">
-            Test Case
-          </Text>
-        </Col>
-      </Row>
       {/* Column Header */}
       <Row gutter={2} className="detail-table-head">
-        {item_qa_columns &&
-          item_qa_columns.map((col, key) => {
+        {item_packaging_process_columns &&
+          item_packaging_process_columns.map((col, key) => {
             return (
               <Col key={col.id} span={col.size} className="col-outline">
                 {col.require && !readOnly && (
@@ -88,53 +88,34 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
                 backgroundColor: "#FCFCFC",
               }}
               name={`row-${key}`}
-              gutter={6}
+              gutter={3}
               className="col-2"
             >
-              <Col span={6} className="text-string">
+              <Col span={3} className="text-center">
                 <CustomSelect
                   allowClear
                   showSearch
-                  size={"small"}
-                  placeholder={"Subject"}
-                  name="subject_id"
-                  field_id="subject_id"
-                  field_name="subject_name"
-                  value={line.subject_name}
-                  data={[]}
+                  size="small"
+                  className={"filling-process-input"}
+                  placeholder={"Item Code"}
+                  name="item_no"
+                  field_id="item_id"
+                  field_name="item_no_name"
+                  value={line.item_no}
+                  data={item_list}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
-                          subject_id: option.data.subject_id,
-                          subject_name: option.data.subject_name,
+                          item_no: option.data.item_no,
+                          item_name: option.data.item_name,
+                          item_image: option.data.item_image,
                         })
                       : onChangeValue(line.id, {
-                          subject_id: null,
-                          subject_name: null,
-                        });
-                  }}
-                />
-              </Col>
-              <Col span={6} className="text-string">
-                <CustomSelect
-                  allowClear
-                  showSearch
-                  size={"small"}
-                  placeholder={"Specification"}
-                  name="specification_id"
-                  field_id="specification_id"
-                  field_name="specification_name"
-                  value={line.specification_name}
-                  data={[]}
-                  onChange={(data, option) => {
-                    data && data
-                      ? onChangeValue(line.id, {
-                          specification_id: option.data.specification_id,
-                          specification_name: option.data.specification_name,
-                        })
-                      : onChangeValue(line.id, {
-                          specification_id: null,
-                          specification_name: null,
+                          item_no: null,
+                          item_name: null,
+                          item_image: null,
+                          packaging_item_qty: 0,
+                          packaging_method: null,
                         });
                   }}
                 />
@@ -143,36 +124,103 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
                 <CustomSelect
                   allowClear
                   showSearch
-                  size={"small"}
+                  size="small"
+                  className={"filling-process-input"}
+                  placeholder={"Item Name"}
+                  name="item_name"
+                  field_id="item_id"
+                  field_name="item_no_name"
+                  value={line.item_name}
+                  data={item_list}
+                  onChange={(data, option) => {
+                    data && data
+                      ? onChangeValue(line.id, {
+                          item_no: option.data.item_no,
+                          item_name: option.data.item_name,
+                          item_image: option.data.item_image,
+                        })
+                      : onChangeValue(line.id, {
+                          item_no: null,
+                          item_name: null,
+                          item_image: null,
+                          packaging_item_qty: 0,
+                          packaging_method: null,
+                        });
+                  }}
+                />
+              </Col>
+              <Col span={3} className="text-string">
+                <InputNumber
+                  {...numberFormat}
+                  size="small"
+                  className={"filling-process-input"}
+                  name="packaging_item_qty"
+                  placeholder="Qty. / pcs"
+                  value={line.packaging_item_qty}
+                  defaultValue={0.0}
+                  min={0.0}
+                  step={1.0}
+                  onChange={(data) => {
+                    onChangeValue(line.id, {
+                      packaging_item_qty: data,
+                    });
+                  }}
+                  style={{ width: "100%" }}
+                  size="small"
+                />
+              </Col>
+              <Col span={3} className="text-string">
+                {/* Packaging Method */}
+                <CustomSelect
+                  allowClear
+                  showSearch
+                  size="small"
+                  className={"filling-process-input"}
                   placeholder={"Method"}
-                  name="method_id"
-                  field_id="method_id"
-                  field_name="method_name"
-                  value={line.method_name}
+                  name="packaging_method"
+                  field_id="packaging_method"
+                  field_name="packaging_method"
+                  value={line.packaging_method}
                   data={[]}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
-                          method_id: option.data.method_id,
-                          method_name: option.data.method_name,
+                          packaging_method: option.data.packaging_method,
                         })
                       : onChangeValue(line.id, {
-                          method_id: null,
-                          method_name: null,
+                          packaging_method: null,
                         });
                   }}
                 />
               </Col>
               <Col span={6} className="text-string">
                 <Input
-                  name="item_qa_detail_remark"
+                  name="packaging_method_remark"
                   size="small"
+                  className={"filling-process-input"}
                   placeholder={"Remark"}
                   onChange={(e) =>
-                    onChangeValue({ item_qa_detail_remark: e.target.value })
+                    onChangeValue({ packaging_method_remark: e.target.value })
                   }
-                  value={line.item_qa_detail_remark}
+                  value={line.packaging_method_remark}
                 />
+              </Col>
+              <Col span={3} className="text-center">
+                {/* Item Image */}
+                <div className="input-center-disabled">
+                  <Space size={24}>
+                    <EditTwoTone
+                      className="button-icon"
+                      title="Edit Image"
+                      onClick={() => console.log("Edit Image")}
+                    />
+                    <EyeOutlined
+                      className="button-icon"
+                      title="View Image"
+                      onClick={() => console.log("View Image")}
+                    />
+                  </Space>
+                </div>
               </Col>
 
               <Col span={1} style={{ textAlign: "center" }}>
@@ -235,4 +283,4 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
   );
 };
 
-export default ItemQADetail;
+export default PackagingProcess;
