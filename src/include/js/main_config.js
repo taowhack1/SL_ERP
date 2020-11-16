@@ -11,6 +11,7 @@ export const numberFormat = {
 // Sv.Test
 export const api_server = `http://192.168.5.222:3009`;
 export const report_server = `http://192.168.1.211`;
-// Sv.Production
+
+// Sv.Productionnfig
 // export const api_server = `http://192.168.1.210:3009`;
 // export const report_server = `http://192.168.5.207`;

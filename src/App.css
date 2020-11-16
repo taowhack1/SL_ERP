@@ -394,7 +394,9 @@ span.server-status {
 }
 span.ant-typography .server-status .status-production,
 span.status-production {
-  background-color: #00ed10 !important;
+  /* background-color: #00ed10 !important; */
+  /* background-color: #27ae60 !important; */
+  background-color: #2ecc71 !important;
 }
 span.ant-typography .server-status .status-dev,
 span.status-dev {
