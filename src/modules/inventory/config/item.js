@@ -52,6 +52,7 @@ export const item_fields = {
   item_min: 0,
   item_max: 0,
   item_customer_run_no: "SRL",
+  item_price_approve_id: 1,
   uom_id: null,
   uom_name: null,
   type_id: null,
@@ -69,10 +70,11 @@ export const item_fields = {
   item_updated_by: null,
   vat_id: 1,
   user_name: null,
-
+  currency_id: 1,
+  currency_no: "THB",
   item_trade_name: null,
   item_shelf_life: 0,
-  item_sale_local: false,
+  item_sale_local: 1,
   item_sale_export: false,
   item_specification: false,
   item_msds: false,
@@ -152,3 +154,81 @@ export const item_vendor_require_fields = [
   "type_id",
   "category_id",
 ];
+
+export const item_qa_columns = [
+  {
+    id: 0,
+    name: "QA Subject",
+    size: 6,
+    require: true,
+  },
+  {
+    id: 1,
+    name: "Specification",
+    size: 6,
+    require: true,
+  },
+  {
+    id: 2,
+    name: "Method",
+    size: 5,
+    require: true,
+  },
+  {
+    id: 3,
+    name: "Remark",
+    size: 6,
+    require: true,
+  },
+];
+
+export const item_qa_detail_fields = {
+  qa_subject_id: null,
+  qa_subject_name: null,
+  qa_specification_id: null,
+  qa_specification_name: null,
+  qa_method_id: null,
+  qa_method_name: null,
+  commit: 1,
+};
+
+export const item_formula_columns = [
+  {
+    id: 0,
+    name: "Part",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 1,
+    name: "No.",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 2,
+    name: "RM Code",
+    size: 6,
+    require: true,
+  },
+  {
+    id: 3,
+    name: "%(W/W)",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 4,
+    name: "Remark",
+    size: 8,
+    require: false,
+  },
+];
+export const item_formula_detail_fields = {
+  item_formula_id: null,
+  item_formula_part: null,
+  item_formula_no: null,
+  item_formula_percentage: null,
+  item_formula_remark: null,
+  commit: 1,
+};

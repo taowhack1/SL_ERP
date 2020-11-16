@@ -19,7 +19,7 @@ import {
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
-import Line from "../../components/VendorLine";
+
 import {
   autoCompleteUser,
   locationData,
@@ -54,6 +54,8 @@ import { reducer } from "./reducers";
 import { numberFormat } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 import { useHistory } from "react-router-dom";
+import TabPanel from "./item/TabPanel";
+import { get_all_vendor } from "../../actions/purchase/vendorActions";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -67,15 +69,15 @@ const ItemCreate = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getMasterDataItem());
+    dispatch(get_all_vendor());
   }, []);
-  const master_data = useSelector((state) => state.inventory.master_data);
+
+  const customers = useSelector((state) => state.sales.master_data.customers);
   const auth = useSelector((state) => state.auth.authData);
   const data = props.location.state ? props.location.state : 0;
 
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
-
-  const callback = (key) => {};
 
   useEffect(() => {
     headDispatch({
@@ -90,6 +92,19 @@ const ItemCreate = (props) => {
       payload: data.data_detail ? data.data_detail : [item_detail_fields],
     });
   }, []);
+
+  const getTabDetail = (item_type) => {
+    let tabDetail = <></>;
+    switch (item_type) {
+      case 1:
+      case 2:
+        tabDetail = <></>;
+        break;
+
+      default:
+        break;
+    }
+  };
 
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
@@ -190,6 +205,7 @@ const ItemCreate = (props) => {
             )}
           </Col>
         </Row>
+
         <Row className="col-2">
           <Col span={24} style={{ marginBottom: 8 }}>
             <h3>
@@ -253,438 +269,14 @@ const ItemCreate = (props) => {
 
         <Row className="col-2 row-tab-margin">
           <Col span={24}>
-            <Tabs defaultActiveKey="1" onChange={callback}>
-              <Tabs.TabPane
-                tab={
-                  <span>
-                    <span className="require">* </span>
-                    Detail
-                  </span>
-                }
-                key="1"
-              >
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>
-                      <span className="require">* </span>SRL
-                    </Text>
-                  </Col>
-                  <Col span={8}>
-                    <Input
-                      name="item_customer_run_no"
-                      disabled={data_head.item_id ? 1 : 0}
-                      placeholder="Customer or vendor short name"
-                      onChange={(e) =>
-                        upDateFormValue({
-                          item_customer_run_no: e.target.value,
-                        })
-                      }
-                      value={data_head.item_customer_run_no}
-                    />
-                  </Col>
-                  <Col span={2}></Col>
-                  <Col span={3}>
-                    <Text strong>
-                      <span className="require">* </span>Item type{" "}
-                    </Text>
-                  </Col>
-                  <Col span={8}>
-                    <CustomSelect
-                      allowClear
-                      disabled={data_head.item_id ? 1 : 0}
-                      showSearch
-                      placeholder={"Item type"}
-                      name="type_id"
-                      field_id="type_id"
-                      field_name="type_name"
-                      value={data_head.type_name}
-                      data={master_data.item_type}
-                      onChange={(data, option) => {
-                        data && data
-                          ? upDateFormValue({
-                              type_id: data,
-                              type_name: option.title,
-                              category_id: null,
-                              category_name: null,
-                            })
-                          : upDateFormValue({
-                              category_id: null,
-                              category_name: null,
-                            });
-                      }}
-                    />
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>Item barcode</Text>
-                  </Col>
-                  <Col span={8}>
-                    <Input
-                      disabled
-                      placeholder={"Barcode"}
-                      onChange={(e) =>
-                        upDateFormValue({ item_barcode: e.target.value })
-                      }
-                      value={data_head.item_barcode}
-                    />
-                  </Col>
-
-                  <Col span={2}></Col>
-                  <Col span={3}>
-                    <Text strong>
-                      <span className="require">* </span>Category{" "}
-                    </Text>
-                  </Col>
-                  <Col span={8}>
-                    <CustomSelect
-                      allowClear
-                      showSearch
-                      disabled={data_head.item_id ? 1 : 0}
-                      placeholder={"Category"}
-                      name="category_id"
-                      field_id="category_id"
-                      field_name="category_name"
-                      value={data_head.category_name}
-                      data={
-                        data_head.type_id
-                          ? master_data.item_category.filter(
-                              (categ) => categ.type_id === data_head.type_id
-                            )
-                          : master_data.item_category
-                      }
-                      onChange={(data, option) => {
-                        data && data
-                          ? upDateFormValue({
-                              category_id: option.data.category_id,
-                              category_name: option.data.category_name,
-                            })
-                          : upDateFormValue({
-                              category_id: null,
-                              category_name: null,
-                            });
-                      }}
-                    />
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>
-                      <span className="require">* </span>Unit of measure
-                    </Text>
-                  </Col>
-                  <Col span={8}>
-                    <CustomSelect
-                      allowClear
-                      showSearch
-                      placeholder={"Unit of measure"}
-                      name="uom_id"
-                      field_id="uom_id"
-                      field_name="uom_no"
-                      value={data_head.uom_no}
-                      data={master_data.item_uom}
-                      onChange={(data, option) => {
-                        data && data
-                          ? upDateFormValue({
-                              uom_id: option.data.uom_id,
-                              uom_no: option.data.uom_no,
-                            })
-                          : upDateFormValue({
-                              uom_id: null,
-                              uom_no: null,
-                            });
-                      }}
-                    />
-                  </Col>
-                  <Col span={2}></Col>
-                  <Col span={3}></Col>
-                  <Col span={8}></Col>
-                </Row>
-                <Row className="col-2">
-                  <Col span={24}>
-                    <Space direction="vertical" style={{ width: "100%" }}>
-                      <Text strong>Notes </Text>
-                      <TextArea
-                        name="item_remark"
-                        placeholder="Notes"
-                        onChange={(e) =>
-                          upDateFormValue({ item_remark: e.target.value })
-                        }
-                        value={data_head.item_remark}
-                      />
-                    </Space>
-                  </Col>
-                </Row>
-              </Tabs.TabPane>
-              <Tabs.TabPane tab="R&D" key="2">
-                <Row className="col-2 row-margin-vertical">
-                  <Col
-                    span={12}
-                    // style={{
-                    //   borderRight: "1px solid #c4c4c4",
-                    // }}
-                  >
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={6}>
-                        <Text strong>Trade name</Text>
-                      </Col>
-                      <Col span={16}>
-                        <Input
-                          name="item_trade_name"
-                          placeholder="Item Trade name"
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_trade_name: e.target.value,
-                            })
-                          }
-                          value={data_head.item_trade_name}
-                        />
-                      </Col>
-                      <Col span={2}></Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={6}>
-                        <Text strong>Shelf life (day) </Text>
-                      </Col>
-                      <Col span={16}>
-                        <InputNumber
-                          name="item_shelf_life"
-                          placeholder={"Shelf life (day)"}
-                          min={0}
-                          step={1}
-                          precision={0}
-                          style={{ width: "100%" }}
-                          disabled={0}
-                          value={data_head.item_shelf_life}
-                          onChange={(data) =>
-                            upDateFormValue({
-                              item_shelf_life: data,
-                            })
-                          }
-                        />
-                      </Col>
-                      <Col span={2}></Col>
-                    </Row>
-                  </Col>
-                  <Col span={12}>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={2}></Col>
-                      <Col span={4}>
-                        <Text strong>Sale to</Text>
-                      </Col>
-                      <Col span={18}>
-                        <Space align="baseline">
-                          <Checkbox
-                            checked={data_head.item_sale_local}
-                            onChange={(e) =>
-                              upDateFormValue({
-                                item_sale_local: e.target.checked ? 1 : 0,
-                              })
-                            }
-                          />
-                          <Text>Local</Text>
-                        </Space>
-                        <br />
-                        <Space align="baseline">
-                          <Checkbox
-                            checked={data_head.item_sale_export}
-                            onChange={(e) =>
-                              upDateFormValue({
-                                item_sale_export: e.target.checked ? 1 : 0,
-                              })
-                            }
-                          />
-                          <Text>Export</Text>
-                        </Space>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-                <Row
-                  className="col-2 row-margin-vertical"
-                  style={{
-                    borderBottom: "1px solid #E5E5E5",
-                    paddingBottom: 10,
-                  }}
-                >
-                  <Col span={24}>
-                    <Text strong>Documents</Text>
-                  </Col>
-                </Row>
-                <Row className="col-2 row-tab-margin">
-                  <Col
-                    span={12}
-                    style={{
-                      borderRight: "1px solid #c4c4c4",
-                    }}
-                  >
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={2}></Col>
-                      <Col span={2}>
-                        <Checkbox
-                          checked={data_head.item_specification}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_specification: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
-                      </Col>
-                      <Col span={9}>
-                        <Text strong> Specification.</Text>
-                      </Col>
-                      <Col span={10}>
-                        <Upload {...props}>
-                          {/* <Button icon={<UploadOutlined />}>
-                            Click to Upload
-                          </Button> */}
-                        </Upload>
-                      </Col>
-                      <Col span={1}></Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={2}></Col>
-                      <Col span={2}>
-                        <Checkbox
-                          checked={data_head.item_msds}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_msds: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
-                      </Col>
-                      <Col span={9}>
-                        <Text strong> MSDS.</Text>
-                      </Col>
-                      <Col span={10}>
-                        <Upload {...props}>
-                          {/* <Button icon={<UploadOutlined />}>
-                            Click to Upload
-                          </Button> */}
-                        </Upload>
-                      </Col>
-                      <Col span={1}></Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={2}></Col>
-                      <Col span={2}>
-                        <Checkbox
-                          checked={data_head.item_quotation}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_quotation: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
-                      </Col>
-                      <Col span={9}>
-                        <Text strong> Quotation.</Text>
-                      </Col>
-                      <Col span={10}>
-                        <Upload {...props}>
-                          {/* <Button icon={<UploadOutlined />}>
-                            Click to Upload
-                          </Button> */}
-                        </Upload>
-                      </Col>
-                      <Col span={1}></Col>
-                    </Row>
-                  </Col>
-                  {/* Right Row */}
-                  <Col span={12}>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={1}></Col>
-                      <Col span={2}></Col>
-                      <Col span={2}>
-                        <Checkbox
-                          checked={data_head.item_halal_cert}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_halal_cert: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
-                      </Col>
-                      <Col span={9}>
-                        <Text strong> Halal Cert.</Text>
-                      </Col>
-                      <Col span={10}>
-                        <Upload {...props}>
-                          {/* <Button icon={<UploadOutlined />}>
-                            Click to Upload
-                          </Button> */}
-                        </Upload>
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={1}></Col>
-                      <Col span={2}></Col>
-                      <Col span={2}>
-                        <Checkbox
-                          checked={data_head.item_non_haram}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_non_haram: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
-                      </Col>
-                      <Col span={9}>
-                        <Text strong> Non-Haram Statement.</Text>
-                      </Col>
-                      <Col span={10}>
-                        <Upload {...props}>
-                          {/* <Button icon={<UploadOutlined />}>
-                            Click to Upload
-                          </Button> */}
-                        </Upload>
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={1}></Col>
-                      <Col span={2}></Col>
-                      <Col span={2}>
-                        <Checkbox
-                          checked={data_head.item_non_halal}
-                          onChange={(e) =>
-                            upDateFormValue({
-                              item_non_halal: e.target.checked ? 1 : 0,
-                            })
-                          }
-                        />
-                      </Col>
-                      <Col span={9}>
-                        <Text strong> Non-Halal.</Text>
-                      </Col>
-                      <Col span={10}></Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Tabs.TabPane>
-              <Tabs.TabPane tab={"Purchase"} key="3">
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>Sale price</Text>
-                  </Col>
-                  <Col span={8}>
-                    <InputNumber
-                      {...numberFormat}
-                      style={{ width: "100%" }}
-                      value={data_head.item_price}
-                      precision={3}
-                      onChange={(data) => upDateFormValue({ item_price: data })}
-                    />
-                  </Col>
-                </Row>
-                <Row className="col-2 row-tab-margin-lg"></Row>
-                <Line
-                  readOnly={false}
-                  detailDispatch={detailDispatch}
-                  data_detail={data_detail}
-                />
-              </Tabs.TabPane>
-            </Tabs>
+            <TabPanel
+              data_head={data_head}
+              data_detail={data_detail}
+              headDispatch={headDispatch}
+              detailDispatch={detailDispatch}
+              upDateFormValue={upDateFormValue}
+              readOnly={false}
+            />
           </Col>
         </Row>
       </div>

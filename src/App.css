@@ -429,3 +429,22 @@ div.search-table {
   margin: 0px auto;
   margin-top: 15px;
 }
+
+.pl-1 {
+  padding-left: 10px;
+}
+.pl-2 {
+  padding-left: 20px;
+}
+.pl-3 {
+  padding-left: 30px;
+}
+.pl-4 {
+  padding-left: 40px;
+}
+
+.radio-vertical {
+  display: block;
+  height: 25px;
+  line-height: 25px;
+}

@@ -52,11 +52,20 @@ export const createNewItems = (data_head, data_detail, redirect) => async (
         if (res.status === 200 && res.data[0].length) {
           console.log("res", res);
           const item_id = res.data[0][0].item_id;
-          await axios.post(
-            `${api_get_item_detail}/${item_id}`,
-            data_detail,
-            header_config
+          const data_detail_copy = data_detail.filter(
+            (detail) =>
+              detail.vendor_id !== null &&
+              detail.item_vendor_price !== 0 &&
+              detail.uom_id !== null &&
+              detail.type_id !== null &&
+              detail.category_id !== null
           );
+          data_detail_copy.length &&
+            (await axios.post(
+              `${api_get_item_detail}/${item_id}`,
+              data_detail,
+              header_config
+            ));
           await dispatch(get_item_by_id(item_id));
           message.success({
             content: "Item Created.",
