@@ -245,7 +245,7 @@ export const item_filling_weight_columns = [
     id: 1,
     name: "Unit",
     size: 3,
-    require: true,
+    require: false,
   },
   {
     id: 2,
@@ -257,7 +257,7 @@ export const item_filling_weight_columns = [
     id: 3,
     name: "Unit",
     size: 3,
-    require: true,
+    require: false,
   },
   {
     id: 4,
@@ -269,7 +269,7 @@ export const item_filling_weight_columns = [
     id: 5,
     name: "Unit",
     size: 3,
-    require: true,
+    require: false,
   },
 ];
 

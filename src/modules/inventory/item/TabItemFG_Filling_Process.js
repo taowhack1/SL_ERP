@@ -29,6 +29,7 @@ const TabFillingProcess = ({
   data_detail,
   detailDispatch,
   readOnly,
+  packaging_uom,
 }) => {
   const currency_list = useSelector(
     (state) => state.accounting.master_data.currency
@@ -364,7 +365,7 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect style={{ width: "100%" }} size="small" />
+                  <div></div>
                 </Col>
               </Row>
             </Col>
