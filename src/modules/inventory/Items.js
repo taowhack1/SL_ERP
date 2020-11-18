@@ -70,7 +70,11 @@ const Items = (props) => {
 
   useEffect(() => {
     dispatch(getAllItems());
-  }, [dispatch]);
+  }, []);
+
+  useEffect(() => {
+    setItems(dataItems);
+  }, [dataItems.length]);
 
   useEffect(() => {
     setLoading(true);
