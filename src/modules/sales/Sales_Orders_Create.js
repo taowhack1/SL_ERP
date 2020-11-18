@@ -15,7 +15,7 @@ import moment from "moment";
 
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
-import ItemLine from "./Sales_ItemLine";
+// import ItemLine from "./Sales_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
 import numeral from "numeral";
 import { useDispatch, useSelector } from "react-redux";
