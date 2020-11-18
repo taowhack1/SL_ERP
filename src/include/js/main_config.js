@@ -9,9 +9,9 @@ export const numberFormat = {
   parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
 };
 // Sv.Test
-export const api_server = `http://192.168.5.222:3009`;
+// export const api_server = `http://192.168.5.222:3009`;
 export const report_server = `http://192.168.1.211`;
 
 // Sv.Productionnfig
-// export const api_server = `http://192.168.1.210:3009`;
+export const api_server = `http://192.168.1.210:3009`;
 // export const report_server = `http://192.168.5.207`;

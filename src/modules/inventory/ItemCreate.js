@@ -54,6 +54,7 @@ import { reducer } from "./reducers";
 import { numberFormat } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 import { useHistory } from "react-router-dom";
+import { get_all_vendor } from "../../actions/purchase/vendorActions";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
@@ -67,6 +68,7 @@ const ItemCreate = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getMasterDataItem());
+    dispatch(get_all_vendor());
   }, []);
   const master_data = useSelector((state) => state.inventory.master_data);
   const auth = useSelector((state) => state.auth.authData);
