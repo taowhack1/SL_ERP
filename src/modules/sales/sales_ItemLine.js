@@ -208,6 +208,7 @@ const ItemLine = ({
                     showSearch
                     name="uom_id"
                     size="small"
+                    disabled
                     placeholder={"Unit"}
                     data={select_uoms}
                     field_id="uom_id"

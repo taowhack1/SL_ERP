@@ -204,6 +204,7 @@ const ItemLine = ({
                   <CustomSelect
                     allowClear
                     showSearch
+                    disabled
                     size={"small"}
                     name={`uom_id${key}`}
                     placeholder={"Unit"}

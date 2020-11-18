@@ -142,6 +142,7 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
                 <CustomSelect
                   allowClear
                   showSearch
+                  disabled
                   size={"small"}
                   placeholder={"Select UOM"}
                   name="uom_id"

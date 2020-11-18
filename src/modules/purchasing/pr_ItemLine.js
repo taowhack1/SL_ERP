@@ -213,6 +213,7 @@ const ItemLine = ({
                   <CustomSelect
                     allowClear
                     showSearch
+                    disabled
                     size="small"
                     placeholder={"Unit"}
                     data={select_uoms}

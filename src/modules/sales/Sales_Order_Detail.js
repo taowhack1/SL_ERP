@@ -195,6 +195,7 @@ const SO_Detail = ({
                   <CustomSelect
                     allowClear
                     showSearch
+                    disabled
                     name="uom_id"
                     size="small"
                     placeholder={"Unit"}
