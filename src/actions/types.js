@@ -113,6 +113,9 @@ export const GET_SO_BY_ID = "GET_SO_BY_ID";
 
 export const RESET_SO = "RESET_SO";
 
+// QA
+export const GET_QA_MASTER_DATA = "GET_QA_MASTER_DATA";
+
 //QC
 export const GET_QC_RECEIVE_LIST = "GET_QC_RECEIVE_LIST";
 export const GET_QC_RECEIVE_DETAIL_LIST = "GET_QC_RECEIVE_DETAIL_LIST";

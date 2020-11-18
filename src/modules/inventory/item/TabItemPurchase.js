@@ -79,7 +79,19 @@ const TabItemPurchase = ({
         </Col>
         <Col span={1}></Col>
       </Row> */}
-      <Row className="col-2"></Row>
+      <Row
+        className="col-2 row-margin-vertical"
+        style={{
+          borderBottom: "1px solid #E5E5E5",
+          paddingBottom: 10,
+        }}
+      >
+        <Col span={24}>
+          <Text strong className="detail-tab-header">
+            Vendor
+          </Text>
+        </Col>
+      </Row>
       <Line
         readOnly={false}
         detailDispatch={detailDispatch}

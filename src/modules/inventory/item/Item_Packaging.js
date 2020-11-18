@@ -53,12 +53,14 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
       },
     });
   };
-  const test_image = {
-    uid: "-1",
-    name: "no_image.svg",
-    status: "done",
-    url: null,
-  };
+  const test_image = [
+    {
+      uid: "-1",
+      name: "no_image.svg",
+      status: "done",
+      url: require("./no_image.svg"),
+    },
+  ];
   console.log(data_detail);
   return (
     <>
@@ -213,7 +215,7 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
               </Col>
               <Col span={3} className="text-center">
                 {/* Item Image */}
-                <ItemPreview image_file={test_image} />
+                <ItemPreview fileList={test_image} readOnly={true} />
                 {/* <div className="input-center-disabled">
                   <EyeOutlined
                     className="button-icon"

@@ -32,6 +32,7 @@ export const get_open_po_list = () => (dispatch) => {
   });
 };
 export const get_po_list = (user_name) => (dispatch) => {
+  console.log(`${api_purchase_get_all_po}/${user_name}`);
   axios
     .get(`${api_purchase_get_all_po}/${user_name}`, header_config)
     .then((res) => {

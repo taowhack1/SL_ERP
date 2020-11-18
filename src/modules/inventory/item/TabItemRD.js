@@ -178,7 +178,12 @@ const TabItemRD = ({
             </Col>
             <Col span={10}>
               <Upload>
-                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                <Button
+                  icon={<UploadOutlined />}
+                  disabled={data_head.item_specification ? 0 : 1}
+                >
+                  Click to Upload
+                </Button>
               </Upload>
             </Col>
             <Col span={1}></Col>
@@ -200,7 +205,12 @@ const TabItemRD = ({
             </Col>
             <Col span={10}>
               <Upload>
-                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                <Button
+                  icon={<UploadOutlined />}
+                  disabled={data_head.item_msds ? 0 : 1}
+                >
+                  Click to Upload
+                </Button>
               </Upload>
             </Col>
             <Col span={1}></Col>
@@ -222,7 +232,12 @@ const TabItemRD = ({
             </Col>
             <Col span={10}>
               <Upload>
-                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                <Button
+                  icon={<UploadOutlined />}
+                  disabled={data_head.item_quotation ? 0 : 1}
+                >
+                  Click to Upload
+                </Button>
               </Upload>
             </Col>
             <Col span={1}></Col>
@@ -248,7 +263,12 @@ const TabItemRD = ({
             </Col>
             <Col span={10}>
               <Upload>
-                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                <Button
+                  icon={<UploadOutlined />}
+                  disabled={data_head.item_halal_cert ? 0 : 1}
+                >
+                  Click to Upload
+                </Button>
               </Upload>
             </Col>
           </Row>
@@ -270,7 +290,12 @@ const TabItemRD = ({
             </Col>
             <Col span={10}>
               <Upload>
-                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                <Button
+                  icon={<UploadOutlined />}
+                  disabled={data_head.item_non_haram ? 0 : 1}
+                >
+                  Click to Upload
+                </Button>
               </Upload>
             </Col>
           </Row>

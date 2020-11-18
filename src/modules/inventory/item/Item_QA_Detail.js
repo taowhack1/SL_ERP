@@ -21,7 +21,11 @@ import CustomSelect from "../../../components/CustomSelect";
 const { Text } = Typography;
 
 const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
-  const units = useSelector((state) => state.inventory.master_data.item_uom);
+  const {
+    test_case_subject,
+    test_case_specification,
+    test_case_method,
+  } = useSelector((state) => state.qa.qa_master_data);
   const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const addLine = () => {
     detailDispatch({ type: "ADD_ROW", payload: item_qa_detail_fields });
@@ -97,20 +101,20 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
                   showSearch
                   size={"small"}
                   placeholder={"Subject"}
-                  name="subject_id"
-                  field_id="subject_id"
-                  field_name="subject_name"
-                  value={line.subject_name}
-                  data={[]}
+                  name="qa_subject_id"
+                  field_id="qa_subject_id"
+                  field_name="qa_subject_name"
+                  value={line.qa_subject_name}
+                  data={test_case_subject}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
-                          subject_id: option.data.subject_id,
-                          subject_name: option.data.subject_name,
+                          qa_subject_id: option.data.qa_subject_id,
+                          qa_subject_name: option.data.qa_subject_name,
                         })
                       : onChangeValue(line.id, {
-                          subject_id: null,
-                          subject_name: null,
+                          qa_subject_id: null,
+                          qa_subject_name: null,
                         });
                   }}
                 />
@@ -121,20 +125,21 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
                   showSearch
                   size={"small"}
                   placeholder={"Specification"}
-                  name="specification_id"
-                  field_id="specification_id"
-                  field_name="specification_name"
-                  value={line.specification_name}
-                  data={[]}
+                  name="qa_specification_id"
+                  field_id="qa_specification_id"
+                  field_name="qa_specification_name"
+                  value={line.qa_specification_name}
+                  data={test_case_specification}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
-                          specification_id: option.data.specification_id,
-                          specification_name: option.data.specification_name,
+                          qa_specification_id: option.data.qa_specification_id,
+                          qa_specification_name:
+                            option.data.qa_specification_name,
                         })
                       : onChangeValue(line.id, {
-                          specification_id: null,
-                          specification_name: null,
+                          qa_specification_id: null,
+                          qa_specification_name: null,
                         });
                   }}
                 />
@@ -145,20 +150,20 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
                   showSearch
                   size={"small"}
                   placeholder={"Method"}
-                  name="method_id"
-                  field_id="method_id"
-                  field_name="method_name"
-                  value={line.method_name}
-                  data={[]}
+                  name="qa_method_id"
+                  field_id="qa_method_id"
+                  field_name="qa_method_name"
+                  value={line.qa_method_name}
+                  data={test_case_method}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
-                          method_id: option.data.method_id,
-                          method_name: option.data.method_name,
+                          qa_method_id: option.data.qa_method_id,
+                          qa_method_name: option.data.qa_method_name,
                         })
                       : onChangeValue(line.id, {
-                          method_id: null,
-                          method_name: null,
+                          qa_method_id: null,
+                          qa_method_name: null,
                         });
                   }}
                 />

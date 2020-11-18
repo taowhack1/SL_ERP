@@ -3,6 +3,11 @@ export const header_config = {
     "Content-Type": "application/json",
   },
 };
+export const header_config_form = {
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+};
 export const numberFormat = {
   precision: 3,
   formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),

@@ -78,7 +78,9 @@ export const po_list_columns = [
     align: "center",
     ellipsis: true,
     render: (value, record, index) => {
-      return getSelfStepStatus(record);
+      return getSelfStepStatus(record ? record : []);
+      // console.log("PO record", record);
+      // return getSelfStepStatus(record);
     },
   },
 ];

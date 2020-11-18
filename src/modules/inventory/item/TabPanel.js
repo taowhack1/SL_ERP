@@ -32,14 +32,19 @@ const TabPanel = ({
   upDateFormValue,
   readOnly,
 }) => {
+  const { type_id } = data_head;
   const callback = (key) => {};
   const master_data = useSelector((state) => state.inventory.master_data);
   return (
     <>
-      <Tabs defaultActiveKey={"6"} onChange={callback}>
+      <Tabs
+        defaultActiveKey={"6"}
+        onChange={callback}
+        className="row-tab-margin-lg"
+      >
         <Tabs.TabPane
           tab={
-            <span>
+            <span className="tab_pane">
               <span className="require">* </span>
               General Detail
             </span>
@@ -53,6 +58,7 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
+        {/* {type_id !== undefined && type_id && ( */}
         <Tabs.TabPane tab="R&D Detail" key={"2"}>
           <TabItemRD
             data_head={data_head}
@@ -62,6 +68,8 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
+        {/* )} */}
+        {/* {type_id !== undefined && type_id && type_id === 3 && ( */}
         <Tabs.TabPane tab="Bulk Formula" key={"3"}>
           <TabBulkFormula
             data_head={data_head}
@@ -71,6 +79,7 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
+        {/* )} */}
         <Tabs.TabPane tab={"QA"} key="4">
           <TabItemQA
             data_head={data_head}
@@ -80,6 +89,7 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
+        {/* {type_id !== undefined && type_id && type_id !== 4 && ( */}
         <Tabs.TabPane tab={"Purchase Vendor"} key="5">
           <TabItemPurchase
             data_head={data_head}
@@ -89,6 +99,7 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
+        {/* )} */}
         <Tabs.TabPane tab={"FG Filling Process"} key="6">
           <TabFillingProcess
             data_head={data_head}

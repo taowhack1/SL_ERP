@@ -261,7 +261,7 @@ export const issue_columns = [
     dataIndex: "trans_status_name",
     key: "trans_status_name",
     width: "9%",
-    align: "left",
+    align: "center",
     sorter: {
       compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
       multiple: 3,

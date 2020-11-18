@@ -296,7 +296,7 @@ const PurchaseRequisitionCreate = (props) => {
             {data_head.currency_no ? data_head.currency_no : "THB"}
           </Col>
         </Row>
-        <Row className="col-2 space-top-md">
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">

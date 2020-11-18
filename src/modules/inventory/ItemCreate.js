@@ -56,12 +56,15 @@ import Authorize from "../system/Authorize";
 import { useHistory } from "react-router-dom";
 import TabPanel from "./item/TabPanel";
 import { get_all_vendor } from "../../actions/purchase/vendorActions";
+import ItemPreview from "./item/Item_Preview";
+import { get_qa_test_case_master } from "../../actions/qa/qaTestAction";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
 const initialStateHead = item_fields;
 const initialStateDetail = [item_detail_fields];
-
+const reader = new FileReader();
+const formData = new FormData();
 const ItemCreate = (props) => {
   const history = useHistory();
   const authorize = Authorize();
@@ -69,6 +72,7 @@ const ItemCreate = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getMasterDataItem());
+
     dispatch(get_all_vendor());
   }, []);
 
@@ -78,6 +82,7 @@ const ItemCreate = (props) => {
 
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
+  const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
     headDispatch({
@@ -134,10 +139,6 @@ const ItemCreate = (props) => {
       const key = "validate";
 
       const validate = validateFormHead(data_head, item_require_fields);
-      // const validate_detail = validateFormDetail(
-      //   data_detail,
-      //   item_vendor_require_fields
-      // );
       if (validate.validate) {
         console.log("pass");
         data_head.item_id
@@ -146,10 +147,13 @@ const ItemCreate = (props) => {
                 data_head.item_id,
                 data_head,
                 data_detail,
+                fileList,
                 redirect_to_view
               )
             )
-          : dispatch(createNewItems(data_head, data_detail, redirect_to_view));
+          : dispatch(
+              createNewItems(data_head, data_detail, fileList, redirect_to_view)
+            );
       } else {
         message.warning({
           content: "Please fill your form completely.",
@@ -157,10 +161,6 @@ const ItemCreate = (props) => {
           duration: 2,
         });
       }
-
-      // data_head.item_no
-      //   ? dispatch(upDateItem(data_head.item_id, data_head, data_detail))
-      //   : dispatch(createNewItems(data_head, data_detail));
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -177,6 +177,10 @@ const ItemCreate = (props) => {
   const redirect_to_view = (id) => {
     history.push("/inventory/items/view/" + (id ? id : "new"));
   };
+  useEffect(() => {
+    data_head.type_id && dispatch(get_qa_test_case_master(data_head.type_id));
+  }, [data_head.type_id]);
+
   console.log("data_head", data_head);
   return (
     <MainLayout {...config} data={data_head}>
@@ -195,19 +199,19 @@ const ItemCreate = (props) => {
           <Col span={2}></Col>
           <Col span={3}></Col>
           <Col span={8} style={{ textAlign: "right" }}>
-            {data_head.item_no && (
+            {/* {data_head.item_no && (
               <Barcode
                 value={data_head.item_barcode}
                 width={1.5}
                 height={30}
                 fontSize={14}
               />
-            )}
+            )} */}
           </Col>
         </Row>
 
         <Row className="col-2">
-          <Col span={24} style={{ marginBottom: 8 }}>
+          <Col span={19} style={{ marginBottom: 8 }}>
             <h3>
               <strong>
                 <span className="require">* </span>Description Name
@@ -221,49 +225,59 @@ const ItemCreate = (props) => {
                 value={data_head.item_name}
               />
             </Col>
-          </Col>
-        </Row>
-        <Row className="col-2">
-          <Col span={24} style={{ marginLeft: 5 }}>
-            <Space align="baseline">
-              <Checkbox
-                name="item_sale"
-                checked={data_head.item_sale}
-                onChange={(e) =>
-                  upDateFormValue({ item_sale: e.target.checked ? 1 : 0 })
-                }
-              />
-              <Text>Can be sold</Text>
-            </Space>
-            <br />
-            <Space align="baseline">
-              <Checkbox
-                name="item_purchase"
-                checked={data_head.item_purchase}
-                onChange={(e) =>
-                  upDateFormValue({ item_purchase: e.target.checked ? 1 : 0 })
-                }
-              />
-              <Text>Can be purchase</Text>
-            </Space>
-            {data_head.item_no && (
-              <Space
-                align="baseline"
-                style={{ float: "right", marginRight: 10 }}
-              >
-                <Text strong>Active</Text>
-                <Switch
-                  name="item_actived"
-                  checkedChildren={""}
-                  unCheckedChildren={""}
-                  checked={data_head.item_actived}
-                  style={{ width: 35 }}
-                  onClick={(data) =>
-                    upDateFormValue({ item_actived: data ? 1 : 0 })
+            <div style={{ marginLeft: 10, marginTop: 10 }}>
+              <Space align="baseline">
+                <Checkbox
+                  name="item_sale"
+                  checked={data_head.item_sale}
+                  onChange={(e) =>
+                    upDateFormValue({ item_sale: e.target.checked ? 1 : 0 })
                   }
                 />
+                <Text>Can be sold</Text>
               </Space>
-            )}
+              <br />
+              <Space align="baseline">
+                <Checkbox
+                  name="item_purchase"
+                  checked={data_head.item_purchase}
+                  onChange={(e) =>
+                    upDateFormValue({ item_purchase: e.target.checked ? 1 : 0 })
+                  }
+                />
+                <Text>Can be purchase</Text>
+              </Space>
+              {data_head.item_no && (
+                <Space
+                  align="baseline"
+                  style={{ float: "right", marginRight: 10 }}
+                >
+                  <Text strong>Active</Text>
+                  <Switch
+                    name="item_actived"
+                    checkedChildren={""}
+                    unCheckedChildren={""}
+                    checked={data_head.item_actived}
+                    style={{ width: 35 }}
+                    onClick={(data) =>
+                      upDateFormValue({ item_actived: data ? 1 : 0 })
+                    }
+                  />
+                </Space>
+              )}
+            </div>
+          </Col>
+          <Col span={1}></Col>
+          <Col span={4}>
+            <div>
+              <ItemPreview
+                fileList={fileList}
+                readOnly={false}
+                maxFile={1}
+                setFileList={setFileList}
+                file_type_id={1}
+              />
+            </div>
           </Col>
         </Row>
 

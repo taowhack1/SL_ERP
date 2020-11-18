@@ -286,7 +286,7 @@ const IssueCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical" />
-        <Row className="col-2 space-top-md">
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane

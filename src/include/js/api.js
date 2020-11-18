@@ -25,6 +25,7 @@ export const api_disburse_get_ref_issue_head = `${api_server}/api/list/po`;
 export const api_disburse_get_ref_issue_detail = `${api_server}/api/inventory/issue_detail/ref`;
 
 // item
+export const api_upload_file = `${api_server}/api/upload/item/file`;
 export const api_get_item_by_id = `${api_server}/api/inventory/item`;
 export const api_get_item_detail = `${api_server}/api/inventory/item_vendor`;
 export const api_get_location_shelf_by_item_id = `${api_server}/api/list/location/shelf`;
@@ -33,6 +34,10 @@ export const api_get_lot_batch_by_item_id_shelf = `${api_server}/api/list/lot_no
 //qc
 export const api_qc_receive_list = `${api_server}/api/qa/qc/item`;
 export const api_qc_receive_detail_list = `${api_server}/api/qa/qc/item/detail`;
+//qa test case
+export const api_qa_subject = `${api_server}/api/list/qa_subject`;
+export const api_qa_specification = `${api_server}/api/list/qa_specification`;
+export const api_qa_method = `${api_server}/api/list/qa_method`;
 
 //vendor
 export const api_vendor = `${api_server}/api/purchase/vendor`;

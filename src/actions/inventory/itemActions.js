@@ -13,6 +13,7 @@ import {
 } from "../../include/js/api";
 import axios from "axios";
 import { message } from "antd";
+import { item_save_file } from "../file&image/itemFileAction";
 const api_path = api_url + "/query/sql";
 export const getAllItems = () => async (dispatch) => {
   const query_items = {
@@ -41,9 +42,12 @@ export const getAllItems = () => async (dispatch) => {
   });
 };
 
-export const createNewItems = (data_head, data_detail, redirect) => async (
-  dispatch
-) => {
+export const createNewItems = (
+  data_head,
+  data_detail,
+  fileList,
+  redirect
+) => async (dispatch) => {
   console.log("Create item...");
   try {
     axios
@@ -80,39 +84,55 @@ export const createNewItems = (data_head, data_detail, redirect) => async (
         }
       });
   } catch (error) {
-    console.log("error", error);
+    console.log(error);
+    message.error({
+      content: "Somethings went wrong. \n" + error,
+      key: "error",
+      duration: 2,
+    });
   }
 };
 
-export const upDateItem = (item_id, data_head, data_detail, redirect) => async (
-  dispatch
-) => {
+export const upDateItem = (
+  item_id,
+  data_head,
+  data_detail,
+  fileList,
+  redirect
+) => async (dispatch) => {
   console.log("Update item...");
   try {
-    axios
-      .put(api_url + "/inventory/item/" + item_id, data_head, header_config)
-      .then(async (res) => {
-        if (res.status === 200 && res.data[0].length) {
-          await axios.post(
-            `${api_get_item_detail}/${item_id}`,
-            data_detail,
-            header_config
-          );
-          await dispatch(get_item_by_id(item_id));
-          message.success({
-            content: "Item Update.",
-            key: "validate",
-            duration: 2,
-          });
-          redirect(item_id);
-          return true;
-        } else {
-          alert("Something went wrong please try again...");
-          return false;
-        }
-      });
+    item_save_file(fileList, item_id);
+    // axios
+    //   .put(api_url + "/inventory/item/" + item_id, data_head, header_config)
+    //   .then(async (res) => {
+    //     if (res.status === 200 && res.data[0].length) {
+    //       // item_save_file(fileList);
+    //       await axios.post(
+    //         `${api_get_item_detail}/${item_id}`,
+    //         data_detail,
+    //         header_config
+    //       );
+    //       await dispatch(get_item_by_id(item_id));
+    //       message.success({
+    //         content: "Item Update.",
+    //         key: "validate",
+    //         duration: 2,
+    //       });
+    //       redirect(item_id);
+    //       return true;
+    //     } else {
+    //       alert("Something went wrong please try again...");
+    //       return false;
+    //     }
+    //   });
   } catch (error) {
-    console.log("error", error);
+    console.log(error);
+    message.error({
+      content: "Somethings went wrong. \n" + error,
+      key: "error",
+      duration: 2,
+    });
   }
 };
 
