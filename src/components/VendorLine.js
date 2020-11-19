@@ -23,7 +23,7 @@ import numeral from "numeral";
 
 const { Text } = Typography;
 
-const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
+const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
   const units = useSelector((state) => state.inventory.master_data.item_uom);
   const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const addLine = () => {
@@ -43,6 +43,20 @@ const VendorLine = ({ data_detail, readOnly, detailDispatch }) => {
       },
     });
   };
+
+  useEffect(() => {
+    !readOnly &&
+      detailDispatch({
+        type: "SET_DETAIL",
+        payload: data_detail.map((detail) => {
+          return {
+            ...detail,
+            uom_id: data_head.uom_id,
+            uom_no: data_head.uom_no,
+          };
+        }),
+      });
+  }, [data_head.uom_id]);
   console.log(data_detail);
   return (
     <>
