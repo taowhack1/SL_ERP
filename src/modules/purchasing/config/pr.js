@@ -81,7 +81,7 @@ export const pr_list_columns = [
     align: "center",
     ellipsis: true,
     render: (value, record, index) => {
-      return getSelfStepStatus(record);
+      return record && getSelfStepStatus(record);
     },
   },
   {
