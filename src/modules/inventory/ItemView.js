@@ -468,7 +468,11 @@ const ItemView = (props) => {
                   </Col>
                 </Row>
                 <Row className="col-2 row-tab-margin-lg"></Row>
-                <Line data_detail={data_detail} readOnly={true} />
+                <Line
+                  data_head={data_head}
+                  data_detail={data_detail}
+                  readOnly={true}
+                />
               </Tabs.TabPane>
             </Tabs>
           </Col>

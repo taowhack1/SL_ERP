@@ -52,16 +52,17 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
   };
 
   useEffect(() => {
-    detailDispatch({
-      type: "SET_DETAIL",
-      payload: data_detail.map((detail) => {
-        return {
-          ...detail,
-          uom_id: data_head.uom_id,
-          uom_no: data_head.uom_no,
-        };
-      }),
-    });
+    !readOnly &&
+      detailDispatch({
+        type: "SET_DETAIL",
+        payload: data_detail.map((detail) => {
+          return {
+            ...detail,
+            uom_id: data_head.uom_id,
+            uom_no: data_head.uom_no,
+          };
+        }),
+      });
   }, [data_head.uom_id]);
   console.log(data_detail);
   return (
