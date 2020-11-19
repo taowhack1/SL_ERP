@@ -82,7 +82,8 @@ export const item_fields = {
   item_halal_cert: false,
   item_non_haram: false,
   item_non_halal: false,
-
+  item_control_id: 1,
+  item_control_name: "None",
   commit: 1,
 };
 
@@ -230,6 +231,55 @@ export const item_formula_detail_fields = {
   item_formula_no: null,
   item_formula_percentage: null,
   item_formula_remark: null,
+  commit: 1,
+};
+
+export const item_production_process_columns = [
+  {
+    id: 0,
+    name: "Part",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 1,
+    name: "Description Method",
+    size: 8,
+    require: true,
+  },
+  {
+    id: 2,
+    name: "Hono(RPM)",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 3,
+    name: "Agitator(RPM)",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 4,
+    name: "Scraper(RPM)",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 5,
+    name: "Time(Minutes)",
+    size: 3,
+    require: false,
+  },
+];
+export const item_production_process_fields = {
+  item_formula_part_id: null,
+  item_formula_part_name: null,
+  item_production_process_description: null,
+  item_production_process_hono: null,
+  item_production_process_agitator: null,
+  item_production_process_scraper: null,
+  item_production_process_time: 0,
   commit: 1,
 };
 
