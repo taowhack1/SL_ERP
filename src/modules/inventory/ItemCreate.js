@@ -681,6 +681,7 @@ const ItemCreate = (props) => {
                 </Row>
                 <Row className="col-2 row-tab-margin-lg"></Row>
                 <Line
+                  data_head={data_head}
                   readOnly={false}
                   detailDispatch={detailDispatch}
                   data_detail={data_detail}
