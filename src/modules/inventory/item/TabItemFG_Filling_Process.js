@@ -22,27 +22,29 @@ import PackagingProcess from "./Item_Packaging";
 const { TextArea } = Input;
 
 const TabFillingProcess = ({
-  key,
-  master_data,
-  data_head,
-  upDateFormValue,
-  data_detail,
-  detailDispatch,
+  uom_no,
+
   readOnly,
-  packaging_uom,
+  data_filling_detail,
+  fillingDetailDispatch,
+  data_weight_detail,
+  weightDetailDispatch,
 }) => {
   const currency_list = useSelector(
     (state) => state.accounting.master_data.currency
   );
+  const onChangeValue = (rowId, data) => {
+    weightDetailDispatch({
+      type: "CHANGE_DETAIL_VALUE",
+      payload: {
+        id: rowId,
+        data: data,
+      },
+    });
+  };
   return (
     <>
-      <Row
-        className="col-2 row-margin-vertical"
-        style={{
-          borderBottom: "1px solid #E5E5E5",
-          paddingBottom: 10,
-        }}
-      >
+      <Row className="col-2 row-margin-vertical  detail-tab-row">
         <Col span={24}>
           <Text strong className="detail-tab-header">
             Weight
@@ -102,18 +104,17 @@ const TabFillingProcess = ({
                 <Col span={5} className="text-center">
                   <InputNumber
                     {...numberFormat}
-                    name="item_weight_filling_standard"
+                    name="item_weight_standard_qty"
                     placeholder="Standard"
-                    // value={line.item_weight_filling_standard}
+                    value={data_weight_detail[0].item_weight_standard_qty}
                     defaultValue={0.0}
                     min={0.0001}
-                    // max={100.0}
                     step={1.0}
                     onChange={(data) => {
                       console.log(data);
-                      // onChangeValue(line.id, {
-                      //   item_weight_filling_standard: data,
-                      // });
+                      onChangeValue(data_weight_detail[0].id, {
+                        item_weight_standard_qty: data,
+                      });
                     }}
                     style={{ width: "100%" }}
                     size="small"
@@ -130,18 +131,17 @@ const TabFillingProcess = ({
                 <Col span={5} className="text-center">
                   <InputNumber
                     {...numberFormat}
-                    name="item_weight_filling_min"
+                    name="item_weight_min_qty"
                     placeholder="Min"
-                    // value={line.item_weight_filling_min}
+                    value={data_weight_detail[0].item_weight_min_qty}
                     defaultValue={0.0}
                     min={0.0001}
-                    // max={100.0}
                     step={1.0}
                     onChange={(data) => {
                       console.log(data);
-                      // onChangeValue(line.id, {
-                      //   item_weight_filling_min: data,
-                      // });
+                      onChangeValue(data_weight_detail[0].id, {
+                        item_weight_min_qty: data,
+                      });
                     }}
                     style={{ width: "100%" }}
                     size="small"
@@ -149,23 +149,27 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect style={{ width: "100%" }} size="small" />
+                  <CustomSelect
+                    style={{ width: "100%" }}
+                    size="small"
+                    placeholder="uom"
+                  />
                 </Col>
                 <Col span={5} className="text-center">
                   <InputNumber
                     {...numberFormat}
-                    name="item_weight_filling_max"
+                    name="item_weight_max_qty"
                     placeholder="Max"
-                    // value={line.item_weight_filling_max}
+                    value={data_weight_detail[0].item_weight_max_qty}
                     defaultValue={0.0}
                     min={0.0001}
                     // max={100.0}
                     step={1.0}
                     onChange={(data) => {
                       console.log(data);
-                      // onChangeValue(line.id, {
-                      //   item_weight_filling_max: data,
-                      // });
+                      onChangeValue(data_weight_detail[0].id, {
+                        item_weight_max_qty: data,
+                      });
                     }}
                     style={{ width: "100%" }}
                     size="small"
@@ -173,7 +177,11 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect style={{ width: "100%" }} size="small" />
+                  <CustomSelect
+                    style={{ width: "100%" }}
+                    size="small"
+                    placeholder="uom"
+                  />
                 </Col>
               </Row>
             </Col>
@@ -184,6 +192,7 @@ const TabFillingProcess = ({
               <Text strong>FG Weight </Text>
             </Col>
             <Col span={18}>
+              {/* weight */}
               <Row
                 key={1}
                 style={{
@@ -198,18 +207,17 @@ const TabFillingProcess = ({
                 <Col span={5} className="text-center">
                   <InputNumber
                     {...numberFormat}
-                    name="item_weight_filling_standard"
+                    name="item_weight_standard_qty"
                     placeholder="Standard"
-                    // value={line.item_weight_filling_standard}
+                    value={data_weight_detail[1].item_weight_standard_qty}
                     defaultValue={0.0}
                     min={0.0001}
-                    // max={100.0}
                     step={1.0}
                     onChange={(data) => {
                       console.log(data);
-                      // onChangeValue(line.id, {
-                      //   item_weight_filling_standard: data,
-                      // });
+                      onChangeValue(data_weight_detail[1].id, {
+                        item_weight_standard_qty: data,
+                      });
                     }}
                     style={{ width: "100%" }}
                     size="small"
@@ -226,18 +234,17 @@ const TabFillingProcess = ({
                 <Col span={5} className="text-center">
                   <InputNumber
                     {...numberFormat}
-                    name="item_weight_filling_min"
+                    name="item_weight_min_qty"
                     placeholder="Min"
-                    // value={line.item_weight_filling_min}
+                    value={data_weight_detail[1].item_weight_min_qty}
                     defaultValue={0.0}
                     min={0.0001}
-                    // max={100.0}
                     step={1.0}
                     onChange={(data) => {
                       console.log(data);
-                      // onChangeValue(line.id, {
-                      //   item_weight_filling_min: data,
-                      // });
+                      onChangeValue(data_weight_detail[1].id, {
+                        item_weight_min_qty: data,
+                      });
                     }}
                     style={{ width: "100%" }}
                     size="small"
@@ -245,23 +252,27 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect style={{ width: "100%" }} size="small" />
+                  <CustomSelect
+                    style={{ width: "100%" }}
+                    size="small"
+                    placeholder="uom"
+                  />
                 </Col>
                 <Col span={5} className="text-center">
                   <InputNumber
                     {...numberFormat}
-                    name="item_weight_filling_max"
+                    name="item_weight_max_qty"
                     placeholder="Max"
-                    // value={line.item_weight_filling_max}
+                    value={data_weight_detail[1].item_weight_max_qty}
                     defaultValue={0.0}
                     min={0.0001}
                     // max={100.0}
                     step={1.0}
                     onChange={(data) => {
                       console.log(data);
-                      // onChangeValue(line.id, {
-                      //   item_weight_filling_max: data,
-                      // });
+                      onChangeValue(data_weight_detail[1].id, {
+                        item_weight_max_qty: data,
+                      });
                     }}
                     style={{ width: "100%" }}
                     size="small"
@@ -269,7 +280,11 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect style={{ width: "100%" }} size="small" />
+                  <CustomSelect
+                    style={{ width: "100%" }}
+                    size="small"
+                    placeholder="uom"
+                  />
                 </Col>
               </Row>
             </Col>
@@ -280,6 +295,7 @@ const TabFillingProcess = ({
               <Text strong>FG Weight / Box</Text>
             </Col>
             <Col span={18}>
+              {/* weight */}
               <Row
                 key={1}
                 style={{
@@ -294,18 +310,17 @@ const TabFillingProcess = ({
                 <Col span={5} className="text-center">
                   <InputNumber
                     {...numberFormat}
-                    name="item_weight_filling_standard"
+                    name="item_weight_standard_qty"
                     placeholder="Standard"
-                    // value={line.item_weight_filling_standard}
+                    value={data_weight_detail[2].item_weight_standard_qty}
                     defaultValue={0.0}
                     min={0.0001}
-                    // max={100.0}
                     step={1.0}
                     onChange={(data) => {
                       console.log(data);
-                      // onChangeValue(line.id, {
-                      //   item_weight_filling_standard: data,
-                      // });
+                      onChangeValue(data_weight_detail[2].id, {
+                        item_weight_standard_qty: data,
+                      });
                     }}
                     style={{ width: "100%" }}
                     size="small"
@@ -322,18 +337,17 @@ const TabFillingProcess = ({
                 <Col span={5} className="text-center">
                   <InputNumber
                     {...numberFormat}
-                    name="item_weight_filling_min"
+                    name="item_weight_min_qty"
                     placeholder="Min"
-                    // value={line.item_weight_filling_min}
+                    value={data_weight_detail[2].item_weight_min_qty}
                     defaultValue={0.0}
                     min={0.0001}
-                    // max={100.0}
                     step={1.0}
                     onChange={(data) => {
                       console.log(data);
-                      // onChangeValue(line.id, {
-                      //   item_weight_filling_min: data,
-                      // });
+                      onChangeValue(data_weight_detail[2].id, {
+                        item_weight_min_qty: data,
+                      });
                     }}
                     style={{ width: "100%" }}
                     size="small"
@@ -341,23 +355,27 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect style={{ width: "100%" }} size="small" />
+                  <CustomSelect
+                    style={{ width: "100%" }}
+                    size="small"
+                    placeholder="uom"
+                  />
                 </Col>
                 <Col span={5} className="text-center">
                   <InputNumber
                     {...numberFormat}
-                    name="item_weight_filling_max"
+                    name="item_weight_max_qty"
                     placeholder="Max"
-                    // value={line.item_weight_filling_max}
+                    value={data_weight_detail[2].item_weight_max_qty}
                     defaultValue={0.0}
                     min={0.0001}
                     // max={100.0}
                     step={1.0}
                     onChange={(data) => {
                       console.log(data);
-                      // onChangeValue(line.id, {
-                      //   item_weight_filling_max: data,
-                      // });
+                      onChangeValue(data_weight_detail[2].id, {
+                        item_weight_max_qty: data,
+                      });
                     }}
                     style={{ width: "100%" }}
                     size="small"
@@ -365,7 +383,11 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect style={{ width: "100%" }} size="small" />
+                  <CustomSelect
+                    style={{ width: "100%" }}
+                    size="small"
+                    placeholder="uom"
+                  />
                 </Col>
               </Row>
             </Col>
@@ -387,11 +409,11 @@ const TabFillingProcess = ({
         </Col>
       </Row>
       <Row
-        className="col-2 row-tab-margin-lg"
-        style={{
-          borderBottom: "1px solid #E5E5E5",
-          paddingBottom: 10,
-        }}
+        className="col-2 row-tab-margin-lg detail-tab-row"
+        // style={{
+        //   borderBottom: "1px solid #E5E5E5",
+        //   paddingBottom: 10,
+        // }}
       >
         <Col span={24}>
           <Text strong className="detail-tab-header">
@@ -403,8 +425,9 @@ const TabFillingProcess = ({
         {/* PackagingProcess */}
         <Col span={24}>
           <PackagingProcess
-            data_detail={data_detail}
-            detailDispatch={detailDispatch}
+            readOnly={readOnly}
+            data_filling_detail={data_filling_detail}
+            fillingDetailDispatch={fillingDetailDispatch}
           />
         </Col>
       </Row>

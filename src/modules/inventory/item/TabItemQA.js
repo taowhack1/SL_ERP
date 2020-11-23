@@ -17,12 +17,10 @@ import ItemQADetail from "./Item_QA_Detail";
 const { TextArea } = Input;
 
 const TabItemQA = ({
-  key,
-  master_data,
-  data_head,
-  upDateFormValue,
-  data_detail,
-  detailDispatch,
+  readOnly,
+  // qa
+  data_qa_detail,
+  qaDetailDispatch,
 }) => {
   const currency_list = useSelector(
     (state) => state.accounting.master_data.currency
@@ -30,9 +28,10 @@ const TabItemQA = ({
   return (
     <>
       <ItemQADetail
-        readOnly={false}
-        detailDispatch={detailDispatch}
-        data_detail={data_detail}
+        readOnly={readOnly}
+        // qa
+        data_qa_detail={data_qa_detail}
+        qaDetailDispatch={qaDetailDispatch}
       />
     </>
   );

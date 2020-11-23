@@ -15,6 +15,7 @@ import {
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import numeral from "numeral";
+import { convertDigit } from "../include/js/main_config";
 const { RangePicker } = DatePicker;
 const { Text } = Typography;
 
@@ -220,14 +221,14 @@ const VendorLine = ({
                 <Text>{getValidate(line.itemValidate, "text")}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{numeral(line.itemQty).format("0,0.0000")}</Text>
+                <Text>{convertDigit(line.itemQty)}</Text>
               </Col>
 
               <Col span={3} className="text-string">
                 <Text>{line.itemUnit}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{numeral(line.itemPrice).format("0,0.000")}</Text>
+                <Text>{convertDigit(line.itemPrice)}</Text>
               </Col>
             </Row>
           ))}

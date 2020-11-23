@@ -24,6 +24,7 @@ import {
   sumArrObj,
 } from "../../include/js/function_main";
 import numeral from "numeral";
+import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
 const { Option } = Select;
 
@@ -260,7 +261,7 @@ const SO_Detail = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <div className="total-number">
-                    {numeral(line.so_detail_total_price).format("0,0.000")}
+                    {convertDigit(line.so_detail_total_price)}
                   </div>
                 </Col>
                 <Col span={3} className="text-number">
@@ -321,7 +322,7 @@ const SO_Detail = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view">
-                    {numeral(line.so_detail_qty).format("0,0.000")}
+                    {convertDigit(line.so_detail_qty)}
                   </Text>
                 </Col>
                 <Col span={2} className="text-string">
@@ -329,17 +330,17 @@ const SO_Detail = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view">
-                    {numeral(line.so_detail_price).format("0,0.000")}
+                    {convertDigit(line.so_detail_price)}
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view">
-                    {numeral(line.so_detail_discount).format("0,0.000")}
+                    {convertDigit(line.so_detail_discount)}
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view">
-                    {numeral(line.so_detail_total_price).format("0,0.000")}
+                    {convertDigit(line.so_detail_total_price)}
                   </Text>
                 </Col>
                 <Col span={3} className="text-center">

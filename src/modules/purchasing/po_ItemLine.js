@@ -22,6 +22,7 @@ import numeral from "numeral";
 import CustomSelect from "../../components/CustomSelect";
 import { calSubtotal, sumArrObj } from "../../include/js/function_main";
 import moment from "moment";
+import { convertDigit } from "../../include/js/main_config";
 const { Option } = Select;
 const { Text } = Typography;
 const numberFormat = {
@@ -277,7 +278,7 @@ const ItemLine = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <div className="total-number">
-                    {numeral(line.po_detail_total_price).format("0,0.000")}
+                    {convertDigit(line.po_detail_total_price)}
                   </div>
                 </Col>
                 <Col span={3} className="text-number">
@@ -344,7 +345,7 @@ const ItemLine = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view">
-                    {numeral(line.po_detail_qty).format("0,0.000")}
+                    {convertDigit(line.po_detail_qty)}
                   </Text>
                 </Col>
                 <Col span={2} className="text-string">
@@ -352,17 +353,17 @@ const ItemLine = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view">
-                    {numeral(line.po_detail_price).format("0,0.000")}
+                    {convertDigit(line.po_detail_price)}
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view">
-                    {numeral(line.po_detail_discount).format("0,0.000")}
+                    {convertDigit(line.po_detail_discount)}
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view">
-                    {numeral(line.po_detail_total_price).format("0,0.000")}
+                    {convertDigit(line.po_detail_total_price)}
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">

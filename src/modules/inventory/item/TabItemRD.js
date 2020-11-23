@@ -16,20 +16,18 @@ import React from "react";
 import { useSelector } from "react-redux";
 import CustomSelect from "../../../components/CustomSelect";
 import Line from "../../../components/VendorLine";
+import { get_pre_run_no } from "../../../include/js/function_main";
 import { numberFormat } from "../../../include/js/main_config";
+import ItemCertificate from "./ItemCertificate";
 const { TextArea } = Input;
 
 const TabItemRD = ({
-  key,
   master_data,
   data_head,
   upDateFormValue,
-  data_detail,
-  detailDispatch,
+  customers,
+  readOnly,
 }) => {
-  const currency_list = useSelector(
-    (state) => state.accounting.master_data.currency
-  );
   return (
     <>
       <Row className="col-2 row-margin-vertical">
@@ -40,7 +38,7 @@ const TabItemRD = ({
           }}
         >
           <Row className="col-2 row-margin-vertical">
-            <Col span={6}>
+            <Col span={7}>
               <Text strong>Item trade name</Text>
             </Col>
             <Col span={16}>
@@ -55,16 +53,15 @@ const TabItemRD = ({
                 value={data_head.item_trade_name}
               />
             </Col>
-            <Col span={2}></Col>
+            <Col span={1}></Col>
           </Row>
           <Row className="col-2 row-margin-vertical">
-            <Col span={6}>
-              <Text strong>Vendor item name </Text>
+            <Col span={7}>
+              <Text strong>Vendor term name </Text>
             </Col>
             <Col span={16}>
               <Input
-                name="vendor_item_name"
-                placeholder="Vendor item name"
+                placeholder="Vendor term name"
                 onChange={(e) =>
                   upDateFormValue({
                     vendor_item_name: e.target.value,
@@ -73,23 +70,101 @@ const TabItemRD = ({
                 value={data_head.vendor_item_name}
               />
             </Col>
-            <Col span={2}></Col>
+            <Col span={1}></Col>
           </Row>
           <Row className="col-2 row-margin-vertical">
-            <Col span={6}>
-              <Text strong>Customer name </Text>
+            <Col span={7}>
+              <Text strong>
+                <span className="require">* </span>Customer name{" "}
+              </Text>
             </Col>
             <Col span={16}>
-              <CustomSelect name="customer_id" placeholder="Customer Name" />
+              <CustomSelect
+                allowClear
+                disabled={data_head.item_id ? 1 : 0}
+                showSearch
+                placeholder={"Customer name"}
+                name="customer_id"
+                field_id="customer_id"
+                field_name="customer_no_name"
+                value={data_head.customer_no_name}
+                data={customers}
+                onChange={(data, option) => {
+                  data && data
+                    ? upDateFormValue({
+                        customer_id: option.data.customer_id,
+                        customer_no_name: option.data.customer_no_name,
+                        item_customer_run_no: option.data.customer_name_short,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          2,
+                          option.data.customer_name_short
+                        ),
+                      })
+                    : upDateFormValue({
+                        customer_id: null,
+                        customer_no_name: null,
+                        item_customer_run_no: null,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          2,
+                          "---"
+                        ),
+                      });
+                }}
+              />
             </Col>
-            <Col span={2}></Col>
+            <Col span={1}></Col>
+          </Row>
+          <Row className="col-2 row-margin-vertical">
+            <Col span={7}>
+              <Text strong>
+                <span className="require">* </span>Identify benefit
+              </Text>
+            </Col>
+            <Col span={16}>
+              <CustomSelect
+                allowClear
+                disabled={data_head.item_id ? 1 : 0}
+                showSearch
+                placeholder={"Identify benefit"}
+                name="identify_benefit_id"
+                field_id="identify_benefit_id"
+                field_name="identify_benefit_no_name"
+                value={data_head.identify_benefit_no_name}
+                data={master_data.item_benefit}
+                onChange={(data, option) => {
+                  data && data
+                    ? upDateFormValue({
+                        identify_benefit_id: option.data.identify_benefit_id,
+                        identify_benefit_no_name:
+                          option.data.identify_benefit_no_name,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          3,
+                          option.data.identify_benefit_run_no
+                        ),
+                      })
+                    : upDateFormValue({
+                        identify_benefit_id: null,
+                        identify_benefit_no_name: null,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          3,
+                          "-"
+                        ),
+                      });
+                }}
+              />
+            </Col>
+            <Col span={1}></Col>
           </Row>
         </Col>
         <Col span={12}>
           <Row className="col-2 row-margin-vertical">
-            <Col span={2}></Col>
-            <Col span={6}>
-              <Text strong>Price Approve By</Text>
+            <Col span={1}></Col>
+            <Col span={7}>
+              <Text strong>Price approve by</Text>
             </Col>
             <Col span={16}>
               <Radio.Group
@@ -111,8 +186,8 @@ const TabItemRD = ({
           </Row>
           <Row className="col-2 row-tab-margin"></Row>
           <Row className="col-2 row-margin-vertical">
-            <Col span={2}></Col>
-            <Col span={6}>
+            <Col span={1}></Col>
+            <Col span={7}>
               <Text strong>Sale to</Text>
             </Col>
             <Col span={16}>
@@ -143,182 +218,11 @@ const TabItemRD = ({
           </Row>
         </Col>
       </Row>
-      <Row
-        className="col-2 row-margin-vertical"
-        style={{
-          borderBottom: "1px solid #E5E5E5",
-          paddingBottom: 10,
-        }}
-      >
-        <Col span={24}>
-          <Text strong>Documents</Text>
-        </Col>
-      </Row>
-      <Row className="col-2 row-tab-margin">
-        <Col
-          span={12}
-          style={{
-            borderRight: "1px solid #c4c4c4",
-          }}
-        >
-          <Row className="col-2 row-margin-vertical">
-            <Col span={2}></Col>
-            <Col span={2}>
-              <Checkbox
-                checked={data_head.item_specification}
-                onChange={(e) =>
-                  upDateFormValue({
-                    item_specification: e.target.checked ? 1 : 0,
-                  })
-                }
-              />
-            </Col>
-            <Col span={9}>
-              <Text strong> Specification.</Text>
-            </Col>
-            <Col span={10}>
-              <Upload>
-                <Button
-                  icon={<UploadOutlined />}
-                  disabled={data_head.item_specification ? 0 : 1}
-                >
-                  Click to Upload
-                </Button>
-              </Upload>
-            </Col>
-            <Col span={1}></Col>
-          </Row>
-          <Row className="col-2 row-margin-vertical">
-            <Col span={2}></Col>
-            <Col span={2}>
-              <Checkbox
-                checked={data_head.item_msds}
-                onChange={(e) =>
-                  upDateFormValue({
-                    item_msds: e.target.checked ? 1 : 0,
-                  })
-                }
-              />
-            </Col>
-            <Col span={9}>
-              <Text strong> MSDS.</Text>
-            </Col>
-            <Col span={10}>
-              <Upload>
-                <Button
-                  icon={<UploadOutlined />}
-                  disabled={data_head.item_msds ? 0 : 1}
-                >
-                  Click to Upload
-                </Button>
-              </Upload>
-            </Col>
-            <Col span={1}></Col>
-          </Row>
-          <Row className="col-2 row-margin-vertical">
-            <Col span={2}></Col>
-            <Col span={2}>
-              <Checkbox
-                checked={data_head.item_quotation}
-                onChange={(e) =>
-                  upDateFormValue({
-                    item_quotation: e.target.checked ? 1 : 0,
-                  })
-                }
-              />
-            </Col>
-            <Col span={9}>
-              <Text strong> Quotation.</Text>
-            </Col>
-            <Col span={10}>
-              <Upload>
-                <Button
-                  icon={<UploadOutlined />}
-                  disabled={data_head.item_quotation ? 0 : 1}
-                >
-                  Click to Upload
-                </Button>
-              </Upload>
-            </Col>
-            <Col span={1}></Col>
-          </Row>
-        </Col>
-        {/* Right Row */}
-        <Col span={12}>
-          <Row className="col-2 row-margin-vertical">
-            <Col span={1}></Col>
-            <Col span={2}></Col>
-            <Col span={2}>
-              <Checkbox
-                checked={data_head.item_halal_cert}
-                onChange={(e) =>
-                  upDateFormValue({
-                    item_halal_cert: e.target.checked ? 1 : 0,
-                  })
-                }
-              />
-            </Col>
-            <Col span={9}>
-              <Text strong> Halal Cert.</Text>
-            </Col>
-            <Col span={10}>
-              <Upload>
-                <Button
-                  icon={<UploadOutlined />}
-                  disabled={data_head.item_halal_cert ? 0 : 1}
-                >
-                  Click to Upload
-                </Button>
-              </Upload>
-            </Col>
-          </Row>
-          <Row className="col-2 row-margin-vertical">
-            <Col span={1}></Col>
-            <Col span={2}></Col>
-            <Col span={2}>
-              <Checkbox
-                checked={data_head.item_non_haram}
-                onChange={(e) =>
-                  upDateFormValue({
-                    item_non_haram: e.target.checked ? 1 : 0,
-                  })
-                }
-              />
-            </Col>
-            <Col span={9}>
-              <Text strong> Non-Haram Statement.</Text>
-            </Col>
-            <Col span={10}>
-              <Upload>
-                <Button
-                  icon={<UploadOutlined />}
-                  disabled={data_head.item_non_haram ? 0 : 1}
-                >
-                  Click to Upload
-                </Button>
-              </Upload>
-            </Col>
-          </Row>
-          <Row className="col-2 row-margin-vertical">
-            <Col span={1}></Col>
-            <Col span={2}></Col>
-            <Col span={2}>
-              <Checkbox
-                checked={data_head.item_non_halal}
-                onChange={(e) =>
-                  upDateFormValue({
-                    item_non_halal: e.target.checked ? 1 : 0,
-                  })
-                }
-              />
-            </Col>
-            <Col span={9}>
-              <Text strong> Non-Halal.</Text>
-            </Col>
-            <Col span={10}></Col>
-          </Row>
-        </Col>
-      </Row>
+      <ItemCertificate
+        data_head={data_head}
+        upDateFormValue={upDateFormValue}
+        readOnly={readOnly}
+      />
     </>
   );
 };

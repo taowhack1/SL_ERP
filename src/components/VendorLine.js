@@ -20,6 +20,7 @@ import {
 import { useSelector } from "react-redux";
 import CustomSelect from "./CustomSelect";
 import numeral from "numeral";
+import { convertDigit } from "../include/js/main_config";
 
 const { Text } = Typography;
 
@@ -27,7 +28,14 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
   const units = useSelector((state) => state.inventory.master_data.item_uom);
   const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const addLine = () => {
-    detailDispatch({ type: "ADD_ROW", payload: item_detail_fields });
+    detailDispatch({
+      type: "ADD_ROW",
+      payload: {
+        ...item_detail_fields,
+        uom_id: data_head.uom_id && data_head.uom_id,
+        uom_no: data_head.uom_no && data_head.uom_no,
+      },
+    });
   };
 
   const delLine = (id) => {
@@ -245,15 +253,13 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
                 <Text>{line.item_vendor_lead_time}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>
-                  {numeral(line.item_vendor_min_qty).format("0,0.000")}
-                </Text>
+                <Text>{convertDigit(line.item_vendor_min_qty)}</Text>
               </Col>
               <Col span={2} className="text-string">
                 <Text>{line.uom_no}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{numeral(line.item_vendor_price).format("0,0.000")}</Text>
+                <Text>{convertDigit(line.item_vendor_price)}</Text>
               </Col>
               <Col span={5} className="text-number">
                 <Text>{line.item_vendor_remark}</Text>

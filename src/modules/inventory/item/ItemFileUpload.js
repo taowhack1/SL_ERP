@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Upload, Modal, Space } from "antd";
-import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
+import { Upload, Modal, Space, Button } from "antd";
+import { EyeOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -11,13 +11,15 @@ function getBase64(file) {
   });
 }
 
-const ItemPreview = ({
+const ItemFileUpload = ({
   imageFile,
   fileList,
   readOnly,
   maxFile,
   setFileList,
   file_type_id,
+  upload_type,
+  chkbox_upload_fields,
 }) => {
   const [state, setState] = useState({
     previewVisible: false,
@@ -74,33 +76,57 @@ const ItemPreview = ({
       return false;
     },
   };
-  console.log("Item_Preview.js", fileList);
+  console.log("ItemFileUpload.js", fileList);
+  const get_file_render_by_type = (upload_type = "Button") => {
+    switch (upload_type) {
+      case "Card":
+        return (
+          <Upload
+            {...uploadConfig}
+            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            listType="picture-card"
+            className="avatar-uploader"
+            fileList={fileList}
+            disabled={readOnly}
+            onPreview={handlePreview}
+            onChange={handleChange}
+          >
+            {fileList.length >= maxFile ? null : uploadButton}
+          </Upload>
+        );
+      case "View":
+        return (
+          <div className="input-center-disabled">
+            <Space>
+              <EyeOutlined
+                className="button-icon"
+                title="View Image"
+                onClick={() => handlePreview(fileList)}
+              />
+              View
+            </Space>
+          </div>
+        );
+      case "Button":
+        return (
+          <>
+            <Upload>
+              <Button
+                icon={<UploadOutlined />}
+                disabled={chkbox_upload_fields ? 0 : 1}
+              >
+                Click to upload
+              </Button>
+            </Upload>
+          </>
+        );
+      default:
+        return <></>;
+    }
+  };
   return (
     <>
-      {readOnly ? (
-        <div className="input-center-disabled">
-          <Space>
-            <EyeOutlined
-              className="button-icon"
-              title="View Image"
-              onClick={() => handlePreview(fileList)}
-            />
-            View
-          </Space>
-        </div>
-      ) : (
-        <Upload
-          {...uploadConfig}
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          listType="picture-card"
-          className="avatar-uploader"
-          fileList={fileList}
-          onPreview={handlePreview}
-          onChange={handleChange}
-        >
-          {fileList.length >= maxFile ? null : uploadButton}
-        </Upload>
-      )}
+      {get_file_render_by_type(upload_type)}
       <Modal
         visible={previewVisible}
         title={previewTitle}
@@ -113,4 +139,4 @@ const ItemPreview = ({
   );
 };
 
-export default React.memo(ItemPreview);
+export default React.memo(ItemFileUpload);

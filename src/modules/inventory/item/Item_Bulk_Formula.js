@@ -17,32 +17,34 @@ import { useSelector } from "react-redux";
 import numeral from "numeral";
 import {
   item_formula_columns,
+  item_formula_detail_fields,
   item_qa_columns,
   item_qa_detail_fields,
 } from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
-import { numberFormat } from "../../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../../include/js/main_config";
 
 const { Text } = Typography;
 
-const BulkFormula = ({ data_detail, readOnly, detailDispatch }) => {
-  const item_list = useSelector((state) =>
-    state.inventory.master_data.item_list.filter(
-      (item) => item.type_id === 1 || item.type_id === 3
-    )
-  );
-  const units = useSelector((state) => state.inventory.master_data.item_uom);
-  const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
+const BulkFormula = ({
+  readOnly,
+  data_formula_detail,
+  formulaDetailDispatch,
+  item_list,
+}) => {
   const addLine = () => {
-    detailDispatch({ type: "ADD_ROW", payload: item_qa_detail_fields });
+    formulaDetailDispatch({
+      type: "ADD_ROW",
+      payload: item_formula_detail_fields,
+    });
   };
 
   const delLine = (id) => {
-    detailDispatch({ type: "DEL_ROW", payload: { id: id } });
+    formulaDetailDispatch({ type: "DEL_ROW", payload: { id: id } });
   };
 
   const onChangeValue = (rowId, data) => {
-    detailDispatch({
+    formulaDetailDispatch({
       type: "CHANGE_DETAIL_VALUE",
       payload: {
         id: rowId,
@@ -58,30 +60,23 @@ const BulkFormula = ({ data_detail, readOnly, detailDispatch }) => {
         item_formula_part: String.fromCharCode(i),
       });
     }
-    console.log("arrayPart", arrayPart);
     return arrayPart;
   };
 
   const getFormulaNo = (part = "A") => {
     let arrayNo = [];
+    let part_temp = part && part !== undefined ? part : "A";
     for (let i = 1; i <= 30; i++) {
       arrayNo.push({
-        item_formula_part: part,
-        item_formula_no: part + numeral(i).format("00"),
+        item_formula_part: part_temp,
+        item_formula_part_no: part_temp + numeral(i).format("00"),
       });
     }
     return arrayNo;
   };
-  console.log(data_detail);
   return (
     <>
-      <Row
-        className="col-2 row-margin-vertical"
-        style={{
-          borderBottom: "1px solid #E5E5E5",
-          paddingBottom: 10,
-        }}
-      >
+      <Row className="col-2 row-margin-vertical  detail-tab-row">
         <Col span={24}>
           <Text strong className="detail-tab-header">
             Formula
@@ -111,7 +106,7 @@ const BulkFormula = ({ data_detail, readOnly, detailDispatch }) => {
       {!readOnly ? (
         <>
           {/* Edit Form */}
-          {data_detail.map((line, key) => (
+          {data_formula_detail.map((line, key) => (
             <Row
               key={line.id}
               style={{
@@ -153,19 +148,20 @@ const BulkFormula = ({ data_detail, readOnly, detailDispatch }) => {
                   showSearch
                   size={"small"}
                   placeholder={"No."}
-                  name="item_formula_no"
-                  field_id="item_formula_no"
-                  field_name="item_formula_no"
-                  value={line.item_formula_no}
+                  name="item_formula_part_no"
+                  field_id="item_formula_part_no"
+                  field_name="item_formula_part_no"
+                  value={line.item_formula_part_no}
                   data={getFormulaNo(line.item_formula_part)}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
                           item_formula_part: option.data.item_formula_part,
-                          item_formula_no: option.data.item_formula_no,
+                          item_formula_part_no:
+                            option.data.item_formula_part_no,
                         })
                       : onChangeValue(line.id, {
-                          item_formula_no: null,
+                          item_formula_part_no: null,
                         });
                   }}
                 />
@@ -196,9 +192,9 @@ const BulkFormula = ({ data_detail, readOnly, detailDispatch }) => {
               </Col>
               <Col span={3} className="text-string">
                 <InputNumber
-                  name="item_formula_percentage"
+                  name="item_formula_qty"
                   placeholder="Percentage"
-                  value={line.item_formula_percentage}
+                  value={line.item_formula_qty}
                   defaultValue={0.0}
                   min={0.0}
                   max={100.0}
@@ -208,7 +204,7 @@ const BulkFormula = ({ data_detail, readOnly, detailDispatch }) => {
                   step={1.0}
                   onChange={(data) => {
                     onChangeValue(line.id, {
-                      item_formula_percentage: data,
+                      item_formula_qty: data,
                     });
                   }}
                   style={{ width: "100%" }}
@@ -217,13 +213,15 @@ const BulkFormula = ({ data_detail, readOnly, detailDispatch }) => {
               </Col>
               <Col span={8} className="text-string">
                 <Input
-                  name="item_qa_detail_remark"
+                  name="item_formula_remark"
                   size="small"
                   placeholder={"Remark"}
                   onChange={(e) =>
-                    onChangeValue({ item_qa_detail_remark: e.target.value })
+                    onChangeValue(line.id, {
+                      item_formula_remark: e.target.value,
+                    })
                   }
-                  value={line.item_qa_detail_remark}
+                  value={line.item_formula_remark}
                 />
               </Col>
 
@@ -247,7 +245,7 @@ const BulkFormula = ({ data_detail, readOnly, detailDispatch }) => {
       ) : (
         <>
           {/* View Form */}
-          {data_detail.map((line, key) => (
+          {data_formula_detail.map((line, key) => (
             <Row
               key={line.item_vendor_id}
               style={{
@@ -258,25 +256,22 @@ const BulkFormula = ({ data_detail, readOnly, detailDispatch }) => {
               gutter={6}
               className="col-2"
             >
-              <Col span={7} className="text-string">
-                <Text>{line.vendor_no_name}</Text>
+              <Col span={3} className="text-string">
+                <Text>{line.item_formula_part}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{line.item_vendor_lead_time}</Text>
+                <Text>{line.item_formula_part_no}</Text>
               </Col>
-              <Col span={3} className="text-number">
+              <Col span={6} className="text-number">
                 <Text>
-                  {numeral(line.item_vendor_min_qty).format("0,0.000")}
+                  <Text>{line.item_no_name}</Text>
                 </Text>
               </Col>
-              <Col span={2} className="text-string">
-                <Text>{line.uom_no}</Text>
+              <Col span={3} className="text-string">
+                <Text>{convertDigit(line.item_formula_qty)}</Text>
               </Col>
-              <Col span={3} className="text-number">
-                <Text>{numeral(line.item_vendor_price).format("0,0.000")}</Text>
-              </Col>
-              <Col span={5} className="text-number">
-                <Text>{line.item_vendor_remark}</Text>
+              <Col span={8} className="text-number">
+                <Text>{line.item_formula_remark}</Text>
               </Col>
             </Row>
           ))}
@@ -287,4 +282,4 @@ const BulkFormula = ({ data_detail, readOnly, detailDispatch }) => {
   );
 };
 
-export default BulkFormula;
+export default React.memo(BulkFormula);

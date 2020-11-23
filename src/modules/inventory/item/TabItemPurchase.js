@@ -25,6 +25,7 @@ const TabItemPurchase = ({
   upDateFormValue,
   data_detail,
   detailDispatch,
+  readOnly,
 }) => {
   const currency_list = useSelector(
     (state) => state.accounting.master_data.currency
@@ -79,13 +80,7 @@ const TabItemPurchase = ({
         </Col>
         <Col span={1}></Col>
       </Row> */}
-      <Row
-        className="col-2 row-margin-vertical"
-        style={{
-          borderBottom: "1px solid #E5E5E5",
-          paddingBottom: 10,
-        }}
-      >
+      <Row className="col-2 row-margin-vertical  detail-tab-row">
         <Col span={24}>
           <Text strong className="detail-tab-header">
             Vendor
@@ -93,8 +88,9 @@ const TabItemPurchase = ({
         </Col>
       </Row>
       <Line
-        readOnly={false}
+        readOnly={readOnly}
         detailDispatch={detailDispatch}
+        data_head={data_head}
         data_detail={data_detail}
       />
     </>

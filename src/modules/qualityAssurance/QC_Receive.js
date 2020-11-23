@@ -8,6 +8,7 @@ import { reducer } from "./reducers";
 import { get_qc_receive_list, update_qc_receive_list } from "../../actions/qa";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
+import { convertDigit } from "../../include/js/main_config";
 
 const numberFormat = {
   precision: 3,
@@ -95,7 +96,7 @@ const QCReceive = () => {
       key: "sum_stock_detail_qty_inbound",
       align: "right",
       width: "23%",
-      render: (value) => numeral(value).format("0,0.000"),
+      render: (value) => convertDigit(value),
     },
   ];
 

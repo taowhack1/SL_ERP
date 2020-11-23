@@ -34,6 +34,7 @@ import moment from "moment";
 import { reducer } from "./reducers";
 import CustomSelect from "../../components/CustomSelect";
 import { get_lot_batch_by_item_id_shelf } from "../../actions/inventory";
+import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
 const numberFormat = {
   precision: 3,
@@ -320,7 +321,7 @@ const SubDetail = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.disburse_detail_sub_qty).format("0,0.000")}
+                    {convertDigit(line.disburse_detail_sub_qty)}
                   </Text>
                 </Col>
                 <Col span={2} className="text-string">

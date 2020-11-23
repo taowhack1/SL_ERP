@@ -37,6 +37,7 @@ import {
   get_lot_batch_by_item_id_shelf,
 } from "../../actions/inventory";
 import { disburse_sub_detail_require_fields } from "./config/disburse";
+import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
 
 const DisburseDetail = ({
@@ -173,12 +174,12 @@ const DisburseDetail = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <div className="total-number text-value">
-                    {numeral(line.issue_detail_qty).format("0,0.000")}
+                    {convertDigit(line.issue_detail_qty)}
                   </div>
                 </Col>
                 <Col span={3} className="text-number">
                   <div className="total-number text-value">
-                    {numeral(line.tg_disburse_detail_qty_balance).format(
+                    {convertDigit(line.tg_disburse_detail_qty_balance).format(
                       "0,0.000"
                     )}
                   </div>
@@ -191,7 +192,7 @@ const DisburseDetail = ({
                         : "total-number text-value"
                     }
                   >
-                    {numeral(line.tg_disburse_detail_qty).format("0,0.000")}
+                    {convertDigit(line.tg_disburse_detail_qty)}
                   </div>
                 </Col>
                 <Col span={2} className="text-string">
@@ -268,19 +269,19 @@ const DisburseDetail = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.issue_detail_qty).format("0,0.000")}
+                    {convertDigit(line.issue_detail_qty)}
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.tg_disburse_detail_qty_balance).format(
+                    {convertDigit(line.tg_disburse_detail_qty_balance).format(
                       "0,0.000"
                     )}
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.tg_disburse_detail_qty).format("0,0.000")}
+                    {convertDigit(line.tg_disburse_detail_qty)}
                   </Text>
                 </Col>
                 <Col span={2} className="text-string">
@@ -357,7 +358,7 @@ const DisburseDetail = ({
           <Col span={21}>
             <Text className="text-value">
               {temp_detail &&
-                numeral(temp_detail.tg_disburse_detail_qty_balance).format(
+                convertDigit(temp_detail.tg_disburse_detail_qty_balance).format(
                   "0,000.000"
                 ) + "  "}
             </Text>
@@ -381,7 +382,7 @@ const DisburseDetail = ({
           <Col span={21}>
             {temp_detail && (
               <Text className="text-value">
-                {numeral(temp_detail.tg_disburse_detail_qty).format(
+                {convertDigit(temp_detail.tg_disburse_detail_qty).format(
                   "0,000.000"
                 )}
               </Text>
@@ -389,9 +390,9 @@ const DisburseDetail = ({
             {"  /  "}
             <Text strong>
               {temp_detail &&
-                numeral(temp_detail.tg_disburse_detail_qty_balance_temp).format(
-                  "0,000.000"
-                ) + "  "}
+                convertDigit(
+                  temp_detail.tg_disburse_detail_qty_balance_temp
+                ).format("0,000.000") + "  "}
             </Text>
             <Text strong>{temp_detail && temp_detail.uom_no}</Text>
           </Col>

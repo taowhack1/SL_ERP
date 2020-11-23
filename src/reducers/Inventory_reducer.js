@@ -34,6 +34,7 @@ const initialState = {
     item_uom: [],
     item_type: [],
     item_benefit: [],
+    item_control: [],
     item_category: [],
     item_list: [],
     shelf: [],

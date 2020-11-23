@@ -52,6 +52,7 @@ export const item_fields = {
   item_min: 0,
   item_max: 0,
   item_customer_run_no: "SRL",
+
   item_price_approve_id: 1,
   uom_id: null,
   uom_name: null,
@@ -63,7 +64,7 @@ export const item_fields = {
   branch_id: 1,
   branch_name: null,
   identify_benefit_id: 1,
-  identify_benefit_name: null,
+  identify_benefit_no_name: "[ IDB01 ] Siri เป็นผู้ซื้อ Local",
   item_remark: null,
   item_actived: 1,
   item_created_by: null,
@@ -82,8 +83,13 @@ export const item_fields = {
   item_halal_cert: false,
   item_non_haram: false,
   item_non_halal: false,
+  tg_trans_status_id: 1,
   item_control_id: 1,
   item_control_name: "None",
+  item_formula_effective_date: null,
+  item_pre_run_no: ["-", "--", "SRL", "A", "-----"],
+  customer_id: 1,
+  customer_no_name: "[ CUS0001 ] Siri Laboratories Co., Ltd.",
   commit: 1,
 };
 
@@ -91,6 +97,7 @@ export const item_detail_fields = {
   id: null,
   item_vendor_lead_time: 0,
   item_vendor_min_qty: 0,
+  item_vendor_price: 0,
   vendor_id: null,
   vendor_no_name: null,
   item_id: null,
@@ -145,6 +152,7 @@ export const item_require_fields = [
   "uom_id",
   "type_id",
   "category_id",
+  "item_control_id",
 ];
 export const item_vendor_require_fields = [
   "vendor_id",
@@ -184,12 +192,14 @@ export const item_qa_columns = [
 ];
 
 export const item_qa_detail_fields = {
+  id: null,
   qa_subject_id: null,
   qa_subject_name: null,
   qa_specification_id: null,
   qa_specification_name: null,
   qa_method_id: null,
   qa_method_name: null,
+  item_qa_remark: null,
   commit: 1,
 };
 
@@ -226,10 +236,13 @@ export const item_formula_columns = [
   },
 ];
 export const item_formula_detail_fields = {
+  id: null,
+  item_id: null,
   item_formula_id: null,
   item_formula_part: null,
-  item_formula_no: null,
-  item_formula_percentage: null,
+  item_formula_part_no: null,
+  item_formula_qty: 0,
+  // item_formula_percentage: null,
   item_formula_remark: null,
   commit: 1,
 };
@@ -273,6 +286,7 @@ export const item_production_process_columns = [
   },
 ];
 export const item_production_process_fields = {
+  id: null,
   item_formula_part_id: null,
   item_formula_part_name: null,
   item_production_process_description: null,
@@ -361,5 +375,47 @@ export const item_packaging_process_columns = [
     name: "Image",
     size: 3,
     require: false,
+  },
+];
+
+export const item_filling_detail_fields = {
+  id: null,
+  qa_method_id: null,
+  item_filling_process_qty: 0,
+  item_id: null,
+  item_filling_process_remark: null,
+  commit: 1,
+};
+
+export const item_weight_detail = [
+  {
+    id: 0,
+    weight_type_id: 1,
+    item_weight_standard_qty: 0,
+    item_weight_min_qty: 0,
+    item_weight_max_qty: 0,
+    item_id: null,
+    item_weight_remark: null,
+    commit: 1,
+  },
+  {
+    id: 1,
+    weight_type_id: 2,
+    item_weight_standard_qty: 0,
+    item_weight_min_qty: 0,
+    item_weight_max_qty: 0,
+    item_id: null,
+    item_weight_remark: null,
+    commit: 1,
+  },
+  {
+    id: 2,
+    weight_type_id: 3,
+    item_weight_standard_qty: 0,
+    item_weight_min_qty: 0,
+    item_weight_max_qty: 0,
+    item_id: null,
+    item_weight_remark: null,
+    commit: 1,
   },
 ];

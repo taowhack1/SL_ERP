@@ -3,6 +3,7 @@ import {
   getRefStatus,
   getSelfStepStatus,
 } from "../../../include/js/function_main";
+import { convertDigit } from "../../../include/js/main_config";
 export const receive_columns = [
   {
     title: "Receive No.",
@@ -74,7 +75,7 @@ export const receive_columns = [
       compare: (a, b) => a.tg_receive_total_amount - b.tg_receive_total_amount,
       multiple: 3,
     },
-    render: (value) => numeral(value).format("0,0.000"),
+    render: (value) => convertDigit(value),
   },
 
   {

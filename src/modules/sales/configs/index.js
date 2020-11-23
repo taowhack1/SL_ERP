@@ -3,6 +3,7 @@ import {
   getRefStatus,
   getSelfStepStatus,
 } from "../../../include/js/function_main";
+import { convertDigit } from "../../../include/js/main_config";
 export const quotationColumns = [
   {
     title: "Reference",
@@ -63,7 +64,7 @@ export const quotationColumns = [
       compare: (a, b) => a.tg_qn_total_amount - b.tg_qn_total_amount,
       multiple: 3,
     },
-    render: (value) => numeral(value).format("0,0.000"),
+    render: (value) => convertDigit(value),
     ellipsis: true,
   },
 
@@ -299,7 +300,7 @@ export const so_columns = [
       compare: (a, b) => a.tg_so_total_amount - b.tg_so_total_amount,
       multiple: 3,
     },
-    render: (value) => numeral(value).format("0,0.000"),
+    render: (value) => convertDigit(value),
   },
 
   {

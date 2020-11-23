@@ -31,14 +31,23 @@ const TabPanel = ({
   detailDispatch,
   upDateFormValue,
   readOnly,
+  data_formula_detail,
+  formulaDetailDispatch,
+  data_qa_detail,
+  qaDetailDispatch,
+  data_filling_detail,
+  fillingDetailDispatch,
+  data_weight_detail,
+  weightDetailDispatch,
 }) => {
   const { type_id } = data_head;
   const callback = (key) => {};
   const master_data = useSelector((state) => state.inventory.master_data);
+  const customers = useSelector((state) => state.sales.master_data.customers);
   return (
     <>
       <Tabs
-        defaultActiveKey={"6"}
+        defaultActiveKey={"1"}
         onChange={callback}
         className="row-tab-margin-lg"
       >
@@ -46,7 +55,7 @@ const TabPanel = ({
           tab={
             <span className="tab_pane">
               <span className="require">* </span>
-              General Detail
+              {"General Detail"}
             </span>
           }
           key={"1"}
@@ -59,38 +68,69 @@ const TabPanel = ({
           />
         </Tabs.TabPane>
         {/* {type_id !== undefined && type_id && ( */}
-        <Tabs.TabPane tab="R&D Detail" key={"2"}>
+        <Tabs.TabPane
+          tab={
+            <span className="tab_pane">
+              <span className="require">* </span>
+              {"R&D Detail"}
+            </span>
+          }
+          key={"2"}
+        >
           <TabItemRD
             data_head={data_head}
-            data_detail={data_detail}
-            detailDispatch={detailDispatch}
+            master_data={master_data}
+            customers={customers}
             upDateFormValue={upDateFormValue}
             readOnly={readOnly}
           />
         </Tabs.TabPane>
         {/* )} */}
         {/* {type_id !== undefined && type_id && type_id === 3 && ( */}
-        <Tabs.TabPane tab="Bulk Formula" key={"3"}>
+        <Tabs.TabPane
+          tab={
+            <span className="tab_pane">
+              <span className="require">* </span>
+              {"Bulk Formula"}
+            </span>
+          }
+          key={"3"}
+        >
           <TabBulkFormula
             data_head={data_head}
-            data_detail={data_detail}
-            detailDispatch={detailDispatch}
             upDateFormValue={upDateFormValue}
+            // formula
+            data_formula_detail={data_formula_detail}
+            formulaDetailDispatch={formulaDetailDispatch}
             readOnly={readOnly}
           />
         </Tabs.TabPane>
         {/* )} */}
-        <Tabs.TabPane tab={"QA"} key="4">
+        <Tabs.TabPane
+          tab={
+            <span className="tab_pane">
+              <span className="require">* </span>
+              {"QA"}
+            </span>
+          }
+          key={"4"}
+        >
           <TabItemQA
-            data_head={data_head}
-            data_detail={data_detail}
-            detailDispatch={detailDispatch}
-            upDateFormValue={upDateFormValue}
+            data_qa_detail={data_qa_detail}
+            qaDetailDispatch={qaDetailDispatch}
             readOnly={readOnly}
           />
         </Tabs.TabPane>
         {/* {type_id !== undefined && type_id && type_id !== 4 && ( */}
-        <Tabs.TabPane tab={"Purchase Vendor"} key="5">
+        <Tabs.TabPane
+          tab={
+            <span className="tab_pane">
+              <span className="require">* </span>
+              {"Purchase Vendor"}
+            </span>
+          }
+          key={"5"}
+        >
           <TabItemPurchase
             data_head={data_head}
             data_detail={data_detail}
@@ -100,12 +140,21 @@ const TabPanel = ({
           />
         </Tabs.TabPane>
         {/* )} */}
-        <Tabs.TabPane tab={"FG Filling Process"} key="6">
+        <Tabs.TabPane
+          tab={
+            <span className="tab_pane">
+              <span className="require">* </span>
+              {"FG Filling Process"}
+            </span>
+          }
+          key={"6"}
+        >
           <TabFillingProcess
-            data_head={data_head}
-            data_detail={data_detail}
-            detailDispatch={detailDispatch}
-            upDateFormValue={upDateFormValue}
+            uom_no={data_head.uom_no}
+            data_filling_detail={data_filling_detail}
+            fillingDetailDispatch={fillingDetailDispatch}
+            data_weight_detail={data_weight_detail}
+            weightDetailDispatch={weightDetailDispatch}
             readOnly={readOnly}
           />
         </Tabs.TabPane>
@@ -114,4 +163,4 @@ const TabPanel = ({
   );
 };
 
-export default TabPanel;
+export default React.memo(TabPanel);

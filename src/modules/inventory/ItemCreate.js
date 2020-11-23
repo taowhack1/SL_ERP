@@ -37,11 +37,16 @@ import {
 import {
   item_detail_fields,
   item_fields,
+  item_filling_detail_fields,
+  item_formula_detail_fields,
+  item_qa_detail_fields,
   item_require_fields,
   item_vendor_require_fields,
+  item_weight_detail,
 } from "./config/item";
 import {
   getNameById,
+  get_pre_run_no,
   validateFormDetail,
   validateFormHead,
 } from "../../include/js/function_main";
@@ -56,13 +61,19 @@ import Authorize from "../system/Authorize";
 import { useHistory } from "react-router-dom";
 import TabPanel from "./item/TabPanel";
 import { get_all_vendor } from "../../actions/purchase/vendorActions";
-import ItemPreview from "./item/Item_Preview";
+import ItemFileUpload from "./item/ItemFileUpload";
 import { get_qa_test_case_master } from "../../actions/qa/qaTestAction";
+import { get_sale_master_data } from "../../actions/sales";
 const { Option } = Select;
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
 const initialStateHead = item_fields;
 const initialStateDetail = [item_detail_fields];
+const initialStateFormula = [item_formula_detail_fields];
+const initialStateQA = [item_qa_detail_fields];
+const initialStateFilling = [item_filling_detail_fields];
+const initialStateWeight = item_weight_detail;
+
 const reader = new FileReader();
 const formData = new FormData();
 const ItemCreate = (props) => {
@@ -76,15 +87,31 @@ const ItemCreate = (props) => {
     dispatch(get_all_vendor());
   }, []);
 
-  const customers = useSelector((state) => state.sales.master_data.customers);
   const auth = useSelector((state) => state.auth.authData);
   const data = props.location.state ? props.location.state : 0;
 
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
+  const [data_formula_detail, formulaDetailDispatch] = useReducer(
+    reducer,
+    initialStateFormula
+  );
+  const [data_qa_detail, qaDetailDispatch] = useReducer(
+    reducer,
+    initialStateQA
+  );
+  const [data_weight_detail, weightDetailDispatch] = useReducer(
+    reducer,
+    initialStateWeight
+  );
+  const [data_filling_detail, fillingDetailDispatch] = useReducer(
+    reducer,
+    initialStateFilling
+  );
   const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
+    dispatch(get_sale_master_data());
     headDispatch({
       type: "SET_HEAD",
       payload: data.data_head
@@ -97,19 +124,6 @@ const ItemCreate = (props) => {
       payload: data.data_detail ? data.data_detail : [item_detail_fields],
     });
   }, []);
-
-  const getTabDetail = (item_type) => {
-    let tabDetail = <></>;
-    switch (item_type) {
-      case 1:
-      case 2:
-        tabDetail = <></>;
-        break;
-
-      default:
-        break;
-    }
-  };
 
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
@@ -137,30 +151,35 @@ const ItemCreate = (props) => {
     onSave: (e) => {
       console.log("Save");
       const key = "validate";
-
-      const validate = validateFormHead(data_head, item_require_fields);
-      if (validate.validate) {
-        console.log("pass");
-        data_head.item_id
-          ? dispatch(
-              upDateItem(
-                data_head.item_id,
-                data_head,
-                data_detail,
-                fileList,
-                redirect_to_view
-              )
-            )
-          : dispatch(
-              createNewItems(data_head, data_detail, fileList, redirect_to_view)
-            );
-      } else {
-        message.warning({
-          content: "Please fill your form completely.",
-          key,
-          duration: 2,
-        });
-      }
+      console.log("SAVE HEAD", data_head);
+      console.log("SAVE DETAIL", data_detail);
+      console.log("SAVE QA", data_qa_detail);
+      console.log("SAVE FORMULA", data_formula_detail);
+      console.log("SAVE WEIGHT", data_weight_detail);
+      console.log("SAVE FILLING", data_filling_detail);
+      // const validate = validateFormHead(data_head, item_require_fields);
+      // if (validate.validate) {
+      //   console.log("pass");
+      //   data_head.item_id
+      //     ? dispatch(
+      //         upDateItem(
+      //           data_head.item_id,
+      //           data_head,
+      //           data_detail,
+      //           fileList,
+      //           redirect_to_view
+      //         )
+      //       )
+      //     : dispatch(
+      //         createNewItems(data_head, data_detail, fileList, redirect_to_view)
+      //       );
+      // } else {
+      //   message.warning({
+      //     content: "Please fill your form completely.",
+      //     key,
+      //     duration: 2,
+      //   });
+      // }
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -191,22 +210,19 @@ const ItemCreate = (props) => {
               <strong>{data_head.item_no ? "Edit" : "Create"} Item</strong>
             </h2>
             <h3 style={{ marginBottom: 8 }}>
-              {data_head.item_no && (
+              {data_head.item_no ? (
                 <strong>Item Code # {data_head.item_no}</strong>
+              ) : (
+                <strong>
+                  Pre-Running Item Code : [{data_head.item_pre_run_no.join("")}]
+                </strong>
               )}
             </h3>
           </Col>
           <Col span={2}></Col>
           <Col span={3}></Col>
           <Col span={8} style={{ textAlign: "right" }}>
-            {/* {data_head.item_no && (
-              <Barcode
-                value={data_head.item_barcode}
-                width={1.5}
-                height={30}
-                fontSize={14}
-              />
-            )} */}
+            {/* BARCODE */}
           </Col>
         </Row>
 
@@ -270,12 +286,13 @@ const ItemCreate = (props) => {
           <Col span={1}></Col>
           <Col span={4}>
             <div>
-              <ItemPreview
+              <ItemFileUpload
                 fileList={fileList}
                 readOnly={false}
                 maxFile={1}
                 setFileList={setFileList}
                 file_type_id={1}
+                upload_type={"Card"}
               />
             </div>
           </Col>
@@ -285,9 +302,17 @@ const ItemCreate = (props) => {
           <Col span={24}>
             <TabPanel
               data_head={data_head}
-              data_detail={data_detail}
               headDispatch={headDispatch}
+              data_detail={data_detail}
               detailDispatch={detailDispatch}
+              data_formula_detail={data_formula_detail}
+              formulaDetailDispatch={formulaDetailDispatch}
+              data_qa_detail={data_qa_detail}
+              qaDetailDispatch={qaDetailDispatch}
+              data_filling_detail={data_filling_detail}
+              fillingDetailDispatch={fillingDetailDispatch}
+              data_weight_detail={data_weight_detail}
+              weightDetailDispatch={weightDetailDispatch}
               upDateFormValue={upDateFormValue}
               readOnly={false}
             />

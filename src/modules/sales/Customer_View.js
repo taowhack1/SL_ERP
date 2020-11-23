@@ -8,6 +8,7 @@ import Title from "antd/lib/skeleton/Title";
 import numeral from "numeral";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
+import { convertDigit } from "../../include/js/main_config";
 
 const { Text } = Typography;
 
@@ -193,9 +194,7 @@ const CustomerView = (props) => {
                       </Col>
                       <Col span={18}>
                         <Text className="text-view">
-                          {numeral(data_head.customer_limit_credit).format(
-                            "0,0.000"
-                          )}
+                          {convertDigit(data_head.customer_limit_credit)}
                         </Text>
                         <Text strong style={{ paddingLeft: 10 }}>
                           {data_head.currency_no}

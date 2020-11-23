@@ -22,7 +22,7 @@ import moment from "moment";
 
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
-import ItemLine from "./Sales_ItemLine";
+
 import TotalFooter from "../../components/TotalFooter";
 import {
   quotation_detail_fields,
@@ -46,6 +46,7 @@ import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 import $ from "jquery";
 import { useHistory } from "react-router-dom";
+import ItemLine from "./Sales_ItemLine";
 const { TextArea } = Input;
 const { Text } = Typography;
 

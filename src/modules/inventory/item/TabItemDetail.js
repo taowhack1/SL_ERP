@@ -15,6 +15,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import CustomSelect from "../../../components/CustomSelect";
 import Line from "../../../components/VendorLine";
+import { get_pre_run_no } from "../../../include/js/function_main";
 import { numberFormat } from "../../../include/js/main_config";
 const { TextArea } = Input;
 
@@ -22,25 +23,6 @@ const TabItemDetail = ({ key, master_data, data_head, upDateFormValue }) => {
   return (
     <>
       <Row className="col-2 row-margin-vertical">
-        <Col span={3}>
-          <Text strong>
-            <span className="require">* </span>SRL
-          </Text>
-        </Col>
-        <Col span={8}>
-          <Input
-            name="item_customer_run_no"
-            disabled={data_head.item_id ? 1 : 0}
-            placeholder="Customer or vendor short name"
-            onChange={(e) =>
-              upDateFormValue({
-                item_customer_run_no: e.target.value,
-              })
-            }
-            value={data_head.item_customer_run_no}
-          />
-        </Col>
-        <Col span={2}></Col>
         <Col span={3}>
           <Text strong>
             <span className="require">* </span>Item type{" "}
@@ -64,10 +46,68 @@ const TabItemDetail = ({ key, master_data, data_head, upDateFormValue }) => {
                     type_name: option.title,
                     category_id: null,
                     category_name: null,
+                    item_pre_run_no: get_pre_run_no(
+                      data_head.item_pre_run_no,
+                      0,
+                      option.data.type_run_no
+                    ),
+                  })
+                : upDateFormValue({
+                    type_id: null,
+                    type_name: null,
+                    category_id: null,
+                    category_name: null,
+                    item_pre_run_no: get_pre_run_no(
+                      data_head.item_pre_run_no,
+                      0,
+                      "-"
+                    ),
+                  });
+            }}
+          />
+        </Col>
+        <Col span={2}></Col>
+        <Col span={3}>
+          <Text strong>
+            <span className="require">* </span>Category{" "}
+          </Text>
+        </Col>
+        <Col span={8}>
+          <CustomSelect
+            allowClear
+            showSearch
+            disabled={data_head.item_id ? 1 : 0}
+            placeholder={"Category"}
+            name="category_id"
+            field_id="category_id"
+            field_name="category_name"
+            value={data_head.category_name}
+            data={
+              data_head.type_id
+                ? master_data.item_category.filter(
+                    (categ) => categ.type_id === data_head.type_id
+                  )
+                : master_data.item_category
+            }
+            onChange={(data, option) => {
+              data && data
+                ? upDateFormValue({
+                    category_id: option.data.category_id,
+                    category_name: option.data.category_name,
+                    item_pre_run_no: get_pre_run_no(
+                      data_head.item_pre_run_no,
+                      1,
+                      option.data.category_run_no
+                    ),
                   })
                 : upDateFormValue({
                     category_id: null,
                     category_name: null,
+                    item_pre_run_no: get_pre_run_no(
+                      data_head.item_pre_run_no,
+                      1,
+                      "--"
+                    ),
                   });
             }}
           />
@@ -102,38 +142,33 @@ const TabItemDetail = ({ key, master_data, data_head, upDateFormValue }) => {
             }}
           />
         </Col>
+
         <Col span={2}></Col>
         <Col span={3}>
           <Text strong>
-            <span className="require">* </span>Category{" "}
+            <span className="require">* </span>Storage Condition{" "}
           </Text>
         </Col>
         <Col span={8}>
           <CustomSelect
             allowClear
+            // disabled={data_head.item_id ? 1 : 0}
             showSearch
-            disabled={data_head.item_id ? 1 : 0}
-            placeholder={"Category"}
-            name="category_id"
-            field_id="category_id"
-            field_name="category_name"
-            value={data_head.category_name}
-            data={
-              data_head.type_id
-                ? master_data.item_category.filter(
-                    (categ) => categ.type_id === data_head.type_id
-                  )
-                : master_data.item_category
-            }
+            placeholder={"Storage Condition"}
+            name="item_control_id"
+            field_id="item_control_id"
+            field_name="item_control_name"
+            value={data_head.item_control_name}
+            data={master_data.item_control}
             onChange={(data, option) => {
               data && data
                 ? upDateFormValue({
-                    category_id: option.data.category_id,
-                    category_name: option.data.category_name,
+                    item_control_id: option.data.item_control_id,
+                    item_control_name: option.data.item_control_name,
                   })
                 : upDateFormValue({
-                    category_id: null,
-                    category_name: null,
+                    item_control_id: null,
+                    item_control_name: null,
                   });
             }}
           />
@@ -162,41 +197,7 @@ const TabItemDetail = ({ key, master_data, data_head, upDateFormValue }) => {
             }
           />
         </Col>
-
         <Col span={2}></Col>
-        <Col span={3}>
-          <Text strong>
-            <span className="require">* </span>Storage Condition{" "}
-          </Text>
-        </Col>
-        <Col span={8}>
-          <CustomSelect
-            allowClear
-            // disabled={data_head.item_id ? 1 : 0}
-            showSearch
-            placeholder={"Storage Condition"}
-            name="item_control_id"
-            field_id="item_control_id"
-            field_name="item_control_name"
-            // value={data_head.type_name}
-            // data={master_data.item_type}
-            // onChange={(data, option) => {
-            //   data && data
-            //     ? upDateFormValue({
-            //         type_id: data,
-            //         type_name: option.title,
-            //         category_id: null,
-            //         category_name: null,
-            //       })
-            //     : upDateFormValue({
-            //         category_id: null,
-            //         category_name: null,
-            //       });
-            // }}
-          />
-        </Col>
-      </Row>
-      <Row className="col-2 row-margin-vertical">
         <Col span={3}>
           <Text strong>Item barcode</Text>
         </Col>

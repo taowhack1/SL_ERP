@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import {
@@ -13,6 +13,7 @@ import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 import SearchTable from "../../components/SearchTable";
 const Items = (props) => {
+  const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
@@ -82,6 +83,11 @@ const Items = (props) => {
       setLoading(false);
     }, 1200);
   }, [items]);
+
+  const redirect_to_view = (id) => {
+    history.push("/inventory/items/view/" + (id ? id : "new"));
+  };
+
   return (
     <div>
       <MainLayout {...config}>
@@ -106,10 +112,7 @@ const Items = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     keepLog.keep_log_action(record.item_no);
-                    dispatch(get_item_by_id(record.item_id));
-                    props.history.push({
-                      pathname: "/inventory/items/view/" + record.item_id,
-                    });
+                    dispatch(get_item_by_id(record.item_id, redirect_to_view));
                   },
                 };
               }}

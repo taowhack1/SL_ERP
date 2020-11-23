@@ -28,6 +28,7 @@ import {
 import moment from "moment";
 import { reducer } from "./reducers";
 import CustomSelect from "../../components/CustomSelect";
+import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
 const numberFormat = {
   precision: 3,
@@ -314,7 +315,7 @@ const SubDetail = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.receive_detail_sub_qty).format("0,0.000")}
+                    {convertDigit(line.receive_detail_sub_qty)}
                   </Text>
                 </Col>
                 <Col span={2} className="text-string">

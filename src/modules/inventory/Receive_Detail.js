@@ -37,6 +37,7 @@ import CustomSelect from "../../components/CustomSelect";
 import moment from "moment";
 import { get } from "jquery";
 import { get_location_shelf_by_item_id } from "../../actions/inventory";
+import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
 const numberFormat = {
   precision: 3,
@@ -216,14 +217,14 @@ const ReceiveDetail = ({
                     </Col>
                     <Col span={3} className="text-number">
                       <div className="total-number text-value">
-                        {numeral(line.po_detail_qty).format("0,0.000")}
+                        {convertDigit(line.po_detail_qty)}
                       </div>
                     </Col>
                     <Col span={3} className="text-number">
                       <div className="total-number text-value">
-                        {numeral(line.tg_receive_detail_qty_balance).format(
-                          "0,0.000"
-                        )}
+                        {convertDigit(
+                          line.tg_receive_detail_qty_balance
+                        ).format("0,0.000")}
                       </div>
                     </Col>
                     <Col span={3} className="text-number">
@@ -234,7 +235,7 @@ const ReceiveDetail = ({
                             : "total-number text-value"
                         }
                       >
-                        {numeral(line.tg_receive_detail_qty).format("0,0.000")}
+                        {convertDigit(line.tg_receive_detail_qty)}
                       </div>
                     </Col>
                     <Col span={2} className="text-string">
@@ -247,17 +248,17 @@ const ReceiveDetail = ({
                     </Col>
                     <Col span={2} className="text-number">
                       <div className="total-number text-value">
-                        {numeral(line.receive_detail_price).format("0,0.000")}
+                        {convertDigit(line.receive_detail_price)}
                       </div>
                     </Col>
                     {/* <Col span={2} className="text-number">
                   <div className="total-number text-value">
-                    {numeral(line.receive_detail_discount).format("0,0.000")}
+                    {convertDigit(line.receive_detail_discount) }
                   </div>
                 </Col>
                 <Col span={3} className="text-number text-value">
                   <div className="total-number">
-                    {numeral(line.receive_detail_total_price).format("0,0.000")}
+                    {convertDigit(line.receive_detail_total_price) }
                   </div>
                 </Col> */}
                     <Col span={3} className="text-number text-value">
@@ -324,14 +325,14 @@ const ReceiveDetail = ({
                     </Col>
                     <Col span={3} className="text-number">
                       <div className="total-number text-value">
-                        {numeral(line.po_detail_qty).format("0,0.000")}
+                        {convertDigit(line.po_detail_qty)}
                       </div>
                     </Col>
                     <Col span={3} className="text-number">
                       <div className="total-number text-value">
-                        {numeral(line.tg_receive_detail_qty_balance).format(
-                          "0,0.000"
-                        )}
+                        {convertDigit(
+                          line.tg_receive_detail_qty_balance
+                        ).format("0,0.000")}
                       </div>
                     </Col>
                     <Col span={3} className="text-number">
@@ -342,7 +343,7 @@ const ReceiveDetail = ({
                             : "total-number text-value"
                         }
                       >
-                        {numeral(line.tg_receive_detail_qty).format("0,0.000")}
+                        {convertDigit(line.tg_receive_detail_qty) }
                       </div> */}
                       <InputNumber
                         {...numberFormat}
@@ -397,7 +398,7 @@ const ReceiveDetail = ({
                     </Col>
                     <Col span={2} className="text-number">
                       {/* <div className="total-number text-value">
-                        {numeral(line.receive_detail_price).format("0,0.000")}
+                        {convertDigit(line.receive_detail_price) }
                       </div> */}
                       <InputNumber
                         {...numberFormat}
@@ -493,19 +494,19 @@ const ReceiveDetail = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.po_detail_qty).format("0,0.000")}
+                    {convertDigit(line.po_detail_qty)}
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.tg_receive_detail_qty_balance).format(
+                    {convertDigit(line.tg_receive_detail_qty_balance).format(
                       "0,0.000"
                     )}
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.tg_receive_detail_qty).format("0,0.000")}
+                    {convertDigit(line.tg_receive_detail_qty)}
                   </Text>
                 </Col>
                 <Col span={2} className="text-string">
@@ -513,17 +514,17 @@ const ReceiveDetail = ({
                 </Col>
                 <Col span={2} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.receive_detail_price).format("0,0.000")}
+                    {convertDigit(line.receive_detail_price)}
                   </Text>
                 </Col>
                 {/* <Col span={2} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.receive_detail_discount).format("0,0.000")}
+                    {convertDigit(line.receive_detail_discount) }
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view text-number">
-                    {numeral(line.receive_detail_total_price).format("0,0.000")}
+                    {convertDigit(line.receive_detail_total_price) }
                   </Text>
                 </Col> */}
                 <Col span={3} className="text-center">
@@ -599,7 +600,7 @@ const ReceiveDetail = ({
           <Col span={21}>
             <Text className="text-value">
               {temp_detail &&
-                numeral(temp_detail.tg_receive_detail_qty_balance).format(
+                convertDigit(temp_detail.tg_receive_detail_qty_balance).format(
                   "0,000.000"
                 ) + "  "}
             </Text>
@@ -623,15 +624,17 @@ const ReceiveDetail = ({
           <Col span={21}>
             {temp_detail && (
               <Text className="text-value">
-                {numeral(temp_detail.tg_receive_detail_qty).format("0,000.000")}
+                {convertDigit(temp_detail.tg_receive_detail_qty).format(
+                  "0,000.000"
+                )}
               </Text>
             )}
             {"  /  "}
             <Text strong>
               {temp_detail &&
-                numeral(temp_detail.tg_receive_detail_qty_balance_temp).format(
-                  "0,000.000"
-                ) + "  "}
+                convertDigit(
+                  temp_detail.tg_receive_detail_qty_balance_temp
+                ).format("0,000.000") + "  "}
             </Text>
             <Text strong>{temp_detail && temp_detail.uom_no}</Text>
           </Col>

@@ -6,10 +6,6 @@ export const api_receive = `${api_server}/api/inventory/receive`;
 export const api_receive_detail = `${api_server}/api/inventory/receive_detail`;
 export const api_receive_sub_detail = `${api_server}/api/inventory/receive_detail_sub/receive_detail`;
 
-export const api_get_item_type = `${api_server}/api/list/type`;
-export const api_get_item_category = `${api_server}/api/list/category`;
-export const api_get_item_uom = `${api_server}/api/list/uom`;
-export const api_get_item_identify_benefit = `${api_server}/api/list/identify_benefit`;
 export const api_issue = `${api_server}/api/inventory/issue`;
 export const api_issue_detail = `${api_server}/api/inventory/issue_detail`;
 
@@ -25,6 +21,12 @@ export const api_disburse_get_ref_issue_head = `${api_server}/api/list/po`;
 export const api_disburse_get_ref_issue_detail = `${api_server}/api/inventory/issue_detail/ref`;
 
 // item
+export const api_get_item_type = `${api_server}/api/list/type`;
+export const api_get_item_category = `${api_server}/api/list/category`;
+export const api_get_item_uom = `${api_server}/api/list/uom`;
+export const api_get_item_identify_benefit = `${api_server}/api/list/identify_benefit`;
+export const api_get_item_control = `${api_server}/api/list/item_control`;
+
 export const api_upload_file = `${api_server}/api/upload/item/file`;
 export const api_get_item_by_id = `${api_server}/api/inventory/item`;
 export const api_get_item_detail = `${api_server}/api/inventory/item_vendor`;

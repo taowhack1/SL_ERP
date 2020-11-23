@@ -23,15 +23,19 @@ import moment from "moment";
 const { TextArea } = Input;
 
 const TabBulkFormula = ({
-  key,
-  master_data,
   data_head,
+  readOnly,
   upDateFormValue,
-  data_detail,
-  detailDispatch,
+  data_formula_detail,
+  formulaDetailDispatch,
 }) => {
   const currency_list = useSelector(
     (state) => state.accounting.master_data.currency
+  );
+  const item_list = useSelector((state) =>
+    state.inventory.master_data.item_list.filter(
+      (item) => item.type_id === 1 || item.type_id === 3
+    )
   );
   return (
     <>
@@ -49,29 +53,26 @@ const TabBulkFormula = ({
                 placeholder="Effective Date"
                 required
                 value={
-                  data_detail.item_formula_effective_date
+                  data_head.item_formula_effective_date
                     ? moment(
-                        data_detail.item_formula_effective_date,
+                        data_head.item_formula_effective_date,
                         "DD/MM/YYYY"
                       )
                     : ""
                 }
                 defaultValue={
-                  data_detail.item_formula_effective_date
+                  data_head.item_formula_effective_date
                     ? moment(
-                        data_detail.item_formula_effective_date,
+                        data_head.item_formula_effective_date,
                         "DD/MM/YYYY"
                       )
                     : ""
                 }
                 onChange={(data) => {
-                  detailDispatch({
-                    type: "CHANGE_DETAIL_VALUE",
-                    payload: {
-                      item_formula_effective_date: data
-                        ? data.format("DD/MM/YYYY")
-                        : "",
-                    },
+                  upDateFormValue({
+                    item_formula_effective_date: data
+                      ? data.format("DD/MM/YYYY")
+                      : "",
                   });
                 }}
               />
@@ -83,9 +84,10 @@ const TabBulkFormula = ({
       <Row className="col-2 row-tab-margin-lg">
         <Col span={24}>
           <BulkFormula
-            readOnly={false}
-            detailDispatch={detailDispatch}
-            data_detail={data_detail}
+            readOnly={readOnly}
+            data_formula_detail={data_formula_detail}
+            formulaDetailDispatch={formulaDetailDispatch}
+            item_list={item_list}
           />
         </Col>
       </Row>

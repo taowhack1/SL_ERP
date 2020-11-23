@@ -17,10 +17,11 @@ import { useSelector } from "react-redux";
 import numeral from "numeral";
 import { item_qa_columns, item_qa_detail_fields } from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
+import { convertDigit } from "../../../include/js/main_config";
 
 const { Text } = Typography;
 
-const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
+const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
   const {
     test_case_subject,
     test_case_specification,
@@ -28,15 +29,15 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
   } = useSelector((state) => state.qa.qa_master_data);
   const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const addLine = () => {
-    detailDispatch({ type: "ADD_ROW", payload: item_qa_detail_fields });
+    qaDetailDispatch({ type: "ADD_ROW", payload: item_qa_detail_fields });
   };
 
   const delLine = (id) => {
-    detailDispatch({ type: "DEL_ROW", payload: { id: id } });
+    qaDetailDispatch({ type: "DEL_ROW", payload: { id: id } });
   };
 
   const onChangeValue = (rowId, data) => {
-    detailDispatch({
+    qaDetailDispatch({
       type: "CHANGE_DETAIL_VALUE",
       payload: {
         id: rowId,
@@ -44,19 +45,13 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
       },
     });
   };
-  console.log(data_detail);
+  console.log(data_qa_detail);
   return (
     <>
-      <Row
-        className="col-2 row-margin-vertical"
-        style={{
-          borderBottom: "1px solid #E5E5E5",
-          paddingBottom: 10,
-        }}
-      >
+      <Row className="col-2 row-margin-vertical  detail-tab-row">
         <Col span={24}>
           <Text strong className="detail-tab-header">
-            Test Case
+            QA Test Case
           </Text>
         </Col>
       </Row>
@@ -83,7 +78,7 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
       {!readOnly ? (
         <>
           {/* Edit Form */}
-          {data_detail.map((line, key) => (
+          {data_qa_detail.map((line, key) => (
             <Row
               key={line.id}
               style={{
@@ -170,13 +165,13 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
               </Col>
               <Col span={6} className="text-string">
                 <Input
-                  name="item_qa_detail_remark"
+                  name="item_qa_remark"
                   size="small"
                   placeholder={"Remark"}
                   onChange={(e) =>
-                    onChangeValue({ item_qa_detail_remark: e.target.value })
+                    onChangeValue(line.id, { item_qa_remark: e.target.value })
                   }
-                  value={line.item_qa_detail_remark}
+                  value={line.item_qa_remark}
                 />
               </Col>
 
@@ -200,7 +195,7 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
       ) : (
         <>
           {/* View Form */}
-          {data_detail.map((line, key) => (
+          {data_qa_detail.map((line, key) => (
             <Row
               key={line.item_vendor_id}
               style={{
@@ -218,15 +213,13 @@ const ItemQADetail = ({ data_detail, readOnly, detailDispatch }) => {
                 <Text>{line.item_vendor_lead_time}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>
-                  {numeral(line.item_vendor_min_qty).format("0,0.000")}
-                </Text>
+                <Text>{convertDigit(line.item_vendor_min_qty)}</Text>
               </Col>
               <Col span={2} className="text-string">
                 <Text>{line.uom_no}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{numeral(line.item_vendor_price).format("0,0.000")}</Text>
+                <Text>{convertDigit(line.item_vendor_price)}</Text>
               </Col>
               <Col span={5} className="text-number">
                 <Text>{line.item_vendor_remark}</Text>

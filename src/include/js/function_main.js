@@ -229,3 +229,14 @@ export const getRefStatus = ({
     }
   }
 };
+
+export const get_pre_run_no = (prev, index, value) => {
+  if ((index !== null || index !== undefined) && prev.length) {
+    let copy_run_no = prev;
+    if (index === 0) {
+      copy_run_no[1] = "--";
+    }
+    copy_run_no[index] = value;
+    return copy_run_no;
+  }
+};

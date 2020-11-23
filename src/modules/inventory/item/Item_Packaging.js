@@ -19,33 +19,41 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import numeral from "numeral";
 import {
+  item_filling_detail_fields,
   item_formula_columns,
   item_packaging_process_columns,
   item_qa_columns,
   item_qa_detail_fields,
 } from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
-import { numberFormat } from "../../../include/js/main_config";
-import ItemPreview from "./Item_Preview";
+import { convertDigit, numberFormat } from "../../../include/js/main_config";
+import ItemFileUpload from "./ItemFileUpload";
 
 const { Text } = Typography;
 
-const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
+const PackagingProcess = ({
+  data_filling_detail,
+  readOnly,
+  fillingDetailDispatch,
+}) => {
   const item_list = useSelector((state) =>
     state.inventory.master_data.item_list.filter(
       (item) => item.type_id === 1 || item.type_id === 3
     )
   );
   const addLine = () => {
-    detailDispatch({ type: "ADD_ROW", payload: item_qa_detail_fields });
+    fillingDetailDispatch({
+      type: "ADD_ROW",
+      payload: item_filling_detail_fields,
+    });
   };
 
   const delLine = (id) => {
-    detailDispatch({ type: "DEL_ROW", payload: { id: id } });
+    fillingDetailDispatch({ type: "DEL_ROW", payload: { id: id } });
   };
 
   const onChangeValue = (rowId, data) => {
-    detailDispatch({
+    fillingDetailDispatch({
       type: "CHANGE_DETAIL_VALUE",
       payload: {
         id: rowId,
@@ -61,7 +69,7 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
       url: require("./no_image.svg"),
     },
   ];
-  console.log(data_detail);
+  console.log(data_filling_detail);
   return (
     <>
       {/* Column Header */}
@@ -87,7 +95,7 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
       {!readOnly ? (
         <>
           {/* Edit Form */}
-          {data_detail.map((line, key) => (
+          {data_filling_detail.map((line, key) => (
             <Row
               key={line.id}
               style={{
@@ -114,12 +122,13 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
+                          item_id: option.data.item_id,
                           item_no: option.data.item_no,
                           item_name: option.data.item_name,
                           item_image: option.data.item_image,
                         })
                       : onChangeValue(line.id, {
-                          item_no: null,
+                          item_id: null,
                           item_name: null,
                           item_image: null,
                           packaging_item_qty: 0,
@@ -143,11 +152,13 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
+                          item_id: option.data.item_id,
                           item_no: option.data.item_no,
                           item_name: option.data.item_name,
                           item_image: option.data.item_image,
                         })
                       : onChangeValue(line.id, {
+                          item_id: option.data.item_id,
                           item_no: null,
                           item_name: null,
                           item_image: null,
@@ -162,15 +173,15 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
                   {...numberFormat}
                   size="small"
                   className={"filling-process-input"}
-                  name="packaging_item_qty"
+                  name="item_filling_process_qty"
                   placeholder="Qty. / pcs"
-                  value={line.packaging_item_qty}
+                  value={line.item_filling_process_qty}
                   defaultValue={0.0}
                   min={0.0}
                   step={1.0}
                   onChange={(data) => {
                     onChangeValue(line.id, {
-                      packaging_item_qty: data,
+                      item_filling_process_qty: data,
                     });
                   }}
                   style={{ width: "100%" }}
@@ -185,37 +196,44 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
                   size="small"
                   className={"filling-process-input"}
                   placeholder={"Method"}
-                  name="packaging_method"
-                  field_id="packaging_method"
-                  field_name="packaging_method"
-                  value={line.packaging_method}
+                  name="item_filling_process_method"
+                  field_id="item_filling_process_method"
+                  field_name="item_filling_process_method"
+                  value={line.item_filling_process_method}
                   data={[]}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
-                          packaging_method: option.data.packaging_method,
+                          item_filling_process_method:
+                            option.data.item_filling_process_method,
                         })
                       : onChangeValue(line.id, {
-                          packaging_method: null,
+                          item_filling_process_method: null,
                         });
                   }}
                 />
               </Col>
               <Col span={6} className="text-string">
                 <Input
-                  name="packaging_method_remark"
+                  name="item_filling_process_remark"
                   size="small"
                   className={"filling-process-input"}
                   placeholder={"Remark"}
                   onChange={(e) =>
-                    onChangeValue({ packaging_method_remark: e.target.value })
+                    onChangeValue(line.id, {
+                      item_filling_process_remark: e.target.value,
+                    })
                   }
-                  value={line.packaging_method_remark}
+                  value={line.item_filling_process_remark}
                 />
               </Col>
               <Col span={3} className="text-center">
                 {/* Item Image */}
-                <ItemPreview fileList={test_image} readOnly={true} />
+                <ItemFileUpload
+                  fileList={test_image}
+                  readOnly={true}
+                  upload_type={"View"}
+                />
                 {/* <div className="input-center-disabled">
                   <EyeOutlined
                     className="button-icon"
@@ -246,7 +264,7 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
       ) : (
         <>
           {/* View Form */}
-          {data_detail.map((line, key) => (
+          {data_filling_detail.map((line, key) => (
             <Row
               key={line.item_vendor_id}
               style={{
@@ -264,15 +282,13 @@ const PackagingProcess = ({ data_detail, readOnly, detailDispatch }) => {
                 <Text>{line.item_vendor_lead_time}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>
-                  {numeral(line.item_vendor_min_qty).format("0,0.000")}
-                </Text>
+                <Text>{convertDigit(line.item_vendor_min_qty)}</Text>
               </Col>
               <Col span={2} className="text-string">
                 <Text>{line.uom_no}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{numeral(line.item_vendor_price).format("0,0.000")}</Text>
+                <Text>{convertDigit(line.item_vendor_price)}</Text>
               </Col>
               <Col span={5} className="text-number">
                 <Text>{line.item_vendor_remark}</Text>

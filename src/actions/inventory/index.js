@@ -20,6 +20,7 @@ import {
   api_get_lot_batch_by_item_id_shelf,
   api_shelf,
   get_stock_on_hand,
+  api_get_item_control,
 } from "../../include/js/api";
 
 export const getMasterDataItem = () => async (dispatch) => {
@@ -33,6 +34,7 @@ export const getMasterDataItem = () => async (dispatch) => {
     );
     const get_item = axios.get(api_get_item_list, header_config);
     const get_shelf = axios.get(api_shelf, header_config);
+    const get_item_control = axios.get(api_get_item_control, header_config);
     let master_data = {
       item_type: await get_type.then((res) => {
         return res.data[0];
@@ -44,6 +46,9 @@ export const getMasterDataItem = () => async (dispatch) => {
         return res.data[0];
       }),
       item_benefit: await get_benefit.then((res) => {
+        return res.data[0];
+      }),
+      item_control: await get_item_control.then((res) => {
         return res.data[0];
       }),
       item_list: await get_item.then((res) => {

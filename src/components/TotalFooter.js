@@ -1,6 +1,7 @@
 import React from "react";
 import numeral from "numeral";
 import { Row, Col, Typography } from "antd";
+import { convertDigit } from "../include/js/main_config";
 const { Text } = Typography;
 
 const TotalFooter = ({ excludeVat, vat, includeVat, currency = "THB" }) => {
@@ -15,7 +16,7 @@ const TotalFooter = ({ excludeVat, vat, includeVat, currency = "THB" }) => {
         </Col>
         <Col span={3} className="text-number">
           <Text className="text-view">
-            {numeral(excludeVat ? excludeVat : 0).format("0,0.000")}
+            {convertDigit(excludeVat ? excludeVat : 0)}
           </Text>
         </Col>
         <Col span={1} className="text-string">
@@ -29,9 +30,7 @@ const TotalFooter = ({ excludeVat, vat, includeVat, currency = "THB" }) => {
           <Text strong>Vat :</Text>
         </Col>
         <Col span={3} className="text-number">
-          <Text className="text-view">
-            {numeral(vat ? vat : 0).format("0,0.000")}
-          </Text>
+          <Text className="text-view">{convertDigit(vat ? vat : 0)}</Text>
         </Col>
         <Col span={1} className="text-string">
           <Text strong> {currency}</Text>
@@ -53,7 +52,7 @@ const TotalFooter = ({ excludeVat, vat, includeVat, currency = "THB" }) => {
         </Col>
         <Col span={3} className="text-number">
           <Text className="text-view">
-            {numeral(includeVat ? includeVat : 0).format("0,0.000")}
+            {convertDigit(includeVat ? includeVat : 0)}
           </Text>
         </Col>
         <Col span={1} className="text-string">

@@ -13,6 +13,7 @@ import { issue_detail_fields, issue_detail_columns } from "./config";
 import CustomSelect from "../../components/CustomSelect";
 import numeral from "numeral";
 import ModalSelectItem from "./Modal_Select_Item";
+import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
 
 const numberFormat = {
@@ -325,7 +326,7 @@ const IssueDetail = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view">
-                    {numeral(line.issue_detail_qty).format("0,0.000")}
+                    {convertDigit(line.issue_detail_qty)}
                   </Text>
                 </Col>
                 <Col span={3} className="text-string">

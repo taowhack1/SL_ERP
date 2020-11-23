@@ -136,7 +136,7 @@ export const upDateItem = (
   }
 };
 
-export const get_item_by_id = (item_id) => async (dispatch) => {
+export const get_item_by_id = (item_id, redirect) => async (dispatch) => {
   console.log("get_item_by_id");
 
   try {
@@ -150,20 +150,28 @@ export const get_item_by_id = (item_id) => async (dispatch) => {
         `${api_get_item_detail}/${item_id}`,
         header_config
       );
-      const item = {
-        item_head:
-          res_head &&
-          (await res_head.then((res) => {
-            return res.data[0][0];
-          })),
-        item_detail:
-          res_detail &&
-          (await res_detail.then((res) => {
-            return res.data[0];
-          })),
-      };
-      console.log(`GET_ITEM_BY_ID ${item_id}`, item);
-      await dispatch({ type: GET_ITEM_BY_ID, payload: item });
+      Promise.allSettled([res_head, res_detail]).then((data) => {
+        console.log("Promise.allSettled", data);
+        // const item = {
+        //   item_head:
+        //     res_head &&
+        //     (await res_head.then((res) => {
+        //       return res.data[0][0];
+        //     })),
+        //   item_detail:
+        //     res_detail &&
+        //     (await res_detail.then((res) => {
+        //       return res.data[0];
+        //     })),
+        // };
+        const item = {
+          item_head: data[0].value.data[0][0],
+          item_detail: data[1].value.data[0][0],
+        };
+        console.log(`GET_ITEM_BY_ID ${item_id}`, item);
+        dispatch({ type: GET_ITEM_BY_ID, payload: item });
+        item.item_head && redirect(item_id);
+      });
     }
   } catch (error) {
     console.log(error);
