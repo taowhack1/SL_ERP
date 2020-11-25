@@ -29,9 +29,18 @@ export const api_get_item_control = `${api_server}/api/list/item_control`;
 
 export const api_upload_file = `${api_server}/api/upload/item/file`;
 export const api_get_item_by_id = `${api_server}/api/inventory/item`;
-export const api_get_item_detail = `${api_server}/api/inventory/item_vendor`;
 export const api_get_location_shelf_by_item_id = `${api_server}/api/list/location/shelf`;
 export const api_get_lot_batch_by_item_id_shelf = `${api_server}/api/list/lot_no/batch`;
+// item -> vendor
+export const api_item_vendor = `${api_server}/api/inventory/item_vendor`;
+// item -> formula
+export const api_item_formula = `${api_server}/api/inventory/item_formula`;
+// item -> qa
+export const api_item_qa = `${api_server}/api/inventory/item_qa`;
+// item -> weight
+export const api_item_weight = `${api_server}/api/inventory/item_weight`;
+// item -> filling
+export const api_item_filling_process = `${api_server}/api/inventory/item_filling_process`;
 
 //qc
 export const api_qc_receive_list = `${api_server}/api/qa/qc/item`;

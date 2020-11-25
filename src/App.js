@@ -71,8 +71,6 @@ const initialContext = {
 // class App extends Component {
 const App = (props) => {
   const [context, setContext] = useState(initialContext);
-
-  console.log(context);
   useEffect(() => {
     context.log_detail.user_name && keep_log(context);
   }, [context]);

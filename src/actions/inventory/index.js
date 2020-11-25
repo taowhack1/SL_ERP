@@ -23,9 +23,13 @@ import {
   api_get_item_control,
 } from "../../include/js/api";
 
-export const getMasterDataItem = () => async (dispatch) => {
+export const getMasterDataItem = (user) => async (dispatch) => {
   try {
-    const get_type = axios.get(`${api_get_item_type}`, header_config);
+    const user_name = user ?? "";
+    const get_type = axios.get(
+      `${api_get_item_type}/${user_name}`,
+      header_config
+    );
     const get_categoty = axios.get(`${api_get_item_category}`, header_config);
     const get_uom = axios.get(`${api_get_item_uom}`, header_config);
     const get_benefit = axios.get(

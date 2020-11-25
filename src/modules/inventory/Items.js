@@ -17,6 +17,7 @@ const Items = (props) => {
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
+  const auth = useSelector((state) => state.auth.authData);
   const current_menu = useSelector((state) => state.auth.currentMenu);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
@@ -81,6 +82,9 @@ const Items = (props) => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      return () => {
+        clearTimeout();
+      };
     }, 1200);
   }, [items]);
 
@@ -112,7 +116,13 @@ const Items = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     keepLog.keep_log_action(record.item_no);
-                    dispatch(get_item_by_id(record.item_id, redirect_to_view));
+                    dispatch(
+                      get_item_by_id(
+                        record.item_id,
+                        auth.user_name,
+                        redirect_to_view
+                      )
+                    );
                   },
                 };
               }}

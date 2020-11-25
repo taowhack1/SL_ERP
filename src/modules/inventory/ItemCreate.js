@@ -37,6 +37,7 @@ import {
 import {
   item_detail_fields,
   item_fields,
+  item_file,
   item_filling_detail_fields,
   item_formula_detail_fields,
   item_qa_detail_fields,
@@ -81,13 +82,14 @@ const ItemCreate = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
+
+  const auth = useSelector((state) => state.auth.authData);
   useEffect(() => {
-    dispatch(getMasterDataItem());
+    dispatch(getMasterDataItem(auth.user_name));
 
     dispatch(get_all_vendor());
   }, []);
 
-  const auth = useSelector((state) => state.auth.authData);
   const data = props.location.state ? props.location.state : 0;
 
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
@@ -108,27 +110,76 @@ const ItemCreate = (props) => {
     reducer,
     initialStateFilling
   );
-  const [fileList, setFileList] = useState([]);
+  const [data_file, setFile] = useState({
+    item_image: null,
+    certificate: {
+      2: null,
+      3: null,
+      4: null,
+      5: null,
+      6: null,
+    },
+  });
 
   useEffect(() => {
     dispatch(get_sale_master_data());
     headDispatch({
       type: "SET_HEAD",
-      payload: data.data_head
-        ? { ...data.data_head, commit: 1, user_name: auth.user_name }
-        : { ...item_fields, commit: 1, user_name: auth.user_name },
+      payload:
+        data && data.data_head
+          ? { ...data.data_head, commit: 1, user_name: auth.user_name }
+          : { ...item_fields, commit: 1, user_name: auth.user_name },
     });
 
     detailDispatch({
       type: "SET_DETAIL",
-      payload: data.data_detail ? data.data_detail : [item_detail_fields],
+      payload:
+        data && data.data_detail.length
+          ? data.data_detail
+          : [item_detail_fields],
     });
+    formulaDetailDispatch({
+      type: "SET_DETAIL",
+      payload:
+        data && data.data_formula_detail.length
+          ? data.data_formula_detail
+          : [item_formula_detail_fields],
+    });
+    qaDetailDispatch({
+      type: "SET_DETAIL",
+      payload:
+        data && data.data_qa_detail.length
+          ? data.data_qa_detail
+          : [item_qa_detail_fields],
+    });
+    weightDetailDispatch({
+      type: "SET_DETAIL",
+      payload:
+        data && data.data_weight_detail.length
+          ? data.data_weight_detail
+          : item_weight_detail,
+    });
+    fillingDetailDispatch({
+      type: "SET_DETAIL",
+      payload:
+        data && data.data_filling_detail.length
+          ? data.data_filling_detail
+          : [item_filling_detail_fields],
+    });
+    setFile(data.data_file ?? item_file);
   }, []);
 
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
-
+  const updateFile = (data, type) => {
+    type === 1
+      ? setFile({ ...data_file, ...data })
+      : setFile({
+          ...data_file,
+          certificate: { ...data_file.certificate, ...data },
+        });
+  };
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -157,29 +208,47 @@ const ItemCreate = (props) => {
       console.log("SAVE FORMULA", data_formula_detail);
       console.log("SAVE WEIGHT", data_weight_detail);
       console.log("SAVE FILLING", data_filling_detail);
-      // const validate = validateFormHead(data_head, item_require_fields);
-      // if (validate.validate) {
-      //   console.log("pass");
-      //   data_head.item_id
-      //     ? dispatch(
-      //         upDateItem(
-      //           data_head.item_id,
-      //           data_head,
-      //           data_detail,
-      //           fileList,
-      //           redirect_to_view
-      //         )
-      //       )
-      //     : dispatch(
-      //         createNewItems(data_head, data_detail, fileList, redirect_to_view)
-      //       );
-      // } else {
-      //   message.warning({
-      //     content: "Please fill your form completely.",
-      //     key,
-      //     duration: 2,
-      //   });
-      // }
+      const validate = validateFormHead(data_head, item_require_fields);
+      // const validate = {
+      //   validate: true,
+      // };
+
+      if (validate.validate) {
+        const data = {
+          access_right: {
+            vendor: true,
+            formula: true,
+            qa: true,
+            weight: true,
+            filling_process: true,
+            attach_file: true,
+          },
+          data_head: data_head,
+          data_detail: data_detail,
+          data_formula_detail: data_formula_detail,
+          data_qa_detail: data_qa_detail,
+          data_weight_detail: data_weight_detail,
+          data_filling_detail: data_filling_detail,
+          data_file: data_file,
+        };
+        console.log("validate pass");
+        data_head.item_id
+          ? dispatch(
+              upDateItem(
+                data_head.item_id,
+                data,
+                auth.user_name,
+                redirect_to_view
+              )
+            )
+          : dispatch(createNewItems(data, auth.user_name, redirect_to_view));
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -200,7 +269,12 @@ const ItemCreate = (props) => {
     data_head.type_id && dispatch(get_qa_test_case_master(data_head.type_id));
   }, [data_head.type_id]);
 
-  console.log("data_head", data_head);
+  console.log("SAVE HEAD", data_head);
+  console.log("SAVE DETAIL", data_detail);
+  console.log("SAVE QA", data_qa_detail);
+  console.log("SAVE FORMULA", data_formula_detail);
+  console.log("SAVE WEIGHT", data_weight_detail);
+  console.log("SAVE FILLING", data_filling_detail);
   return (
     <MainLayout {...config} data={data_head}>
       <div id="form">
@@ -213,7 +287,7 @@ const ItemCreate = (props) => {
               {data_head.item_no ? (
                 <strong>Item Code # {data_head.item_no}</strong>
               ) : (
-                <strong>
+                <strong style={{ color: "#FF8C00" }}>
                   Pre-Running Item Code : [{data_head.item_pre_run_no.join("")}]
                 </strong>
               )}
@@ -287,10 +361,10 @@ const ItemCreate = (props) => {
           <Col span={4}>
             <div>
               <ItemFileUpload
-                fileList={fileList}
+                data_file={data_file}
+                updateFile={updateFile}
                 readOnly={false}
                 maxFile={1}
-                setFileList={setFileList}
                 file_type_id={1}
                 upload_type={"Card"}
               />
@@ -301,6 +375,8 @@ const ItemCreate = (props) => {
         <Row className="col-2 row-tab-margin">
           <Col span={24}>
             <TabPanel
+              data_file={data_file}
+              updateFile={updateFile}
               data_head={data_head}
               headDispatch={headDispatch}
               data_detail={data_detail}
@@ -319,7 +395,7 @@ const ItemCreate = (props) => {
           </Col>
         </Row>
       </div>
-      <Comments data={dataComments} />
+      <Comments data={[]} />
     </MainLayout>
   );
 };

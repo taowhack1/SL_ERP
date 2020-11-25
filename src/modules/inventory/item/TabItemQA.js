@@ -22,9 +22,6 @@ const TabItemQA = ({
   data_qa_detail,
   qaDetailDispatch,
 }) => {
-  const currency_list = useSelector(
-    (state) => state.accounting.master_data.currency
-  );
   return (
     <>
       <ItemQADetail

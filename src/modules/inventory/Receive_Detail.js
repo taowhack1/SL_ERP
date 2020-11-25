@@ -222,9 +222,7 @@ const ReceiveDetail = ({
                     </Col>
                     <Col span={3} className="text-number">
                       <div className="total-number text-value">
-                        {convertDigit(
-                          line.tg_receive_detail_qty_balance
-                        ).format("0,0.000")}
+                        {convertDigit(line.tg_receive_detail_qty_balance)}
                       </div>
                     </Col>
                     <Col span={3} className="text-number">
@@ -330,9 +328,7 @@ const ReceiveDetail = ({
                     </Col>
                     <Col span={3} className="text-number">
                       <div className="total-number text-value">
-                        {convertDigit(
-                          line.tg_receive_detail_qty_balance
-                        ).format("0,0.000")}
+                        {convertDigit(line.tg_receive_detail_qty_balance)}
                       </div>
                     </Col>
                     <Col span={3} className="text-number">
@@ -499,9 +495,7 @@ const ReceiveDetail = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <Text className="text-view text-number">
-                    {convertDigit(line.tg_receive_detail_qty_balance).format(
-                      "0,0.000"
-                    )}
+                    {convertDigit(line.tg_receive_detail_qty_balance)}
                   </Text>
                 </Col>
                 <Col span={3} className="text-number">
@@ -600,9 +594,7 @@ const ReceiveDetail = ({
           <Col span={21}>
             <Text className="text-value">
               {temp_detail &&
-                convertDigit(temp_detail.tg_receive_detail_qty_balance).format(
-                  "0,000.000"
-                ) + "  "}
+                convertDigit(temp_detail.tg_receive_detail_qty_balance)}
             </Text>
             <Text className="text-value">
               {temp_detail && temp_detail.uom_no}
@@ -624,17 +616,13 @@ const ReceiveDetail = ({
           <Col span={21}>
             {temp_detail && (
               <Text className="text-value">
-                {convertDigit(temp_detail.tg_receive_detail_qty).format(
-                  "0,000.000"
-                )}
+                {convertDigit(temp_detail.tg_receive_detail_qty)}
               </Text>
             )}
             {"  /  "}
             <Text strong>
               {temp_detail &&
-                convertDigit(
-                  temp_detail.tg_receive_detail_qty_balance_temp
-                ).format("0,000.000") + "  "}
+                convertDigit(temp_detail.tg_receive_detail_qty_balance_temp)}
             </Text>
             <Text strong>{temp_detail && temp_detail.uom_no}</Text>
           </Col>

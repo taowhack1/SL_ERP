@@ -36,6 +36,9 @@ const PackagingProcess = ({
   readOnly,
   fillingDetailDispatch,
 }) => {
+  const test_case_method = useSelector(
+    (state) => state.qa.qa_master_data.test_case_method
+  );
   const item_list = useSelector((state) =>
     state.inventory.master_data.item_list.filter(
       (item) => item.type_id === 1 || item.type_id === 3
@@ -196,19 +199,20 @@ const PackagingProcess = ({
                   size="small"
                   className={"filling-process-input"}
                   placeholder={"Method"}
-                  name="item_filling_process_method"
-                  field_id="item_filling_process_method"
-                  field_name="item_filling_process_method"
-                  value={line.item_filling_process_method}
-                  data={[]}
+                  name="qa_method_id"
+                  field_id="qa_method_id"
+                  field_name="qa_method_name"
+                  value={line.qa_method_name}
+                  data={test_case_method}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
-                          item_filling_process_method:
-                            option.data.item_filling_process_method,
+                          qa_method_id: option.data.qa_method_id,
+                          qa_method_name: option.data.qa_method_name,
                         })
                       : onChangeValue(line.id, {
-                          item_filling_process_method: null,
+                          qa_method_id: null,
+                          qa_method_name: null,
                         });
                   }}
                 />
@@ -229,19 +233,11 @@ const PackagingProcess = ({
               </Col>
               <Col span={3} className="text-center">
                 {/* Item Image */}
-                <ItemFileUpload
+                {/* <ItemFileUpload
                   fileList={test_image}
                   readOnly={true}
                   upload_type={"View"}
-                />
-                {/* <div className="input-center-disabled">
-                  <EyeOutlined
-                    className="button-icon"
-                    title="View Image"
-                    onClick={() => console.log("View Image")}
-                  />
-                  View
-                </div> */}
+                /> */}
               </Col>
 
               <Col span={1} style={{ textAlign: "center" }}>
@@ -266,7 +262,7 @@ const PackagingProcess = ({
           {/* View Form */}
           {data_filling_detail.map((line, key) => (
             <Row
-              key={line.item_vendor_id}
+              key={line.id}
               style={{
                 marginBottom: 0,
                 border: "1px solid white",
@@ -275,23 +271,24 @@ const PackagingProcess = ({
               gutter={6}
               className="col-2"
             >
-              <Col span={7} className="text-string">
-                <Text>{line.vendor_no_name}</Text>
+              <Col span={3} className="text-center">
+                <Text>{line.item_no}</Text>
+              </Col>
+              <Col span={5} className="text-string">
+                <Text>{line.item_name}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{line.item_vendor_lead_time}</Text>
+                <Text>{convertDigit(line.item_filling_process_qty)}</Text>
               </Col>
-              <Col span={3} className="text-number">
-                <Text>{convertDigit(line.item_vendor_min_qty)}</Text>
+              <Col span={3} className="text-string">
+                <Text>{line.qa_method_name}</Text>
               </Col>
-              <Col span={2} className="text-string">
-                <Text>{line.uom_no}</Text>
+              <Col span={6} className="text-string">
+                <Text>{line.item_filling_process_remark}</Text>
               </Col>
-              <Col span={3} className="text-number">
-                <Text>{convertDigit(line.item_vendor_price)}</Text>
-              </Col>
+
               <Col span={5} className="text-number">
-                <Text>{line.item_vendor_remark}</Text>
+                {/* <Text>{line.item_vendor_remark}</Text> */}
               </Col>
             </Row>
           ))}

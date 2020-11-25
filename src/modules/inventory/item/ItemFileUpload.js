@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Upload, Modal, Space, Button } from "antd";
 import { EyeOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { api_server } from "../../../include/js/main_config";
+import Text from "antd/lib/typography/Text";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -10,89 +12,139 @@ function getBase64(file) {
     reader.onerror = (error) => reject(error);
   });
 }
-
+const uploadButton = (
+  <div>
+    <PlusOutlined />
+    <div style={{ marginTop: 8 }}>Upload</div>
+  </div>
+);
 const ItemFileUpload = ({
-  imageFile,
-  fileList,
+  data_file,
+  updateFile,
   readOnly,
   maxFile,
-  setFileList,
   file_type_id,
+
   upload_type,
   chkbox_upload_fields,
 }) => {
+  const saveFile = (file_type_id, file_tmp) => {
+    if (file_type_id === 1) {
+      console.log("File State 3");
+      updateFile({ item_image: file_tmp }, file_type_id);
+    } else {
+      console.log("File State 3");
+      updateFile({ [file_type_id]: file_tmp }, file_type_id);
+    }
+  };
+  console.log("ItemFileUpload[data_file] : ", data_file);
   const [state, setState] = useState({
     previewVisible: false,
     previewImage: "",
     previewTitle: "",
   });
+  const { previewVisible, previewImage, previewTitle } = state;
   const handleCancel = () => setState({ ...state, previewVisible: false });
-  const handleChange = ({ fileList }) =>
-    setFileList(
-      fileList.map((file) => {
-        let file_temp = file;
-        file.status = "done";
-        return file_temp;
-      })
-    );
+  const handleChange = async ({ file, fileList }) => {
+    const reader = new FileReader();
+    console.log("handleChange ", file, fileList);
+    let file_tmp = null;
+    console.log("File State 1");
+    if (fileList.length) {
+      file_tmp = file;
+      // file_tmp = fileList[0];
+      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        console.log("File State 2");
+        console.log(e);
+        file_tmp.uid = file.uid;
+        file_tmp.thumbUrl = e.target.result;
+        file_tmp.url = e.target.result;
+        // file_tmp.url = e.target.result;
+        file_tmp.file = e.target.result;
+        file_tmp.commit = 1;
+        file_tmp.file_type_id = file_type_id;
+        console.log("File State 3");
+        saveFile(file_type_id, file_tmp);
+      };
+    } else {
+      saveFile(file_type_id, file_tmp);
+    }
+  };
+
   const handlePreview = async (file) => {
     console.log(file);
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
+    if (file.item_file_original_type) {
+      if (file.item_file_original_type.includes("image")) {
+        setState({
+          previewImage: file.url || file.preview,
+          previewVisible: true,
+          previewTitle:
+            file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
+        });
+      } else {
+        const link = document.createElement("a");
+        link.href = file.url;
+        link.setAttribute("download", file.item_file_original_name); //or any other extension
+        link.setAttribute("target", "_blank"); //or any other extension
 
-    setState({
-      previewImage: file.url || file.preview,
-      previewVisible: true,
-      previewTitle:
-        file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
-    });
+        document.body.appendChild(link);
+        link.click();
+      }
+    } else {
+      setState({
+        previewImage: file.url || file.preview,
+        previewVisible: true,
+        previewTitle:
+          file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
+      });
+    }
   };
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
-  const { previewVisible, previewImage, previewTitle } = state;
+
   const uploadConfig = {
     beforeUpload: (file, file_list) => {
-      console.log("beforeUpload", file);
-      // let files = [];
-
-      // setFileList([...fileList, file]);
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (e) => {
-        console.log(e.target);
-        file.thumbUrl = e.target.result;
-        file.file = e.target.result;
-        file.user_name = "2563002";
-        file.commit = 1;
-        // file.file_type_id = file_type_id;
-        // files.push(file);
-        setFileList([file]);
-      };
+      console.log("Before Upload");
       return false;
     },
+    onChange: handleChange,
+    showUploadList: {
+      showDownloadIcon: true,
+      downloadIcon: "download ",
+    },
   };
-  console.log("ItemFileUpload.js", fileList);
-  const get_file_render_by_type = (upload_type = "Button") => {
+
+  const get_file_render_by_type = (upload_type, data_file) => {
+    console.log(data_file, data_file.item_image);
+    let file_temp = [];
+    switch (file_type_id) {
+      case 1:
+        file_temp = data_file.item_image ? [data_file.item_image] : [];
+        break;
+      default:
+        file_temp = data_file.certificate[file_type_id]
+          ? [data_file.certificate[file_type_id]]
+          : [];
+        break;
+    }
+    console.log(`file_temp[${file_type_id}]`, file_temp);
     switch (upload_type) {
       case "Card":
         return (
-          <Upload
-            {...uploadConfig}
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            listType="picture-card"
-            className="avatar-uploader"
-            fileList={fileList}
-            disabled={readOnly}
-            onPreview={handlePreview}
-            onChange={handleChange}
-          >
-            {fileList.length >= maxFile ? null : uploadButton}
-          </Upload>
+          <>
+            <Upload
+              {...uploadConfig}
+              listType="picture-card"
+              className="avatar-uploader"
+              fileList={file_temp}
+              disabled={readOnly}
+              onPreview={handlePreview}
+            >
+              {file_temp.length ? null : uploadButton}
+            </Upload>
+          </>
         );
       case "View":
         return (
@@ -101,7 +153,7 @@ const ItemFileUpload = ({
               <EyeOutlined
                 className="button-icon"
                 title="View Image"
-                onClick={() => handlePreview(fileList)}
+                onClick={() => handlePreview(file_temp)}
               />
               View
             </Space>
@@ -110,14 +162,48 @@ const ItemFileUpload = ({
       case "Button":
         return (
           <>
-            <Upload>
-              <Button
-                icon={<UploadOutlined />}
-                disabled={chkbox_upload_fields ? 0 : 1}
+            {readOnly ? (
+              chkbox_upload_fields &&
+              (file_temp[0].item_file_path ? (
+                <Upload
+                  {...uploadConfig}
+                  fileList={file_temp}
+                  disabled={readOnly}
+                  onPreview={handlePreview}
+                >
+                  {readOnly ||
+                  (file_temp.length && file_temp[0].item_file_path) ? null : (
+                    <Button
+                      icon={<UploadOutlined />}
+                      disabled={chkbox_upload_fields ? 0 : 1}
+                    >
+                      Click to upload
+                    </Button>
+                  )}
+                </Upload>
+              ) : (
+                <Text className="text-view">No file.</Text>
+              ))
+            ) : (
+              <Upload
+                {...uploadConfig}
+                fileList={file_temp[0] && file_temp[0].name ? file_temp : []}
+                disabled={readOnly}
+                onPreview={handlePreview}
               >
-                Click to upload
-              </Button>
-            </Upload>
+                {readOnly ||
+                (file_temp.length &&
+                  file_temp[0] &&
+                  file_temp[0].name) ? null : (
+                  <Button
+                    icon={<UploadOutlined />}
+                    disabled={chkbox_upload_fields ? 0 : 1}
+                  >
+                    Click to upload
+                  </Button>
+                )}
+              </Upload>
+            )}
           </>
         );
       default:
@@ -126,7 +212,7 @@ const ItemFileUpload = ({
   };
   return (
     <>
-      {get_file_render_by_type(upload_type)}
+      {get_file_render_by_type(upload_type, data_file ?? [])}
       <Modal
         visible={previewVisible}
         title={previewTitle}
@@ -139,4 +225,4 @@ const ItemFileUpload = ({
   );
 };
 
-export default React.memo(ItemFileUpload);
+export default ItemFileUpload;

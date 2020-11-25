@@ -4,68 +4,56 @@ import React from "react";
 import { api_upload_file } from "../../include/js/api";
 import { header_config } from "../../include/js/main_config";
 
-export const item_save_file = async (files, item_id) => {
-  // const reader = new FileReader();
-  const formData = new FormData();
-  // console.log("item_save_file", files);
-
-  // const handleFiles = (files) => {
-  //   let photosArr = [];
-  //   let filesUploadArr = [];
-  //   for (let file of files) {
-  //     let reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.addEventListener("load", () => {
-  //       let fileobj = {
-  //         name: file.name,
-  //         type: file.type,
-  //         size: file.size,
-  //         src: reader.result,
-  //       };
-  //       photosArr.push(fileobj);
-  //       filesUploadArr.push(file);
-  //       setFilesUpload([...filesUpload, ...filesUploadArr]);
-  //     });
-  //   }
-  // };
-
+export const item_save_file = (item_id, files) => {
   try {
-    console.log(files[0]);
-    // reader.readAsDataURL(files[0]);
-    formData.append("file", files[0]);
-    formData.append("user_name", files[0].user_name);
-    formData.append("commit", 1);
-    formData.append("file_type_id", files[0].file_type_id);
-    formData.append("item_file_remark", "");
-    // console.log("formData", formData.entries());
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
-    const upload_res = await axios.post(
-      `${api_upload_file}/${item_id}`,
-      formData
-    );
-    console.log(upload_res);
-    if (upload_res.data) {
-      message.error({
-        content: "Upload file sucess",
-        key: "success",
-        duration: 2,
+    const file_temp = files.item_image;
+    const file_temp2 = Object.values(files.certificate);
+    file_temp2.unshift(file_temp);
+    console.log("file_temp", file_temp2);
+    file_temp2
+      .filter((file) => file && file !== null && file !== undefined)
+      .forEach(async (file) => {
+        const formData = new FormData();
+
+        formData.append("file", file);
+        formData.append("user_name", file.user_name);
+        formData.append("commit", 1);
+        formData.append("file_type_id", file.file_type_id);
+        formData.append("item_file_remark", "");
+        if (
+          !file.commit ||
+          !file.commit === undefined ||
+          file.commit === null
+        ) {
+          return false;
+        } else {
+          return axios
+            .post(`${api_upload_file}/${item_id}`, formData)
+            .then((res) => {
+              console.log("Uploaded.", file.file_type_id, res);
+            });
+        }
+        // const upload_res = await axios.post(
+        //   `${api_upload_file}/${item_id}`,
+        //   formData
+        // );
+        // if (upload_res.data) {
+        //   console.log("Uploaded.", file.file_type_id);
+        // } else {
+        //   console.log(
+        //     "Somethings went wrong ! ",
+        //     upload_res,
+        //     file.file_type_id
+        //   );
+        // }
       });
-    } else {
-      console.log("Somethings went wrong ! ", upload_res);
-    }
   } catch (error) {
-    error.response.status === 500
-      ? message.error({
-          content: "Missing some file data. \n" + error,
-          key: "error",
-          duration: 3,
-        })
-      : message.error({
-          content: "Somethings went wrong. \n" + error,
-          key: "error",
-          duration: 3,
-        });
+    console.log(error);
+    error &&
+      message.error({
+        content: "Missing some file data. \n" + error,
+        key: "error",
+        duration: 3,
+      });
   }
 };

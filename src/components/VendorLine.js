@@ -168,18 +168,20 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
                   placeholder={"Select UOM"}
                   name="uom_id"
                   field_id="uom_id"
-                  field_name="uom_no"
-                  value={line.uom_no}
+                  field_name="uom_no_name"
+                  value={line.uom_no_name}
                   data={units}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
                           uom_id: option.data.uom_id,
                           uom_no: option.data.uom_no,
+                          uom_no_name: option.data.uom_no_name,
                         })
                       : onChangeValue(line.id, {
                           uom_id: null,
                           uom_no: null,
+                          uom_no_name: null,
                         });
                   }}
                 />
@@ -256,12 +258,12 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
                 <Text>{convertDigit(line.item_vendor_min_qty)}</Text>
               </Col>
               <Col span={2} className="text-string">
-                <Text>{line.uom_no}</Text>
+                <Text>{line.uom_no_name}</Text>
               </Col>
               <Col span={3} className="text-number">
                 <Text>{convertDigit(line.item_vendor_price)}</Text>
               </Col>
-              <Col span={5} className="text-number">
+              <Col span={5} className="text-string">
                 <Text>{line.item_vendor_remark}</Text>
               </Col>
             </Row>

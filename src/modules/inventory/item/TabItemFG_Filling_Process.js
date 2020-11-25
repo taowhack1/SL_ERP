@@ -1,28 +1,13 @@
-import { UploadOutlined } from "@ant-design/icons";
-import {
-  Checkbox,
-  Col,
-  Input,
-  InputNumber,
-  Row,
-  Tabs,
-  Upload,
-  Button,
-  Space,
-  Radio,
-} from "antd";
+import { Col, Input, InputNumber, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useSelector } from "react-redux";
-import CustomSelect from "../../../components/CustomSelect";
-import Line from "../../../components/VendorLine";
-import { numberFormat } from "../../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../../include/js/main_config";
 import { item_filling_weight_columns } from "../config/item";
 import PackagingProcess from "./Item_Packaging";
-const { TextArea } = Input;
 
 const TabFillingProcess = ({
-  uom_no,
+  uom_no_name,
 
   readOnly,
   data_filling_detail,
@@ -30,9 +15,6 @@ const TabFillingProcess = ({
   data_weight_detail,
   weightDetailDispatch,
 }) => {
-  const currency_list = useSelector(
-    (state) => state.accounting.master_data.currency
-  );
   const onChangeValue = (rowId, data) => {
     weightDetailDispatch({
       type: "CHANGE_DETAIL_VALUE",
@@ -52,12 +34,7 @@ const TabFillingProcess = ({
         </Col>
       </Row>
       <Row className="col-2 row-margin-vertical">
-        <Col
-          span={18}
-          // style={{
-          //   borderRight: "1px solid #c4c4c4",
-          // }}
-        >
+        <Col span={18}>
           <Row className="col-2 row-margin-vertical">
             <Col span={4}></Col>
             <Col span={18}>
@@ -74,12 +51,6 @@ const TabFillingProcess = ({
                       </Col>
                     );
                   })}
-                {/* 
-                <Col span={1} className="col-outline">
-                  <Text strong>
-                    <EllipsisOutlined />
-                  </Text>
-                </Col> */}
               </Row>
             </Col>
             <Col span={2}></Col>
@@ -101,87 +72,108 @@ const TabFillingProcess = ({
                 gutter={6}
                 className="col-2"
               >
-                <Col span={5} className="text-center">
-                  <InputNumber
-                    {...numberFormat}
-                    name="item_weight_standard_qty"
-                    placeholder="Standard"
-                    value={data_weight_detail[0].item_weight_standard_qty}
-                    defaultValue={0.0}
-                    min={0.0001}
-                    step={1.0}
-                    onChange={(data) => {
-                      console.log(data);
-                      onChangeValue(data_weight_detail[0].id, {
-                        item_weight_standard_qty: data,
-                      });
-                    }}
-                    style={{ width: "100%" }}
-                    size="small"
-                  />
+                <Col span={5} className="text-number">
+                  {readOnly ? (
+                    <Text className="text-view text-number">
+                      {data_weight_detail.length &&
+                      data_weight_detail[0].item_weight_standard_qty
+                        ? convertDigit(
+                            data_weight_detail[0].item_weight_standard_qty
+                          )
+                        : "-"}
+                    </Text>
+                  ) : (
+                    <InputNumber
+                      {...numberFormat}
+                      name="item_weight_standard_qty"
+                      placeholder="Standard"
+                      value={data_weight_detail[0].item_weight_standard_qty}
+                      defaultValue={0.0}
+                      min={0.0001}
+                      step={1.0}
+                      onChange={(data) => {
+                        console.log(data);
+                        onChangeValue(data_weight_detail[0].id, {
+                          item_weight_standard_qty: data,
+                        });
+                      }}
+                      style={{ width: "100%" }}
+                      size="small"
+                    />
+                  )}
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect
-                    style={{ width: "100%" }}
-                    size="small"
-                    placeholder="uom"
-                  />
+                  <Text className="text-center">{uom_no_name}</Text>
                 </Col>
-                <Col span={5} className="text-center">
-                  <InputNumber
-                    {...numberFormat}
-                    name="item_weight_min_qty"
-                    placeholder="Min"
-                    value={data_weight_detail[0].item_weight_min_qty}
-                    defaultValue={0.0}
-                    min={0.0001}
-                    step={1.0}
-                    onChange={(data) => {
-                      console.log(data);
-                      onChangeValue(data_weight_detail[0].id, {
-                        item_weight_min_qty: data,
-                      });
-                    }}
-                    style={{ width: "100%" }}
-                    size="small"
-                  />
-                </Col>
-                <Col span={3} className="text-center">
-                  {/* std. unit */}
-                  <CustomSelect
-                    style={{ width: "100%" }}
-                    size="small"
-                    placeholder="uom"
-                  />
-                </Col>
-                <Col span={5} className="text-center">
-                  <InputNumber
-                    {...numberFormat}
-                    name="item_weight_max_qty"
-                    placeholder="Max"
-                    value={data_weight_detail[0].item_weight_max_qty}
-                    defaultValue={0.0}
-                    min={0.0001}
-                    // max={100.0}
-                    step={1.0}
-                    onChange={(data) => {
-                      console.log(data);
-                      onChangeValue(data_weight_detail[0].id, {
-                        item_weight_max_qty: data,
-                      });
-                    }}
-                    style={{ width: "100%" }}
-                    size="small"
-                  />
+                <Col span={5} className="text-number">
+                  {readOnly ? (
+                    <Text className="text-view text-number">
+                      {data_weight_detail.length &&
+                      data_weight_detail[0].item_weight_min_qty
+                        ? convertDigit(
+                            data_weight_detail[0].item_weight_min_qty
+                          )
+                        : "-"}
+                    </Text>
+                  ) : (
+                    <InputNumber
+                      {...numberFormat}
+                      name="item_weight_min_qty"
+                      placeholder="Min"
+                      value={data_weight_detail[0].item_weight_min_qty}
+                      defaultValue={0.0}
+                      min={0.0001}
+                      step={1.0}
+                      onChange={(data) => {
+                        console.log(data);
+                        onChangeValue(data_weight_detail[0].id, {
+                          item_weight_min_qty: data,
+                        });
+                      }}
+                      style={{ width: "100%" }}
+                      size="small"
+                    />
+                  )}
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect
-                    style={{ width: "100%" }}
-                    size="small"
-                    placeholder="uom"
-                  />
+                  <Text className="text-center">{uom_no_name}</Text>
+                </Col>
+                <Col span={5} className="text-number">
+                  {readOnly ? (
+                    <Text className="text-view text-number">
+                      {data_weight_detail.length &&
+                      data_weight_detail[0].item_weight_max_qty
+                        ? convertDigit(
+                            data_weight_detail[0].item_weight_max_qty
+                          )
+                        : "-"}
+                    </Text>
+                  ) : (
+                    <InputNumber
+                      {...numberFormat}
+                      name="item_weight_max_qty"
+                      placeholder="Max"
+                      value={data_weight_detail[0].item_weight_max_qty}
+                      defaultValue={0.0}
+                      min={0.0001}
+                      // max={100.0}
+                      step={1.0}
+                      onChange={(data) => {
+                        console.log(data);
+                        onChangeValue(data_weight_detail[0].id, {
+                          item_weight_max_qty: data,
+                        });
+                      }}
+                      style={{ width: "100%" }}
+                      size="small"
+                    />
+                  )}
+                </Col>
+                <Col span={3} className="text-center">
+                  {/* std. unit */}
+                  <Text className="text-center">{uom_no_name}</Text>
                 </Col>
               </Row>
             </Col>
@@ -204,87 +196,111 @@ const TabFillingProcess = ({
                 gutter={6}
                 className="col-2"
               >
-                <Col span={5} className="text-center">
-                  <InputNumber
-                    {...numberFormat}
-                    name="item_weight_standard_qty"
-                    placeholder="Standard"
-                    value={data_weight_detail[1].item_weight_standard_qty}
-                    defaultValue={0.0}
-                    min={0.0001}
-                    step={1.0}
-                    onChange={(data) => {
-                      console.log(data);
-                      onChangeValue(data_weight_detail[1].id, {
-                        item_weight_standard_qty: data,
-                      });
-                    }}
-                    style={{ width: "100%" }}
-                    size="small"
-                  />
+                <Col span={5} className="text-number">
+                  {readOnly ? (
+                    <Text className="text-view text-number">
+                      {data_weight_detail.length &&
+                      data_weight_detail[1].item_weight_standard_qty
+                        ? convertDigit(
+                            data_weight_detail[1].item_weight_standard_qty
+                          )
+                        : "-"}
+                    </Text>
+                  ) : (
+                    <InputNumber
+                      {...numberFormat}
+                      name="item_weight_standard_qty"
+                      placeholder="Standard"
+                      value={data_weight_detail[1].item_weight_standard_qty}
+                      defaultValue={0.0}
+                      min={0.0001}
+                      step={1.0}
+                      onChange={(data) => {
+                        console.log(data);
+                        onChangeValue(data_weight_detail[1].id, {
+                          item_weight_standard_qty: data,
+                        });
+                      }}
+                      style={{ width: "100%" }}
+                      size="small"
+                    />
+                  )}
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect
-                    style={{ width: "100%" }}
-                    size="small"
-                    placeholder="uom"
-                  />
+                  <Text className="text-center">{uom_no_name}</Text>
                 </Col>
-                <Col span={5} className="text-center">
-                  <InputNumber
-                    {...numberFormat}
-                    name="item_weight_min_qty"
-                    placeholder="Min"
-                    value={data_weight_detail[1].item_weight_min_qty}
-                    defaultValue={0.0}
-                    min={0.0001}
-                    step={1.0}
-                    onChange={(data) => {
-                      console.log(data);
-                      onChangeValue(data_weight_detail[1].id, {
-                        item_weight_min_qty: data,
-                      });
-                    }}
-                    style={{ width: "100%" }}
-                    size="small"
-                  />
-                </Col>
-                <Col span={3} className="text-center">
-                  {/* std. unit */}
-                  <CustomSelect
-                    style={{ width: "100%" }}
-                    size="small"
-                    placeholder="uom"
-                  />
-                </Col>
-                <Col span={5} className="text-center">
-                  <InputNumber
-                    {...numberFormat}
-                    name="item_weight_max_qty"
-                    placeholder="Max"
-                    value={data_weight_detail[1].item_weight_max_qty}
-                    defaultValue={0.0}
-                    min={0.0001}
-                    // max={100.0}
-                    step={1.0}
-                    onChange={(data) => {
-                      console.log(data);
-                      onChangeValue(data_weight_detail[1].id, {
-                        item_weight_max_qty: data,
-                      });
-                    }}
-                    style={{ width: "100%" }}
-                    size="small"
-                  />
+                <Col span={5} className="text-number">
+                  {readOnly ? (
+                    <Text className="text-view text-number">
+                      {data_weight_detail.length &&
+                      data_weight_detail[1].item_weight_min_qty
+                        ? convertDigit(
+                            data_weight_detail[1].item_weight_min_qty
+                          )
+                        : "-"}
+                    </Text>
+                  ) : (
+                    <InputNumber
+                      {...numberFormat}
+                      name="item_weight_min_qty"
+                      placeholder="Min"
+                      value={
+                        data_weight_detail.length &&
+                        data_weight_detail[1].item_weight_min_qty
+                      }
+                      defaultValue={0.0}
+                      min={0.0001}
+                      step={1.0}
+                      onChange={(data) => {
+                        console.log(data);
+                        onChangeValue(data_weight_detail[1].id, {
+                          item_weight_min_qty: data,
+                        });
+                      }}
+                      style={{ width: "100%" }}
+                      size="small"
+                    />
+                  )}
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect
-                    style={{ width: "100%" }}
-                    size="small"
-                    placeholder="uom"
-                  />
+                  <Text className="text-center">{uom_no_name}</Text>
+                </Col>
+                <Col span={5} className="text-number">
+                  {readOnly ? (
+                    <Text className="text-view text-number">
+                      {data_weight_detail.length &&
+                      data_weight_detail[1].item_weight_max_qty
+                        ? convertDigit(
+                            data_weight_detail[1].item_weight_max_qty
+                          )
+                        : "-"}
+                    </Text>
+                  ) : (
+                    <InputNumber
+                      {...numberFormat}
+                      name="item_weight_max_qty"
+                      placeholder="Max"
+                      value={data_weight_detail[1].item_weight_max_qty}
+                      defaultValue={0.0}
+                      min={0.0001}
+                      // max={100.0}
+                      step={1.0}
+                      onChange={(data) => {
+                        console.log(data);
+                        onChangeValue(data_weight_detail[1].id, {
+                          item_weight_max_qty: data,
+                        });
+                      }}
+                      style={{ width: "100%" }}
+                      size="small"
+                    />
+                  )}
+                </Col>
+                <Col span={3} className="text-center">
+                  {/* std. unit */}
+                  <Text className="text-center">{uom_no_name}</Text>
                 </Col>
               </Row>
             </Col>
@@ -307,87 +323,108 @@ const TabFillingProcess = ({
                 gutter={6}
                 className="col-2"
               >
-                <Col span={5} className="text-center">
-                  <InputNumber
-                    {...numberFormat}
-                    name="item_weight_standard_qty"
-                    placeholder="Standard"
-                    value={data_weight_detail[2].item_weight_standard_qty}
-                    defaultValue={0.0}
-                    min={0.0001}
-                    step={1.0}
-                    onChange={(data) => {
-                      console.log(data);
-                      onChangeValue(data_weight_detail[2].id, {
-                        item_weight_standard_qty: data,
-                      });
-                    }}
-                    style={{ width: "100%" }}
-                    size="small"
-                  />
+                <Col span={5} className="text-number">
+                  {readOnly ? (
+                    <Text className="text-view text-number">
+                      {data_weight_detail.length &&
+                      data_weight_detail[2].item_weight_standard_qty
+                        ? convertDigit(
+                            data_weight_detail[2].item_weight_standard_qty
+                          )
+                        : "-"}
+                    </Text>
+                  ) : (
+                    <InputNumber
+                      {...numberFormat}
+                      name="item_weight_standard_qty"
+                      placeholder="Standard"
+                      value={data_weight_detail[2].item_weight_standard_qty}
+                      defaultValue={0.0}
+                      min={0.0001}
+                      step={1.0}
+                      onChange={(data) => {
+                        console.log(data);
+                        onChangeValue(data_weight_detail[2].id, {
+                          item_weight_standard_qty: data,
+                        });
+                      }}
+                      style={{ width: "100%" }}
+                      size="small"
+                    />
+                  )}
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect
-                    style={{ width: "100%" }}
-                    size="small"
-                    placeholder="uom"
-                  />
+                  <Text className="text-center">{uom_no_name}</Text>
                 </Col>
-                <Col span={5} className="text-center">
-                  <InputNumber
-                    {...numberFormat}
-                    name="item_weight_min_qty"
-                    placeholder="Min"
-                    value={data_weight_detail[2].item_weight_min_qty}
-                    defaultValue={0.0}
-                    min={0.0001}
-                    step={1.0}
-                    onChange={(data) => {
-                      console.log(data);
-                      onChangeValue(data_weight_detail[2].id, {
-                        item_weight_min_qty: data,
-                      });
-                    }}
-                    style={{ width: "100%" }}
-                    size="small"
-                  />
-                </Col>
-                <Col span={3} className="text-center">
-                  {/* std. unit */}
-                  <CustomSelect
-                    style={{ width: "100%" }}
-                    size="small"
-                    placeholder="uom"
-                  />
-                </Col>
-                <Col span={5} className="text-center">
-                  <InputNumber
-                    {...numberFormat}
-                    name="item_weight_max_qty"
-                    placeholder="Max"
-                    value={data_weight_detail[2].item_weight_max_qty}
-                    defaultValue={0.0}
-                    min={0.0001}
-                    // max={100.0}
-                    step={1.0}
-                    onChange={(data) => {
-                      console.log(data);
-                      onChangeValue(data_weight_detail[2].id, {
-                        item_weight_max_qty: data,
-                      });
-                    }}
-                    style={{ width: "100%" }}
-                    size="small"
-                  />
+                <Col span={5} className="text-number">
+                  {readOnly ? (
+                    <Text className="text-view text-number">
+                      {data_weight_detail.length &&
+                      data_weight_detail[2].item_weight_min_qty
+                        ? convertDigit(
+                            data_weight_detail[2].item_weight_min_qty
+                          )
+                        : "-"}
+                    </Text>
+                  ) : (
+                    <InputNumber
+                      {...numberFormat}
+                      name="item_weight_min_qty"
+                      placeholder="Min"
+                      value={data_weight_detail[2].item_weight_min_qty}
+                      defaultValue={0.0}
+                      min={0.0001}
+                      step={1.0}
+                      onChange={(data) => {
+                        console.log(data);
+                        onChangeValue(data_weight_detail[2].id, {
+                          item_weight_min_qty: data,
+                        });
+                      }}
+                      style={{ width: "100%" }}
+                      size="small"
+                    />
+                  )}
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <CustomSelect
-                    style={{ width: "100%" }}
-                    size="small"
-                    placeholder="uom"
-                  />
+                  <Text className="text-center">{uom_no_name}</Text>
+                </Col>
+                <Col span={5} className="text-number">
+                  {readOnly ? (
+                    <Text className="text-view text-number">
+                      {data_weight_detail.length &&
+                      data_weight_detail[2].item_weight_max_qty
+                        ? convertDigit(
+                            data_weight_detail[2].item_weight_max_qty
+                          )
+                        : "-"}
+                    </Text>
+                  ) : (
+                    <InputNumber
+                      {...numberFormat}
+                      name="item_weight_max_qty"
+                      placeholder="Max"
+                      value={data_weight_detail[2].item_weight_max_qty}
+                      defaultValue={0.0}
+                      min={0.0001}
+                      // max={100.0}
+                      step={1.0}
+                      onChange={(data) => {
+                        console.log(data);
+                        onChangeValue(data_weight_detail[2].id, {
+                          item_weight_max_qty: data,
+                        });
+                      }}
+                      style={{ width: "100%" }}
+                      size="small"
+                    />
+                  )}
+                </Col>
+                <Col span={3} className="text-center">
+                  {/* std. unit */}
+                  <Text className="text-center">{uom_no_name}</Text>
                 </Col>
               </Row>
             </Col>
@@ -408,13 +445,7 @@ const TabFillingProcess = ({
           </Row>
         </Col>
       </Row>
-      <Row
-        className="col-2 row-tab-margin-lg detail-tab-row"
-        // style={{
-        //   borderBottom: "1px solid #E5E5E5",
-        //   paddingBottom: 10,
-        // }}
-      >
+      <Row className="col-2 row-tab-margin-lg detail-tab-row">
         <Col span={24}>
           <Text strong className="detail-tab-header">
             Filling Process

@@ -247,7 +247,7 @@ const BulkFormula = ({
           {/* View Form */}
           {data_formula_detail.map((line, key) => (
             <Row
-              key={line.item_vendor_id}
+              key={line.id}
               style={{
                 marginBottom: 0,
                 border: "1px solid white",
@@ -256,21 +256,21 @@ const BulkFormula = ({
               gutter={6}
               className="col-2"
             >
-              <Col span={3} className="text-string">
+              <Col span={3} className="text-center">
                 <Text>{line.item_formula_part}</Text>
               </Col>
-              <Col span={3} className="text-number">
+              <Col span={3} className="text-center">
                 <Text>{line.item_formula_part_no}</Text>
               </Col>
-              <Col span={6} className="text-number">
+              <Col span={6} className="text-string">
                 <Text>
                   <Text>{line.item_no_name}</Text>
                 </Text>
               </Col>
-              <Col span={3} className="text-string">
-                <Text>{convertDigit(line.item_formula_qty)}</Text>
+              <Col span={3} className="text-number">
+                <Text>{convertDigit(line.item_formula_qty)} % </Text>
               </Col>
-              <Col span={8} className="text-number">
+              <Col span={8} className="text-string">
                 <Text>{line.item_formula_remark}</Text>
               </Col>
             </Row>

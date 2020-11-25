@@ -5,16 +5,141 @@ import {
   UPDATE_ITEM,
   GET_ITEM_BY_ID,
 } from "../types";
-import { header_config } from "../../include/js/main_config";
+import { api_server, header_config } from "../../include/js/main_config";
 import {
   api_get_item_by_id,
   api_url,
-  api_get_item_detail,
+  api_item_vendor,
+  api_item_formula,
+  api_item_qa,
+  api_item_weight,
+  api_item_filling_process,
+  api_upload_file,
+  api_approve,
 } from "../../include/js/api";
 import axios from "axios";
-import { message } from "antd";
+import { Alert, message, notification } from "antd";
 import { item_save_file } from "../file&image/itemFileAction";
+import React from "react";
+import { sortData } from "../../include/js/function_main";
 const api_path = api_url + "/query/sql";
+
+const openNotificationWithIcon = (type, title, text) => {
+  notification[type]({
+    message: <h4 className="notify-title">{title}</h4>,
+    description: text,
+  });
+};
+
+const bind_vendor_fn = (item_id, data_detail) => {
+  console.log("bind_vendor_fn");
+  //check authorize
+  const data_detail_temp = data_detail.filter(
+    (detail) =>
+      detail.vendor_id !== null &&
+      detail.item_vendor_price !== 0 &&
+      detail.uom_id !== null &&
+      detail.type_id !== null &&
+      detail.category_id !== null
+  );
+  return (
+    data_detail_temp.length &&
+    axios
+      .post(`${api_item_vendor}/${item_id}`, data_detail_temp, header_config)
+      .then((res) => {
+        console.log("BIND VENDOR");
+      })
+  );
+};
+const bind_formula = (item_id, data_formula_detail) => {
+  console.log("bind_formula");
+  const data_formula_detail_temp = data_formula_detail.filter(
+    (detail) =>
+      detail.item_id !== null &&
+      detail.item_formula_part !== null &&
+      detail.item_formula_part_no !== null &&
+      detail.item_formula_qty !== 0 &&
+      detail.commit === 1
+  );
+  return (
+    data_formula_detail_temp.length &&
+    axios
+      .post(
+        `${api_item_formula}/${item_id}`,
+        data_formula_detail_temp,
+        header_config
+      )
+      .then((res) => {
+        console.log("BIND FORMULA");
+      })
+  );
+};
+
+const bind_qa_test = (item_id, data_qa_detail) => {
+  console.log("bind_qa_test");
+  const data_qa_detail_temp = data_qa_detail.filter(
+    (detail) =>
+      detail.qa_subject_id !== null &&
+      detail.qa_specification_id !== null &&
+      detail.qa_method_id !== null &&
+      detail.commit === 1
+  );
+  return (
+    data_qa_detail_temp.length &&
+    axios
+      .post(`${api_item_qa}/${item_id}`, data_qa_detail_temp, header_config)
+      .then((res) => {
+        console.log("BIND QA TEST");
+      })
+  );
+};
+
+const bind_weight = (item_id, data_weight_detail) => {
+  console.log("bind_weight");
+  const data_weight_detail_temp = data_weight_detail.filter(
+    (detail) =>
+      detail.weight_type_id !== null &&
+      detail.item_weight_standard_qty !== null &&
+      detail.item_weight_min_qty !== null &&
+      detail.item_weight_max_qty !== null &&
+      detail.commit === 1
+  );
+  return (
+    data_weight_detail_temp.length &&
+    axios
+      .post(
+        `${api_item_weight}/${item_id}`,
+        data_weight_detail_temp,
+        header_config
+      )
+      .then((res) => {
+        console.log("BIND WEIGHT");
+      })
+  );
+};
+
+const bind_filling_process = (item_id, data_filling_detail) => {
+  console.log("bind_filling_process");
+  const data_filling_detail_temp = data_filling_detail.filter(
+    (detail) =>
+      detail.qa_method_id !== null &&
+      detail.item_filling_process_qty !== null &&
+      detail.commit === 1
+  );
+  return (
+    data_filling_detail_temp.length &&
+    axios
+      .post(
+        `${api_item_filling_process}/${item_id}`,
+        data_filling_detail_temp,
+        header_config
+      )
+      .then((res) => {
+        console.log("BIND FILLING PROCESS");
+      })
+  );
+};
+
 export const getAllItems = () => async (dispatch) => {
   const query_items = {
     query_sql: `SELECT
@@ -42,45 +167,131 @@ export const getAllItems = () => async (dispatch) => {
   });
 };
 
-export const createNewItems = (
-  data_head,
-  data_detail,
-  fileList,
-  redirect
-) => async (dispatch) => {
-  console.log("Create item...");
+export const createNewItems = (data, user_name, redirect) => async (
+  dispatch
+) => {
+  console.log("Create item... data value", data);
+  const {
+    access_right,
+    data_head,
+    data_detail,
+    data_formula_detail,
+    data_qa_detail,
+    data_weight_detail,
+    data_filling_detail,
+    data_file,
+  } = data;
+
   try {
     axios
       .post(api_url + "/inventory/item", data_head, header_config)
-      .then(async (res) => {
+      .then(async (res, rej) => {
+        console.log("rej", rej);
         if (res.status === 200 && res.data[0].length) {
-          console.log("res", res);
           const item_id = res.data[0][0].item_id;
-          const data_detail_copy = data_detail.filter(
-            (detail) =>
-              detail.vendor_id !== null &&
-              detail.item_vendor_price !== 0 &&
-              detail.uom_id !== null &&
-              detail.type_id !== null &&
-              detail.category_id !== null
-          );
-          data_detail_copy.length &&
-            (await axios.post(
-              `${api_get_item_detail}/${item_id}`,
-              data_detail,
-              header_config
-            ));
-          await dispatch(get_item_by_id(item_id));
-          message.success({
-            content: "Item Created.",
-            key: "validate",
-            duration: 2,
-          });
-          redirect(item_id);
+          // access_right: {
+          //   vendor: true,
+          //   formula: true,
+          //   qa: true,
+          //   weight: true,
+          //   filling_process: true,
+          //   attach_file: true,
+          // },
+          Promise.allSettled([
+            access_right.vendor && bind_vendor_fn(item_id, data_detail),
+            access_right.formula && bind_formula(item_id, data_formula_detail),
+            access_right.qa && bind_qa_test(item_id, data_qa_detail),
+            access_right.weight && bind_weight(item_id, data_weight_detail),
+            access_right.filling_process &&
+              bind_filling_process(item_id, data_filling_detail),
+            access_right.attach_file && item_save_file(item_id, data_file),
+          ])
+            .then(async (data) => {
+              console.log("Promise.allSettled. THEN ", data);
+              await dispatch(get_item_by_id(item_id, user_name, redirect));
+              message.success({
+                content: "Item Created.",
+                key: "validate",
+                duration: 2,
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
           return true;
         } else {
           alert("Something went wrong please try again...");
           return false;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        openNotificationWithIcon(
+          "error",
+          "Error !",
+          `${error}.
+          Please contact admin.`
+        );
+      });
+  } catch ({ response }) {
+    openNotificationWithIcon(
+      "error",
+      "Error !",
+      `${response.statusText}.\n Please contact admin.`
+    );
+    // message.error({
+    //   content: "Somethings went wrong. \n" + error,
+    //   key: "error",
+    //   duration: 2,
+    // });
+  }
+};
+
+export const upDateItem = (item_id, data, user_name, redirect) => async (
+  dispatch
+) => {
+  const {
+    access_right,
+    data_head,
+    data_detail,
+    data_formula_detail,
+    data_qa_detail,
+    data_weight_detail,
+    data_filling_detail,
+    data_file,
+  } = data;
+  console.log("Update item...", data);
+  try {
+    axios
+      .put(api_url + "/inventory/item/" + item_id, data_head, header_config)
+      .then(async (res) => {
+        if (res.status === 200 && res.data[0].length) {
+          Promise.allSettled([
+            access_right.vendor && bind_vendor_fn(item_id, data_detail),
+            access_right.formula && bind_formula(item_id, data_formula_detail),
+            access_right.qa && bind_qa_test(item_id, data_qa_detail),
+            access_right.weight && bind_weight(item_id, data_weight_detail),
+            access_right.filling_process &&
+              bind_filling_process(item_id, data_filling_detail),
+            access_right.attach_file && item_save_file(item_id, data_file),
+          ])
+            .then((data) => {
+              console.log("Promise Then");
+              dispatch(get_item_by_id(item_id, user_name, redirect));
+              message.success({
+                content: "Item Update.",
+                key: "validate",
+                duration: 2,
+              });
+            })
+            .catch((error) => {
+              console.log("Promise Catch");
+            });
+
+          // return true;
+        } else {
+          alert("Something went wrong please try again...");
+          // return false;
         }
       });
   } catch (error) {
@@ -93,84 +304,108 @@ export const createNewItems = (
   }
 };
 
-export const upDateItem = (
-  item_id,
-  data_head,
-  data_detail,
-  fileList,
-  redirect
-) => async (dispatch) => {
-  console.log("Update item...");
-  try {
-    item_save_file(fileList, item_id);
-    // axios
-    //   .put(api_url + "/inventory/item/" + item_id, data_head, header_config)
-    //   .then(async (res) => {
-    //     if (res.status === 200 && res.data[0].length) {
-    //       // item_save_file(fileList);
-    //       await axios.post(
-    //         `${api_get_item_detail}/${item_id}`,
-    //         data_detail,
-    //         header_config
-    //       );
-    //       await dispatch(get_item_by_id(item_id));
-    //       message.success({
-    //         content: "Item Update.",
-    //         key: "validate",
-    //         duration: 2,
-    //       });
-    //       redirect(item_id);
-    //       return true;
-    //     } else {
-    //       alert("Something went wrong please try again...");
-    //       return false;
-    //     }
-    //   });
-  } catch (error) {
-    console.log(error);
-    message.error({
-      content: "Somethings went wrong. \n" + error,
-      key: "error",
-      duration: 2,
-    });
-  }
-};
-
-export const get_item_by_id = (item_id, redirect) => async (dispatch) => {
-  console.log("get_item_by_id");
+export const get_item_by_id = (item_id, user_name, redirect) => async (
+  dispatch
+) => {
+  console.log("GET_ITEM_BY_ID FUNCTION");
 
   try {
     if (item_id) {
-      console.log(`${api_get_item_by_id}/${item_id}`);
+      console.log(`${api_get_item_by_id}/${item_id}&${user_name}`);
       const res_head = axios.get(
-        `${api_get_item_by_id}/${item_id}`,
+        `${api_get_item_by_id}/${item_id}&${user_name}`,
         header_config
       );
       const res_detail = axios.get(
-        `${api_get_item_detail}/${item_id}`,
+        `${api_item_vendor}/${item_id}`,
         header_config
       );
-      Promise.allSettled([res_head, res_detail]).then((data) => {
-        console.log("Promise.allSettled", data);
-        // const item = {
-        //   item_head:
-        //     res_head &&
-        //     (await res_head.then((res) => {
-        //       return res.data[0][0];
-        //     })),
-        //   item_detail:
-        //     res_detail &&
-        //     (await res_detail.then((res) => {
-        //       return res.data[0];
-        //     })),
-        // };
+      const res_formula = axios.get(
+        `${api_item_formula}/${item_id}`,
+        header_config
+      );
+      const res_qa = axios.get(`${api_item_qa}/${item_id}`, header_config);
+      const res_weight = axios.get(
+        `${api_item_weight}/${item_id}`,
+        header_config
+      );
+      const res_filling_process = axios.get(
+        `${api_item_filling_process}/${item_id}`,
+        header_config
+      );
+      const res_file = axios.get(
+        `${api_upload_file}/${item_id}`,
+        header_config
+      );
+
+      Promise.allSettled([
+        res_head,
+        res_detail,
+        res_formula,
+        res_qa,
+        res_weight,
+        res_filling_process,
+        res_file,
+      ]).then((data) => {
+        const convertFileField = (file) => {
+          let path = file.item_file_path
+            ? api_server + file.item_file_path
+            : require("./no_image.svg");
+          if (file.item_file_path) {
+            path = api_server + file.item_file_path;
+          } else {
+            path = file.file_type_id === 1 ? require("./no_image.svg") : null;
+          }
+          let file_temp = file;
+          file_temp.name = file.item_file_original_name;
+          file_temp.path = path;
+          file_temp.file_type_id = file.file_type_id;
+          file_temp.uid = file.file_type_id;
+          file_temp.thumbUrl = path;
+          file_temp.url = path;
+          return file_temp;
+        };
+        console.log("Promise.allSettled GET ITEM BY ID", data);
+        const data_file_temp = data[6].value.data[0];
         const item = {
-          item_head: data[0].value.data[0][0],
-          item_detail: data[1].value.data[0][0],
+          data_head: data[0].value.data.main_master,
+          data_detail: sortData(data[1].value.data[0]),
+          data_formula_detail: sortData(data[2].value.data[0]),
+          data_qa_detail: sortData(data[3].value.data[0]),
+          data_weight_detail: sortData(data[4].value.data[0]),
+          data_filling_detail: sortData(data[5].value.data[0]),
+          data_file: {
+            item_image:
+              convertFileField(
+                data_file_temp.filter((file) => file.file_type_id === 1)[0]
+              ) ?? null,
+            certificate: {
+              2:
+                convertFileField(
+                  data_file_temp.filter((file) => file.file_type_id === 2)[0]
+                ) ?? null,
+              3:
+                convertFileField(
+                  data_file_temp.filter((file) => file.file_type_id === 3)[0]
+                ) ?? null,
+              4:
+                convertFileField(
+                  data_file_temp.filter((file) => file.file_type_id === 4)[0]
+                ) ?? null,
+              5:
+                convertFileField(
+                  data_file_temp.filter((file) => file.file_type_id === 5)[0]
+                ) ?? null,
+              6:
+                convertFileField(
+                  data_file_temp.filter((file) => file.file_type_id === 6)[0]
+                ) ?? null,
+            },
+          },
         };
         console.log(`GET_ITEM_BY_ID ${item_id}`, item);
         dispatch({ type: GET_ITEM_BY_ID, payload: item });
-        item.item_head && redirect(item_id);
+        item.data_head && redirect(item_id);
       });
     }
   } catch (error) {
@@ -178,44 +413,49 @@ export const get_item_by_id = (item_id, redirect) => async (dispatch) => {
   }
 };
 
-// --EXEC [INVENTORY].[dbo].[sp_ups_ins_tb_item]
-// --/*required*/
-// -- @item_id = 1, @user_name = '2563002',
+export const item_actions = (data, item_id) => (dispatch) => {
+  data.commit = 1;
 
-// --/*not-required*/
-// --  @item_name = 'ทดสอบ 10', @uom_id = '14', @vat_id='1', @branch_id = '1',
-// --  @item_name_th = 'ทดสอบ 10', @item_image_path = '', @item_barcode = '',
-// --  @item_sale = true, @item_purchase = true, @item_price = '10.50',
-// --  @item_cost = '5.5', @item_qty_tg = '0', @item_weight = '5',@item_mfd_leadtime = '15',
-// --  @item_min='5', @item_max='10',
-// --  @item_remark = 'remark 1',
-// --  @commit = 0 ไม่เซฟลงดาต้าเบส 1 เซฟลงดาต้าเบส
-
-// --  @item_customer_run_no nvarchar(20) = null, Can't update
-// --  @type_id nvarchar(20) = null, Can't update
-// --  @category_id nvarchar(20) = null, Can't update
-// --  @identify_benefit_id nvarchar(20) = null, Can't update
-
-// //Create a new Item
-// router.post("/inventory/item", item.create);
-
-// // Retrieve all Item
-// router.get("/item", item.findAll);
-
-// // Retrieve a single Item with item_id
-// router.get("/item/:item_id", item.findOne);
-
-// // Update a Item with item_id
-// router.put("/item/:item_id", item.update);
-
-// // Retrieve all type
-// router.get("/type", item.listtypeAll);
-
-// // Retrieve a all category with type
-// router.get("/category/:type_id", item.listcategory);
-
-// // Retrieve all uom
-// router.get("/uom", item.listuom);
-
-// // Retrieve all identify_benefit
-// router.get("/identify_benefit", item.listidentify_benefit);
+  data.process_id
+    ? axios
+        .put(`${api_approve}/${data.process_id}`, data, header_config)
+        .then((res) => {
+          let msg = "";
+          switch (data.process_status_id) {
+            case 2:
+              // Confirm
+              msg = "Confirm.";
+              break;
+            case 3:
+              msg = "Cancel.";
+              break;
+            // Cancel
+            case 4:
+              msg = "Complete.";
+              break;
+            // Complete
+            case 5:
+              msg = "Approve.";
+              break;
+            // Approve
+            case 6:
+              msg = "Reject.";
+              break;
+            // Reject
+            default:
+              break;
+          }
+          message.success({
+            content: msg,
+            key: "validate",
+            duration: 2,
+          });
+          console.log(res);
+          dispatch(get_item_by_id(item_id, data.user_name));
+        })
+    : message.error({
+        content: "Somethings went wrong. please contact programmer.",
+        key: "validate",
+        duration: 4,
+      });
+};

@@ -40,6 +40,8 @@ export const item_fields = {
   item_id: 0,
   item_no: null,
   item_name: null,
+  item_name_trade: null,
+  item_name_vendor: null,
   item_name_th: null,
   item_image_path: null,
   item_sale: 1,
@@ -53,7 +55,7 @@ export const item_fields = {
   item_max: 0,
   item_customer_run_no: "SRL",
 
-  item_price_approve_id: 1,
+  item_price_approve: 1,
   uom_id: null,
   uom_name: null,
   type_id: null,
@@ -86,7 +88,7 @@ export const item_fields = {
   tg_trans_status_id: 1,
   item_control_id: 1,
   item_control_name: "None",
-  item_formula_effective_date: null,
+  item_effective_date: null,
   item_pre_run_no: ["-", "--", "SRL", "A", "-----"],
   customer_id: 1,
   customer_no_name: "[ CUS0001 ] Siri Laboratories Co., Ltd.",
@@ -419,3 +421,14 @@ export const item_weight_detail = [
     commit: 1,
   },
 ];
+
+export const item_file = {
+  item_image: null,
+  certificate: {
+    2: null,
+    3: null,
+    4: null,
+    5: null,
+    6: null,
+  },
+};

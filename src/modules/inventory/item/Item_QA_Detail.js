@@ -197,7 +197,7 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
           {/* View Form */}
           {data_qa_detail.map((line, key) => (
             <Row
-              key={line.item_vendor_id}
+              key={line.id}
               style={{
                 marginBottom: 0,
                 border: "1px solid white",
@@ -206,23 +206,17 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
               gutter={6}
               className="col-2"
             >
-              <Col span={7} className="text-string">
-                <Text>{line.vendor_no_name}</Text>
+              <Col span={6} className="text-string">
+                <Text>{line.qa_subject_name}</Text>
               </Col>
-              <Col span={3} className="text-number">
-                <Text>{line.item_vendor_lead_time}</Text>
+              <Col span={6} className="text-string">
+                <Text>{line.qa_specification_name}</Text>
               </Col>
-              <Col span={3} className="text-number">
-                <Text>{convertDigit(line.item_vendor_min_qty)}</Text>
+              <Col span={5} className="text-string">
+                <Text>{line.qa_method_name}</Text>
               </Col>
-              <Col span={2} className="text-string">
-                <Text>{line.uom_no}</Text>
-              </Col>
-              <Col span={3} className="text-number">
-                <Text>{convertDigit(line.item_vendor_price)}</Text>
-              </Col>
-              <Col span={5} className="text-number">
-                <Text>{line.item_vendor_remark}</Text>
+              <Col span={6} className="text-string">
+                <Text>{line.item_qa_remark}</Text>
               </Col>
             </Row>
           ))}

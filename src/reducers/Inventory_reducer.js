@@ -27,8 +27,13 @@ import {
 } from "../actions/types";
 const initialState = {
   item: {
-    item_head: {},
-    item_detail: [],
+    data_head: {},
+    data_detail: [],
+    data_formula_detail: [],
+    data_qa_detail: [],
+    data_weight_detail: [],
+    data_filling_detail: [],
+    data_file: [],
   },
   master_data: {
     item_uom: [],

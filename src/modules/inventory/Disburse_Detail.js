@@ -358,9 +358,7 @@ const DisburseDetail = ({
           <Col span={21}>
             <Text className="text-value">
               {temp_detail &&
-                convertDigit(temp_detail.tg_disburse_detail_qty_balance).format(
-                  "0,000.000"
-                ) + "  "}
+                convertDigit(temp_detail.tg_disburse_detail_qty_balance)}
             </Text>
             <Text className="text-value">
               {temp_detail && temp_detail.uom_no}
@@ -382,9 +380,7 @@ const DisburseDetail = ({
           <Col span={21}>
             {temp_detail && (
               <Text className="text-value">
-                {convertDigit(temp_detail.tg_disburse_detail_qty).format(
-                  "0,000.000"
-                )}
+                {convertDigit(temp_detail.tg_disburse_detail_qty)}
               </Text>
             )}
             {"  /  "}
