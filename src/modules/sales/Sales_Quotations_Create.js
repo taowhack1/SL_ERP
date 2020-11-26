@@ -22,7 +22,7 @@ import moment from "moment";
 
 import Comments from "../../components/Comments";
 import { dataComments } from "../../data";
-import ItemLine from "./Sales_ItemLine";
+import ItemLine from "./Sales_Detail";
 import TotalFooter from "../../components/TotalFooter";
 import {
   quotation_detail_fields,

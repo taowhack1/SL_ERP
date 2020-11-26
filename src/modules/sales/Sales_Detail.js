@@ -12,9 +12,8 @@ import {
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
-import moment from "moment";
 
 import {
   quotation_detail_fields,
@@ -22,11 +21,7 @@ import {
   so_detail_fields,
 } from "./configs";
 import CustomSelect from "../../components/CustomSelect";
-import {
-  calSubtotal,
-  sortData,
-  sumArrObj,
-} from "../../include/js/function_main";
+import { calSubtotal, sumArrObj } from "../../include/js/function_main";
 import numeral from "numeral";
 const { Text } = Typography;
 const { Option } = Select;
