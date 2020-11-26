@@ -26,7 +26,9 @@ const Requisition = (props) => {
   authorize.check_authorize();
   const dispatch = useDispatch();
   const keepLog = useKeepLogs();
-  let data = useSelector((state) => state.purchase.pr.pr_list);
+  let pr_list = useSelector((state) => state.purchase.pr.pr_list);
+  const [data, setData] = useState(pr_list);
+  const [loading, setLoading] = useState(false);
   const auth = useSelector((state) => state.auth.authData);
   const currentMenu = useSelector((state) => state.auth.currentMenu);
   const onChange = (pagination, filters, sorter, extra) => {
@@ -55,7 +57,15 @@ const Requisition = (props) => {
       console.log("Cancel");
     },
     onSearch: (value) => {
-      data = data.filter((pr) => pr.pr_no.indexOf(value) >= 0);
+      console.log(value);
+      setLoading(true);
+      setTimeout(() => {
+        const search_data = pr_list.filter(
+          (pr) => pr.pr_no.indexOf(value) >= 0
+        );
+        setData(search_data);
+        setLoading(false);
+      }, 1200);
     },
   };
 
@@ -65,6 +75,7 @@ const Requisition = (props) => {
         columns={pr_list_columns}
         dataSource={data}
         onChange={onChange}
+        loading={loading}
         size="small"
         rowKey="pr_id"
         onRow={(record, rowIndex) => {

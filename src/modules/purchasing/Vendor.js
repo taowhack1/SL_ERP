@@ -24,8 +24,11 @@ const Vendor = (props) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
+  const Search = (value) => {};
   const dispatch = useDispatch();
-  const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
+  let vendors = useSelector((state) => state.purchase.vendor.vendor_list);
+  const [data, setData] = useState(vendors);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     dispatch(get_all_vendor());
     dispatch(get_vendor_payment_term_list());
@@ -38,6 +41,17 @@ const Vendor = (props) => {
     show: true,
     breadcrumb: ["Home", "Vendors"],
     search: true,
+    onSearch: (value) => {
+      console.log(value);
+      setLoading(true);
+      setTimeout(() => {
+        const search_vendor = vendors.filter(
+          (vendor) => vendor.vendor_name.indexOf(value) >= 0
+        );
+        setData(search_vendor);
+        setLoading(false);
+      }, 1200);
+    },
     create: "/purchase/vendor/create",
     buttonAction: ["Create"],
     discard: "/purchase/vendor",
@@ -45,6 +59,7 @@ const Vendor = (props) => {
       console.log("Cancel");
     },
   };
+
   return (
     <div>
       <MainLayout {...config}>
@@ -52,9 +67,10 @@ const Vendor = (props) => {
           <Col span={24}>
             <Table
               columns={vendor_columns}
-              dataSource={vendors}
+              dataSource={data}
               onChange={onChange}
               rowKey={"vendor_id"}
+              loading={loading}
               size="small"
               onRow={(record, rowIndex) => {
                 return {

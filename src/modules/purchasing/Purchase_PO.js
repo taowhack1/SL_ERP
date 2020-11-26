@@ -36,7 +36,9 @@ const PurchaseOrders = (props) => {
     };
   }, [dispatch]);
 
-  const data = useSelector((state) => state.purchase.po.po_list);
+  const po_list = useSelector((state) => state.purchase.po.po_list);
+  const [data, setData] = useState(po_list);
+  const [loading, setLoading] = useState(false);
   const [rowClick, setRowClick] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
@@ -58,6 +60,17 @@ const PurchaseOrders = (props) => {
     onCancel: () => {
       console.log("Cancel");
     },
+    onSearch: (value) => {
+      console.log(value);
+      setLoading(true);
+      setTimeout(() => {
+        const search_data = po_list.filter(
+          (po) => po.po_no.indexOf(value) >= 0
+        );
+        setData(search_data);
+        setLoading(false);
+      }, 1200);
+    },
   };
   return (
     <div>
@@ -68,6 +81,7 @@ const PurchaseOrders = (props) => {
               columns={po_list_columns}
               dataSource={data}
               rowKey="po_id"
+              loading={loading}
               onChange={onChange}
               size="small"
               onRow={(record, rowIndex) => {

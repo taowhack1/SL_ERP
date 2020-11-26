@@ -4,7 +4,7 @@ import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 
 export default function Search(props) {
   const onChange = (value) => {
-    props && props.onSearch(value);
+    props.onSearch && props.onSearch(value);
   };
   return (
     <>
