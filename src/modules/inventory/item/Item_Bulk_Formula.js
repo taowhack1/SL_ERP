@@ -230,6 +230,44 @@ const BulkFormula = ({
               </Col>
             </Row>
           ))}
+
+          <Row class="row-tab-margin col-2" gutter={6}>
+            <Col span={12}></Col>
+            <Col span={12}>
+              {/* <Row gutter={6}>
+                <Col span={6} className="col-left text-right">
+                  {" "}
+                  <Text>Total %(W/W)</Text>
+                </Col>
+                <Col span={16} className="col-right text-center">
+                  <Text>100.000%</Text>
+                </Col>
+                <Col span={2}></Col>
+              </Row> */}
+              <Row
+                style={{
+                  marginBottom: 0,
+                  border: "1px solid white",
+                  backgroundColor: "#FCFCFC",
+                }}
+                gutter={6}
+                className="col-2"
+              >
+                <Col span={6} className="text-right">
+                  <div className="detail-box text-right">
+                    <Text strong>Total %(W/W)</Text>
+                  </div>
+                </Col>
+                <Col span={16} className="text-center">
+                  <div className="detail-box text-center">
+                    <Text strong>100.000%</Text>
+                  </div>
+                </Col>
+
+                <Col span={2} style={{ textAlign: "center" }}></Col>
+              </Row>
+            </Col>
+          </Row>
           <div style={{ marginTop: 10 }}>
             <Button
               type="dashed"

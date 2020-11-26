@@ -48,6 +48,10 @@ import Customer from "./modules/sales/Customer";
 import CustomerView from "./modules/sales/Customer_View";
 import CustomerCreate from "./modules/sales/Customer_Create";
 
+import Production from "./modules/production/Production";
+import WorkCenter from "./modules/production/WorkCenter";
+import Tooling from "./modules/production/Tooling";
+
 import NotFound from "./modules/dashboard/NotFound";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import store from "./store";
@@ -309,6 +313,16 @@ const App = (props) => {
             </Route>
             <Route exact path="/qa/qc/qualitytest">
               <QualityTest />
+            </Route>
+
+            <Route exact path="/production">
+              <Production />
+            </Route>
+            <Route exact path="/production/work_center">
+              <WorkCenter />
+            </Route>
+            <Route exact path="/production/tooling">
+              <Tooling />
             </Route>
 
             <Route>

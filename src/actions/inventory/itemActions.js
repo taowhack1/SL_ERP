@@ -405,7 +405,7 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         };
         console.log(`GET_ITEM_BY_ID ${item_id}`, item);
         dispatch({ type: GET_ITEM_BY_ID, payload: item });
-        item.data_head && redirect(item_id);
+        item.data_head && redirect && redirect(item_id);
       });
     }
   } catch (error) {

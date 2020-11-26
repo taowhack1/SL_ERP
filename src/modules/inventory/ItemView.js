@@ -197,6 +197,7 @@ const ItemView = (props) => {
       dispatch(item_actions(app_detail, data_head.item_id));
     },
   };
+
   console.log("SAVE HEAD", data_head);
   console.log("SAVE DETAIL", data_detail);
   console.log("SAVE QA", data_qa_detail);

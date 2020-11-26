@@ -95,12 +95,22 @@ const ItemFileUpload = ({
         link.click();
       }
     } else {
-      setState({
-        previewImage: file.url || file.preview,
-        previewVisible: true,
-        previewTitle:
-          file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
-      });
+      if (file.type.includes("image")) {
+        setState({
+          previewImage: file.url || file.preview,
+          previewVisible: true,
+          previewTitle:
+            file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
+        });
+      } else {
+        const link = document.createElement("a");
+        link.href = file.url;
+        link.setAttribute("download", file.name); //or any other extension
+        link.setAttribute("target", "_blank"); //or any other extension
+
+        document.body.appendChild(link);
+        link.click();
+      }
     }
   };
 
