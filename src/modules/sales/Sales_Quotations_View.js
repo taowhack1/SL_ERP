@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
-import ItemLine from "./Sales_ItemLine";
+import ItemLine from "./Sales_Detail";
 import Comments from "../../components/Comments";
 import TotalFooter from "../../components/TotalFooter";
 import ModalRemark from "../../components/Modal_Remark";
