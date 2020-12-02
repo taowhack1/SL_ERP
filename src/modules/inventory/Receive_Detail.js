@@ -105,11 +105,6 @@ const ReceiveDetail = ({
         "receive_detail_sub_qty"
       );
 
-      // const discount = calDiscount(
-      //   temp_detail.receive_detail_discount,
-      //   temp_detail.tg_receive_detail_qty_balance,
-      //   receive_qty
-      // );
       console.log(
         "balance",
         temp_detail.tg_receive_detail_qty_balance_temp,

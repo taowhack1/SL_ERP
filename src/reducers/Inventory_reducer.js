@@ -30,6 +30,7 @@ const initialState = {
     data_head: {},
     data_detail: [],
     data_formula_detail: [],
+    data_process: [],
     data_qa_detail: [],
     data_weight_detail: [],
     data_filling_detail: [],

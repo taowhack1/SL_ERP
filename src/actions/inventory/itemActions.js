@@ -16,6 +16,7 @@ import {
   api_item_filling_process,
   api_upload_file,
   api_approve,
+  api_item_process,
 } from "../../include/js/api";
 import axios from "axios";
 import { Alert, message, notification } from "antd";
@@ -139,6 +140,20 @@ const bind_filling_process = (item_id, data_filling_detail) => {
       })
   );
 };
+const bind_process = (item_id, data_process) => {
+  console.log("bind_process");
+  const data_process_temp = data_process.filter(
+    (detail) => detail.work_center_id !== null && detail.commit === 1
+  );
+  return (
+    data_process_temp.length &&
+    axios
+      .post(`${api_item_process}/${item_id}`, data_process_temp, header_config)
+      .then((res) => {
+        console.log("BIND PROCESS");
+      })
+  );
+};
 
 export const getAllItems = () => async (dispatch) => {
   const query_items = {
@@ -176,6 +191,7 @@ export const createNewItems = (data, user_name, redirect) => async (
     data_head,
     data_detail,
     data_formula_detail,
+    data_process_detail,
     data_qa_detail,
     data_weight_detail,
     data_filling_detail,
@@ -200,6 +216,7 @@ export const createNewItems = (data, user_name, redirect) => async (
           Promise.allSettled([
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
             access_right.formula && bind_formula(item_id, data_formula_detail),
+            access_right.process && bind_process(item_id, data_process_detail),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
             access_right.weight && bind_weight(item_id, data_weight_detail),
             access_right.filling_process &&
@@ -255,6 +272,7 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
     data_head,
     data_detail,
     data_formula_detail,
+    data_process_detail,
     data_qa_detail,
     data_weight_detail,
     data_filling_detail,
@@ -269,6 +287,7 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
           Promise.allSettled([
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
             access_right.formula && bind_formula(item_id, data_formula_detail),
+            access_right.process && bind_process(item_id, data_process_detail),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
             access_right.weight && bind_weight(item_id, data_weight_detail),
             access_right.filling_process &&
@@ -324,6 +343,10 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         `${api_item_formula}/${item_id}`,
         header_config
       );
+      const res_process = axios.get(
+        `${api_item_process}/${item_id}`,
+        header_config
+      );
       const res_qa = axios.get(`${api_item_qa}/${item_id}`, header_config);
       const res_weight = axios.get(
         `${api_item_weight}/${item_id}`,
@@ -342,6 +365,7 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         res_head,
         res_detail,
         res_formula,
+        res_process,
         res_qa,
         res_weight,
         res_filling_process,
@@ -371,9 +395,10 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
           data_head: data[0].value.data.main_master,
           data_detail: sortData(data[1].value.data[0]),
           data_formula_detail: sortData(data[2].value.data[0]),
-          data_qa_detail: sortData(data[3].value.data[0]),
-          data_weight_detail: sortData(data[4].value.data[0]),
-          data_filling_detail: sortData(data[5].value.data[0]),
+          data_process: sortData(data[3].value.data[0]),
+          data_qa_detail: sortData(data[4].value.data[0]),
+          data_weight_detail: sortData(data[5].value.data[0]),
+          data_filling_detail: sortData(data[6].value.data[0]),
           data_file: {
             item_image:
               convertFileField(

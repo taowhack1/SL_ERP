@@ -39,7 +39,7 @@ const WorkCenterDetail = ({ data_detail, detailDispatch, readOnly }) => {
   };
   return (
     <>
-      <Row className="col-2 row-tab-margin-lg detail-tab-row">
+      <Row className="col-2 detail-tab-row">
         <Col span={24}>
           <Text strong style={{ fontSize: 16 }}>
             <ProfileOutlined style={{ marginRight: 10 }} /> Machine or Tool

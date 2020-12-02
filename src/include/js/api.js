@@ -41,6 +41,8 @@ export const api_item_qa = `${api_server}/api/inventory/item_qa`;
 export const api_item_weight = `${api_server}/api/inventory/item_weight`;
 // item -> filling
 export const api_item_filling_process = `${api_server}/api/inventory/item_filling_process`;
+// item -> process
+export const api_item_process = `${api_server}/api/inventory/item_process`;
 
 //qc
 export const api_qc_receive_list = `${api_server}/api/qa/qc/item`;

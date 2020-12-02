@@ -32,51 +32,7 @@ const TabProductionProcess = ({
 }) => {
   return (
     <>
-      <Row className="col-2 row-margin-vertical">
-        <Col span={12}>
-          <Row className="col-2 row-margin-vertical">
-            <Col span={6}>
-              <Text strong>Effective Date</Text>
-            </Col>
-            <Col span={16}>
-              {readOnly ? (
-                <Text className="text-view text-center">
-                  {data_head.item_effective_date
-                    ? data_head.item_effective_date
-                    : "-"}
-                </Text>
-              ) : (
-                <DatePicker
-                  name={"item_effective_date"}
-                  format={"DD/MM/YYYY"}
-                  style={{ width: "100%" }}
-                  placeholder="Effective Date"
-                  required
-                  value={
-                    data_head.item_effective_date
-                      ? moment(data_head.item_effective_date, "DD/MM/YYYY")
-                      : ""
-                  }
-                  defaultValue={
-                    data_head.item_effective_date
-                      ? moment(data_head.item_effective_date, "DD/MM/YYYY")
-                      : ""
-                  }
-                  onChange={(data) => {
-                    upDateFormValue({
-                      item_effective_date: data
-                        ? data.format("DD/MM/YYYY")
-                        : "",
-                    });
-                  }}
-                />
-              )}
-            </Col>
-            <Col span={2}></Col>
-          </Row>
-        </Col>
-      </Row>
-      <Row className="col-2 row-tab-margin-lg">
+      <Row className="col-2 mt-1">
         <Col span={24}>
           <ProductionProcess
             readOnly={readOnly}

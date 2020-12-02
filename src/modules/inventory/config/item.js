@@ -430,16 +430,18 @@ export const item_production_process_columns = [
   },
   {
     id: 3,
-    name: "Description",
-    size: 12,
+    name: "Remark",
+    size: 11,
     require: false,
   },
 ];
 
 export const item_production_process_fields = {
   id: null,
-  item_work_center_id: null,
-  item_production_process_remark: null,
+  work_center_id: null,
+  work_center_time: null,
+  work_center_worker: null,
+  item_process_remark: null,
   commit: 1,
 };
 

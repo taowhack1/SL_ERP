@@ -1,46 +1,46 @@
-import {
-  Button,
-  Row,
-  Col,
-  InputNumber,
-  AutoComplete,
-  Typography,
-  Input,
-} from "antd";
+import { Button, Row, Col, Typography, Input, Space, message } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
   EllipsisOutlined,
+  EyeOutlined,
+  EditOutlined,
+  FormOutlined,
+  InfoCircleTwoTone,
 } from "@ant-design/icons";
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import numeral from "numeral";
+import React, { useEffect, useReducer, useState } from "react";
 import {
   item_production_process_columns,
-  item_qa_columns,
-  item_qa_detail_fields,
+  item_production_process_fields,
 } from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
-import { convertDigit } from "../../../include/js/main_config";
+import { getAllWorkCenter } from "../../../actions/production/workCenterActions";
+import { useDispatch, useSelector } from "react-redux";
+import { reducer } from "../reducers";
+import { validateFormDetail } from "../../../include/js/function_main";
+import ItemProcessModal from "./ItemProcessModal";
 
 const { Text } = Typography;
-// data_production_process_detail,
-//productionProcessDetailDispatch,
 const ProductionProcess = ({
   readOnly,
   data_production_process_detail,
   productionProcessDetailDispatch,
 }) => {
-  const {
-    test_case_subject,
-    test_case_specification,
-    test_case_method,
-  } = useSelector((state) => state.qa.qa_master_data);
-  const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
+  const { workCenterList } = useSelector(
+    (state) => state.production.workCenter
+  );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllWorkCenter());
+  }, []);
+
+  const [visible, setVisible] = useState(false);
+  const [temp_detail, setTempDetail] = useState(null);
+  const [temp_sub_detail, tempSubDetailDispatch] = useReducer(reducer, []);
   const addLine = () => {
     productionProcessDetailDispatch({
       type: "ADD_ROW",
-      payload: item_qa_detail_fields,
+      payload: item_production_process_fields,
     });
   };
 
@@ -57,7 +57,43 @@ const ProductionProcess = ({
       },
     });
   };
-  console.log(data_production_process_detail);
+
+  const modalSave = () => {
+    console.log("Confirm Modal", "id", temp_detail.id, temp_sub_detail);
+    const key = "validate";
+    const validate_detail = validateFormDetail(temp_sub_detail, []);
+    if (validate_detail.validate) {
+      setVisible(false);
+
+      productionProcessDetailDispatch({
+        type: "CHANGE_DETAIL_VALUE",
+        payload: {
+          id: temp_detail.id,
+          data: {
+            work_center_detail: temp_sub_detail,
+          },
+        },
+      });
+      setTempDetail(null);
+    } else {
+      message.warning({
+        content: "Please fill your form completely.",
+        key,
+        duration: 2,
+      });
+    }
+  };
+
+  const modalCancel = () => {
+    setVisible(false);
+    setTempDetail(null);
+    console.log("Cancel Modal");
+    tempSubDetailDispatch({
+      type: "SET_DETAIL",
+      payload: [],
+    });
+  };
+  console.log(visible);
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
@@ -81,10 +117,8 @@ const ProductionProcess = ({
             );
           })}
 
-        <Col span={1} className="col-outline">
-          <Text strong>
-            <EllipsisOutlined />
-          </Text>
+        <Col span={2} className="col-outline">
+          <EllipsisOutlined />
         </Col>
       </Row>
       {!readOnly ? (
@@ -111,38 +145,56 @@ const ProductionProcess = ({
                   showSearch
                   size={"small"}
                   placeholder={"Subject"}
-                  name="qa_subject_id"
-                  field_id="qa_subject_id"
-                  field_name="qa_subject_name"
-                  value={line.qa_subject_name}
-                  data={test_case_subject}
+                  name="work_center_id"
+                  field_id="work_center_id"
+                  field_name="work_center_no_description"
+                  value={line.work_center_no_description}
+                  data={workCenterList}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
-                          qa_subject_id: option.data.qa_subject_id,
-                          qa_subject_name: option.data.qa_subject_name,
+                          work_center_id: option.data.work_center_id,
+                          work_center_no_description:
+                            option.data.work_center_no_description,
                         })
                       : onChangeValue(line.id, {
-                          qa_subject_id: null,
-                          qa_subject_name: null,
+                          work_center_id: null,
+                          work_center_no_description: null,
                         });
                   }}
                 />
               </Col>
-              <Col span={12} className="text-string">
+              <Col span={11} className="text-string">
                 <Input
-                  name="item_qa_remark"
+                  name="item_process_remark"
                   size="small"
-                  placeholder={"Description"}
+                  placeholder={"Remark"}
                   onChange={(e) =>
-                    onChangeValue(line.id, { item_qa_remark: e.target.value })
+                    onChangeValue(line.id, {
+                      item_process_remark: e.target.value,
+                    })
                   }
-                  value={line.item_qa_remark}
+                  value={line.item_process_remark}
                 />
               </Col>
 
-              <Col span={1} style={{ textAlign: "center" }}>
-                <DeleteTwoTone onClick={() => delLine(line.id)} />
+              <Col span={2} className="text-center">
+                <Space size={16}>
+                  {line.work_center_id && (
+                    <FormOutlined
+                      onClick={() => {
+                        setVisible(true);
+                        tempSubDetailDispatch({
+                          type: "SET_DETAIL",
+                          payload: [],
+                        });
+                        setTempDetail(line);
+                      }}
+                      className="button-icon"
+                    />
+                  )}
+                  <DeleteTwoTone onClick={() => delLine(line.id)} />
+                </Space>
               </Col>
             </Row>
           ))}
@@ -172,23 +224,45 @@ const ProductionProcess = ({
               gutter={6}
               className="col-2"
             >
-              <Col span={6} className="text-string">
-                <Text>{line.qa_subject_name}</Text>
+              <Col span={1} className="text-center">
+                <Text>{key + 1}</Text>
               </Col>
-              <Col span={6} className="text-string">
-                <Text>{line.qa_specification_name}</Text>
+              <Col span={10} className="text-left">
+                <Text className="text-left">
+                  {line.work_center_no_description}
+                </Text>
               </Col>
-              <Col span={5} className="text-string">
-                <Text>{line.qa_method_name}</Text>
+              <Col span={11} className="text-left">
+                <Text className="text-left">{line.item_process_remark}</Text>
               </Col>
-              <Col span={6} className="text-string">
-                <Text>{line.item_qa_remark}</Text>
+              <Col span={2} className="text-center">
+                {line.work_center_id && (
+                  <InfoCircleTwoTone
+                    className="button-icon"
+                    onClick={() => {
+                      setVisible(true);
+                      tempSubDetailDispatch({
+                        type: "SET_DETAIL",
+                        payload: line.work_center_detail,
+                      });
+                      setTempDetail(line);
+                    }}
+                  />
+                )}
               </Col>
             </Row>
           ))}
         </> //close tag
       )}
       {/* end readonly */}
+      <ItemProcessModal
+        readOnly={readOnly}
+        visible={visible}
+        modalSave={modalSave}
+        modalCancel={modalCancel}
+        data_detail={temp_sub_detail}
+        detailDispatch={tempSubDetailDispatch}
+      />
     </>
   );
 };

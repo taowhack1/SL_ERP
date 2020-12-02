@@ -416,11 +416,13 @@ const WorkCenterCreate = (props) => {
                     </Row>
                   </Col>
                 </Row>
-                <WorkCenterDetail
-                  data_detail={data_detail}
-                  detailDispatch={detailDispatch}
-                  readOnly={false}
-                />
+                <div className="mt-3">
+                  <WorkCenterDetail
+                    data_detail={data_detail}
+                    detailDispatch={detailDispatch}
+                    readOnly={false}
+                  />
+                </div>
               </Tabs.TabPane>
               <Tabs.TabPane
                 tab={<span className="tab_pane">{"Notes"}</span>}

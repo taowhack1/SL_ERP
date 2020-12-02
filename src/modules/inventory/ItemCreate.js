@@ -4,33 +4,15 @@ import {
   Row,
   Col,
   Input,
-  Tabs,
-  Radio,
-  Select,
-  AutoComplete,
   Typography,
-  InputNumber,
   Checkbox,
   Space,
   Switch,
   message,
-  Upload,
-  Button,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
-
-import {
-  autoCompleteUser,
-  locationData,
-  autoCompleteUnit,
-} from "../../data/inventoryData";
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
-import Barcode from "react-barcode";
-import { vendorColumns, vendors, companys } from "../../data/itemData";
 import {
-  getSelectDetail,
   createNewItems,
   upDateItem,
 } from "../../actions/inventory/itemActions";
@@ -44,22 +26,11 @@ import {
   item_production_process_fields,
   item_qa_detail_fields,
   item_require_fields,
-  item_vendor_require_fields,
   item_weight_detail,
 } from "./config/item";
-import {
-  getNameById,
-  get_pre_run_no,
-  validateFormDetail,
-  validateFormHead,
-} from "../../include/js/function_main";
-import $ from "jquery";
+import { validateFormHead } from "../../include/js/function_main";
 import { getMasterDataItem } from "../../actions/inventory";
-import { UploadOutlined } from "@ant-design/icons";
-import CustomSelect from "../../components/CustomSelect";
-import { item_vendor_columns } from "./config/item";
 import { reducer } from "./reducers";
-import { numberFormat } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 import { useHistory } from "react-router-dom";
 import TabPanel from "./item/TabPanel";
@@ -67,9 +38,7 @@ import { get_all_vendor } from "../../actions/purchase/vendorActions";
 import ItemFileUpload from "./item/ItemFileUpload";
 import { get_qa_test_case_master } from "../../actions/qa/qaTestAction";
 import { get_sale_master_data } from "../../actions/sales";
-const { Option } = Select;
-const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+const { Text } = Typography;
 const initialStateHead = item_fields;
 const initialStateDetail = [item_detail_fields];
 const initialStateFormula = [item_formula_detail_fields];
@@ -155,6 +124,13 @@ const ItemCreate = (props) => {
           ? data.data_formula_detail
           : [item_formula_detail_fields],
     });
+    productionProcessDetailDispatch({
+      type: "SET_DETAIL",
+      payload:
+        data && data.data_process.length
+          ? data.data_process
+          : [item_production_process_fields],
+    });
     qaDetailDispatch({
       type: "SET_DETAIL",
       payload:
@@ -216,6 +192,7 @@ const ItemCreate = (props) => {
       console.log("SAVE DETAIL", data_detail);
       console.log("SAVE QA", data_qa_detail);
       console.log("SAVE FORMULA", data_formula_detail);
+      console.log("SAVE PROCESS", data_production_process_detail);
       console.log("SAVE WEIGHT", data_weight_detail);
       console.log("SAVE FILLING", data_filling_detail);
       const validate = validateFormHead(data_head, item_require_fields);
@@ -228,6 +205,7 @@ const ItemCreate = (props) => {
           access_right: {
             vendor: true,
             formula: true,
+            process: true,
             qa: true,
             weight: true,
             filling_process: true,
@@ -236,6 +214,7 @@ const ItemCreate = (props) => {
           data_head: data_head,
           data_detail: data_detail,
           data_formula_detail: data_formula_detail,
+          data_process: data_production_process_detail,
           data_qa_detail: data_qa_detail,
           data_weight_detail: data_weight_detail,
           data_filling_detail: data_filling_detail,
