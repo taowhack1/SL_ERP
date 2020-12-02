@@ -33,6 +33,9 @@ const Vendor = (props) => {
     dispatch(get_all_vendor());
     dispatch(get_vendor_payment_term_list());
   }, []);
+  useEffect(() => {
+    setData(vendors);
+  }, [vendors.length]);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,

@@ -21,6 +21,7 @@ export const get_log_by_id = (process_id) => async (dispatch) => {
 };
 
 export const reset_comments = () => (dispatch) => {
+  console.log("RESET_COMMENTS");
   dispatch({
     type: RESET_COMMENTS,
   });

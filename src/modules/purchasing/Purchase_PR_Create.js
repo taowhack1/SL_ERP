@@ -58,12 +58,13 @@ const PurchaseRequisitionCreate = (props) => {
   const dataComments = useSelector((state) => state.log.comment_log);
   const cost_centers = useSelector((state) => state.hrm.cost_center);
   const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
+  const { item_type } = useSelector((state) => state.inventory.master_data);
 
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
   const data =
     props.location && props.location.state ? props.location.state : 0;
-
+  console.log("data", data);
   const flow =
     data_head &&
     data_head.data_flow_process &&
@@ -102,6 +103,8 @@ const PurchaseRequisitionCreate = (props) => {
   };
 
   const upDateFormValue = (data) => {
+    Object.keys(data).includes("type_id") &&
+      detailDispatch({ type: "SET_DETAIL", payload: [pr_detail_fields] });
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -174,7 +177,7 @@ const PurchaseRequisitionCreate = (props) => {
       "/purchase/pr/view/" + (data_head.pr_id ? data_head.pr_id : "new")
     );
   };
-  console.log(data_head, data_detail);
+  console.log("PR DATA", data_head, data_detail);
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -296,11 +299,46 @@ const PurchaseRequisitionCreate = (props) => {
             {data_head.currency_no ? data_head.currency_no : "THB"}
           </Col>
         </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Item Type :
+            </Text>
+          </Col>
+
+          <Col span={8}>
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"Item type"}
+              name="type_id"
+              field_id="type_id"
+              field_name="type_name"
+              value={data_head.type_name}
+              data={item_type.filter(
+                (type) =>
+                  type.type_id !== 3 && type.type_id !== 4 && type.type_id !== 5
+              )}
+              onChange={(data, option) => {
+                data && data
+                  ? upDateFormValue({
+                      type_id: data,
+                      type_name: option.title,
+                    })
+                  : upDateFormValue({
+                      type_id: null,
+                      type_name: null,
+                    });
+              }}
+            />
+          </Col>
+        </Row>
         <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
                 <ItemLine
+                  type_id={data_head.type_id}
                   data_detail={data_detail}
                   readOnly={false}
                   detailDispatch={detailDispatch}

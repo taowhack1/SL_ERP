@@ -99,3 +99,15 @@ export const api_qn_detail = `${api_server}/api/sales/qn_detail`;
 export const api_so = `${api_server}/api/sales/so`;
 export const api_so_detail = `${api_server}/api/sales/so_detail`;
 export const api_get_qn_open_so = `${api_server}/api/list/qn`;
+
+// Machine
+export const api_machine = `${api_server}/api/production/machine`;
+export const api_machine_type = `${api_server}/api/list/machine_type_tool`;
+export const api_machine_item_type = `${api_server}/api/list/machine_type`;
+export const api_machine_category = `${api_server}/api/list/machine_category`;
+// Work Center
+export const api_work_center = `${api_server}/api/production/work_center`;
+export const api_work_center_detail = `${api_server}/api/production/work_center_detail`;
+export const api_work_center_type = `${api_server}/api/list/work_center_type`;
+export const api_work_center_category = `${api_server}/api/list/work_center_category`;
+export const api_work_center_capacity_categ = `${api_server}/api/list/capacity_category`;

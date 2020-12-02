@@ -10,6 +10,7 @@ import salesReducer from "./Sales_Reducer";
 import QAReducer from "./QA_Reducer";
 import AccountingReducer from "./Accounting_Reducer";
 import { USER_LOGOUT } from "../actions/types";
+import ProductionReducer from "./ProductionReducer";
 
 export const appReducer = combineReducers({
   auth: authReducer,
@@ -22,6 +23,7 @@ export const appReducer = combineReducers({
   hrm: hrmReducer,
   log: comments,
   accounting: AccountingReducer,
+  production: ProductionReducer,
 });
 export const rootReducer = (state, action) => {
   if (action.type === USER_LOGOUT) {

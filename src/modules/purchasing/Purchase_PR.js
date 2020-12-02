@@ -26,7 +26,7 @@ const Requisition = (props) => {
   authorize.check_authorize();
   const dispatch = useDispatch();
   const keepLog = useKeepLogs();
-  let pr_list = useSelector((state) => state.purchase.pr.pr_list);
+  const pr_list = useSelector((state) => state.purchase.pr.pr_list);
   const [data, setData] = useState(pr_list);
   const [loading, setLoading] = useState(false);
   const auth = useSelector((state) => state.auth.authData);
@@ -41,6 +41,9 @@ const Requisition = (props) => {
     dispatch(reset_comments());
   }, [dispatch]);
 
+  useEffect(() => {
+    setData(pr_list);
+  }, [pr_list.length]);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,

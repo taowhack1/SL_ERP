@@ -40,6 +40,8 @@ import {
   item_file,
   item_filling_detail_fields,
   item_formula_detail_fields,
+  item_formula_part_fields,
+  item_production_process_fields,
   item_qa_detail_fields,
   item_require_fields,
   item_vendor_require_fields,
@@ -74,9 +76,8 @@ const initialStateFormula = [item_formula_detail_fields];
 const initialStateQA = [item_qa_detail_fields];
 const initialStateFilling = [item_filling_detail_fields];
 const initialStateWeight = item_weight_detail;
-
-const reader = new FileReader();
-const formData = new FormData();
+const initialStateProductionProcess = [item_production_process_fields];
+const initialStateFormulaPart = [item_formula_part_fields];
 const ItemCreate = (props) => {
   const history = useHistory();
   const authorize = Authorize();
@@ -98,6 +99,10 @@ const ItemCreate = (props) => {
     reducer,
     initialStateFormula
   );
+  const [data_formula_part, formulaPartDetailDispatch] = useReducer(
+    reducer,
+    initialStateFormulaPart
+  );
   const [data_qa_detail, qaDetailDispatch] = useReducer(
     reducer,
     initialStateQA
@@ -110,6 +115,11 @@ const ItemCreate = (props) => {
     reducer,
     initialStateFilling
   );
+  const [
+    data_production_process_detail,
+    productionProcessDetailDispatch,
+  ] = useReducer(reducer, initialStateProductionProcess);
+
   const [data_file, setFile] = useState({
     item_image: null,
     certificate: {
@@ -381,14 +391,20 @@ const ItemCreate = (props) => {
               headDispatch={headDispatch}
               data_detail={data_detail}
               detailDispatch={detailDispatch}
+              // Formula
               data_formula_detail={data_formula_detail}
               formulaDetailDispatch={formulaDetailDispatch}
+              data_formula_part={data_formula_part}
+              formulaPartDetailDispatch={formulaPartDetailDispatch}
+              // QA
               data_qa_detail={data_qa_detail}
               qaDetailDispatch={qaDetailDispatch}
               data_filling_detail={data_filling_detail}
               fillingDetailDispatch={fillingDetailDispatch}
               data_weight_detail={data_weight_detail}
               weightDetailDispatch={weightDetailDispatch}
+              data_production_process_detail={data_production_process_detail}
+              productionProcessDetailDispatch={productionProcessDetailDispatch}
               upDateFormValue={upDateFormValue}
               readOnly={false}
             />

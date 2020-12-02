@@ -12,6 +12,11 @@ import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 import SearchTable from "../../components/SearchTable";
 import { work_center_columns } from "./config/master_data";
+import {
+  getAllWorkCenter,
+  getWorkCenterByID,
+} from "../../actions/production/workCenterActions";
+import { resetProductionData } from "../../actions/production";
 const WorkCenter = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
@@ -27,7 +32,7 @@ const WorkCenter = (props) => {
   };
 
   const dataWorkCenter = useSelector(
-    (state) => state.inventory.master_data.item_list
+    (state) => state.production.workCenter.workCenterList
   );
   const [workCenter, setWorkCenter] = useState([]);
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -36,46 +41,26 @@ const WorkCenter = (props) => {
     title: current_project && current_project.project_name,
     home: current_project && current_project.project_url,
     show: true,
-    breadcrumb: ["Home", "WorkCenter"],
+    breadcrumb: ["Home", "Work Center"],
     search: false,
-    create: "/production/work_conter/create",
+    create: "/production/work_center/create",
     // buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     buttonAction: ["Create"],
     edit: {},
     disabledEditBtn: !rowClick,
-    discard: "/production/work_conter",
+    discard: "/production/work_center",
     onCancel: () => {
       console.log("Cancel");
     },
   };
-  // const onChangeSeach = ({ type_id, category_id, search_text }) => {
-  //   console.log("search_text", search_text);
-  //   let search_data = dataWorkCenter;
-
-  //   if (type_id) {
-  //     category_id
-  //       ? (search_data = search_data.filter(
-  //           (item) => item.category_id === category_id
-  //         ))
-  //       : (search_data = search_data.filter(
-  //           (item) => item.type_id === type_id
-  //         ));
-  //   }
-  //   setWorkCenter(
-  //     search_data.filter(
-  //       (item) =>
-  //         item.item_name.indexOf(search_text) >= 0 ||
-  //         item.item_no.indexOf(search_text) >= 0
-  //     )
-  //   );
-  // };
-
-  // useEffect(() => {
-  //   dispatch(getAllItems());
-  // }, []);
 
   useEffect(() => {
-    // setWorkCenter(dataWorkCenter);
+    dispatch(getAllWorkCenter());
+    // return () => dispatch(resetProductionData());
+  }, []);
+
+  useEffect(() => {
+    setWorkCenter(dataWorkCenter);
   }, [dataWorkCenter.length]);
 
   useEffect(() => {
@@ -89,7 +74,7 @@ const WorkCenter = (props) => {
   }, [workCenter]);
 
   const redirect_to_view = (id) => {
-    history.push("/production/work_conter/view/" + (id ? id : "new"));
+    history.push("/production/work_center/view/" + (id ? id : "new"));
   };
 
   return (
@@ -105,7 +90,7 @@ const WorkCenter = (props) => {
               onChange={onChange}
               bordered
               size="small"
-              rowKey="item_id"
+              rowKey="work_center_id"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
@@ -115,14 +100,10 @@ const WorkCenter = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    // keepLog.keep_log_action(record.item_no);
-                    // dispatch(
-                    //   get_item_by_id(
-                    //     record.item_id,
-                    //     auth.user_name,
-                    //     redirect_to_view
-                    //   )
-                    // );
+                    keepLog.keep_log_action(record.work_center_no);
+                    dispatch(
+                      getWorkCenterByID(record.work_center_id, redirect_to_view)
+                    );
                   },
                 };
               }}

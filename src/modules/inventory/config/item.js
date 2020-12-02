@@ -206,36 +206,42 @@ export const item_qa_detail_fields = {
 };
 
 export const item_formula_columns = [
-  {
-    id: 0,
-    name: "Part",
-    size: 3,
-    require: true,
-  },
+  // {
+  //   id: 0,
+  //   name: "Part",
+  //   size: 3,
+  //   require: true,
+  // },
+  // {
+  //   id: 1,
+  //   name: "No.",
+  //   size: 3,
+  //   require: true,
+  // },
   {
     id: 1,
     name: "No.",
-    size: 3,
-    require: true,
+    size: 1,
+    require: false,
   },
   {
     id: 2,
     name: "RM Code",
-    size: 6,
+    size: 14,
     require: true,
   },
   {
     id: 3,
     name: "%(W/W)",
-    size: 3,
+    size: 8,
     require: true,
   },
-  {
-    id: 4,
-    name: "Remark",
-    size: 8,
-    require: false,
-  },
+  // {
+  //   id: 4,
+  //   name: "Description",
+  //   size: 10,
+  //   require: false,
+  // },
 ];
 export const item_formula_detail_fields = {
   id: null,
@@ -246,56 +252,6 @@ export const item_formula_detail_fields = {
   item_formula_qty: 0,
   // item_formula_percentage: null,
   item_formula_remark: null,
-  commit: 1,
-};
-
-export const item_production_process_columns = [
-  {
-    id: 0,
-    name: "Part",
-    size: 3,
-    require: true,
-  },
-  {
-    id: 1,
-    name: "Description Method",
-    size: 8,
-    require: true,
-  },
-  {
-    id: 2,
-    name: "Hono(RPM)",
-    size: 3,
-    require: true,
-  },
-  {
-    id: 3,
-    name: "Agitator(RPM)",
-    size: 3,
-    require: true,
-  },
-  {
-    id: 4,
-    name: "Scraper(RPM)",
-    size: 3,
-    require: true,
-  },
-  {
-    id: 5,
-    name: "Time(Minutes)",
-    size: 3,
-    require: false,
-  },
-];
-export const item_production_process_fields = {
-  id: null,
-  item_formula_part_id: null,
-  item_formula_part_name: null,
-  item_production_process_description: null,
-  item_production_process_hono: null,
-  item_production_process_agitator: null,
-  item_production_process_scraper: null,
-  item_production_process_time: 0,
   commit: 1,
 };
 
@@ -431,4 +387,64 @@ export const item_file = {
     5: null,
     6: null,
   },
+};
+
+export const item_process_specification_columns = [
+  {
+    id: 0,
+    name: "No.",
+    size: 1,
+    require: false,
+  },
+  {
+    id: 1,
+    name: "Condition",
+    size: 14,
+    require: true,
+  },
+  {
+    id: 2,
+    name: "Set",
+    size: 8,
+    require: true,
+  },
+  // {
+  //   id: 3,
+  //   name: "Description",
+  //   size: 8,
+  //   require: false,
+  // },
+];
+export const item_production_process_columns = [
+  {
+    id: 0,
+    name: "No.",
+    size: 1,
+    require: false,
+  },
+  {
+    id: 1,
+    name: "Work Center",
+    size: 10,
+    require: true,
+  },
+  {
+    id: 3,
+    name: "Description",
+    size: 12,
+    require: false,
+  },
+];
+
+export const item_production_process_fields = {
+  id: null,
+  item_work_center_id: null,
+  item_production_process_remark: null,
+  commit: 1,
+};
+
+export const item_formula_part_fields = {
+  id: 0,
+  formula_part_name: "A",
+  formula_part_capacity: 0,
 };

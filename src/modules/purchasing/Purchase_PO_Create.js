@@ -210,32 +210,58 @@ const PurchaseOrderCreate = (props) => {
     props.history.push("/purchase/po/view/" + (po_id ? po_id : "new"));
   };
   const getDataRef = (refId, mainData, refData) => {
-    let copyMain = { ...mainData };
-    let copyRef = { ...refData[refId] };
-    copyMain.pr_id = copyRef.pr_id;
-    copyMain.pr_no = copyRef.pr_no;
-    copyMain.vendor_no_name = copyRef.vendor_no_name;
-    copyMain.pr_no_description = copyRef.pr_no_description;
-    copyMain.po_description = copyRef.pr_description;
-    copyMain.po_due_date = copyRef.tg_pr_due_date;
-    copyMain.tg_po_amount = copyRef.tg_pr_amount;
-    copyMain.tg_po_discount = copyRef.tg_pr_discount;
-    copyMain.tg_po_sum_amount = copyRef.tg_pr_sum_amount;
-    copyMain.tg_po_vat_amount = copyRef.tg_pr_vat_amount;
-    copyMain.tg_po_total_amount = copyRef.tg_pr_total_amount;
-    copyMain.currency_id = copyRef.currency_id;
-    copyMain.currency_no = copyRef.currency_no;
-    copyMain.payment_term_id = copyRef.payment_term_id;
-    copyMain.payment_term_no_name = copyRef.payment_term_no_name;
-    copyMain.cost_center_id = copyRef.cost_center_id;
-    copyMain.vendor_id = copyRef.vendor_id;
+    let copyMain = refData[refId];
+    // let copyRef = { ...refData[refId] };
+    // copyMain.pr_id = copyRef.pr_id;
+    // copyMain.pr_no = copyRef.pr_no;
+    // copyMain.vendor_no_name = copyRef.vendor_no_name;
+    // copyMain.pr_no_description = copyRef.pr_no_description;
+    // copyMain.po_description = copyRef.pr_description;
+    // copyMain.po_due_date = copyRef.tg_pr_due_date;
+    // copyMain.tg_po_amount = copyRef.tg_pr_amount;
+    // copyMain.tg_po_discount = copyRef.tg_pr_discount;
+    // copyMain.tg_po_sum_amount = copyRef.tg_pr_sum_amount;
+    // copyMain.tg_po_vat_amount = copyRef.tg_pr_vat_amount;
+    // copyMain.tg_po_total_amount = copyRef.tg_pr_total_amount;
+    // copyMain.currency_id = copyRef.currency_id;
+    // copyMain.currency_no = copyRef.currency_no;
+    // copyMain.payment_term_id = copyRef.payment_term_id;
+    // copyMain.payment_term_no_name = copyRef.payment_term_no_name;
+    // copyMain.cost_center_id = copyRef.cost_center_id;
+    // copyMain.type_id = copyRef.type_id;
+    // copyMain.type_name = copyRef.type_name;
+    // copyMain.po_discount = copyRef.pr_discount;
+    // copyMain.vendor_id = copyRef.vendor_id;
     upDateFormValue({ ...data_head, ...copyMain });
   };
-
   const resetDataRef = () => {
+    let copyMain = po_fields;
+    copyMain.pr_id = null;
+    copyMain.pr_no = null;
+    copyMain.vendor_no_name = null;
+    copyMain.pr_no_description = null;
+    copyMain.po_description = null;
+    copyMain.po_due_date = null;
+    copyMain.tg_po_amount = null;
+    copyMain.tg_po_discount = null;
+    copyMain.tg_po_sum_amount = null;
+    copyMain.tg_po_vat_amount = null;
+    copyMain.tg_po_total_amount = null;
+    copyMain.currency_id = null;
+    copyMain.currency_no = null;
+    copyMain.payment_term_id = null;
+    copyMain.payment_term_no_name = null;
+    copyMain.cost_center_id = null;
+    copyMain.vendor_id = null;
+    upDateFormValue(copyMain);
+    detailDispatch({ type: "SET_DETAIL", payload: initialStateDetail });
     dispatch(reset_po_data());
   };
-  console.log(data_detail);
+
+  // const resetDataRef = () => {
+  //   dispatch(reset_po_data());
+  // };
+  console.log(data_head, data_detail);
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -277,9 +303,16 @@ const PurchaseOrderCreate = (props) => {
               data={select_box_pr}
               onChange={(data, option) => {
                 console.log("onchange");
-                option && option.title
-                  ? getDataRef(option.key, data_head, select_box_pr)
-                  : resetDataRef();
+                if (data) {
+                  console.log("if");
+                  getDataRef(option.key, data_head, select_box_pr);
+                } else {
+                  console.log("else");
+                  resetDataRef();
+                }
+                // option && option.title
+                //     ? getDataRef(option.key, data_head, select_box_pr)
+                //     : resetDataRef()
               }}
             />
           </Col>
@@ -398,11 +431,21 @@ const PurchaseOrderCreate = (props) => {
             {data_head.currency_no ? data_head.currency_no : "THB"}
           </Col>
         </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Item Type :</Text>
+          </Col>
+          <Col span={8} className="text-view">
+            {data_head.type_name}
+          </Col>
+          <Col span={2}></Col>
+        </Row>
         <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey={"1"} onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key={"1"}>
                 <ItemLine
+                  type_id={data_head.type_id}
                   pr_id={data_head.pr_id && data_head.pr_id}
                   po_id={data_head.po_id && data_head.po_id}
                   data_detail={data_detail}

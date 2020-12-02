@@ -248,6 +248,15 @@ const PurchaseOrderCreate = (props) => {
             {data_head.currency_no}
           </Col>
         </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Item Type :</Text>
+          </Col>
+          <Col span={8} className="text-view">
+            {data_head.type_name}
+          </Col>
+          <Col span={2}></Col>
+        </Row>
         <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey={"1"} onChange={callback}>
@@ -261,7 +270,9 @@ const PurchaseOrderCreate = (props) => {
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key={"2"}>
-                <Text className="text-view">{data_head.po_remark}</Text>
+                <Text className="text-view">
+                  {data_head.po_remark ? data_head.po_remark : "-"}
+                </Text>
               </Tabs.TabPane>
             </Tabs>
           </Col>

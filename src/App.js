@@ -50,7 +50,11 @@ import CustomerCreate from "./modules/sales/Customer_Create";
 
 import Production from "./modules/production/Production";
 import WorkCenter from "./modules/production/WorkCenter";
-import Tooling from "./modules/production/Tooling";
+import WorkCenterCreate from "./modules/production/WorkCenterCreate";
+import WorkCenterView from "./modules/production/WorkCenterView";
+import Machine from "./modules/production/Machine";
+import MachineCreate from "./modules/production/MachineCreate";
+import MachineView from "./modules/production/MachineView";
 
 import NotFound from "./modules/dashboard/NotFound";
 import { Provider, useDispatch, useSelector } from "react-redux";
@@ -75,6 +79,7 @@ const initialContext = {
 // class App extends Component {
 const App = (props) => {
   const [context, setContext] = useState(initialContext);
+
   useEffect(() => {
     context.log_detail.user_name && keep_log(context);
   }, [context]);
@@ -314,16 +319,44 @@ const App = (props) => {
             <Route exact path="/qa/qc/qualitytest">
               <QualityTest />
             </Route>
-
+            {/* PRODUCTION */}
             <Route exact path="/production">
               <Production />
             </Route>
+
             <Route exact path="/production/work_center">
               <WorkCenter />
             </Route>
-            <Route exact path="/production/tooling">
-              <Tooling />
+            <Route exact path="/production/work_center/create">
+              <WorkCenterCreate />
             </Route>
+            <Route
+              exact
+              path="/production/work_center/view/:id"
+              component={WorkCenterView}
+            />
+            <Route
+              exact
+              path="/production/work_center/edit/:id"
+              component={WorkCenterCreate}
+            />
+
+            <Route exact path="/production/machine">
+              <Machine />
+            </Route>
+            <Route exact path="/production/machine/create">
+              <MachineCreate />
+            </Route>
+            <Route
+              exact
+              path="/production/machine/view/:id"
+              component={MachineView}
+            />
+            <Route
+              exact
+              path="/production/machine/edit/:id"
+              component={MachineCreate}
+            />
 
             <Route>
               <NotFound />

@@ -10,6 +10,7 @@ export const pr_require_fields = [
   "cost_center_id",
   "branch_id",
   "currency_id",
+  "type_id",
 ];
 export const pr_require_fields_detail = [
   "item_id",
@@ -174,7 +175,7 @@ export const prItemColumns = [
     id: 3,
     name: "Unit Price",
     size: 3,
-    require: true,
+    require: false,
   },
   {
     id: 4,

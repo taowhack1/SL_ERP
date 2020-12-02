@@ -37,6 +37,9 @@ const PurchaseOrders = (props) => {
   }, [dispatch]);
 
   const po_list = useSelector((state) => state.purchase.po.po_list);
+  useEffect(() => {
+    setData(po_list);
+  }, [po_list.length]);
   const [data, setData] = useState(po_list);
   const [loading, setLoading] = useState(false);
   const [rowClick, setRowClick] = useState(false);

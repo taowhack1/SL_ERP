@@ -11,8 +11,13 @@ import $ from "jquery";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 import SearchTable from "../../components/SearchTable";
-import { tooling_columns, work_center_columns } from "./config/master_data";
-const Tooling = (props) => {
+import { machine_columns, work_center_columns } from "./config/master_data";
+import {
+  getAllMachine,
+  getMachineByID,
+} from "../../actions/production/machineActions";
+import { resetProductionData } from "../../actions/production";
+const Machine = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
@@ -27,55 +32,35 @@ const Tooling = (props) => {
   };
 
   const dataTooling = useSelector(
-    (state) => state.inventory.master_data.item_list
+    (state) => state.production.machine.machineList
   );
-  const [tooling, setTooling] = useState([]);
+  const [machine, setTooling] = useState([]);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
     title: current_project && current_project.project_name,
     home: current_project && current_project.project_url,
     show: true,
-    breadcrumb: ["Home", "Tooling"],
+    breadcrumb: ["Home", "Machine"],
     search: false,
-    create: "/production/tooling/create",
+    create: "/production/machine/create",
     // buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     buttonAction: ["Create"],
     edit: {},
     disabledEditBtn: !rowClick,
-    discard: "/production/tooling",
+    discard: "/production/machine",
     onCancel: () => {
       console.log("Cancel");
     },
   };
-  // const onChangeSeach = ({ type_id, category_id, search_text }) => {
-  //   console.log("search_text", search_text);
-  //   let search_data = dataTooling;
-
-  //   if (type_id) {
-  //     category_id
-  //       ? (search_data = search_data.filter(
-  //           (item) => item.category_id === category_id
-  //         ))
-  //       : (search_data = search_data.filter(
-  //           (item) => item.type_id === type_id
-  //         ));
-  //   }
-  //   setTooling(
-  //     search_data.filter(
-  //       (item) =>
-  //         item.item_name.indexOf(search_text) >= 0 ||
-  //         item.item_no.indexOf(search_text) >= 0
-  //     )
-  //   );
-  // };
-
-  // useEffect(() => {
-  //   dispatch(getAllItems());
-  // }, []);
 
   useEffect(() => {
-    // setTooling(dataTooling);
+    dispatch(getAllMachine());
+    // return () => dispatch(resetProductionData());
+  }, []);
+
+  useEffect(() => {
+    setTooling(dataTooling);
   }, [dataTooling.length]);
 
   useEffect(() => {
@@ -86,10 +71,10 @@ const Tooling = (props) => {
         clearTimeout();
       };
     }, 1200);
-  }, [tooling]);
+  }, [machine]);
 
   const redirect_to_view = (id) => {
-    history.push("/production/tooling/view/" + (id ? id : "new"));
+    history.push("/production/machine/view/" + (id ? id : "new"));
   };
 
   return (
@@ -100,12 +85,12 @@ const Tooling = (props) => {
             <Table
               // title={() => <SearchTable onChangeSeach={onChangeSeach} />}
               loading={loading}
-              columns={tooling_columns}
-              dataSource={tooling}
+              columns={machine_columns}
+              dataSource={machine}
               onChange={onChange}
               bordered
               size="small"
-              rowKey="item_id"
+              rowKey="machine_id"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
@@ -115,14 +100,10 @@ const Tooling = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    // keepLog.keep_log_action(record.item_no);
-                    // dispatch(
-                    //   get_item_by_id(
-                    //     record.item_id,
-                    //     auth.user_name,
-                    //     redirect_to_view
-                    //   )
-                    // );
+                    keepLog.keep_log_action(record.machine_no);
+                    dispatch(
+                      getMachineByID(record.machine_id, redirect_to_view)
+                    );
                   },
                 };
               }}
@@ -134,4 +115,4 @@ const Tooling = (props) => {
   );
 };
 
-export default withRouter(Tooling);
+export default withRouter(Machine);
