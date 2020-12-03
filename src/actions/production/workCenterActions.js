@@ -16,7 +16,14 @@ const bindWorkCenterDetail = (work_center_id, data_detail) => {
       console.log("BIND DETAIL");
     });
 };
+export const getWorkCenterDetailByID = async (work_center_id) => {
+  const get_detail = () =>
+    axios.get(`${api_work_center_detail}/${work_center_id}`, header_config);
 
+  const res = await get_detail();
+  console.log("GET_DETAIL");
+  return res.data[0];
+};
 export const getAllWorkCenter = (user_name) => (dispatch) => {
   axios.get(api_work_center, header_config).then((res) =>
     dispatch({

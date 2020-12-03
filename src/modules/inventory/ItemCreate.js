@@ -22,7 +22,8 @@ import {
   item_file,
   item_filling_detail_fields,
   item_formula_detail_fields,
-  item_formula_part_fields,
+  item_part_specification_detail_fields,
+  item_part_specification_fields,
   item_production_process_fields,
   item_qa_detail_fields,
   item_require_fields,
@@ -46,7 +47,8 @@ const initialStateQA = [item_qa_detail_fields];
 const initialStateFilling = [item_filling_detail_fields];
 const initialStateWeight = item_weight_detail;
 const initialStateProductionProcess = [item_production_process_fields];
-const initialStateFormulaPart = [item_formula_part_fields];
+const initialStatePart = [item_part_specification_fields];
+const initialStatePartDetail = [item_part_specification_detail_fields];
 const ItemCreate = (props) => {
   const history = useHistory();
   const authorize = Authorize();
@@ -68,9 +70,10 @@ const ItemCreate = (props) => {
     reducer,
     initialStateFormula
   );
-  const [data_formula_part, formulaPartDetailDispatch] = useReducer(
+  const [data_part, partDispatch] = useReducer(reducer, initialStatePart);
+  const [data_part_detail, partDetailDispatch] = useReducer(
     reducer,
-    initialStateFormulaPart
+    initialStatePartDetail
   );
   const [data_qa_detail, qaDetailDispatch] = useReducer(
     reducer,
@@ -152,20 +155,17 @@ const ItemCreate = (props) => {
           ? data.data_filling_detail
           : [item_filling_detail_fields],
     });
+    partDetailDispatch({
+      type: "SET_DETAIL",
+      payload:
+        data && data.data_part_detail.length
+          ? data.data_part_detail
+          : initialStatePartDetail,
+    });
+
     setFile(data.data_file ?? item_file);
   }, []);
 
-  const upDateFormValue = (data) => {
-    headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
-  };
-  const updateFile = (data, type) => {
-    type === 1
-      ? setFile({ ...data_file, ...data })
-      : setFile({
-          ...data_file,
-          certificate: { ...data_file.certificate, ...data },
-        });
-  };
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -251,6 +251,19 @@ const ItemCreate = (props) => {
       console.log("Confirm");
     },
   };
+
+  const upDateFormValue = (data) => {
+    headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
+  };
+  const updateFile = (data, type) => {
+    type === 1
+      ? setFile({ ...data_file, ...data })
+      : setFile({
+          ...data_file,
+          certificate: { ...data_file.certificate, ...data },
+        });
+  };
+
   const redirect_to_view = (id) => {
     history.push("/inventory/items/view/" + (id ? id : "new"));
   };
@@ -373,8 +386,11 @@ const ItemCreate = (props) => {
               // Formula
               data_formula_detail={data_formula_detail}
               formulaDetailDispatch={formulaDetailDispatch}
-              data_formula_part={data_formula_part}
-              formulaPartDetailDispatch={formulaPartDetailDispatch}
+              //PART
+              data_part={data_part}
+              partDispatch={partDispatch}
+              data_part_detail={data_part_detail}
+              partDetailDispatch={partDetailDispatch}
               // QA
               data_qa_detail={data_qa_detail}
               qaDetailDispatch={qaDetailDispatch}

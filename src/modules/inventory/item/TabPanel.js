@@ -21,11 +21,16 @@ const TabPanel = ({
   data_detail,
   detailDispatch,
   upDateFormValue,
+
   readOnly,
   data_formula_detail,
   formulaDetailDispatch,
-  data_formula_part,
-  formulaPartDetailDispatch,
+  // PART
+  data_part,
+  partDispatch,
+  data_part_detail,
+  partDetailDispatch,
+  // QA
   data_qa_detail,
   qaDetailDispatch,
   data_filling_detail,
@@ -50,7 +55,7 @@ const TabPanel = ({
   return (
     <>
       <Tabs
-        defaultActiveKey={"4"}
+        defaultActiveKey={"3"}
         onChange={callback}
         className="row-tab-margin-lg"
       >
@@ -114,8 +119,11 @@ const TabPanel = ({
             // formula
             data_formula_detail={data_formula_detail}
             formulaDetailDispatch={formulaDetailDispatch}
-            data_formula_part={data_formula_part}
-            formulaPartDetailDispatch={formulaPartDetailDispatch}
+            // PART
+            data_part={data_part}
+            partDispatch={partDispatch}
+            data_part_detail={data_part_detail}
+            partDetailDispatch={partDetailDispatch}
             readOnly={readOnly}
           />
         </Tabs.TabPane>
@@ -199,6 +207,8 @@ const TabPanel = ({
           key={"7"}
         >
           <TabFillingProcess
+            data_head={data_head}
+            upDateFormValue={upDateFormValue}
             uom_no_name={data_head.uom_no_name}
             data_filling_detail={data_filling_detail}
             fillingDetailDispatch={fillingDetailDispatch}

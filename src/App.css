@@ -122,6 +122,31 @@ h6 {
 .mb-4 {
   margin-bottom: 40px;
 }
+.ml-1 {
+  margin-left: 10px;
+}
+.mr-1 {
+  margin-right: 10px;
+}
+.ml-2 {
+  margin-left: 10px;
+}
+.mr-2 {
+  margin-right: 20px;
+}
+.ml-3 {
+  margin-left: 10px;
+}
+.mr-3 {
+  margin-right: 30px;
+}
+.ml-4 {
+  margin-left: 10px;
+}
+.mr-4 {
+  margin-right: 40px;
+}
+
 #top-content {
   padding: 0px 20px;
   padding-bottom: 10px;

@@ -92,7 +92,7 @@ const TabBulkFormula = ({
     const startChar = 65;
     return "Part : " + String.fromCharCode(key + startChar);
   };
-  console.log("data_part", data_part);
+  console.log(data_part);
   return (
     <>
       <Row className="col-2 row-margin-vertical">

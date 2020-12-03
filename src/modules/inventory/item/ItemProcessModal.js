@@ -13,7 +13,7 @@ export const ItemProcessModal = ({
   data_detail,
   detailDispatch,
 }) => {
-  console.log("[Modal] visible", visible);
+  console.log(data_detail);
   return (
     <Modal
       width={1100}
@@ -37,55 +37,7 @@ export const ItemProcessModal = ({
         ),
       ]}
     >
-      <Row>
-        <Col span={12} className="col-left">
-          <Row className="row-margin-vertical">
-            <Col span={6} className="pd-left-1">
-              <Text strong>
-                <span className="require">* </span>Worker
-              </Text>
-            </Col>
-            <Col span={17}>
-              <InputNumber className="full-width" />
-            </Col>
-            <Col span={1}></Col>
-          </Row>
-        </Col>
-        <Col span={12} className="col-right">
-          <Row className="row-margin-vertical">
-            <Col span={1}></Col>
-            <Col span={6}>
-              <Text strong>
-                <span className="require">* </span>Time Used
-              </Text>
-            </Col>
-            <Col span={17} className="pd-right-1">
-              <TimePicker
-                className="full-width"
-                format={"HH:mm"}
-                showNow={false}
-                name={"work_center_time"}
-                style={{ width: "100%" }}
-                placeholder="Hour : Minute"
-                required
-                value={
-                  data_detail.work_center_time
-                    ? moment(data_detail.work_center_time, "HH:mm:ss")
-                    : ""
-                }
-                onChange={(data) => {
-                  const time = moment(data, "HH:mm").format("HH:mm:ss");
-                  console.log(time);
-                  //   upDateFormValue({
-                  //     work_center_time: data ? time : null,
-                  //   });
-                }}
-              />
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-      <Row className="row-tab-margin-lg">
+      <Row className="">
         <Col span={24}>
           <WorkCenterDetail
             data_detail={data_detail}

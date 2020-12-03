@@ -1,3 +1,5 @@
+import { header_config } from "../../../include/js/main_config";
+
 export const item_vendor_columns = [
   {
     id: 0,
@@ -38,6 +40,7 @@ export const item_vendor_columns = [
 
 export const item_fields = {
   item_id: 0,
+  item_id_ref: null,
   item_no: null,
   item_name: null,
   item_name_trade: null,
@@ -205,56 +208,6 @@ export const item_qa_detail_fields = {
   commit: 1,
 };
 
-export const item_formula_columns = [
-  // {
-  //   id: 0,
-  //   name: "Part",
-  //   size: 3,
-  //   require: true,
-  // },
-  // {
-  //   id: 1,
-  //   name: "No.",
-  //   size: 3,
-  //   require: true,
-  // },
-  {
-    id: 1,
-    name: "No.",
-    size: 1,
-    require: false,
-  },
-  {
-    id: 2,
-    name: "RM Code",
-    size: 14,
-    require: true,
-  },
-  {
-    id: 3,
-    name: "%(W/W)",
-    size: 8,
-    require: true,
-  },
-  // {
-  //   id: 4,
-  //   name: "Description",
-  //   size: 10,
-  //   require: false,
-  // },
-];
-export const item_formula_detail_fields = {
-  id: null,
-  item_id: null,
-  item_formula_id: null,
-  item_formula_part: null,
-  item_formula_part_no: null,
-  item_formula_qty: 0,
-  // item_formula_percentage: null,
-  item_formula_remark: null,
-  commit: 1,
-};
-
 // Filling Process
 export const item_filling_weight_columns = [
   {
@@ -389,6 +342,33 @@ export const item_file = {
   },
 };
 
+export const item_formula_columns = [
+  {
+    id: 1,
+    name: "No.",
+    size: 1,
+    require: false,
+  },
+  {
+    id: 2,
+    name: "RM Code",
+    size: 9,
+    require: true,
+  },
+  {
+    id: 3,
+    name: "Machine | Tool",
+    size: 9,
+    require: true,
+  },
+  {
+    id: 4,
+    name: "%(W/W)",
+    size: 4,
+    require: true,
+  },
+];
+
 export const item_process_specification_columns = [
   {
     id: 0,
@@ -408,12 +388,6 @@ export const item_process_specification_columns = [
     size: 8,
     require: true,
   },
-  // {
-  //   id: 3,
-  //   name: "Description",
-  //   size: 8,
-  //   require: false,
-  // },
 ];
 export const item_production_process_columns = [
   {
@@ -425,28 +399,67 @@ export const item_production_process_columns = [
   {
     id: 1,
     name: "Work Center",
-    size: 10,
+    size: 7,
+    require: true,
+  },
+  {
+    id: 2,
+    name: "Worker",
+    size: 3,
     require: true,
   },
   {
     id: 3,
+    name: "Time Used",
+    size: 3,
+    require: true,
+  },
+  {
+    id: 4,
     name: "Remark",
-    size: 11,
+    size: 8,
     require: false,
   },
 ];
+
+export const item_formula_detail_fields = {
+  id: 0,
+  item_id: null,
+  item_formula_id: null,
+  item_part_id: null,
+  item_formula_qty: 0,
+  item_part_specification_id: null,
+  item_formula_remark: null,
+  commit: 1,
+};
+
+// PART DETAIL
+export const item_part_specification_detail_fields = {
+  id: 0,
+  item_part_specification_id: null,
+  item_part_specification_detail_id: null,
+  item_part_specification_detail_condition: null,
+  item_part_specification_detail_set: null,
+  item_part_specification_detail_remark: null,
+};
+// PART
+export const item_part_specification_fields = {
+  id: 0,
+  item_part_specification_id: null,
+  item_part_specification_time: 0,
+  item_part_specification_remark: null,
+  item_id: null,
+  item_part_id: 1,
+  item_part_name: "Part : A",
+  item_formula_detail: [item_formula_detail_fields],
+  item_part_detail: [item_part_specification_detail_fields],
+};
 
 export const item_production_process_fields = {
   id: null,
   work_center_id: null,
   work_center_time: null,
-  work_center_worker: null,
+  work_center_worker: 0,
   item_process_remark: null,
   commit: 1,
-};
-
-export const item_formula_part_fields = {
-  id: 0,
-  formula_part_name: "A",
-  formula_part_capacity: 0,
 };

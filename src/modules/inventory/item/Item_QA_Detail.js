@@ -6,11 +6,13 @@ import {
   AutoComplete,
   Typography,
   Input,
+  Space,
 } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
   EllipsisOutlined,
+  ProfileOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -48,11 +50,15 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
   console.log(data_qa_detail);
   return (
     <>
-      <Row className="col-2 row-margin-vertical  detail-tab-row">
+      <Row className="col-2 row-margin-vertical detail-tab-row">
         <Col span={24}>
-          <Text strong className="detail-tab-header">
-            QA Test Case
-          </Text>
+          <Space>
+            <Text strong style={{ fontSize: 16, marginRight: 10 }}>
+              {/* <span className="require">* </span> */}
+              <ProfileOutlined style={{ marginRight: 10 }} />
+              QA Test Case
+            </Text>
+          </Space>
         </Col>
       </Row>
       {/* Column Header */}

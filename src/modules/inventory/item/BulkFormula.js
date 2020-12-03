@@ -34,6 +34,7 @@ const BulkFormula = ({
   formulaDetailDispatch,
   item_list,
 }) => {
+  const { machineList } = useSelector((state) => state.production.machine);
   const addLine = () => {
     formulaDetailDispatch({
       type: "ADD_ROW",
@@ -79,48 +80,13 @@ const BulkFormula = ({
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
-        {/* <Col span={24}>
-          <Space>
-            <div className="detail-tab-header">
-            <Text strong>Formula</Text>
-            </div>
-            <PlusOutlined /> Add a line
-            <Button
-              type="ghost"
-              className="primary"
-              onClick={() => {
-                addLine();
-              }}
-              style={{ borderRadius: 3 }}
-            >
-              <PlusOutlined /> Add
-            </Button>
-          </Space>
-        </Col> */}
         <Col span={3}>
-          {/* <div className="detail-tab-header"> */}
           <Text strong style={{ fontSize: 16 }}>
             <ProfileOutlined style={{ marginRight: 10 }} /> Formula
           </Text>
-          {/* </div> */}
         </Col>
         <Col span={10} className="text-left"></Col>
-        <Col
-          span={11}
-          className="text-right"
-          // style={{ backgroundColor: "gray" }}
-        >
-          {/* <Button
-            type="ghost"
-            className="primary"
-            onClick={() => {
-              addLine();
-            }}
-            style={{ borderRadius: 3 }}
-          >
-            <PlusOutlined /> Add a line
-          </Button> */}
-        </Col>
+        <Col span={11} className="text-right"></Col>
       </Row>
       {/* Column Header */}
       <div className="detail-form">
@@ -158,58 +124,10 @@ const BulkFormula = ({
                 gutter={4}
                 className="form-row"
               >
-                {/* <Col span={3} className="text-center">
-                  <CustomSelect
-                    allowClear
-                    showSearch
-                    size={"small"}
-                    placeholder={"Part"}
-                    name="item_formula_part"
-                    field_id="item_formula_part"
-                    field_name="item_formula_part"
-                    value={line.item_formula_part}
-                    data={getFormulaPart()}
-                    onChange={(data, option) => {
-                      data && data
-                        ? onChangeValue(line.id, {
-                            item_formula_part: option.data.item_formula_part,
-                            item_formula_no: null,
-                          })
-                        : onChangeValue(line.id, {
-                            item_formula_no: null,
-                            item_formula_part: null,
-                          });
-                    }}
-                  />
-                </Col>
-                <Col span={3} className="text-string">
-                  <CustomSelect
-                    allowClear
-                    showSearch
-                    size={"small"}
-                    placeholder={"No."}
-                    name="item_formula_part_no"
-                    field_id="item_formula_part_no"
-                    field_name="item_formula_part_no"
-                    value={line.item_formula_part_no}
-                    data={getFormulaNo(line.item_formula_part)}
-                    onChange={(data, option) => {
-                      data && data
-                        ? onChangeValue(line.id, {
-                            item_formula_part: option.data.item_formula_part,
-                            item_formula_part_no:
-                              option.data.item_formula_part_no,
-                          })
-                        : onChangeValue(line.id, {
-                            item_formula_part_no: null,
-                          });
-                    }}
-                  />
-                </Col> */}
                 <Col span={1} className="text-center">
                   <Text>{key + 1}</Text>
                 </Col>
-                <Col span={14} className="text-string">
+                <Col span={9} className="text-string">
                   <CustomSelect
                     allowClear
                     showSearch
@@ -233,7 +151,31 @@ const BulkFormula = ({
                     }}
                   />
                 </Col>
-                <Col span={8} className="text-string">
+                <Col span={9} className="text-string">
+                  <CustomSelect
+                    allowClear
+                    showSearch
+                    size="small"
+                    placeholder={"Select Machine"}
+                    name="machine_no_name"
+                    field_id="machine_id"
+                    field_name="machine_no_name"
+                    value={line.machine_no_name}
+                    data={machineList}
+                    onChange={(data, option) => {
+                      data && data
+                        ? onChangeValue(line.id, {
+                            machine_id: option.data.machine_id,
+                            machine_no_name: option.data.machine_no_name,
+                          })
+                        : onChangeValue(line.id, {
+                            machine_id: null,
+                            machine_no_name: null,
+                          });
+                    }}
+                  />
+                </Col>
+                <Col span={4} className="text-number">
                   <InputNumber
                     name="item_formula_qty"
                     placeholder="Percentage"
@@ -254,20 +196,6 @@ const BulkFormula = ({
                     size="small"
                   />
                 </Col>
-                {/* <Col span={10} className="text-string">
-                  <Input
-                    name="item_formula_remark"
-                    size="small"
-                    placeholder={"Remark"}
-                    onChange={(e) =>
-                      onChangeValue(line.id, {
-                        item_formula_remark: e.target.value,
-                      })
-                    }
-                    value={line.item_formula_remark}
-                  />
-                </Col> */}
-
                 <Col span={1} style={{ textAlign: "center" }}>
                   <DeleteTwoTone onClick={() => delLine(line.id)} />
                 </Col>

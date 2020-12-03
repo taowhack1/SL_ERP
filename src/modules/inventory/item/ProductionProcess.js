@@ -1,4 +1,14 @@
-import { Button, Row, Col, Typography, Input, Space, message } from "antd";
+import {
+  Button,
+  Row,
+  Col,
+  Typography,
+  Input,
+  Space,
+  message,
+  TimePicker,
+  InputNumber,
+} from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
@@ -7,6 +17,7 @@ import {
   EditOutlined,
   FormOutlined,
   InfoCircleTwoTone,
+  ProfileOutlined,
 } from "@ant-design/icons";
 import React, { useEffect, useReducer, useState } from "react";
 import {
@@ -14,11 +25,16 @@ import {
   item_production_process_fields,
 } from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
-import { getAllWorkCenter } from "../../../actions/production/workCenterActions";
+import {
+  getAllWorkCenter,
+  getWorkCenterDetailByID,
+} from "../../../actions/production/workCenterActions";
 import { useDispatch, useSelector } from "react-redux";
 import { reducer } from "../reducers";
 import { validateFormDetail } from "../../../include/js/function_main";
 import ItemProcessModal from "./ItemProcessModal";
+import moment from "moment";
+import { work_center_detail_fields } from "../../production/config/master_data";
 
 const { Text } = Typography;
 const ProductionProcess = ({
@@ -90,7 +106,7 @@ const ProductionProcess = ({
     console.log("Cancel Modal");
     tempSubDetailDispatch({
       type: "SET_DETAIL",
-      payload: [],
+      payload: [work_center_detail_fields],
     });
   };
   console.log(visible);
@@ -98,9 +114,13 @@ const ProductionProcess = ({
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
         <Col span={24}>
-          <Text strong className="detail-tab-header">
-            Production Process
-          </Text>
+          <Space>
+            <Text strong style={{ fontSize: 16, marginRight: 10 }}>
+              {/* <span className="require">* </span> */}
+              <ProfileOutlined style={{ marginRight: 10 }} />
+              Production Process
+            </Text>
+          </Space>
         </Col>
       </Row>
       {/* Column Header */}
@@ -139,12 +159,12 @@ const ProductionProcess = ({
               <Col span={1} className="text-center">
                 {key + 1}
               </Col>
-              <Col span={10} className="text-string">
+              <Col span={7} className="text-string">
                 <CustomSelect
                   allowClear
                   showSearch
                   size={"small"}
-                  placeholder={"Subject"}
+                  placeholder={"Select Work Center"}
                   name="work_center_id"
                   field_id="work_center_id"
                   field_name="work_center_no_description"
@@ -156,16 +176,67 @@ const ProductionProcess = ({
                           work_center_id: option.data.work_center_id,
                           work_center_no_description:
                             option.data.work_center_no_description,
+                          work_center_worker:
+                            option.data.work_center_worker ?? 0,
+                          work_center_time:
+                            option.data.work_center_time ?? null,
                         })
                       : onChangeValue(line.id, {
                           work_center_id: null,
                           work_center_no_description: null,
+                          work_center_worker: 0,
+                          work_center_time: null,
                         });
                   }}
                 />
               </Col>
-              <Col span={11} className="text-string">
+              <Col span={3} className="text-right">
+                <InputNumber
+                  disabled={line.work_center_id ? 0 : 1}
+                  className="full-width"
+                  name="work_center_worker"
+                  placeholder="Amount of Worker"
+                  value={line.work_center_worker}
+                  min={0}
+                  step={1}
+                  defaultValue={0}
+                  precision={0}
+                  onChange={(data) => {
+                    onChangeValue(line.id, {
+                      work_center_worker: data,
+                    });
+                  }}
+                  size="small"
+                />
+              </Col>
+              <Col span={3} className="text-center">
+                <TimePicker
+                  disabled={line.work_center_id ? 0 : 1}
+                  className="full-width"
+                  format={"HH:mm"}
+                  showNow={false}
+                  name={"work_center_time"}
+                  style={{ width: "100%" }}
+                  placeholder="Hour : Minute"
+                  required
+                  size="small"
+                  value={
+                    line.work_center_time
+                      ? moment(line.work_center_time, "HH:mm:ss")
+                      : ""
+                  }
+                  onChange={(data) => {
+                    const time = moment(data, "HH:mm").format("HH:mm:ss");
+                    console.log(time);
+                    onChangeValue(line.id, {
+                      work_center_time: data ? time : null,
+                    });
+                  }}
+                />
+              </Col>
+              <Col span={8} className="text-string">
                 <Input
+                  disabled={line.work_center_id ? 0 : 1}
                   name="item_process_remark"
                   size="small"
                   placeholder={"Remark"}
@@ -182,18 +253,27 @@ const ProductionProcess = ({
                 <Space size={16}>
                   {line.work_center_id && (
                     <FormOutlined
-                      onClick={() => {
-                        setVisible(true);
+                      onClick={async () => {
+                        const detail = await getWorkCenterDetailByID(
+                          line.work_center_id
+                        );
+
                         tempSubDetailDispatch({
                           type: "SET_DETAIL",
-                          payload: [],
+                          payload: detail.length
+                            ? detail
+                            : [work_center_detail_fields],
                         });
+                        console.log("SET");
+                        setVisible(true);
                         setTempDetail(line);
                       }}
                       className="button-icon"
                     />
                   )}
-                  <DeleteTwoTone onClick={() => delLine(line.id)} />
+                  {data_production_process_detail.length > 1 && (
+                    <DeleteTwoTone onClick={() => delLine(line.id)} />
+                  )}
                 </Space>
               </Col>
             </Row>
@@ -227,12 +307,18 @@ const ProductionProcess = ({
               <Col span={1} className="text-center">
                 <Text>{key + 1}</Text>
               </Col>
-              <Col span={10} className="text-left">
+              <Col span={7} className="text-left">
                 <Text className="text-left">
                   {line.work_center_no_description}
                 </Text>
               </Col>
-              <Col span={11} className="text-left">
+              <Col span={3} className="text-right">
+                <Text className="text-right">{line.work_center_worker}</Text>
+              </Col>
+              <Col span={3} className="text-center">
+                <Text className="text-center">{line.work_center_time}</Text>
+              </Col>
+              <Col span={8} className="text-left">
                 <Text className="text-left">{line.item_process_remark}</Text>
               </Col>
               <Col span={2} className="text-center">

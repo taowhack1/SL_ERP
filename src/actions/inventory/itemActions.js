@@ -57,8 +57,8 @@ const bind_formula = (item_id, data_formula_detail) => {
   const data_formula_detail_temp = data_formula_detail.filter(
     (detail) =>
       detail.item_id !== null &&
-      detail.item_formula_part !== null &&
-      detail.item_formula_part_no !== null &&
+      detail.item_part_id !== null &&
+      // detail.item_formula_part_no !== null &&
       detail.item_formula_qty !== 0 &&
       detail.commit === 1
   );

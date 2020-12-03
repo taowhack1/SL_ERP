@@ -31,23 +31,23 @@ const { Text } = Typography;
 
 const PartSpecification = ({
   readOnly,
-  data_formula_detail,
-  formulaDetailDispatch,
+  data_part_detail,
+  partDetailDispatch,
   item_list,
 }) => {
   const addLine = () => {
-    formulaDetailDispatch({
+    partDetailDispatch({
       type: "ADD_ROW",
       payload: item_formula_detail_fields,
     });
   };
 
   const delLine = (id) => {
-    formulaDetailDispatch({ type: "DEL_ROW", payload: { id: id } });
+    partDetailDispatch({ type: "DEL_ROW", payload: { id: id } });
   };
 
   const onChangeValue = (rowId, data) => {
-    formulaDetailDispatch({
+    partDetailDispatch({
       type: "CHANGE_DETAIL_VALUE",
       payload: {
         id: rowId,
@@ -113,7 +113,7 @@ const PartSpecification = ({
         {!readOnly ? (
           <>
             {/* Edit Form */}
-            {data_formula_detail.map((line, key) => (
+            {data_part_detail.map((line, key) => (
               <Row
                 key={line.id}
                 style={{
@@ -198,7 +198,7 @@ const PartSpecification = ({
         ) : (
           <>
             {/* View Form */}
-            {data_formula_detail.map((line, key) => (
+            {data_part_detail.map((line, key) => (
               <Row
                 key={line.id}
                 style={{

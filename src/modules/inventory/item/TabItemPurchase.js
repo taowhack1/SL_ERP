@@ -1,4 +1,4 @@
-import { UploadOutlined } from "@ant-design/icons";
+import { ProfileOutlined, UploadOutlined } from "@ant-design/icons";
 import {
   Checkbox,
   Col,
@@ -28,9 +28,13 @@ const TabItemPurchase = ({
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
         <Col span={24}>
-          <Text strong className="detail-tab-header">
-            Vendor
-          </Text>
+          <Space>
+            <Text strong style={{ fontSize: 16, marginRight: 10 }}>
+              {/* <span className="require">* </span> */}
+              <ProfileOutlined style={{ marginRight: 10 }} />
+              Vendor
+            </Text>
+          </Space>
         </Col>
       </Row>
       <Line

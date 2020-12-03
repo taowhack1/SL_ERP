@@ -12,12 +12,13 @@ import {
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
 import numeral from "numeral";
 import {
   item_formula_columns,
   item_formula_detail_fields,
+  item_part_specification_fields,
   item_process_specification_columns,
   item_qa_columns,
   item_qa_detail_fields,
@@ -26,76 +27,31 @@ import CustomSelect from "../../../components/CustomSelect";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
 import PartSpecificationDetail from "./PartSpecification_Detail";
 import BulkFormula from "./BulkFormula";
+import { reducer } from "../reducers";
 
 const { Text, Title } = Typography;
 
 const PartSpecification = ({
   partName,
   readOnly,
+  data_part_detail,
+  partDetailDispatch,
   data_formula_detail,
   formulaDetailDispatch,
   item_list,
 }) => {
-  const addLine = () => {
-    formulaDetailDispatch({
-      type: "ADD_ROW",
-      payload: item_formula_detail_fields,
-    });
-  };
-
-  const delLine = (id) => {
-    formulaDetailDispatch({ type: "DEL_ROW", payload: { id: id } });
-  };
-
-  const onChangeValue = (rowId, data) => {
-    formulaDetailDispatch({
-      type: "CHANGE_DETAIL_VALUE",
-      payload: {
-        id: rowId,
-        data: data,
-      },
-    });
-  };
-
-  const getFormulaNo = (part = "A") => {
-    let arrayNo = [];
-    let part_temp = part && part !== undefined ? part : "A";
-    for (let i = 1; i <= 30; i++) {
-      arrayNo.push({
-        item_formula_part: part_temp,
-        item_formula_part_no: part_temp + numeral(i).format("00"),
-      });
-    }
-    return arrayNo;
-  };
   return (
     <>
       <div className="group-row">
         <Row className="col-2 row-margin-vertical">
           <Col span={24}>
             {/* Column Header */}
-
-            {/* <Row className="group-row-header">
-              <Col span={12}>
-                <Row>
-                  <Col span={1}></Col>
-                  <Col span={8}>
-                    <Text strong>Part Name:</Text>
-                  </Col>
-                  <Col span={14}>
-                    <Input />
-                  </Col>
-                  <Col span={1}></Col>
-                </Row>
-              </Col>
-              <Col span={12}></Col>
-            </Row> */}
             <Row className="col-2 row-margin-vertical">
               <Col span={12}>
                 <Row>
                   <Col span={1}></Col>
                   <Col span={10}>
-                    <Title level={5}>Part : {partName}</Title>
+                    <Title level={5}>{partName}</Title>
                   </Col>
                 </Row>
               </Col>
@@ -105,8 +61,10 @@ const PartSpecification = ({
             <div className="detail-container">
               <PartSpecificationDetail
                 readOnly={readOnly}
-                data_formula_detail={data_formula_detail}
-                formulaDetailDispatch={formulaDetailDispatch}
+                // data_formula_detail={data_formula_detail}
+                // formulaDetailDispatch={formulaDetailDispatch}
+                data_part_detail={data_part_detail}
+                partDetailDispatch={partDetailDispatch}
                 item_list={item_list}
               />
             </div>
