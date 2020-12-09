@@ -22,7 +22,9 @@ import {
   item_file,
   item_filling_detail_fields,
   item_formula_detail_fields,
+  item_formula_detail_init_fields,
   item_part_specification_detail_fields,
+  item_part_specification_detail_init_fields,
   item_part_specification_fields,
   item_production_process_fields,
   item_qa_detail_fields,
@@ -39,16 +41,19 @@ import { get_all_vendor } from "../../actions/purchase/vendorActions";
 import ItemFileUpload from "./item/ItemFileUpload";
 import { get_qa_test_case_master } from "../../actions/qa/qaTestAction";
 import { get_sale_master_data } from "../../actions/sales";
+import { getAllWorkCenter } from "../../actions/production/workCenterActions";
 const { Text } = Typography;
 const initialStateHead = item_fields;
 const initialStateDetail = [item_detail_fields];
-const initialStateFormula = [item_formula_detail_fields];
+const initialStateFormula = item_formula_detail_init_fields;
 const initialStateQA = [item_qa_detail_fields];
 const initialStateFilling = [item_filling_detail_fields];
 const initialStateWeight = item_weight_detail;
 const initialStateProductionProcess = [item_production_process_fields];
 const initialStatePart = [item_part_specification_fields];
-const initialStatePartDetail = [item_part_specification_detail_fields];
+const initialStatePartDetail = item_part_specification_detail_init_fields;
+
+export const PartContext = React.createContext();
 const ItemCreate = (props) => {
   const history = useHistory();
   const authorize = Authorize();
@@ -58,12 +63,11 @@ const ItemCreate = (props) => {
   const auth = useSelector((state) => state.auth.authData);
   useEffect(() => {
     dispatch(getMasterDataItem(auth.user_name));
-
+    dispatch(getAllWorkCenter());
     dispatch(get_all_vendor());
   }, []);
 
   const data = props.location.state ? props.location.state : 0;
-
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
   const [data_formula_detail, formulaDetailDispatch] = useReducer(
@@ -120,13 +124,7 @@ const ItemCreate = (props) => {
           ? data.data_detail
           : [item_detail_fields],
     });
-    formulaDetailDispatch({
-      type: "SET_DETAIL",
-      payload:
-        data && data.data_formula_detail.length
-          ? data.data_formula_detail
-          : [item_formula_detail_fields],
-    });
+
     productionProcessDetailDispatch({
       type: "SET_DETAIL",
       payload:
@@ -155,12 +153,24 @@ const ItemCreate = (props) => {
           ? data.data_filling_detail
           : [item_filling_detail_fields],
     });
-    partDetailDispatch({
+    partDispatch({
       type: "SET_DETAIL",
       payload:
-        data && data.data_part_detail.length
+        data && data.data_part.length ? data.data_part : initialStatePart,
+    });
+    partDetailDispatch({
+      type: "SET_HEAD",
+      payload:
+        data && data.data_part_detail
           ? data.data_part_detail
           : initialStatePartDetail,
+    });
+    formulaDetailDispatch({
+      type: "SET_HEAD",
+      payload:
+        data && data.data_formula_detail
+          ? data.data_formula_detail
+          : initialStateFormula,
     });
 
     setFile(data.data_file ?? item_file);
@@ -187,20 +197,29 @@ const ItemCreate = (props) => {
     discard: "/inventory/items",
     onSave: (e) => {
       console.log("Save");
-      const key = "validate";
       console.log("SAVE HEAD", data_head);
-      console.log("SAVE DETAIL", data_detail);
-      console.log("SAVE QA", data_qa_detail);
+      console.log("SAVE VENDOR DETAIL", data_detail);
+      console.log("SAVE PART", data_part);
+      console.log("SAVE PART DETAIL", data_part_detail);
       console.log("SAVE FORMULA", data_formula_detail);
-      console.log("SAVE PROCESS", data_production_process_detail);
+      console.log("SAVE QA", data_qa_detail);
       console.log("SAVE WEIGHT", data_weight_detail);
       console.log("SAVE FILLING", data_filling_detail);
+      console.log("SAVE FILES", data_file);
+
+      const key = "validate";
+      data_part.map((part) => {
+        part.item_part_specification_detail =
+          data_part_detail[part.item_part_id];
+        part.item_formula = data_formula_detail[part.item_part_id];
+      });
       const validate = validateFormHead(data_head, item_require_fields);
       // const validate = {
       //   validate: true,
       // };
 
       if (validate.validate) {
+        // true,false
         const data = {
           access_right: {
             vendor: true,
@@ -213,6 +232,7 @@ const ItemCreate = (props) => {
           },
           data_head: data_head,
           data_detail: data_detail,
+          data_part: data_part,
           data_formula_detail: data_formula_detail,
           data_process: data_production_process_detail,
           data_qa_detail: data_qa_detail,
@@ -220,7 +240,6 @@ const ItemCreate = (props) => {
           data_filling_detail: data_filling_detail,
           data_file: data_file,
         };
-        console.log("validate pass");
         data_head.item_id
           ? dispatch(
               upDateItem(
@@ -240,11 +259,9 @@ const ItemCreate = (props) => {
       }
     },
     onEdit: (e) => {
-      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {
@@ -270,13 +287,7 @@ const ItemCreate = (props) => {
   useEffect(() => {
     data_head.type_id && dispatch(get_qa_test_case_master(data_head.type_id));
   }, [data_head.type_id]);
-
-  console.log("SAVE HEAD", data_head);
-  console.log("SAVE DETAIL", data_detail);
-  console.log("SAVE QA", data_qa_detail);
-  console.log("SAVE FORMULA", data_formula_detail);
-  console.log("SAVE WEIGHT", data_weight_detail);
-  console.log("SAVE FILLING", data_filling_detail);
+  console.log(data_head);
   return (
     <MainLayout {...config} data={data_head}>
       <div id="form">

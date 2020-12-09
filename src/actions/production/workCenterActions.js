@@ -21,7 +21,7 @@ export const getWorkCenterDetailByID = async (work_center_id) => {
     axios.get(`${api_work_center_detail}/${work_center_id}`, header_config);
 
   const res = await get_detail();
-  console.log("GET_DETAIL");
+  console.log("GET_DETAIL", res);
   return res.data[0];
 };
 export const getAllWorkCenter = (user_name) => (dispatch) => {

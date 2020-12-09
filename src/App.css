@@ -652,3 +652,7 @@ div.ant-tabs-tab > div {
   line-height: 23px;
   font-size: 14px;
 }
+.row-head {
+  height: 38px;
+  line-height: 38px;
+}

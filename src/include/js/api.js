@@ -31,8 +31,14 @@ export const api_upload_file = `${api_server}/api/upload/item/file`;
 export const api_get_item_by_id = `${api_server}/api/inventory/item`;
 export const api_get_location_shelf_by_item_id = `${api_server}/api/list/location/shelf`;
 export const api_get_lot_batch_by_item_id_shelf = `${api_server}/api/list/lot_no/batch`;
+export const api_get_master_part = `${api_server}/api/list/item_part`;
+// item -> Active / In-active
+export const api_item_status = `${api_server}/api/inventory/item/actived`;
 // item -> vendor
 export const api_item_vendor = `${api_server}/api/inventory/item_vendor`;
+// item -> part & formula
+export const api_part_and_formula = `${api_server}/api/inventory/item_part_specification`;
+export const api_get_part_by_item_id = `${api_server}/api/inventory/item_part_specification_detail2`;
 // item -> formula
 export const api_item_formula = `${api_server}/api/inventory/item_formula`;
 // item -> qa

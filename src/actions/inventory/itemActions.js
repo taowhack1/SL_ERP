@@ -17,6 +17,9 @@ import {
   api_upload_file,
   api_approve,
   api_item_process,
+  api_part_and_formula,
+  api_get_part_by_item_id,
+  api_item_status,
 } from "../../include/js/api";
 import axios from "axios";
 import { Alert, message, notification } from "antd";
@@ -72,6 +75,25 @@ const bind_formula = (item_id, data_formula_detail) => {
       )
       .then((res) => {
         console.log("BIND FORMULA");
+      })
+  );
+};
+const bind_part_and_formula = (item_id, data_part) => {
+  console.log("bind_part_and_formula");
+  // const data_formula_detail_temp = data_formula_detail.filter(
+  //   (detail) =>
+  //     detail.item_id !== null &&
+  //     detail.item_part_id !== null &&
+  //     // detail.item_formula_part_no !== null &&
+  //     detail.item_formula_qty !== 0 &&
+  //     detail.commit === 1
+  // );
+  return (
+    // data_formula_detail_temp.length &&
+    axios
+      .post(`${api_part_and_formula}/${item_id}`, data_part, header_config)
+      .then((res) => {
+        console.log("BIND PART");
       })
   );
 };
@@ -190,6 +212,7 @@ export const createNewItems = (data, user_name, redirect) => async (
     access_right,
     data_head,
     data_detail,
+    data_part,
     data_formula_detail,
     data_process_detail,
     data_qa_detail,
@@ -215,8 +238,9 @@ export const createNewItems = (data, user_name, redirect) => async (
           // },
           Promise.allSettled([
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
-            access_right.formula && bind_formula(item_id, data_formula_detail),
-            access_right.process && bind_process(item_id, data_process_detail),
+            access_right.formula && bind_part_and_formula(item_id, data_part),
+            // access_right.formula && bind_formula(item_id, data_formula_detail),
+            // access_right.process && bind_process(item_id, data_process_detail),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
             access_right.weight && bind_weight(item_id, data_weight_detail),
             access_right.filling_process &&
@@ -271,6 +295,7 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
     access_right,
     data_head,
     data_detail,
+    data_part,
     data_formula_detail,
     data_process_detail,
     data_qa_detail,
@@ -286,8 +311,9 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
         if (res.status === 200 && res.data[0].length) {
           Promise.allSettled([
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
-            access_right.formula && bind_formula(item_id, data_formula_detail),
-            access_right.process && bind_process(item_id, data_process_detail),
+            access_right.formula && bind_part_and_formula(item_id, data_part),
+            // access_right.formula && bind_formula(item_id, data_formula_detail),
+            // access_right.process && bind_process(item_id, data_process_detail),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
             access_right.weight && bind_weight(item_id, data_weight_detail),
             access_right.filling_process &&
@@ -339,6 +365,10 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         `${api_item_vendor}/${item_id}`,
         header_config
       );
+      const res_part = axios.get(
+        `${api_get_part_by_item_id}/${item_id}`,
+        header_config
+      );
       const res_formula = axios.get(
         `${api_item_formula}/${item_id}`,
         header_config
@@ -360,10 +390,10 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         `${api_upload_file}/${item_id}`,
         header_config
       );
-
       Promise.allSettled([
         res_head,
         res_detail,
+        res_part,
         res_formula,
         res_process,
         res_qa,
@@ -372,6 +402,8 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         res_file,
       ]).then((data) => {
         const convertFileField = (file) => {
+          let file_temp = file;
+
           let path = file.item_file_path
             ? api_server + file.item_file_path
             : require("./no_image.svg");
@@ -379,8 +411,9 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
             path = api_server + file.item_file_path;
           } else {
             path = file.file_type_id === 1 ? require("./no_image.svg") : null;
+            file_temp.item_file_original_type =
+              file.file_type_id === 1 ? "image" : null;
           }
-          let file_temp = file;
           file_temp.name = file.item_file_original_name;
           file_temp.path = path;
           file_temp.file_type_id = file.file_type_id;
@@ -390,41 +423,66 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
           return file_temp;
         };
         console.log("Promise.allSettled GET ITEM BY ID", data);
-        const data_file_temp = data[6].value.data[0];
+        const data_file_temp = data[8].value.data[0];
+        let data_part_detail_temp = {};
+        let data_formula_detail_temp = {};
+        data[2].value.data.forEach((part) => {
+          data_part_detail_temp[part.item_part_id] = sortData(
+            part.item_part_specification_detail
+          );
+
+          data_formula_detail_temp[part.item_part_id] = sortData(
+            part.item_formula
+          );
+        });
+        console.log(
+          "GET data_part_detail",
+          data_part_detail_temp,
+          data_formula_detail_temp
+        );
         const item = {
           data_head: data[0].value.data.main_master,
           data_detail: sortData(data[1].value.data[0]),
-          data_formula_detail: sortData(data[2].value.data[0]),
-          data_process: sortData(data[3].value.data[0]),
-          data_qa_detail: sortData(data[4].value.data[0]),
-          data_weight_detail: sortData(data[5].value.data[0]),
-          data_filling_detail: sortData(data[6].value.data[0]),
+          // data_part
+          data_part: sortData(data[2].value.data),
+          data_part_detail: data_part_detail_temp,
+          data_formula_detail: data_formula_detail_temp,
+          data_process: sortData(data[4].value.data[0]),
+          data_qa_detail: sortData(data[5].value.data[0]),
+          data_weight_detail: sortData(data[6].value.data[0]),
+          data_filling_detail: sortData(data[7].value.data[0]),
           data_file: {
             item_image:
+              data_file_temp.length &&
               convertFileField(
                 data_file_temp.filter((file) => file.file_type_id === 1)[0]
-              ) ?? null,
+              ),
             certificate: {
               2:
+                data_file_temp.length &&
                 convertFileField(
                   data_file_temp.filter((file) => file.file_type_id === 2)[0]
-                ) ?? null,
+                ),
               3:
+                data_file_temp.length &&
                 convertFileField(
                   data_file_temp.filter((file) => file.file_type_id === 3)[0]
-                ) ?? null,
+                ),
               4:
+                data_file_temp.length &&
                 convertFileField(
                   data_file_temp.filter((file) => file.file_type_id === 4)[0]
-                ) ?? null,
+                ),
               5:
+                data_file_temp.length &&
                 convertFileField(
                   data_file_temp.filter((file) => file.file_type_id === 5)[0]
-                ) ?? null,
+                ),
               6:
+                data_file_temp.length &&
                 convertFileField(
                   data_file_temp.filter((file) => file.file_type_id === 6)[0]
-                ) ?? null,
+                ),
             },
           },
         };
@@ -483,4 +541,42 @@ export const item_actions = (data, item_id) => (dispatch) => {
         key: "validate",
         duration: 4,
       });
+};
+
+export const itemUpdateStatus = (id, status) => {
+  try {
+    axios
+      .put(
+        `${api_item_status}/${id}`,
+        {
+          item_actived: status,
+        },
+        header_config
+      )
+      .then((res) => {
+        res.data[0].length
+          ? message.success({
+              content:
+                status === 0
+                  ? "Item has been deleted."
+                  : "Item has been actived.",
+              key: "validate",
+              duration: 2,
+            })
+          : message.error({
+              content: "Somethings went wrong. please contact programmer.",
+              key: "validate",
+              duration: 4,
+            });
+      })
+      .catch((error) => {
+        message.error({
+          content: "Somethings went wrong. please contact programmer.",
+          key: "validate",
+          duration: 4,
+        });
+      });
+  } catch (error) {
+    console.log(error);
+  }
 };

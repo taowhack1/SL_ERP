@@ -1,26 +1,11 @@
-import { UploadOutlined } from "@ant-design/icons";
-import {
-  Checkbox,
-  Col,
-  Input,
-  InputNumber,
-  Row,
-  Tabs,
-  Upload,
-  Button,
-  Space,
-} from "antd";
+import { Col, Input, InputNumber, Row, Space } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
-import { useSelector } from "react-redux";
 import CustomSelect from "../../../components/CustomSelect";
-import Line from "../../../components/VendorLine";
 import { get_pre_run_no } from "../../../include/js/function_main";
-import { numberFormat } from "../../../include/js/main_config";
 const { TextArea } = Input;
 
 const TabItemDetail = ({
-  key,
   master_data,
   data_head,
   upDateFormValue,
@@ -32,7 +17,8 @@ const TabItemDetail = ({
       <Row className="col-2 row-margin-vertical">
         <Col span={3}>
           <Text strong>
-            <span className="require">* </span>Item type{" "}
+            {!readOnly && <span className="require">* </span>}
+            Item type
           </Text>
         </Col>
         <Col span={8}>
@@ -82,7 +68,8 @@ const TabItemDetail = ({
         <Col span={2}></Col>
         <Col span={3}>
           <Text strong>
-            <span className="require">* </span>Category{" "}
+            {!readOnly && <span className="require">* </span>}
+            Category
           </Text>
         </Col>
         <Col span={8}>
@@ -135,7 +122,8 @@ const TabItemDetail = ({
       <Row className="col-2 row-margin-vertical">
         <Col span={3}>
           <Text strong>
-            <span className="require">* </span>Unit of measure
+            {!readOnly && <span className="require">* </span>}
+            Unit of measure
           </Text>
         </Col>
         <Col span={8}>
@@ -159,11 +147,13 @@ const TabItemDetail = ({
                       uom_id: option.data.uom_id,
                       uom_no: option.data.uom_no,
                       uom_no_name: option.data.uom_no_name,
+                      uom_name: option.data.uom_name,
                     })
                   : upDateFormValue({
                       uom_id: null,
                       uom_no: null,
                       uom_no_name: null,
+                      uom_name: null,
                     });
               }}
             />
@@ -173,7 +163,8 @@ const TabItemDetail = ({
         <Col span={2}></Col>
         <Col span={3}>
           <Text strong>
-            <span className="require">* </span>Storage Condition{" "}
+            {!readOnly && <span className="require">* </span>}
+            Storage Condition
           </Text>
         </Col>
         <Col span={8}>
@@ -210,7 +201,8 @@ const TabItemDetail = ({
       <Row className="col-2 row-margin-vertical">
         <Col span={3}>
           <Text strong>
-            <span className="require">* </span>Shelf life (day){" "}
+            {!readOnly && <span className="require">* </span>}
+            Shelf life (day)
           </Text>
         </Col>
         <Col span={8}>

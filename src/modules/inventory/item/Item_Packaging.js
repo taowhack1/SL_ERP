@@ -1,33 +1,17 @@
-import {
-  Button,
-  Row,
-  Col,
-  InputNumber,
-  AutoComplete,
-  Typography,
-  Input,
-  Space,
-} from "antd";
+import { Button, Row, Col, InputNumber, Typography, Input } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
   EllipsisOutlined,
-  EyeOutlined,
-  EditTwoTone,
 } from "@ant-design/icons";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import numeral from "numeral";
 import {
   item_filling_detail_fields,
-  item_formula_columns,
   item_packaging_process_columns,
-  item_qa_columns,
-  item_qa_detail_fields,
 } from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
-import ItemFileUpload from "./ItemFileUpload";
 
 const { Text } = Typography;
 
@@ -64,15 +48,6 @@ const PackagingProcess = ({
       },
     });
   };
-  const test_image = [
-    {
-      uid: "-1",
-      name: "no_image.svg",
-      status: "done",
-      url: require("./no_image.svg"),
-    },
-  ];
-  console.log(data_filling_detail);
   return (
     <>
       {/* Column Header */}
@@ -102,68 +77,40 @@ const PackagingProcess = ({
             <Row
               key={line.id}
               style={{
-                marginBottom: 0,
-                border: "1px solid white",
-                backgroundColor: "#FCFCFC",
+                margin: "0px 1px",
+                backgroundColor: key % 2 ? "#F8F8F8" : "#FCFCFC",
               }}
               name={`row-${key}`}
-              gutter={3}
-              className="col-2"
+              gutter={4}
+              className="form-row"
             >
-              <Col span={3} className="text-center">
-                <CustomSelect
-                  allowClear
-                  showSearch
-                  size="small"
-                  className={"filling-process-input"}
-                  placeholder={"Item Code"}
-                  name="item_no"
-                  field_id="item_id"
-                  field_name="item_no_name"
-                  value={line.item_no}
-                  data={item_list}
-                  onChange={(data, option) => {
-                    data && data
-                      ? onChangeValue(line.id, {
-                          item_id: option.data.item_id,
-                          item_no: option.data.item_no,
-                          item_name: option.data.item_name,
-                          item_image: option.data.item_image,
-                        })
-                      : onChangeValue(line.id, {
-                          item_id: null,
-                          item_name: null,
-                          item_image: null,
-                          packaging_item_qty: 0,
-                          packaging_method: null,
-                        });
-                  }}
-                />
+              <Col span={1} className="text-center">
+                {key + 1}
               </Col>
-              <Col span={5} className="text-string">
+              <Col span={8} className="text-string">
                 <CustomSelect
                   allowClear
                   showSearch
                   size="small"
                   className={"filling-process-input"}
                   placeholder={"Item Name"}
-                  name="item_name"
+                  name="item_no_name"
                   field_id="item_id"
                   field_name="item_no_name"
-                  value={line.item_name}
+                  value={line.item_no_name}
                   data={item_list}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
-                          item_id: option.data.item_id,
-                          item_no: option.data.item_no,
-                          item_name: option.data.item_name,
+                          item_id_filling_process: option.data.item_id,
+                          item_no_name: option.data.item_no_name,
+                          uom_name: option.data.uom_name,
                           item_image: option.data.item_image,
                         })
                       : onChangeValue(line.id, {
-                          item_id: option.data.item_id,
-                          item_no: null,
-                          item_name: null,
+                          item_id_filling_process: null,
+                          item_no_name: null,
+                          uom_name: null,
                           item_image: null,
                           packaging_item_qty: 0,
                           packaging_method: null,
@@ -190,6 +137,9 @@ const PackagingProcess = ({
                   style={{ width: "100%" }}
                   size="small"
                 />
+              </Col>
+              <Col span={2} className="input-string-disabled">
+                <Text className="text-left">{line.uom_name}</Text>
               </Col>
               <Col span={3} className="text-string">
                 {/* Packaging Method */}
@@ -231,18 +181,11 @@ const PackagingProcess = ({
                   value={line.item_filling_process_remark}
                 />
               </Col>
-              <Col span={3} className="text-center">
-                {/* Item Image */}
-                {/* <ItemFileUpload
-                  fileList={test_image}
-                  readOnly={true}
-                  upload_type={"View"}
-                /> */}
-              </Col>
-
-              <Col span={1} style={{ textAlign: "center" }}>
-                <DeleteTwoTone onClick={() => delLine(line.id)} />
-              </Col>
+              {data_filling_detail.length > 1 && (
+                <Col span={1} style={{ textAlign: "center" }}>
+                  <DeleteTwoTone onClick={() => delLine(line.id)} />
+                </Col>
+              )}
             </Row>
           ))}
           <div style={{ marginTop: 10 }}>
@@ -264,31 +207,34 @@ const PackagingProcess = ({
             <Row
               key={line.id}
               style={{
-                marginBottom: 0,
-                border: "1px solid white",
-                backgroundColor: "#FCFCFC",
+                margin: "0px 1px",
+                backgroundColor: key % 2 ? "#F8F8F8" : "#FCFCFC",
               }}
-              gutter={6}
-              className="col-2"
+              name={`row-${key}`}
+              gutter={4}
+              className="form-row"
             >
-              <Col span={3} className="text-center">
-                <Text>{line.item_no}</Text>
+              <Col span={1} className="text-center">
+                <Text>{key + 1}</Text>
               </Col>
-              <Col span={5} className="text-string">
-                <Text>{line.item_name}</Text>
+              <Col span={8} className="text-string">
+                <Text className="text-left">{line.item_name ?? "-"}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{convertDigit(line.item_filling_process_qty)}</Text>
+                <Text className="text-right">
+                  {convertDigit(line.item_filling_process_qty) ?? "-"}
+                </Text>
+              </Col>
+              <Col span={2} className="text-string">
+                <Text className="text-left">{line.uom_name ?? "-"}</Text>
               </Col>
               <Col span={3} className="text-string">
-                <Text>{line.qa_method_name}</Text>
+                <Text className="text-left">{line.qa_method_name ?? "-"}</Text>
               </Col>
               <Col span={6} className="text-string">
-                <Text>{line.item_filling_process_remark}</Text>
-              </Col>
-
-              <Col span={5} className="text-number">
-                {/* <Text>{line.item_vendor_remark}</Text> */}
+                <Text className="text-left">
+                  {line.item_filling_process_remark ?? "-"}
+                </Text>
               </Col>
             </Row>
           ))}

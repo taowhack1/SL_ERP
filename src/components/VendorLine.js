@@ -1,25 +1,16 @@
-import {
-  Button,
-  Row,
-  Col,
-  InputNumber,
-  AutoComplete,
-  Typography,
-  Input,
-} from "antd";
+import { Button, Row, Col, InputNumber, Typography, Input } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   item_detail_fields,
   item_vendor_columns,
 } from "../modules/inventory/config/item";
 import { useSelector } from "react-redux";
 import CustomSelect from "./CustomSelect";
-import numeral from "numeral";
 import { convertDigit } from "../include/js/main_config";
 
 const { Text } = Typography;
@@ -33,7 +24,7 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
       payload: {
         ...item_detail_fields,
         uom_id: data_head.uom_id && data_head.uom_id,
-        uom_no: data_head.uom_no && data_head.uom_no,
+        uom_name: data_head.uom_name && data_head.uom_name,
       },
     });
   };
@@ -60,12 +51,11 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
           return {
             ...detail,
             uom_id: data_head.uom_id,
-            uom_no: data_head.uom_no,
+            uom_name: data_head.uom_name,
           };
         }),
       });
   }, [data_head.uom_id]);
-  console.log(data_detail);
   return (
     <>
       {/* Column Header */}
@@ -95,15 +85,17 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
             <Row
               key={line.id}
               style={{
-                marginBottom: 0,
-                border: "1px solid white",
-                backgroundColor: "#FCFCFC",
+                margin: "0px 1px",
+                backgroundColor: key % 2 ? "#F8F8F8" : "#FCFCFC",
               }}
               name={`row-${key}`}
-              gutter={6}
-              className="col-2"
+              gutter={4}
+              className="form-row"
             >
-              <Col span={7} className="text-string">
+              <Col span={1} className="text-center">
+                <Text>{key + 1}</Text>
+              </Col>
+              <Col span={6} className="text-string">
                 <CustomSelect
                   allowClear
                   showSearch
@@ -164,24 +156,25 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
                 <CustomSelect
                   allowClear
                   showSearch
+                  disabled
                   size={"small"}
                   placeholder={"Select UOM"}
                   name="uom_id"
                   field_id="uom_id"
-                  field_name="uom_no_name"
-                  value={line.uom_no_name}
+                  field_name="uom_name"
+                  value={line.uom_name}
                   data={units}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
                           uom_id: option.data.uom_id,
                           uom_no: option.data.uom_no,
-                          uom_no_name: option.data.uom_no_name,
+                          uom_name: option.data.uom_name,
                         })
                       : onChangeValue(line.id, {
                           uom_id: null,
                           uom_no: null,
-                          uom_no_name: null,
+                          uom_name: null,
                         });
                   }}
                 />
@@ -239,32 +232,35 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
           {/* View Form */}
           {data_detail.map((line, key) => (
             <Row
-              key={line.item_vendor_id}
+              key={line.id}
               style={{
-                marginBottom: 0,
-                border: "1px solid white",
-                backgroundColor: "#FCFCFC",
+                margin: "0px 1px",
+                backgroundColor: key % 2 ? "#F8F8F8" : "#FCFCFC",
               }}
-              gutter={6}
-              className="col-2"
+              name={`row-${key}`}
+              gutter={4}
+              className="form-row"
             >
-              <Col span={7} className="text-string">
-                <Text>{line.vendor_no_name}</Text>
+              <Col span={1} className="text-center">
+                <Text>{key + 1}</Text>
+              </Col>
+              <Col span={6} className="text-string">
+                <Text>{line.vendor_no_name ?? "-"}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{line.item_vendor_lead_time}</Text>
+                <Text>{line.item_vendor_lead_time ?? "-"}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{convertDigit(line.item_vendor_min_qty)}</Text>
+                <Text>{convertDigit(line.item_vendor_min_qty) ?? "-"}</Text>
               </Col>
               <Col span={2} className="text-string">
-                <Text>{line.uom_no_name}</Text>
+                <Text>{line.uom_name ?? "-"}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{convertDigit(line.item_vendor_price)}</Text>
+                <Text>{convertDigit(line.item_vendor_price) ?? "-"}</Text>
               </Col>
               <Col span={5} className="text-string">
-                <Text>{line.item_vendor_remark}</Text>
+                <Text>{line.item_vendor_remark ?? "-"}</Text>
               </Col>
             </Row>
           ))}

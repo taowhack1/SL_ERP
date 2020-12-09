@@ -6,7 +6,6 @@ import { message } from "antd";
 
 export const get_all_vendor = () => (dispatch) => {
   axios.get(api_vendor, header_config).then((res) => {
-    console.log("get_all_vendor", res);
     dispatch({
       type: GET_ALL_VENDOR,
       payload: res.data[0],
@@ -35,7 +34,6 @@ export const create_vendor = (data_head, redirect) => (dispatch) => {
     axios
       .post(`${api_vendor}`, data_head, header_config)
       .then((res) => {
-        console.log(res);
         const vendor_id = res.data[0][0].vendor_id;
         dispatch(get_vendor_by_id(vendor_id, redirect));
         message.success({
@@ -63,12 +61,10 @@ export const create_vendor = (data_head, redirect) => (dispatch) => {
 };
 
 export const update_vendor = (vendor_id, data_head, redirect) => (dispatch) => {
-  console.log("vendor_update", data_head);
   try {
     axios
       .put(`${api_vendor}/${vendor_id}`, data_head, header_config)
       .then((res) => {
-        console.log(res);
         const vendor_id = res.data[0][0].vendor_id;
         dispatch(get_vendor_by_id(vendor_id, redirect));
         message.success({

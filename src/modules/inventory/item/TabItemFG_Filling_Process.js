@@ -1,4 +1,4 @@
-import { Col, Input, InputNumber, Row } from "antd";
+import { Col, InputNumber, Row, TimePicker } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -6,9 +6,10 @@ import CustomSelect from "../../../components/CustomSelect";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
 import { item_filling_weight_columns } from "../config/item";
 import PackagingProcess from "./Item_Packaging";
+import moment from "moment";
 
 const TabFillingProcess = ({
-  uom_no_name,
+  uom_name,
   data_head,
   upDateFormValue,
 
@@ -34,37 +35,87 @@ const TabFillingProcess = ({
     <>
       <Row className="col-2 row-margin-vertical">
         <Col span={12} className="col-left">
-          <Row className="row-margin-vertical">
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <Text strong className="pd-left-1">
-                <span className="require">* </span>Bulk Code
+                {!readOnly && <span className="require">* </span>}
+                Bulk Code
               </Text>
             </Col>
-            <Col span={17}>
-              <CustomSelect
-                className="full-width"
-                allowClear
-                showSearch
-                placeholder={"Raw Material Code"}
-                name="item_id_ref"
-                field_id="item_id_ref"
-                field_name="item_no_name"
-                value={data_head.item_ref_no_name}
-                data={rm_list}
-                onChange={(data, option) => {
-                  data && data
-                    ? upDateFormValue({
-                        item_id_ref: option.data.item_id,
-                        item_ref_no_name: option.data.item_no_name,
-                      })
-                    : upDateFormValue({
-                        item_id_ref: null,
-                        item_ref_no_name: null,
-                      });
-                }}
-              />
+            <Col span={15}>
+              {readOnly ? (
+                <Text className="text-left">
+                  {data_head.item_ref_no_name ?? "-"}
+                </Text>
+              ) : (
+                <CustomSelect
+                  className="full-width"
+                  allowClear
+                  showSearch
+                  placeholder={"Raw Material Code"}
+                  name="item_id_ref"
+                  field_id="item_id_ref"
+                  field_name="item_no_name"
+                  value={data_head.item_ref_no_name}
+                  data={rm_list}
+                  onChange={(data, option) => {
+                    data && data
+                      ? upDateFormValue({
+                          item_id_ref: option.data.item_id,
+                          item_ref_no_name: option.data.item_no_name,
+                        })
+                      : upDateFormValue({
+                          item_id_ref: null,
+                          item_ref_no_name: null,
+                        });
+                  }}
+                />
+              )}
             </Col>
-            <Col span={1}></Col>
+            <Col span={3}></Col>
+          </Row>
+          <Row className="col-2 row-margin-vertical">
+            <Col span={6}>
+              <Text strong className="pd-left-1">
+                {!readOnly && <span className="require">* </span>}Used Time / 1
+                pc. :
+              </Text>
+            </Col>
+            <Col span={15}>
+              {readOnly ? (
+                <Text className="text-view">
+                  {data_head.item_filling_process_time
+                    ? data_head.item_filling_process_time
+                    : "-"}
+                </Text>
+              ) : (
+                <TimePicker
+                  className="full-width"
+                  format={"HH:mm:ss"}
+                  showNow={false}
+                  name={"item_filling_process_time"}
+                  placeholder="00:00:00 (HH : mm : ss)"
+                  required
+                  value={
+                    data_head.item_filling_process_time
+                      ? moment(data_head.item_filling_process_time, "HH:mm:ss")
+                      : ""
+                  }
+                  onChange={(data) => {
+                    const time = moment(data, "HH:mm:ss").format("HH:mm:ss");
+                    console.log(time);
+                    upDateFormValue({
+                      item_filling_process_time: data ? time : null,
+                    });
+                  }}
+                />
+              )}
+            </Col>
+            <Col span={3}>
+              <Text strong className="pd-left-1">
+                Hour
+              </Text>
+            </Col>
           </Row>
         </Col>
         <Col span={12} className="col-right"></Col>
@@ -105,15 +156,14 @@ const TabFillingProcess = ({
             <Col span={18}>
               {/* weight */}
               <Row
-                key={1}
+                key={0}
                 style={{
-                  marginBottom: 0,
-                  border: "1px solid white",
-                  backgroundColor: "#FCFCFC",
+                  margin: "0px 1px",
+                  backgroundColor: 0 % 2 ? "#F8F8F8" : "#FCFCFC",
                 }}
-                name={`row-filling`}
-                gutter={6}
-                className="col-2"
+                name={`row-${0}`}
+                gutter={4}
+                className="form-row"
               >
                 <Col span={5} className="text-number">
                   {readOnly ? (
@@ -135,7 +185,6 @@ const TabFillingProcess = ({
                       min={0.0001}
                       step={1.0}
                       onChange={(data) => {
-                        console.log(data);
                         onChangeValue(data_weight_detail[0].id, {
                           item_weight_standard_qty: data,
                         });
@@ -147,7 +196,7 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <Text className="text-center">{uom_no_name}</Text>
+                  <Text>{"[ g ] Gram"}</Text>
                 </Col>
                 <Col span={5} className="text-number">
                   {readOnly ? (
@@ -169,7 +218,6 @@ const TabFillingProcess = ({
                       min={0.0001}
                       step={1.0}
                       onChange={(data) => {
-                        console.log(data);
                         onChangeValue(data_weight_detail[0].id, {
                           item_weight_min_qty: data,
                         });
@@ -181,7 +229,7 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <Text className="text-center">{uom_no_name}</Text>
+                  <Text>{"[ g ] Gram"}</Text>
                 </Col>
                 <Col span={5} className="text-number">
                   {readOnly ? (
@@ -204,7 +252,6 @@ const TabFillingProcess = ({
                       // max={100.0}
                       step={1.0}
                       onChange={(data) => {
-                        console.log(data);
                         onChangeValue(data_weight_detail[0].id, {
                           item_weight_max_qty: data,
                         });
@@ -216,7 +263,7 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <Text className="text-center">{uom_no_name}</Text>
+                  <Text>{"[ g ] Gram"}</Text>
                 </Col>
               </Row>
             </Col>
@@ -231,13 +278,12 @@ const TabFillingProcess = ({
               <Row
                 key={1}
                 style={{
-                  marginBottom: 0,
-                  border: "1px solid white",
-                  backgroundColor: "#FCFCFC",
+                  margin: "0px 1px",
+                  backgroundColor: 1 % 2 ? "#F8F8F8" : "#FCFCFC",
                 }}
-                name={`row-filling`}
-                gutter={6}
-                className="col-2"
+                name={`row-${1}`}
+                gutter={4}
+                className="form-row"
               >
                 <Col span={5} className="text-number">
                   {readOnly ? (
@@ -259,7 +305,6 @@ const TabFillingProcess = ({
                       min={0.0001}
                       step={1.0}
                       onChange={(data) => {
-                        console.log(data);
                         onChangeValue(data_weight_detail[1].id, {
                           item_weight_standard_qty: data,
                         });
@@ -271,7 +316,7 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <Text className="text-center">{uom_no_name}</Text>
+                  <Text>{"[ g ] Gram"}</Text>
                 </Col>
                 <Col span={5} className="text-number">
                   {readOnly ? (
@@ -296,7 +341,6 @@ const TabFillingProcess = ({
                       min={0.0001}
                       step={1.0}
                       onChange={(data) => {
-                        console.log(data);
                         onChangeValue(data_weight_detail[1].id, {
                           item_weight_min_qty: data,
                         });
@@ -308,7 +352,7 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <Text className="text-center">{uom_no_name}</Text>
+                  <Text>{"[ g ] Gram"}</Text>
                 </Col>
                 <Col span={5} className="text-number">
                   {readOnly ? (
@@ -331,7 +375,6 @@ const TabFillingProcess = ({
                       // max={100.0}
                       step={1.0}
                       onChange={(data) => {
-                        console.log(data);
                         onChangeValue(data_weight_detail[1].id, {
                           item_weight_max_qty: data,
                         });
@@ -343,7 +386,7 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <Text className="text-center">{uom_no_name}</Text>
+                  <Text>{"[ g ] Gram"}</Text>
                 </Col>
               </Row>
             </Col>
@@ -356,15 +399,14 @@ const TabFillingProcess = ({
             <Col span={18}>
               {/* weight */}
               <Row
-                key={1}
+                key={2}
                 style={{
-                  marginBottom: 0,
-                  border: "1px solid white",
-                  backgroundColor: "#FCFCFC",
+                  margin: "0px 1px",
+                  backgroundColor: 2 % 2 ? "#F8F8F8" : "#FCFCFC",
                 }}
-                name={`row-filling`}
-                gutter={6}
-                className="col-2"
+                name={`row-${2}`}
+                gutter={4}
+                className="form-row"
               >
                 <Col span={5} className="text-number">
                   {readOnly ? (
@@ -386,7 +428,6 @@ const TabFillingProcess = ({
                       min={0.0001}
                       step={1.0}
                       onChange={(data) => {
-                        console.log(data);
                         onChangeValue(data_weight_detail[2].id, {
                           item_weight_standard_qty: data,
                         });
@@ -398,7 +439,7 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <Text className="text-center">{uom_no_name}</Text>
+                  <Text>{"[ g ] Gram"}</Text>
                 </Col>
                 <Col span={5} className="text-number">
                   {readOnly ? (
@@ -420,7 +461,6 @@ const TabFillingProcess = ({
                       min={0.0001}
                       step={1.0}
                       onChange={(data) => {
-                        console.log(data);
                         onChangeValue(data_weight_detail[2].id, {
                           item_weight_min_qty: data,
                         });
@@ -432,7 +472,7 @@ const TabFillingProcess = ({
                 </Col>
                 <Col span={3} className="text-center">
                   {/* std. unit */}
-                  <Text className="text-center">{uom_no_name}</Text>
+                  <Text>{"[ g ] Gram"}</Text>
                 </Col>
                 <Col span={5} className="text-number">
                   {readOnly ? (
@@ -455,7 +495,6 @@ const TabFillingProcess = ({
                       // max={100.0}
                       step={1.0}
                       onChange={(data) => {
-                        console.log(data);
                         onChangeValue(data_weight_detail[2].id, {
                           item_weight_max_qty: data,
                         });
@@ -466,8 +505,7 @@ const TabFillingProcess = ({
                   )}
                 </Col>
                 <Col span={3} className="text-center">
-                  {/* std. unit */}
-                  <Text className="text-center">{uom_no_name}</Text>
+                  <Text>{"[ g ] Gram"}</Text>
                 </Col>
               </Row>
             </Col>
@@ -500,6 +538,7 @@ const TabFillingProcess = ({
         <Col span={24}>
           <PackagingProcess
             readOnly={readOnly}
+            uom_name={uom_name}
             data_filling_detail={data_filling_detail}
             fillingDetailDispatch={fillingDetailDispatch}
           />

@@ -3,36 +3,42 @@ import { header_config } from "../../../include/js/main_config";
 export const item_vendor_columns = [
   {
     id: 0,
-    name: "Vendor Name",
-    size: 7,
-    require: true,
+    name: "No.",
+    size: 1,
+    require: false,
   },
   {
     id: 1,
+    name: "Vendor Name",
+    size: 6,
+    require: true,
+  },
+  {
+    id: 2,
     name: "Lead Time(Day)",
     size: 3,
     require: true,
   },
   {
-    id: 2,
+    id: 3,
     name: "Min. Quantity",
     size: 3,
     require: true,
   },
   {
-    id: 3,
+    id: 4,
     name: "Unit",
     size: 2,
     require: true,
   },
   {
-    id: 4,
+    id: 5,
     name: "Price / Unit",
     size: 3,
     require: true,
   },
   {
-    id: 5,
+    id: 6,
     name: "Remark",
     size: 5,
   },
@@ -95,6 +101,9 @@ export const item_fields = {
   item_pre_run_no: ["-", "--", "SRL", "A", "-----"],
   customer_id: 1,
   customer_no_name: "[ CUS0001 ] Siri Laboratories Co., Ltd.",
+  item_qa_day: 0,
+  item_qa_time: null,
+  item_filling_process_time: null,
   commit: 1,
 };
 
@@ -172,26 +181,32 @@ export const item_vendor_require_fields = [
 export const item_qa_columns = [
   {
     id: 0,
+    name: "No.",
+    size: 1,
+    require: false,
+  },
+  {
+    id: 1,
     name: "QA Subject",
     size: 6,
     require: true,
   },
   {
-    id: 1,
+    id: 2,
     name: "Specification",
     size: 6,
     require: true,
   },
   {
-    id: 2,
+    id: 3,
     name: "Method",
     size: 5,
     require: true,
   },
   {
-    id: 3,
+    id: 4,
     name: "Remark",
-    size: 6,
+    size: 5,
     require: true,
   },
 ];
@@ -253,14 +268,14 @@ export const item_filling_weight_columns = [
 export const item_packaging_process_columns = [
   {
     id: 0,
-    name: "Item Code",
-    size: 3,
-    require: true,
+    name: "No.",
+    size: 1,
+    require: false,
   },
   {
     id: 1,
-    name: "Description",
-    size: 5,
+    name: "Item",
+    size: 8,
     require: true,
   },
   {
@@ -271,20 +286,20 @@ export const item_packaging_process_columns = [
   },
   {
     id: 3,
+    name: "Unit",
+    size: 2,
+    require: true,
+  },
+  {
+    id: 4,
     name: "Method",
     size: 3,
     require: true,
   },
   {
-    id: 4,
+    id: 5,
     name: "Remark",
     size: 6,
-    require: false,
-  },
-  {
-    id: 5,
-    name: "Image",
-    size: 3,
     require: false,
   },
 ];
@@ -292,8 +307,10 @@ export const item_packaging_process_columns = [
 export const item_filling_detail_fields = {
   id: null,
   qa_method_id: null,
+  item_id_filling_process: null,
   item_filling_process_qty: 0,
   item_id: null,
+  item_no_name: null,
   item_filling_process_remark: null,
   commit: 1,
 };
@@ -422,18 +439,36 @@ export const item_production_process_columns = [
   },
 ];
 
-export const item_formula_detail_fields = {
+// PART
+export const item_part_specification_fields = {
   id: 0,
-  item_id: null,
-  item_formula_id: null,
-  item_part_id: null,
-  item_formula_qty: 0,
   item_part_specification_id: null,
-  item_formula_remark: null,
-  commit: 1,
+  // item_part_specification_time: null,
+  item_part_specification_time: "00:00:00",
+  item_part_specification_remark: null,
+  item_id: null,
+  item_part_id: 1,
+  item_part_name: "Part : A",
+  item_part_specification_worker: 0,
+  machine_id: null,
+  machine_no_name: null,
+  work_center_id: null,
+  work_center_description: null,
+};
+// PART DETAIL
+export const item_part_specification_detail_init_fields = {
+  1: [
+    {
+      id: 0,
+      item_part_specification_id: null,
+      item_part_specification_detail_id: null,
+      item_part_specification_detail_condition: null,
+      item_part_specification_detail_set: null,
+      item_part_specification_detail_remark: null,
+    },
+  ],
 };
 
-// PART DETAIL
 export const item_part_specification_detail_fields = {
   id: 0,
   item_part_specification_id: null,
@@ -442,19 +477,35 @@ export const item_part_specification_detail_fields = {
   item_part_specification_detail_set: null,
   item_part_specification_detail_remark: null,
 };
-// PART
-export const item_part_specification_fields = {
-  id: 0,
-  item_part_specification_id: null,
-  item_part_specification_time: 0,
-  item_part_specification_remark: null,
-  item_id: null,
-  item_part_id: 1,
-  item_part_name: "Part : A",
-  item_formula_detail: [item_formula_detail_fields],
-  item_part_detail: [item_part_specification_detail_fields],
+//PART FORMULA
+
+export const item_formula_detail_init_fields = {
+  1: [
+    {
+      id: 0,
+      item_id: null,
+      item_id_formula: null,
+
+      item_formula_qty: 0,
+      item_part_specification_id: null,
+      item_formula_remark: null,
+      machine_id_formula: null,
+      commit: 1,
+    },
+  ],
 };
 
+export const item_formula_detail_fields = {
+  id: 0,
+  item_id: null,
+  item_id_formula: null,
+  item_formula_qty: 0,
+  item_part_specification_id: null,
+  item_formula_remark: null,
+  machine_id_formula: null,
+  commit: 1,
+};
+// PRODUCTION PROCESS
 export const item_production_process_fields = {
   id: null,
   work_center_id: null,

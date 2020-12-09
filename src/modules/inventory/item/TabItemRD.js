@@ -34,7 +34,6 @@ const TabItemRD = ({
   customers,
   readOnly,
 }) => {
-  console.log("data_file", data_file);
   return (
     <>
       <Row className="col-2 row-margin-vertical">
@@ -96,7 +95,8 @@ const TabItemRD = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={7}>
               <Text strong>
-                <span className="require">* </span>Customer name{" "}
+                {!readOnly && <span className="require">* </span>}
+                Customer name
               </Text>
             </Col>
             <Col span={16}>
@@ -148,7 +148,8 @@ const TabItemRD = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={7}>
               <Text strong>
-                <span className="require">* </span>Identify benefit
+                {!readOnly && <span className="require">* </span>}
+                Identify benefit
               </Text>
             </Col>
             <Col span={16}>

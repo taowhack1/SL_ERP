@@ -6,6 +6,7 @@ import {
 } from "../types";
 import {
   api_get_item_list,
+  api_get_master_part,
   api_get_uom_list,
   api_query,
 } from "../../include/js/api";
@@ -39,6 +40,7 @@ export const getMasterDataItem = (user) => async (dispatch) => {
     const get_item = axios.get(api_get_item_list, header_config);
     const get_shelf = axios.get(api_shelf, header_config);
     const get_item_control = axios.get(api_get_item_control, header_config);
+    const get_master_part = axios.get(api_get_master_part, header_config);
     let master_data = {
       item_type: await get_type.then((res) => {
         return res.data[0];
@@ -61,6 +63,9 @@ export const getMasterDataItem = (user) => async (dispatch) => {
       shelf: await get_shelf.then((res) => {
         return res.data[0];
       }),
+      item_part: await get_master_part.then((res) => {
+        return res.data[0];
+      }),
     };
     await dispatch({ type: GET_MASTER_DATA_ITEM, payload: master_data });
   } catch (error) {
@@ -69,7 +74,6 @@ export const getMasterDataItem = (user) => async (dispatch) => {
 };
 
 export const get_location_shelf_by_item_id = (item_id) => async (dispatch) => {
-  console.log(`${api_get_location_shelf_by_item_id}/${item_id}`);
   try {
     await axios
       .get(`${api_get_location_shelf_by_item_id}/${item_id}`, header_config)

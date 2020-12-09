@@ -116,7 +116,6 @@ const ProductionProcess = ({
         <Col span={24}>
           <Space>
             <Text strong style={{ fontSize: 16, marginRight: 10 }}>
-              {/* <span className="require">* </span> */}
               <ProfileOutlined style={{ marginRight: 10 }} />
               Production Process
             </Text>

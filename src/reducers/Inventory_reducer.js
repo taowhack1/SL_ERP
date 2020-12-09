@@ -44,6 +44,7 @@ const initialState = {
     item_category: [],
     item_list: [],
     shelf: [],
+    item_part: [],
   },
   stock: {
     item_location_shelf: [],

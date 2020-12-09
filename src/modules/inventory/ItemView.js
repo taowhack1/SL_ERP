@@ -1,61 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Radio,
-  Select,
-  AutoComplete,
-  Typography,
-  InputNumber,
-  Checkbox,
-  Space,
-  Switch,
-  message,
-  Upload,
-  Button,
-} from "antd";
+import { Row, Col, Typography, Space, Switch, message } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
-import Line from "../../components/VendorLine";
-import {
-  autoCompleteUser,
-  locationData,
-  autoCompleteUnit,
-} from "../../data/inventoryData";
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
-import Barcode from "react-barcode";
-import { vendorColumns, vendors, companys } from "../../data/itemData";
-import {
-  getSelectDetail,
-  createNewItems,
-  upDateItem,
-  item_actions,
-} from "../../actions/inventory/itemActions";
-import { item_fields } from "./config/item";
-import { getNameById } from "../../include/js/function_main";
-import $ from "jquery";
+import { item_actions } from "../../actions/inventory/itemActions";
 import { getMasterDataItem } from "../../actions/inventory";
-import {
-  BorderOutlined,
-  CheckSquareOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import CustomSelect from "../../components/CustomSelect";
-import { item_vendor_columns } from "./config/item";
-import numeral from "numeral";
+import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
 import Authorize from "../system/Authorize";
 import ItemPreview from "./item/ItemFileUpload";
 import TabPanel from "./item/TabPanel";
 import { get_log_by_id } from "../../actions/comment&log";
 import ModalRemark from "../../components/Modal_Remark";
 
-const { Option } = Select;
-const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+const { Text } = Typography;
 const ItemView = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
@@ -64,6 +21,8 @@ const ItemView = (props) => {
   const {
     data_head,
     data_detail,
+    data_part,
+    data_part_detail,
     data_formula_detail,
     data_process,
     data_qa_detail,
@@ -104,14 +63,8 @@ const ItemView = (props) => {
     dispatch(getMasterDataItem());
   }, []);
   useEffect(() => {
-    console.log("GET_LOG");
     data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
   }, [data_head]);
-
-  // const data_head = useSelector(state=>state.inventory.item.item_head);
-  // const data_detail = useSelector(state=>state.inventory.item.item_detail);
-
-  const callback = (key) => {};
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
@@ -139,6 +92,8 @@ const ItemView = (props) => {
       data: {
         data_head: data_head,
         data_detail: data_detail,
+        data_part: data_part,
+        data_part_detail: data_part_detail,
         data_formula_detail: data_formula_detail,
         data_process: data_process,
         data_qa_detail: data_qa_detail,
@@ -200,20 +155,11 @@ const ItemView = (props) => {
     },
   };
 
-  console.log("SAVE HEAD", data_head);
-  console.log("SAVE DETAIL", data_detail);
-  console.log("SAVE QA", data_qa_detail);
-  console.log("SAVE FORMULA", data_formula_detail);
-  console.log("SAVE WEIGHT", data_weight_detail);
-  console.log("SAVE FILLING", data_filling_detail);
   return (
     <MainLayout {...config}>
       <div id="form">
         <Row className="col-2">
           <Col span={11}>
-            {/* <h2>
-              <strong>{data_head.item_no ? "Edit" : "Create"} Item</strong>
-            </h2> */}
             <h3 style={{ marginBottom: 8 }}>
               {data_head.item_no && (
                 <strong>
@@ -224,14 +170,7 @@ const ItemView = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}></Col>
-          <Col span={8} style={{ textAlign: "right" }}>
-            {/* <Barcode
-              value={data_head.item_barcode}
-              width={1.5}
-              height={30}
-              fontSize={14}
-            /> */}
-          </Col>
+          <Col span={8} style={{ textAlign: "right" }}></Col>
         </Row>
         <Row className="col-2">
           <Col span={19} style={{ marginBottom: 15 }}>
@@ -295,16 +234,19 @@ const ItemView = (props) => {
         <Row className="col-2 row-tab-margin">
           <Col span={24}>
             <TabPanel
+              data_file={data_file}
               data_head={data_head}
               data_detail={data_detail}
+              // Formula
               data_formula_detail={data_formula_detail}
+              //PART
+              data_part={data_part}
+              data_part_detail={data_part_detail}
+              // QA
               data_qa_detail={data_qa_detail}
-              data_weight_detail={data_weight_detail}
               data_filling_detail={data_filling_detail}
-              data_file={data_file}
-              // headDispatch={headDispatch}
-              // detailDispatch={detailDispatch}
-              // upDateFormValue={upDateFormValue}
+              data_weight_detail={data_weight_detail}
+              // data_production_process_detail={data_production_process_detail}
               readOnly={true}
             />
           </Col>

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Upload, Modal, Space, Button } from "antd";
 import { EyeOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import { api_server } from "../../../include/js/main_config";
 import Text from "antd/lib/typography/Text";
 
 function getBase64(file) {
@@ -22,7 +21,6 @@ const ItemFileUpload = ({
   data_file,
   updateFile,
   readOnly,
-  maxFile,
   file_type_id,
 
   upload_type,
@@ -30,14 +28,11 @@ const ItemFileUpload = ({
 }) => {
   const saveFile = (file_type_id, file_tmp) => {
     if (file_type_id === 1) {
-      console.log("File State 3");
       updateFile({ item_image: file_tmp }, file_type_id);
     } else {
-      console.log("File State 3");
       updateFile({ [file_type_id]: file_tmp }, file_type_id);
     }
   };
-  console.log("ItemFileUpload[data_file] : ", data_file);
   const [state, setState] = useState({
     previewVisible: false,
     previewImage: "",
@@ -47,16 +42,12 @@ const ItemFileUpload = ({
   const handleCancel = () => setState({ ...state, previewVisible: false });
   const handleChange = async ({ file, fileList }) => {
     const reader = new FileReader();
-    console.log("handleChange ", file, fileList);
     let file_tmp = null;
-    console.log("File State 1");
     if (fileList.length) {
       file_tmp = file;
       // file_tmp = fileList[0];
       reader.readAsDataURL(file);
       reader.onload = (e) => {
-        console.log("File State 2");
-        console.log(e);
         file_tmp.uid = file.uid;
         file_tmp.thumbUrl = e.target.result;
         file_tmp.url = e.target.result;
@@ -64,7 +55,6 @@ const ItemFileUpload = ({
         file_tmp.file = e.target.result;
         file_tmp.commit = 1;
         file_tmp.file_type_id = file_type_id;
-        console.log("File State 3");
         saveFile(file_type_id, file_tmp);
       };
     } else {
@@ -73,7 +63,7 @@ const ItemFileUpload = ({
   };
 
   const handlePreview = async (file) => {
-    console.log(file);
+    console.log("file", file);
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
@@ -116,7 +106,6 @@ const ItemFileUpload = ({
 
   const uploadConfig = {
     beforeUpload: (file, file_list) => {
-      console.log("Before Upload");
       return false;
     },
     onChange: handleChange,
@@ -127,7 +116,6 @@ const ItemFileUpload = ({
   };
 
   const get_file_render_by_type = (upload_type, data_file) => {
-    console.log(data_file, data_file.item_image);
     let file_temp = [];
     switch (file_type_id) {
       case 1:
@@ -139,7 +127,6 @@ const ItemFileUpload = ({
           : [];
         break;
     }
-    console.log(`file_temp[${file_type_id}]`, file_temp);
     switch (upload_type) {
       case "Card":
         return (

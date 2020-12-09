@@ -12,7 +12,7 @@ import { item_show_columns } from "./config/item";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 import SearchTable from "../../components/SearchTable";
-const Items = (props) => {
+const ManufacturingOrderMain = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
@@ -36,7 +36,7 @@ const Items = (props) => {
     title: current_project && current_project.project_name,
     home: current_project && current_project.project_url,
     show: true,
-    breadcrumb: ["Home", "Items"],
+    breadcrumb: ["Home", "ManufacturingOrderMain"],
     search: false,
     create: "/inventory/items/create",
     buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
@@ -134,4 +134,4 @@ const Items = (props) => {
   );
 };
 
-export default withRouter(Items);
+export default withRouter(ManufacturingOrderMain);

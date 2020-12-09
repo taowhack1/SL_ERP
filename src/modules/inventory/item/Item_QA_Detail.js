@@ -1,25 +1,14 @@
-import {
-  Button,
-  Row,
-  Col,
-  InputNumber,
-  AutoComplete,
-  Typography,
-  Input,
-  Space,
-} from "antd";
+import { Button, Row, Col, Typography, Input, Space } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
   EllipsisOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import numeral from "numeral";
 import { item_qa_columns, item_qa_detail_fields } from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
-import { convertDigit } from "../../../include/js/main_config";
 
 const { Text } = Typography;
 
@@ -47,14 +36,12 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
       },
     });
   };
-  console.log(data_qa_detail);
   return (
     <>
-      <Row className="col-2 row-margin-vertical detail-tab-row">
+      <Row className="col-2 row-margin-vertical detail-tab-row ">
         <Col span={24}>
           <Space>
             <Text strong style={{ fontSize: 16, marginRight: 10 }}>
-              {/* <span className="require">* </span> */}
               <ProfileOutlined style={{ marginRight: 10 }} />
               QA Test Case
             </Text>
@@ -88,14 +75,16 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
             <Row
               key={line.id}
               style={{
-                marginBottom: 0,
-                border: "1px solid white",
+                margin: "0px 1px",
                 backgroundColor: "#FCFCFC",
               }}
               name={`row-${key}`}
-              gutter={6}
-              className="col-2"
+              gutter={4}
+              className="form-row"
             >
+              <Col span={1} className="text-center">
+                <Text>{key + 1}</Text>
+              </Col>
               <Col span={6} className="text-string">
                 <CustomSelect
                   allowClear
@@ -169,7 +158,7 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
                   }}
                 />
               </Col>
-              <Col span={6} className="text-string">
+              <Col span={5} className="text-string">
                 <Input
                   name="item_qa_remark"
                   size="small"
@@ -205,13 +194,16 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
             <Row
               key={line.id}
               style={{
-                marginBottom: 0,
-                border: "1px solid white",
-                backgroundColor: "#FCFCFC",
+                margin: "0px 1px",
+                backgroundColor: key % 2 ? "#F8F8F8" : "#FCFCFC",
               }}
-              gutter={6}
-              className="col-2"
+              name={`row-${key}`}
+              gutter={4}
+              className="form-row"
             >
+              <Col span={1} className="text-center">
+                <Text>{key + 1}</Text>
+              </Col>
               <Col span={6} className="text-string">
                 <Text>{line.qa_subject_name}</Text>
               </Col>
@@ -221,7 +213,7 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
               <Col span={5} className="text-string">
                 <Text>{line.qa_method_name}</Text>
               </Col>
-              <Col span={6} className="text-string">
+              <Col span={5} className="text-string">
                 <Text>{line.item_qa_remark}</Text>
               </Col>
             </Row>

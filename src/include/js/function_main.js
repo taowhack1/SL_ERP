@@ -7,6 +7,8 @@ import {
   CloseCircleOutlined,
   SyncOutlined,
 } from "@ant-design/icons";
+import numeral from "numeral";
+
 export const sortData = (arrObject) => {
   let copyData = arrObject;
   let temp = [];
@@ -33,7 +35,6 @@ export const sortDataWithoutCommit = (arrObject) => {
 };
 
 export const getNameById = (id, masterData, masterField, field) => {
-  // console.log(id, masterData, masterField, field);
   const data = id && masterData.filter((data) => data[`${masterField}`] === id);
   const data2 = data && { ...data[0] };
   return data2 && data2[`${field}`] ? data2[`${field}`] : "";
@@ -120,7 +121,6 @@ export const validateFormDetail = (ArrayObj, require_field) => {
             obj_data[req_field].trim() === "") ||
           obj_data[req_field] <= 0
         ) {
-          console.log(req_field);
           objKey.push(`[name=row-${key}]`);
           // objKey.push(`[name=${req_field}]`);
           validate = false;
@@ -129,7 +129,6 @@ export const validateFormDetail = (ArrayObj, require_field) => {
     });
 
     const require_fields = `${objKey.toString()}`;
-    console.log(require_fields);
     // $(`${require_fields}`).addClass("require-field-alert");
     $(`${require_fields}`).addClass("require-row-field-alert");
     $(`${require_fields}`).focus();
@@ -231,7 +230,6 @@ export const getRefStatus = ({
 };
 
 export const get_pre_run_no = (prev, index, value) => {
-  console.log("GET_PRE_RUNNING_NO");
   if ((index !== null || index !== undefined) && prev.length) {
     let copy_run_no = prev;
     if (index === 0) {
@@ -247,4 +245,21 @@ export const get_pre_run_no = (prev, index, value) => {
     }
     return copy_run_no;
   }
+};
+
+export const convertNumberToTime = (number = 0) => {
+  const second = (number ? number : 0) * 60;
+  let result = numeral(second).format("00:00:00");
+  result = result.split(":");
+  result = result[0].length === 1 ? "0" + result.join(":") : result.join(":");
+  console.log("convertNumberToTime Before : ", number, " After :", result);
+  return result;
+};
+
+export const convertTimeToNumber = (time = "00:00:00") => {
+  const timeTemp = time ? time : "00:00:00";
+  const timeArray = timeTemp.split(":");
+  const minutes = parseInt(timeArray[0] * 60) + parseInt(timeArray[1]);
+  console.log("convertTimeToNumber Before : ", time, " After : ", minutes);
+  return minutes;
 };

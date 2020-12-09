@@ -1,53 +1,45 @@
-import {
-  Button,
-  Row,
-  Col,
-  InputNumber,
-  AutoComplete,
-  Typography,
-  Input,
-  Space,
-} from "antd";
+import { Button, Row, Col, InputNumber, Typography } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
   EllipsisOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import numeral from "numeral";
+import React, { useEffect, useReducer } from "react";
 import {
   item_formula_columns,
   item_formula_detail_fields,
-  item_qa_columns,
-  item_qa_detail_fields,
 } from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
-import { convertDigit, numberFormat } from "../../../include/js/main_config";
+import { convertDigit } from "../../../include/js/main_config";
+import { reducer } from "../reducers";
 
 const { Text } = Typography;
 
 const BulkFormula = ({
   readOnly,
+  item_part_id,
   data_formula_detail,
   formulaDetailDispatch,
   item_list,
+  machineList,
 }) => {
-  const { machineList } = useSelector((state) => state.production.machine);
+  const [detail, detailDispatch] = useReducer(reducer, data_formula_detail);
   const addLine = () => {
-    formulaDetailDispatch({
+    detailDispatch({
       type: "ADD_ROW",
-      payload: item_formula_detail_fields,
+      payload: {
+        ...item_formula_detail_fields,
+      },
     });
   };
 
   const delLine = (id) => {
-    formulaDetailDispatch({ type: "DEL_ROW", payload: { id: id } });
+    detailDispatch({ type: "DEL_ROW", payload: { id: id } });
   };
 
   const onChangeValue = (rowId, data) => {
-    formulaDetailDispatch({
+    detailDispatch({
       type: "CHANGE_DETAIL_VALUE",
       payload: {
         id: rowId,
@@ -56,27 +48,15 @@ const BulkFormula = ({
     });
   };
 
-  const getFormulaPart = (number = 10) => {
-    let arrayPart = [];
-    for (let i = 65; i < 90 - number; i++) {
-      arrayPart.push({
-        item_formula_part: String.fromCharCode(i),
+  useEffect(() => {
+    !readOnly &&
+      formulaDetailDispatch({
+        type: "CHANGE_HEAD_VALUE",
+        payload: {
+          [item_part_id]: detail,
+        },
       });
-    }
-    return arrayPart;
-  };
-
-  const getFormulaNo = (part = "A") => {
-    let arrayNo = [];
-    let part_temp = part && part !== undefined ? part : "A";
-    for (let i = 1; i <= 30; i++) {
-      arrayNo.push({
-        item_formula_part: part_temp,
-        item_formula_part_no: part_temp + numeral(i).format("00"),
-      });
-    }
-    return arrayNo;
-  };
+  }, [detail]);
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
@@ -117,8 +97,7 @@ const BulkFormula = ({
                 key={line.id}
                 style={{
                   margin: "0px 1px",
-                  // backgroundColor: key % 2 ? "#F1F1F1" : "#FCFCFC",
-                  backgroundColor: "#FCFCFC",
+                  backgroundColor: key % 2 ? "#F8F8F8" : "#FCFCFC",
                 }}
                 name={`row-${key}`}
                 gutter={4}
@@ -133,7 +112,7 @@ const BulkFormula = ({
                     showSearch
                     size={"small"}
                     placeholder={"Raw Material Code"}
-                    name="item_id"
+                    name="item_id_formula"
                     field_id="item_id"
                     field_name="item_no_name"
                     value={line.item_no_name}
@@ -141,11 +120,11 @@ const BulkFormula = ({
                     onChange={(data, option) => {
                       data && data
                         ? onChangeValue(line.id, {
-                            item_id: option.data.item_id,
+                            item_id_formula: option.data.item_id,
                             item_no_name: option.data.item_no_name,
                           })
                         : onChangeValue(line.id, {
-                            item_id: null,
+                            item_id_formula: null,
                             item_no_name: null,
                           });
                     }}
@@ -157,7 +136,7 @@ const BulkFormula = ({
                     showSearch
                     size="small"
                     placeholder={"Select Machine"}
-                    name="machine_no_name"
+                    name="machine_id_formula"
                     field_id="machine_id"
                     field_name="machine_no_name"
                     value={line.machine_no_name}
@@ -165,11 +144,11 @@ const BulkFormula = ({
                     onChange={(data, option) => {
                       data && data
                         ? onChangeValue(line.id, {
-                            machine_id: option.data.machine_id,
+                            machine_id_formula: option.data.machine_id,
                             machine_no_name: option.data.machine_no_name,
                           })
                         : onChangeValue(line.id, {
-                            machine_id: null,
+                            machine_id_formula: null,
                             machine_no_name: null,
                           });
                     }}
@@ -221,28 +200,29 @@ const BulkFormula = ({
                 key={line.id}
                 style={{
                   margin: "0px 1px",
-                  backgroundColor: key % 2 ? "#F1F1F1" : "#FCFCFC",
+                  backgroundColor: key % 2 ? "#F8F8F8" : "#FCFCFC",
                 }}
                 name={`row-${key}`}
                 gutter={4}
                 className="form-row"
               >
-                <Col span={3} className="text-center">
-                  <Text>{line.item_formula_part}</Text>
+                <Col span={1} className="text-center">
+                  <Text className="text-value">{key + 1}</Text>
                 </Col>
-                <Col span={3} className="text-center">
-                  <Text>{line.item_formula_part_no}</Text>
-                </Col>
-                <Col span={6} className="text-string">
-                  <Text>
-                    <Text>{line.item_no_name}</Text>
+                <Col span={9}>
+                  <Text className="text-left text-value">
+                    {line.item_no_name ?? "-"}
                   </Text>
                 </Col>
-                <Col span={3} className="text-number">
-                  <Text>{convertDigit(line.item_formula_qty)} % </Text>
+                <Col span={9}>
+                  <Text className="text-left text-value">
+                    {line.machine_no_name ?? "-"}
+                  </Text>
                 </Col>
-                <Col span={8} className="text-string">
-                  <Text>{line.item_formula_remark}</Text>
+                <Col span={4} className="text-number">
+                  <Text className="text-right text-value">
+                    {convertDigit(line.item_formula_qty) ?? "-"} %
+                  </Text>
                 </Col>
               </Row>
             ))}
