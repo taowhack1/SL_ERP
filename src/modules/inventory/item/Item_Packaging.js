@@ -25,7 +25,7 @@ const PackagingProcess = ({
   );
   const item_list = useSelector((state) =>
     state.inventory.master_data.item_list.filter(
-      (item) => item.type_id === 1 || item.type_id === 3
+      (item) => item.type_id !== 1 && item.type_id <= 6
     )
   );
   const addLine = () => {
