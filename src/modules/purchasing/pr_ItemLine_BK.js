@@ -17,7 +17,6 @@ import {
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 const { Option } = Select;
-// import { columns } from "../data";
 
 const { Text } = Typography;
 

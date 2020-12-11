@@ -14,10 +14,7 @@ import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
-import ItemLine from "./Sales_Detail";
 import TotalFooter from "../../components/TotalFooter";
-import numeral from "numeral";
 import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
 import { create_so, get_qn_open_so, update_so } from "../../actions/sales";

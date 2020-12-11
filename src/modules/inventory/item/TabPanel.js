@@ -2,7 +2,7 @@ import { Tabs } from "antd";
 import React from "react";
 import { useSelector } from "react-redux";
 import TabItemDetail from "./TabItemDetail";
-import TabFillingProcess from "./TabItemFG_Filling_Process";
+import TabPackaging from "./TabItemFG_Packaging";
 import TabItemPurchase from "./TabItemPurchase";
 import TabItemQA from "./TabItemQA";
 import TabItemRD from "./TabItemRD";
@@ -29,8 +29,8 @@ const TabPanel = ({
   // QA
   data_qa_detail,
   qaDetailDispatch,
-  data_filling_detail,
-  fillingDetailDispatch,
+  data_packaging_detail,
+  packagingDetailDispatch,
   data_weight_detail,
   weightDetailDispatch,
 }) => {
@@ -193,17 +193,17 @@ const TabPanel = ({
               tab={
                 <span className="tab_pane">
                   {!readOnly && <span className="require">* </span>}
-                  {"FG Filling Process"}
+                  {"FG Packaging & Filling Process"}
                 </span>
               }
               key={"7"}
             >
-              <TabFillingProcess
+              <TabPackaging
                 data_head={data_head}
                 upDateFormValue={upDateFormValue}
                 uom_name={data_head.uom_name}
-                data_filling_detail={data_filling_detail}
-                fillingDetailDispatch={fillingDetailDispatch}
+                data_packaging_detail={data_packaging_detail}
+                packagingDetailDispatch={packagingDetailDispatch}
                 data_weight_detail={data_weight_detail}
                 weightDetailDispatch={weightDetailDispatch}
                 readOnly={readOnly}

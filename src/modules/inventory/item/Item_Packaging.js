@@ -7,7 +7,7 @@ import {
 import React from "react";
 import { useSelector } from "react-redux";
 import {
-  item_filling_detail_fields,
+  item_packaging_detail_fields,
   item_packaging_process_columns,
 } from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
@@ -15,10 +15,10 @@ import { convertDigit, numberFormat } from "../../../include/js/main_config";
 
 const { Text } = Typography;
 
-const PackagingProcess = ({
-  data_filling_detail,
+const Packaging = ({
+  data_packaging_detail,
   readOnly,
-  fillingDetailDispatch,
+  packagingDetailDispatch,
 }) => {
   const test_case_method = useSelector(
     (state) => state.qa.qa_master_data.test_case_method
@@ -29,18 +29,18 @@ const PackagingProcess = ({
     )
   );
   const addLine = () => {
-    fillingDetailDispatch({
+    packagingDetailDispatch({
       type: "ADD_ROW",
-      payload: item_filling_detail_fields,
+      payload: item_packaging_detail_fields,
     });
   };
 
   const delLine = (id) => {
-    fillingDetailDispatch({ type: "DEL_ROW", payload: { id: id } });
+    packagingDetailDispatch({ type: "DEL_ROW", payload: { id: id } });
   };
 
   const onChangeValue = (rowId, data) => {
-    fillingDetailDispatch({
+    packagingDetailDispatch({
       type: "CHANGE_DETAIL_VALUE",
       payload: {
         id: rowId,
@@ -73,7 +73,7 @@ const PackagingProcess = ({
       {!readOnly ? (
         <>
           {/* Edit Form */}
-          {data_filling_detail.map((line, key) => (
+          {data_packaging_detail.map((line, key) => (
             <Row
               key={line.id}
               style={{
@@ -92,7 +92,7 @@ const PackagingProcess = ({
                   allowClear
                   showSearch
                   size="small"
-                  className={"filling-process-input"}
+                  className={"packaging-process-input"}
                   placeholder={"Item Name"}
                   name="item_no_name"
                   field_id="item_id"
@@ -102,13 +102,13 @@ const PackagingProcess = ({
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
-                          item_id_filling_process: option.data.item_id,
+                          item_id_packaging: option.data.item_id,
                           item_no_name: option.data.item_no_name,
                           uom_name: option.data.uom_name,
                           item_image: option.data.item_image,
                         })
                       : onChangeValue(line.id, {
-                          item_id_filling_process: null,
+                          item_id_packaging: null,
                           item_no_name: null,
                           uom_name: null,
                           item_image: null,
@@ -122,16 +122,16 @@ const PackagingProcess = ({
                 <InputNumber
                   {...numberFormat}
                   size="small"
-                  className={"filling-process-input"}
-                  name="item_filling_process_qty"
+                  className={"packaging-process-input"}
+                  name="item_packaging_qty"
                   placeholder="Qty. / pcs"
-                  value={line.item_filling_process_qty}
+                  value={line.item_packaging_qty}
                   defaultValue={0.0}
                   min={0.0}
                   step={1.0}
                   onChange={(data) => {
                     onChangeValue(line.id, {
-                      item_filling_process_qty: data,
+                      item_packaging_qty: data,
                     });
                   }}
                   style={{ width: "100%" }}
@@ -147,7 +147,7 @@ const PackagingProcess = ({
                   allowClear
                   showSearch
                   size="small"
-                  className={"filling-process-input"}
+                  className={"packaging-process-input"}
                   placeholder={"Method"}
                   name="qa_method_id"
                   field_id="qa_method_id"
@@ -169,19 +169,19 @@ const PackagingProcess = ({
               </Col>
               <Col span={6} className="text-string">
                 <Input
-                  name="item_filling_process_remark"
+                  name="item_packaging_remark"
                   size="small"
-                  className={"filling-process-input"}
+                  className={"packaging-process-input"}
                   placeholder={"Remark"}
                   onChange={(e) =>
                     onChangeValue(line.id, {
-                      item_filling_process_remark: e.target.value,
+                      item_packaging_remark: e.target.value,
                     })
                   }
-                  value={line.item_filling_process_remark}
+                  value={line.item_packaging_remark}
                 />
               </Col>
-              {data_filling_detail.length > 1 && (
+              {data_packaging_detail.length > 1 && (
                 <Col span={1} style={{ textAlign: "center" }}>
                   <DeleteTwoTone onClick={() => delLine(line.id)} />
                 </Col>
@@ -203,7 +203,7 @@ const PackagingProcess = ({
       ) : (
         <>
           {/* View Form */}
-          {data_filling_detail.map((line, key) => (
+          {data_packaging_detail.map((line, key) => (
             <Row
               key={line.id}
               style={{
@@ -222,7 +222,7 @@ const PackagingProcess = ({
               </Col>
               <Col span={3} className="text-number">
                 <Text className="text-right">
-                  {convertDigit(line.item_filling_process_qty) ?? "-"}
+                  {convertDigit(line.item_packaging_qty) ?? "-"}
                 </Text>
               </Col>
               <Col span={2} className="text-string">
@@ -233,7 +233,7 @@ const PackagingProcess = ({
               </Col>
               <Col span={6} className="text-string">
                 <Text className="text-left">
-                  {line.item_filling_process_remark ?? "-"}
+                  {line.item_packaging_remark ?? "-"}
                 </Text>
               </Col>
             </Row>
@@ -245,4 +245,4 @@ const PackagingProcess = ({
   );
 };
 
-export default PackagingProcess;
+export default Packaging;

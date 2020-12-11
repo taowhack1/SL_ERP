@@ -49,6 +49,10 @@ import CustomerView from "./modules/sales/Customer_View";
 import CustomerCreate from "./modules/sales/Customer_Create";
 
 import Production from "./modules/production/Production";
+// Operation
+import WorkOrderMain from "./modules/production/Operation/WorkOrderMain";
+import WorkOrderCreate from "./modules/production/Operation/WorkOrderCreate";
+// Master Data
 import WorkCenter from "./modules/production/WorkCenter";
 import WorkCenterCreate from "./modules/production/WorkCenterCreate";
 import WorkCenterView from "./modules/production/WorkCenterView";
@@ -323,7 +327,15 @@ const App = (props) => {
             <Route exact path="/production">
               <Production />
             </Route>
+            {/* PRODUCTION OPERATION */}
+            <Route exact path="/production/operations/wo">
+              <WorkOrderMain />
+            </Route>
+            <Route exact path="/production/operations/wo/create">
+              <WorkOrderCreate />
+            </Route>
 
+            {/* PRODUCTION MASTER DATA */}
             <Route exact path="/production/work_center">
               <WorkCenter />
             </Route>

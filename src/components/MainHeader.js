@@ -8,7 +8,6 @@ import {
   CaretDownOutlined,
   DatabaseOutlined,
 } from "@ant-design/icons";
-import { menuProfile } from "../data";
 import MainConfig from "./MainConfig";
 import { signOut, change_working_project } from "../actions/authActions";
 import { useDispatch } from "react-redux";

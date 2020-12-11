@@ -45,8 +45,8 @@ export const api_item_formula = `${api_server}/api/inventory/item_formula`;
 export const api_item_qa = `${api_server}/api/inventory/item_qa`;
 // item -> weight
 export const api_item_weight = `${api_server}/api/inventory/item_weight`;
-// item -> filling
-export const api_item_filling_process = `${api_server}/api/inventory/item_filling_process`;
+// item -> packaging
+export const api_item_packaging = `${api_server}/api/inventory/item_packaging`;
 // item -> process
 export const api_item_process = `${api_server}/api/inventory/item_process`;
 

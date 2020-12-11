@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { columnsMove, dataMove } from "../../data/inventoryData";
 import $ from "jquery";
 import { get_report_stock } from "../../actions/inventory";
 import { stock_on_hand_columns } from "./config/report";

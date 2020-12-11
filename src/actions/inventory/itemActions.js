@@ -13,13 +13,14 @@ import {
   api_item_formula,
   api_item_qa,
   api_item_weight,
-  api_item_filling_process,
+  api_item_packaging,
   api_upload_file,
   api_approve,
   api_item_process,
   api_part_and_formula,
   api_get_part_by_item_id,
   api_item_status,
+  api_get_item_list,
 } from "../../include/js/api";
 import axios from "axios";
 import { Alert, message, notification } from "antd";
@@ -141,24 +142,24 @@ const bind_weight = (item_id, data_weight_detail) => {
   );
 };
 
-const bind_filling_process = (item_id, data_filling_detail) => {
-  console.log("bind_filling_process");
-  const data_filling_detail_temp = data_filling_detail.filter(
+const bind_packaging = (item_id, data_packaging_detail) => {
+  console.log("bind_packaging");
+  const data_packaging_detail_temp = data_packaging_detail.filter(
     (detail) =>
       detail.qa_method_id !== null &&
-      detail.item_filling_process_qty !== null &&
+      detail.item_packaging_qty !== null &&
       detail.commit === 1
   );
   return (
-    data_filling_detail_temp.length &&
+    data_packaging_detail_temp.length &&
     axios
       .post(
-        `${api_item_filling_process}/${item_id}`,
-        data_filling_detail_temp,
+        `${api_item_packaging}/${item_id}`,
+        data_packaging_detail_temp,
         header_config
       )
       .then((res) => {
-        console.log("BIND FILLING PROCESS");
+        console.log("BIND PACKAGING");
       })
   );
 };
@@ -178,25 +179,7 @@ const bind_process = (item_id, data_process) => {
 };
 
 export const getAllItems = () => async (dispatch) => {
-  const query_items = {
-    query_sql: `SELECT
-    A.*, 
-    '( '+B.uom_no+' ) '+B.uom_name as uom_name,
-    '( '+C.type_no+' ) '+C.type_name as type_name,
-    D.category_name,
-    E.vat_name,
-    F.branch_name,
-    G.identify_benefit_name
-  FROM
-    [INVENTORY].[dbo].[tb_item] A
-  LEFT JOIN [INVENTORY].[dbo].[tb_uom] B ON A.uom_id = B.uom_id
-  LEFT JOIN [INVENTORY].[dbo].[tb_type] C ON A.type_id = C.type_id
-  LEFT JOIN [INVENTORY].[dbo].[tb_category] D ON A.category_id = D.category_id
-  LEFT JOIN [PURCHASE].[dbo].[tb_vat] E ON A.vat_id = E.vat_id
-  LEFT JOIN [HRM].[dbo].[tb_branch] F ON A.branch_id = F.branch_id
-  LEFT JOIN [INVENTORY].[dbo].[tb_identify_benefit] G ON A.identify_benefit_id = G.identify_benefit_id`,
-  };
-  await axios.post(api_path, query_items).then((res) => {
+  await axios.get(api_get_item_list, header_config).then((res) => {
     dispatch({
       type: GET_ALL_ITEMS,
       payload: res.data[0],
@@ -217,7 +200,7 @@ export const createNewItems = (data, user_name, redirect) => async (
     data_process_detail,
     data_qa_detail,
     data_weight_detail,
-    data_filling_detail,
+    data_packaging_detail,
     data_file,
   } = data;
 
@@ -233,7 +216,7 @@ export const createNewItems = (data, user_name, redirect) => async (
           //   formula: true,
           //   qa: true,
           //   weight: true,
-          //   filling_process: true,
+          //   packaging: true,
           //   attach_file: true,
           // },
           Promise.allSettled([
@@ -243,9 +226,10 @@ export const createNewItems = (data, user_name, redirect) => async (
             // access_right.process && bind_process(item_id, data_process_detail),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
             access_right.weight && bind_weight(item_id, data_weight_detail),
-            access_right.filling_process &&
-              bind_filling_process(item_id, data_filling_detail),
-            access_right.attach_file && item_save_file(item_id, data_file),
+            access_right.packaging &&
+              bind_packaging(item_id, data_packaging_detail),
+            access_right.attach_file &&
+              item_save_file(item_id, data_file, user_name),
           ])
             .then(async (data) => {
               console.log("Promise.allSettled. THEN ", data);
@@ -300,7 +284,7 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
     data_process_detail,
     data_qa_detail,
     data_weight_detail,
-    data_filling_detail,
+    data_packaging_detail,
     data_file,
   } = data;
   console.log("Update item...", data);
@@ -316,9 +300,10 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
             // access_right.process && bind_process(item_id, data_process_detail),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
             access_right.weight && bind_weight(item_id, data_weight_detail),
-            access_right.filling_process &&
-              bind_filling_process(item_id, data_filling_detail),
-            access_right.attach_file && item_save_file(item_id, data_file),
+            access_right.packaging &&
+              bind_packaging(item_id, data_packaging_detail),
+            access_right.attach_file &&
+              item_save_file(item_id, data_file, user_name),
           ])
             .then((data) => {
               console.log("Promise Then");
@@ -382,8 +367,8 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         `${api_item_weight}/${item_id}`,
         header_config
       );
-      const res_filling_process = axios.get(
-        `${api_item_filling_process}/${item_id}`,
+      const res_packaging = axios.get(
+        `${api_item_packaging}/${item_id}`,
         header_config
       );
       const res_file = axios.get(
@@ -398,7 +383,7 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         res_process,
         res_qa,
         res_weight,
-        res_filling_process,
+        res_packaging,
         res_file,
       ]).then((data) => {
         const convertFileField = (file) => {
@@ -450,7 +435,7 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
           data_process: sortData(data[4].value.data[0]),
           data_qa_detail: sortData(data[5].value.data[0]),
           data_weight_detail: sortData(data[6].value.data[0]),
-          data_filling_detail: sortData(data[7].value.data[0]),
+          data_packaging_detail: sortData(data[7].value.data[0]),
           data_file: {
             item_image:
               data_file_temp.length &&

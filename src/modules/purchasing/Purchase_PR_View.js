@@ -4,7 +4,6 @@ import { Row, Col, Tabs, Typography, Alert, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import ItemLine from "./pr_ItemLine";
-import { dataComments, itemLots } from "../../data";
 import { prItemColumns } from "./config/pr";
 import Comments from "../../components/Comments";
 import TotalFooter from "../../components/TotalFooter";

@@ -3,10 +3,10 @@ import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { columnsMove, dataMove } from "../../data/inventoryData";
 import $ from "jquery";
 import Authorize from "../system/Authorize";
 const StockMove = (props) => {
+  const { columnsMove, dataMove } = [];
   const authorize = Authorize();
   authorize.check_authorize();
   const [rowClick, setRowClick] = useState(false);

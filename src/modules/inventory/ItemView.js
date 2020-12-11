@@ -27,7 +27,7 @@ const ItemView = (props) => {
     data_process,
     data_qa_detail,
     data_weight_detail,
-    data_filling_detail,
+    data_packaging_detail,
     data_file,
   } = useSelector((state) => state.inventory.item);
 
@@ -98,7 +98,7 @@ const ItemView = (props) => {
         data_process: data_process,
         data_qa_detail: data_qa_detail,
         data_weight_detail: data_weight_detail,
-        data_filling_detail: data_filling_detail,
+        data_packaging_detail: data_packaging_detail,
         data_file: data_file,
       },
       path: data_head && "/inventory/items/edit/" + data_head.item_id,
@@ -244,7 +244,7 @@ const ItemView = (props) => {
               data_part_detail={data_part_detail}
               // QA
               data_qa_detail={data_qa_detail}
-              data_filling_detail={data_filling_detail}
+              data_packaging_detail={data_packaging_detail}
               data_weight_detail={data_weight_detail}
               // data_production_process_detail={data_production_process_detail}
               readOnly={true}

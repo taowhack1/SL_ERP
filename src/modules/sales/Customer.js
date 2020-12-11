@@ -3,16 +3,12 @@ import { useHistory, withRouter } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { customerData } from "../../data/sale/data";
 import {
   get_customer_by_id,
   get_customer_list,
 } from "../../actions/sales/customerActions";
 import $ from "jquery";
-import {
-  get_currency_list,
-  get_customer_payment_term_list,
-} from "../../actions/accounting";
+import { get_customer_payment_term_list } from "../../actions/accounting";
 import { customer_columns } from "./configs/customer";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";

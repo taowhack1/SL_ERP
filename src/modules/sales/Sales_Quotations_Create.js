@@ -21,7 +21,6 @@ import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
 
 import TotalFooter from "../../components/TotalFooter";
 import {

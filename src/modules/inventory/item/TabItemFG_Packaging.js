@@ -4,18 +4,18 @@ import React from "react";
 import { useSelector } from "react-redux";
 import CustomSelect from "../../../components/CustomSelect";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
-import { item_filling_weight_columns } from "../config/item";
-import PackagingProcess from "./Item_Packaging";
+import { item_packaging_weight_columns } from "../config/item";
+import Packaging from "./Item_Packaging";
 import moment from "moment";
 
-const TabFillingProcess = ({
+const TabPackaging = ({
   uom_name,
   data_head,
   upDateFormValue,
 
   readOnly,
-  data_filling_detail,
-  fillingDetailDispatch,
+  data_packaging_detail,
+  packagingDetailDispatch,
   data_weight_detail,
   weightDetailDispatch,
 }) => {
@@ -36,13 +36,13 @@ const TabFillingProcess = ({
       <Row className="col-2 row-margin-vertical">
         <Col span={12} className="col-left">
           <Row className="col-2 row-margin-vertical">
-            <Col span={6}>
+            <Col span={7}>
               <Text strong className="pd-left-1">
                 {!readOnly && <span className="require">* </span>}
                 Bulk Code
               </Text>
             </Col>
-            <Col span={15}>
+            <Col span={14}>
               {readOnly ? (
                 <Text className="text-left">
                   {data_head.item_ref_no_name ?? "-"}
@@ -75,17 +75,17 @@ const TabFillingProcess = ({
             <Col span={3}></Col>
           </Row>
           <Row className="col-2 row-margin-vertical">
-            <Col span={6}>
+            <Col span={7}>
               <Text strong className="pd-left-1">
                 {!readOnly && <span className="require">* </span>}Used Time / 1
-                pc. :
+                Pcs. :
               </Text>
             </Col>
-            <Col span={15}>
+            <Col span={14}>
               {readOnly ? (
                 <Text className="text-view">
-                  {data_head.item_filling_process_time
-                    ? data_head.item_filling_process_time
+                  {data_head.item_packaging_time
+                    ? data_head.item_packaging_time
                     : "-"}
                 </Text>
               ) : (
@@ -93,19 +93,19 @@ const TabFillingProcess = ({
                   className="full-width"
                   format={"HH:mm:ss"}
                   showNow={false}
-                  name={"item_filling_process_time"}
+                  name={"item_packaging_time"}
                   placeholder="00:00:00 (HH : mm : ss)"
                   required
                   value={
-                    data_head.item_filling_process_time
-                      ? moment(data_head.item_filling_process_time, "HH:mm:ss")
+                    data_head.item_packaging_time
+                      ? moment(data_head.item_packaging_time, "HH:mm:ss")
                       : ""
                   }
                   onChange={(data) => {
                     const time = moment(data, "HH:mm:ss").format("HH:mm:ss");
                     console.log(time);
                     upDateFormValue({
-                      item_filling_process_time: data ? time : null,
+                      item_packaging_time: data ? time : null,
                     });
                   }}
                 />
@@ -134,8 +134,8 @@ const TabFillingProcess = ({
             <Col span={18}>
               {/* Weight Columns */}
               <Row gutter={2} className="detail-table-head">
-                {item_filling_weight_columns &&
-                  item_filling_weight_columns.map((col, key) => {
+                {item_packaging_weight_columns &&
+                  item_packaging_weight_columns.map((col, key) => {
                     return (
                       <Col key={col.id} span={col.size} className="col-outline">
                         {col.require && !readOnly && (
@@ -151,7 +151,7 @@ const TabFillingProcess = ({
           </Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={4}>
-              <Text strong>Filling Weight</Text>
+              <Text strong>Packaging Weight</Text>
             </Col>
             <Col span={18}>
               {/* weight */}
@@ -529,18 +529,18 @@ const TabFillingProcess = ({
       <Row className="col-2 row-tab-margin-lg detail-tab-row">
         <Col span={24}>
           <Text strong className="detail-tab-header">
-            Filling Process
+            Packaging
           </Text>
         </Col>
       </Row>
       <Row className="col-2 row-tab-margin">
-        {/* PackagingProcess */}
+        {/* Packaging */}
         <Col span={24}>
-          <PackagingProcess
+          <Packaging
             readOnly={readOnly}
             uom_name={uom_name}
-            data_filling_detail={data_filling_detail}
-            fillingDetailDispatch={fillingDetailDispatch}
+            data_packaging_detail={data_packaging_detail}
+            packagingDetailDispatch={packagingDetailDispatch}
           />
         </Col>
       </Row>
@@ -548,4 +548,4 @@ const TabFillingProcess = ({
   );
 };
 
-export default TabFillingProcess;
+export default TabPackaging;

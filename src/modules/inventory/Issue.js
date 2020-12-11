@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { reqColumns } from "../../data/inventoryData";
 import $ from "jquery";
 import axios from "axios";
 import { getMasterDataItem } from "../../actions/inventory";

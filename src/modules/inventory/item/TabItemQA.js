@@ -17,7 +17,7 @@ const TabItemQA = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <Text strong>
-                {!readOnly && <span className="require">* </span>}QA Used Time /
+                {!readOnly && <span className="require">* </span>}QA used time /
                 Lot. :{" "}
               </Text>
             </Col>

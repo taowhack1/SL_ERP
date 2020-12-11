@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../../components/MainLayout";
 import {
   getAllItems,
   get_item_by_id,
-} from "../../actions/inventory/itemActions";
+} from "../../../actions/inventory/itemActions";
 import $ from "jquery";
-import { item_show_columns } from "./config/item";
-import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
-import SearchTable from "../../components/SearchTable";
-const ManufacturingOrderMain = (props) => {
+import Authorize from "../../system/Authorize";
+import useKeepLogs from "../../logs/useKeepLogs";
+import SearchTable from "../../../components/SearchTable";
+import { item_show_columns } from "../../inventory/config/item";
+import { work_order_columns } from "../config/workOrder";
+import WorkOrderSearchTool from "./WorkOrderSearchTool";
+const WorkOrderMain = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
@@ -36,14 +38,14 @@ const ManufacturingOrderMain = (props) => {
     title: current_project && current_project.project_name,
     home: current_project && current_project.project_url,
     show: true,
-    breadcrumb: ["Home", "ManufacturingOrderMain"],
+    breadcrumb: ["Home", "Operations", "Work Order"],
     search: false,
-    create: "/inventory/items/create",
-    buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
-    // buttonAction: ["Create"],
+    create: "/production/operations/wo/create",
+    // buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
+    buttonAction: ["Create"],
     edit: {},
     disabledEditBtn: !rowClick,
-    discard: "/inventory/items",
+    discard: "/production",
     onCancel: () => {
       console.log("Cancel");
     },
@@ -98,14 +100,53 @@ const ManufacturingOrderMain = (props) => {
         <Row className="row-tab-margin-lg">
           <Col span={24}>
             <Table
-              title={() => <SearchTable onChangeSeach={onChangeSeach} />}
+              title={() => (
+                <WorkOrderSearchTool onChangeSeach={onChangeSeach} />
+              )}
               loading={loading}
-              columns={item_show_columns}
-              dataSource={items}
+              columns={work_order_columns}
+              dataSource={[
+                {
+                  work_order_no: "WO201200001",
+                  work_order_source: "SO201200001",
+                  item_no_name:
+                    "[ 401SCME01900 ] DERMACARE BY POSH NIACINAMIDE ANTIBLEMISH FACIAL SERUM",
+                  work_order_job_name: "TEST CREATE WORK ORDER 1",
+                  work_order_plan_date_start: "16/12/2020",
+                  work_order_plan_date_end: "26/12/2020",
+                  work_order_deadline_date: "30/12/2020",
+                  work_order_qty: 120,
+                  uom_name: "Gram",
+                },
+                {
+                  work_order_no: "WO201200002",
+                  work_order_source: "SO201200002",
+                  item_no_name:
+                    "[ 401SCME01900 ] DERMACARE BY POSH NIACINAMIDE ANTIBLEMISH FACIAL SERUM",
+                  work_order_job_name: "TEST CREATE WORK ORDER 2",
+                  work_order_plan_date_start: "03/01/2021",
+                  work_order_plan_date_end: "16/01/2021",
+                  work_order_deadline_date: "30/01/2021",
+                  work_order_qty: 100,
+                  uom_name: "Kilogram",
+                },
+                {
+                  work_order_no: "WO201200003",
+                  work_order_source: "SO201200003",
+                  item_no_name:
+                    "[ 401SCME01900 ] DERMACARE BY POSH NIACINAMIDE ANTIBLEMISH FACIAL SERUM",
+                  work_order_job_name: "TEST CREATE WORK ORDER 3",
+                  work_order_plan_date_start: "12/01/2021",
+                  work_order_plan_date_end: "18/01/2021",
+                  work_order_deadline_date: "31/01/2021",
+                  work_order_qty: 10,
+                  uom_name: "Pieces",
+                },
+              ]}
               onChange={onChange}
               bordered
               size="small"
-              rowKey="item_id"
+              rowKey="work_order_id"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
@@ -134,4 +175,4 @@ const ManufacturingOrderMain = (props) => {
   );
 };
 
-export default withRouter(ManufacturingOrderMain);
+export default withRouter(WorkOrderMain);

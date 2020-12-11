@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { saleOrderColumns, saleOrderData } from "../../data/sale/data";
 import $ from "jquery";
 import { useDispatch, useSelector } from "react-redux";
 import {

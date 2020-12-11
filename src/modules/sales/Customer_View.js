@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Row, Col, Typography, Tabs } from "antd";
 import MainLayout from "../../components/MainLayout";
-import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
 import { useSelector } from "react-redux";
 import Title from "antd/lib/skeleton/Title";
 import numeral from "numeral";

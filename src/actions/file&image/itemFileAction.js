@@ -1,38 +1,41 @@
 import { message } from "antd";
 import axios from "axios";
 import React from "react";
+import { useSelector } from "react-redux";
 import { api_upload_file } from "../../include/js/api";
 import { header_config } from "../../include/js/main_config";
 
-export const item_save_file = (item_id, files) => {
+export const item_save_file = (item_id, files, user_name) => {
   try {
     const file_temp = files.item_image;
     const file_temp2 = Object.values(files.certificate);
     file_temp2.unshift(file_temp);
     console.log("file_temp", file_temp2);
     file_temp2
-      .filter((file) => file && file !== null && file !== undefined)
-      .forEach(async (file) => {
+      // .filter((file) => file && file !== null && file !== undefined)
+      .forEach(async (file, key) => {
+        console.log(file, key);
         const formData = new FormData();
 
         formData.append("file", file);
-        formData.append("user_name", file.user_name);
+        formData.append("user_name", user_name);
         formData.append("commit", 1);
-        formData.append("file_type_id", file.file_type_id);
+        formData.append("file_type_id", key + 1);
         formData.append("item_file_remark", "");
         if (
-          !file.commit ||
-          !file.commit === undefined ||
-          file.commit === null
+          file === null ||
+          (file.commit !== undefined && file.commit !== null && file.commit)
         ) {
-          return false;
-        } else {
           return axios
             .post(`${api_upload_file}/${item_id}`, formData)
             .then((res) => {
-              console.log("Uploaded.", file.file_type_id, res);
+              console.log("Uploaded.", key + 1, res);
             });
+        } else {
+          console.log("File else file_type_id : ", key + 1);
+          return false;
         }
+
         // const upload_res = await axios.post(
         //   `${api_upload_file}/${item_id}`,
         //   formData

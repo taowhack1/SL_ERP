@@ -3,15 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { reqColumns } from "../../data/inventoryData";
 import $ from "jquery";
-import axios from "axios";
 import { getMasterDataItem } from "../../actions/inventory";
 import { disburse_columns } from "./config";
-import {
-  get_issue_by_id,
-  get_issue_list,
-} from "../../actions/inventory/issueActions";
 import {
   get_disburse_by_id,
   get_disburse_list,

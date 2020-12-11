@@ -103,7 +103,7 @@ export const item_fields = {
   customer_no_name: "[ CUS0001 ] Siri Laboratories Co., Ltd.",
   item_qa_day: 0,
   item_qa_time: null,
-  item_filling_process_time: null,
+  item_packaging_time: null,
   commit: 1,
 };
 
@@ -223,8 +223,8 @@ export const item_qa_detail_fields = {
   commit: 1,
 };
 
-// Filling Process
-export const item_filling_weight_columns = [
+// Packaging
+export const item_packaging_weight_columns = [
   {
     id: 0,
     name: "Standard",
@@ -304,14 +304,14 @@ export const item_packaging_process_columns = [
   },
 ];
 
-export const item_filling_detail_fields = {
+export const item_packaging_detail_fields = {
   id: null,
   qa_method_id: null,
-  item_id_filling_process: null,
-  item_filling_process_qty: 0,
+  item_id_packaging: null,
+  item_packaging_qty: 0,
   item_id: null,
   item_no_name: null,
-  item_filling_process_remark: null,
+  item_packaging_remark: null,
   commit: 1,
 };
 

@@ -3,11 +3,7 @@ import { useSelector } from "react-redux";
 import { Row, Col, Input, Tabs, Select, Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
 
-import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
 import Authorize from "../system/Authorize";
-const { Option } = Select;
-const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 const VendorView = (props) => {

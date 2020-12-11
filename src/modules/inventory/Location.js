@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Row, Col, Table, Modal } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { columns, locations, warehouses } from "../../data/locationData";
 import { Form, Input, Select } from "antd";
 import $ from "jquery";
 import Authorize from "../system/Authorize";
@@ -17,6 +16,7 @@ const layout = {
   },
 };
 const Location = () => {
+  const { columns, locations, warehouses } = [];
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();

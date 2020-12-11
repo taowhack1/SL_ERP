@@ -33,7 +33,7 @@ const initialState = {
     data_process: [],
     data_qa_detail: [],
     data_weight_detail: [],
-    data_filling_detail: [],
+    data_packaging_detail: [],
     data_file: [],
   },
   master_data: {

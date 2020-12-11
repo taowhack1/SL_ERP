@@ -20,7 +20,7 @@ import {
   item_detail_fields,
   item_fields,
   item_file,
-  item_filling_detail_fields,
+  item_packaging_detail_fields,
   item_formula_detail_fields,
   item_formula_detail_init_fields,
   item_part_specification_detail_fields,
@@ -42,12 +42,13 @@ import ItemFileUpload from "./item/ItemFileUpload";
 import { get_qa_test_case_master } from "../../actions/qa/qaTestAction";
 import { get_sale_master_data } from "../../actions/sales";
 import { getAllWorkCenter } from "../../actions/production/workCenterActions";
+import { getAllMachine } from "../../actions/production/machineActions";
 const { Text } = Typography;
 const initialStateHead = item_fields;
 const initialStateDetail = [item_detail_fields];
 const initialStateFormula = item_formula_detail_init_fields;
 const initialStateQA = [item_qa_detail_fields];
-const initialStateFilling = [item_filling_detail_fields];
+const initialStatePackaging = [item_packaging_detail_fields];
 const initialStateWeight = item_weight_detail;
 const initialStateProductionProcess = [item_production_process_fields];
 const initialStatePart = [item_part_specification_fields];
@@ -87,9 +88,9 @@ const ItemCreate = (props) => {
     reducer,
     initialStateWeight
   );
-  const [data_filling_detail, fillingDetailDispatch] = useReducer(
+  const [data_packaging_detail, packagingDetailDispatch] = useReducer(
     reducer,
-    initialStateFilling
+    initialStatePackaging
   );
   const [
     data_production_process_detail,
@@ -109,6 +110,7 @@ const ItemCreate = (props) => {
 
   useEffect(() => {
     dispatch(get_sale_master_data());
+    dispatch(getAllMachine());
     headDispatch({
       type: "SET_HEAD",
       payload:
@@ -146,12 +148,12 @@ const ItemCreate = (props) => {
           ? data.data_weight_detail
           : item_weight_detail,
     });
-    fillingDetailDispatch({
+    packagingDetailDispatch({
       type: "SET_DETAIL",
       payload:
-        data && data.data_filling_detail.length
-          ? data.data_filling_detail
-          : [item_filling_detail_fields],
+        data && data.data_packaging_detail.length
+          ? data.data_packaging_detail
+          : [item_packaging_detail_fields],
     });
     partDispatch({
       type: "SET_DETAIL",
@@ -204,7 +206,7 @@ const ItemCreate = (props) => {
       console.log("SAVE FORMULA", data_formula_detail);
       console.log("SAVE QA", data_qa_detail);
       console.log("SAVE WEIGHT", data_weight_detail);
-      console.log("SAVE FILLING", data_filling_detail);
+      console.log("SAVE PACKAGING", data_packaging_detail);
       console.log("SAVE FILES", data_file);
 
       const key = "validate";
@@ -227,7 +229,7 @@ const ItemCreate = (props) => {
             process: true,
             qa: true,
             weight: true,
-            filling_process: true,
+            packaging: true,
             attach_file: true,
           },
           data_head: data_head,
@@ -237,7 +239,7 @@ const ItemCreate = (props) => {
           data_process: data_production_process_detail,
           data_qa_detail: data_qa_detail,
           data_weight_detail: data_weight_detail,
-          data_filling_detail: data_filling_detail,
+          data_packaging_detail: data_packaging_detail,
           data_file: data_file,
         };
         data_head.item_id
@@ -287,7 +289,7 @@ const ItemCreate = (props) => {
   useEffect(() => {
     data_head.type_id && dispatch(get_qa_test_case_master(data_head.type_id));
   }, [data_head.type_id]);
-  console.log(data_head);
+  console.log(data_file);
   return (
     <MainLayout {...config} data={data_head}>
       <div id="form">
@@ -405,8 +407,8 @@ const ItemCreate = (props) => {
               // QA
               data_qa_detail={data_qa_detail}
               qaDetailDispatch={qaDetailDispatch}
-              data_filling_detail={data_filling_detail}
-              fillingDetailDispatch={fillingDetailDispatch}
+              data_packaging_detail={data_packaging_detail}
+              packagingDetailDispatch={packagingDetailDispatch}
               data_weight_detail={data_weight_detail}
               weightDetailDispatch={weightDetailDispatch}
               data_production_process_detail={data_production_process_detail}

@@ -333,7 +333,7 @@ tr.selected-row:hover {
 .input-string-disabled {
   text-align: left;
   border: 1px solid #cccccc;
-  width: 100%;
+  /* width: 95%; */
   height: 100%;
   background-color: #f2f2f2;
   padding-left: 5px;
