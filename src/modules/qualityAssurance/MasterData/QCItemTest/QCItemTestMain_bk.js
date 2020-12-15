@@ -2,15 +2,14 @@ import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table, Typography } from "antd";
-import MainLayout from "../../components/MainLayout";
-import { reducer } from "./reducers";
-import { update_qc_receive_list } from "../../actions/qa";
-import Authorize from "../system/Authorize";
-import ModalCreateQCTestCase from "./ModalCreateQCTestCase";
+import MainLayout from "../../../../components/MainLayout";
+import { reducer } from "../../reducers";
+import Authorize from "../../../system/Authorize";
+import ModalQuality from "../../ModalCreateQCTestCase";
 import $ from "jquery";
 const initialData = {};
 
-const QualityTest = () => {
+const QCItemTestMain = () => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -18,9 +17,7 @@ const QualityTest = () => {
   const [visible, setVisible] = useState(false);
   const [qc_list, qcListDispatch] = useReducer(reducer, []);
   const [update, setUpdate] = useState(0);
-  const auth = useSelector((state) => state.auth.authData);
   const current_project = useSelector((state) => state.auth.currentProject);
-  const qc_receive_list = useSelector((state) => state.qa.qc_receive_list);
   const qc_receive_detail_list = useSelector(
     (state) => state.qa.qc_receive_detail_list
   );
@@ -60,12 +57,6 @@ const QualityTest = () => {
     },
     onSave: (e) => {
       //e.preventDefault();
-
-      setLoading(true);
-      console.log("Save");
-      setUpdate(!update);
-      const data_update = qc_list.filter((row) => row.commit === 1);
-      dispatch(update_qc_receive_list(data_update, setLoading));
     },
   };
 
@@ -78,63 +69,72 @@ const QualityTest = () => {
 
   const mainColumns = [
     {
-      title: "Subject",
-      dataIndex: "qc_test_subject",
-      key: "qc_test_subject",
+      title: "Item Type",
+      dataIndex: "type_no_name",
+      key: "type_no_name",
       align: "left",
-      width: "40%",
     },
     {
-      title: "Description",
-      dataIndex: "subject_description",
-      key: "subject_description",
-      align: "left",
-      width: "40%",
+      title: "Number of Subject",
+      dataIndex: "count_subject",
+      key: "count_subject",
+      align: "right",
+      width: "15%",
     },
     {
       title: "Number of Specification",
       dataIndex: "count_specification",
       key: "count_specification",
       align: "right",
-      width: "20%",
+      width: "15%",
+    },
+    {
+      title: "Number of Method",
+      dataIndex: "count_method",
+      key: "count_method",
+      align: "right",
+      width: "15%",
     },
   ];
 
-  const qc_subject_data = [
+  const item_type_data = [
     {
       id: 0,
-      subject_id: 0,
-      qc_test_subject: "Appearance",
-      subject_description: "คำอธิบาย 1",
+      type_id: 1,
+      type_no_name: "[RM] Raw Material",
+      count_subject: 10,
       count_specification: 3,
+      count_method: 7,
     },
     {
       id: 1,
-      subject_id: 1,
-      qc_test_subject: "Color",
-      subject_description: "ทดสอบสี 2",
-      count_specification: 12,
+      type_id: 2,
+      type_no_name: "[PK] Package",
+      count_subject: 8,
+      count_specification: 5,
+      count_method: 12,
     },
-    ,
     {
       id: 2,
-      subject_id: 2,
-      qc_test_subject: "Odor",
-      subject_description: "คำอธิบาย 3",
-      count_specification: 7,
+      type_id: 3,
+      type_no_name: "[BULK] Bulk",
+      count_subject: 24,
+      count_specification: 84,
+      count_method: 4,
     },
     {
       id: 3,
-      subject_id: 3,
-      qc_test_subject: "pH(Initial)",
-      subject_description: "คำอธิบาย 4",
-      count_specification: 103,
+      type_id: 4,
+      type_no_name: "[FG] Finish Good",
+      count_subject: 18,
+      count_specification: 22,
+      count_method: 7,
     },
   ];
 
-  const qc_specification_columns = [
+  const qcTestSubColumns = [
     {
-      title: "Specification",
+      title: "Subject",
       dataIndex: "specification_name",
       key: "specification_name",
       width: "40%",
@@ -216,8 +216,8 @@ const QualityTest = () => {
     return (
       <Table
         bordered
-        columns={qc_specification_columns}
-        rowKey={"specification_id"}
+        columns={qcTestSubColumns}
+        rowKey={"type_id"}
         dataSource={qc_specification_data.filter(
           (spec) => spec.subject_id === record.subject_id
         )}
@@ -298,8 +298,8 @@ const QualityTest = () => {
               bordered
               loading={loading}
               columns={mainColumns}
-              rowKey={"subject_id"}
-              dataSource={qc_subject_data}
+              rowKey={"type_id"}
+              dataSource={item_type_data}
               expandable={{ expandedRowRender }}
               onChange={onChange}
               size="small"
@@ -321,9 +321,9 @@ const QualityTest = () => {
           </Col>
         </Row>
       </MainLayout>
-      <ModalCreateQCTestCase {...modalConfig} visible={visible} />
+      <ModalQuality {...modalConfig} visible={visible} />
     </div>
   );
 };
 
-export default withRouter(QualityTest);
+export default withRouter(QCItemTestMain);

@@ -74,6 +74,8 @@ import ItemView from "./modules/inventory/ItemView";
 import { log_detail } from "./modules/system/configs/log";
 import { keep_log } from "./actions/comment&log";
 import Authorize from "./modules/system/Authorize";
+import QCItemTestMain from "./modules/qualityAssurance/MasterData/QCItemTest/QCItemTestMain";
+import QCItemTestCreate from "./modules/qualityAssurance/MasterData/QCItemTest/QCItemTestCreate";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -320,9 +322,23 @@ const App = (props) => {
             <Route exact path="/qa/qc/receive">
               <QCReceive />
             </Route>
-            <Route exact path="/qa/qc/qualitytest">
+            <Route exact path="/qa/master_data/quality_test_item">
+              {/* <QCItemTestMain /> */}
               <QualityTest />
             </Route>
+            <Route exact path="/qa/master_data/quality_test_item/create">
+              <QCItemTestCreate />
+            </Route>
+            {/* <Route
+              exact
+              path="/qa/master_data/quality_test_item/view/:id"
+              component={QCItemTestView}
+            /> */}
+            <Route
+              exact
+              path="/qa/master_data/quality_test_item/edit/:id"
+              component={QCItemTestCreate}
+            />
             {/* PRODUCTION */}
             <Route exact path="/production">
               <Production />

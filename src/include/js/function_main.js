@@ -34,6 +34,12 @@ export const sortDataWithoutCommit = (arrObject) => {
   return temp;
 };
 
+export const editFieldArrObj = (arrObj, objKeyValue, commit = 0) => {
+  return arrObj.map((obj, key) => {
+    return { ...obj, id: key, ...objKeyValue, commit: commit };
+  });
+};
+
 export const getNameById = (id, masterData, masterField, field) => {
   const data = id && masterData.filter((data) => data[`${masterField}`] === id);
   const data2 = data && { ...data[0] };

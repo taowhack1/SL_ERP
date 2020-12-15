@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
@@ -25,35 +25,33 @@ import Authorize from "../../system/Authorize";
 import { useHistory } from "react-router-dom";
 import WorkOrderTabPanel from "./WorkOrderTabPanel";
 import {
+  workOrderFields,
   workOrderPKDetailFields,
   workOrderRMDetailFields,
 } from "../config/workOrder";
 import { getAllItems } from "../../../actions/inventory/itemActions";
+import { getSOReference } from "../../../actions/production/workOrderActions";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
 const { TextArea } = Input;
 
-const initialStateHead = work_center_fields;
+const initialStateHead = workOrderFields;
 const initialStateRM = [workOrderRMDetailFields];
 const initialStatePK = [workOrderPKDetailFields];
+export const WOContext = React.createContext();
 
 const WorkOrderCreate = (props) => {
   const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
+  const data_so_ref = useSelector(
+    (state) => state.production.operations.workOrder.workOrder.data_so_ref
+  );
   const data =
     props.location && props.location.state ? props.location.state : 0;
   const auth = useSelector((state) => state.auth.authData);
   const current_project = useSelector((state) => state.auth.currentProject);
-  const { workCenterType } = useSelector(
-    (state) => state.production.masterData.workCenter
-  );
-  const item_type = useSelector((state) =>
-    state.inventory.master_data.item_type.filter(
-      (type) => type.type_id === 3 || type.type_id === 4
-    )
-  );
   const dataComments = useSelector((state) => state.log.comment_log);
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_rm_detail, rmDetailDispatch] = useReducer(
@@ -127,7 +125,13 @@ const WorkOrderCreate = (props) => {
   };
   useEffect(() => {
     dispatch(getAllItems());
+    dispatch(getSOReference());
   }, []);
+
+  const contextValue = useMemo(() => {
+    return { data_head, upDateFormValue };
+  }, [data_head, upDateFormValue]);
+  console.log("WorkOrderCreate");
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -175,7 +179,43 @@ const WorkOrderCreate = (props) => {
                     </Text>
                   </Col>
                   <Col span={18}>
-                    <CustomSelect placeholder="SO Document" />
+                    {/* data_so_ref */}
+                    <CustomSelect
+                      allowClear
+                      showSearch
+                      // size={"small"}
+                      placeholder={"SO Document"}
+                      name="so_id"
+                      field_id="so_id"
+                      field_name="so_no"
+                      value={data_head.so_no}
+                      data={data_so_ref ?? []}
+                      onChange={(data, option) => {
+                        data && data
+                          ? upDateFormValue({
+                              so_id: option.data.so_id,
+                              so_no: option.data.so_no,
+                              so_detail: option.data.so_detail,
+                              item_id: null,
+                              item_no_name: null,
+                              wo_delivery_date: null,
+                              wo_qty: 0,
+                              uom_id: null,
+                              uom_no: null,
+                            })
+                          : upDateFormValue({
+                              so_id: null,
+                              so_no: null,
+                              so_detail: null,
+                              item_id: null,
+                              item_no_name: null,
+                              wo_delivery_date: null,
+                              wo_qty: 0,
+                              uom_id: null,
+                              uom_no: null,
+                            });
+                      }}
+                    />
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -186,7 +226,7 @@ const WorkOrderCreate = (props) => {
                   </Col>
                   <Col span={18}>
                     <Text className="text-view">
-                      {data_head.work_order_deadline ?? "DD/MM/YYYY"}
+                      {data_head.wo_delivery_date ?? "DD/MM/YYYY"}
                     </Text>
                   </Col>
                 </Row>
@@ -199,21 +239,52 @@ const WorkOrderCreate = (props) => {
                     </Text>
                   </Col>
                   <Col span={18}>
-                    <CustomSelect disabled />
+                    <CustomSelect
+                      allowClear
+                      showSearch
+                      // size={"small"}
+                      placeholder={"SO Document"}
+                      name="item_id"
+                      field_id="item_id"
+                      field_name="item_no_name"
+                      value={data_head.item_no_name}
+                      data={data_head.so_detail ?? []}
+                      onChange={(data, option) => {
+                        data && data
+                          ? upDateFormValue({
+                              item_id: option.data.item_id,
+                              item_no_name: option.data.item_no_name,
+                              wo_delivery_date:
+                                option.data.so_detail_delivery_date,
+                              wo_qty: option.data.so_detail_qty,
+                              uom_id: option.data.uom_id,
+                              uom_no: option.data.uom_no,
+                            })
+                          : upDateFormValue({
+                              item_id: null,
+                              item_no_name: null,
+                              wo_delivery_date: null,
+                              wo_qty: 0,
+                              uom_id: null,
+                              uom_no: null,
+                            });
+                      }}
+                    />
                   </Col>
                 </Row>
               </Col>
             </Row>
           </Col>
         </Row>
-
-        <WorkOrderTabPanel
-          readOnly={false}
-          data_rm_detail={data_rm_detail}
-          rmDetailDispatch={rmDetailDispatch}
-          data_pk_detail={data_pk_detail}
-          pkDetailDispatch={pkDetailDispatch}
-        />
+        <WOContext.Provider value={contextValue}>
+          <WorkOrderTabPanel
+            readOnly={false}
+            data_rm_detail={data_rm_detail}
+            rmDetailDispatch={rmDetailDispatch}
+            data_pk_detail={data_pk_detail}
+            pkDetailDispatch={pkDetailDispatch}
+          />
+        </WOContext.Provider>
       </div>
       <Comments data={dataComments} />
     </MainLayout>

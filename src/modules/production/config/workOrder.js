@@ -78,7 +78,32 @@ export const work_order_columns = [
     },
   },
 ];
-
+export const workOrderFields = {
+  wo_id: null,
+  wo_no: null,
+  wo_order_date: null,
+  wo_plan_start_date: null,
+  wo_plan_end_date: null,
+  wo_delivery_date: null,
+  wo_description: null,
+  wo_agreement: null,
+  wo_qty: 0,
+  wo_spare_qty: 0,
+  wo_remark: null,
+  wo_lock: null,
+  wo_rows: null,
+  wo_actived: null,
+  wo_created: null,
+  wo_created_by: null,
+  wo_updated: null,
+  wo_updated_by: null,
+  so_id: null,
+  branch_id: null,
+  item_id: null,
+  process_id: null,
+  tg_trans_status_id: null,
+  tg_trans_close_id: null,
+};
 export const workOrderRMColumns = [
   {
     id: 1,
@@ -106,7 +131,7 @@ export const workOrderRMColumns = [
   },
   {
     id: 5,
-    name: "Used Qty.",
+    name: "Qty. To PR",
     size: 3,
     require: true,
   },
@@ -157,7 +182,7 @@ export const workOrderPKColumns = [
   },
   {
     id: 5,
-    name: "Used Qty.",
+    name: "Qty. To PR",
     size: 3,
     require: true,
   },

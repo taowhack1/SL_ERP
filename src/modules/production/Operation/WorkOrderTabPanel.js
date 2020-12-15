@@ -19,6 +19,7 @@ const WorkOrderTabPanel = ({
   const itemList = useSelector(
     (state) => state.inventory.master_data.item_list
   );
+  console.log("WorkOrderTabPanel");
   return (
     <Row className="col-2">
       <Col span={24}>
@@ -89,4 +90,4 @@ const WorkOrderTabPanel = ({
   );
 };
 
-export default WorkOrderTabPanel;
+export default React.memo(WorkOrderTabPanel);

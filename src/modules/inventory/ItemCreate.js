@@ -287,7 +287,8 @@ const ItemCreate = (props) => {
     history.push("/inventory/items/view/" + (id ? id : "new"));
   };
   useEffect(() => {
-    data_head.type_id && dispatch(get_qa_test_case_master(data_head.type_id));
+    data_head.type_id &&
+      dispatch(get_qa_test_case_master(data_head.type_id, 1, 1, 1));
   }, [data_head.type_id]);
   console.log(data_file);
   return (

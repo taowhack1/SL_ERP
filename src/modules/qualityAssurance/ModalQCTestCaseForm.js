@@ -1,7 +1,8 @@
 import { Input, Row } from "antd";
 import Form from "antd/lib/form/Form";
 import Text from "antd/lib/typography/Text";
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
+import { useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
 import { reducer } from "./reducers";
 const layout = {
@@ -12,10 +13,16 @@ const layout = {
     span: 20,
   },
 };
-const TestForm = (props) => {
+const ModalQCTestCaseForm = (props) => {
+  const auth = useSelector((state) => state.auth.authData);
   const { fields, data_head, type } = props;
-  const [fromData, fromDispatch] = useReducer(reducer, {});
-  console.log(props);
+  const item_type_list = useSelector(
+    (state) => state.inventory.master_data.item_type
+  );
+  const [state, setState] = useState({
+    [fields[0]]: null,
+    [fields[1]]: null,
+  });
   const getSelectRef = (qualityType = 0) => {
     switch (type) {
       case 1:
@@ -50,23 +57,53 @@ const TestForm = (props) => {
         return null;
     }
   };
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const upDateFormValue = (data) => {
+    // headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
+    setState({ ...state, ...data });
   };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-  const onChangeValue = (data) => {
-    fromDispatch({
-      type: "UPDATE_HEAD_VALUE",
-      payload: data,
-    });
-  };
-
+  useEffect(() => {
+    setState({ [fields[0]]: null, [fields[1]]: null });
+  }, [fields]);
+  console.log(state);
   return (
     <>
-      {getSelectRef(type)}
+      <Row className="col-2 row-margin-vertical">
+        <Text strong>
+          <span className="require">* </span>Item Type
+        </Text>
+      </Row>
+      <Row className="col-2 row-margin-vertical">
+        <CustomSelect
+          allowClear
+          showSearch
+          placeholder={"Item type"}
+          name="type_id"
+          field_id="type_id"
+          field_name="type_name"
+          value={data_head.type_name}
+          data={item_type_list}
+          onChange={(data, option) => {
+            data && data
+              ? upDateFormValue({
+                  type_id: data,
+                  type_no: option.data.type_no,
+                  type_name: option.title,
+                  commit: 1,
+                  user_name: auth.user_name,
+                  branch_id: auth.branch_id,
+                })
+              : upDateFormValue({
+                  type_id: null,
+                  type_no: null,
+                  type_name: null,
+                  commit: 0,
+                  user_name: null,
+                  branch_id: null,
+                });
+          }}
+        />
+      </Row>
+      {/* {getSelectRef(type)} */}
       <Row className="col-2 row-margin-vertical">
         <Text strong>
           <span className="require">* </span>Name
@@ -76,11 +113,11 @@ const TestForm = (props) => {
         <Input
           name={fields[0]}
           onChange={(e) =>
-            onChangeValue({
+            upDateFormValue({
               [fields[0]]: e.target.value,
             })
           }
-          value={data_head[fields[0]]}
+          value={state[fields[0]]}
           placeholder="Name"
         />
       </Row>
@@ -91,11 +128,11 @@ const TestForm = (props) => {
         <Input
           name={fields[1]}
           onChange={(e) =>
-            onChangeValue({
+            upDateFormValue({
               [fields[1]]: e.target.value,
             })
           }
-          value={data_head[fields[1]]}
+          value={state[fields[1]]}
           placeholder="Description"
         />
       </Row>
@@ -103,4 +140,4 @@ const TestForm = (props) => {
   );
 };
 
-export default TestForm;
+export default React.memo(ModalQCTestCaseForm);

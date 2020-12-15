@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import React, { useEffect, useReducer } from "react";
 import CustomSelect from "../../../components/CustomSelect";
-import { convertDigit } from "../../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../../include/js/main_config";
 import { reducer } from "../reducers";
 import {
   workOrderRMColumns,
@@ -52,6 +52,7 @@ const TabWorkOrderRMDetail = ({
   //       },
   //     });
   // }, [detail]);
+  console.log("TabWorkOrderRMDetail");
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
@@ -140,10 +141,10 @@ const TabWorkOrderRMDetail = ({
                 </Col>
                 <Col span={3} className="text-number">
                   <InputNumber
-                    placeholder={"Used Quantity"}
+                    {...numberFormat}
+                    placeholder={"Qty. to PR"}
                     min={0.0}
-                    step={0.0001}
-                    precision={4}
+                    step={0.001}
                     style={{ width: "100%" }}
                     disabled={0}
                     name="item_qty"

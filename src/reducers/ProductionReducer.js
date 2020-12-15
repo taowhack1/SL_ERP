@@ -5,6 +5,9 @@ import {
   GET_MACHINE_BY_ID,
   GET_PRODUCTION_MASTER_DATA,
   GET_WORK_CENTER_BY_ID,
+  GET_ALL_WORK_ORDER,
+  GET_WORK_ORDER_BY_ID,
+  GET_WO_SO_REF,
 } from "../actions/types";
 
 export const initialState = {
@@ -34,6 +37,17 @@ export const initialState = {
       capacityCategory: [],
     },
   },
+  operations: {
+    workOrder: {
+      workOrder: {
+        data_head: {},
+        data_rm_detail: [],
+        data_pk_detail: [],
+        data_so_ref: [],
+      },
+      workOrderList: [],
+    },
+  },
 };
 
 export default (state = initialState, action) => {
@@ -44,6 +58,42 @@ export default (state = initialState, action) => {
         masterData: {
           ...state.masterData,
           ...action.payload,
+        },
+      };
+    case GET_WO_SO_REF:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          workOrder: {
+            ...state.operations.workOrder,
+            workOrder: {
+              ...state.operations.workOrder.workOrder,
+              data_so_ref: action.payload,
+            },
+          },
+        },
+      };
+    case GET_WORK_ORDER_BY_ID:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          workOrder: {
+            ...state.operations.workOrder,
+            workOrder: action.payload,
+          },
+        },
+      };
+    case GET_WO_SO_REF:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          workOrder: {
+            ...state.operations.workOrder,
+            workOrder: action.payload,
+          },
         },
       };
     case GET_ALL_WORK_CENTER:

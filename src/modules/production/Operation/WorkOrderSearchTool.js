@@ -142,17 +142,17 @@ const WorkOrderSearchTool = (props) => {
           </Col>
 
           <Col span={1}></Col>
-          <Col span={2}>
+          <Col span={10}>
             <Button
               className="search-button"
               danger
               icon={<ClearOutlined />}
+              style={{ width: 150 }}
               onClick={reset_state}
             >
               Clear Search
             </Button>
           </Col>
-          <Col span={8}></Col>
         </Row>
       </div>
     </>

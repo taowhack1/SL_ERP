@@ -7,6 +7,7 @@ const TabWorkOrderRM = ({
   rmDetailDispatch,
   itemList,
 }) => {
+  console.log("TabWorkOrderRM");
   return (
     <>
       <TabWorkOrderRMDetail
@@ -19,4 +20,4 @@ const TabWorkOrderRM = ({
   );
 };
 
-export default TabWorkOrderRM;
+export default React.memo(TabWorkOrderRM);

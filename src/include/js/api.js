@@ -119,3 +119,7 @@ export const api_work_center_detail = `${api_server}/api/production/work_center_
 export const api_work_center_type = `${api_server}/api/list/work_center_type`;
 export const api_work_center_category = `${api_server}/api/list/work_center_category`;
 export const api_work_center_capacity_categ = `${api_server}/api/list/capacity_category`;
+
+// Work Order
+export const api_work_order = `${api_server}/`;
+export const api_wo_so_ref = `${api_server}/api/list/so`;
