@@ -20,6 +20,7 @@ import {
   qcTestItemMethodFields,
   qcTestItemSpecFields,
   qcTestItemSubjectFields,
+  subject_data,
 } from "../../configs/qcTestItemConfig";
 import Comments from "../../../../components/Comments";
 import MainLayout from "../../../../components/MainLayout";
@@ -41,6 +42,7 @@ const QCItemTestCreate = (props) => {
   authorize.check_authorize();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth.authData);
+  const readOnly = false;
 
   const data =
     props.location && props.location.state ? props.location.state : 0;
@@ -52,11 +54,11 @@ const QCItemTestCreate = (props) => {
   const [data_head, headDispatch] = useReducer(reducer, {
     user_name: auth.user_name,
     branch_id: auth.branch_id,
-    type_id: null,
-    type_name: null,
+    type_id: 1,
+    type_name: "Raw Material",
     commit: 1,
   });
-  const [data_subject, subjectDispatch] = useReducer(
+  const [subjectData, subjectDispatch] = useReducer(
     reducer,
     initialStateSubject
   );
@@ -98,8 +100,44 @@ const QCItemTestCreate = (props) => {
       console.log("Confirm");
     },
   };
+
+  const addLine = (dispatch) => {
+    dispatch({
+      type: "ADD_ROW_WOC",
+      payload: { ...qcTestItemSubjectFields, ...data_head },
+    });
+  };
+
+  const delLine = (id, qa_id, dispatch) => {
+    if (qa_id !== undefined && qa_id !== null) {
+      dispatch({
+        type: "CHANGE_DETAIL_VALUE",
+        payload: {
+          id: id,
+          data: { qa_subject_actived: 0, ...data_head },
+        },
+      });
+    } else {
+      dispatch({ type: "DEL_ROW", payload: { id: id } });
+    }
+  };
+
+  const onChangeValue = (rowId, data, dispatch) => {
+    dispatch({
+      type: "CHANGE_DETAIL_VALUE",
+      payload: {
+        id: rowId,
+        data: { ...data, ...data_head },
+      },
+    });
+  };
+
   useEffect(() => {
     dispatch(getMasterDataItem(auth.user_name));
+    subjectDispatch({
+      type: "SET_DETAIL_WOC",
+      payload: subject_data,
+    });
   }, []);
 
   const upDateFormValue = (data) => {
@@ -110,10 +148,25 @@ const QCItemTestCreate = (props) => {
   };
   // const
   const contextValue = useMemo(() => {
-    return { data_head, data_subject, subjectDispatch };
-  }, [data_head, data_subject, subjectDispatch]);
-  console.log("main-render data_head", data_head);
-  console.log("main-render subject", data_subject);
+    return {
+      data_head,
+      readOnly,
+      subjectData,
+      subjectDispatch,
+      addLine,
+      delLine,
+      onChangeValue,
+    };
+  }, [
+    data_head,
+    readOnly,
+    subjectData,
+    subjectDispatch,
+    addLine,
+    delLine,
+    onChangeValue,
+  ]);
+  console.log("head render");
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -170,7 +223,9 @@ const QCItemTestCreate = (props) => {
         </Row>
 
         <QCContext.Provider value={contextValue}>
-          <QCItemTestTabPanel readOnly={false} />
+          <QCItemTestTabPanel
+          // readOnly={false}
+          />
         </QCContext.Provider>
       </div>
       <Comments data={[]} />

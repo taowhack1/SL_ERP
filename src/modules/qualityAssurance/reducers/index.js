@@ -7,6 +7,8 @@ export const reducer = (state, action) => {
   switch (action.type) {
     case "ADD_ROW":
       return sortData([...state, action.payload]);
+    case "ADD_ROW_WOC":
+      return sortDataWithoutCommit([...state, action.payload]);
     case "DEL_ROW":
       return sortData(state.filter((line) => line.id !== action.payload.id));
     case "CHANGE_DETAIL_VALUE":

@@ -323,8 +323,8 @@ const App = (props) => {
               <QCReceive />
             </Route>
             <Route exact path="/qa/master_data/quality_test_item">
-              {/* <QCItemTestMain /> */}
-              <QualityTest />
+              <QCItemTestMain />
+              {/* <QualityTest /> */}
             </Route>
             <Route exact path="/qa/master_data/quality_test_item/create">
               <QCItemTestCreate />

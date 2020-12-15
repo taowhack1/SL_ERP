@@ -656,3 +656,15 @@ div.ant-tabs-tab > div {
   height: 38px;
   line-height: 38px;
 }
+.table-detail th {
+  background-color: #d0d0ef !important;
+  padding: 2px 5px !important;
+}
+tr.row-table-detail > td {
+  /* background-color: khaki; */
+  padding: 2px 5px !important;
+}
+
+tr.row-table-detail-inactive {
+  background-color: #e3e3e3;
+}
