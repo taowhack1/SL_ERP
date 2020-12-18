@@ -29,6 +29,7 @@ const QCItemTestTabSubject = (
     // onChangeValue,
   } = useContext(QCContext);
   const reducer = new ReducerClass(
+    subjectData,
     subjectDispatch,
     qcTestItemSubjectFields,
     data_head
@@ -54,8 +55,8 @@ const QCItemTestTabSubject = (
         loading={loading}
         columns={qcTestItemSubjectColumns(
           readOnly,
-          reducer.onChangeValue,
-          reducer.delLine,
+          reducer.onChangeDetailValue,
+          reducer.deleteRow,
           reducer.updateRowStatus
         )}
         dataSource={subjectData}
@@ -80,7 +81,7 @@ const QCItemTestTabSubject = (
         <Button
           type="dashed"
           onClick={() => {
-            reducer.addLineNoCommit();
+            reducer.addNewRowNoCommit();
           }}
           block
         >
