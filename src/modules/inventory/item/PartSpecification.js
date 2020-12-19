@@ -10,6 +10,9 @@ import {
 } from "../../../include/js/function_main";
 import { getWorkCenterDetailByID } from "../../../actions/production/workCenterActions";
 import moment from "moment";
+import ItemPartMix from "./ItemPartMix";
+import { EditTwoTone } from "@ant-design/icons";
+import ItemPartName from "./ItemPartName";
 
 const { Text, Title } = Typography;
 
@@ -55,9 +58,12 @@ const PartSpecification = ({
             <Row className="col-2 row-margin-vertical">
               <Col span={12}>
                 <Row className="row-head">
-                  <Col span={1}></Col>
-                  <Col span={10}>
-                    <Title level={4}>{data_part.item_part_name}</Title>
+                  {/* <Col span={1}></Col> */}
+                  <Col span={24}>
+                    <ItemPartName
+                      data_part={data_part}
+                      partDispatch={partDispatch}
+                    />
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -154,10 +160,48 @@ const PartSpecification = ({
                 <Row className="row-margin-vertical">
                   <Col span={1}></Col>
                   <Col span={6}>
-                    <Text strong>
-                      {!readOnly && <span className="require">* </span>}
-                      Part Machine :
-                    </Text>
+                    <Text strong>Main - Machine :</Text>
+                  </Col>
+                  <Col span={16}>
+                    {readOnly ? (
+                      <div className="text-left">
+                        <Text className="text-view">
+                          {data_part.machine_no_name
+                            ? data_part.machine_no_name
+                            : "-"}
+                        </Text>
+                      </div>
+                    ) : (
+                      <CustomSelect
+                        allowClear
+                        showSearch
+                        disabled={data_part.work_center_id ? 0 : 1}
+                        size="small"
+                        placeholder={"Select Machine"}
+                        name="machine_no_name"
+                        field_id="machine_id"
+                        field_name="machine_no_name"
+                        value={data_part.machine_no_name}
+                        data={workCenterMachine}
+                        onChange={(data, option) => {
+                          data && data
+                            ? onChangeValue(data_part.id, {
+                                machine_id: option.data.machine_id,
+                                machine_no_name: option.data.machine_no_name,
+                              })
+                            : onChangeValue(data_part.id, {
+                                machine_id: null,
+                                machine_no_name: null,
+                              });
+                        }}
+                      />
+                    )}
+                  </Col>
+                </Row>
+                <Row className="row-margin-vertical">
+                  <Col span={1}></Col>
+                  <Col span={6}>
+                    <Text strong>Sub - Machine :</Text>
                   </Col>
                   <Col span={16}>
                     {readOnly ? (
@@ -215,44 +259,6 @@ const PartSpecification = ({
                       <span className="require">* </span>Schedule Time :
                     </Text>
                   </Col>
-                  {/* <Col span={12}>
-                    {readOnly ? (
-                      <div className="text-right">
-                        <Text className="text-value">
-                          {convertTimeToNumber(
-                            data_part.item_part_specification_time
-                          )}
-                        </Text>
-                      </div>
-                    ) : (
-                      <InputNumber
-                        placeholder={"Minutes"}
-                        min={0}
-                        step={1}
-                        precision={0}
-                        style={{ width: "100%" }}
-                        disabled={0}
-                        defaultValue={0}
-                        name="item_part_specification_time"
-                        value={convertTimeToNumber(
-                          data_part.item_part_specification_time
-                        )}
-                        onChange={(data) => {
-                          onChangeValue(data_part.id, {
-                            item_part_specification_time: convertNumberToTime(
-                              data
-                            ),
-                          });
-                        }}
-                        size="small"
-                      />
-                    )}
-                  </Col>
-                  <Col span={5}>
-                    <Text strong className="pd-left-2">
-                      Minutes
-                    </Text>
-                  </Col> */}
                   <Col span={12}>
                     {readOnly ? (
                       <Text className="text-view">
@@ -305,6 +311,9 @@ const PartSpecification = ({
                 item_list={item_list}
                 machineList={machineList}
               />
+            </div>
+            <div className="detail-container mt-4">
+              <ItemPartMix readOnly={readOnly} />
             </div>
           </Col>
         </Row>

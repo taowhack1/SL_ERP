@@ -43,7 +43,7 @@ const TabPanel = ({
   return (
     <>
       <Tabs
-        defaultActiveKey={"7"}
+        defaultActiveKey={"3"}
         onChange={callback}
         className="row-tab-margin-lg"
       >
@@ -64,59 +64,61 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
-        {type_id !== undefined &&
+        {/* {type_id !== undefined &&
           type_id &&
           [1, 2, 3, 4, 5].includes(type_id) &&
-          [1, 10, 11].includes(department_id) && (
-            <Tabs.TabPane
-              tab={
-                <span className="tab_pane">
-                  {!readOnly && <span className="require">* </span>}
-                  {"R&D Detail"}
-                </span>
-              }
-              key={"2"}
-            >
-              <TabItemRD
-                data_file={data_file}
-                updateFile={updateFile}
-                data_head={data_head}
-                master_data={master_data}
-                customers={customers}
-                upDateFormValue={upDateFormValue}
-                readOnly={readOnly}
-              />
-            </Tabs.TabPane>
-          )}
+          [1, 10, 11].includes(department_id) && ( */}
+        <Tabs.TabPane
+          tab={
+            <span className="tab_pane">
+              {!readOnly && <span className="require">* </span>}
+              {"R&D Detail"}
+            </span>
+          }
+          key={"2"}
+        >
+          <TabItemRD
+            data_file={data_file}
+            updateFile={updateFile}
+            data_head={data_head}
+            master_data={master_data}
+            customers={customers}
+            upDateFormValue={upDateFormValue}
+            readOnly={readOnly}
+          />
+        </Tabs.TabPane>
+        {/* )}
+         {type_id !== undefined &&
+           type_id &&
+           type_id === 3 &&
+          [1, 10, 11].includes(department_id) && ( */}
+        <Tabs.TabPane
+          tab={
+            <span className="tab_pane">
+              {!readOnly && <span className="require">* </span>}
+              {"Bulk Formula"}
+            </span>
+          }
+          key={"3"}
+        >
+          <TabBulkFormula
+            data_head={data_head}
+            upDateFormValue={upDateFormValue}
+            // formula
+            data_formula_detail={data_formula_detail}
+            formulaDetailDispatch={formulaDetailDispatch}
+            // PART
+            data_part={data_part}
+            partDispatch={partDispatch}
+            data_part_detail={data_part_detail}
+            partDetailDispatch={partDetailDispatch}
+            readOnly={readOnly}
+          />
+        </Tabs.TabPane>
+        {/* )}*/}
+        {/* 
+        ยังไม่ใช้งาน
         {type_id !== undefined &&
-          type_id &&
-          type_id === 3 &&
-          [1, 10, 11].includes(department_id) && (
-            <Tabs.TabPane
-              tab={
-                <span className="tab_pane">
-                  {!readOnly && <span className="require">* </span>}
-                  {"Bulk Formula"}
-                </span>
-              }
-              key={"3"}
-            >
-              <TabBulkFormula
-                data_head={data_head}
-                upDateFormValue={upDateFormValue}
-                // formula
-                data_formula_detail={data_formula_detail}
-                formulaDetailDispatch={formulaDetailDispatch}
-                // PART
-                data_part={data_part}
-                partDispatch={partDispatch}
-                data_part_detail={data_part_detail}
-                partDetailDispatch={partDetailDispatch}
-                readOnly={readOnly}
-              />
-            </Tabs.TabPane>
-          )}
-        {/* {type_id !== undefined &&
           type_id &&
           type_id === 3 &&
           [1, 10, 11].includes(department_id) && (
@@ -140,76 +142,79 @@ const TabPanel = ({
                 readOnly={readOnly}
               />
             </Tabs.TabPane>
-          )} */}
+          )} 
+          ยังไม่ใช้งาน
+          */}
+        {/*           
         {type_id !== undefined &&
           type_id &&
           [1, 2, 3, 4, 5].includes(type_id) &&
-          [1, 10, 11, 18].includes(department_id) && (
-            <Tabs.TabPane
-              tab={
-                <span className="tab_pane">
-                  {!readOnly && <span className="require">* </span>}
-                  {"QA"}
-                </span>
-              }
-              key={"5"}
-            >
-              <TabItemQA
-                data_head={data_head}
-                upDateFormValue={upDateFormValue}
-                data_qa_detail={data_qa_detail}
-                qaDetailDispatch={qaDetailDispatch}
-                readOnly={readOnly}
-              />
-            </Tabs.TabPane>
-          )}
+          [1, 10, 11, 18].includes(department_id) && ( */}
+        <Tabs.TabPane
+          tab={
+            <span className="tab_pane">
+              {!readOnly && <span className="require">* </span>}
+              {"QA"}
+            </span>
+          }
+          key={"5"}
+        >
+          <TabItemQA
+            data_head={data_head}
+            upDateFormValue={upDateFormValue}
+            data_qa_detail={data_qa_detail}
+            qaDetailDispatch={qaDetailDispatch}
+            readOnly={readOnly}
+          />
+        </Tabs.TabPane>
+        {/* )}
         {type_id !== undefined &&
           type_id &&
           ![3, 4, 5].includes(type_id) &&
-          [1, 10, 13].includes(department_id) && (
-            <Tabs.TabPane
-              tab={
-                <span className="tab_pane">
-                  {!readOnly && <span className="require">* </span>}
-                  {"Purchase Vendor"}
-                </span>
-              }
-              key={"6"}
-            >
-              <TabItemPurchase
-                data_head={data_head}
-                data_detail={data_detail}
-                detailDispatch={detailDispatch}
-                upDateFormValue={upDateFormValue}
-                readOnly={readOnly}
-              />
-            </Tabs.TabPane>
-          )}
+          [1, 10, 13].includes(department_id) && ( */}
+        <Tabs.TabPane
+          tab={
+            <span className="tab_pane">
+              {!readOnly && <span className="require">* </span>}
+              {"Purchase Vendor"}
+            </span>
+          }
+          key={"6"}
+        >
+          <TabItemPurchase
+            data_head={data_head}
+            data_detail={data_detail}
+            detailDispatch={detailDispatch}
+            upDateFormValue={upDateFormValue}
+            readOnly={readOnly}
+          />
+        </Tabs.TabPane>
+        {/* )}
         {type_id !== undefined &&
           type_id &&
           [4, 5].includes(type_id) &&
-          [1, 10, 11, 18].includes(department_id) && (
-            <Tabs.TabPane
-              tab={
-                <span className="tab_pane">
-                  {!readOnly && <span className="require">* </span>}
-                  {"FG Packaging & Filling Process"}
-                </span>
-              }
-              key={"7"}
-            >
-              <TabPackaging
-                data_head={data_head}
-                upDateFormValue={upDateFormValue}
-                uom_name={data_head.uom_name}
-                data_packaging_detail={data_packaging_detail}
-                packagingDetailDispatch={packagingDetailDispatch}
-                data_weight_detail={data_weight_detail}
-                weightDetailDispatch={weightDetailDispatch}
-                readOnly={readOnly}
-              />
-            </Tabs.TabPane>
-          )}
+          [1, 10, 11, 18].includes(department_id) && ( */}
+        <Tabs.TabPane
+          tab={
+            <span className="tab_pane">
+              {!readOnly && <span className="require">* </span>}
+              {"FG Packaging & Filling Process"}
+            </span>
+          }
+          key={"7"}
+        >
+          <TabPackaging
+            data_head={data_head}
+            upDateFormValue={upDateFormValue}
+            uom_name={data_head.uom_name}
+            data_packaging_detail={data_packaging_detail}
+            packagingDetailDispatch={packagingDetailDispatch}
+            data_weight_detail={data_weight_detail}
+            weightDetailDispatch={weightDetailDispatch}
+            readOnly={readOnly}
+          />
+        </Tabs.TabPane>
+        {/* )} */}
       </Tabs>
     </>
   );

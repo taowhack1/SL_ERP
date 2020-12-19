@@ -52,7 +52,7 @@ const TabBulkFormula = ({
       payload: {
         ...item_part_specification_fields,
         item_part_id: data_part.length + 1,
-        item_part_name: getPart(data_part.length),
+        item_part_name: "New..",
       },
     });
     partDetailDispatch({
@@ -167,7 +167,7 @@ const TabBulkFormula = ({
           }}
           style={{ borderRadius: 3, marginTop: 10, width: 120 }}
         >
-          <PlusOutlined /> Add a Part
+          <PlusOutlined /> Add New
         </Button>
       )}
       <Tabs tabPosition={"left"} style={{ marginTop: 10 }}>

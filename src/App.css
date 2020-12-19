@@ -668,3 +668,18 @@ tr.row-table-detail > td {
 tr.row-table-detail-inactive {
   background-color: #e3e3e3;
 }
+.font-size-l {
+  font-size: 18px;
+}
+input.ant-input.hover-border {
+  font-size: 20px;
+  margin-bottom: 1.5em;
+  font-weight: 600;
+  line-height: 1.4;
+  /* font-family: bold; */
+}
+input.ant-input.hover-border:hover {
+  box-sizing: border-box;
+  border: 1px solid #40a9ff;
+  animation-duration: 2s;
+}

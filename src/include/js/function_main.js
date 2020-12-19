@@ -269,3 +269,42 @@ export const convertTimeToNumber = (time = "00:00:00") => {
   console.log("convertTimeToNumber Before : ", time, " After : ", minutes);
   return minutes;
 };
+
+export const replaceDataInArrObjById = (
+  masterArr = [],
+  targetArr = [],
+  keyId = "id",
+  keyToReplace
+) => {
+  var t0 = performance.now();
+  // const newPM = data_part_mix.map((pm) => {
+  //   return pm.length > 1
+  //     ? pm.map((data) => {
+  //         const matchData = data_part.find(
+  //           (part) => part.item_part_id === data.item_part_id
+  //         );
+  //         return matchData
+  //           ? { ...data, item_part_name: matchData.item_part_name }
+  //           : data;
+  //       })
+  //     : pm;
+  // });
+  const newData = targetArr.map((arrObj) => {
+    return arrObj.length > 1
+      ? arrObj.map((data) => {
+          const matchData = masterArr.find(
+            (part) => part[keyId] === data[keyId]
+          );
+          return matchData
+            ? { ...data, [keyToReplace]: matchData[keyToReplace] }
+            : data;
+        })
+      : arrObj;
+  });
+  console.log("updateName");
+  console.log(masterArr);
+  console.log(newData);
+  var t1 = performance.now();
+  console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+  return newData;
+};

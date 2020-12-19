@@ -1,5 +1,8 @@
-import { header_config } from "../../../include/js/main_config";
-
+import React from "react";
+import CustomSelect from "../../../components/CustomSelect";
+import Text from "antd/lib/typography/Text";
+import { Popconfirm } from "antd";
+import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
 export const item_vendor_columns = [
   {
     id: 0,
@@ -514,3 +517,93 @@ export const item_production_process_fields = {
   item_process_remark: null,
   commit: 1,
 };
+
+export const item_part_mix_fields = {
+  id: 0,
+  item_part_specification_name: null,
+  item_part_specification_id: null,
+  commit: 1,
+};
+export const itemPartMixColumns = (
+  readOnly,
+  onChange,
+  onDelete,
+  onToggle,
+  { data_part }
+) => [
+  {
+    id: 1,
+    title: "No.",
+    dataIndex: "id",
+    width: "5%",
+    align: "center",
+    render: (value, record, index) => {
+      return value + 1;
+    },
+  },
+  {
+    id: 2,
+    title: <div className="text-center">Part Name</div>,
+    dataIndex: "item_part_name",
+    key: "item_part_name",
+    align: "left",
+    // width: "40%",
+    render: (value, record, index) => {
+      if (readOnly) {
+        return value;
+      } else {
+        return (
+          <CustomSelect
+            allowClear
+            showSearch
+            size={"small"}
+            placeholder={"Select Part"}
+            name="item_part_id"
+            field_id="item_part_id"
+            field_name="item_part_name"
+            value={record.item_part_name}
+            data={data_part}
+            onChange={(data, option) => {
+              data && data
+                ? onChange(record.id, {
+                    item_part_id: option.data.item_part_id,
+                    item_part_name: option.data.item_part_name,
+                  })
+                : onChange(record.id, {
+                    item_part_id: null,
+                    item_part_name: null,
+                  });
+            }}
+          />
+        );
+      }
+    },
+  },
+  !readOnly && {
+    title: (
+      <Text strong>
+        <EllipsisOutlined />
+      </Text>
+    ),
+    align: "center",
+    width: "5%",
+    render: (value, record, index) => {
+      if (readOnly) {
+        return null;
+      } else {
+        return (
+          <Popconfirm
+            onConfirm={() => {
+              onDelete(record.id);
+            }}
+            title="Are you sure you want to delete this row？"
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteTwoTone />
+          </Popconfirm>
+        );
+      }
+    },
+  },
+];

@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
@@ -30,6 +30,7 @@ import {
   item_qa_detail_fields,
   item_require_fields,
   item_weight_detail,
+  item_part_mix_fields,
 } from "./config/item";
 import { validateFormHead } from "../../include/js/function_main";
 import { getMasterDataItem } from "../../actions/inventory";
@@ -43,6 +44,7 @@ import { get_qa_test_case_master } from "../../actions/qa/qaTestAction";
 import { get_sale_master_data } from "../../actions/sales";
 import { getAllWorkCenter } from "../../actions/production/workCenterActions";
 import { getAllMachine } from "../../actions/production/machineActions";
+import ReducerClass from "../../include/js/ReducerClass";
 const { Text } = Typography;
 const initialStateHead = item_fields;
 const initialStateDetail = [item_detail_fields];
@@ -96,7 +98,7 @@ const ItemCreate = (props) => {
     data_production_process_detail,
     productionProcessDetailDispatch,
   ] = useReducer(reducer, initialStateProductionProcess);
-
+  const PMReducer = new ReducerClass(null, null, item_part_mix_fields);
   const [data_file, setFile] = useState({
     item_image: null,
     certificate: {
@@ -290,6 +292,12 @@ const ItemCreate = (props) => {
     data_head.type_id &&
       dispatch(get_qa_test_case_master(data_head.type_id, 1, 1, 1));
   }, [data_head.type_id]);
+  const ContextValue = useMemo(() => {
+    return {
+      PMReducer,
+      data_part,
+    };
+  }, [PMReducer]);
   console.log(data_file);
   return (
     <MainLayout {...config} data={data_head}>
@@ -390,33 +398,37 @@ const ItemCreate = (props) => {
 
         <Row className="col-2 row-tab-margin">
           <Col span={24}>
-            <TabPanel
-              data_file={data_file}
-              updateFile={updateFile}
-              data_head={data_head}
-              headDispatch={headDispatch}
-              data_detail={data_detail}
-              detailDispatch={detailDispatch}
-              // Formula
-              data_formula_detail={data_formula_detail}
-              formulaDetailDispatch={formulaDetailDispatch}
-              //PART
-              data_part={data_part}
-              partDispatch={partDispatch}
-              data_part_detail={data_part_detail}
-              partDetailDispatch={partDetailDispatch}
-              // QA
-              data_qa_detail={data_qa_detail}
-              qaDetailDispatch={qaDetailDispatch}
-              data_packaging_detail={data_packaging_detail}
-              packagingDetailDispatch={packagingDetailDispatch}
-              data_weight_detail={data_weight_detail}
-              weightDetailDispatch={weightDetailDispatch}
-              data_production_process_detail={data_production_process_detail}
-              productionProcessDetailDispatch={productionProcessDetailDispatch}
-              upDateFormValue={upDateFormValue}
-              readOnly={false}
-            />
+            <PartContext.Provider value={ContextValue}>
+              <TabPanel
+                data_file={data_file}
+                updateFile={updateFile}
+                data_head={data_head}
+                headDispatch={headDispatch}
+                data_detail={data_detail}
+                detailDispatch={detailDispatch}
+                // Formula
+                data_formula_detail={data_formula_detail}
+                formulaDetailDispatch={formulaDetailDispatch}
+                //PART
+                data_part={data_part}
+                partDispatch={partDispatch}
+                data_part_detail={data_part_detail}
+                partDetailDispatch={partDetailDispatch}
+                // QA
+                data_qa_detail={data_qa_detail}
+                qaDetailDispatch={qaDetailDispatch}
+                data_packaging_detail={data_packaging_detail}
+                packagingDetailDispatch={packagingDetailDispatch}
+                data_weight_detail={data_weight_detail}
+                weightDetailDispatch={weightDetailDispatch}
+                data_production_process_detail={data_production_process_detail}
+                productionProcessDetailDispatch={
+                  productionProcessDetailDispatch
+                }
+                upDateFormValue={upDateFormValue}
+                readOnly={false}
+              />
+            </PartContext.Provider>
           </Col>
         </Row>
       </div>
