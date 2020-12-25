@@ -1,8 +1,9 @@
 import React from "react";
 import CustomSelect from "../../../components/CustomSelect";
 import Text from "antd/lib/typography/Text";
-import { Popconfirm } from "antd";
+import { Input, InputNumber, Popconfirm } from "antd";
 import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
+import { convertDigit } from "../../../include/js/main_config";
 export const item_vendor_columns = [
   {
     id: 0,
@@ -359,6 +360,8 @@ export const item_file = {
     4: null,
     5: null,
     6: null,
+    7: null,
+    8: null,
   },
 };
 
@@ -372,43 +375,117 @@ export const item_formula_columns = [
   {
     id: 2,
     name: "RM Code",
-    size: 9,
-    require: true,
-  },
-  {
-    id: 3,
-    name: "Machine | Tool",
-    size: 9,
-    require: true,
-  },
-  {
-    id: 4,
-    name: "%(W/W)",
-    size: 4,
-    require: true,
-  },
-];
-
-export const item_process_specification_columns = [
-  {
-    id: 0,
-    name: "No.",
-    size: 1,
-    require: false,
-  },
-  {
-    id: 1,
-    name: "Condition",
     size: 14,
     require: true,
   },
   {
-    id: 2,
-    name: "Set",
+    id: 3,
+    name: "%(W/W)",
     size: 8,
     require: true,
   },
 ];
+export const itemPartConditionColumns = (
+  readOnly,
+  onChange,
+  onDelete,
+  Save
+) => [
+  {
+    id: 1,
+    title: "No.",
+    dataIndex: "id",
+    width: "5%",
+    align: "center",
+    render: (value, record, index) => {
+      return value + 1;
+    },
+  },
+  {
+    id: 2,
+    title: <div className="text-center">Condition</div>,
+    dataIndex: "item_part_specification_detail_condition",
+    key: "item_part_specification_detail_condition",
+    align: "left",
+    // width: "40%",
+    render: (value, record, index) => {
+      if (readOnly) {
+        return value;
+      } else {
+        return (
+          <Input
+            size={"small"}
+            placeholder={"Condition"}
+            name="item_part_specification_detail_condition"
+            value={record.item_part_specification_detail_condition}
+            onChange={(e) => {
+              onChange(record.id, {
+                item_part_specification_detail_condition: e.target.value,
+              });
+            }}
+            onBlur={() => Save(record.id)}
+          />
+        );
+      }
+    },
+  },
+  {
+    id: 3,
+    title: <div className="text-center">Set</div>,
+    dataIndex: "item_part_specification_detail_set",
+    key: "item_part_specification_detail_set",
+    align: "left",
+    // width: "40%",
+    render: (value, record, index) => {
+      if (readOnly) {
+        return value;
+      } else {
+        return (
+          <Input
+            size={"small"}
+            placeholder={"Set"}
+            name="item_part_specification_detail_set"
+            value={record.item_part_specification_detail_set}
+            onChange={(e) => {
+              onChange(record.id, {
+                item_part_specification_detail_set: e.target.value,
+              });
+            }}
+            onBlur={() => Save(record.id)}
+          />
+        );
+      }
+    },
+  },
+  {
+    title: (
+      <Text strong>
+        <EllipsisOutlined />
+      </Text>
+    ),
+    align: "center",
+    width: "5%",
+    render: (value, record, index) => {
+      if (readOnly) {
+        return null;
+      } else {
+        return (
+          <Popconfirm
+            onConfirm={() => {
+              onDelete(record.id);
+            }}
+            title="Are you sure you want to delete this row？"
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteTwoTone />
+          </Popconfirm>
+        );
+      }
+    },
+  },
+];
+
 export const item_production_process_columns = [
   {
     id: 0,
@@ -443,34 +520,248 @@ export const item_production_process_columns = [
 ];
 
 // PART
-export const item_part_specification_fields = {
-  id: 0,
-  item_part_specification_id: null,
-  // item_part_specification_time: null,
-  item_part_specification_time: "00:00:00",
-  item_part_specification_remark: null,
-  item_id: null,
-  item_part_id: 1,
-  item_part_name: "Part : A",
-  item_part_specification_worker: 0,
-  machine_id: null,
-  machine_no_name: null,
-  work_center_id: null,
-  work_center_description: null,
-};
-// PART DETAIL
-export const item_part_specification_detail_init_fields = {
-  1: [
+export const testData = {
+  data_part: [
     {
       id: 0,
       item_part_specification_id: null,
-      item_part_specification_detail_id: null,
-      item_part_specification_detail_condition: null,
-      item_part_specification_detail_set: null,
-      item_part_specification_detail_remark: null,
+      item_part_specification_time: "01:00:00",
+      item_part_specification_worker: 3,
+      item_part_specification_remark: null,
+      item_part_sort: 1,
+      item_part_description: "Part A",
+      work_center_id: null,
+      work_center_no: null,
+      work_center_description: null,
+      work_center_no_description: null,
+      machine_id_main: null,
+      machine_no_main: null,
+      machine_name_main: null,
+      machine_no_name_main: null,
+      machine_id_sub: null,
+      machine_no_sub: null,
+      machine_name_sub: null,
+      machine_no_name_sub: null,
+      data_id: 0,
+    },
+    {
+      id: 1,
+      item_part_specification_id: null,
+      item_part_specification_time: "01:30:00",
+      item_part_specification_worker: 1,
+      item_part_specification_remark: null,
+      item_part_sort: 2,
+      item_part_description: "Part B",
+      work_center_id: null,
+      work_center_no: null,
+      work_center_description: null,
+      work_center_no_description: null,
+      machine_id_main: null,
+      machine_no_main: null,
+      machine_name_main: null,
+      machine_no_name_main: null,
+      machine_id_sub: null,
+      machine_no_sub: null,
+      machine_name_sub: null,
+      machine_no_name_sub: null,
+      data_id: 1,
+    },
+    {
+      id: 2,
+      item_part_specification_id: null,
+      item_part_specification_time: "00:30:00",
+      item_part_specification_worker: 2,
+      item_part_specification_remark: null,
+      item_part_sort: 3,
+      item_part_description: "A+B",
+      work_center_id: null,
+      work_center_no: null,
+      work_center_description: null,
+      work_center_no_description: null,
+      machine_id_main: null,
+      machine_no_main: null,
+      machine_name_main: null,
+      machine_no_name_main: null,
+      machine_id_sub: null,
+      machine_no_sub: null,
+      machine_name_sub: null,
+      machine_no_name_sub: null,
+      data_id: 2,
     },
   ],
+  data_part_detail: [
+    [
+      {
+        id: 0,
+        item_part_specification_id: null,
+        item_part_specification_detail_id: null,
+        item_part_specification_detail_condition: "Con 1 A",
+        item_part_specification_detail_set: "Set 1 A",
+        item_part_specification_detail_remark: null,
+      },
+      {
+        id: 1,
+        item_part_specification_id: null,
+        item_part_specification_detail_id: null,
+        item_part_specification_detail_condition: "Con 2 A",
+        item_part_specification_detail_set: "Set 2 A",
+        item_part_specification_detail_remark: null,
+      },
+      {
+        id: 2,
+        item_part_specification_id: null,
+        item_part_specification_detail_id: null,
+        item_part_specification_detail_condition: "Con 3 A",
+        item_part_specification_detail_set: "Set 3 A",
+        item_part_specification_detail_remark: null,
+      },
+    ],
+    [
+      {
+        id: 0,
+        item_part_specification_id: null,
+        item_part_specification_detail_id: null,
+        item_part_specification_detail_condition: "Con 1 B",
+        item_part_specification_detail_set: "Set 1 B",
+        item_part_specification_detail_remark: null,
+      },
+      {
+        id: 1,
+        item_part_specification_id: null,
+        item_part_specification_detail_id: null,
+        item_part_specification_detail_condition: "Con 2 B",
+        item_part_specification_detail_set: "Set 2 B",
+        item_part_specification_detail_remark: null,
+      },
+      {
+        id: 2,
+        item_part_specification_id: null,
+        item_part_specification_detail_id: null,
+        item_part_specification_detail_condition: "Con 3 B",
+        item_part_specification_detail_set: "Set 3 B",
+        item_part_specification_detail_remark: null,
+      },
+    ],
+    [
+      {
+        id: 0,
+        item_part_specification_id: null,
+        item_part_specification_detail_id: null,
+        item_part_specification_detail_condition: "Con 1 A+B",
+        item_part_specification_detail_set: "Set 1 A+B",
+        item_part_specification_detail_remark: null,
+      },
+      {
+        id: 1,
+        item_part_specification_id: null,
+        item_part_specification_detail_id: null,
+        item_part_specification_detail_condition: "Con 2 A+B",
+        item_part_specification_detail_set: "Set 2 A+B",
+        item_part_specification_detail_remark: null,
+      },
+      {
+        id: 2,
+        item_part_specification_id: null,
+        item_part_specification_detail_id: null,
+        item_part_specification_detail_condition: "Con 3 A+B",
+        item_part_specification_detail_set: "Set 3 A+B",
+        item_part_specification_detail_remark: null,
+      },
+    ],
+  ],
+  data_part_mix: [
+    [],
+    [],
+    [
+      {
+        id: 0,
+        item_part_mix_id: null,
+        item_part_mix_remark: null,
+        item_part_sort_mix: 1,
+        // item_part_description: "Part A",
+        commit: 1,
+      },
+      {
+        id: 1,
+        item_part_mix_id: null,
+        item_part_mix_remark: null,
+        item_part_sort_mix: 2,
+        // item_part_description: "Part B",
+        commit: 1,
+      },
+    ],
+  ],
+  data_formula: [
+    [
+      {
+        item_formula_id: null,
+        item_part_sort: 0,
+        item_id_formula: 4,
+        item_no_name: "[ 101SRLA00400 ] Olivem 1000",
+        machine_id_formula: null,
+        item_formula_percent_qty: 12.5,
+        item_formula_remark: null,
+      },
+      {
+        item_formula_id: null,
+        item_part_sort: 0,
+        item_id_formula: 5,
+        item_no_name: "[ 101SRLA00500 ] Lipomulse luxe",
+        machine_id_formula: null,
+        item_formula_percent_qty: 35.53,
+        item_formula_remark: null,
+      },
+    ],
+    [
+      {
+        item_formula_id: null,
+        item_part_sort: 1,
+        item_id_formula: 3,
+        item_no_name: "[ 101SRLA00300 ] CARBOPOL@ULTREZ21 POLYMER",
+        machine_id_formula: null,
+        item_formula_percent_qty: 3,
+        item_formula_remark: "ทดสอบ3",
+      },
+      {
+        item_formula_id: null,
+        item_part_sort: 1,
+        item_id_formula: 5,
+        item_no_name: "[ 101SRLA00500 ] Lipomulse luxe",
+        machine_id_formula: null,
+        item_formula_percent_qty: 15.5321,
+        item_formula_remark: null,
+      },
+    ],
+    [],
+  ],
 };
+export const item_part_specification_fields = {
+  id: 0,
+  item_part_specification_id: null,
+  item_part_specification_time: "00:00:00",
+  item_part_specification_worker: 0,
+  item_part_specification_remark: null,
+  item_id: null,
+  item_no: null,
+  item_name: null,
+  item_no_name: null,
+  item_part_sort: 1,
+  item_part_description: "New..",
+  work_center_id: null,
+  work_center_no: null,
+  work_center_description: null,
+  work_center_no_description: null,
+  machine_id_main: null,
+  machine_no_main: null,
+  machine_name_main: null,
+  machine_no_name_main: null,
+  machine_id_sub: null,
+  machine_no_sub: null,
+  machine_name_sub: null,
+  machine_no_name_sub: null,
+  data_id: 0,
+};
+// PART DETAIL
 
 export const item_part_specification_detail_fields = {
   id: 0,
@@ -482,27 +773,12 @@ export const item_part_specification_detail_fields = {
 };
 //PART FORMULA
 
-export const item_formula_detail_init_fields = {
-  1: [
-    {
-      id: 0,
-      item_id: null,
-      item_id_formula: null,
-
-      item_formula_qty: 0,
-      item_part_specification_id: null,
-      item_formula_remark: null,
-      machine_id_formula: null,
-      commit: 1,
-    },
-  ],
-};
-
 export const item_formula_detail_fields = {
   id: 0,
+  item_formula_id: null,
   item_id: null,
   item_id_formula: null,
-  item_formula_qty: 0,
+  item_formula_percent_qty: 0,
   item_part_specification_id: null,
   item_formula_remark: null,
   machine_id_formula: null,
@@ -520,15 +796,147 @@ export const item_production_process_fields = {
 
 export const item_part_mix_fields = {
   id: 0,
-  item_part_specification_name: null,
-  item_part_specification_id: null,
+  item_part_sort_mix: null,
+  item_part_mix_id: null,
+  item_part_mix_remark: null,
+  // item_part_description: null,
   commit: 1,
 };
+
+export const itemFormulaColumns = (
+  readOnly,
+  onChange,
+  onDelete,
+  Save,
+  { itemList }
+) => [
+  {
+    id: 1,
+    title: "No.",
+    dataIndex: "id",
+    width: "5%",
+    align: "center",
+    render: (value, record, index) => {
+      return value + 1;
+    },
+  },
+  {
+    id: 2,
+    title: <div className="text-center">Raw Material Code</div>,
+    dataIndex: "item_no_name",
+    key: "item_no_name",
+    align: "left",
+    // width: "40%",
+    render: (value, record, index) => {
+      if (readOnly) {
+        return value;
+      } else {
+        return (
+          <CustomSelect
+            allowClear
+            showSearch
+            size={"small"}
+            placeholder={"Raw Material Code"}
+            name="item_id_formula"
+            field_id="item_id"
+            field_name="item_no_name"
+            value={record.item_no_name}
+            data={itemList}
+            onChange={(data, option) => {
+              data && data
+                ? onChange(record.id, {
+                    item_id_formula: option.data.item_id,
+                    item_no_name: option.data.item_no_name,
+                  })
+                : onChange(record.id, {
+                    item_id_formula: null,
+                    item_no_name: null,
+                    item_formula_percent_qty: 0,
+                  });
+            }}
+            onBlur={() => Save(record.id)}
+          />
+        );
+      }
+    },
+  },
+  {
+    id: 3,
+    title: (
+      <div className="text-center">
+        {!readOnly && <span className="require">* </span>}
+        %(W/W)
+      </div>
+    ),
+    dataIndex: "item_formula_percent_qty",
+    key: "item_formula_percent_qty",
+    align: "right",
+    width: "20%",
+    render: (value, record, index) => {
+      if (readOnly) {
+        return convertDigit(value, 4) + " %";
+      } else {
+        return (
+          <InputNumber
+            name="item_formula_percent_qty"
+            placeholder="Percentage"
+            value={record.item_formula_percent_qty}
+            disabled={record.item_id_formula ? 0 : 1}
+            defaultValue={0.0}
+            min={0.0}
+            max={100.0}
+            formatter={(value) => `${value}%`}
+            parser={(value) => value.replace("%", "")}
+            precision={4}
+            step={0.0001}
+            onChange={(data) => {
+              onChange(record.id, {
+                item_formula_percent_qty: data,
+              });
+            }}
+            onBlur={() => Save(record.id, "item_formula_percent_qty")}
+            size="small"
+            className="full-width"
+          />
+        );
+      }
+    },
+  },
+  {
+    title: (
+      <Text strong>
+        <EllipsisOutlined />
+      </Text>
+    ),
+    align: "center",
+    width: "5%",
+    render: (value, record, index) => {
+      if (readOnly) {
+        return null;
+      } else {
+        return (
+          <Popconfirm
+            onConfirm={() => {
+              onDelete(record.id);
+            }}
+            title="Are you sure you want to delete this row？"
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteTwoTone />
+          </Popconfirm>
+        );
+      }
+    },
+  },
+];
+
 export const itemPartMixColumns = (
   readOnly,
   onChange,
   onDelete,
-  onToggle,
+  getPartName,
+  Save,
   { data_part }
 ) => [
   {
@@ -544,13 +952,13 @@ export const itemPartMixColumns = (
   {
     id: 2,
     title: <div className="text-center">Part Name</div>,
-    dataIndex: "item_part_name",
-    key: "item_part_name",
+    dataIndex: "item_part_description",
+    key: "item_part_description",
     align: "left",
     // width: "40%",
     render: (value, record, index) => {
       if (readOnly) {
-        return value;
+        return getPartName(record.item_part_sort_mix);
       } else {
         return (
           <CustomSelect
@@ -558,28 +966,29 @@ export const itemPartMixColumns = (
             showSearch
             size={"small"}
             placeholder={"Select Part"}
-            name="item_part_id"
-            field_id="item_part_id"
-            field_name="item_part_name"
-            value={record.item_part_name}
+            name="item_part_sort"
+            field_id="item_part_sort"
+            field_name="item_part_description"
+            value={getPartName(record.item_part_sort_mix)}
             data={data_part}
             onChange={(data, option) => {
               data && data
                 ? onChange(record.id, {
-                    item_part_id: option.data.item_part_id,
-                    item_part_name: option.data.item_part_name,
+                    item_part_sort_mix: option.data.item_part_sort,
+                    // item_part_description: option.data.item_part_description,
                   })
                 : onChange(record.id, {
-                    item_part_id: null,
-                    item_part_name: null,
+                    item_part_sort_mix: null,
+                    // item_part_description: null,
                   });
             }}
+            onBlur={() => Save(record.id)}
           />
         );
       }
     },
   },
-  !readOnly && {
+  {
     title: (
       <Text strong>
         <EllipsisOutlined />

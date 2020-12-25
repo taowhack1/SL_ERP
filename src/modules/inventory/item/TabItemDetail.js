@@ -1,8 +1,9 @@
-import { Col, Input, InputNumber, Row, Space } from "antd";
+import { Col, DatePicker, Input, InputNumber, Row, Space } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import CustomSelect from "../../../components/CustomSelect";
 import { get_pre_run_no } from "../../../include/js/function_main";
+import moment from "moment";
 const { TextArea } = Input;
 
 const TabItemDetail = ({
@@ -247,6 +248,56 @@ const TabItemDetail = ({
               value={data_head.item_barcode}
             />
           )}
+        </Col>
+      </Row>
+      <Row className="col-2 row-margin-vertical">
+        <Col span={12}>
+          <Row className="col-2">
+            <Col span={6}>
+              <Text strong>Effective Date</Text>
+            </Col>
+            <Col span={16}>
+              {readOnly ? (
+                <Text className="text-view text-center">
+                  {data_head.item_formula_effective_date
+                    ? data_head.item_formula_effective_date
+                    : "-"}
+                </Text>
+              ) : (
+                <DatePicker
+                  name={"item_formula_effective_date"}
+                  format={"DD/MM/YYYY"}
+                  style={{ width: "100%" }}
+                  placeholder="Effective Date"
+                  required
+                  value={
+                    data_head.item_formula_effective_date
+                      ? moment(
+                          data_head.item_formula_effective_date,
+                          "DD/MM/YYYY"
+                        )
+                      : ""
+                  }
+                  defaultValue={
+                    data_head.item_formula_effective_date
+                      ? moment(
+                          data_head.item_formula_effective_date,
+                          "DD/MM/YYYY"
+                        )
+                      : ""
+                  }
+                  onChange={(data) => {
+                    upDateFormValue({
+                      item_formula_effective_date: data
+                        ? data.format("DD/MM/YYYY")
+                        : "",
+                    });
+                  }}
+                />
+              )}
+            </Col>
+            <Col span={2}></Col>
+          </Row>
         </Col>
       </Row>
       <Row className="col-2">

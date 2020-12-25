@@ -21,6 +21,7 @@ import {
   api_get_part_by_item_id,
   api_item_status,
   api_get_item_list,
+  api_get_part_and_formula_all,
 } from "../../include/js/api";
 import axios from "axios";
 import { Alert, message, notification } from "antd";
@@ -34,6 +35,27 @@ const openNotificationWithIcon = (type, title, text) => {
     message: <h4 className="notify-title">{title}</h4>,
     description: text,
   });
+};
+const convertFileField = (file) => {
+  let file_temp = file;
+
+  let path = file.item_file_path
+    ? api_server + file.item_file_path
+    : require("./no_image.svg");
+  if (file.item_file_path) {
+    path = api_server + file.item_file_path;
+  } else {
+    path = file.file_type_id === 1 ? require("./no_image.svg") : null;
+    file_temp.item_file_original_type =
+      file.file_type_id === 1 ? "image" : null;
+  }
+  file_temp.name = file.item_file_original_name;
+  file_temp.path = path;
+  file_temp.file_type_id = file.file_type_id;
+  file_temp.uid = file.file_type_id;
+  file_temp.thumbUrl = path;
+  file_temp.url = path;
+  return file_temp;
 };
 
 const bind_vendor_fn = (item_id, data_detail) => {
@@ -61,9 +83,9 @@ const bind_formula = (item_id, data_formula_detail) => {
   const data_formula_detail_temp = data_formula_detail.filter(
     (detail) =>
       detail.item_id !== null &&
-      detail.item_part_id !== null &&
+      detail.item_part_sort !== null &&
       // detail.item_formula_part_no !== null &&
-      detail.item_formula_qty !== 0 &&
+      detail.item_formula_percent_qty !== 0 &&
       detail.commit === 1
   );
   return (
@@ -84,9 +106,9 @@ const bind_part_and_formula = (item_id, data_part) => {
   // const data_formula_detail_temp = data_formula_detail.filter(
   //   (detail) =>
   //     detail.item_id !== null &&
-  //     detail.item_part_id !== null &&
+  //     detail.item_part_sort !== null &&
   //     // detail.item_formula_part_no !== null &&
-  //     detail.item_formula_qty !== 0 &&
+  //     detail.item_formula_percent_qty !== 0 &&
   //     detail.commit === 1
   // );
   return (
@@ -190,25 +212,32 @@ export const getAllItems = () => async (dispatch) => {
 export const createNewItems = (data, user_name, redirect) => async (
   dispatch
 ) => {
-  console.log("Create item... data value", data);
   const {
     access_right,
     data_head,
     data_detail,
     data_part,
-    data_formula_detail,
-    data_process_detail,
+    data_part_detail,
+    data_part_mix,
+    data_formula,
     data_qa_detail,
     data_weight_detail,
     data_packaging_detail,
     data_file,
   } = data;
-
+  console.log("createNewItems RawData :", data);
   try {
+    const groupPartData = data_part.map((part, index) => {
+      return {
+        ...part,
+        item_part_specification_detail: data_part_detail[index],
+        item_part_mix: data_part_mix[index],
+        item_formula: data_formula[index],
+      };
+    });
     axios
       .post(api_url + "/inventory/item", data_head, header_config)
       .then(async (res, rej) => {
-        console.log("rej", rej);
         if (res.status === 200 && res.data[0].length) {
           const item_id = res.data[0][0].item_id;
           // access_right: {
@@ -221,9 +250,8 @@ export const createNewItems = (data, user_name, redirect) => async (
           // },
           Promise.allSettled([
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
-            access_right.formula && bind_part_and_formula(item_id, data_part),
-            // access_right.formula && bind_formula(item_id, data_formula_detail),
-            // access_right.process && bind_process(item_id, data_process_detail),
+            access_right.formula &&
+              bind_part_and_formula(item_id, groupPartData),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
             access_right.weight && bind_weight(item_id, data_weight_detail),
             access_right.packaging &&
@@ -280,24 +308,32 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
     data_head,
     data_detail,
     data_part,
-    data_formula_detail,
-    data_process_detail,
+    data_part_detail,
+    data_part_mix,
+    data_formula,
     data_qa_detail,
     data_weight_detail,
     data_packaging_detail,
     data_file,
   } = data;
-  console.log("Update item...", data);
+  console.log("upDateItem RawData :", data);
   try {
+    const groupPartData = data_part.map((part, index) => {
+      return {
+        ...part,
+        item_part_specification_detail: data_part_detail[index],
+        item_part_mix: data_part_mix[index],
+        item_formula: data_formula[index],
+      };
+    });
     axios
       .put(api_url + "/inventory/item/" + item_id, data_head, header_config)
       .then(async (res) => {
         if (res.status === 200 && res.data[0].length) {
           Promise.allSettled([
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
-            access_right.formula && bind_part_and_formula(item_id, data_part),
-            // access_right.formula && bind_formula(item_id, data_formula_detail),
-            // access_right.process && bind_process(item_id, data_process_detail),
+            access_right.formula &&
+              bind_part_and_formula(item_id, groupPartData),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
             access_right.weight && bind_weight(item_id, data_weight_detail),
             access_right.packaging &&
@@ -351,15 +387,7 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         header_config
       );
       const res_part = axios.get(
-        `${api_get_part_by_item_id}/${item_id}`,
-        header_config
-      );
-      const res_formula = axios.get(
-        `${api_item_formula}/${item_id}`,
-        header_config
-      );
-      const res_process = axios.get(
-        `${api_item_process}/${item_id}`,
+        `${api_get_part_and_formula_all}/${item_id}`,
         header_config
       );
       const res_qa = axios.get(`${api_item_qa}/${item_id}`, header_config);
@@ -379,101 +407,86 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         res_head,
         res_detail,
         res_part,
-        res_formula,
-        res_process,
         res_qa,
         res_weight,
         res_packaging,
         res_file,
       ]).then((data) => {
-        const convertFileField = (file) => {
-          let file_temp = file;
-
-          let path = file.item_file_path
-            ? api_server + file.item_file_path
-            : require("./no_image.svg");
-          if (file.item_file_path) {
-            path = api_server + file.item_file_path;
-          } else {
-            path = file.file_type_id === 1 ? require("./no_image.svg") : null;
-            file_temp.item_file_original_type =
-              file.file_type_id === 1 ? "image" : null;
-          }
-          file_temp.name = file.item_file_original_name;
-          file_temp.path = path;
-          file_temp.file_type_id = file.file_type_id;
-          file_temp.uid = file.file_type_id;
-          file_temp.thumbUrl = path;
-          file_temp.url = path;
-          return file_temp;
-        };
         console.log("Promise.allSettled GET ITEM BY ID", data);
-        const data_file_temp = data[8].value.data[0];
-        let data_part_detail_temp = {};
-        let data_formula_detail_temp = {};
-        data[2].value.data.forEach((part) => {
-          data_part_detail_temp[part.item_part_id] = sortData(
-            part.item_part_specification_detail
-          );
-
-          data_formula_detail_temp[part.item_part_id] = sortData(
-            part.item_formula
-          );
-        });
-        console.log(
-          "GET data_part_detail",
-          data_part_detail_temp,
-          data_formula_detail_temp
-        );
-        const item = {
-          data_head: data[0].value.data.main_master,
-          data_detail: sortData(data[1].value.data[0]),
-          // data_part
-          data_part: sortData(data[2].value.data),
-          data_part_detail: data_part_detail_temp,
-          data_formula_detail: data_formula_detail_temp,
-          data_process: sortData(data[4].value.data[0]),
-          data_qa_detail: sortData(data[5].value.data[0]),
-          data_weight_detail: sortData(data[6].value.data[0]),
-          data_packaging_detail: sortData(data[7].value.data[0]),
-          data_file: {
-            item_image:
-              data_file_temp.length &&
-              convertFileField(
-                data_file_temp.filter((file) => file.file_type_id === 1)[0]
-              ),
-            certificate: {
-              2:
+        const packingItemData = (data) => {
+          const data_part = sortData(data[2].value.data);
+          let data_part_detail = [];
+          let data_part_mix = [];
+          let data_formula = [];
+          data_part.forEach((part, index) => {
+            data_part_detail.push(
+              sortData(part.item_part_specification_detail)
+            );
+            data_part_mix.push(sortData(part.item_part_mix));
+            data_formula.push(sortData(part.item_formula));
+          });
+          const data_file_temp = data[6].value.data[0];
+          const item = {
+            data_head: data[0].value.data.main_master,
+            data_detail: sortData(data[1].value.data[0]),
+            data_part: data_part,
+            data_part_detail: data_part_detail,
+            data_part_mix: data_part_mix,
+            data_formula: data_formula,
+            data_qa_detail: sortData(data[3].value.data[0]),
+            data_weight_detail: sortData(data[4].value.data[0]),
+            data_packaging_detail: sortData(data[5].value.data[0]),
+            data_file: {
+              item_image:
                 data_file_temp.length &&
                 convertFileField(
-                  data_file_temp.filter((file) => file.file_type_id === 2)[0]
+                  data_file_temp.filter((file) => file.file_type_id === 1)[0]
                 ),
-              3:
-                data_file_temp.length &&
-                convertFileField(
-                  data_file_temp.filter((file) => file.file_type_id === 3)[0]
-                ),
-              4:
-                data_file_temp.length &&
-                convertFileField(
-                  data_file_temp.filter((file) => file.file_type_id === 4)[0]
-                ),
-              5:
-                data_file_temp.length &&
-                convertFileField(
-                  data_file_temp.filter((file) => file.file_type_id === 5)[0]
-                ),
-              6:
-                data_file_temp.length &&
-                convertFileField(
-                  data_file_temp.filter((file) => file.file_type_id === 6)[0]
-                ),
+              certificate: {
+                2:
+                  data_file_temp.length &&
+                  convertFileField(
+                    data_file_temp.filter((file) => file.file_type_id === 2)[0]
+                  ),
+                3:
+                  data_file_temp.length &&
+                  convertFileField(
+                    data_file_temp.filter((file) => file.file_type_id === 3)[0]
+                  ),
+                4:
+                  data_file_temp.length &&
+                  convertFileField(
+                    data_file_temp.filter((file) => file.file_type_id === 4)[0]
+                  ),
+                5:
+                  data_file_temp.length &&
+                  convertFileField(
+                    data_file_temp.filter((file) => file.file_type_id === 5)[0]
+                  ),
+                6:
+                  data_file_temp.length &&
+                  convertFileField(
+                    data_file_temp.filter((file) => file.file_type_id === 6)[0]
+                  ),
+                7:
+                  data_file_temp.length &&
+                  convertFileField(
+                    data_file_temp.filter((file) => file.file_type_id === 7)[0]
+                  ),
+                8:
+                  data_file_temp.length &&
+                  convertFileField(
+                    data_file_temp.filter((file) => file.file_type_id === 8)[0]
+                  ),
+              },
             },
-          },
+          };
+
+          return item;
         };
-        console.log(`GET_ITEM_BY_ID ${item_id}`, item);
-        dispatch({ type: GET_ITEM_BY_ID, payload: item });
-        item.data_head && redirect && redirect(item_id);
+        const itemData = packingItemData(data);
+        dispatch({ type: GET_ITEM_BY_ID, payload: itemData });
+        itemData.data_head && redirect && redirect(item_id);
       });
     }
   } catch (error) {

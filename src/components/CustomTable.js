@@ -35,7 +35,6 @@ const CustomTable = (props) => {
       pagination: { ...state.pagination, current: lastPage },
     });
   };
-  console.log(state);
   return (
     <>
       <Table
@@ -54,7 +53,7 @@ const CustomTable = (props) => {
             ? () => (
                 <>
                   {!readOnly && (
-                    <div style={{ marginTop: 10 }}>
+                    <div className="mt-1">
                       <Button
                         type="dashed"
                         onClick={() => {

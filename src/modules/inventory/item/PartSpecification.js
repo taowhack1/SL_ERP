@@ -1,69 +1,74 @@
 import { Row, Col, InputNumber, Typography, TimePicker } from "antd";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import CustomSelect from "../../../components/CustomSelect";
 import PartSpecificationDetail from "./PartSpecification_Detail";
 import BulkFormula from "./BulkFormula";
-import {
-  convertNumberToTime,
-  convertTimeToNumber,
-} from "../../../include/js/function_main";
 import { getWorkCenterDetailByID } from "../../../actions/production/workCenterActions";
 import moment from "moment";
 import ItemPartMix from "./ItemPartMix";
-import { EditTwoTone } from "@ant-design/icons";
 import ItemPartName from "./ItemPartName";
+import { ItemContext } from "../../../include/js/context";
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
-const PartSpecification = ({
-  item_part_id,
-  readOnly,
-  data_part,
-  partDispatch,
-  data_part_detail,
-  partDetailDispatch,
-  data_formula_detail,
-  formulaDetailDispatch,
-  addLine,
-  delLine,
-}) => {
-  const [workCenterMachine, setWorkCenterMachine] = useState([]);
+const PartSpecification = ({ partId }) => {
+  const { PartReducer, readOnly } = useContext(ItemContext);
   const { workCenterList } = useSelector(
     (state) => state.production.workCenter
   );
-  const { machineList } = useSelector((state) => state.production.machine);
-  const item_list = useSelector((state) =>
-    state.inventory.master_data.item_list.filter(
-      (item) => item.type_id === 1 || item.type_id === 3
-    )
-  );
+  const [workCenterMachine, setWorkCenterMachine] = useState([]);
 
-  const onChangeValue = (rowId, data) => {
-    partDispatch({
-      type: "CHANGE_DETAIL_VALUE",
-      payload: {
-        id: rowId,
-        data: data,
-      },
-    });
+  const [state, setState] = useState({
+    item_part_specification_time:
+      PartReducer.data[partId].item_part_specification_time,
+    item_part_specification_remark:
+      PartReducer.data[partId].item_part_specification_remark,
+    item_part_specification_worker:
+      PartReducer.data[partId].item_part_specification_worker,
+    machine_id_main: PartReducer.data[partId].machine_id_main,
+    machine_no_name_main: PartReducer.data[partId].machine_no_name_main,
+    machine_id_sub: PartReducer.data[partId].machine_id_sub,
+    machine_no_name_sub: PartReducer.data[partId].machine_no_name_sub,
+    work_center_id: PartReducer.data[partId].work_center_id,
+    work_center_no_description:
+      PartReducer.data[partId].work_center_no_description,
+  });
+
+  const onChangeValue = (data) => {
+    setState({ ...state, ...data });
+  };
+  const Save = () => {
+    PartReducer.onChangeDetailValue(partId, state);
   };
 
+  useEffect(() => {
+    setState({
+      item_part_specification_time:
+        PartReducer.data[partId].item_part_specification_time,
+      item_part_specification_remark:
+        PartReducer.data[partId].item_part_specification_remark,
+      item_part_specification_worker:
+        PartReducer.data[partId].item_part_specification_worker,
+      machine_id_main: PartReducer.data[partId].machine_id_main,
+      machine_no_name_main: PartReducer.data[partId].machine_no_name_main,
+      machine_id_sub: PartReducer.data[partId].machine_id_sub,
+      machine_no_name_sub: PartReducer.data[partId].machine_no_name_sub,
+      work_center_id: PartReducer.data[partId].work_center_id,
+      work_center_no_description:
+        PartReducer.data[partId].work_center_no_description,
+    });
+  }, [PartReducer.data[partId].data_id]);
   return (
     <>
       <div className="group-row">
         <Row className="col-2 row-margin-vertical">
           <Col span={24}>
-            {/* Column Header */}
             <Row className="col-2 row-margin-vertical">
               <Col span={12}>
                 <Row className="row-head">
-                  {/* <Col span={1}></Col> */}
                   <Col span={24}>
-                    <ItemPartName
-                      data_part={data_part}
-                      partDispatch={partDispatch}
-                    />
+                    <ItemPartName partId={partId} />
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -78,8 +83,8 @@ const PartSpecification = ({
                     {readOnly ? (
                       <div className="text-left">
                         <Text className="text-view">
-                          {data_part.work_center_no_description
-                            ? data_part.work_center_no_description
+                          {state.work_center_no_description
+                            ? state.work_center_no_description
                             : "-"}
                         </Text>
                       </div>
@@ -92,18 +97,24 @@ const PartSpecification = ({
                         name="work_center_id"
                         field_id="work_center_id"
                         field_name="work_center_no_description"
-                        value={data_part.work_center_no_description}
+                        value={state.work_center_no_description}
                         data={workCenterList}
                         onChange={async (data, option) => {
                           data && data
-                            ? onChangeValue(data_part.id, {
+                            ? onChangeValue({
                                 work_center_id: option.data.work_center_id,
                                 work_center_no_description:
                                   option.data.work_center_no_description,
-                                machine_id: null,
-                                machine_no_name: null,
+                                machine_id_main: null,
+                                machine_no_name_main: null,
+                                machine_id_sub: null,
+                                machine_no_name_sub: null,
                               })
-                            : onChangeValue(data_part.id, {
+                            : onChangeValue({
+                                machine_id_main: null,
+                                machine_no_name_main: null,
+                                machine_id_sub: null,
+                                machine_no_name_sub: null,
                                 work_center_id: null,
                                 work_center_no_description: null,
                               });
@@ -112,6 +123,7 @@ const PartSpecification = ({
                           );
                           setWorkCenterMachine(workCenterDetail);
                         }}
+                        onBlur={() => Save()}
                       />
                     )}
                   </Col>
@@ -129,8 +141,8 @@ const PartSpecification = ({
                     {readOnly ? (
                       <div className="text-left">
                         <Text className="text-view">
-                          {data_part.item_part_specification_worker
-                            ? data_part.item_part_specification_worker
+                          {state.item_part_specification_worker
+                            ? state.item_part_specification_worker
                             : "-"}
                         </Text>
                       </div>
@@ -143,12 +155,13 @@ const PartSpecification = ({
                         step={1}
                         defaultValue={0}
                         precision={0}
-                        value={data_part.item_part_specification_worker}
+                        value={state.item_part_specification_worker}
                         onChange={(data) => {
-                          onChangeValue(data_part.id, {
+                          onChangeValue({
                             item_part_specification_worker: data ?? 0,
                           });
                         }}
+                        onBlur={() => Save()}
                         size="small"
                       />
                     )}
@@ -166,8 +179,8 @@ const PartSpecification = ({
                     {readOnly ? (
                       <div className="text-left">
                         <Text className="text-view">
-                          {data_part.machine_no_name
-                            ? data_part.machine_no_name
+                          {state.machine_no_name_main
+                            ? state.machine_no_name_main
                             : "-"}
                         </Text>
                       </div>
@@ -175,25 +188,27 @@ const PartSpecification = ({
                       <CustomSelect
                         allowClear
                         showSearch
-                        disabled={data_part.work_center_id ? 0 : 1}
+                        disabled={state.work_center_id ? 0 : 1}
                         size="small"
                         placeholder={"Select Machine"}
-                        name="machine_no_name"
+                        name="machine_no_name_main"
                         field_id="machine_id"
                         field_name="machine_no_name"
-                        value={data_part.machine_no_name}
+                        value={state.machine_no_name_main}
                         data={workCenterMachine}
                         onChange={(data, option) => {
                           data && data
-                            ? onChangeValue(data_part.id, {
-                                machine_id: option.data.machine_id,
-                                machine_no_name: option.data.machine_no_name,
+                            ? onChangeValue({
+                                machine_id_main: option.data.machine_id,
+                                machine_no_name_main:
+                                  option.data.machine_no_name,
                               })
-                            : onChangeValue(data_part.id, {
-                                machine_id: null,
-                                machine_no_name: null,
+                            : onChangeValue({
+                                machine_id_main: null,
+                                machine_no_name_main: null,
                               });
                         }}
+                        onBlur={() => Save()}
                       />
                     )}
                   </Col>
@@ -207,8 +222,8 @@ const PartSpecification = ({
                     {readOnly ? (
                       <div className="text-left">
                         <Text className="text-view">
-                          {data_part.machine_no_name
-                            ? data_part.machine_no_name
+                          {state.machine_no_name_sub
+                            ? state.machine_no_name_sub
                             : "-"}
                         </Text>
                       </div>
@@ -216,39 +231,35 @@ const PartSpecification = ({
                       <CustomSelect
                         allowClear
                         showSearch
-                        disabled={data_part.work_center_id ? 0 : 1}
+                        disabled={state.work_center_id ? 0 : 1}
                         size="small"
                         placeholder={"Select Machine"}
-                        name="machine_no_name"
+                        name="machine_no_name_sub"
                         field_id="machine_id"
                         field_name="machine_no_name"
-                        value={data_part.machine_no_name}
+                        value={state.machine_no_name_sub}
                         data={workCenterMachine}
                         onChange={(data, option) => {
                           data && data
-                            ? onChangeValue(data_part.id, {
-                                machine_id: option.data.machine_id,
-                                machine_no_name: option.data.machine_no_name,
+                            ? onChangeValue({
+                                machine_id_sub: option.data.machine_id,
+                                machine_no_name_sub:
+                                  option.data.machine_no_name,
                               })
-                            : onChangeValue(data_part.id, {
-                                machine_id: null,
-                                machine_no_name: null,
+                            : onChangeValue({
+                                machine_id_sub: null,
+                                machine_no_name_sub: null,
                               });
                         }}
+                        onBlur={() => Save()}
                       />
                     )}
                   </Col>
                 </Row>
               </Col>
             </Row>
-
             <div className="detail-container">
-              <PartSpecificationDetail
-                item_part_id={item_part_id}
-                readOnly={readOnly}
-                data_part_detail={data_part_detail}
-                partDetailDispatch={partDetailDispatch}
-              />
+              <PartSpecificationDetail partId={partId} />
             </div>
             <Row className="col-2 row-margin-vertical">
               <Col span={12}>
@@ -262,8 +273,8 @@ const PartSpecification = ({
                   <Col span={12}>
                     {readOnly ? (
                       <Text className="text-view">
-                        {data_part.item_part_specification_time
-                          ? data_part.item_part_specification_time
+                        {state.item_part_specification_time
+                          ? state.item_part_specification_time
                           : "-"}
                       </Text>
                     ) : (
@@ -276,20 +287,20 @@ const PartSpecification = ({
                         size="small"
                         required
                         value={
-                          data_part.item_part_specification_time
+                          state.item_part_specification_time
                             ? moment(
-                                data_part.item_part_specification_time,
+                                state.item_part_specification_time,
                                 "HH:mm:ss"
                               )
                             : ""
                         }
                         onChange={(data) => {
                           const time = moment(data, "HH:mm").format("HH:mm:ss");
-                          console.log(time);
-                          onChangeValue(data_part.id, {
+                          onChangeValue({
                             item_part_specification_time: data ? time : null,
                           });
                         }}
+                        onBlur={() => Save()}
                       />
                     )}
                   </Col>
@@ -302,18 +313,11 @@ const PartSpecification = ({
               </Col>
               <Col span={12}></Col>
             </Row>
-            <div className="detail-container mt-4">
-              <BulkFormula
-                readOnly={readOnly}
-                item_part_id={item_part_id}
-                data_formula_detail={data_formula_detail}
-                formulaDetailDispatch={formulaDetailDispatch}
-                item_list={item_list}
-                machineList={machineList}
-              />
+            <div className="detail-container mt-2">
+              <BulkFormula partId={partId} />
             </div>
-            <div className="detail-container mt-4">
-              <ItemPartMix readOnly={readOnly} />
+            <div className="detail-container mt-2">
+              <ItemPartMix partId={partId} />
             </div>
           </Col>
         </Row>
@@ -322,4 +326,4 @@ const PartSpecification = ({
   );
 };
 
-export default PartSpecification;
+export default React.memo(PartSpecification);

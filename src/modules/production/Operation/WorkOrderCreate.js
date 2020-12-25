@@ -110,7 +110,7 @@ const WorkOrderCreate = (props) => {
       PKReducer,
     };
   }, [readOnly, headReducer, RMReducer, PKReducer]);
-  headReducer.setReducer(1);
+  headReducer.setReducer("object");
   console.log("WorkOrderCreate Render...");
   return (
     <MainLayout {...config}>
@@ -135,8 +135,8 @@ const WorkOrderCreate = (props) => {
             </Text>
           </Col>
         </Row>
-        <WorkOrderHead />
         <WOContext.Provider value={headContextValue}>
+          <WorkOrderHead />
           <WorkOrderTabPanel />
         </WOContext.Provider>
       </div>

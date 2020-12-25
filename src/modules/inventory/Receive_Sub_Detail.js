@@ -19,7 +19,6 @@ import {
 import React, { useState, useEffect, useReducer } from "react";
 import { useSelector } from "react-redux";
 import numeral from "numeral";
-import { calSubtotal, sumArrObj } from "../../include/js/function_main";
 import {
   receive_detail_fields,
   receive_sub_detail_fields,

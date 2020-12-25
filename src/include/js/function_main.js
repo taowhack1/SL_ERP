@@ -17,6 +17,7 @@ export const sortData = (arrObject) => {
       ...obj,
       id: key,
       commit: 1,
+      data_id: key,
     });
   });
   return temp;
@@ -81,6 +82,14 @@ export const sumArrOdjWithField = (arrObj = [], field) => {
   let total = numbers.length
     ? numbers.reduce((prev, current) => prev + current)
     : 0;
+  return total;
+};
+export const sum2DArrOdjWithField = (arrObj = [[]], field = "") => {
+  const total = arrObj.reduce(
+    (total, currentArr) =>
+      total + currentArr.reduce((total, obj) => total + obj[field], 0),
+    0
+  );
   return total;
 };
 
@@ -277,18 +286,6 @@ export const replaceDataInArrObjById = (
   keyToReplace
 ) => {
   var t0 = performance.now();
-  // const newPM = data_part_mix.map((pm) => {
-  //   return pm.length > 1
-  //     ? pm.map((data) => {
-  //         const matchData = data_part.find(
-  //           (part) => part.item_part_id === data.item_part_id
-  //         );
-  //         return matchData
-  //           ? { ...data, item_part_name: matchData.item_part_name }
-  //           : data;
-  //       })
-  //     : pm;
-  // });
   const newData = targetArr.map((arrObj) => {
     return arrObj.length > 1
       ? arrObj.map((data) => {
@@ -307,4 +304,12 @@ export const replaceDataInArrObjById = (
   var t1 = performance.now();
   console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
   return newData;
+};
+
+export const getFieldNameById = (dataArrObj = [], id, keyId, keyName) => {
+  const findData =
+    id !== undefined && id !== null
+      ? dataArrObj.find((obj) => obj[keyId] === id)
+      : null;
+  return findData ? findData[keyName] : null;
 };

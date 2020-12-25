@@ -4,7 +4,7 @@ import {
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import React from "react";
+import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 import {
   item_packaging_detail_fields,
@@ -12,6 +12,7 @@ import {
 } from "../config/item";
 import CustomSelect from "../../../components/CustomSelect";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
+import { ItemContext } from "../../../include/js/context";
 
 const { Text } = Typography;
 
@@ -20,13 +21,9 @@ const Packaging = ({
   readOnly,
   packagingDetailDispatch,
 }) => {
+  const { PKList } = useContext(ItemContext);
   const test_case_method = useSelector(
     (state) => state.qa.qa_master_data.test_case_method
-  );
-  const item_list = useSelector((state) =>
-    state.inventory.master_data.item_list.filter(
-      (item) => item.type_id !== 1 && item.type_id <= 6
-    )
   );
   const addLine = () => {
     packagingDetailDispatch({
@@ -98,7 +95,7 @@ const Packaging = ({
                   field_id="item_id"
                   field_name="item_no_name"
                   value={line.item_no_name}
-                  data={item_list}
+                  data={PKList}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {

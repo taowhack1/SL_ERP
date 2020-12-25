@@ -14,8 +14,9 @@ export const numberFormat = {
   formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
   parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
 };
-export const convertDigit = (value) => {
-  return typeof value === "number" && numeral(value).format("0,0.000");
+export const convertDigit = (value, decimalPoint = 3) => {
+  const format = "0,0." + "0".repeat(decimalPoint);
+  return typeof value === "number" && numeral(value).format(format);
 };
 // Sv.Test
 export const api_server = `http://192.168.5.222:3009`;

@@ -253,6 +253,7 @@ const PurchaseOrderCreate = (props) => {
     copyMain.payment_term_no_name = null;
     copyMain.cost_center_id = null;
     copyMain.vendor_id = null;
+    copyMain.vat_rate = 0;
     upDateFormValue(copyMain);
     detailDispatch({ type: "SET_DETAIL", payload: initialStateDetail });
     dispatch(reset_po_data());
@@ -349,6 +350,7 @@ const PurchaseOrderCreate = (props) => {
                       payment_term_no_name: option.data.payment_term_no_name,
                       currency_id: option.data.currency_id,
                       currency_no: option.data.currency_no,
+                      vat_rate: option.data.vat_rate,
                     })
                   : upDateFormValue({
                       vendor_id: null,
@@ -357,6 +359,7 @@ const PurchaseOrderCreate = (props) => {
                       payment_term_no_name: null,
                       currency_id: 1,
                       currency_no: "THB",
+                      vat_rate: 0,
                     })
               }
             />

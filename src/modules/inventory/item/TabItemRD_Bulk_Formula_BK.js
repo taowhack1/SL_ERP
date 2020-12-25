@@ -79,7 +79,7 @@ const TabBulkFormula = ({
       type: "ADD_ROW",
       payload: {
         ...item_part_specification_fields,
-        item_part_name: getPart(data_part.length),
+        item_part_description: getPart(data_part.length),
       },
     });
   };
@@ -185,7 +185,7 @@ const TabBulkFormula = ({
                   <span className="require" style={{}}>
                     *{" "}
                   </span>
-                  {line.item_part_name}
+                  {line.item_part_description}
                   <CloseOutlined
                     title="Delete"
                     onClick={() => showPopconfirm(line.id)}

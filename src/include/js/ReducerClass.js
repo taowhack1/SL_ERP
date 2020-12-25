@@ -2,23 +2,38 @@ import { useReducer } from "react";
 import { reducer } from "../../modules/production/reducers";
 
 class ReducerClass {
-  // dispatch = null;
-  // initialState = null;
   constructor(data, dispatch, initialState, commonData) {
-    // this.data = data;
+    this.data = data;
     // this.dispatch = dispatch;
-    this.data = initialState;
+    // this.data = initialState;
     this.initialState = initialState;
     this.commonData = commonData;
-    console.log("ReducerConstuctor");
   }
-  setReducer = (type = 1) => {
-    console.log("setReducer");
-
+  setReducer = (dataType = "object") => {
     [this.data, this.dispatch] = useReducer(
       reducer,
-      type === 1 ? this.initialState : [this.initialState]
+      dataType === "object"
+        ? this.data ?? this.initialState
+        : [this.data ?? this.initialState]
     );
+  };
+  setDataObject = (data = {}) => {
+    this.dispatch({
+      type: "SET_HEAD",
+      payload: data ? data : this.initialState,
+    });
+  };
+  setDataArray = (data = []) => {
+    this.dispatch({
+      type: "SET_DETAIL",
+      payload: data && data.length ? data : [this.initialState],
+    });
+  };
+  setDataArray2D = (data = []) => {
+    this.dispatch({
+      type: "SET_ARRAY_2D",
+      payload: data && data.length ? data : [this.initialState],
+    });
   };
   getFlow = () => {
     this.flow =
@@ -35,9 +50,6 @@ class ReducerClass {
   setInitialState = (initialState) => {
     this.initialState = initialState;
   };
-  setDispatch = (commonData) => {
-    this.commonData = commonData;
-  };
 
   setData = (data) => {
     return (this.data = data);
@@ -45,10 +57,24 @@ class ReducerClass {
   getData = () => {
     return this.data;
   };
-  addNewRow = () => {
+  addNewRow = (dataRow, id) => {
+    id !== undefined && id !== null
+      ? this.dispatch({
+          type: "ADD_ROW_2D_DETAIL",
+          payload: {
+            id: id,
+            data: dataRow ?? this.initialState,
+          },
+        })
+      : this.dispatch({
+          type: "ADD_ROW",
+          payload: dataRow ?? this.initialState,
+        });
+  };
+  addNewRow2D = (dataRow) => {
     this.dispatch({
-      type: "ADD_ROW",
-      payload: this.initialState,
+      type: "ADD_ROW_2D",
+      payload: dataRow ?? this.initialState,
     });
   };
   addNewRowNoCommit = () => {
@@ -58,14 +84,28 @@ class ReducerClass {
     });
   };
 
-  deleteRow = (id) => {
+  deleteRow = (id, field_id) => {
     id !== undefined &&
       id !== null &&
-      this.dispatch({ type: "DEL_ROW", payload: { id: id } });
+      this.dispatch({
+        type: "DEL_ROW",
+        payload: { id: id, field_id: field_id },
+      });
+  };
+  deleteRow2D = (id, id2) => {
+    if (id2 !== null && id2 !== undefined) {
+      this.dispatch({
+        type: "DEL_ROW_2D_DETAIL",
+        payload: { id: id, id2: id2 },
+      });
+    } else {
+      id !== undefined &&
+        id !== null &&
+        this.dispatch({ type: "DEL_ROW_2D", payload: { id: id } });
+    }
   };
 
   updateRowStatus = (id, objStatus) => {
-    console.log(id);
     id !== undefined &&
       id !== null &&
       this.dispatch({
@@ -87,6 +127,19 @@ class ReducerClass {
         type: "CHANGE_DETAIL_VALUE",
         payload: {
           id: id,
+          data: { ...data, ...this.commonData },
+        },
+      });
+  };
+  onChangeDetailValue2D = (id, id2, data) => {
+    id !== undefined &&
+      id !== null &&
+      data &&
+      this.dispatch({
+        type: "CHANGE_DETAIL_VALUE_2D",
+        payload: {
+          id: id,
+          id2: id2,
           data: { ...data, ...this.commonData },
         },
       });

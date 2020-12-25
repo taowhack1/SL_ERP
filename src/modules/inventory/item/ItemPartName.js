@@ -1,52 +1,56 @@
 import { Input } from "antd";
-import React, { useState } from "react";
-
-const ItemPartName = ({ data_part, partDispatch }) => {
+import Title from "antd/lib/typography/Title";
+import React, { useContext, useEffect, useState } from "react";
+import { ItemContext } from "../../../include/js/context";
+const ItemPartName = ({ partId }) => {
+  const { PartReducer, readOnly } = useContext(ItemContext);
   const [state, setState] = useState({
     onEdit: false,
-    item_part_id: data_part.item_part_id,
-    item_part_name: data_part.item_part_name,
+    item_part_sort: PartReducer.data[partId].item_part_sort,
+    item_part_description: PartReducer.data[partId].item_part_description,
   });
   const [focus, setFocus] = useState(false);
   const Save = () => {
-    partDispatch({
-      type: "CHANGE_DETAIL_VALUE",
-      payload: {
-        id: data_part.id,
-        data: { item_part_name: state.item_part_name },
-      },
+    PartReducer.onChangeDetailValue(partId, {
+      item_part_description: state.item_part_description,
     });
   };
+  useEffect(() => {
+    setState({
+      onEdit: false,
+      item_part_sort: PartReducer.data[partId].item_part_sort,
+      item_part_description: PartReducer.data[partId].item_part_description,
+    });
+  }, [PartReducer.data[partId].data_id]);
+
   return (
     <>
-      {/* {state.onEdit ? ( */}
-      <Input
-        onPressEnter={() => {
-          setState({ ...state, onEdit: false });
-          Save();
-        }}
-        onBlur={() => {
-          Save();
-          setFocus(false);
-        }}
-        placeholder="Part Name"
-        value={state.item_part_name}
-        onChange={(e) => setState({ ...state, item_part_name: e.target.value })}
-        bordered={focus}
-        onClick={() => setFocus(true)}
-        className="hover-border ml-1 full-width"
-      />
-      {/* // ) : (
-      //   <Title level={4}>
-      //     {state.item_part_name}{" "}
-      //     <EditTwoTone
-      //       className="font-size-l"
-      //       onClick={() => setState({ ...state, onEdit: true })}
-      //     />
-      //   </Title>
-      // )} */}
+      {readOnly ? (
+        <Title level={4} className="pd-left-2">
+          {state.item_part_description}
+        </Title>
+      ) : (
+        <Input
+          onPressEnter={() => {
+            setState({ ...state, onEdit: false });
+            Save();
+          }}
+          onBlur={() => {
+            Save();
+            setFocus(false);
+          }}
+          placeholder="Part Name"
+          value={state.item_part_description}
+          onChange={(e) =>
+            setState({ ...state, item_part_description: e.target.value })
+          }
+          bordered={focus}
+          onClick={() => setFocus(true)}
+          className="hover-border ml-1 full-width"
+        />
+      )}
     </>
   );
 };
 
-export default ItemPartName;
+export default React.memo(ItemPartName);

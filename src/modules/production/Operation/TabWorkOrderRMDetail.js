@@ -20,8 +20,8 @@ import { RMContext, WOContext } from "./WorkOrderCreate";
 const { Text } = Typography;
 
 const TabWorkOrderRMDetail = ({ itemList }) => {
-  const { RMReducer, readOnly } = useContext(RMContext);
-  RMReducer.setReducer(2);
+  const { RMReducer, readOnly } = useContext(WOContext);
+  RMReducer.setReducer("array");
   const inputData = {
     itemList: itemList,
   };

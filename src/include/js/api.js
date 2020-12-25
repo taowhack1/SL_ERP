@@ -38,6 +38,7 @@ export const api_item_status = `${api_server}/api/inventory/item/actived`;
 export const api_item_vendor = `${api_server}/api/inventory/item_vendor`;
 // item -> part & formula
 export const api_part_and_formula = `${api_server}/api/inventory/item_part_specification`;
+export const api_get_part_and_formula_all = `${api_server}/api/inventory/item_part_specification_all`;
 export const api_get_part_by_item_id = `${api_server}/api/inventory/item_part_specification_detail2`;
 // item -> formula
 export const api_item_formula = `${api_server}/api/inventory/item_formula`;

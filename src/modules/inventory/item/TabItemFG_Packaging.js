@@ -1,27 +1,23 @@
 import { Col, InputNumber, Row, TimePicker } from "antd";
 import Text from "antd/lib/typography/Text";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useContext } from "react";
 import CustomSelect from "../../../components/CustomSelect";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
 import { item_packaging_weight_columns } from "../config/item";
+import ItemFileUpload from "./ItemFileUpload";
 import Packaging from "./Item_Packaging";
 import moment from "moment";
-
+import { ItemContext } from "../../../include/js/context";
 const TabPackaging = ({
   uom_name,
   data_head,
   upDateFormValue,
-
-  readOnly,
   data_packaging_detail,
   packagingDetailDispatch,
   data_weight_detail,
   weightDetailDispatch,
 }) => {
-  const rm_list = useSelector((state) =>
-    state.inventory.master_data.item_list.filter((item) => item.type_id === 3)
-  );
+  const { readOnly, data_file, updateFile, BULKList } = useContext(ItemContext);
   const onChangeValue = (rowId, data) => {
     weightDetailDispatch({
       type: "CHANGE_DETAIL_VALUE",
@@ -48,16 +44,17 @@ const TabPackaging = ({
                   {data_head.item_ref_no_name ?? "-"}
                 </Text>
               ) : (
+                // data_head.item_ref_no_name ?? "-"
                 <CustomSelect
                   className="full-width"
                   allowClear
                   showSearch
-                  placeholder={"Raw Material Code"}
+                  placeholder={"Bulk Code"}
                   name="item_id_ref"
                   field_id="item_id_ref"
                   field_name="item_no_name"
                   value={data_head.item_ref_no_name}
-                  data={rm_list}
+                  data={BULKList}
                   onChange={(data, option) => {
                     data && data
                       ? upDateFormValue({
@@ -74,6 +71,7 @@ const TabPackaging = ({
             </Col>
             <Col span={3}></Col>
           </Row>
+
           <Row className="col-2 row-margin-vertical">
             <Col span={7}>
               <Text strong className="pd-left-1">
@@ -103,7 +101,6 @@ const TabPackaging = ({
                   }
                   onChange={(data) => {
                     const time = moment(data, "HH:mm:ss").format("HH:mm:ss");
-                    console.log(time);
                     upDateFormValue({
                       item_packaging_time: data ? time : null,
                     });
@@ -118,7 +115,33 @@ const TabPackaging = ({
             </Col>
           </Row>
         </Col>
-        <Col span={12} className="col-right"></Col>
+      </Row>
+      <Row className="col-2 detail-tab-row mt-3 mb-1">
+        <Col span={24}>
+          <Text strong className="detail-tab-header">
+            Filling Process
+          </Text>
+        </Col>
+      </Row>
+      <Row className="col-2">
+        <Col span={12}>
+          <Row className="col-2">
+            <Col span={7}>
+              <Text strong>Ducument.</Text>
+            </Col>
+            <Col span={10}>
+              <ItemFileUpload
+                data_file={data_file}
+                updateFile={updateFile}
+                chkbox_upload_fields={1}
+                maxFile={1}
+                file_type_id={8}
+                upload_type={"Button"}
+                readOnly={readOnly}
+              />
+            </Col>
+          </Row>
+        </Col>
       </Row>
       <Row className="col-2 detail-tab-row mt-3 mb-1">
         <Col span={24}>

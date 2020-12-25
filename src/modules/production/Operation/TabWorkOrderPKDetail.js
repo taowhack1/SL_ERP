@@ -50,7 +50,7 @@ const TabWorkOrderPKDetail = ({
   //     formulaDetailDispatch({
   //       type: "CHANGE_HEAD_VALUE",
   //       payload: {
-  //         [item_part_id]: detail,
+  //         [item_part_sort]: detail,
   //       },
   //     });
   // }, [detail]);
@@ -207,7 +207,7 @@ const TabWorkOrderPKDetail = ({
                 </Col>
                 <Col span={4} className="text-number">
                   <Text className="text-right text-value">
-                    {convertDigit(line.item_formula_qty) ?? "-"} %
+                    {convertDigit(line.item_formula_percent_qty) ?? "-"} %
                   </Text>
                 </Col>
               </Row>
