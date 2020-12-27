@@ -41,8 +41,8 @@ const ItemLine = ({
   vat_rate,
   detailDispatch,
   headDispatch,
+  updateAmount,
 }) => {
-  const dispatch = useDispatch();
   // master data
 
   const select_items = useSelector((state) =>
@@ -54,20 +54,8 @@ const ItemLine = ({
     (state) => state.inventory.master_data.item_uom
   );
 
-  const updateAmount = () => {
-    const obj = sumArrObj(data_detail, "po_detail_total_price", vat_rate);
-    headDispatch({
-      type: "CHANGE_HEAD_VALUE",
-      payload: {
-        tg_po_sum_amount: obj.exclude_vat,
-        tg_po_vat_amount: obj.vat,
-        tg_po_total_amount: obj.include_vat,
-      },
-    });
-  };
-
   useEffect(() => {
-    !readOnly && updateAmount();
+    !readOnly && updateAmount(data_detail, "po_detail_total_price", vat_rate);
   }, [data_detail]);
 
   // function
@@ -91,7 +79,7 @@ const ItemLine = ({
   if (!readOnly) {
     data_detail && !po_id && !data_detail.length && addLine();
   }
-
+  console.log(data_detail);
   return (
     <>
       {/* Column Header */}
@@ -157,6 +145,11 @@ const ItemLine = ({
                               uom_id: null,
                               item_no_name: null,
                               uom_no: null,
+                              po_detail_qty: 0,
+                              po_detail_price: 0,
+                              po_detail_discount: 0,
+                              po_detail_total_price: 0,
+                              po_detail_due_date: null,
                             });
                       }}
                       style={{ width: "100%" }}
@@ -315,11 +308,13 @@ const ItemLine = ({
                     />
                   </Col>
                   <Col span={1} style={{ textAlign: "center" }}>
-                    <DeleteTwoTone
-                      onClick={() => {
-                        delLine(line.id);
-                      }}
-                    />
+                    {data_detail.length > 1 && (
+                      <DeleteTwoTone
+                        onClick={() => {
+                          delLine(line.id);
+                        }}
+                      />
+                    )}
                   </Col>
                 </Row>
                 <Row
@@ -337,6 +332,7 @@ const ItemLine = ({
                     <TextArea
                       rows={1}
                       placeholder={"Remark..."}
+                      disabled={line.item_id ? 0 : 1}
                       value={line.po_detail_remark}
                       onChange={(e) =>
                         onChangeValue(line.id, {
@@ -350,17 +346,19 @@ const ItemLine = ({
                 </Row>
               </div>
             ))}
-          <div style={{ marginTop: 10 }}>
-            <Button
-              type="dashed"
-              onClick={() => {
-                addLine();
-              }}
-              block
-            >
-              <PlusOutlined /> Add a line
-            </Button>
-          </div>
+          {pr_id && (
+            <div style={{ marginTop: 10 }}>
+              <Button
+                type="dashed"
+                onClick={() => {
+                  addLine();
+                }}
+                block
+              >
+                <PlusOutlined /> Add a line
+              </Button>
+            </div>
+          )}
         </>
       ) : (
         <>

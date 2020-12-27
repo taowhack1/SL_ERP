@@ -93,6 +93,7 @@ export const po_fields = {
   po_due_date: null,
   po_contact_description: "",
   po_remark: null,
+  po_discount: 0,
   po_lock: 0,
   po_actived: 1,
   po_created: null,

@@ -9,6 +9,7 @@ import {
   Typography,
   DatePicker,
   message,
+  InputNumber,
 } from "antd";
 import { useParams, withRouter } from "react-router-dom";
 import MainLayout from "../../components/MainLayout";
@@ -39,8 +40,9 @@ import {
 import { reducer } from "./reducers";
 import axios from "axios";
 import { api_get_pr_detail_ref } from "../../include/js/api";
-import { header_config } from "../../include/js/main_config";
+import { header_config, numberFormat } from "../../include/js/main_config";
 import {
+  sumArrObj,
   validateFormDetail,
   validateFormHead,
 } from "../../include/js/function_main";
@@ -120,7 +122,15 @@ const PurchaseOrderCreate = (props) => {
           const details = res.data[0];
           detailDispatch({
             type: "SET_DETAIL",
-            payload: details.length ? details : initialStateDetail,
+            payload: details.length
+              ? details.map((obj) => {
+                  return {
+                    ...obj,
+                    po_detail_total_price:
+                      obj.po_detail_qty * obj.po_detail_price,
+                  };
+                })
+              : initialStateDetail,
           });
         });
     // dispatch(get_pr_detail(data_head.pr_id));
@@ -211,27 +221,6 @@ const PurchaseOrderCreate = (props) => {
   };
   const getDataRef = (refId, mainData, refData) => {
     let copyMain = refData[refId];
-    // let copyRef = { ...refData[refId] };
-    // copyMain.pr_id = copyRef.pr_id;
-    // copyMain.pr_no = copyRef.pr_no;
-    // copyMain.vendor_no_name = copyRef.vendor_no_name;
-    // copyMain.pr_no_description = copyRef.pr_no_description;
-    // copyMain.po_description = copyRef.pr_description;
-    // copyMain.po_due_date = copyRef.tg_pr_due_date;
-    // copyMain.tg_po_amount = copyRef.tg_pr_amount;
-    // copyMain.tg_po_discount = copyRef.tg_pr_discount;
-    // copyMain.tg_po_sum_amount = copyRef.tg_pr_sum_amount;
-    // copyMain.tg_po_vat_amount = copyRef.tg_pr_vat_amount;
-    // copyMain.tg_po_total_amount = copyRef.tg_pr_total_amount;
-    // copyMain.currency_id = copyRef.currency_id;
-    // copyMain.currency_no = copyRef.currency_no;
-    // copyMain.payment_term_id = copyRef.payment_term_id;
-    // copyMain.payment_term_no_name = copyRef.payment_term_no_name;
-    // copyMain.cost_center_id = copyRef.cost_center_id;
-    // copyMain.type_id = copyRef.type_id;
-    // copyMain.type_name = copyRef.type_name;
-    // copyMain.po_discount = copyRef.pr_discount;
-    // copyMain.vendor_id = copyRef.vendor_id;
     upDateFormValue({ ...data_head, ...copyMain });
   };
   const resetDataRef = () => {
@@ -254,14 +243,23 @@ const PurchaseOrderCreate = (props) => {
     copyMain.cost_center_id = null;
     copyMain.vendor_id = null;
     copyMain.vat_rate = 0;
+    copyMain.po_discount = 0;
     upDateFormValue(copyMain);
     detailDispatch({ type: "SET_DETAIL", payload: initialStateDetail });
     dispatch(reset_po_data());
   };
+  const updateAmount = (data_detail, field, vat_rate, discount) => {
+    const obj = sumArrObj(data_detail, field, vat_rate, data_head.po_discount);
+    headDispatch({
+      type: "CHANGE_HEAD_VALUE",
+      payload: {
+        tg_po_sum_amount: obj.exclude_vat,
+        tg_po_vat_amount: obj.vat,
+        tg_po_total_amount: obj.include_vat,
+      },
+    });
+  };
 
-  // const resetDataRef = () => {
-  //   dispatch(reset_po_data());
-  // };
   console.log(data_head, data_detail);
   return (
     <MainLayout {...config}>
@@ -439,7 +437,7 @@ const PurchaseOrderCreate = (props) => {
             <Text strong>Item Type :</Text>
           </Col>
           <Col span={8} className="text-view">
-            {data_head.type_name}
+            {data_head.type_no_name}
           </Col>
           <Col span={2}></Col>
         </Row>
@@ -456,6 +454,7 @@ const PurchaseOrderCreate = (props) => {
                   detailDispatch={detailDispatch}
                   headDispatch={headDispatch}
                   vat_rate={data_head.vat_rate}
+                  updateAmount={updateAmount}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key={"2"}>
@@ -473,13 +472,50 @@ const PurchaseOrderCreate = (props) => {
             </Tabs>
           </Col>
         </Row>
+
         {tab === "1" ? (
-          <TotalFooter
-            excludeVat={data_head.tg_po_sum_amount}
-            vat={data_head.tg_po_vat_amount}
-            includeVat={data_head.tg_po_total_amount}
-            currency={data_head.currency_no}
-          />
+          <>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={15}></Col>
+
+              <Col span={5} className="text-number">
+                <Text strong>Extended Discount :</Text>
+              </Col>
+              <Col span={3} className="text-number">
+                <InputNumber
+                  name="item_discount"
+                  placeholder="Discount"
+                  value={data_head.po_discount}
+                  min={0.0}
+                  step={5}
+                  precision={3}
+                  defaultValue={0}
+                  {...numberFormat}
+                  onChange={(data) => {
+                    upDateFormValue({ po_discount: data });
+                  }}
+                  onBlur={(data) => {
+                    updateAmount(
+                      data_detail,
+                      "po_detail_total_price",
+                      data_head.vat_rate
+                    );
+                  }}
+                  className="full-width"
+                  size="small"
+                />
+              </Col>
+              <Col span={1} className="text-string">
+                <Text strong> {data_head.currency_no ?? "THB"}</Text>
+              </Col>
+            </Row>
+            <TotalFooter
+              excludeVat={data_head.tg_po_sum_amount}
+              vat={data_head.tg_po_vat_amount}
+              includeVat={data_head.tg_po_total_amount}
+              currency={data_head.currency_no}
+            />
+          </>
         ) : null}
       </div>
       <Comments data={dataComments} />

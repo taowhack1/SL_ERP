@@ -17,7 +17,7 @@ import {
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
 import ModalRemark from "../../components/Modal_Remark";
 import numeral from "numeral";
-import { report_server } from "../../include/js/main_config";
+import { convertDigit, report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 const { Option } = Select;
 const { TextArea } = Input;
@@ -278,12 +278,29 @@ const PurchaseOrderCreate = (props) => {
           </Col>
         </Row>
         {tab === "1" ? (
-          <TotalFooter
-            excludeVat={data_head.tg_po_sum_amount}
-            vat={data_head.tg_po_vat_amount}
-            includeVat={data_head.tg_po_total_amount}
-            currency={data_head.currency_no}
-          />
+          <>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={15}></Col>
+
+              <Col span={5} className="text-number">
+                <Text strong>Extended Discount :</Text>
+              </Col>
+              <Col span={3} className="text-number">
+                <Text className="text-value">
+                  {convertDigit(data_head.po_discount, 3)}
+                </Text>
+              </Col>
+              <Col span={1} className="text-string">
+                <Text strong> {data_head.currency_no ?? "THB"}</Text>
+              </Col>
+            </Row>
+            <TotalFooter
+              excludeVat={data_head.tg_po_sum_amount}
+              vat={data_head.tg_po_vat_amount}
+              includeVat={data_head.tg_po_total_amount}
+              currency={data_head.currency_no}
+            />
+          </>
         ) : null}
       </div>
       <ModalRemark

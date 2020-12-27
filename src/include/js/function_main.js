@@ -54,15 +54,18 @@ export const calSubtotal = (qty, price, discount = 0) => {
   return total - discount;
 };
 
-export const sumArrObj = (arrObj = [], field, vat = 0.07) => {
+export const sumArrObj = (arrObj = [], field, vat = 0.07, discount = 0) => {
   let numbers = [];
-  arrObj &&
-    arrObj.map((line) => {
-      numbers.push(line[field]);
-    });
-  let total = numbers.length
-    ? numbers.reduce((prev, current) => prev + current)
-    : 0;
+  // arrObj &&
+  //   arrObj.map((line) => {
+  //     numbers.push(line[field]);
+  //   });
+  // let total = numbers.length
+  //   ? numbers.reduce((prev, current) => prev + current)
+  //   : 0;
+  let total = arrObj.reduce((total, obj) => total + obj[field], 0);
+  total = total - discount ?? 0;
+  console.log(arrObj, total);
   let vat_amount = total * vat;
   let include_vat = total + vat_amount;
   let summary = {
