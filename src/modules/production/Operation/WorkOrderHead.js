@@ -9,15 +9,39 @@ import { Row, Col, Input, Typography } from "antd";
 import CustomSelect from "../../../components/CustomSelect";
 import { useSelector } from "react-redux";
 import { WOContext } from "./WorkOrderCreate";
+import { getSOReference } from "../../../actions/production/workOrderActions";
+import { get_so_detail } from "../../../actions/purchase/PO_Actions";
 const { Text } = Typography;
 const { TextArea } = Input;
-
 const WorkOrderHead = () => {
-  const { headReducer } = useContext(WOContext);
-  const [state, setState] = useState(headReducer.data);
-  const { data_so_ref } = useSelector(
-    (state) => state.production.operations.workOrder
+  const SOList = useSelector(
+    (state) => state.production.operations.workOrder.workOrder.data_so_ref
   );
+  const { headReducer, readOnly } = useContext(WOContext);
+  const {
+    wo_description,
+    wo_delivery_date,
+    so_id,
+    so_no_description,
+    item_id,
+    item_no_name,
+  } = headReducer;
+  const [state, setState] = useState({
+    wo_description: wo_description,
+    wo_delivery_date: wo_delivery_date,
+    so_id: so_id,
+    so_no_description: so_no_description,
+    item_id: item_id,
+    item_no_name: item_no_name,
+  });
+  const onChange = (data) => {
+    setState({ ...state, ...data });
+  };
+  const Save = (field) => {
+    state[field] !== headReducer.data[field] &&
+      headReducer.onChangeHeadValue(state);
+  };
+  console.log("WorkOrderHead Render..", headReducer.data, state);
   return (
     <>
       <Row className="col-2">
@@ -29,18 +53,17 @@ const WorkOrderHead = () => {
           </h3>
           <Col span={24}>
             <Input
-              name="work_center_description"
+              name="wo_description"
               required
               placeholder={"Description / Job Name."}
               onChange={(e) =>
-                setState({
-                  ...state,
-                  work_center_description: e.target.value,
+                onChange({
+                  wo_description: e.target.value,
                 })
               }
-              value={state.work_center_description}
-              onBlur={() => {
-                headReducer.onChangeHeadValue(state);
+              value={state.wo_description}
+              onBlur={(e) => {
+                Save("wo_description");
               }}
             />
           </Col>
@@ -61,38 +84,36 @@ const WorkOrderHead = () => {
                     placeholder={"SO Document"}
                     name="so_id"
                     field_id="so_id"
-                    field_name="so_no"
-                    value={state.so_no}
-                    data={data_so_ref ?? []}
-                    onChange={(data, option) => {
+                    field_name="so_no_description"
+                    value={state.so_no_description}
+                    data={SOList}
+                    onChange={async (data, option) => {
                       data && data
-                        ? setState({
-                            ...state,
+                        ? onChange({
                             so_id: option.data.so_id,
-                            so_no: option.data.so_no,
+                            so_no_description: option.data.so_no_description,
                             so_detail: option.data.so_detail,
                             item_id: null,
                             item_no_name: null,
                             wo_delivery_date: null,
-                            wo_qty: 0,
+                            wo_qty_produce: 0,
                             uom_id: null,
                             uom_no: null,
                           })
-                        : setState({
-                            ...state,
+                        : onChange({
                             so_id: null,
-                            so_no: null,
+                            so_no_description: null,
                             so_detail: null,
                             item_id: null,
                             item_no_name: null,
                             wo_delivery_date: null,
-                            wo_qty: 0,
+                            wo_qty_produce: 0,
                             uom_id: null,
                             uom_no: null,
                           });
                     }}
                     onBlur={() => {
-                      headReducer.onChangeHeadValue(state);
+                      Save("so_id");
                     }}
                   />
                 </Col>
@@ -130,8 +151,7 @@ const WorkOrderHead = () => {
                     data={state.so_detail ?? []}
                     onChange={(data, option) => {
                       data && data
-                        ? setState({
-                            ...state,
+                        ? onChange({
                             item_id: option.data.item_id,
                             item_no_name: option.data.item_no_name,
                             wo_delivery_date:
@@ -140,8 +160,7 @@ const WorkOrderHead = () => {
                             uom_id: option.data.uom_id,
                             uom_no: option.data.uom_no,
                           })
-                        : setState({
-                            ...state,
+                        : onChange({
                             item_id: null,
                             item_no_name: null,
                             wo_delivery_date: null,
@@ -151,7 +170,7 @@ const WorkOrderHead = () => {
                           });
                     }}
                     onBlur={() => {
-                      headReducer.onChangeHeadValue(state);
+                      Save("item_id");
                     }}
                   />
                 </Col>
@@ -164,4 +183,4 @@ const WorkOrderHead = () => {
   );
 };
 
-export default WorkOrderHead;
+export default React.memo(WorkOrderHead);

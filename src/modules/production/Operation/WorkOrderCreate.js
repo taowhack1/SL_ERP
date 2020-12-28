@@ -13,22 +13,27 @@ import {
   workOrderPKDetailFields,
   workOrderRMDetailFields,
 } from "../config/workOrder";
-import { getAllItems } from "../../../actions/inventory/itemActions";
+import {
+  getAllItems,
+  getFGMaterialList,
+} from "../../../actions/inventory/itemActions";
 import { getSOReference } from "../../../actions/production/workOrderActions";
 import ReducerClass from "../../../include/js/ReducerClass";
 import WorkOrderHead from "./WorkOrderHead";
+import { speadArray2DTo1D } from "../../../include/js/function_main";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
 const { TextArea } = Input;
 
 export const WOContext = React.createContext();
-export const RMContext = React.createContext();
-export const PKContext = React.createContext();
-const headReducer = new ReducerClass(null, null, workOrderFields);
-const RMReducer = new ReducerClass(null, null, workOrderRMDetailFields);
-const PKReducer = new ReducerClass(null, null, workOrderPKDetailFields);
 
 const WorkOrderCreate = (props) => {
+  const headReducer = new ReducerClass(null, null, workOrderFields);
+  const RMReducer = new ReducerClass(null, null, workOrderRMDetailFields);
+  const PKReducer = new ReducerClass(null, null, workOrderPKDetailFields);
+  headReducer.setReducer("object");
+  RMReducer.setReducer("array");
+
   const readOnly = false;
   const authorize = Authorize();
   const history = useHistory();
@@ -37,9 +42,37 @@ const WorkOrderCreate = (props) => {
   const auth = useSelector((state) => state.auth.authData);
   const current_project = useSelector((state) => state.auth.currentProject);
   const dataComments = useSelector((state) => state.log.comment_log);
-  const data_so_ref = useSelector(
-    (state) => state.production.operations.workOrder.workOrder.data_so_ref
-  );
+
+  useEffect(() => {
+    dispatch(getAllItems());
+    dispatch(getSOReference());
+  }, []);
+  useEffect(() => {
+    const { so_id, item_id, wo_qty } = headReducer.data;
+
+    const getMaterial = async () => {
+      const materialDetail = await getFGMaterialList(so_id, item_id, wo_qty);
+      console.log(materialDetail);
+      RMReducer.setDataArray(await materialDetail.item_formula);
+      headReducer.onChangeHeadValue({
+        wo_qty_produce: materialDetail.item_qty_produce,
+        wo_qty_produce_ref: materialDetail.item_qty_produce_ref,
+        branch_id: auth.branch_id,
+        item_id_ref: materialDetail.item_id_ref,
+        user_name: auth.user_name,
+        wo_qty_spare: 0,
+        tg_trans_status_id: 1,
+        uom_no: materialDetail.uom_no,
+      });
+    };
+    so_id && item_id && getMaterial();
+  }, [headReducer.data.item_id]);
+  useEffect(() => {
+    // GET LOG
+    readOnly !== false &&
+      headReducer.data.process_id &&
+      dispatch(get_log_by_id(headReducer.data.process_id));
+  }, [headReducer.data]);
 
   const data =
     props.location && props.location.state ? props.location.state : 0;
@@ -53,8 +86,8 @@ const WorkOrderCreate = (props) => {
       "Home",
       "Operations",
       "Work Order",
-      headReducer.data.work_order_no ? "Edit" : "Create",
-      headReducer.data.work_order_no && headReducer.data.work_order_no,
+      headReducer.data.wo_no ? "Edit" : "Create",
+      headReducer.data.wo_no && headReducer.data.wo_no,
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
@@ -86,62 +119,50 @@ const WorkOrderCreate = (props) => {
     },
   };
 
-  useEffect(() => {
-    dispatch(getAllItems());
-    dispatch(getSOReference());
-  }, []);
-
-  useEffect(() => {
-    // GET LOG
-    headReducer.data.process_id &&
-      dispatch(get_log_by_id(headReducer.data.process_id));
-  }, [headReducer.data]);
-
   const redirect_to_view = (id) => {
     history.push("/production/work_center/view/" + (id ? id : "new"));
   };
 
   const headContextValue = useMemo(() => {
-    console.log("headContextValue");
     return {
       readOnly,
       headReducer,
       RMReducer,
       PKReducer,
     };
-  }, [readOnly, headReducer, RMReducer, PKReducer]);
-  headReducer.setReducer("object");
+  }, [readOnly, headReducer, RMReducer.data, PKReducer]);
   console.log("WorkOrderCreate Render...");
   return (
-    <MainLayout {...config}>
-      <div id="form">
-        <Row className="col-2">
-          <Col span={8}>
-            <h2>
-              <strong>
-                {headReducer.data.work_order_id ? "Edit" : "Create"} Work Order
-                {headReducer.data.work_order_no &&
-                  "#" + headReducer.data.work_order_no}
-              </strong>
-            </h2>
-          </Col>
-          <Col span={12}></Col>
-          <Col span={2}>
-            <Text strong>Create Date :</Text>
-          </Col>
-          <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">
-              {headReducer.data.work_order_created}
-            </Text>
-          </Col>
-        </Row>
-        <WOContext.Provider value={headContextValue}>
+    <WOContext.Provider value={headContextValue}>
+      <MainLayout {...config}>
+        <div id="form">
+          <Row className="col-2">
+            <Col span={8}>
+              <h2>
+                <strong>
+                  {headReducer.data.work_order_id ? "Edit" : "Create"} Work
+                  Order
+                  {headReducer.data.wo_no && "#" + headReducer.data.wo_no}
+                </strong>
+              </h2>
+            </Col>
+            <Col span={12}></Col>
+            <Col span={2}>
+              <Text strong>Create Date :</Text>
+            </Col>
+            <Col span={2} style={{ textAlign: "right" }}>
+              <Text className="text-view">
+                {headReducer.data.work_order_created}
+              </Text>
+            </Col>
+          </Row>
+
           <WorkOrderHead />
           <WorkOrderTabPanel />
-        </WOContext.Provider>
-      </div>
-      <Comments data={dataComments} />
-    </MainLayout>
+        </div>
+        <Comments data={dataComments} />
+      </MainLayout>
+    </WOContext.Provider>
   );
 };
 

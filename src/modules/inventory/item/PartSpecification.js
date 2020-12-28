@@ -20,8 +20,8 @@ const PartSpecification = ({ partId }) => {
   const [workCenterMachine, setWorkCenterMachine] = useState([]);
 
   const [state, setState] = useState({
-    item_part_specification_time:
-      PartReducer.data[partId].item_part_specification_time,
+    item_part_specification_lead_time:
+      PartReducer.data[partId].item_part_specification_lead_time,
     item_part_specification_remark:
       PartReducer.data[partId].item_part_specification_remark,
     item_part_specification_worker:
@@ -44,8 +44,8 @@ const PartSpecification = ({ partId }) => {
 
   useEffect(() => {
     setState({
-      item_part_specification_time:
-        PartReducer.data[partId].item_part_specification_time,
+      item_part_specification_lead_time:
+        PartReducer.data[partId].item_part_specification_lead_time,
       item_part_specification_remark:
         PartReducer.data[partId].item_part_specification_remark,
       item_part_specification_worker:
@@ -273,8 +273,8 @@ const PartSpecification = ({ partId }) => {
                   <Col span={12}>
                     {readOnly ? (
                       <Text className="text-view">
-                        {state.item_part_specification_time
-                          ? state.item_part_specification_time
+                        {state.item_part_specification_lead_time
+                          ? state.item_part_specification_lead_time
                           : "-"}
                       </Text>
                     ) : (
@@ -282,14 +282,14 @@ const PartSpecification = ({ partId }) => {
                         className="full-width"
                         format={"HH:mm"}
                         showNow={false}
-                        name={"item_part_specification_time"}
+                        name={"item_part_specification_lead_time"}
                         placeholder="00:00:00 (HH : mm : ss)"
                         size="small"
                         required
                         value={
-                          state.item_part_specification_time
+                          state.item_part_specification_lead_time
                             ? moment(
-                                state.item_part_specification_time,
+                                state.item_part_specification_lead_time,
                                 "HH:mm:ss"
                               )
                             : ""
@@ -297,7 +297,9 @@ const PartSpecification = ({ partId }) => {
                         onChange={(data) => {
                           const time = moment(data, "HH:mm").format("HH:mm:ss");
                           onChangeValue({
-                            item_part_specification_time: data ? time : null,
+                            item_part_specification_lead_time: data
+                              ? time
+                              : null,
                           });
                         }}
                         onBlur={() => Save()}

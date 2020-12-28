@@ -1,7 +1,7 @@
 import { DatePicker, Row, Col, Tabs, InputNumber } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Text from "antd/lib/typography/Text";
-import React, { useContext, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import moment from "moment";
 import { WOContext } from "./WorkOrderCreate";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
@@ -14,17 +14,31 @@ const { RangePicker } = DatePicker;
 const TabWorkOrderDetail = () => {
   const { headReducer, readOnly } = useContext(WOContext);
   const [state, setState] = useState({
-    wo_qty: headReducer.data.wo_qty,
+    wo_qty_produce: headReducer.data.wo_qty_produce,
     wo_spare_qty: headReducer.data.wo_spare_qty,
     wo_plan_start_date: headReducer.data.wo_plan_start_date,
-    wo_plan_start_date: headReducer.data.wo_plan_start_date,
-    uom_name: headReducer.data.uom_name,
+    wo_plan_end_date: headReducer.data.wo_plan_end_date,
+    uom_no: headReducer.data.uom_no,
   });
+  useEffect(() => {
+    state.wo_qty_produce !== headReducer.data.wo_qty_produce &&
+      setState({
+        wo_qty_produce: headReducer.data.wo_qty_produce,
+        wo_spare_qty: headReducer.data.wo_spare_qty,
+        wo_plan_start_date: headReducer.data.wo_plan_start_date,
+        wo_plan_end_date: headReducer.data.wo_plan_end_date,
+        uom_no: headReducer.data.uom_no,
+      });
+  }, [headReducer.data.wo_qty_produce]);
   function disabledDate(current) {
     // Can not select days before today and today
     return current && current - 1 < moment().subtract(1, "days").endOf("day");
   }
-  console.log("TabWorkOrderDetail", headReducer.data);
+  const Save = (field) => {
+    state[field] !== headReducer.data[field] &&
+      headReducer.onChangeHeadValue(state);
+  };
+  console.log("Work Order Detail...", headReducer.data, state);
   return (
     <Row className="col-2  mt-1" gutter={32}>
       <Col span={12} className="col-border-right">
@@ -37,22 +51,22 @@ const TabWorkOrderDetail = () => {
           <Col span={15} className="text-right">
             <ToggleReadOnlyElement
               readOnly={readOnly}
-              value={convertDigit(state.wo_qty)}
+              value={convertDigit(state.wo_qty_produce)}
             >
               <InputNumber
                 {...numberFormat}
                 min={0}
                 step={1}
                 placeholder={"Qty. to produce"}
-                name={"wo_qty"}
+                name={"wo_qty_produce"}
                 defaultValue={0}
                 className="full-width"
-                value={state.wo_qty}
+                value={state.wo_qty_produce}
                 onChange={(data) => {
-                  setState({ ...state, wo_qty: data });
+                  setState({ ...state, wo_qty_produce: data });
                 }}
-                onBlur={() => {
-                  headReducer.onChangeHeadValue(state);
+                onBlur={(data) => {
+                  Save("wo_qty_produce");
                 }}
               />
             </ToggleReadOnlyElement>
@@ -72,10 +86,10 @@ const TabWorkOrderDetail = () => {
           <Col span={15} className="text-right">
             <ToggleReadOnlyElement
               readOnly={readOnly}
-              value={convertDigit(state.wo_spare_qty)}
+              value={convertDigit(state.wo_qty_spare)}
             >
               <InputNumber
-                name="wo_spare_qty"
+                name="wo_qty_spare"
                 placeholder="Percentage"
                 defaultValue={0.0}
                 min={0.0}
@@ -84,12 +98,12 @@ const TabWorkOrderDetail = () => {
                 parser={(value) => value.replace("%", "")}
                 precision={3}
                 step={1.0}
-                value={state.wo_spare_qty}
+                value={state.wo_qty_spare}
                 onChange={(data) => {
-                  setState({ ...state, wo_spare_qty: data });
+                  setState({ ...state, wo_qty_spare: data });
                 }}
                 onBlur={() => {
-                  headReducer.onChangeHeadValue(state);
+                  Save("wo_qty_spare");
                 }}
                 className="full-width"
               />
@@ -135,7 +149,7 @@ const TabWorkOrderDetail = () => {
                       });
                 }}
                 onBlur={() => {
-                  headReducer.onChangeHeadValue(state);
+                  Save("wo_plan_start_date");
                 }}
                 value={[
                   state.wo_plan_start_date

@@ -22,6 +22,7 @@ import {
   api_item_status,
   api_get_item_list,
   api_get_part_and_formula_all,
+  api_get_fg_material,
 } from "../../include/js/api";
 import axios from "axios";
 import { Alert, message, notification } from "antd";
@@ -577,4 +578,10 @@ export const itemUpdateStatus = (id, status) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const getFGMaterialList = async (so_id, item_id, qty_to_produce) => {
+  return await axios
+    .get(`${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}`)
+    .then((res) => res.data[0]);
 };

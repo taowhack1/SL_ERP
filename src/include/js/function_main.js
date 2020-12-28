@@ -316,3 +316,24 @@ export const getFieldNameById = (dataArrObj = [], id, keyId, keyName) => {
       : null;
   return findData ? findData[keyName] : null;
 };
+
+export const speadArray2DTo1D = () => {
+  const arr2D = [
+    [
+      { id: 0, description: "A" },
+      { id: 1, description: "A" },
+    ],
+    [
+      { id: 2, description: "B" },
+      { id: 3, description: "B" },
+    ],
+    [
+      { id: 5, description: "C" },
+      { id: 7, description: "C" },
+    ],
+  ];
+  const fieldKey = "item_part_description";
+  let newArr = [];
+  arr2D.forEach((arr) => newArr.push(...arr));
+  console.log(sortData(newArr));
+};

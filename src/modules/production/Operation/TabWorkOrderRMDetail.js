@@ -16,17 +16,19 @@ import {
 import CustomTable from "../../../components/CustomTable";
 import ReducerClass from "../../../include/js/ReducerClass";
 import { RMContext, WOContext } from "./WorkOrderCreate";
+import { useSelector } from "react-redux";
 
 const { Text } = Typography;
 
-const TabWorkOrderRMDetail = ({ itemList }) => {
+const TabWorkOrderRMDetail = () => {
   const { RMReducer, readOnly } = useContext(WOContext);
-  RMReducer.setReducer("array");
+  const itemList = useSelector((state) =>
+    state.inventory.master_data.item_list.filter((item) => item.type_id === 1)
+  );
   const inputData = {
     itemList: itemList,
   };
-
-  console.log("TabWorkOrderRMDetail");
+  console.log("RM Detail...", RMReducer.data);
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">

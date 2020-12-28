@@ -5,7 +5,7 @@ const TabWorkOrderRM = ({ itemList }) => {
   console.log("TabWorkOrderRM");
   return (
     <>
-      <TabWorkOrderRMDetail itemList={itemList} />
+      <TabWorkOrderRMDetail />
     </>
   );
 };

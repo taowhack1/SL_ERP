@@ -25,7 +25,6 @@ const updateWorkOrderPKDetail = (id, data_pk_detail) => {
 
 export const getSOReference = () => (dispatch) => {
   axios.get(`${api_wo_so_ref}`, header_config).then((res) => {
-    console.log(res.data);
     dispatch({ type: GET_WO_SO_REF, payload: res.data });
   });
 };

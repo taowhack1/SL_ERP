@@ -24,6 +24,7 @@ class ReducerClass {
     });
   };
   setDataArray = (data = []) => {
+    console.log("setDataArray", data);
     this.dispatch({
       type: "SET_DETAIL",
       payload: data && data.length ? data : [this.initialState],

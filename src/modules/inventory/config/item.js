@@ -525,7 +525,7 @@ export const testData = {
     {
       id: 0,
       item_part_specification_id: null,
-      item_part_specification_time: "01:00:00",
+      item_part_specification_lead_time: "01:00:00",
       item_part_specification_worker: 3,
       item_part_specification_remark: null,
       item_part_sort: 1,
@@ -547,7 +547,7 @@ export const testData = {
     {
       id: 1,
       item_part_specification_id: null,
-      item_part_specification_time: "01:30:00",
+      item_part_specification_lead_time: "01:30:00",
       item_part_specification_worker: 1,
       item_part_specification_remark: null,
       item_part_sort: 2,
@@ -569,7 +569,7 @@ export const testData = {
     {
       id: 2,
       item_part_specification_id: null,
-      item_part_specification_time: "00:30:00",
+      item_part_specification_lead_time: "00:30:00",
       item_part_specification_worker: 2,
       item_part_specification_remark: null,
       item_part_sort: 3,
@@ -738,7 +738,7 @@ export const testData = {
 export const item_part_specification_fields = {
   id: 0,
   item_part_specification_id: null,
-  item_part_specification_time: "00:00:00",
+  item_part_specification_lead_time: "00:00:00",
   item_part_specification_worker: 0,
   item_part_specification_remark: null,
   item_id: null,
