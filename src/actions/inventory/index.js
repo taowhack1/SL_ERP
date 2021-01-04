@@ -40,7 +40,6 @@ export const getMasterDataItem = (user) => async (dispatch) => {
     const get_item = axios.get(api_get_item_list, header_config);
     const get_shelf = axios.get(api_shelf, header_config);
     const get_item_control = axios.get(api_get_item_control, header_config);
-    const get_master_part = axios.get(api_get_master_part, header_config);
     let master_data = {
       item_type: await get_type.then((res) => {
         return res.data[0];
@@ -61,9 +60,6 @@ export const getMasterDataItem = (user) => async (dispatch) => {
         return res.data[0];
       }),
       shelf: await get_shelf.then((res) => {
-        return res.data[0];
-      }),
-      item_part: await get_master_part.then((res) => {
         return res.data[0];
       }),
     };

@@ -9,6 +9,18 @@ class ReducerClass {
     this.initialState = initialState;
     this.commonData = commonData;
   }
+  resetDataObject = () => {
+    this.dispatch({
+      type: "SET_HEAD",
+      payload: this.initialState,
+    });
+  };
+  resetDataArray = () => {
+    this.dispatch({
+      type: "SET_HEAD",
+      payload: [this.initialState],
+    });
+  };
   setReducer = (dataType = "object") => {
     [this.data, this.dispatch] = useReducer(
       reducer,

@@ -52,6 +52,7 @@ import Production from "./modules/production/Production";
 // Operation
 import WorkOrderMain from "./modules/production/Operation/WorkOrderMain";
 import WorkOrderCreate from "./modules/production/Operation/WorkOrderCreate";
+import WorkOrderView from "./modules/production/Operation/WorkOrderView";
 // Master Data
 import WorkCenter from "./modules/production/WorkCenter";
 import WorkCenterCreate from "./modules/production/WorkCenterCreate";
@@ -350,6 +351,16 @@ const App = (props) => {
             <Route exact path="/production/operations/wo/create">
               <WorkOrderCreate />
             </Route>
+            <Route
+              exact
+              path="/production/operations/wo/view/:id"
+              component={WorkOrderView}
+            />
+            <Route
+              exact
+              path="/production/operations/wo/edit/:id"
+              component={WorkOrderCreate}
+            />
 
             {/* PRODUCTION MASTER DATA */}
             <Route exact path="/production/work_center">

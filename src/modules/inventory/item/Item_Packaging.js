@@ -215,7 +215,7 @@ const Packaging = ({
                 <Text>{key + 1}</Text>
               </Col>
               <Col span={8} className="text-string">
-                <Text className="text-left">{line.item_name ?? "-"}</Text>
+                <Text className="text-left">{line.item_no_name ?? "-"}</Text>
               </Col>
               <Col span={3} className="text-number">
                 <Text className="text-right">

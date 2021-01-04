@@ -1,14 +1,22 @@
 import { DatePicker, Row, Col, Tabs, InputNumber } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Text from "antd/lib/typography/Text";
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import moment from "moment";
-import { WOContext } from "./WorkOrderCreate";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
 import ReducerClass from "../../../include/js/ReducerClass";
 import CustomText from "../../../components/CustomText";
 import ToggleReadOnlyElement from "../../../components/ToggleReadOnlyElement";
 import { reducer } from "../reducers";
+import { WOContext } from "../../../include/js/context";
+import { get } from "jquery";
 
 const { RangePicker } = DatePicker;
 const TabWorkOrderDetail = () => {
@@ -18,6 +26,8 @@ const TabWorkOrderDetail = () => {
     wo_spare_qty: headReducer.data.wo_spare_qty,
     wo_plan_start_date: headReducer.data.wo_plan_start_date,
     wo_plan_end_date: headReducer.data.wo_plan_end_date,
+    wo_qty_percent_spare_rm: headReducer.data.wo_qty_percent_spare_rm,
+    wo_qty_percent_spare_pk: headReducer.data.wo_qty_percent_spare_pk,
     uom_no: headReducer.data.uom_no,
   });
   useEffect(() => {
@@ -27,6 +37,8 @@ const TabWorkOrderDetail = () => {
         wo_spare_qty: headReducer.data.wo_spare_qty,
         wo_plan_start_date: headReducer.data.wo_plan_start_date,
         wo_plan_end_date: headReducer.data.wo_plan_end_date,
+        wo_qty_percent_spare_rm: headReducer.data.wo_qty_percent_spare_rm,
+        wo_qty_percent_spare_pk: headReducer.data.wo_qty_percent_spare_pk,
         uom_no: headReducer.data.uom_no,
       });
   }, [headReducer.data.wo_qty_produce]);
@@ -38,7 +50,7 @@ const TabWorkOrderDetail = () => {
     state[field] !== headReducer.data[field] &&
       headReducer.onChangeHeadValue(state);
   };
-  console.log("Work Order Detail...", headReducer.data, state);
+  console.log(headReducer.data);
   return (
     <Row className="col-2  mt-1" gutter={32}>
       <Col span={12} className="col-border-right">
@@ -80,16 +92,16 @@ const TabWorkOrderDetail = () => {
         <Row className="col-2 row-margin-vertical">
           <Col span={6}>
             <CustomText label strong readOnly={readOnly}>
-              Qty. To Spare (%) :
+              RM. To Spare (%) :
             </CustomText>
           </Col>
           <Col span={15} className="text-right">
             <ToggleReadOnlyElement
               readOnly={readOnly}
-              value={convertDigit(state.wo_qty_spare)}
+              value={convertDigit(state.wo_qty_percent_spare_rm)}
             >
               <InputNumber
-                name="wo_qty_spare"
+                name="wo_qty_percent_spare_rm"
                 placeholder="Percentage"
                 defaultValue={0.0}
                 min={0.0}
@@ -98,12 +110,48 @@ const TabWorkOrderDetail = () => {
                 parser={(value) => value.replace("%", "")}
                 precision={3}
                 step={1.0}
-                value={state.wo_qty_spare}
+                value={state.wo_qty_percent_spare_rm}
                 onChange={(data) => {
-                  setState({ ...state, wo_qty_spare: data });
+                  setState({ ...state, wo_qty_percent_spare_rm: data });
                 }}
                 onBlur={() => {
-                  Save("wo_qty_spare");
+                  Save("wo_qty_percent_spare_rm");
+                }}
+                className="full-width"
+              />
+            </ToggleReadOnlyElement>
+          </Col>
+          <Col span={3} className="text-right">
+            <CustomText strong>{"%"}</CustomText>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={6}>
+            <CustomText label strong readOnly={readOnly}>
+              PK To Spare (%) :
+            </CustomText>
+          </Col>
+          <Col span={15} className="text-right">
+            <ToggleReadOnlyElement
+              readOnly={readOnly}
+              value={convertDigit(state.wo_qty_percent_spare_pk)}
+            >
+              <InputNumber
+                name="wo_qty_percent_spare_pk"
+                placeholder="Percentage"
+                defaultValue={0.0}
+                min={0.0}
+                max={100.0}
+                formatter={(value) => `${value}%`}
+                parser={(value) => value.replace("%", "")}
+                precision={3}
+                step={1.0}
+                value={state.wo_qty_percent_spare_pk}
+                onChange={(data) => {
+                  setState({ ...state, wo_qty_percent_spare_pk: data });
+                }}
+                onBlur={() => {
+                  Save("wo_qty_percent_spare_pk");
                 }}
                 className="full-width"
               />
@@ -122,14 +170,11 @@ const TabWorkOrderDetail = () => {
             </CustomText>
           </Col>
           <Col span={18}>
-            <ToggleReadOnlyElement
-              readOnly={readOnly}
-              value={() => {
-                const start = state.wo_plan_start_date ?? " ";
-                const end = state.wo_plan_end_date ?? " ";
-                return start + " - " + end;
-              }}
-            >
+            {readOnly ? (
+              <Text className="text-value text-left">
+                {state.wo_plan_start_date + " - " + state.wo_plan_end_date}
+              </Text>
+            ) : (
               <RangePicker
                 format={"DD/MM/YYYY"}
                 name="qn_exp_date"
@@ -160,7 +205,35 @@ const TabWorkOrderDetail = () => {
                     : "",
                 ]}
               />
-            </ToggleReadOnlyElement>
+            )}
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={6}>
+            <Text className="require" strong>
+              <span className="require">* </span>
+              RM Lead Time (days):
+            </Text>
+          </Col>
+          <Col span={18}>
+            <Text className="text-left">
+              {headReducer.data.wo_lead_time_day_rm +
+                headReducer.data.wo_lead_time_day_rm_qa}
+            </Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={6}>
+            <Text className="require" strong>
+              <span className="require">* </span>
+              PK Lead Time (days):
+            </Text>
+          </Col>
+          <Col span={18}>
+            <Text className="text-left">
+              {headReducer.data.wo_lead_time_day_pk +
+                headReducer.data.wo_lead_time_day_pk_qa}
+            </Text>
           </Col>
         </Row>
       </Col>

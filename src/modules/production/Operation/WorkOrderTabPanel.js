@@ -1,21 +1,13 @@
-import { DatePicker, Row, Col, Tabs, InputNumber } from "antd";
-import TextArea from "antd/lib/input/TextArea";
-import Text from "antd/lib/typography/Text";
-import React, { useContext, useMemo } from "react";
-import moment from "moment";
+import { Row, Col, Tabs } from "antd";
+import React, { useContext } from "react";
 import TabWorkOrderDetail from "./TabWorkOrderDetail";
 import TabWorkOrderRM from "./TabWorkOrderRM";
-import TabWorkOrderPK from "./TabWorkOrderPK";
-import { useSelector } from "react-redux";
 import TabWorkOrderPKDetail from "./TabWorkOrderPKDetail";
-import { WOContext } from "./WorkOrderCreate";
 import TabWorkOrderRemark from "./TabWorkOrderRemark";
+import { WOContext } from "../../../include/js/context";
 
 const WorkOrderTabPanel = () => {
-  const itemList = useSelector(
-    (state) => state.inventory.master_data.item_list
-  );
-  const getItemList = useMemo(() => itemList, [itemList]);
+  const { readOnly } = useContext(WOContext);
   console.log("WorkOrderTabPanel");
   return (
     <Row className="col-2">
@@ -24,7 +16,7 @@ const WorkOrderTabPanel = () => {
           <Tabs.TabPane
             tab={
               <span className="tab_pane">
-                <span className="require">* </span>
+                {!readOnly && <span className="require">* </span>}
                 {"Detail"}
               </span>
             }
@@ -35,28 +27,24 @@ const WorkOrderTabPanel = () => {
           <Tabs.TabPane
             tab={
               <span className="tab_pane">
-                <span className="require">* </span>
+                {!readOnly && <span className="require">* </span>}
                 {"Raw Material"}
               </span>
             }
             key={"2"}
           >
-            <TabWorkOrderRM
-              itemList={getItemList.filter((item) => item.type_id === 1)}
-            />
+            <TabWorkOrderRM />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={
               <span className="tab_pane">
-                <span className="require">* </span>
+                {!readOnly && <span className="require">* </span>}
                 {"Packaging"}
               </span>
             }
             key={"3"}
           >
-            <TabWorkOrderPKDetail
-              itemList={getItemList.filter((item) => item.type_id === 2)}
-            />
+            <TabWorkOrderPKDetail />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={<span className="tab_pane">{"Notes"}</span>}

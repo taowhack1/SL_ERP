@@ -14,24 +14,30 @@ import SearchTable from "../../../components/SearchTable";
 import { item_show_columns } from "../../inventory/config/item";
 import { work_order_columns } from "../config/workOrder";
 import WorkOrderSearchTool from "./WorkOrderSearchTool";
+import {
+  getAllWorkOrder,
+  getWorkOrderByID,
+} from "../../../actions/production/workOrderActions";
 const WorkOrderMain = (props) => {
+  const dispatch = useDispatch();
+
   const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
   const auth = useSelector((state) => state.auth.authData);
   const current_menu = useSelector((state) => state.auth.currentMenu);
-  const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   const [loading, setLoading] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
 
-  const dataItems = useSelector(
-    (state) => state.inventory.master_data.item_list
+  const { workOrderList } = useSelector(
+    (state) => state.production.operations.workOrder
   );
-  const [items, setItems] = useState(dataItems);
+  const [stateWO, setStateWO] = useState(workOrderList);
+
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -41,7 +47,6 @@ const WorkOrderMain = (props) => {
     breadcrumb: ["Home", "Operations", "Work Order"],
     search: false,
     create: "/production/operations/wo/create",
-    // buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     buttonAction: ["Create"],
     edit: {},
     disabledEditBtn: !rowClick,
@@ -50,48 +55,55 @@ const WorkOrderMain = (props) => {
       console.log("Cancel");
     },
   };
-  const onChangeSeach = ({ type_id, category_id, search_text }) => {
-    console.log("search_text", search_text);
-    let search_data = dataItems;
+  const onChangeSeach = ({
+    wo_id,
+    item_id,
+    wo_plan_start_date,
+    wo_plan_end_date,
+    wo_due_date_start,
+    wo_due_date_end,
+  }) => {
+    let search_data = workOrderList;
 
-    if (type_id) {
-      category_id
-        ? (search_data = search_data.filter(
-            (item) => item.category_id === category_id
-          ))
-        : (search_data = search_data.filter(
-            (item) => item.type_id === type_id
-          ));
-    }
-    setItems(
-      search_data.filter(
-        (item) =>
-          item.item_name.indexOf(search_text) >= 0 ||
-          item.item_no.indexOf(search_text) >= 0
-      )
+    console.log(
+      wo_id,
+      item_id,
+      wo_plan_start_date,
+      wo_plan_end_date,
+      wo_due_date_start,
+      wo_due_date_end
     );
+    if (wo_id) {
+      search_data = search_data.filter((data) => data.wo_id === wo_id);
+    }
+    if (item_id) {
+      search_data = search_data.filter((data) => data.item_id === item_id);
+    }
+    if (wo_plan_start_date) {
+      search_data = search_data.filter(
+        (data) =>
+          data.wo_plan_start_date >= wo_plan_start_date &&
+          data.wo_plan_end_date <= wo_plan_end_date
+      );
+    }
+    if (wo_due_date_start) {
+      search_data = search_data.filter(
+        (data) =>
+          data.wo_due_date >= wo_due_date_start &&
+          data.wo_due_date <= wo_due_date_end
+      );
+    }
+    setStateWO(search_data);
   };
 
   useEffect(() => {
-    dispatch(getAllItems());
+    dispatch(getAllWorkOrder(auth.user_name));
   }, []);
-
   useEffect(() => {
-    setItems(dataItems);
-  }, [dataItems.length]);
-
-  useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      return () => {
-        clearTimeout();
-      };
-    }, 1200);
-  }, [items]);
-
+    setStateWO(workOrderList);
+  }, [workOrderList.length]);
   const redirect_to_view = (id) => {
-    history.push("/inventory/items/view/" + (id ? id : "new"));
+    history.push("wo/view/" + (id ? id : "new"));
   };
 
   return (
@@ -105,48 +117,11 @@ const WorkOrderMain = (props) => {
               )}
               loading={loading}
               columns={work_order_columns}
-              dataSource={[
-                {
-                  work_order_no: "WO201200001",
-                  work_order_source: "SO201200001",
-                  item_no_name:
-                    "[ 401SCME01900 ] DERMACARE BY POSH NIACINAMIDE ANTIBLEMISH FACIAL SERUM",
-                  work_order_job_name: "TEST CREATE WORK ORDER 1",
-                  work_order_plan_date_start: "16/12/2020",
-                  work_order_plan_date_end: "26/12/2020",
-                  work_order_deadline_date: "30/12/2020",
-                  work_order_qty: 120,
-                  uom_name: "Gram",
-                },
-                {
-                  work_order_no: "WO201200002",
-                  work_order_source: "SO201200002",
-                  item_no_name:
-                    "[ 401SCME01900 ] DERMACARE BY POSH NIACINAMIDE ANTIBLEMISH FACIAL SERUM",
-                  work_order_job_name: "TEST CREATE WORK ORDER 2",
-                  work_order_plan_date_start: "03/01/2021",
-                  work_order_plan_date_end: "16/01/2021",
-                  work_order_deadline_date: "30/01/2021",
-                  work_order_qty: 100,
-                  uom_name: "Kilogram",
-                },
-                {
-                  work_order_no: "WO201200003",
-                  work_order_source: "SO201200003",
-                  item_no_name:
-                    "[ 401SCME01900 ] DERMACARE BY POSH NIACINAMIDE ANTIBLEMISH FACIAL SERUM",
-                  work_order_job_name: "TEST CREATE WORK ORDER 3",
-                  work_order_plan_date_start: "12/01/2021",
-                  work_order_plan_date_end: "18/01/2021",
-                  work_order_deadline_date: "31/01/2021",
-                  work_order_qty: 10,
-                  uom_name: "Pieces",
-                },
-              ]}
+              dataSource={stateWO}
               onChange={onChange}
               bordered
               size="small"
-              rowKey="work_order_id"
+              rowKey="wo_id"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
@@ -156,10 +131,10 @@ const WorkOrderMain = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    keepLog.keep_log_action(record.item_no);
+                    keepLog.keep_log_action(record.wo_no);
                     dispatch(
-                      get_item_by_id(
-                        record.item_id,
+                      getWorkOrderByID(
+                        record.wo_id,
                         auth.user_name,
                         redirect_to_view
                       )

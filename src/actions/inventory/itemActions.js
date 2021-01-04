@@ -580,8 +580,20 @@ export const itemUpdateStatus = (id, status) => {
   }
 };
 
-export const getFGMaterialList = async (so_id, item_id, qty_to_produce) => {
+export const getFGMaterialList = async (
+  so_id,
+  item_id,
+  qty_to_produce,
+  wo_qty_percent_spare_rm,
+  wo_qty_percent_spare_pk
+) => {
+  // so_id, item_id, item_qty_produce, wo_qty_percent_spare_rm, wo_qty_percent_spare_pk
+  console.log(
+    `${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}&${wo_qty_percent_spare_rm}&${wo_qty_percent_spare_pk}`
+  );
   return await axios
-    .get(`${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}`)
+    .get(
+      `${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}&${wo_qty_percent_spare_rm}&${wo_qty_percent_spare_pk}`
+    )
     .then((res) => res.data[0]);
 };

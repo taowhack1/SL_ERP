@@ -82,8 +82,8 @@ const TabPackaging = ({
             <Col span={14}>
               {readOnly ? (
                 <Text className="text-view">
-                  {data_head.item_packaging_time
-                    ? data_head.item_packaging_time
+                  {data_head.item_packaging_lead_time
+                    ? data_head.item_packaging_lead_time
                     : "-"}
                 </Text>
               ) : (
@@ -91,18 +91,18 @@ const TabPackaging = ({
                   className="full-width"
                   format={"HH:mm:ss"}
                   showNow={false}
-                  name={"item_packaging_time"}
+                  name={"item_packaging_lead_time"}
                   placeholder="00:00:00 (HH : mm : ss)"
                   required
                   value={
-                    data_head.item_packaging_time
-                      ? moment(data_head.item_packaging_time, "HH:mm:ss")
+                    data_head.item_packaging_lead_time
+                      ? moment(data_head.item_packaging_lead_time, "HH:mm:ss")
                       : ""
                   }
                   onChange={(data) => {
                     const time = moment(data, "HH:mm:ss").format("HH:mm:ss");
                     upDateFormValue({
-                      item_packaging_time: data ? time : null,
+                      item_packaging_lead_time: data ? time : null,
                     });
                   }}
                 />

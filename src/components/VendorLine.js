@@ -127,10 +127,10 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
                   precision={0}
                   style={{ width: "100%" }}
                   disabled={0}
-                  name="item_vendor_lead_time"
-                  value={line.item_vendor_lead_time}
+                  name="item_vendor_lead_time_day"
+                  value={line.item_vendor_lead_time_day}
                   onChange={(data) =>
-                    onChangeValue(line.id, { item_vendor_lead_time: data })
+                    onChangeValue(line.id, { item_vendor_lead_time_day: data })
                   }
                   size="small"
                 />
@@ -248,7 +248,7 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
                 <Text>{line.vendor_no_name ?? "-"}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{line.item_vendor_lead_time ?? "-"}</Text>
+                <Text>{line.item_vendor_lead_time_day ?? "-"}</Text>
               </Col>
               <Col span={3} className="text-number">
                 <Text>{convertDigit(line.item_vendor_min_qty) ?? "-"}</Text>

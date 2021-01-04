@@ -41,8 +41,7 @@ export const initialState = {
     workOrder: {
       workOrder: {
         data_head: {},
-        data_rm_detail: [],
-        data_pk_detail: [],
+        data_material: [],
         data_so_ref: [],
       },
       workOrderList: [],
@@ -74,6 +73,17 @@ export default (state = initialState, action) => {
           },
         },
       };
+    case GET_ALL_WORK_ORDER:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          workOrder: {
+            ...state.operations.workOrder,
+            workOrderList: action.payload,
+          },
+        },
+      };
     case GET_WORK_ORDER_BY_ID:
       return {
         ...state,
@@ -81,7 +91,10 @@ export default (state = initialState, action) => {
           ...state.operations,
           workOrder: {
             ...state.operations.workOrder,
-            workOrder: action.payload,
+            workOrder: {
+              ...state.operations.workOrder.workOrder,
+              ...action.payload,
+            },
           },
         },
       };

@@ -25,11 +25,13 @@ const TabItemQA = ({
               <Space size={24}>
                 {readOnly ? (
                   <Text className="text-view">
-                    {data_head.item_qa_day ? data_head.item_qa_day : "-"}
+                    {data_head.item_qa_lead_time_day
+                      ? data_head.item_qa_lead_time_day
+                      : "-"}
                   </Text>
                 ) : (
                   <InputNumber
-                    name="item_qa_day"
+                    name="item_qa_lead_time_day"
                     placeholder={"Day"}
                     title="Amount of day"
                     min={0}
@@ -37,10 +39,10 @@ const TabItemQA = ({
                     precision={0}
                     style={{ width: "150px" }}
                     disabled={0}
-                    value={data_head.item_qa_day}
+                    value={data_head.item_qa_lead_time_day}
                     onChange={(data) =>
                       upDateFormValue({
-                        item_qa_day: data,
+                        item_qa_lead_time_day: data,
                       })
                     }
                   />
@@ -48,7 +50,9 @@ const TabItemQA = ({
                 <Text strong> Day </Text>
                 {readOnly ? (
                   <Text className="text-view">
-                    {data_head.item_qa_time ? data_head.item_qa_time : "-"}
+                    {data_head.item_qa_lead_time
+                      ? data_head.item_qa_lead_time
+                      : "-"}
                   </Text>
                 ) : (
                   <TimePicker
@@ -56,20 +60,20 @@ const TabItemQA = ({
                     format={"HH:mm"}
                     showNow={false}
                     minuteStep={15}
-                    name={"item_qa_time"}
+                    name={"item_qa_lead_time"}
                     style={{ width: "150px" }}
                     placeholder="00:00"
                     required
                     value={
-                      data_head.item_qa_time
-                        ? moment(data_head.item_qa_time, "HH:mm:ss")
+                      data_head.item_qa_lead_time
+                        ? moment(data_head.item_qa_lead_time, "HH:mm:ss")
                         : ""
                     }
                     onChange={(data) => {
                       const time = moment(data, "HH:mm").format("HH:mm:ss");
                       console.log(time);
                       upDateFormValue({
-                        item_qa_time: data ? time : null,
+                        item_qa_lead_time: data ? time : null,
                       });
                     }}
                   />

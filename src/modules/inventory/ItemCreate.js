@@ -218,7 +218,7 @@ const ItemCreate = (props) => {
       const validate = validateFormHead(data_head, item_require_fields);
       if (PartReducer.data.length > 1 && formulaPercent !== 100) {
         message.warning({
-          content: "Error !! Please check Bulk Formula %(W/W).",
+          content: "Please check Bulk Formula %(W/W) !!.",
           key,
           duration: 4,
         });

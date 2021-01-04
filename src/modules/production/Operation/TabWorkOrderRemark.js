@@ -1,7 +1,7 @@
 import TextArea from "antd/lib/input/TextArea";
 import Text from "antd/lib/typography/Text";
 import React, { useContext, useState } from "react";
-import { WOContext } from "./WorkOrderCreate";
+import { WOContext } from "../../../include/js/context";
 
 const TabWorkOrderRemark = () => {
   const { headReducer, readOnly } = useContext(WOContext);

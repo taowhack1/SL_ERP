@@ -63,7 +63,7 @@ export const item_fields = {
   item_cost: 0,
   item_barcode: null,
   item_weight: 0,
-  item_mfd_leadtime: 0,
+  item_mfd_lead_time_day: 0,
   item_min: 0,
   item_max: 0,
   item_customer_run_no: "SRL",
@@ -105,15 +105,15 @@ export const item_fields = {
   item_pre_run_no: ["-", "--", "SRL", "A", "-----"],
   customer_id: 1,
   customer_no_name: "[ CUS0001 ] Siri Laboratories Co., Ltd.",
-  item_qa_day: 0,
-  item_qa_time: null,
-  item_packaging_time: null,
+  item_qa_lead_time_day: 0,
+  item_qa_lead_time: null,
+  item_packaging_lead_time: null,
   commit: 1,
 };
 
 export const item_detail_fields = {
   id: null,
-  item_vendor_lead_time: 0,
+  item_vendor_lead_time_day: 0,
   item_vendor_min_qty: 0,
   item_vendor_price: 0,
   vendor_id: null,
@@ -174,7 +174,7 @@ export const item_require_fields = [
 ];
 export const item_vendor_require_fields = [
   "vendor_id",
-  "item_vendor_lead_time",
+  "item_vendor_lead_time_day",
   "item_vendor_min_qty",
   "item_vendor_price",
   "uom_id",

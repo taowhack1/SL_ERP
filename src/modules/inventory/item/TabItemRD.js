@@ -45,7 +45,7 @@ const TabItemRD = ({
         >
           <Row className="col-2 row-margin-vertical">
             <Col span={7}>
-              <Text strong>Item trade name</Text>
+              <Text strong>INCI name</Text>
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -55,7 +55,7 @@ const TabItemRD = ({
               ) : (
                 <Input
                   name="item_name_trade"
-                  placeholder="Item trade name"
+                  placeholder="INCI name"
                   onChange={(e) =>
                     upDateFormValue({
                       item_name_trade: e.target.value,

@@ -15,8 +15,8 @@ import {
 } from "../config/workOrder";
 import CustomTable from "../../../components/CustomTable";
 import ReducerClass from "../../../include/js/ReducerClass";
-import { RMContext, WOContext } from "./WorkOrderCreate";
 import { useSelector } from "react-redux";
+import { WOContext } from "../../../include/js/context";
 
 const { Text } = Typography;
 
@@ -28,7 +28,7 @@ const TabWorkOrderRMDetail = () => {
   const inputData = {
     itemList: itemList,
   };
-  console.log("RM Detail...", RMReducer.data);
+  console.log(RMReducer.data);
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
@@ -54,7 +54,7 @@ const TabWorkOrderRMDetail = () => {
         )}
         dataSource={RMReducer.data}
         readOnly={readOnly}
-        onAdd={RMReducer.addNewRow}
+        // onAdd={RMReducer.addNewRow}
       />
     </>
   );

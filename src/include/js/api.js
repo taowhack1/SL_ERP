@@ -122,6 +122,7 @@ export const api_work_center_category = `${api_server}/api/list/work_center_cate
 export const api_work_center_capacity_categ = `${api_server}/api/list/capacity_category`;
 
 // Work Order
-export const api_work_order = `${api_server}/`;
+export const api_work_order = `${api_server}/api/production/wo`;
+export const api_work_order_detail = `${api_server}/api/production/wo_detail`;
 export const api_wo_so_ref = `${api_server}/api/list/so`;
 export const api_get_fg_material = `${api_server}/api/production/wo/calculate`;

@@ -37,13 +37,8 @@ import CustomSelect from "../../components/CustomSelect";
 import moment from "moment";
 import { get } from "jquery";
 import { get_location_shelf_by_item_id } from "../../actions/inventory";
-import { convertDigit } from "../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../include/js/main_config";
 const { Text } = Typography;
-const numberFormat = {
-  precision: 3,
-  formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-  parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
-};
 
 const ReceiveDetail = ({
   readOnly,
