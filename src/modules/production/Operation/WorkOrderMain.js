@@ -18,6 +18,7 @@ import {
   getAllWorkOrder,
   getWorkOrderByID,
 } from "../../../actions/production/workOrderActions";
+import { reset_comments } from "../../../actions/comment&log";
 const WorkOrderMain = (props) => {
   const dispatch = useDispatch();
 
@@ -98,6 +99,7 @@ const WorkOrderMain = (props) => {
 
   useEffect(() => {
     dispatch(getAllWorkOrder(auth.user_name));
+    dispatch(reset_comments());
   }, []);
   useEffect(() => {
     setStateWO(workOrderList);

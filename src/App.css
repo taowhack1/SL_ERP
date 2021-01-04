@@ -433,6 +433,7 @@ span.require {
 .tag-status {
   width: 100%;
   text-align: center;
+  overflow: hidden;
 }
 span.ant-typography .server-status,
 span.server-status {

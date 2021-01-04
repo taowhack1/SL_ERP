@@ -54,13 +54,14 @@ import { getAllMachine } from "../../actions/production/machineActions";
 import ReducerClass from "../../include/js/ReducerClass";
 import { ItemContext } from "../../include/js/context";
 const { Text } = Typography;
-const initialStateHead = item_fields;
-const initialStateDetail = [item_detail_fields];
-const initialStateQA = [item_qa_detail_fields];
-const initialStatePackaging = [item_packaging_detail_fields];
-const initialStateWeight = item_weight_detail;
 
 const ItemCreate = (props) => {
+  const initialStateHead = item_fields;
+  const initialStateDetail = [item_detail_fields];
+  const initialStateQA = [item_qa_detail_fields];
+  const initialStatePackaging = [item_packaging_detail_fields];
+  const initialStateWeight = item_weight_detail;
+
   const readOnly = false;
   const history = useHistory();
   const authorize = Authorize();
@@ -327,6 +328,8 @@ const ItemCreate = (props) => {
     data_file,
     updateFile,
   ]);
+  console.log("initialStateHead ", initialStateHead);
+  console.log("Item Pre-run :", data_head.item_pre_run_no);
   return (
     <ItemContext.Provider value={ContextValue}>
       <MainLayout {...config}>

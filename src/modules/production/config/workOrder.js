@@ -225,33 +225,16 @@ export const workOrderRMColumns = (
       return <Text className="text-value ">{value ?? "-"}</Text>;
     },
   },
-  // !readOnly && {
-  //   title: (
-  //     <Text strong>
-  //       <EllipsisOutlined />
-  //     </Text>
-  //   ),
-  //   align: "center",
-  //   width: "5%",
-  //   render: (value, record, index) => {
-  //     if (readOnly) {
-  //       return null;
-  //     } else {
-  //       return (
-  //         <Popconfirm
-  //           onConfirm={() => {
-  //             onDelete(record.id);
-  //           }}
-  //           title="Are you sure you want to delete this row？"
-  //           okText="Yes"
-  //           cancelText="No"
-  //         >
-  //           <DeleteTwoTone />
-  //         </Popconfirm>
-  //       );
-  //     }
-  //   },
-  // },
+  {
+    title: <div className="text-center">Lead-Time (days)</div>,
+    align: "center",
+    width: "10%",
+    render: (value, record, index) => {
+      return (
+        record.wo_detail_lead_time_day_pr + record.wo_detail_lead_time_day_qa
+      );
+    },
+  },
 ];
 
 export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
@@ -360,6 +343,16 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
       return <Text className="text-value ">{value ?? "-"}</Text>;
     },
   },
+  {
+    title: <div className="text-center">Lead-Time (days)</div>,
+    align: "center",
+    width: "10%",
+    render: (value, record, index) => {
+      return (
+        record.wo_detail_lead_time_day_pr + record.wo_detail_lead_time_day_qa
+      );
+    },
+  },
 ];
 
 export const workOrderRMDetailFields = {
@@ -371,6 +364,8 @@ export const workOrderRMDetailFields = {
   item_qty: 0,
   item_cal_qty: 0,
   item_on_stock_qty: 0,
+  wo_detail_lead_time_day_qa: 0,
+  wo_detail_lead_time_day_pr: 0,
 };
 
 export const workOrderPKDetailFields = {
@@ -382,4 +377,6 @@ export const workOrderPKDetailFields = {
   item_qty: 0,
   item_cal_qty: 0,
   item_on_stock_qty: 0,
+  wo_detail_lead_time_day_qa: 0,
+  wo_detail_lead_time_day_pr: 0,
 };

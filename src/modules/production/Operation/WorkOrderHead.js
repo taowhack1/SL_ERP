@@ -158,7 +158,8 @@ const WorkOrderHead = () => {
                               item_id: option.data.item_id,
                               item_no_name: option.data.item_no_name,
                               wo_due_date: option.data.so_detail_delivery_date,
-                              wo_qty_produce: option.data.so_detail_qty,
+                              wo_qty_produce:
+                                option.data.tg_so_detail_qty_balance,
                               uom_id: option.data.uom_id,
                               uom_no: option.data.uom_no,
                             })

@@ -12,6 +12,7 @@ export const get_log_by_id = (process_id) => async (dispatch) => {
     `${api_comments_log}/${process_id}`,
     header_config
   );
+  console.log("Log : ", res);
   if (res.data[0].length) {
     dispatch({
       type: GET_LOG_BY_ID,
