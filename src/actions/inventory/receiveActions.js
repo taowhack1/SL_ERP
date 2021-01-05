@@ -20,10 +20,12 @@ import {
 import { message } from "antd";
 
 export const get_receive_list = (user_name) => async (dispatch) => {
-  axios.get(`${api_receive}/all/${user_name}`, header_config).then((res) => {
-    console.log("GET_RECEIVE_LIST");
-    dispatch({ type: GET_RECEIVE_LIST, payload: res.data[0] });
-  });
+  return await axios
+    .get(`${api_receive}/all/${user_name}`, header_config)
+    .then((res) => {
+      console.log("GET_RECEIVE_LIST");
+      dispatch({ type: GET_RECEIVE_LIST, payload: res.data[0] });
+    });
 };
 
 export const reset_receive = () => async (dispatch) => {
@@ -31,7 +33,7 @@ export const reset_receive = () => async (dispatch) => {
 };
 
 export const get_po_receive_list = () => async (dispatch) => {
-  axios
+  return await axios
     .get(api_receive_get_ref_po_head, header_config)
     .then((res) => {
       console.log("GET_PO_RECEIVE_LIST");
@@ -43,7 +45,7 @@ export const get_po_receive_list = () => async (dispatch) => {
 };
 
 export const get_po_detail_ref = (po_id) => async (dispatch) => {
-  axios
+  return await axios
     .get(`${api_receive_get_ref_po_detail}/${po_id}`, header_config)
     .then((res) => {
       console.log("GET_PO_DETAIL_REF");
@@ -82,7 +84,7 @@ export const get_receive_by_id = (id, user_name) => async (dispatch) => {
               .get(`${api_receive_sub_detail}/${id}`, header_config)
               .then((res) => {
                 const sub_detail = res.data[0];
-                details.map((detail) => {
+                details.forEach((detail) => {
                   detail.receive_sub_detail = sortData(
                     sub_detail.filter(
                       (sub) =>
@@ -152,8 +154,8 @@ export const create_receive = (
               const data_detail = res.data[0];
               let data_sub_detail = [];
 
-              data_detail.map((detail, index) => {
-                temp_sub_detail[index].map((sub) => {
+              data_detail.forEach((detail, index) => {
+                temp_sub_detail[index].forEach((sub) => {
                   sub.receive_detail_id = detail.receive_detail_id;
                   data_sub_detail.push(sub);
                 });

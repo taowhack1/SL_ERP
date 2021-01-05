@@ -308,7 +308,7 @@ const PartSpecification = ({ partId }) => {
                   </Col>
                   <Col span={5}>
                     <Text strong className="pd-left-1">
-                      Hour
+                      Minutes
                     </Text>
                   </Col>
                 </Row>

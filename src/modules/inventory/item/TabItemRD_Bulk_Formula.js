@@ -80,7 +80,9 @@ const TabBulkFormula = () => {
               <Text
                 strong
                 type={
-                  convertDigit(formulaPercent, 4) != 100 ? "danger" : "success"
+                  convertDigit(formulaPercent, 4) !== convertDigit(100, 4)
+                    ? "danger"
+                    : "success"
                 }
               >
                 {convertDigit(formulaPercent, 4)}

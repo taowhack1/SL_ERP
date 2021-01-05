@@ -9,42 +9,36 @@ import {
   get_vendor_by_id,
 } from "../../actions/purchase/vendorActions";
 import { vendor_columns } from "./config/vendor";
-import {
-
-  get_vendor_payment_term_list,
-} from "../../actions/accounting";
+import { get_vendor_payment_term_list } from "../../actions/accounting";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 const Vendor = (props) => {
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
- 
+
   const [, setRowClick] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
- 
+
   const dispatch = useDispatch();
   let vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const [data, setData] = useState(vendors);
   const [loading, setLoading] = useState(false);
-  useEffect((dispatch) => {
+  useEffect(() => {
     const getMasterData = () => {
       dispatch(get_all_vendor());
       dispatch(get_vendor_payment_term_list());
     };
     getMasterData();
   }, []);
-  useEffect(
-    (vendors) => {
-      const setStateData = () => {
-        setData(vendors);
-      };
-      setStateData();
-    },
-    [vendors.length]
-  );
+  useEffect(() => {
+    const setStateData = () => {
+      setData(vendors);
+    };
+    setStateData();
+  }, [vendors.length]);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
