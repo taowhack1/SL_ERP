@@ -48,5 +48,7 @@ export const reducer = (state, action) => {
       return action.payload;
     case "CHANGE_HEAD_VALUE":
       return { ...state, ...action.payload };
+    default:
+      return state;
   }
 };

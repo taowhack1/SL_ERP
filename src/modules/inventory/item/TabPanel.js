@@ -133,7 +133,7 @@ const TabPanel = ({
               tab={
                 <span className="tab_pane">
                   {!readOnly && <span className="require">* </span>}
-                  {"QA"}
+                  {"Specification"}
                 </span>
               }
               key={"5"}

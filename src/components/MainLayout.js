@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Layout } from "antd";
 import TopContent from "./TopComponent";
 import MainHeader from "./MainHeader";
 import MainFooter from "./MainFooter";
+import { AppContext } from "../include/js/context";
 
 const { Header, Content } = Layout;
 
 function MainLayout(props) {
+  const context = useContext(AppContext);
+  console.log(context);
   return (
     <>
       <Layout>

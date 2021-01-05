@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { Context } from "./include/js/context";
+import { AppContext, Context } from "./include/js/context";
 
 import Dashboard from "./modules/dashboard/Dashboard";
 import Login from "./modules/system/Login";
@@ -10,7 +10,6 @@ import Settings from "./modules/settings/Settings";
 
 import QualityAssurance from "./modules/qualityAssurance/Quality_Assurance";
 import QCReceive from "./modules/qualityAssurance/QC_Receive";
-
 
 import Inventory from "./modules/inventory/Inventory";
 
@@ -77,6 +76,8 @@ import { keep_log } from "./actions/comment&log";
 
 import QCItemTestMain from "./modules/qualityAssurance/MasterData/QCItemTest/QCItemTestMain";
 import QCItemTestCreate from "./modules/qualityAssurance/MasterData/QCItemTest/QCItemTestCreate";
+import ItemType from "./modules/inventory/item/masterData/type/ItemType";
+import MainLayout from "./components/MainLayout";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -86,11 +87,19 @@ const initialContext = {
 // class App extends Component {
 const App = (props) => {
   const [context, setContext] = useState(initialContext);
-
   useEffect(() => {
     context.log_detail.user_name && keep_log(context);
   }, [context]);
 
+  const [appContext, setAppContext] = useState({
+    config: {},
+  });
+  const AppContextValue = useMemo(() => {
+    return {
+      appContext,
+      setAppContext,
+    };
+  }, [appContext]);
   return (
     <Provider store={store}>
       <Context.Provider value={[context, setContext]}>
@@ -201,6 +210,10 @@ const App = (props) => {
             </Route>
             <Route exact path="/inventory/location">
               <Location />
+            </Route>
+
+            <Route exact path="/inventory/items/type">
+              <ItemType />
             </Route>
 
             {/* INVENTORY REPORT */}

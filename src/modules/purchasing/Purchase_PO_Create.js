@@ -67,36 +67,35 @@ const PurchaseOrderCreate = (props) => {
       return step.all_group_in_node;
     });
 
-  const setEditableData = () => {
-    headDispatch({
-      type: "SET_HEAD",
-      payload: data.data_head
-        ? {
-            ...data.data_head,
-            commit: 1,
-            user_name: auth.user_name,
-            branch_id: auth.branch_id,
-            branch_name: auth.branch_name,
-          }
-        : {
-            ...po_fields,
-            commit: 1,
-            po_created_by_no_name: auth.employee_no_name_eng,
-            user_name: auth.user_name,
-            branch_id: auth.branch_id,
-            branch_name: auth.branch_name,
-            po_created: moment().format("DD/MM/YYYY"),
-          },
-    });
-    detailDispatch({
-      type: "SET_DETAIL",
-      payload: data.data_detail ? data.data_detail : [po_detail_fields],
-    });
-  };
-
   useEffect(() => {
+    const setEditableData = () => {
+      headDispatch({
+        type: "SET_HEAD",
+        payload: data.data_head
+          ? {
+              ...data.data_head,
+              commit: 1,
+              user_name: auth.user_name,
+              branch_id: auth.branch_id,
+              branch_name: auth.branch_name,
+            }
+          : {
+              ...po_fields,
+              commit: 1,
+              po_created_by_no_name: auth.employee_no_name_eng,
+              user_name: auth.user_name,
+              branch_id: auth.branch_id,
+              branch_name: auth.branch_name,
+              po_created: moment().format("DD/MM/YYYY"),
+            },
+      });
+      detailDispatch({
+        type: "SET_DETAIL",
+        payload: data.data_detail ? data.data_detail : [po_detail_fields],
+      });
+    };
     setEditableData();
-  }, []);
+  }, [auth, data]);
 
   useEffect(() => {
     data_head.pr_id &&

@@ -33,15 +33,12 @@ const Vendor = (props) => {
     };
     getMasterData();
   }, []);
-  useEffect(
-    (vendors) => {
-      const setStateData = () => {
-        setData(vendors);
-      };
-      setStateData();
-    },
-    [vendors.length]
-  );
+  useEffect(() => {
+    const setStateData = () => {
+      setData(vendors);
+    };
+    setStateData();
+  }, [vendors.length]);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,

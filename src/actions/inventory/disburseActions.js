@@ -16,7 +16,7 @@ import {
 } from "../types";
 import { message } from "antd";
 export const get_issue_ref_list = () => async (dispatch) => {
-  axios
+  return await axios
     .get(api_issue_ref_list, header_config)
     .then((res) => {
       console.log("GET_ISSUE_REF_LIST");
@@ -27,11 +27,13 @@ export const get_issue_ref_list = () => async (dispatch) => {
     });
 };
 
-export const get_disburse_list = (user_name) => (dispatch) => {
-  axios.get(`${api_disburse}/all/${user_name}`, header_config).then((res) => {
-    console.log("get all disburse", `${api_disburse}/all/${user_name}`);
-    dispatch({ type: GET_DISBURSE_LIST, payload: res.data[0] });
-  });
+export const get_disburse_list = (user_name) => async (dispatch) => {
+  return await axios
+    .get(`${api_disburse}/all/${user_name}`, header_config)
+    .then((res) => {
+      console.log("get all disburse", `${api_disburse}/all/${user_name}`);
+      dispatch({ type: GET_DISBURSE_LIST, payload: res.data[0] });
+    });
 };
 
 export const get_disburse_by_id = (disburse_id, user_name, redirect) => async (
