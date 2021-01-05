@@ -28,7 +28,6 @@ const ItemView = (props) => {
     data_part_detail,
     data_part_mix,
     data_formula,
-    data_process,
     data_qa_detail,
     data_weight_detail,
     data_packaging_detail,

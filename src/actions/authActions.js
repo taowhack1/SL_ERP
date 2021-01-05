@@ -1,22 +1,15 @@
 import axios from "axios";
 import {
   AUTH_USER,
-  UNAUTH_USER,
-  AUTH_ERROR,
   USER_PROJECT,
   USER_MENU,
   CURRENT_PROJECT,
   CURRENT_MENU,
   USER_LOGOUT,
 } from "../actions/types";
-import {
-  api_url,
-  api_query,
-  api_authen,
-  api_change_password,
-} from "../include/js/api";
+import { api_url, api_authen, api_change_password } from "../include/js/api";
 import { header_config } from "../include/js/main_config";
-import Authorize from "../modules/system/Authorize";
+
 import { getVat } from "./systemConfigActions";
 const url = api_url;
 // const url = "";

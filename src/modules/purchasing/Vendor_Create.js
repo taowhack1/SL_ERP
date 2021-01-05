@@ -1,38 +1,20 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Select,
-  AutoComplete,
-  Typography,
-  Space,
-  message,
-} from "antd";
+import { Row, Col, Input, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import {
   create_vendor,
   update_vendor,
-  vendor_create,
 } from "../../actions/purchase/vendorActions";
 import { vendor_fields, vendor_require_fields } from "./config/vendor";
 import CustomSelect from "../../components/CustomSelect";
 import Authorize from "../system/Authorize";
 import { validateFormHead } from "../../include/js/function_main";
 import { useHistory } from "react-router-dom";
-const { Option } = Select;
+
 const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
-const require_field = {
-  vendor_name: true,
-  vendor_name_short: true,
-  vendor_address: true,
-  vendor_email: false,
-  currency_id: true,
-};
+const { Title, Text } = Typography;
 
 const VendorCreate = (props) => {
   const history = useHistory();

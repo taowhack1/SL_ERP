@@ -1,4 +1,3 @@
-import numeral from "numeral";
 import {
   getRefStatus,
   getSelfStepStatus,
@@ -132,7 +131,6 @@ export const quotation_fields = {
   customer_no: null,
   customer_name: null,
   customer_no_name: null,
-  currency_no: null,
   currency_name: null,
   currency_no_name: null,
   vat_no: null,
@@ -401,7 +399,6 @@ export const so_fields = {
   customer_no: null,
   customer_name: null,
   customer_no_name: null,
-  currency_no: null,
   currency_name: null,
   currency_no_name: null,
   vat_no: null,

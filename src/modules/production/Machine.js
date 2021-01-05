@@ -3,27 +3,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import {
-  getAllItems,
-  get_item_by_id,
-} from "../../actions/inventory/itemActions";
 import $ from "jquery";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
-import SearchTable from "../../components/SearchTable";
-import { machine_columns, work_center_columns } from "./config/master_data";
+
+import { machine_columns } from "./config/master_data";
 import {
   getAllMachine,
   getMachineByID,
 } from "../../actions/production/machineActions";
-import { resetProductionData } from "../../actions/production";
+
 const Machine = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
-  const auth = useSelector((state) => state.auth.authData);
-  const current_menu = useSelector((state) => state.auth.currentMenu);
+
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   const [loading, setLoading] = useState(false);

@@ -9,8 +9,6 @@ import TotalFooter from "../../components/TotalFooter";
 import ModalRemark from "../../components/Modal_Remark";
 import { qn_actions } from "../../actions/sales";
 import { get_log_by_id } from "../../actions/comment&log";
-import { quotation_detail_fields } from "./configs";
-import { sortData } from "../../include/js/function_main";
 import { report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 

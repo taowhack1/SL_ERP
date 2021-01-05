@@ -1,27 +1,13 @@
-import {
-  Button,
-  Row,
-  Col,
-  Typography,
-  Modal,
-  InputNumber,
-  DatePicker,
-  message,
-} from "antd";
+import { Button, Row, Col, Typography, Modal, message } from "antd";
 import {
   PlusOutlined,
   EllipsisOutlined,
   FormOutlined,
   InfoCircleTwoTone,
-  DeleteTwoTone,
 } from "@ant-design/icons";
-import React, { useState, useEffect, useReducer } from "react";
-import numeral from "numeral";
+import React, { useState, useReducer } from "react";
 import SubDetail from "./Disburse_Sub_Detail";
 import {
-  calDiscount,
-  calSubtotal,
-  sumArrObj,
   sumArrOdjWithField,
   validateFormDetail,
 } from "../../include/js/function_main";
@@ -31,7 +17,7 @@ import {
   disburse_sub_detail_fields,
 } from "./config";
 import { reducer } from "./reducers";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   get_location_shelf_by_item_id,
   get_lot_batch_by_item_id_shelf,
@@ -39,14 +25,11 @@ import {
 import { disburse_sub_detail_require_fields } from "./config/disburse";
 import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
-
 const DisburseDetail = ({
   readOnly,
   issue_id,
   data_detail,
-  headDispatch,
   detailDispatch,
-  vat_rate,
 }) => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
@@ -54,15 +37,10 @@ const DisburseDetail = ({
   const [temp_sub_detail, tempSubDetailDispatch] = useReducer(reducer, [
     disburse_sub_detail_fields,
   ]);
-
   // function
   const addLine = () => {
     detailDispatch({ type: "ADD_ROW", payload: disburse_detail_fields });
   };
-  const delLine = (id) => {
-    detailDispatch({ type: "DEL_ROW", payload: { id: id } });
-  };
-
   const modalSave = () => {
     console.log("Confirm Modal", "id", temp_detail.id, temp_sub_detail);
     const key = "validate";
@@ -309,7 +287,6 @@ const DisburseDetail = ({
         style={{
           width: "100%",
           height: "5px",
-          background: "#c6c6c6",
           background:
             "linear-gradient(180deg,rgba(198,198,198,1) 0%, rgba(198,198,198,1) 55%,rgba(255,255,255,1) 100%)",
           marginBottom: 20,

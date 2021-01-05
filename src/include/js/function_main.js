@@ -55,7 +55,6 @@ export const calSubtotal = (qty, price, discount = 0) => {
 };
 
 export const sumArrObj = (arrObj = [], field, vat = 0.07, discount = 0) => {
-  let numbers = [];
   // arrObj &&
   //   arrObj.map((line) => {
   //     numbers.push(line[field]);

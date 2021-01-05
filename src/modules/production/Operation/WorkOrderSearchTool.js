@@ -1,5 +1,5 @@
 import { ClearOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Row, Typography, Col, DatePicker } from "antd";
+import { Button, Row, Col, DatePicker } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";

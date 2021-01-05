@@ -1,19 +1,15 @@
 import {
   GET_ALL_PO,
   CREATE_PO,
-  UPDATE_PO_STATUS,
   PR_TO_PO_DETAIL,
   RESET_PO_DATA,
   GET_PR_OPEN_PO,
   GET_PO_BY_ID,
 } from "../types";
 import {
-  api_query,
   api_purchase,
   api_approve,
-  api_payment_term_vendor,
   api_get_po_detail,
-  api_purchase_po_list,
   api_get_pr_detail_ref,
   api_get_pr_open_po,
   api_purchase_get_all_po,

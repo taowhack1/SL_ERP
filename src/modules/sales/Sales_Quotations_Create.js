@@ -1,27 +1,9 @@
-import React, {
-  useState,
-  useEffect,
-  useReducer,
-  useContext,
-  createContext,
-} from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Select,
-  AutoComplete,
-  Typography,
-  DatePicker,
-  message,
-} from "antd";
+import { Row, Col, Input, Tabs, Typography, DatePicker, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
-
 import Comments from "../../components/Comments";
-
 import TotalFooter from "../../components/TotalFooter";
 import {
   quotation_detail_fields,
@@ -35,15 +17,12 @@ import { create_quotation } from "../../actions/sales";
 import axios from "axios";
 import { api_server, header_config } from "../../include/js/main_config";
 import {
-  sortData,
-  sumArrObj,
   validateFormDetail,
   validateFormHead,
 } from "../../include/js/function_main";
 import { reducer } from "./reducers";
 import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
-import $ from "jquery";
+
 import { useHistory } from "react-router-dom";
 import ItemLine from "./Sales_Detail";
 const { TextArea } = Input;

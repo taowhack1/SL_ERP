@@ -1,17 +1,8 @@
 import React from "react";
 import { UserOutlined } from "@ant-design/icons";
-import {
-  Form,
-  Button,
-  Input,
-  Comment,
-  Avatar,
-  Tooltip,
-  Divider,
-  Typography,
-} from "antd";
+import { Comment, Avatar, Tooltip, Divider, Typography } from "antd";
 import moment from "moment";
-const { Text, Title } = Typography;
+const { Text } = Typography;
 const Comments = (props) => {
   const getActionColor = (id) => {
     switch (id) {

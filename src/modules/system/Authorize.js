@@ -1,9 +1,8 @@
 import { message } from "antd";
-import React, { useContext } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { signOut } from "../../actions/authActions";
-import { Context } from "../../include/js/context";
 
 const Authorize = (props) => {
   const history = useHistory();

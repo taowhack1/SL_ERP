@@ -1,10 +1,10 @@
 import { getRefStatus } from "../../../include/js/function_main";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
 import React from "react";
-import CustomSelect from "../../../components/CustomSelect";
+
 import Text from "antd/lib/typography/Text";
-import { InputNumber, Popconfirm, Switch } from "antd";
-import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
+import { InputNumber } from "antd";
+
 export const work_order_columns = [
   {
     title: "WO Code",

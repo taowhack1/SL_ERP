@@ -1,39 +1,21 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect,  useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Typography } from "antd";
-import { reducer } from "./reducers";
-import { disburse_fields, disburse_detail_fields } from "./config";
-import {
-  create_disburse,
-  disburse_actions,
-  update_disburse,
-} from "../../actions/inventory/disburseActions";
-import { header_config, report_server } from "../../include/js/main_config";
-import { api_disburse_get_ref_issue_detail } from "../../include/js/api";
+import { Row, Col, Tabs, Typography } from "antd";
+import {disburse_actions,} from "../../actions/inventory/disburseActions";
+import { report_server } from "../../include/js/main_config";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
-
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
 import Comments from "../../components/Comments";
 import Detail from "./Disburse_Detail";
-import TotalFooter from "../../components/TotalFooter";
-import CustomSelect from "../../components/CustomSelect";
-import axios from "axios";
-import { get_issue_ref_list } from "../../actions/inventory/disburseActions";
 import ModalRemark from "../../components/Modal_Remark";
 import Authorize from "../system/Authorize";
-
-const { TextArea } = Input;
 const { Text } = Typography;
-
-const initialStateHead = disburse_fields;
-const initialStateDetail = [disburse_detail_fields];
 
 const DisburseView = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
-  const [tab, setTab] = useState("1");
+  const [, setTab] = useState("1");
 
   const [remark, setRemark] = useState("");
   const [openRemarkModal, setOpenRemarkModal] = useState({
@@ -72,9 +54,6 @@ const DisburseView = (props) => {
   const callback = (key) => {
     setTab(key);
   };
-
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
 
   const config = {
     projectId: current_project && current_project.project_id,

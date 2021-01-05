@@ -3,15 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../../components/MainLayout";
-import {
-  getAllItems,
-  get_item_by_id,
-} from "../../../actions/inventory/itemActions";
+
 import $ from "jquery";
 import Authorize from "../../system/Authorize";
 import useKeepLogs from "../../logs/useKeepLogs";
-import SearchTable from "../../../components/SearchTable";
-import { item_show_columns } from "../../inventory/config/item";
+
 import { work_order_columns } from "../config/workOrder";
 import WorkOrderSearchTool from "./WorkOrderSearchTool";
 import {
@@ -27,7 +23,7 @@ const WorkOrderMain = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const auth = useSelector((state) => state.auth.authData);
-  const current_menu = useSelector((state) => state.auth.currentMenu);
+
   const [rowClick, setRowClick] = useState(false);
   const [loading, setLoading] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {

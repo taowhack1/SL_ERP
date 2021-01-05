@@ -5,8 +5,7 @@ import MainLayout from "../../components/MainLayout";
 
 import Comments from "../../components/Comments";
 import Detail from "./Receive_Detail";
-import TotalFooter from "../../components/TotalFooter";
-import { get_log_by_id, reset_comments } from "../../actions/comment&log";
+import { get_log_by_id } from "../../actions/comment&log";
 import { receive_actions } from "../../actions/inventory/receiveActions";
 import ModalRemark from "../../components/Modal_Remark";
 import { report_server } from "../../include/js/main_config";
@@ -17,7 +16,7 @@ const Receive_View = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
-  const [tab, setTab] = useState("1");
+  const [, setTab] = useState("1");
   const [remark, setRemark] = useState("");
   const [openRemarkModal, setOpenRemarkModal] = useState({
     visible: false,

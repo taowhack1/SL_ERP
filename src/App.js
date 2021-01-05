@@ -10,7 +10,7 @@ import Settings from "./modules/settings/Settings";
 
 import QualityAssurance from "./modules/qualityAssurance/Quality_Assurance";
 import QCReceive from "./modules/qualityAssurance/QC_Receive";
-import QualityTest from "./modules/qualityAssurance/QC_Quality_Test";
+
 
 import Inventory from "./modules/inventory/Inventory";
 
@@ -62,7 +62,7 @@ import MachineCreate from "./modules/production/MachineCreate";
 import MachineView from "./modules/production/MachineView";
 
 import NotFound from "./modules/dashboard/NotFound";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import store from "./store";
 import Location from "./modules/inventory/Location";
 
@@ -74,7 +74,7 @@ import ItemCreate from "./modules/inventory/ItemCreate";
 import ItemView from "./modules/inventory/ItemView";
 import { log_detail } from "./modules/system/configs/log";
 import { keep_log } from "./actions/comment&log";
-import Authorize from "./modules/system/Authorize";
+
 import QCItemTestMain from "./modules/qualityAssurance/MasterData/QCItemTest/QCItemTestMain";
 import QCItemTestCreate from "./modules/qualityAssurance/MasterData/QCItemTest/QCItemTestCreate";
 const initialContext = {

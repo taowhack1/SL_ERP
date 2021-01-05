@@ -1,6 +1,6 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Select, Typography, message } from "antd";
+import { Row, Col, Input, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import Detail from "./Issue_Detail";
@@ -26,7 +26,6 @@ import {
 import { useHistory } from "react-router-dom";
 const { Text } = Typography;
 const { TextArea } = Input;
-const { Option } = Select;
 
 const initialStateHead = issue_fields;
 const initialStateDetail = [issue_detail_fields];
@@ -154,7 +153,6 @@ const IssueCreate = (props) => {
             commit: 1,
             user_name: auth.user_name,
             issue_created_by_no_name: auth.employee_no_name_eng,
-            user_name: auth.user_name,
             branch_id: auth.branch_id,
             branch_name: auth.branch_name,
             issue_created: moment().format("DD/MM/YYYY"),
@@ -174,12 +172,6 @@ const IssueCreate = (props) => {
       dispatch(reset_comments());
     };
   }, [data_head]);
-
-  const dateConfig = {
-    format: "DD/MM/YYYY HH:mm:ss",
-    value: moment(),
-    disabled: 1,
-  };
 
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });

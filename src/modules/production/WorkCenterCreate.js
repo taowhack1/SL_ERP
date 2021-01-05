@@ -1,15 +1,12 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
   Col,
   Input,
   Tabs,
-  Select,
   Typography,
   message,
-  Space,
-  DatePicker,
   Radio,
   TimePicker,
   InputNumber,
@@ -21,19 +18,14 @@ import Comments from "../../components/Comments";
 import { reducer } from "./reducers";
 import CustomSelect from "../../components/CustomSelect";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
+
 import {
-  create_issue,
-  update_issue,
-} from "../../actions/inventory/issueActions";
-import {
-  machine_fields,
-  machine_require_fields,
   work_center_detail_fields,
   work_center_detail_require_fields,
   work_center_fields,
   work_center_require_fields,
 } from "./config/master_data";
-import { report_server } from "../../include/js/main_config";
+
 import Authorize from "../system/Authorize";
 import {
   validateFormDetail,
@@ -41,10 +33,7 @@ import {
 } from "../../include/js/function_main";
 import { useHistory } from "react-router-dom";
 import WorkCenterDetail from "./WorkCenterDetail";
-import {
-  getProductionMasterData,
-  resetProductionData,
-} from "../../actions/production";
+import { getProductionMasterData } from "../../actions/production";
 import { getMasterDataItem } from "../../actions/inventory";
 import { getAllMachine } from "../../actions/production/machineActions";
 import {
@@ -53,7 +42,6 @@ import {
 } from "../../actions/production/workCenterActions";
 const { Text } = Typography;
 const { TextArea } = Input;
-const { Option } = Select;
 
 const initialStateHead = work_center_fields;
 const initialStateDetail = [work_center_detail_fields];
@@ -170,7 +158,6 @@ const WorkCenterCreate = (props) => {
             commit: 1,
             user_name: auth.user_name,
             work_center_create_by: auth.employee_no_name_eng,
-            user_name: auth.user_name,
             branch_id: auth.branch_id,
             branch_name: auth.branch_name,
             work_center_created: moment().format("DD/MM/YYYY"),

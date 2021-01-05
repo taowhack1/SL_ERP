@@ -1,12 +1,12 @@
 import { Form, Input, Button, Space, Typography } from "antd";
-import { Redirect, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { LockOutlined } from "@ant-design/icons";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signIn2, signIn, change_password } from "../../actions/authActions";
+import { change_password } from "../../actions/authActions";
 import useKeepLogs from "../logs/useKeepLogs";
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const ChangePassword = (props) => {
   const keepLog = useKeepLogs();

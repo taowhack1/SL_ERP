@@ -1,7 +1,6 @@
 import { Context } from "../../include/js/context";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { useSelector } from "react-redux";
-
 const useKeepLogs = () => {
   const [context, setContext] = useContext(Context);
   const auth = useSelector((state) => state.auth.authData);

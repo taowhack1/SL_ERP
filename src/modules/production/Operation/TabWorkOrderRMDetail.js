@@ -1,20 +1,15 @@
-import { Button, Row, Col, InputNumber, Typography } from "antd";
+import {  Row, Col,Typography } from "antd";
 import {
-  DeleteTwoTone,
-  PlusOutlined,
-  EllipsisOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
-import React, { useContext, useEffect, useReducer } from "react";
-import CustomSelect from "../../../components/CustomSelect";
-import { convertDigit, numberFormat } from "../../../include/js/main_config";
-import { reducer } from "../reducers";
+import React, { useContext} from "react";
+
 import {
   workOrderRMColumns,
-  workOrderRMDetailFields,
+
 } from "../config/workOrder";
 import CustomTable from "../../../components/CustomTable";
-import ReducerClass from "../../../include/js/ReducerClass";
+
 import { useSelector } from "react-redux";
 import { WOContext } from "../../../include/js/context";
 

@@ -1,39 +1,21 @@
-import {
-  Button,
-  Row,
-  Col,
-  InputNumber,
-  Typography,
-  Select,
-  DatePicker,
-  Input,
-} from "antd";
+import { Button, Row, Col, InputNumber, Typography, DatePicker } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import moment from "moment";
-import {
-  update_pr_head,
-  get_pr_detail,
-} from "../../actions/purchase/PR_Actions";
-import {
-  addItemLine,
-  delItemLine,
-  updateValueItemLine,
-} from "../../actions/purchase";
+
 import { prItemColumns, pr_detail_fields } from "./config/pr";
 import CustomSelect from "../../components/CustomSelect";
 import { calSubtotal, sumArrObj } from "../../include/js/function_main";
-import numeral from "numeral";
+
 import { convertDigit } from "../../include/js/main_config";
 import TextArea from "antd/lib/input/TextArea";
 
 const { Text } = Typography;
-const { Option } = Select;
 
 const numberFormat = {
   precision: 3,

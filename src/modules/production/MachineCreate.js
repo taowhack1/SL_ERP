@@ -1,14 +1,12 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
   Col,
   Input,
   Tabs,
-  Select,
   Typography,
   message,
-  Space,
   DatePicker,
   Radio,
 } from "antd";
@@ -19,29 +17,19 @@ import Comments from "../../components/Comments";
 import { reducer } from "./reducers";
 import CustomSelect from "../../components/CustomSelect";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
-import {
-  create_issue,
-  update_issue,
-} from "../../actions/inventory/issueActions";
+
 import { machine_fields, machine_require_fields } from "./config/master_data";
-import { report_server } from "../../include/js/main_config";
+
 import Authorize from "../system/Authorize";
-import {
-  validateFormDetail,
-  validateFormHead,
-} from "../../include/js/function_main";
+import { validateFormHead } from "../../include/js/function_main";
 import { useHistory } from "react-router-dom";
-import {
-  getProductionMasterData,
-  resetProductionData,
-} from "../../actions/production";
+import { getProductionMasterData } from "../../actions/production";
 import {
   createMachine,
   updateMachine,
 } from "../../actions/production/machineActions";
 const { Text } = Typography;
 const { TextArea } = Input;
-const { Option } = Select;
 
 const initialStateHead = machine_fields;
 // const initialStateDetail = [issue_detail_fields];
@@ -54,7 +42,7 @@ const MachineCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
   const auth = useSelector((state) => state.auth.authData);
-  const { itemType, machineType, machineCategory } = useSelector(
+  const { itemType, machineCategory } = useSelector(
     (state) => state.production.masterData.machine
   );
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -140,7 +128,7 @@ const MachineCreate = (props) => {
             commit: 1,
             user_name: auth.user_name,
             machine_created_by: auth.employee_no_name_eng,
-            user_name: auth.user_name,
+
             branch_id: auth.branch_id,
             branch_name: auth.branch_name,
             machine_created: moment().format("DD/MM/YYYY"),

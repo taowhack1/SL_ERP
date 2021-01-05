@@ -7,9 +7,9 @@ import $ from "jquery";
 import { get_report_stock } from "../../actions/inventory";
 import { stock_on_hand_columns } from "./config/report";
 import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
+
 const StockMove = (props) => {
-  const keepLog = useKeepLogs();
+
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();

@@ -12,10 +12,8 @@ import MainConfig from "./MainConfig";
 import { signOut, change_working_project } from "../actions/authActions";
 import { useDispatch } from "react-redux";
 import Text from "antd/lib/typography/Text";
-import useKeepLogs from "../modules/logs/useKeepLogs";
 import { api_server } from "../include/js/main_config";
 const MainHead = (props) => {
-  const keepLog = useKeepLogs();
   const auth = useSelector(
     (state) => state.auth.authData && state.auth.authData
   );

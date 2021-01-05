@@ -4,12 +4,12 @@ import {
   PlusOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Input, InputNumber, Row } from "antd";
+import { Button, Col, Input, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
-import { numberFormat } from "../../include/js/main_config";
+
 import {
   work_center_detail_columns,
   work_center_detail_fields,

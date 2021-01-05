@@ -1,11 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Dropdown, Button, Menu } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { set_working_menu } from "../actions/authActions";
-import { Context } from "../include/js/context";
-import { keep_log } from "../actions/comment&log";
 import useKeepLogs from "../modules/logs/useKeepLogs";
 
 export default function MainConfig(props) {

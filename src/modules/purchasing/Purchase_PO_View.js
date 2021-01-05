@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
-import { Row, Col, Input, Tabs, Select, Typography, message } from "antd";
+import { Row, Col, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
 
 import Comments from "../../components/Comments";
 import ItemLine from "./po_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
-import { poItemColumns } from "./config/po";
-import {
-  po_actions,
-  get_po_by_id,
-  get_pr_detail,
-} from "../../actions/purchase/PO_Actions";
-import { get_log_by_id, reset_comments } from "../../actions/comment&log";
+
+import { po_actions } from "../../actions/purchase/PO_Actions";
+import { get_log_by_id } from "../../actions/comment&log";
 import ModalRemark from "../../components/Modal_Remark";
-import numeral from "numeral";
+
 import { convertDigit, report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
-const { Option } = Select;
-const { TextArea } = Input;
+
 const { Text } = Typography;
 
 const PurchaseOrderCreate = (props) => {
@@ -32,7 +25,7 @@ const PurchaseOrderCreate = (props) => {
     visible: false,
     loading: false,
   });
-  const po_id = useParams().id;
+
   const auth = useSelector((state) => state.auth.authData);
   const dataComments = useSelector((state) => state.log.comment_log);
   const [tab, setTab] = useState("1");

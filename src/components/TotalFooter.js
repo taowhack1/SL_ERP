@@ -1,5 +1,4 @@
 import React from "react";
-import numeral from "numeral";
 import { Row, Col, Typography } from "antd";
 import { convertDigit } from "../include/js/main_config";
 const { Text } = Typography;

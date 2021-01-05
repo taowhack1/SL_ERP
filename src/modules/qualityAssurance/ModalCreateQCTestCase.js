@@ -1,20 +1,6 @@
-import {
-  Input,
-  Select,
-  Form,
-  Modal,
-  Row,
-  Col,
-  Button,
-  Radio,
-  Divider,
-} from "antd";
-import Text from "antd/lib/typography/Text";
-import React, { useEffect, useMemo, useState } from "react";
+import { Modal, Row, Radio, Divider } from "antd";
+import React, { useMemo, useState } from "react";
 import TestForm from "./ModalQCTestCaseForm";
-import { get_issue_ref_list } from "../../actions/inventory/disburseActions";
-import CustomSelect from "../../components/CustomSelect";
-import { useSelector } from "react-redux";
 const QCContext = React.createContext();
 const ModalCreateQCTestCase = (props) => {
   const { modalSave, modalCancel, visible, data_head, test_id } = props;
@@ -32,10 +18,6 @@ const ModalCreateQCTestCase = (props) => {
   };
   const onChangeType = (e) => {
     setQCType(e.target.value);
-  };
-  const upDateFormValue = (data) => {
-    // headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
-    setState({ ...state, ...data });
   };
   const getFields = (type_id) => {
     switch (type_id) {

@@ -1,15 +1,5 @@
 import React, { useEffect, useReducer, useState } from "react";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Select,
-  AutoComplete,
-  Typography,
-  DatePicker,
-  message,
-} from "antd";
+import { Row, Col, Input, Tabs, Typography, DatePicker, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 
@@ -30,13 +20,13 @@ import Detail from "./Sales_Order_Detail";
 import { reducer } from "./reducers";
 import axios from "axios";
 import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
+
 import { useHistory } from "react-router-dom";
 import {
   validateFormDetail,
   validateFormHead,
 } from "../../include/js/function_main";
-const { Option } = Select;
+
 const { TextArea } = Input;
 const { Text } = Typography;
 

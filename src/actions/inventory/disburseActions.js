@@ -4,9 +4,7 @@ import { header_config } from "../../include/js/main_config";
 import {
   api_disburse,
   api_disburse_detail,
-  api_disburse_sub_detail,
   api_disburse_sub_detail_by_disburse_id,
-  api_issue,
   api_issue_ref_list,
   api_approve,
 } from "../../include/js/api";
@@ -14,8 +12,6 @@ import {
   GET_DISBURSE_LIST,
   RESET_DISBURSE,
   GET_DISBURSE_BY_ID,
-  GET_DISBURSE_SUB_DETAIL,
-  GET_DISBURSE_DETAIL,
   GET_ISSUE_REF_LIST,
 } from "../types";
 import { message } from "antd";

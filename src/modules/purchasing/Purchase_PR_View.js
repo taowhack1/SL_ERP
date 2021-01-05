@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Tabs, Typography, Alert, message } from "antd";
+import { Row, Col, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
+
 import ItemLine from "./pr_ItemLine";
 import { prItemColumns } from "./config/pr";
 import Comments from "../../components/Comments";
 import TotalFooter from "../../components/TotalFooter";
 import ModalRemark from "../../components/Modal_Remark";
 import { pr_actions } from "../../actions/purchase/PR_Actions";
-import { get_log_by_id, reset_comments } from "../../actions/comment&log";
-import { useParams } from "react-router-dom";
+import { get_log_by_id } from "../../actions/comment&log";
 import { report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 const { Text } = Typography;
@@ -18,8 +17,6 @@ const { Text } = Typography;
 const PRView = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
-  const pr_id = useParams();
-  const [btnLoading, setBtnLoading] = useState(false);
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
   const auth = useSelector((state) => state.auth.authData);

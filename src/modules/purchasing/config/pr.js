@@ -2,8 +2,6 @@ import {
   getSelfStepStatus,
   getRefStatus,
 } from "../../../include/js/function_main";
-import React from "react";
-import { Tag } from "antd";
 export const pr_require_fields = [
   "pr_description",
   "user_name",

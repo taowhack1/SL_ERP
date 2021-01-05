@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Layout } from "antd";
 import TopContent from "./TopComponent";
 import MainHeader from "./MainHeader";
 import MainFooter from "./MainFooter";
-import Authorize from "../modules/system/Authorize";
+
 const { Header, Content } = Layout;
 
 function MainLayout(props) {

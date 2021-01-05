@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Select, Typography } from "antd";
+import { Row, Col,  Tabs,  Typography } from "antd";
 import MainLayout from "../../components/MainLayout";
 
 import Authorize from "../system/Authorize";

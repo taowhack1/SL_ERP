@@ -3,11 +3,7 @@ import {
   Row,
   Col,
   InputNumber,
-  AutoComplete,
   Typography,
-  Select,
-  Divider,
-  Modal,
   DatePicker,
   Input,
 } from "antd";
@@ -16,17 +12,15 @@ import {
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import numeral from "numeral";
+
 import {
-  receive_detail_fields,
   receive_sub_detail_fields,
   receive_sub_detail_columns,
 } from "./config";
 import moment from "moment";
-import { reducer } from "./reducers";
-import CustomSelect from "../../components/CustomSelect";
+
 import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
 const numberFormat = {
@@ -332,7 +326,6 @@ const SubDetail = ({
         style={{
           width: "100%",
           height: "5px",
-          background: "#c6c6c6",
           background:
             "linear-gradient(180deg,rgba(198,198,198,1) 0%, rgba(198,198,198,1) 55%,rgba(255,255,255,1) 100%)",
           marginBottom: 20,

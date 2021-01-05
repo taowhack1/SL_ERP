@@ -1,24 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Input, Tabs, Select, Typography, message } from "antd";
+import { Row, Col, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
-
 import Comments from "../../components/Comments";
 import TotalFooter from "../../components/TotalFooter";
 import { useDispatch, useSelector } from "react-redux";
-import { get_so_by_id, so_actions } from "../../actions/sales";
+import { so_actions } from "../../actions/sales";
 import Detail from "./Sales_Order_Detail";
 import ModalRemark from "../../components/Modal_Remark";
 import { get_log_by_id } from "../../actions/comment&log";
 import { report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
-const { Option } = Select;
-const { TextArea } = Input;
-const { Title, Text } = Typography;
 
+const { Text } = Typography;
 const SaleOrderView = (props) => {
-  const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();

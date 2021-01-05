@@ -1,16 +1,12 @@
 import { Button, Table } from "antd";
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   qcTestItemSubjectColumns,
   qcTestItemSubjectFields,
-  subject_data,
 } from "../../configs/qcTestItemConfig";
-import QCItemTestTabSubjectDetail from "./QCItemTestTabSubjectDetail";
-import $ from "jquery";
 import { PlusOutlined } from "@ant-design/icons";
 import { QCContext } from "./QCItemTestCreate";
 import ReducerClass from "../../../../include/js/ReducerClass";
-
 const QCItemTestTabSubject = (
   {
     // readOnly,
@@ -34,7 +30,6 @@ const QCItemTestTabSubject = (
     qcTestItemSubjectFields,
     data_head
   );
-  const [rowClick, setRowClick] = useState(false);
   const [loading, setLoading] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);

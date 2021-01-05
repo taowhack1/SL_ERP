@@ -1,17 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Select,
-  AutoComplete,
-  Typography,
-  Space,
-  InputNumber,
-  message,
-} from "antd";
+import { Row, Col, Input, Tabs, Typography, InputNumber, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import { customer_fields, customer_require_fields } from "./configs/customer";
@@ -21,23 +10,16 @@ import {
   update_customer,
 } from "../../actions/sales/customerActions";
 import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
+
 import { validateFormHead } from "../../include/js/function_main";
 import { useHistory } from "react-router-dom";
-const { Option } = Select;
+
 const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+const { Title, Text } = Typography;
 const numberFormat = {
   precision: 3,
   formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
   parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
-};
-const require_field = {
-  customer_name: true,
-  customer_name_short: true,
-  customer_address: true,
-  customer_email: false,
-  currency_id: true,
 };
 
 const CustomerCreate = (props) => {

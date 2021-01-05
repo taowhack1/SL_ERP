@@ -1,40 +1,24 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Typography,
-  DatePicker,
-  Radio,
-  TimePicker,
-  InputNumber,
-} from "antd";
+import { Row, Col, Typography } from "antd";
 import { useHistory } from "react-router-dom";
 import { reducer } from "../../reducers";
 import Authorize from "../../../system/Authorize";
 import CustomSelect from "../../../../components/CustomSelect";
 import {
-  qcTestItemFields,
-  qcTestItemMethodFields,
-  qcTestItemSpecFields,
   qcTestItemSubjectFields,
   subject_data,
 } from "../../configs/qcTestItemConfig";
 import Comments from "../../../../components/Comments";
 import MainLayout from "../../../../components/MainLayout";
-import { get_log_by_id } from "../../../../actions/comment&log";
+
 import QCItemTestTabPanel from "./QCItemTestTabPanel";
 import { getMasterDataItem } from "../../../../actions/inventory";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
-const { TextArea } = Input;
 
 export const QCContext = React.createContext();
 const initialStateSubject = [qcTestItemSubjectFields];
-const initialStateSpec = [qcTestItemSpecFields];
-const initialStateMethod = [qcTestItemMethodFields];
 
 const QCItemTestCreate = (props) => {
   const history = useHistory();
@@ -62,8 +46,6 @@ const QCItemTestCreate = (props) => {
     reducer,
     initialStateSubject
   );
-  const [data_spec, specDispatch] = useReducer(reducer, initialStateSpec);
-  const [data_method, methodDispatch] = useReducer(reducer, initialStateMethod);
 
   const config = {
     projectId: current_project && current_project.project_id,

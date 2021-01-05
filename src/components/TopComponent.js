@@ -1,11 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { withRouter, Link } from "react-router-dom";
 import {
   Col,
   Row,
   Button,
   Breadcrumb,
-  Steps,
   Dropdown,
   Menu,
   Typography,
@@ -13,8 +12,6 @@ import {
 } from "antd";
 import { CaretDownOutlined, RollbackOutlined } from "@ant-design/icons";
 import Search from "./Search";
-import { useSelector } from "react-redux";
-import { Context } from "../include/js/context";
 import useKeepLogs from "../modules/logs/useKeepLogs";
 const { Text } = Typography;
 
@@ -167,7 +164,6 @@ function TopContent(props) {
                   <Button
                     className="primary"
                     onClick={props.onSave && props.onSave}
-                    disabled={props.saveDisabled}
                     loading={btnLoading}
                     disabled={btnLoading}
                   >

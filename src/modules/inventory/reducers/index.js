@@ -1,7 +1,7 @@
 import { sortData } from "../../../include/js/function_main";
 
 export const reducer = (state, action) => {
-  const { head_id, detail_field, id, data, ref_field, ref_id } = action.payload;
+  const { head_id, detail_field, id, data } = action.payload;
   const getDetailTemp = (index, field) => {
     let tempDetail = [];
     if ((index !== null || index !== undefined) && field) {

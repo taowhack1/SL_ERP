@@ -1,35 +1,25 @@
-import {
-  GET_ITEM_DETAIL,
-  GET_ALL_ITEMS,
-  CREATE_ITEM,
-  UPDATE_ITEM,
-  GET_ITEM_BY_ID,
-} from "../types";
+import { GET_ALL_ITEMS, GET_ITEM_BY_ID } from "../types";
 import { api_server, header_config } from "../../include/js/main_config";
 import {
   api_get_item_by_id,
   api_url,
   api_item_vendor,
-  api_item_formula,
   api_item_qa,
   api_item_weight,
   api_item_packaging,
   api_upload_file,
   api_approve,
-  api_item_process,
   api_part_and_formula,
-  api_get_part_by_item_id,
   api_item_status,
   api_get_item_list,
   api_get_part_and_formula_all,
   api_get_fg_material,
 } from "../../include/js/api";
 import axios from "axios";
-import { Alert, message, notification } from "antd";
+import { message, notification } from "antd";
 import { item_save_file } from "../file&image/itemFileAction";
 import React from "react";
 import { sortData } from "../../include/js/function_main";
-const api_path = api_url + "/query/sql";
 
 const openNotificationWithIcon = (type, title, text) => {
   notification[type]({
@@ -79,29 +69,7 @@ const bind_vendor_fn = (item_id, data_detail) => {
       })
   );
 };
-const bind_formula = (item_id, data_formula_detail) => {
-  console.log("bind_formula");
-  const data_formula_detail_temp = data_formula_detail.filter(
-    (detail) =>
-      detail.item_id !== null &&
-      detail.item_part_sort !== null &&
-      // detail.item_formula_part_no !== null &&
-      detail.item_formula_percent_qty !== 0 &&
-      detail.commit === 1
-  );
-  return (
-    data_formula_detail_temp.length &&
-    axios
-      .post(
-        `${api_item_formula}/${item_id}`,
-        data_formula_detail_temp,
-        header_config
-      )
-      .then((res) => {
-        console.log("BIND FORMULA");
-      })
-  );
-};
+
 const bind_part_and_formula = (item_id, data_part) => {
   console.log("bind_part_and_formula");
   // const data_formula_detail_temp = data_formula_detail.filter(
@@ -183,20 +151,6 @@ const bind_packaging = (item_id, data_packaging_detail) => {
       )
       .then((res) => {
         console.log("BIND PACKAGING");
-      })
-  );
-};
-const bind_process = (item_id, data_process) => {
-  console.log("bind_process");
-  const data_process_temp = data_process.filter(
-    (detail) => detail.work_center_id !== null && detail.commit === 1
-  );
-  return (
-    data_process_temp.length &&
-    axios
-      .post(`${api_item_process}/${item_id}`, data_process_temp, header_config)
-      .then((res) => {
-        console.log("BIND PROCESS");
       })
   );
 };

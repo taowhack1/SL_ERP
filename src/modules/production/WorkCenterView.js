@@ -5,12 +5,12 @@ import MainLayout from "../../components/MainLayout";
 import Comments from "../../components/Comments";
 import { get_log_by_id } from "../../actions/comment&log";
 import Authorize from "../system/Authorize";
-import { useHistory } from "react-router-dom";
+
 import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
 
 const WorkCenterView = (props) => {
-  const history = useHistory();
+
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();

@@ -1,16 +1,6 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  AutoComplete,
-  Typography,
-  Select,
-  Alert,
-  message,
-} from "antd";
+import { Row, Col, Input, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import ItemLine from "./pr_ItemLine";
@@ -21,7 +11,6 @@ import {
 import Comments from "../../components/Comments";
 import {
   pr_fields,
-  prItemColumns,
   pr_detail_fields,
   pr_require_fields,
   pr_require_fields_detail,
@@ -30,16 +19,12 @@ import {
   reset_pr_data,
   create_pr,
   update_pr,
-  update_pr_head,
-  pr_actions,
 } from "../../actions/purchase/PR_Actions";
 import CustomSelect from "../../components/CustomSelect";
 import TotalFooter from "../../components/TotalFooter";
 import { reducer } from "./reducers";
-import { Redirect, withRouter } from "react-router-dom";
-import { keep_log } from "../../actions/comment&log";
-import { log_detail } from "../system/configs/log";
-import useKeepLogs from "../logs/useKeepLogs";
+import { withRouter } from "react-router-dom";
+
 import Authorize from "../system/Authorize";
 
 const { TextArea } = Input;
@@ -51,7 +36,6 @@ const initialStateDetail = [pr_detail_fields];
 const PurchaseRequisitionCreate = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
-  const keepLog = useKeepLogs();
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
   const auth = useSelector((state) => state.auth.authData);
