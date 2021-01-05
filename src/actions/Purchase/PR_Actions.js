@@ -10,7 +10,7 @@ import {
   pr_fields,
 } from "../../modules/purchasing/config/pr";
 import axios from "axios";
-import $ from "jquery";
+
 import { sortData } from "../../include/js/function_main";
 import { message } from "antd";
 

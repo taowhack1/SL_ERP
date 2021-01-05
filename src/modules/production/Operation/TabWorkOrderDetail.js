@@ -1,22 +1,14 @@
-import { DatePicker, Row, Col, Tabs, InputNumber } from "antd";
-import TextArea from "antd/lib/input/TextArea";
+import { DatePicker, Row, Col, InputNumber } from "antd";
+
 import Text from "antd/lib/typography/Text";
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
-import ReducerClass from "../../../include/js/ReducerClass";
+
 import CustomText from "../../../components/CustomText";
 import ToggleReadOnlyElement from "../../../components/ToggleReadOnlyElement";
-import { reducer } from "../reducers";
+
 import { WOContext } from "../../../include/js/context";
-import { get } from "jquery";
 
 const { RangePicker } = DatePicker;
 const TabWorkOrderDetail = () => {

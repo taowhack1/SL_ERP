@@ -1,21 +1,12 @@
 import { Input, Row } from "antd";
-import Form from "antd/lib/form/Form";
+
 import Text from "antd/lib/typography/Text";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
-import { reducer } from "./reducers";
-const layout = {
-  labelCol: {
-    span: 4,
-  },
-  wrapperCol: {
-    span: 20,
-  },
-};
 const ModalQCTestCaseForm = (props) => {
   const auth = useSelector((state) => state.auth.authData);
-  const { fields, data_head, type } = props;
+  const { fields, data_head } = props;
   const item_type_list = useSelector(
     (state) => state.inventory.master_data.item_type
   );
@@ -23,40 +14,6 @@ const ModalQCTestCaseForm = (props) => {
     [fields[0]]: null,
     [fields[1]]: null,
   });
-  const getSelectRef = (qualityType = 0) => {
-    switch (type) {
-      case 1:
-        return null;
-      case 2:
-        return (
-          <>
-            <Row className="col-2 row-margin-vertical">
-              <Text strong>
-                <span className="require">* </span>Subject
-              </Text>
-            </Row>
-            <Row className="col-2 row-margin-vertical">
-              <CustomSelect placeholder={"Subject"}></CustomSelect>
-            </Row>
-          </>
-        );
-      case 3:
-        return (
-          <>
-            <Row className="col-2 row-margin-vertical">
-              <Text strong>
-                <span className="require">* </span>Specification
-              </Text>
-            </Row>
-            <Row className="col-2 row-margin-vertical">
-              <CustomSelect placeholder={"Specification"}></CustomSelect>
-            </Row>
-          </>
-        );
-      default:
-        return null;
-    }
-  };
   const upDateFormValue = (data) => {
     // headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
     setState({ ...state, ...data });

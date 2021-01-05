@@ -1,20 +1,11 @@
-import {
-  Button,
-  Row,
-  Col,
-  InputNumber,
-  Typography,
-  Select,
-  DatePicker,
-} from "antd";
+import { Button, Row, Col, InputNumber, Typography, Select } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
-import React, { useState, useEffect } from "react";
-import moment from "moment";
+import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
 
 import {
   quotation_detail_fields,
@@ -22,12 +13,8 @@ import {
   so_detail_fields,
 } from "./configs";
 import CustomSelect from "../../components/CustomSelect";
-import {
-  calSubtotal,
-  sortData,
-  sumArrObj,
-} from "../../include/js/function_main";
-import numeral from "numeral";
+import { calSubtotal, sumArrObj } from "../../include/js/function_main";
+
 import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
 const { Option } = Select;
@@ -40,7 +27,7 @@ const numberFormat = {
 
 const ItemLine = ({
   readOnly,
-  qn_id,
+
   data_detail,
   detailDispatch,
   headDispatch,
@@ -344,7 +331,6 @@ const ItemLine = ({
         style={{
           width: "100%",
           height: "5px",
-          background: "#c6c6c6",
           background:
             "linear-gradient(180deg,rgba(198,198,198,1) 0%, rgba(198,198,198,1) 55%,rgba(255,255,255,1) 100%)",
           marginBottom: 20,

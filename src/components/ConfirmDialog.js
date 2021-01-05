@@ -1,4 +1,4 @@
-import { Popconfirm, Switch, message } from "antd";
+import { Popconfirm, message } from "antd";
 import React, { useState } from "react";
 
 const ConfirmDialog = (props) => {

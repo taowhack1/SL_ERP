@@ -18,7 +18,6 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
     test_case_specification,
     test_case_method,
   } = useSelector((state) => state.qa.qa_master_data);
-  const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const addLine = () => {
     qaDetailDispatch({ type: "ADD_ROW", payload: item_qa_detail_fields });
   };

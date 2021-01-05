@@ -1,41 +1,24 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Typography, message } from "antd";
+import { Row, Col, Typography, message } from "antd";
 import MainLayout from "../../../components/MainLayout";
 import Comments from "../../../components/Comments";
-import CustomSelect from "../../../components/CustomSelect";
 import { get_log_by_id } from "../../../actions/comment&log";
 import Authorize from "../../system/Authorize";
-import { useHistory } from "react-router-dom";
+
 import WorkOrderTabPanel from "./WorkOrderTabPanel";
-import {
-  workOrderFields,
-  workOrderPKDetailFields,
-  workOrderRMDetailFields,
-} from "../config/workOrder";
-import {
-  getAllItems,
-  getFGMaterialList,
-} from "../../../actions/inventory/itemActions";
-import {
-  createWorkOrder,
-  getSOReference,
-  updateWorkOrder,
-  wo_actions,
-} from "../../../actions/production/workOrderActions";
-import ReducerClass from "../../../include/js/ReducerClass";
+import { wo_actions } from "../../../actions/production/workOrderActions";
 import WorkOrderHead from "./WorkOrderHead";
-import { sortData, speadArray2DTo1D } from "../../../include/js/function_main";
+import { sortData } from "../../../include/js/function_main";
 import { WOContext } from "../../../include/js/context";
 import ModalRemark from "../../../components/Modal_Remark";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
-const { TextArea } = Input;
 
 const WorkOrderView = (props) => {
   const readOnly = true;
   const authorize = Authorize();
-  const history = useHistory();
+
   const dispatch = useDispatch();
   authorize.check_authorize();
   const auth = useSelector((state) => state.auth.authData);

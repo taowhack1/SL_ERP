@@ -16,10 +16,9 @@ import {
   DeleteTwoTone,
 } from "@ant-design/icons";
 import React, { useState, useEffect, useReducer } from "react";
-import numeral from "numeral";
+
 import SubDetail from "./Receive_Sub_Detail";
 import {
-  calDiscount,
   calSubtotal,
   sumArrObj,
   sumArrOdjWithField,
@@ -35,7 +34,7 @@ import { reducer } from "./reducers";
 import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
 import moment from "moment";
-import { get } from "jquery";
+
 import { get_location_shelf_by_item_id } from "../../actions/inventory";
 import { convertDigit, numberFormat } from "../../include/js/main_config";
 const { Text } = Typography;

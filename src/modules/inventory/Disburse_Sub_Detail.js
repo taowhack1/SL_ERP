@@ -1,39 +1,21 @@
-import {
-  Button,
-  Row,
-  Col,
-  InputNumber,
-  AutoComplete,
-  Typography,
-  Select,
-  Divider,
-  Modal,
-  DatePicker,
-  Input,
-} from "antd";
+import { Button, Row, Col, InputNumber, Typography, DatePicker } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import React, { useState, useEffect, useReducer } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import numeral from "numeral";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+
+import { sortData } from "../../include/js/function_main";
 import {
-  calSubtotal,
-  sortData,
-  sumArrObj,
-} from "../../include/js/function_main";
-import {
-  receive_detail_fields,
-  receive_sub_detail_fields,
   disburse_sub_detail_columns,
   disburse_sub_detail_fields,
 } from "./config";
 import moment from "moment";
-import { reducer } from "./reducers";
+
 import CustomSelect from "../../components/CustomSelect";
-import { get_lot_batch_by_item_id_shelf } from "../../actions/inventory";
+
 import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
 const numberFormat = {

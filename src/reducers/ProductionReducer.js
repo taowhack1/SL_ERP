@@ -98,17 +98,6 @@ export default (state = initialState, action) => {
           },
         },
       };
-    case GET_WO_SO_REF:
-      return {
-        ...state,
-        operations: {
-          ...state.operations,
-          workOrder: {
-            ...state.operations.workOrder,
-            workOrder: action.payload,
-          },
-        },
-      };
     case GET_ALL_WORK_CENTER:
       return {
         ...state,

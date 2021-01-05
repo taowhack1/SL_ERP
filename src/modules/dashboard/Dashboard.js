@@ -1,24 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect, useHistory, withRouter } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 import MainLayout from "../../components/MainLayout";
 import { Typography, Modal } from "antd";
-import { Form, Input } from "antd";
-import { addSalary, delSalary } from "../../actions/salaryActions";
-import {
-  change_working_project,
-  signIn2,
-  signIn3,
-} from "../../actions/authActions";
 import { get_select_cost_center } from "../../actions/hrm";
 import { get_currency_list } from "../../actions/accounting";
 import { MenuOutlined } from "@ant-design/icons";
 import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
 // import logo from "../../public/res_company_logo.png";
 const { Text, Title } = Typography;
 const Dashboard = (props) => {
-  const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
   const history = useHistory();
@@ -38,9 +29,7 @@ const Dashboard = (props) => {
   const [state, setState] = useState({
     visible: false,
   });
-  const OpenModal = () => {
-    setState({ visible: true });
-  };
+
   const handleOk = () => {
     console.log("Handle OK Button");
     setState({ visible: false });

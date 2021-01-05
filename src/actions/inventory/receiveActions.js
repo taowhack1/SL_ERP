@@ -3,8 +3,6 @@ import {
   GET_PO_RECEIVE_LIST,
   GET_PO_DETAIL_REF,
   GET_RECEIVE_HEAD,
-  GET_RECEIVE_DETAIL,
-  GET_RECEIVE_SUB_DETAIL,
   RESET_RECEIVE,
   GET_RECEIVE_BY_ID,
 } from "../types";
@@ -19,8 +17,6 @@ import {
   api_receive_sub_detail,
   api_approve,
 } from "../../include/js/api";
-import { Redirect } from "react-router-dom";
-import { browserHistory } from "react-router";
 import { message } from "antd";
 
 export const get_receive_list = (user_name) => async (dispatch) => {

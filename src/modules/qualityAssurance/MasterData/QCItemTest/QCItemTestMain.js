@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory, withRouter } from "react-router-dom";
+import {  useSelector } from "react-redux";
+import {  withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import $ from "jquery";
 import Authorize from "../../../system/Authorize";
@@ -9,12 +9,11 @@ import MainLayout from "../../../../components/MainLayout";
 import { qcTestItemMainColumns } from "../../configs/qcTestItemConfig";
 import ModalCreateQCTestCase from "../../ModalCreateQCTestCase";
 const QCItemTestMain = (props) => {
-  const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
-  const auth = useSelector((state) => state.auth.authData);
-  const dispatch = useDispatch();
+
+
   const [rowClick, setRowClick] = useState(false);
   const [loading, setLoading] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
@@ -60,9 +59,7 @@ const QCItemTestMain = (props) => {
     }, 1200);
   }, [items]);
 
-  const redirect_to_view = (id) => {
-    history.push("/qa/master_data/quality_test_item/view/" + (id ? id : "new"));
-  };
+
 
   return (
     <div>

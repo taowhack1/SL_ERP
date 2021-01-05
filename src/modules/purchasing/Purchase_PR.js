@@ -1,26 +1,19 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Component } from "react";
+import React, { useState, useEffect } from "react";
+
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table, Button } from "antd";
+import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { pr_list_columns } from "./config/pr";
 import $ from "jquery";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  get_pr_list,
-  update_pr_head,
-  get_pr_by_id,
-} from "../../actions/purchase/PR_Actions";
-import {
-  get_pr_detail,
-  reset_pr_data,
-} from "../../actions/purchase/PR_Actions";
+import { get_pr_list, get_pr_by_id } from "../../actions/purchase/PR_Actions";
+import { reset_pr_data } from "../../actions/purchase/PR_Actions";
 import { reset_comments } from "../../actions/comment&log";
 import { getMasterDataItem } from "../../actions/inventory";
-import { Context } from "../../include/js/context";
+
 import useKeepLogs from "../logs/useKeepLogs";
 import Authorize from "../system/Authorize";
-import { getStepStatus } from "../../include/js/function_main";
+
 const Requisition = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();

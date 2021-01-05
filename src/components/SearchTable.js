@@ -1,17 +1,11 @@
-import {
-  BankTwoTone,
-  ClearOutlined,
-  PlusOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { Button, Row, Typography, Col, Space, Divider } from "antd";
+import { ClearOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Row, Col } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import ConfirmDialog from "./ConfirmDialog";
 import CustomSelect from "./CustomSelect";
 import Search from "./Search";
-const { Title } = Typography;
+
 const SearchTable = (props) => {
   const master_data = useSelector((state) => state.inventory.master_data);
   const [state, setState] = useState({

@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  BorderOutlined,
-  CheckSquareOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import { Checkbox, Row, Col, Upload, Button, Space } from "antd";
+import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import { Checkbox, Row, Col, Space } from "antd";
 import Text from "antd/lib/typography/Text";
 import ItemFileUpload from "./ItemFileUpload";
 const ItemCertificate = ({

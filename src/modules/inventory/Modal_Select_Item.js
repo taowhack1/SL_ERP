@@ -1,23 +1,22 @@
-import { Button, Col, Popconfirm, Row, Space, Table } from "antd";
+import { Button, Col, Row, Space, Table } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import Text from "antd/lib/typography/Text";
-import React, { useEffect, useReducer, useState } from "react";
-import numeral from "numeral";
+import React, { useEffect, useState } from "react";
+
 import CustomSelect from "../../components/CustomSelect";
-import { reducer } from "./reducers";
-import { issue_detail_fields, select_item_columns } from "./config";
+
+import { select_item_columns } from "./config";
 import { useSelector } from "react-redux";
 import Search from "../../components/Search";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
+
 import ConfirmDialog from "../../components/ConfirmDialog";
 
-const initialState = [issue_detail_fields];
 const Modal_Select_Item = (props) => {
   const { data_detail, filter, headDispatch } = props;
   console.log("Render : Modal_Select_Item");
   const master_data = useSelector((state) => state.inventory.master_data);
-  const [temp_detail, tempDetailDispatch] = useReducer(reducer, initialState);
-  const { detailDispatch, visible, setVisible, readOnly } = props;
+
+  const { visible, readOnly } = props;
   const [search, setSearch] = useState("");
   const [disable_category, setDisableCategory] = useState(true);
   const [selected_item, set_selected_item] = useState(

@@ -10,7 +10,7 @@ import {
 } from "../../actions/purchase/vendorActions";
 import { vendor_columns } from "./config/vendor";
 import {
-  get_currency_list,
+
   get_vendor_payment_term_list,
 } from "../../actions/accounting";
 import Authorize from "../system/Authorize";
@@ -19,12 +19,12 @@ const Vendor = (props) => {
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
-  const [selectedRow, setSelectedRow] = useState();
-  const [rowClick, setRowClick] = useState(false);
+ 
+  const [, setRowClick] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  const Search = (value) => {};
+ 
   const dispatch = useDispatch();
   let vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const [data, setData] = useState(vendors);

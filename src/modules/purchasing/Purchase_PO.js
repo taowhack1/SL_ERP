@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
@@ -14,7 +14,7 @@ import { reset_comments } from "../../actions/comment&log";
 import $ from "jquery";
 import { getMasterDataItem } from "../../actions/inventory";
 import { get_vendor_payment_term_list } from "../../actions/accounting";
-import { Context } from "../../include/js/context";
+
 import useKeepLogs from "../logs/useKeepLogs";
 import Authorize from "../system/Authorize";
 const PurchaseOrders = (props) => {

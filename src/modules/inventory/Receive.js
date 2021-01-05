@@ -25,10 +25,6 @@ const Receive = (props) => {
   };
   const data = useSelector((state) => state.inventory.receive.receive_list);
   const auth = useSelector((state) => state.auth.authData);
-  const getData = (receive_id, user_name) => {
-    dispatch(get_receive_by_id(receive_id, user_name));
-  };
-
   useEffect(() => {
     dispatch(reset_comments());
     dispatch(reset_receive());

@@ -4,7 +4,6 @@ import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
-import axios from "axios";
 import { getMasterDataItem } from "../../actions/inventory";
 import { issue_columns } from "./config";
 import {

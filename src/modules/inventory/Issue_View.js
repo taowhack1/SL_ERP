@@ -5,7 +5,7 @@ import MainLayout from "../../components/MainLayout";
 
 import Comments from "../../components/Comments";
 import Detail from "./Issue_Detail";
-import TotalFooter from "../../components/TotalFooter";
+
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
 import { issue_actions } from "../../actions/inventory/issueActions";
 import ModalRemark from "../../components/Modal_Remark";
@@ -20,7 +20,7 @@ const Issue_View = (props) => {
   const dataComments = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
   const auth = useSelector((state) => state.auth.authData);
-  const [tab, setTab] = useState("1");
+  const [, setTab] = useState("1");
   const [remark, setRemark] = useState("");
   const [openRemarkModal, setOpenRemarkModal] = useState({
     visible: false,

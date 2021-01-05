@@ -1,5 +1,5 @@
-import { Form, Input, Button, Space, Typography, Table, Row } from "antd";
-import { Redirect, withRouter } from "react-router-dom";
+import { Form, Input, Button, Space, Typography, Table } from "antd";
+import { withRouter } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import {
   UserOutlined,
@@ -8,10 +8,9 @@ import {
 } from "@ant-design/icons";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signIn2, signIn } from "../../actions/authActions";
-import manual_qa from "./Manual_ERP_Quality_Assurance.pdf";
+import { signIn2 } from "../../actions/authActions";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 var getUrl = window.location;
 const LoginForm = (props) => {
   var baseUrl =

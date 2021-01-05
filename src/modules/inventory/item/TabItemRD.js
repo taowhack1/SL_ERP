@@ -1,30 +1,10 @@
-import {
-  BorderOutlined,
-  CheckSquareOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import {
-  Checkbox,
-  Col,
-  Input,
-  InputNumber,
-  Row,
-  Tabs,
-  Upload,
-  Button,
-  Space,
-  Radio,
-} from "antd";
+import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import { Checkbox, Col, Input, Row, Space, Radio } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
-import { useSelector } from "react-redux";
 import CustomSelect from "../../../components/CustomSelect";
-import Line from "../../../components/VendorLine";
 import { get_pre_run_no } from "../../../include/js/function_main";
-import { numberFormat } from "../../../include/js/main_config";
 import ItemCertificate from "./ItemCertificate";
-const { TextArea } = Input;
-
 const TabItemRD = ({
   data_file,
   updateFile,

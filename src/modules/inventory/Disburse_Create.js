@@ -15,7 +15,7 @@ import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import Comments from "../../components/Comments";
 import Detail from "./Disburse_Detail";
-import TotalFooter from "../../components/TotalFooter";
+
 import CustomSelect from "../../components/CustomSelect";
 import axios from "axios";
 import { get_issue_ref_list } from "../../actions/inventory/disburseActions";
@@ -24,7 +24,7 @@ import { useHistory } from "react-router-dom";
 import { validateFormHead } from "../../include/js/function_main";
 import {
   disburse_require_fields,
-  disburse_sub_detail_require_fields,
+
 } from "./config/disburse";
 
 const { TextArea } = Input;
@@ -38,7 +38,7 @@ const DisburseCreate = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
-  const [tab, setTab] = useState("1");
+  const [, setTab] = useState("1");
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
 

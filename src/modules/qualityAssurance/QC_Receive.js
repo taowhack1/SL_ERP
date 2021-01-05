@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table, InputNumber } from "antd";
 import MainLayout from "../../components/MainLayout";
-import numeral from "numeral";
+
 import { reducer } from "./reducers";
 import { get_qc_receive_list, update_qc_receive_list } from "../../actions/qa";
 import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
+
 import { convertDigit } from "../../include/js/main_config";
 
 const numberFormat = {

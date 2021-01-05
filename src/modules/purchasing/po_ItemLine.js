@@ -3,10 +3,8 @@ import {
   Row,
   Col,
   InputNumber,
-  AutoComplete,
   Typography,
   Select,
-  Divider,
   DatePicker,
 } from "antd";
 import {
@@ -14,13 +12,13 @@ import {
   PlusOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { get_pr_detail } from "../../actions/purchase/PO_Actions";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+
 import { poItemColumns, po_detail_fields } from "./config/po";
-import numeral from "numeral";
+
 import CustomSelect from "../../components/CustomSelect";
-import { calSubtotal, sumArrObj } from "../../include/js/function_main";
+import { calSubtotal } from "../../include/js/function_main";
 import moment from "moment";
 import { convertDigit } from "../../include/js/main_config";
 import TextArea from "antd/lib/input/TextArea";
@@ -40,7 +38,7 @@ const ItemLine = ({
   readOnly,
   vat_rate,
   detailDispatch,
-  headDispatch,
+
   updateAmount,
 }) => {
   // master data

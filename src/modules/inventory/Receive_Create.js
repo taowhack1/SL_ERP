@@ -1,12 +1,11 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, withRouter } from "react-router";
+import { useHistory } from "react-router";
 import { Row, Col, Input, Tabs, Typography, message } from "antd";
 import { reducer } from "./reducers";
 import {
   receive_fields,
   receive_detail_fields,
-  receive_detail_require_fields,
   receive_require_fields,
 } from "./config";
 import {
@@ -22,14 +21,11 @@ import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import Comments from "../../components/Comments";
 import Detail from "./Receive_Detail";
-import TotalFooter from "../../components/TotalFooter";
+
 import CustomSelect from "../../components/CustomSelect";
 import axios from "axios";
 import Authorize from "../system/Authorize";
-import {
-  validateFormDetail,
-  validateFormHead,
-} from "../../include/js/function_main";
+import { validateFormHead } from "../../include/js/function_main";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -41,7 +37,7 @@ const Receive_Create = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
-  const [tab, setTab] = useState("1");
+  const [, setTab] = useState("1");
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
 

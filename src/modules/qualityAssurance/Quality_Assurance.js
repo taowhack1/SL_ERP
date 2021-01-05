@@ -1,17 +1,13 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import MainLayout from "../../components/MainLayout";
 import { withRouter } from "react-router-dom";
-import { reset_comments } from "../../actions/comment&log";
-import { RESET_ALL_SALES } from "../../actions/types";
 import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
-
 const QualityAssurance = (props) => {
-  const keepLog = useKeepLogs();
+
   const authorize = Authorize();
   authorize.check_authorize();
-  const dispatch = useDispatch();
+ 
   console.log(props.location.state);
   // const onChange = (pagination, filters, sorter, extra) => {
   //   console.log("params", pagination, filters, sorter, extra);

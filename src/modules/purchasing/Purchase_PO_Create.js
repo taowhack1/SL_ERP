@@ -1,17 +1,7 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Select,
-  Typography,
-  DatePicker,
-  message,
-  InputNumber,
-} from "antd";
-import { useParams, withRouter } from "react-router-dom";
+import { Row, Col, Input, Tabs, Typography, message, InputNumber } from "antd";
+import { withRouter } from "react-router-dom";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 
@@ -20,7 +10,6 @@ import ItemLine from "./po_ItemLine";
 
 import {
   po_fields,
-  poItemColumns,
   po_detail_fields,
   po_require_fields_detail,
   po_require_fields,
@@ -31,11 +20,7 @@ import CustomSelect from "../../components/CustomSelect";
 import {
   update_po,
   create_po,
-  get_po_by_id,
-  update_po_head,
   reset_po_data,
-  get_open_po_list,
-  get_pr_detail,
 } from "../../actions/purchase/PO_Actions";
 import { reducer } from "./reducers";
 import axios from "axios";
@@ -46,7 +31,7 @@ import {
   validateFormDetail,
   validateFormHead,
 } from "../../include/js/function_main";
-import $ from "jquery";
+
 import Authorize from "../system/Authorize";
 
 const { TextArea } = Input;

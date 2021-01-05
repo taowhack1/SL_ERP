@@ -5,7 +5,6 @@ import MainLayout from "../../components/MainLayout";
 import { Form, Input, Select } from "antd";
 import $ from "jquery";
 import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
 const { Option } = Select;
 const layout = {
   labelCol: {
@@ -17,7 +16,6 @@ const layout = {
 };
 const Warehouse = () => {
   const { whColumns, warehouses, companys } = [];
-  const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
   const [warehouseData, setwarehouseData] = useState([...warehouses]);

@@ -1,61 +1,30 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect  } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
   Col,
-  Input,
   Tabs,
-  Select,
   Typography,
-  message,
-  Space,
-  DatePicker,
-  Radio,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
 // import Detail from "./Issue_Detail";
 import Comments from "../../components/Comments";
-import { reducer } from "./reducers";
-import CustomSelect from "../../components/CustomSelect";
-import { get_log_by_id, reset_comments } from "../../actions/comment&log";
-import {
-  create_issue,
-  update_issue,
-} from "../../actions/inventory/issueActions";
-import { machine_fields, machine_require_fields } from "./config/master_data";
-import { report_server } from "../../include/js/main_config";
+import { get_log_by_id } from "../../actions/comment&log";
 import Authorize from "../system/Authorize";
-import {
-  validateFormDetail,
-  validateFormHead,
-} from "../../include/js/function_main";
-import { useHistory } from "react-router-dom";
-import {
-  getProductionMasterData,
-  resetProductionData,
-} from "../../actions/production";
-const { Text } = Typography;
-const { TextArea } = Input;
-const { Option } = Select;
 
-const initialStateHead = machine_fields;
+const { Text } = Typography;
+
+
 // const initialStateDetail = [issue_detail_fields];
 
 const MachineView = (props) => {
-  const history = useHistory();
+
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
-  const auth = useSelector((state) => state.auth.authData);
-  const { itemType, machineType, machineCategory } = useSelector(
-    (state) => state.production.masterData.machine
-  );
   const current_project = useSelector((state) => state.auth.currentProject);
   const dataComments = useSelector((state) => state.log.comment_log);
-  const { data_head, data_detail } = useSelector(
+  const { data_head } = useSelector(
     (state) => state.production.machine.machine
   );
 

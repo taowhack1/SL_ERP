@@ -1,17 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { Row, Col, Typography, Tabs } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { useSelector } from "react-redux";
 import Title from "antd/lib/skeleton/Title";
-import numeral from "numeral";
 import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
 import { convertDigit } from "../../include/js/main_config";
-
 const { Text } = Typography;
-
 const CustomerView = (props) => {
-  const keepLog = useKeepLogs();
+  
   const authorize = Authorize();
   authorize.check_authorize();
   const data_head = useSelector((state) => state.sales.customer.customer);

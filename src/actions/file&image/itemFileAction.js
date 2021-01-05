@@ -1,9 +1,7 @@
 import { message } from "antd";
 import axios from "axios";
-import React from "react";
-import { useSelector } from "react-redux";
+
 import { api_upload_file } from "../../include/js/api";
-import { header_config } from "../../include/js/main_config";
 
 export const item_save_file = (item_id, files, user_name) => {
   try {

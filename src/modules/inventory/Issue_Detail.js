@@ -6,12 +6,12 @@ import {
   OrderedListOutlined,
 } from "@ant-design/icons";
 import { useSelector } from "react-redux";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import moment from "moment";
 
-import { issue_detail_fields, issue_detail_columns } from "./config";
+import { issue_detail_columns } from "./config";
 import CustomSelect from "../../components/CustomSelect";
-import numeral from "numeral";
+
 import ModalSelectItem from "./Modal_Select_Item";
 import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
@@ -27,7 +27,7 @@ const IssueDetail = ({
   data_detail,
   headDispatch,
   detailDispatch,
-  category_id,
+
   type_id,
   filter,
 }) => {
@@ -50,9 +50,6 @@ const IssueDetail = ({
   const selectMultiItem = () => {
     setVisible(true);
     console.log("Select multiple item modal open");
-  };
-  const addLine = () => {
-    detailDispatch({ type: "ADD_ROW", payload: issue_detail_fields });
   };
 
   const delLine = (id) => {
