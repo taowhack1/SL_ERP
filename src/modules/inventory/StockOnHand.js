@@ -25,6 +25,7 @@ const StockMove = (props) => {
   const stock_on_hand = useSelector(
     (state) => state.inventory.report.stock_on_hand
   );
+  const [state, setState] = useState(stock_on_hand);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -44,6 +45,16 @@ const StockMove = (props) => {
     onCancel: () => {
       console.log("Cancel");
     },
+    onSearch: (searchText) => {
+      console.log(searchText);
+      searchText
+        ? setState(
+            stock_on_hand.filter(
+              (item) => item.item_no_name.indexOf(searchText) >= 0
+            )
+          )
+        : setState(stock_on_hand);
+    },
   };
   useEffect(() => {
     dispatch(get_report_stock());
@@ -52,6 +63,7 @@ const StockMove = (props) => {
       setLoading(false);
     }, 1200);
   }, []);
+  console.log(state);
   return (
     <div>
       <MainLayout {...config}>
@@ -60,7 +72,7 @@ const StockMove = (props) => {
             <Table
               loading={loading}
               columns={stock_on_hand_columns}
-              dataSource={stock_on_hand}
+              dataSource={state}
               onChange={onChange}
               rowKey={"item_id"}
               size="small"

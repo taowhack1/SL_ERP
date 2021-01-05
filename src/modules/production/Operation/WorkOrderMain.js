@@ -46,7 +46,7 @@ const WorkOrderMain = (props) => {
     home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Operations", "Work Order"],
-    search: false,
+    search: true,
     create: "/production/operations/wo/create",
     buttonAction: ["Create"],
     edit: {},
@@ -54,6 +54,17 @@ const WorkOrderMain = (props) => {
     discard: "/production",
     onCancel: () => {
       console.log("Cancel");
+    },
+    onSearch: (searchText) => {
+      searchText
+        ? setStateWO(
+            workOrderList.filter(
+              (wo) =>
+                wo.item_no_name.indexOf(searchText) >= 0 ||
+                wo.wo_no_description.indexOf(searchText) >= 0
+            )
+          )
+        : setStateWO(workOrderList);
     },
   };
   const onChangeSeach = ({

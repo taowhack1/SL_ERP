@@ -147,43 +147,37 @@ const WorkOrderCreate = (props) => {
       console.log("RM DATA : ", RMReducer.data);
       console.log("PK DATA : ", PKReducer.data);
 
-      let copyData = RMReducer.data;
-      copyData = copyData.map((obj) => {
-        return {
-          ...obj,
-          sum_lead_time:
-            obj.wo_detail_lead_time_day_pr + obj.wo_detail_lead_time_day_qa,
-        };
-      });
-      let copyData2 = PKReducer.data;
-      copyData2 = copyData2.map((obj) => {
-        return {
-          ...obj,
-          sum_lead_time:
-            obj.wo_detail_lead_time_day_pr + obj.wo_detail_lead_time_day_qa,
-        };
-      });
-      const maxRMLeadTime = Math.max.apply(
-        Math,
-        copyData.map((obj) => obj.sum_lead_time)
-      );
-      const maxPKLeadTime = Math.max.apply(
-        Math,
-        copyData2.map((obj) => obj.sum_lead_time)
-      );
-      const maxRM = copyData.find((obj) => obj.sum_lead_time === maxRMLeadTime);
-      const maxPK = copyData2.find(
-        (obj) => obj.sum_lead_time === maxPKLeadTime
-      );
+      // let copyData = RMReducer.data;
+      // copyData = copyData.map((obj) => {
+      //   return {
+      //     ...obj,
+      //     sum_lead_time:
+      //       obj.wo_detail_lead_time_day_pr + obj.wo_detail_lead_time_day_qa,
+      //   };
+      // });
+      // let copyData2 = PKReducer.data;
+      // copyData2 = copyData2.map((obj) => {
+      //   return {
+      //     ...obj,
+      //     sum_lead_time:
+      //       obj.wo_detail_lead_time_day_pr + obj.wo_detail_lead_time_day_qa,
+      //   };
+      // });
+      // const maxRMLeadTime = Math.max.apply(
+      //   Math,
+      //   copyData.map((obj) => obj.sum_lead_time)
+      // );
+      // const maxPKLeadTime = Math.max.apply(
+      //   Math,
+      //   copyData2.map((obj) => obj.sum_lead_time)
+      // );
+      // const maxRM = copyData.find((obj) => obj.sum_lead_time === maxRMLeadTime);
+      // const maxPK = copyData2.find(
+      //   (obj) => obj.sum_lead_time === maxPKLeadTime
+      // );
       console.log("Save");
       const saveData = {
-        data_head: {
-          ...headReducer.data,
-          wo_lead_time_day_rm: maxRM.wo_detail_lead_time_day_pr ?? 0,
-          wo_lead_time_day_rm_qa: maxRM.wo_detail_lead_time_day_qa ?? 0,
-          wo_lead_time_day_pk: maxPK.wo_detail_lead_time_day_pr ?? 0,
-          wo_lead_time_day_pk_qa: maxPK.wo_detail_lead_time_day_qa ?? 0,
-        },
+        data_head: headReducer.data,
         data_material: sortData(RMReducer.data.concat(PKReducer.data)),
       };
       headReducer.data.wo_id

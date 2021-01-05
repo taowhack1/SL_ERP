@@ -29,13 +29,22 @@ const Vendor = (props) => {
   let vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const [data, setData] = useState(vendors);
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    dispatch(get_all_vendor());
-    dispatch(get_vendor_payment_term_list());
+  useEffect((dispatch) => {
+    const getMasterData = () => {
+      dispatch(get_all_vendor());
+      dispatch(get_vendor_payment_term_list());
+    };
+    getMasterData();
   }, []);
-  useEffect(() => {
-    setData(vendors);
-  }, [vendors.length]);
+  useEffect(
+    (vendors) => {
+      const setStateData = () => {
+        setData(vendors);
+      };
+      setStateData();
+    },
+    [vendors.length]
+  );
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,

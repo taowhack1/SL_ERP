@@ -24,6 +24,7 @@ const Disburse = (props) => {
   const disburse_list = useSelector(
     (state) => state.inventory.disburse.disburse_list
   );
+  const [state, setState] = useState(disburse_list);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -46,6 +47,17 @@ const Disburse = (props) => {
     onCancel: () => {
       console.log("Cancel");
     },
+    onSearch: (searchText) => {
+      searchText
+        ? setState(
+            disburse_list.filter(
+              (data) =>
+                data.disburse_no_description.indexOf(searchText) >= 0 ||
+                data.issue_no_description.indexOf(searchText) >= 0
+            )
+          )
+        : setState(disburse_list);
+    },
   };
   return (
     <div>
@@ -54,7 +66,7 @@ const Disburse = (props) => {
           <Col span={24}>
             <Table
               columns={disburse_columns}
-              dataSource={disburse_list}
+              dataSource={state}
               onChange={onChange}
               rowKey={"disburse_id"}
               size="small"

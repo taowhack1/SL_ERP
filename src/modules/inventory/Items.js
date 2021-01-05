@@ -62,11 +62,7 @@ const Items = (props) => {
           ));
     }
     setItems(
-      search_data.filter(
-        (item) =>
-          item.item_name.indexOf(search_text) >= 0 ||
-          item.item_no.indexOf(search_text) >= 0
-      )
+      search_data.filter((item) => item.item_no_name.indexOf(search_text) >= 0)
     );
   };
 

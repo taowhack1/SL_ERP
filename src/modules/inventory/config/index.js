@@ -354,6 +354,9 @@ export const select_item_columns = [
     width: "10%",
     align: "right",
     ellipsis: true,
+    render: (value, record, index) => {
+      return convertDigit(value, 4);
+    },
   },
   {
     title: "Unit",

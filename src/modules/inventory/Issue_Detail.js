@@ -231,7 +231,7 @@ const IssueDetail = ({
                   <CustomSelect
                     allowClear
                     showSearch
-                    disabled={line.item_id ? false : true}
+                    disabled={true}
                     size="small"
                     placeholder={"Unit"}
                     data={select_uoms}

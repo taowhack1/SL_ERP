@@ -217,6 +217,10 @@ button.primary:hover {
 .text-string {
   padding-left: 5px;
   text-align: left !important;
+  /* white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: keep-all; */
 }
 .text-left {
   text-align: left !important;
@@ -378,13 +382,19 @@ tr.selected-row:hover {
 }
 .text-value {
   white-space: nowrap;
-  /* width: 100%; */
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: keep-all;
+  /* width: 100%; */
+
   /* border: 1px solid #000000; */
 }
 .ant-col .text-value {
   color: #717171;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: keep-all;
 }
 div:empty:before {
   content: attr(placeholder);
@@ -434,6 +444,9 @@ span.require {
   width: 100%;
   text-align: center;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: keep-all;
 }
 span.ant-typography .server-status,
 span.server-status {
