@@ -1,5 +1,5 @@
 import { Tag } from "antd";
-import React from "react";
+import React, { useCallback } from "react";
 import $ from "jquery";
 import {
   CheckCircleOutlined,
@@ -264,13 +264,12 @@ export const get_pre_run_no = (prev, index, value) => {
     return copy_run_no;
   }
 };
-
 export const convertNumberToTime = (number = 0) => {
   const second = (number ? number : 0) * 60;
   let result = numeral(second).format("00:00:00");
   result = result.split(":");
   result = result[0].length === 1 ? "0" + result.join(":") : result.join(":");
-  console.log("convertNumberToTime Before : ", number, " After :", result);
+  // console.log("convertNumberToTime Before : ", number, " After :", result);
   return result;
 };
 
@@ -278,7 +277,7 @@ export const convertTimeToNumber = (time = "00:00:00") => {
   const timeTemp = time ? time : "00:00:00";
   const timeArray = timeTemp.split(":");
   const minutes = parseInt(timeArray[0] * 60) + parseInt(timeArray[1]);
-  console.log("convertTimeToNumber Before : ", time, " After : ", minutes);
+  // console.log("convertTimeToNumber Before : ", time, " After : ", minutes);
   return minutes;
 };
 

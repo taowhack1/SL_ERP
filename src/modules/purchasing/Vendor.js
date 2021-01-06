@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
@@ -13,6 +13,7 @@ import { get_vendor_payment_term_list } from "../../actions/accounting";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 const Vendor = (props) => {
+  const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
@@ -65,7 +66,9 @@ const Vendor = (props) => {
       console.log("Cancel");
     },
   };
-
+  const redirect_to_view = (id) => {
+    history.push("/purchase/vendor/view/" + (id ? id : "new"));
+  };
   return (
     <div>
       <MainLayout {...config}>
@@ -88,10 +91,9 @@ const Vendor = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     keepLog.keep_log_action(record.vendor_no);
-                    dispatch(get_vendor_by_id(record.vendor_id));
-                    props.history.push({
-                      pathname: "/purchase/vendor/view/" + record.vendor_id,
-                    });
+                    dispatch(
+                      get_vendor_by_id(record.vendor_id, redirect_to_view)
+                    );
                   },
                 };
               }}

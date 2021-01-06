@@ -1,5 +1,11 @@
-import { Row, Col, InputNumber, Typography, TimePicker } from "antd";
-import React, { useContext, useEffect, useState } from "react";
+import { Row, Col, InputNumber, Typography, TimePicker, Space } from "antd";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import CustomSelect from "../../../components/CustomSelect";
 import PartSpecificationDetail from "./PartSpecification_Detail";
@@ -9,6 +15,11 @@ import moment from "moment";
 import ItemPartMix from "./ItemPartMix";
 import ItemPartName from "./ItemPartName";
 import { ItemContext } from "../../../include/js/context";
+import {
+  convertNumberToTime,
+  convertTimeToNumber,
+} from "../../../include/js/function_main";
+const { RangePicker } = TimePicker;
 
 const { Text } = Typography;
 
@@ -20,8 +31,10 @@ const PartSpecification = ({ partId }) => {
   const [workCenterMachine, setWorkCenterMachine] = useState([]);
 
   const [state, setState] = useState({
-    item_part_specification_lead_time:
-      PartReducer.data[partId].item_part_specification_lead_time,
+    item_part_specification_lead_time_start:
+      PartReducer.data[partId].item_part_specification_lead_time_start,
+    item_part_specification_lead_time_end:
+      PartReducer.data[partId].item_part_specification_lead_time_end,
     item_part_specification_remark:
       PartReducer.data[partId].item_part_specification_remark,
     item_part_specification_worker:
@@ -44,8 +57,10 @@ const PartSpecification = ({ partId }) => {
 
   useEffect(() => {
     setState({
-      item_part_specification_lead_time:
-        PartReducer.data[partId].item_part_specification_lead_time,
+      item_part_specification_lead_time_start:
+        PartReducer.data[partId].item_part_specification_lead_time_start,
+      item_part_specification_lead_time_end:
+        PartReducer.data[partId].item_part_specification_lead_time_end,
       item_part_specification_remark:
         PartReducer.data[partId].item_part_specification_remark,
       item_part_specification_worker:
@@ -270,40 +285,65 @@ const PartSpecification = ({ partId }) => {
                       <span className="require">* </span>Schedule Time :
                     </Text>
                   </Col>
-                  <Col span={12}>
+                  <Col span={12} className="text-center">
                     {readOnly ? (
-                      <Text className="text-view">
-                        {state.item_part_specification_lead_time
-                          ? state.item_part_specification_lead_time
-                          : "-"}
-                      </Text>
+                      <Space size={16}>
+                        <Text className="text-value text-center">
+                          {convertTimeToNumber(
+                            state.item_part_specification_lead_time_start
+                          )}
+                        </Text>
+                        <Text strong>-</Text>
+                        <Text className="text-value text-center">
+                          {convertTimeToNumber(
+                            state.item_part_specification_lead_time_end
+                          )}
+                        </Text>
+                      </Space>
                     ) : (
-                      <TimePicker
-                        className="full-width"
-                        format={"HH:mm"}
-                        showNow={false}
-                        name={"item_part_specification_lead_time"}
-                        placeholder="00:00:00 (HH : mm : ss)"
-                        size="small"
-                        required
-                        value={
-                          state.item_part_specification_lead_time
-                            ? moment(
-                                state.item_part_specification_lead_time,
-                                "HH:mm:ss"
-                              )
-                            : ""
-                        }
-                        onChange={(data) => {
-                          const time = moment(data, "HH:mm").format("HH:mm:ss");
-                          onChangeValue({
-                            item_part_specification_lead_time: data
-                              ? time
-                              : null,
-                          });
-                        }}
-                        onBlur={() => Save()}
-                      />
+                      <Space size={16}>
+                        <InputNumber
+                          name="item_part_specification_lead_time_start"
+                          placeholder="Time"
+                          min={0}
+                          step={1}
+                          defaultValue={0}
+                          precision={0}
+                          value={convertTimeToNumber(
+                            state.item_part_specification_lead_time_start
+                          )}
+                          onChange={(data) => {
+                            onChangeValue({
+                              item_part_specification_lead_time_start: convertNumberToTime(
+                                data
+                              ),
+                            });
+                          }}
+                          onBlur={() => Save()}
+                          size="small"
+                        />
+                        <Text strong>To</Text>
+                        <InputNumber
+                          name="item_part_specification_lead_time_end"
+                          placeholder="Time"
+                          min={0}
+                          step={1}
+                          defaultValue={0}
+                          precision={0}
+                          value={convertTimeToNumber(
+                            state.item_part_specification_lead_time_end
+                          )}
+                          onChange={(data) => {
+                            onChangeValue({
+                              item_part_specification_lead_time_end: convertNumberToTime(
+                                data
+                              ),
+                            });
+                          }}
+                          onBlur={() => Save()}
+                          size="small"
+                        />
+                      </Space>
                     )}
                   </Col>
                   <Col span={5}>

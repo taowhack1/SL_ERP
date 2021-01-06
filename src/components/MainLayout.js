@@ -8,8 +8,8 @@ import { AppContext } from "../include/js/context";
 const { Header, Content } = Layout;
 
 function MainLayout(props) {
-  const context = useContext(AppContext);
-  console.log(context);
+  // const context = useContext(AppContext);
+  // console.log(context);
   return (
     <>
       <Layout>

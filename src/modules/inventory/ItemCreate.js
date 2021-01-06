@@ -34,7 +34,6 @@ import {
   item_require_fields,
   item_weight_detail,
   item_part_mix_fields,
-  testData,
 } from "./config/item";
 import {
   sum2DArrOdjWithField,
@@ -98,17 +97,17 @@ const ItemCreate = (props) => {
     initialStatePackaging
   );
   const PartReducer = new ReducerClass(
-    testData.data_part,
+    data.data_part,
     null,
     item_part_specification_fields
   );
-  const PartDetailReducer = new ReducerClass(testData.data_part_detail, null, [
+  const PartDetailReducer = new ReducerClass(data.data_part_detail, null, [
     item_part_specification_detail_fields,
   ]);
-  const PMReducer = new ReducerClass(testData.data_part_mix, null, [
+  const PMReducer = new ReducerClass(data.data_part_mix, null, [
     item_part_mix_fields,
   ]);
-  const FormulaReducer = new ReducerClass(testData.data_formula, null, [
+  const FormulaReducer = new ReducerClass(data.data_formula, null, [
     item_formula_detail_fields,
   ]);
   PartReducer.setReducer("array");
@@ -328,8 +327,8 @@ const ItemCreate = (props) => {
     data_file,
     updateFile,
   ]);
-  console.log("initialStateHead ", initialStateHead);
-  console.log("Item Pre-run :", data_head.item_pre_run_no);
+  // console.log("initialStateHead ", initialStateHead);
+  // console.log("Item Pre-run :", data_head.item_pre_run_no);
   return (
     <ItemContext.Provider value={ContextValue}>
       <MainLayout {...config}>
