@@ -55,9 +55,12 @@ export const api_item_process = `${api_server}/api/inventory/item_process`;
 export const api_qc_receive_list = `${api_server}/api/qa/qc/item`;
 export const api_qc_receive_detail_list = `${api_server}/api/qa/qc/item/detail`;
 //qa test case
-export const api_qa_subject = `${api_server}/api/list/qa_subject`;
-export const api_qa_specification = `${api_server}/api/list/qa_specification`;
-export const api_qa_method = `${api_server}/api/list/qa_method`;
+export const api_qa_subject_list = `${api_server}/api/list/qa_subject`;
+export const api_qa_specification_list = `${api_server}/api/list/qa_specification`;
+export const api_qa_method_list = `${api_server}/api/list/qa_method`;
+export const api_qa_subject = `${api_server}/api/qa/qa_subject`;
+export const api_qa_specification = `${api_server}/api/qa/qa_specification`;
+export const api_qa_method = `${api_server}/api/qa/qa_method`;
 
 //vendor
 export const api_vendor = `${api_server}/api/purchase/vendor`;

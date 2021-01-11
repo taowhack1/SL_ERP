@@ -12,12 +12,16 @@ export const reducer = (state, action) => {
       console.log(state);
       return state;
     case "DEL_ROW":
+      console.log("1", state);
       state = sortData(state.filter((line) => line.id !== action.payload.id));
+      console.log("2", state);
       state = action.payload.field_id
         ? state.map((data, index) => {
             return { ...data, [action.payload.field_id]: index + 1 };
           })
         : state;
+      console.log("3", state);
+
       return state;
     case "DEL_ROW_2D":
       return state.filter((state, index) => index !== action.payload.id);

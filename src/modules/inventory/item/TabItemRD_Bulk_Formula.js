@@ -11,6 +11,7 @@ import { item_part_specification_fields } from "../config/item";
 import Modal from "antd/lib/modal/Modal";
 import { convertDigit } from "../../../include/js/main_config";
 import { ItemContext } from "../../../include/js/context";
+import TotalFormula from "./TotalFormula";
 const { TabPane } = Tabs;
 const TabBulkFormula = () => {
   const {
@@ -59,6 +60,7 @@ const TabBulkFormula = () => {
     PMReducer.deleteRow2D(rowId);
     FormulaReducer.deleteRow2D(rowId);
   };
+  console.log("PartReducer data", PartReducer.data);
   return (
     <>
       <Row className="col-2 mt-3  detail-tab-row">
@@ -112,22 +114,24 @@ const TabBulkFormula = () => {
           return (
             <TabPane
               tab={
-                <div className="tab-pane text-left">
-                  {!readOnly && <span className="require">* </span>}
-                  {line.item_part_description}
-                  {!readOnly && PartReducer.data.length > 1 && (
-                    <>
+                <div className="tab-pane">
+                  <div style={{ float: "left" }}>
+                    {!readOnly && <span className="require">* </span>}
+                    {line.item_part_description}
+                  </div>
+                  <div style={{ float: "right" }}>
+                    {!readOnly && PartReducer.data.length > 1 && (
                       <CloseOutlined
                         title="Delete"
                         onClick={() => showPopconfirm(line.id)}
                         style={{
-                          marginLeft: 10,
-                          color: "black",
+                          color: "red",
+                          fontWeight: "bold",
                           fontSize: 14,
                         }}
                       />
-                    </>
-                  )}
+                    )}
+                  </div>
                 </div>
               }
               key={`${key}`}
@@ -137,6 +141,9 @@ const TabBulkFormula = () => {
             </TabPane>
           );
         })}
+        <TabPane tab={"Master Formula"} key={"total%"} closable={true}>
+          <TotalFormula />
+        </TabPane>
       </Tabs>
       <Modal
         title="Confirm Delete"

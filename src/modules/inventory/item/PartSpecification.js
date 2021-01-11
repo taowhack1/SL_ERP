@@ -29,7 +29,6 @@ const PartSpecification = ({ partId }) => {
     (state) => state.production.workCenter
   );
   const [workCenterMachine, setWorkCenterMachine] = useState([]);
-
   const [state, setState] = useState({
     item_part_specification_lead_time_start:
       PartReducer.data[partId].item_part_specification_lead_time_start,
@@ -74,6 +73,7 @@ const PartSpecification = ({ partId }) => {
         PartReducer.data[partId].work_center_no_description,
     });
   }, [PartReducer.data[partId].data_id]);
+  console.log(state);
   return (
     <>
       <div className="group-row">

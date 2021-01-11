@@ -115,6 +115,7 @@ export const RESET_SO = "RESET_SO";
 
 // QA
 export const GET_QA_MASTER_DATA = "GET_QA_MASTER_DATA";
+export const GET_QA_TEST_BY_ID = "GET_QA_TEST_BY_ID";
 
 //QC
 export const GET_QC_RECEIVE_LIST = "GET_QC_RECEIVE_LIST";

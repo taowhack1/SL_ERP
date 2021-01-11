@@ -17,7 +17,7 @@ export const sortData = (arrObject) => {
       ...obj,
       id: key,
       commit: 1,
-      data_id: key,
+      data_id: obj.data_id ?? key,
     });
   });
   return temp;
@@ -335,4 +335,8 @@ export const speadArray2DTo1D = () => {
   let newArr = [];
   arr2D.forEach((arr) => newArr.push(...arr));
   console.log(sortData(newArr));
+};
+
+export const pad2number = (number) => {
+  return number < 10 ? "0" + number : number;
 };

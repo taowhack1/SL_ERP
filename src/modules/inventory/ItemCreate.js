@@ -67,6 +67,7 @@ const ItemCreate = (props) => {
   authorize.check_authorize();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth.authData);
+  const { department_id } = useSelector((state) => state.auth.authData);
   const itemList = useSelector((state) =>
     state.inventory.master_data.item_list.filter((item) =>
       [1, 2, 3, 4].includes(item.type_id)
@@ -110,7 +111,9 @@ const ItemCreate = (props) => {
   const FormulaReducer = new ReducerClass(data.data_formula, null, [
     item_formula_detail_fields,
   ]);
-  PartReducer.setReducer("array");
+  PartReducer.setReducer(
+    data ? (data.data_head.item_id ? "object" : "array") : "array"
+  );
   PartDetailReducer.setReducer("array");
   PMReducer.setReducer("array");
   FormulaReducer.setReducer("array");
@@ -132,7 +135,7 @@ const ItemCreate = (props) => {
   const sumPercent = useCallback((data, field) => {
     return setPercent(sum2DArrOdjWithField(data, field));
   }, []);
-
+  console.log("data.data_part", data.data_part);
   useEffect(() => {
     dispatch(get_sale_master_data());
     dispatch(getAllMachine());
@@ -173,7 +176,7 @@ const ItemCreate = (props) => {
           ? data.data_packaging_detail
           : [item_packaging_detail_fields],
     });
-
+    console.log("data part", data.data_part);
     PartReducer.setDataArray(data.data_part);
     PartDetailReducer.setDataArray2D(data.data_part_detail);
     PMReducer.setDataArray2D(data.data_part_mix);
@@ -224,6 +227,19 @@ const ItemCreate = (props) => {
         });
         return false;
       }
+      if (
+        department_id === 13 &&
+        [1, 2].includes(data_head.type_id) &&
+        !data_detail[0].vendor_id
+      ) {
+        console.log("Purchase Person");
+        message.warning({
+          content: 'Please fill "Purchase Vendor" form completely.',
+          key,
+          duration: 4,
+        });
+        return false;
+      }
       if (validate.validate) {
         const data = {
           access_right: {
@@ -247,16 +263,16 @@ const ItemCreate = (props) => {
           data_packaging_detail: data_packaging_detail,
           data_file: data_file,
         };
-        data_head.item_id
-          ? dispatch(
-              upDateItem(
-                data_head.item_id,
-                data,
-                auth.user_name,
-                redirect_to_view
-              )
-            )
-          : dispatch(createNewItems(data, auth.user_name, redirect_to_view));
+        // data_head.item_id
+        //   ? dispatch(
+        //       upDateItem(
+        //         data_head.item_id,
+        //         data,
+        //         auth.user_name,
+        //         redirect_to_view
+        //       )
+        //     )
+        //   : dispatch(createNewItems(data, auth.user_name, redirect_to_view));
       } else {
         message.warning({
           content: "Please fill your form completely.",

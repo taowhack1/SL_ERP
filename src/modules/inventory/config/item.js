@@ -4,6 +4,7 @@ import Text from "antd/lib/typography/Text";
 import { Input, InputNumber, Popconfirm } from "antd";
 import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
 import { convertDigit } from "../../../include/js/main_config";
+import { pad2number } from "../../../include/js/function_main";
 export const item_vendor_columns = [
   {
     id: 0,
@@ -191,7 +192,7 @@ export const item_qa_columns = [
   },
   {
     id: 1,
-    name: "QA Subject",
+    name: "Subject",
     size: 6,
     require: true,
   },
@@ -800,6 +801,45 @@ export const itemPartMixColumns = (
           </Popconfirm>
         );
       }
+    },
+  },
+];
+
+export const totalFormulaColumns = [
+  {
+    title: "Part",
+    dataIndex: "item_part_description",
+    width: "15%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record) => {
+      return record.isFirstItem ? value : " ";
+    },
+  },
+  {
+    title: "No.",
+    dataIndex: "id",
+    align: "center",
+    width: "10%",
+    ellipsis: true,
+    render: (value, record) => {
+      return record.item_part_description + "" + pad2number(value + 1);
+    },
+  },
+  {
+    title: "RM Code",
+    dataIndex: "item_no_name",
+    align: "left",
+    ellipsis: true,
+  },
+  {
+    title: "%(W/W)",
+    dataIndex: "item_formula_percent_qty",
+    width: "30%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record) => {
+      return convertDigit(value, 4);
     },
   },
 ];

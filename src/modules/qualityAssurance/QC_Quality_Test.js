@@ -8,9 +8,10 @@ import { update_qc_receive_list } from "../../actions/qa";
 import Authorize from "../system/Authorize";
 import ModalCreateQCTestCase from "./ModalCreateQCTestCase";
 import $ from "jquery";
+import { get_qa_test_case } from "../../actions/qa/qaTestAction";
 const initialData = {};
 
-const QualityTest = () => {
+const QATestCase = () => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const QualityTest = () => {
   const qc_receive_detail_list = useSelector(
     (state) => state.qa.qc_receive_detail_list
   );
+
   const [data_head, headDispatch] = useReducer(reducer, initialData);
   const [rowClick, setRowClick] = useState(false);
 
@@ -326,4 +328,4 @@ const QualityTest = () => {
   );
 };
 
-export default withRouter(QualityTest);
+export default withRouter(QATestCase);

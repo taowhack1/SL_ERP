@@ -38,7 +38,7 @@ const SearchTable = (props) => {
   };
   useEffect(() => {
     console.log("Search", state);
-    props.onChangeSeach && props.onChangeSeach(state);
+    props.onChangeSearch && props.onChangeSearch(state);
   }, [state]);
   return (
     <>

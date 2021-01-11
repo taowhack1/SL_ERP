@@ -41,10 +41,28 @@ export const qcTestItemMainColumns = [
   },
 ];
 
+export const QASubjectColumns = [
+  {
+    title: "No.",
+    align: "center",
+    dataIndex: "id",
+    width: "5%",
+    render: (value, record, index) => {
+      return value + 1;
+    },
+  },
+  {
+    title: "Description",
+    dataIndex: "qa_subject_description",
+    key: "qa_subject_description",
+    align: "left",
+  },
+];
+
 export const qcTestItemSubjectColumns = (
   readOnly,
-  onChangeValue,
-  delLine,
+  onChange,
+  onDelete,
   updateRowStatus
 ) => [
   {
@@ -75,7 +93,7 @@ export const qcTestItemSubjectColumns = (
             disabled={record.qa_subject_actived ? 0 : 1}
             name={"qa_subject_name"}
             onChange={(e) =>
-              onChangeValue(record.id, {
+              onChange(record.id, {
                 qa_subject_name: e.target.value,
               })
             }
@@ -101,7 +119,7 @@ export const qcTestItemSubjectColumns = (
             disabled={record.qa_subject_actived ? 0 : 1}
             name={"qa_subject_remark"}
             onChange={(e) =>
-              onChangeValue(record.id, {
+              onChange(record.id, {
                 qa_subject_remark: e.target.value,
               })
             }
@@ -139,7 +157,7 @@ export const qcTestItemSubjectColumns = (
         ) : (
           <Popconfirm
             onConfirm={() => {
-              delLine(record.id);
+              onDelete(record.id);
             }}
             title="Are you sure you want to delete this row？"
             okText="Yes"
@@ -152,7 +170,6 @@ export const qcTestItemSubjectColumns = (
     },
   },
 ];
-
 export const subject_data = [
   {
     qa_subject_id: 0,
@@ -172,75 +189,286 @@ export const subject_data = [
     qa_subject_remark: "Description 3",
     qa_subject_actived: 1,
   },
-  // {
-  //   qa_subject_id: 3,
-  //   qa_subject_name: "TEST SUBJECT 4",
-  //   qa_subject_remark: "Description 4",
-  //   qa_subject_actived: 1,
-  // },
-  // {
-  //   qa_subject_id: 4,
-  //   qa_subject_name: "TEST SUBJECT 5",
-  //   qa_subject_remark: "Description 5",
-  //   qa_subject_actived: 1,
-  // },
-  // {
-  //   qa_subject_id: 5,
-  //   qa_subject_name: "TEST SUBJECT 6",
-  //   qa_subject_remark: "Description 6",
-  //   qa_subject_actived: 1,
-  // },
-  // {
-  //   qa_subject_id: 6,
-  //   qa_subject_name: "TEST SUBJECT 7",
-  //   qa_subject_remark: "Description 7",
-  //   qa_subject_actived: 1,
-  // },
-  // {
-  //   qa_subject_id: 7,
-  //   qa_subject_name: "TEST SUBJECT 8",
-  //   qa_subject_remark: "Description 8",
-  //   qa_subject_actived: 1,
-  // },
-  // {
-  //   qa_subject_id: 8,
-  //   qa_subject_name: "TEST SUBJECT 9",
-  //   qa_subject_remark: "Description 9",
-  //   qa_subject_actived: 1,
-  // },
-  // {
-  //   qa_subject_id: 9,
-  //   qa_subject_name: "TEST SUBJECT 10",
-  //   qa_subject_remark: "Description 10",
-  //   qa_subject_actived: 1,
-  // },
-  // {
-  //   qa_subject_id: 10,
-  //   qa_subject_name: "TEST SUBJECT 11",
-  //   qa_subject_remark: "Description 11",
-  //   qa_subject_actived: 1,
-  // },
 ];
-// export const qcTestItemSubjectColumns = [
-//   {
-//     id: 1,
-//     name: "No.",
-//     size: 1,
-//     require: false,
-//   },
-//   {
-//     id: 2,
-//     name: "Subject Name",
-//     size: 11,
-//     require: true,
-//   },
-//   {
-//     id: 3,
-//     name: "Description",
-//     size: 11,
-//     require: false,
-//   },
-// ];
+export const item_test_case = [
+  {
+    type_id: 1,
+    type_no: "RM",
+    type_name: "Raw material",
+    type_no_name: "[ RM ] Raw material",
+    subject_data: [
+      {
+        qa_subject_id: 0,
+        qa_subject_name: "TEST SUBJECT 1",
+        qa_subject_remark: "Description 1",
+        qa_subject_actived: 1,
+      },
+      {
+        qa_subject_id: 1,
+        qa_subject_name: "TEST SUBJECT 2",
+        qa_subject_remark: "Description 2",
+        qa_subject_actived: 1,
+      },
+      {
+        qa_subject_id: 2,
+        qa_subject_name: "TEST SUBJECT 3",
+        qa_subject_remark: "Description 3",
+        qa_subject_actived: 1,
+      },
+    ],
+    specification_data: [
+      {
+        qa_specification_id: 0,
+        qa_specification_name: "TEST SUBJECT 1",
+        qa_specification_remark: "Description 1",
+        qa_specification_actived: 1,
+      },
+      {
+        qa_specification_id: 1,
+        qa_specification_name: "TEST SUBJECT 2",
+        qa_specification_remark: "Description 2",
+        qa_specification_actived: 1,
+      },
+      {
+        qa_specification_id: 2,
+        qa_specification_name: "TEST SUBJECT 3",
+        qa_specification_remark: "Description 3",
+        qa_specification_actived: 1,
+      },
+    ],
+    method_data: [
+      {
+        qa_method_id: 0,
+        qa_method_name: "TEST SUBJECT 1",
+        qa_method_remark: "Description 1",
+        qa_method_actived: 1,
+      },
+      {
+        qa_method_id: 1,
+        qa_method_name: "TEST SUBJECT 2",
+        qa_method_remark: "Description 2",
+        qa_method_actived: 1,
+      },
+      {
+        qa_method_id: 2,
+        qa_method_name: "TEST SUBJECT 3",
+        qa_method_remark: "Description 3",
+        qa_method_actived: 1,
+      },
+    ],
+    count_subject: 3,
+    count_specification: 3,
+    count_method: 3,
+  },
+  {
+    type_id: 2,
+    type_no: "PK",
+    type_name: "Package",
+    type_no_name: "[ PK ] Package",
+    subject_data: [
+      {
+        qa_subject_id: 0,
+        qa_subject_name: "TEST SUBJECT 1",
+        qa_subject_remark: "Description 1",
+        qa_subject_actived: 1,
+      },
+      {
+        qa_subject_id: 1,
+        qa_subject_name: "TEST SUBJECT 2",
+        qa_subject_remark: "Description 2",
+        qa_subject_actived: 1,
+      },
+      {
+        qa_subject_id: 2,
+        qa_subject_name: "TEST SUBJECT 3",
+        qa_subject_remark: "Description 3",
+        qa_subject_actived: 1,
+      },
+    ],
+    specification_data: [
+      {
+        qa_specification_id: 0,
+        qa_specification_name: "TEST SUBJECT 1",
+        qa_specification_remark: "Description 1",
+        qa_specification_actived: 1,
+      },
+      {
+        qa_specification_id: 1,
+        qa_specification_name: "TEST SUBJECT 2",
+        qa_specification_remark: "Description 2",
+        qa_specification_actived: 1,
+      },
+      {
+        qa_specification_id: 2,
+        qa_specification_name: "TEST SUBJECT 3",
+        qa_specification_remark: "Description 3",
+        qa_specification_actived: 1,
+      },
+    ],
+    method_data: [
+      {
+        qa_method_id: 0,
+        qa_method_name: "TEST SUBJECT 1",
+        qa_method_remark: "Description 1",
+        qa_method_actived: 1,
+      },
+      {
+        qa_method_id: 1,
+        qa_method_name: "TEST SUBJECT 2",
+        qa_method_remark: "Description 2",
+        qa_method_actived: 1,
+      },
+      {
+        qa_method_id: 2,
+        qa_method_name: "TEST SUBJECT 3",
+        qa_method_remark: "Description 3",
+        qa_method_actived: 1,
+      },
+    ],
+    count_subject: 3,
+    count_specification: 3,
+    count_method: 3,
+  },
+  {
+    type_id: 3,
+    type_no: "BULK",
+    type_name: "Bulk",
+    type_no_name: "[ BULK ] Bulk",
+    subject_data: [
+      {
+        qa_subject_id: 0,
+        qa_subject_name: "TEST SUBJECT 1",
+        qa_subject_remark: "Description 1",
+        qa_subject_actived: 1,
+      },
+      {
+        qa_subject_id: 1,
+        qa_subject_name: "TEST SUBJECT 2",
+        qa_subject_remark: "Description 2",
+        qa_subject_actived: 1,
+      },
+      {
+        qa_subject_id: 2,
+        qa_subject_name: "TEST SUBJECT 3",
+        qa_subject_remark: "Description 3",
+        qa_subject_actived: 1,
+      },
+    ],
+    specification_data: [
+      {
+        qa_specification_id: 0,
+        qa_specification_name: "TEST SUBJECT 1",
+        qa_specification_remark: "Description 1",
+        qa_specification_actived: 1,
+      },
+      {
+        qa_specification_id: 1,
+        qa_specification_name: "TEST SUBJECT 2",
+        qa_specification_remark: "Description 2",
+        qa_specification_actived: 1,
+      },
+      {
+        qa_specification_id: 2,
+        qa_specification_name: "TEST SUBJECT 3",
+        qa_specification_remark: "Description 3",
+        qa_specification_actived: 1,
+      },
+    ],
+    method_data: [
+      {
+        qa_method_id: 0,
+        qa_method_name: "TEST SUBJECT 1",
+        qa_method_remark: "Description 1",
+        qa_method_actived: 1,
+      },
+      {
+        qa_method_id: 1,
+        qa_method_name: "TEST SUBJECT 2",
+        qa_method_remark: "Description 2",
+        qa_method_actived: 1,
+      },
+      {
+        qa_method_id: 2,
+        qa_method_name: "TEST SUBJECT 3",
+        qa_method_remark: "Description 3",
+        qa_method_actived: 1,
+      },
+    ],
+    count_subject: 3,
+    count_specification: 3,
+    count_method: 3,
+  },
+  {
+    type_id: 4,
+    type_no: "FG",
+    type_name: "Finish Good",
+    type_no_name: "[ FG ] Finish Good",
+    subject_data: [
+      {
+        qa_subject_id: 0,
+        qa_subject_name: "TEST SUBJECT 1",
+        qa_subject_remark: "Description 1",
+        qa_subject_actived: 1,
+      },
+      {
+        qa_subject_id: 1,
+        qa_subject_name: "TEST SUBJECT 2",
+        qa_subject_remark: "Description 2",
+        qa_subject_actived: 1,
+      },
+      {
+        qa_subject_id: 2,
+        qa_subject_name: "TEST SUBJECT 3",
+        qa_subject_remark: "Description 3",
+        qa_subject_actived: 1,
+      },
+    ],
+    specification_data: [
+      {
+        qa_specification_id: 0,
+        qa_specification_name: "TEST SUBJECT 1",
+        qa_specification_remark: "Description 1",
+        qa_specification_actived: 1,
+      },
+      {
+        qa_specification_id: 1,
+        qa_specification_name: "TEST SUBJECT 2",
+        qa_specification_remark: "Description 2",
+        qa_specification_actived: 1,
+      },
+      {
+        qa_specification_id: 2,
+        qa_specification_name: "TEST SUBJECT 3",
+        qa_specification_remark: "Description 3",
+        qa_specification_actived: 1,
+      },
+    ],
+    method_data: [
+      {
+        qa_method_id: 0,
+        qa_method_name: "TEST SUBJECT 1",
+        qa_method_remark: "Description 1",
+        qa_method_actived: 1,
+      },
+      {
+        qa_method_id: 1,
+        qa_method_name: "TEST SUBJECT 2",
+        qa_method_remark: "Description 2",
+        qa_method_actived: 1,
+      },
+      {
+        qa_method_id: 2,
+        qa_method_name: "TEST SUBJECT 3",
+        qa_method_remark: "Description 3",
+        qa_method_actived: 1,
+      },
+    ],
+    count_subject: 3,
+    count_specification: 3,
+    count_method: 3,
+  },
+];
+
 export const qcTestItemSpecColumns = [
   {
     id: 1,

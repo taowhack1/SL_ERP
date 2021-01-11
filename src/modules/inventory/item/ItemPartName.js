@@ -1,4 +1,5 @@
 import { Input } from "antd";
+import Text from "antd/lib/typography/Text";
 import Title from "antd/lib/typography/Title";
 import React, { useContext, useEffect, useState } from "react";
 import { ItemContext } from "../../../include/js/context";
@@ -46,7 +47,7 @@ const ItemPartName = ({ partId }) => {
           }
           bordered={focus}
           onClick={() => setFocus(true)}
-          className="hover-border ml-1 full-width"
+          className="hover-border ml-1 full-width part-name"
         />
       )}
     </>

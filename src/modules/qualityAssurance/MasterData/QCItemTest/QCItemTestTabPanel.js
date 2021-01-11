@@ -1,7 +1,8 @@
-import {  Row, Col, Tabs } from "antd";
+import { Row, Col, Tabs } from "antd";
 import React from "react";
 import QCItemTestTabSubject from "./QCItemTestTabSubject";
-const WorkOrderTabPanel = ({readOnly}) => {
+const WorkOrderTabPanel = ({ readOnly }) => {
+  console.log("Panel Render");
   return (
     <Row className="col-2">
       <Col span={24}>
@@ -15,7 +16,7 @@ const WorkOrderTabPanel = ({readOnly}) => {
             key={"1"}
           >
             {/* <TabWorkOrderDetail /> */}
-            <QCItemTestTabSubject readOnly={readOnly} />
+            <QCItemTestTabSubject />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={<span className="tab_pane">{"Specification"}</span>}

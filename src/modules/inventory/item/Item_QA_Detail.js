@@ -42,7 +42,7 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
           <Space>
             <Text strong style={{ fontSize: 16, marginRight: 10 }}>
               <ProfileOutlined style={{ marginRight: 10 }} />
-              QA Test Case
+              Test Case
             </Text>
           </Space>
         </Col>

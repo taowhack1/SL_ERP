@@ -48,7 +48,7 @@ const Items = (props) => {
       console.log("Cancel");
     },
   };
-  const onChangeSeach = ({ type_id, category_id, search_text }) => {
+  const onChangeSearch = ({ type_id, category_id, search_text }) => {
     console.log("search_text", search_text);
     let search_data = dataItems;
 
@@ -94,7 +94,7 @@ const Items = (props) => {
         <Row className="row-tab-margin-lg">
           <Col span={24}>
             <Table
-              title={() => <SearchTable onChangeSeach={onChangeSeach} />}
+              title={() => <SearchTable onChangeSearch={onChangeSearch} />}
               loading={loading}
               columns={item_show_columns}
               dataSource={items}

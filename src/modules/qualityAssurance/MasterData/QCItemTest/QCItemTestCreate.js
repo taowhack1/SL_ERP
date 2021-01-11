@@ -148,7 +148,7 @@ const QCItemTestCreate = (props) => {
     delLine,
     onChangeValue,
   ]);
-  console.log("head render");
+  console.log("Head render");
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -163,51 +163,45 @@ const QCItemTestCreate = (props) => {
           </Col>
           <Col span={16}></Col>
         </Row>
-        <Row className="col-2">
-          <Col span={24}>
-            <Row className="col-2 mt-2" gutter={[32, 0]}>
-              <Col span={12}>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={6}>
-                    <Text strong>
-                      <span className="require">* </span>Item Type :
-                    </Text>
-                  </Col>
-                  <Col span={18}>
-                    <CustomSelect
-                      allowClear
-                      showSearch
-                      placeholder={"Item type"}
-                      name="type_id"
-                      field_id="type_id"
-                      field_name="type_name"
-                      value={data_head.type_name}
-                      data={item_type_list}
-                      onChange={(data, option) => {
-                        data && data
-                          ? upDateFormValue({
-                              type_id: data,
-                              type_no: option.data.type_no,
-                              type_name: option.title,
-                            })
-                          : upDateFormValue({
-                              type_id: null,
-                              type_no: null,
-                              type_name: null,
-                            });
-                      }}
-                    />
-                  </Col>
-                </Row>
+        <Row className="col-2 mt-2" gutter={[32, 0]}>
+          <Col span={12}>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={6}>
+                <Text strong>
+                  <span className="require">* </span>Item Type :
+                </Text>
+              </Col>
+              <Col span={18}>
+                <CustomSelect
+                  allowClear
+                  showSearch
+                  placeholder={"Item type"}
+                  name="type_id"
+                  field_id="type_id"
+                  field_name="type_name"
+                  value={data_head.type_name}
+                  data={item_type_list}
+                  onChange={(data, option) => {
+                    data && data
+                      ? upDateFormValue({
+                          type_id: data,
+                          type_no: option.data.type_no,
+                          type_name: option.title,
+                        })
+                      : upDateFormValue({
+                          type_id: null,
+                          type_no: null,
+                          type_name: null,
+                        });
+                  }}
+                />
               </Col>
             </Row>
           </Col>
         </Row>
 
         <QCContext.Provider value={contextValue}>
-          <QCItemTestTabPanel
-          // readOnly={false}
-          />
+          <QCItemTestTabPanel />
         </QCContext.Provider>
       </div>
       <Comments data={[]} />
@@ -215,4 +209,4 @@ const QCItemTestCreate = (props) => {
   );
 };
 
-export default QCItemTestCreate;
+export default React.memo(QCItemTestCreate);

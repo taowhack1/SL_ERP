@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from "react";
-import {  useSelector } from "react-redux";
-import {  withRouter } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory, withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import $ from "jquery";
 import Authorize from "../../../system/Authorize";
 import useKeepLogs from "../../../logs/useKeepLogs";
 import MainLayout from "../../../../components/MainLayout";
-import { qcTestItemMainColumns } from "../../configs/qcTestItemConfig";
+import {
+  item_test_case,
+  QASubjectColumns,
+  qcTestItemMainColumns,
+} from "../../configs/qcTestItemConfig";
 import ModalCreateQCTestCase from "../../ModalCreateQCTestCase";
+import { sortData } from "../../../../include/js/function_main";
+import {
+  getQATestByTypeID,
+  get_qa_test_case_master,
+} from "../../../../actions/qa/qaTestAction";
 const QCItemTestMain = (props) => {
+  const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
-
+  const dispatch = useDispatch();
+  const current_project = useSelector((state) => state.auth.currentProject);
 
   const [rowClick, setRowClick] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -20,11 +31,6 @@ const QCItemTestMain = (props) => {
     console.log("params", pagination, filters, sorter, extra);
   };
 
-  const dataItems = useSelector(
-    (state) => state.inventory.master_data.item_list
-  );
-  const [items, setItems] = useState(dataItems);
-  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
     title: current_project && current_project.project_name,
@@ -33,7 +39,6 @@ const QCItemTestMain = (props) => {
     breadcrumb: ["Home", "QA", "Master Data", "Quality Test Item"],
     search: false,
     // create: "modal",
-    // openModal: (title_name) => {},
     create: "/qa/master_data/quality_test_item/create",
     // buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     buttonAction: ["Create"],
@@ -44,59 +49,51 @@ const QCItemTestMain = (props) => {
       console.log("Cancel");
     },
   };
-
-  useEffect(() => {
-    setItems(dataItems);
-  }, [dataItems.length]);
-
-  useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      return () => {
-        clearTimeout();
-      };
-    }, 1200);
-  }, [items]);
-
-
+  // const expandedRowRender = () => {
+  //   const data = [];
+  //   return (
+  //     <Table
+  //       columns={QASubjectColumns}
+  //       dataSource={data}
+  //       pagination={{ pageSize: 20 }}
+  //     />
+  //   );
+  // };
+  const redirect_to_view = (id) => {
+    history.push("/qa/master_data/quality_test_item/view/" + (id ? id : "new"));
+  };
+  const viewRecord = (id) => {
+    dispatch(getQATestByTypeID(id, redirect_to_view));
+  };
 
   return (
     <div>
       <MainLayout {...config}>
-        <Row className="row-tab-margin-lg">
-          <Col span={24}>
-            <Table
-              loading={loading}
-              columns={qcTestItemMainColumns}
-              dataSource={[]}
-              onChange={onChange}
-              bordered
-              size="small"
-              rowKey="type_id"
-              onRow={(record, rowIndex) => {
-                return {
-                  onClick: (e) => {
-                    setRowClick(true);
-                    $(e.target)
-                      .closest("tbody")
-                      .find("tr")
-                      .removeClass("selected-row");
-                    $(e.target).closest("tr").addClass("selected-row");
-                    keepLog.keep_log_action(record.type_no_name);
-                    // dispatch(
-                    //   get_item_by_id(
-                    //     record.item_id,
-                    //     auth.user_name,
-                    //     redirect_to_view
-                    //   )
-                    // );
-                  },
-                };
-              }}
-            />
-          </Col>
-        </Row>
+        <Table
+          loading={loading}
+          columns={qcTestItemMainColumns}
+          dataSource={sortData(item_test_case)}
+          onChange={onChange}
+          bordered
+          pagination={{ pageSize: 10 }}
+          size="small"
+          rowKey="type_id"
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (e) => {
+                setRowClick(true);
+                $(e.target)
+                  .closest("tbody")
+                  .find("tr")
+                  .removeClass("selected-row");
+                $(e.target).closest("tr").addClass("selected-row");
+                keepLog.keep_log_action(record.type_no_name);
+                viewRecord(record.type_id);
+              },
+            };
+          }}
+          // expandable={{ expandedRowRender }}
+        />
       </MainLayout>
       <ModalCreateQCTestCase visible={false} />
     </div>
