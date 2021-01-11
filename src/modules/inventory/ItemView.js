@@ -21,6 +21,7 @@ const ItemView = (props) => {
   authorize.check_authorize();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth.authData);
+  const { department_id } = useSelector((state) => state.auth.authData);
   const {
     data_head,
     data_detail,
@@ -124,13 +125,29 @@ const ItemView = (props) => {
       console.log("Edit");
     },
     onApprove: (e) => {
-      const app_detail = {
-        process_status_id: 5,
-        user_name: auth.user_name,
-        process_id: data_head.process_id,
-        process_member_remark: remark,
-      };
-      dispatch(item_actions(app_detail, data_head.item_id));
+      if (
+        department_id === 13 &&
+        [1, 2].includes(data_head.type_id) &&
+        !data_detail.length
+        // !data_detail[0].vendor_id
+      ) {
+        console.log("Purchase Person");
+        message.warning({
+          content: 'Please fill "Purchase Vendor" form completely.',
+          key: "validate",
+          duration: 4,
+        });
+        return false;
+      } else {
+        console.log("Approve");
+        // const app_detail = {
+        //   process_status_id: 5,
+        //   user_name: auth.user_name,
+        //   process_id: data_head.process_id,
+        //   process_member_remark: remark,
+        // };
+        // dispatch(item_actions(app_detail, data_head.item_id));
+      }
     },
     onConfirm: () => {
       const app_detail = {

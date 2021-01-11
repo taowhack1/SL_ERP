@@ -21,6 +21,8 @@ const Issue = (props) => {
   const [rowClick, setRowClick] = useState(false);
   const auth = useSelector((state) => state.auth.authData);
   const issue_list = useSelector((state) => state.inventory.issue.issue_list);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(issue_list);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -43,6 +45,17 @@ const Issue = (props) => {
     onCancel: () => {
       console.log("Cancel");
     },
+    onSearch: (value) => {
+      console.log(value);
+      setLoading(true);
+      setTimeout(() => {
+        const search_data = issue_list.filter(
+          (issue) => issue.issue_no_description.indexOf(value) >= 0
+        );
+        setData(search_data);
+        setLoading(false);
+      }, 1200);
+    },
   };
   return (
     <div>
@@ -51,7 +64,8 @@ const Issue = (props) => {
           <Col span={24}>
             <Table
               columns={issue_columns}
-              dataSource={issue_list}
+              dataSource={data}
+              loading={loading}
               onChange={onChange}
               rowKey={"issue_id"}
               size="small"

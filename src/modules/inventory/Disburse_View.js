@@ -1,7 +1,7 @@
-import React, { useEffect,  useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Tabs, Typography } from "antd";
-import {disburse_actions,} from "../../actions/inventory/disburseActions";
+import { disburse_actions } from "../../actions/inventory/disburseActions";
 import { report_server } from "../../include/js/main_config";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
 import MainLayout from "../../components/MainLayout";
@@ -75,20 +75,20 @@ const DisburseView = (props) => {
       data_head && data_head.button_reject && "Reject",
       "Back",
     ],
-    action: [
-      {
-        name: "Print",
-        link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${
-          data_head && data_head.disburse_id
-        }`,
-      },
-      data_head &&
-        data_head.button_cancel && {
-          name: "Cancel",
-          cancel: true,
-          link: ``,
-        },
-    ],
+    // action: [
+    //   {
+    //     name: "Print",
+    //     link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${
+    //       data_head && data_head.disburse_id
+    //     }`,
+    //   },
+    //   data_head &&
+    //     data_head.button_cancel && {
+    //       name: "Cancel",
+    //       cancel: true,
+    //       link: ``,
+    //     },
+    // ],
     step: {
       current: data_head && data_head.node_stay - 1,
       step: flow,

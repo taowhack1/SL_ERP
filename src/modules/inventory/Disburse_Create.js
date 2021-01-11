@@ -22,10 +22,7 @@ import { get_issue_ref_list } from "../../actions/inventory/disburseActions";
 import Authorize from "../system/Authorize";
 import { useHistory } from "react-router-dom";
 import { validateFormHead } from "../../include/js/function_main";
-import {
-  disburse_require_fields,
-
-} from "./config/disburse";
+import { disburse_require_fields } from "./config/disburse";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -75,20 +72,20 @@ const DisburseCreate = (props) => {
     ],
     search: false,
     buttonAction: ["Save", "Validate", "Discard"],
-    action: [
-      {
-        name: "Print",
-        link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${
-          data_head && data_head.disburse_id
-        }`,
-      },
-      data_head &&
-        data_head.button_cancel && {
-          name: "Cancel",
-          cancel: true,
-          link: ``,
-        },
-    ],
+    // action: [
+    //   {
+    //     name: "Print",
+    //     link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${
+    //       data_head && data_head.disburse_id
+    //     }`,
+    //   },
+    //   data_head &&
+    //     data_head.button_cancel && {
+    //       name: "Cancel",
+    //       cancel: true,
+    //       link: ``,
+    //     },
+    // ],
     step: {
       current: data_head && data_head.node_stay - 1,
       step: flow,

@@ -203,7 +203,7 @@ const DisburseDetail = ({
                 </Col>
               </Row>
             ))}
-          <div style={{ marginTop: 10 }}>
+          {/* <div style={{ marginTop: 10 }}>
             {!issue_id && (
               <Button
                 type="dashed"
@@ -215,7 +215,7 @@ const DisburseDetail = ({
                 <PlusOutlined /> Add a line
               </Button>
             )}
-          </div>
+          </div> */}
         </>
       ) : (
         <>

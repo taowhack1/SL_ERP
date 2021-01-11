@@ -65,20 +65,7 @@ const IssueCreate = (props) => {
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
-    action: [
-      {
-        name: "Print",
-        link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${
-          data_head && data_head.issue_id
-        }`,
-      },
-      data_head &&
-        data_head.button_cancel && {
-          name: "Cancel",
-          cancel: true,
-          link: ``,
-        },
-    ],
+
     step: {
       current: data_head && data_head.node_stay - 1,
       step: flow,

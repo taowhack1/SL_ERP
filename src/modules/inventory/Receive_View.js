@@ -71,20 +71,20 @@ const Receive_View = (props) => {
       data_head && data_head.button_reject && "Reject",
       "Back",
     ],
-    action: [
-      {
-        name: "Print",
-        link: `${report_server}/Report_purch/report_receive2.aspx?receive_no=${
-          data_head && data_head.receive_no
-        }`,
-      },
-      data_head &&
-        data_head.button_cancel && {
-          name: "Cancel",
-          cancel: true,
-          link: ``,
-        },
-    ],
+    // action: [
+    //   {
+    //     name: "Print",
+    //     link: `${report_server}/Report_purch/report_receive2.aspx?receive_no=${
+    //       data_head && data_head.receive_no
+    //     }`,
+    //   },
+    //   data_head &&
+    //     data_head.button_cancel && {
+    //       name: "Cancel",
+    //       cancel: true,
+    //       link: ``,
+    //     },
+    // ],
     step: {
       current: data_head && data_head.node_stay - 1,
       step: flow,

@@ -23,7 +23,11 @@ const Receive = (props) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  const data = useSelector((state) => state.inventory.receive.receive_list);
+  const receive_list = useSelector(
+    (state) => state.inventory.receive.receive_list
+  );
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(receive_list);
   const auth = useSelector((state) => state.auth.authData);
   useEffect(() => {
     dispatch(reset_comments());
@@ -45,6 +49,17 @@ const Receive = (props) => {
     onCancel: () => {
       console.log("Cancel");
     },
+    onSearch: (value) => {
+      console.log(value);
+      setLoading(true);
+      setTimeout(() => {
+        const search_data = receive_list.filter(
+          (receive) => receive.receive_no_description.indexOf(value) >= 0
+        );
+        setData(search_data);
+        setLoading(false);
+      }, 1200);
+    },
   };
   return (
     <div>
@@ -57,6 +72,7 @@ const Receive = (props) => {
               onChange={onChange}
               rowKey={"receive_id"}
               size="small"
+              loading={loading}
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

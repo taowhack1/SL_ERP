@@ -53,7 +53,7 @@ const Vendor = (props) => {
       setLoading(true);
       setTimeout(() => {
         const search_vendor = vendors.filter(
-          (vendor) => vendor.vendor_name.indexOf(value) >= 0
+          (vendor) => vendor.vendor_no_name.indexOf(value) >= 0
         );
         setData(search_vendor);
         setLoading(false);

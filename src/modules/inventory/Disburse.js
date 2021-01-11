@@ -59,6 +59,7 @@ const Disburse = (props) => {
         : setState(disburse_list);
     },
   };
+  console.log(disburse_list);
   return (
     <div>
       <MainLayout {...config}>

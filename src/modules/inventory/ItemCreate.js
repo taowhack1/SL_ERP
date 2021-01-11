@@ -263,16 +263,16 @@ const ItemCreate = (props) => {
           data_packaging_detail: data_packaging_detail,
           data_file: data_file,
         };
-        // data_head.item_id
-        //   ? dispatch(
-        //       upDateItem(
-        //         data_head.item_id,
-        //         data,
-        //         auth.user_name,
-        //         redirect_to_view
-        //       )
-        //     )
-        //   : dispatch(createNewItems(data, auth.user_name, redirect_to_view));
+        data_head.item_id
+          ? dispatch(
+              upDateItem(
+                data_head.item_id,
+                data,
+                auth.user_name,
+                redirect_to_view
+              )
+            )
+          : dispatch(createNewItems(data, auth.user_name, redirect_to_view));
       } else {
         message.warning({
           content: "Please fill your form completely.",

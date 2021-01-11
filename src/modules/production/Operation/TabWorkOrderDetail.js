@@ -201,13 +201,13 @@ const TabWorkOrderDetail = () => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={6}>
+          <Col span={9}>
             <Text className="require" strong>
               <span className="require">* </span>
               RM Lead Time (days):
             </Text>
           </Col>
-          <Col span={18}>
+          <Col span={15}>
             <Text className="text-left">
               {headReducer.data.wo_lead_time_day_rm +
                 headReducer.data.wo_lead_time_day_rm_qa}
@@ -215,13 +215,13 @@ const TabWorkOrderDetail = () => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={6}>
+          <Col span={9}>
             <Text className="require" strong>
               <span className="require">* </span>
               PK Lead Time (days):
             </Text>
           </Col>
-          <Col span={18}>
+          <Col span={15}>
             <Text className="text-left">
               {headReducer.data.wo_lead_time_day_pk +
                 headReducer.data.wo_lead_time_day_pk_qa}

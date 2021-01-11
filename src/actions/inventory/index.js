@@ -37,6 +37,7 @@ export const getMasterDataItem = (user) => async (dispatch) => {
     const get_item_control = axios.get(api_get_item_control, header_config);
     let master_data = {
       item_type: await get_type.then((res) => {
+        console.log(res.data);
         return res.data[0];
       }),
       item_category: await get_categoty.then((res) => {
