@@ -1,11 +1,7 @@
-import {  Row, Col, Typography } from "antd";
-import {
-  ProfileOutlined,
-} from "@ant-design/icons";
+import { Row, Col, Typography } from "antd";
+import { ProfileOutlined } from "@ant-design/icons";
 import React, { useContext } from "react";
-import {
-  workOrderPKColumns,
-} from "../config/workOrder";
+import { workOrderPKColumns } from "../config/workOrder";
 import CustomTable from "../../../components/CustomTable";
 import { WOContext } from "../../../include/js/context";
 
@@ -28,7 +24,11 @@ const TabWorkOrderPKDetail = () => {
       {/* Column Header */}
       <CustomTable
         rowKey="id"
-        rowClassName="row-table-detail"
+        rowClassName={(record) => {
+          return record.auto_genarate_item
+            ? "row-table-detail "
+            : "row-table-detail require";
+        }}
         pageSize={10}
         focusLastPage={true}
         columns={workOrderPKColumns(

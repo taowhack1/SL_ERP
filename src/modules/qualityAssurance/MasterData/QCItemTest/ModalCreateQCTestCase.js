@@ -1,9 +1,13 @@
 import { Modal, Row, Radio, Divider } from "antd";
 import React, { useMemo, useState } from "react";
-import TestForm from "./ModalQCTestCaseForm";
 const QCContext = React.createContext();
-const ModalCreateQCTestCase = (props) => {
-  const { modalSave, modalCancel, visible, data_head, test_id } = props;
+const ModalCreateQCTestCase = ({
+  modalSave,
+  modalCancel,
+  visible,
+  data_head,
+  test_id,
+}) => {
   const [state, setState] = useState(data_head);
   const [qc_type, setQCType] = useState(1);
   const modalConfig = {
@@ -54,12 +58,6 @@ const ModalCreateQCTestCase = (props) => {
             </Radio.Group>
           </Row>
           <Divider />
-          <TestForm
-            fields={getFields(qc_type)}
-            // fields={["Name", "Description"]}
-            data_head={data_head}
-            type={qc_type}
-          />
         </Modal>
       </QCContext.Provider>
     </>

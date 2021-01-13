@@ -116,25 +116,6 @@ const SubDetail = ({
                 className="col-2"
               >
                 <Col span={5} className="text-string">
-                  {/* <CustomSelect
-                    allowClear
-                    showSearch
-                    placeholder={"Location"}
-                    field_id="location_id"
-                    field_name="location_no_name"
-                    value={line.location_no_name}
-                    data={location_list}
-                    size={"small"}
-                    onChange={(data, option) => {
-                      onChangeValue(line.id, {
-                        location_id: data,
-                        location_no_name: option.data.location_no_name,
-                        shelf_id: option.data.shelf_id,
-                        shelf_name: option.data.shelf_name,
-                        shelf_no_name: option.data.shelf_no_name,
-                      });
-                    }}
-                  /> */}
                   <div
                     className="input-string-disabled text-value"
                     placeholder="Location"

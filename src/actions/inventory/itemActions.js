@@ -14,6 +14,7 @@ import {
   api_get_item_list,
   api_get_part_and_formula_all,
   api_get_fg_material,
+  api_get_all_item_list,
 } from "../../include/js/api";
 import axios from "axios";
 import { message, notification } from "antd";
@@ -155,13 +156,20 @@ const bind_packaging = (item_id, data_packaging_detail) => {
   );
 };
 
-export const getAllItems = () => async (dispatch) => {
-  await axios.get(api_get_item_list, header_config).then((res) => {
-    dispatch({
-      type: GET_ALL_ITEMS,
-      payload: res.data[0],
+export const getAllItems = (user_name) => async (dispatch) => {
+  await axios
+    .get(
+      user_name ? `${api_get_all_item_list}/${user_name}` : api_get_item_list,
+      header_config
+    )
+    .then((res) => {
+      console.log(`${api_get_all_item_list}/${user_name}`);
+      console.log(res.data);
+      dispatch({
+        type: GET_ALL_ITEMS,
+        payload: res.data[0],
+      });
     });
-  });
 };
 
 export const createNewItems = (data, user_name, redirect) => async (

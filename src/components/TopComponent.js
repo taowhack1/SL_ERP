@@ -9,10 +9,12 @@ import {
   Menu,
   Typography,
   message,
+  Space,
 } from "antd";
 import { CaretDownOutlined, RollbackOutlined } from "@ant-design/icons";
 import Search from "./Search";
 import useKeepLogs from "../modules/logs/useKeepLogs";
+import Modal from "antd/lib/modal/Modal";
 const { Text } = Typography;
 
 function TopContent(props) {
@@ -86,6 +88,20 @@ function TopContent(props) {
     props.onCancel && props.onCancel();
   };
 
+  const [visible, setVisible] = useState({ callBack: "", visible: false });
+  const showPopconfirm = (modalTitle, callBack) => {
+    setVisible({ callBack: callBack, visible: true, title: modalTitle });
+  };
+
+  const handleOk = () => {
+    visible.callBack && visible.callBack();
+    setVisible({ callBack: null, visible: false, title: "" });
+  };
+
+  const handleCancel = () => {
+    setVisible({ callBack: null, visible: false, title: "" });
+  };
+
   const menuAction = () => {
     const a = (
       <Menu>
@@ -144,7 +160,7 @@ function TopContent(props) {
         </Row>
         <Row>
           <Col span={8}>
-            <div>
+            <Space size={8}>
               {props.buttonAction.includes("Create") && (
                 <Button className="primary" onClick={onCreate}>
                   Create
@@ -222,7 +238,7 @@ function TopContent(props) {
               )}
               {props.buttonAction.includes("Approve") && (
                 <Button
-                  onClick={onApprove}
+                  onClick={() => showPopconfirm("Approve", onApprove)}
                   className="primary"
                   loading={btnLoading}
                   disabled={btnLoading}
@@ -265,7 +281,7 @@ function TopContent(props) {
                   Back
                 </Button>
               )}
-            </div>
+            </Space>
           </Col>
           <Col span={4}>
             {props.action && (
@@ -301,6 +317,14 @@ function TopContent(props) {
             </div>
           </Col>
         </Row>
+        <Modal
+          title={"Confirm " + visible.title}
+          visible={visible.visible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <p>Are you sure ?</p>
+        </Modal>
       </div>
     </>
   );

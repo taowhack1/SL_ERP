@@ -41,7 +41,7 @@ const WorkOrderMain = (props) => {
     title: current_project && current_project.project_name,
     home: current_project && current_project.project_url,
     show: true,
-    breadcrumb: ["Home", "Operations", "Work Order"],
+    breadcrumb: ["Home", "Operations", "MRP"],
     search: true,
     create: "/production/operations/wo/create",
     buttonAction: ["Create"],

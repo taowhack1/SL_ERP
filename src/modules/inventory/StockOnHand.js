@@ -9,7 +9,6 @@ import { stock_on_hand_columns } from "./config/report";
 import Authorize from "../system/Authorize";
 
 const StockMove = (props) => {
-
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -58,12 +57,14 @@ const StockMove = (props) => {
   };
   useEffect(() => {
     dispatch(get_report_stock());
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1200);
+    // setLoading(true);
+    // setTimeout(() => {
+    //   setLoading(false);
+    // }, 1200);
   }, []);
-  console.log(state);
+  useEffect(() => {
+    setState(stock_on_hand);
+  }, [stock_on_hand]);
   return (
     <div>
       <MainLayout {...config}>

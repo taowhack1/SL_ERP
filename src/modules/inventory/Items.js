@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, withRouter } from "react-router-dom";
+import { Switch, useHistory, withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import {
@@ -48,8 +48,7 @@ const Items = (props) => {
       console.log("Cancel");
     },
   };
-  const onChangeSearch = ({ type_id, category_id, search_text }) => {
-    console.log("search_text", search_text);
+  const onChangeSearch = ({ type_id, category_id, search_text, status_id }) => {
     let search_data = dataItems;
 
     if (type_id) {
@@ -61,13 +60,42 @@ const Items = (props) => {
             (item) => item.type_id === type_id
           ));
     }
+    console.log("status_id", status_id);
+    switch (status_id) {
+      case 99:
+        break;
+      case 1:
+        search_data = search_data.filter(
+          (item) =>
+            !item.process_complete &&
+            (item.button_approve || item.button_reject || item.button_confirm)
+        );
+        break;
+      case 2:
+        search_data = search_data.filter(
+          (item) =>
+            !item.process_complete && item.trans_status_name !== "Cancel"
+        );
+        break;
+      case 3:
+        search_data = search_data.filter(
+          (item) =>
+            !item.process_complete && item.trans_status_name === "Cancel"
+        );
+        break;
+      case 4:
+        search_data = search_data.filter((item) => item.process_complete);
+        break;
+      default:
+        break;
+    }
     setItems(
       search_data.filter((item) => item.item_no_name.indexOf(search_text) >= 0)
     );
   };
 
   useEffect(() => {
-    dispatch(getAllItems());
+    dispatch(getAllItems(auth.user_name));
   }, []);
 
   useEffect(() => {
@@ -87,7 +115,6 @@ const Items = (props) => {
   const redirect_to_view = (id) => {
     history.push("/inventory/items/view/" + (id ? id : "new"));
   };
-
   return (
     <div>
       <MainLayout {...config}>

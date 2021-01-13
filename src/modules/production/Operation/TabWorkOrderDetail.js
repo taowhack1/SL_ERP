@@ -52,7 +52,7 @@ const TabWorkOrderDetail = () => {
               Qty. To Produce :
             </CustomText>
           </Col>
-          <Col span={15} className="text-right">
+          <Col span={15} className={readOnly ? "text-right" : ""}>
             <ToggleReadOnlyElement
               readOnly={readOnly}
               value={convertDigit(state.wo_qty_produce)}
@@ -87,7 +87,7 @@ const TabWorkOrderDetail = () => {
               RM. To Spare (%) :
             </CustomText>
           </Col>
-          <Col span={15} className="text-right">
+          <Col span={15} className={readOnly ? "text-right" : ""}>
             <ToggleReadOnlyElement
               readOnly={readOnly}
               value={convertDigit(state.wo_qty_percent_spare_rm)}
@@ -123,7 +123,7 @@ const TabWorkOrderDetail = () => {
               PK To Spare (%) :
             </CustomText>
           </Col>
-          <Col span={15} className="text-right">
+          <Col span={15} className={readOnly ? "text-right" : ""}>
             <ToggleReadOnlyElement
               readOnly={readOnly}
               value={convertDigit(state.wo_qty_percent_spare_pk)}
@@ -169,7 +169,7 @@ const TabWorkOrderDetail = () => {
             ) : (
               <RangePicker
                 format={"DD/MM/YYYY"}
-                name="qn_exp_date"
+                name="wo_plan_start_date"
                 className="full-width"
                 disabledDate={disabledDate}
                 onChange={(data) => {

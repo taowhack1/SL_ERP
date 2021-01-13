@@ -678,6 +678,19 @@ tr.row-table-detail > td {
   /* background-color: khaki; */
   padding: 2px 5px !important;
 }
+tr.row-table-detail.require {
+  background-color: #ffeded;
+}
+tr.row-table-detail.require > td {
+  border-top: 2px solid red !important;
+  border-bottom: 2px solid red !important;
+}
+tr.row-table-detail.require > td:first-child {
+  border-left: 2px solid red;
+}
+tr.row-table-detail.require > td:last-child {
+  border-right: 2px solid red !important;
+}
 
 tr.row-table-detail-inactive {
   background-color: #e3e3e3;

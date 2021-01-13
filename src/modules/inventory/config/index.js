@@ -105,10 +105,10 @@ export const recieve_detail_columns = [
 
 export const receive_sub_detail_columns = [
   { id: 1, name: "Destination Location", size: 5, require: true },
-  { id: 2, name: "Lot No.", size: 4 },
+  { id: 2, name: "Lot No.", size: 4, require: false },
   { id: 3, name: "Receive Date", size: 3, require: true },
-  { id: 4, name: "MFG Date", size: 3, require: true },
-  { id: 5, name: "EXP Date", size: 3, require: true },
+  { id: 4, name: "MFG Date", size: 3, require: false },
+  { id: 5, name: "EXP Date", size: 3, require: false },
   { id: 6, name: "Quantity Done", size: 3, require: true },
   { id: 7, name: "Unit", size: 2, require: true },
 ];

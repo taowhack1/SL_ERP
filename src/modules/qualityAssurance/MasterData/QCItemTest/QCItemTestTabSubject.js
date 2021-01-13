@@ -41,7 +41,7 @@ const QCItemTestTabSubject = () => {
       type: "CHANGE_DETAIL_VALUE",
       payload: {
         id: id,
-        data: data,
+        data: { ...data, commit: 1 },
       },
     });
   };
@@ -51,7 +51,7 @@ const QCItemTestTabSubject = () => {
     // keySave === "item_formula_percent_qty" &&
     //   sumPercent(FormulaReducer.data, "item_formula_percent_qty");
   };
-  console.log("qc subject render");
+  console.log("qc subject render", state);
   return (
     <>
       <CustomTable

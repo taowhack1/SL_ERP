@@ -148,7 +148,7 @@ const IssueDetail = ({
                     field_id="item_id"
                     field_name="item_no_name"
                     value={line.item_no_name}
-                    onChange={(data, option) =>
+                    onChange={(data, option) => {
                       data && data
                         ? onChangeValue(line.id, {
                             item_id: data,
@@ -163,8 +163,8 @@ const IssueDetail = ({
                             item_no_name: null,
                             uom_no: null,
                             item_control_id: null,
-                          })
-                    }
+                          });
+                    }}
                   />
                 </Col>
                 <Col span={5} className="text-string">

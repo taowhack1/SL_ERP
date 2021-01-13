@@ -27,7 +27,11 @@ const Modal_Select_Item = (props) => {
       ? data_detail[0].item_id && data_detail.map((detail) => detail.item_id)
       : []
   );
-
+  const select_location = useSelector((state) =>
+    state.inventory.master_data.shelf.filter(
+      (shelf) => shelf.shelf_status_id === 4
+    )
+  );
   const [item_list, setItemList] = useState(master_data.item_list);
   const [state, setState] = useState(
     filter && filter
@@ -40,8 +44,6 @@ const Modal_Select_Item = (props) => {
         }
   );
 
-  console.log("filter", filter);
-  console.log("state", state);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (state.type_id) {
@@ -96,10 +98,6 @@ const Modal_Select_Item = (props) => {
     selectedRowKeys: selected_key,
     hideSelectAll: true,
     onSelect: (record, selected, selectedRows, e) => {
-      // if (selected_item.length && record.type_id !== selected_item[0].type_id) {
-      //   reset_selected();
-      // }
-
       if (selected) {
         set_selected_item([...selected_item, record]);
         set_selected_key([...selected_key, record.item_id]);
@@ -109,14 +107,6 @@ const Modal_Select_Item = (props) => {
         );
         set_selected_key(selected_key.filter((key) => key !== record.item_id));
       }
-
-      // if (record.category_id !== filter.category_id) {
-      //   state.category_id &&
-      //     changeState({
-      //       category_id: null,
-      //       category_no_name: null,
-      //     });
-      // }
     },
     //disabled checkbox empty stock
     // getCheckboxProps: (record) => ({

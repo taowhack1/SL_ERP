@@ -135,6 +135,62 @@ const SearchTable = (props) => {
           </Col>
           <Col span={8}></Col>
         </Row>
+        <Row className="col-2">
+          <Col span={2}></Col>
+          <Col span={2}>
+            <Text strong>{"Item Status : "}</Text>
+          </Col>
+          <Col span={8}>
+            <CustomSelect
+              // size="small"
+              allowClear
+              showSearch
+              // disabled={disable_category}
+              placeholder={"Status"}
+              field_id="status_id"
+              field_name="status_name"
+              value={state.status_name}
+              data={[
+                {
+                  id: 0,
+                  status_id: 99,
+                  status_name: "All",
+                },
+                {
+                  id: 1,
+                  status_id: 1,
+                  status_name: "Pending",
+                },
+                {
+                  id: 2,
+                  status_id: 2,
+                  status_name: "Waiting",
+                },
+                {
+                  id: 3,
+                  status_id: 3,
+                  status_name: "Cancel",
+                },
+                {
+                  id: 4,
+                  status_id: 4,
+                  status_name: "Compelte",
+                },
+              ]}
+              onChange={(data, option) => {
+                data && data
+                  ? changeState({
+                      status_id: option.data.status_id,
+                      status_name: option.data.status_name,
+                    })
+                  : changeState({
+                      status_id: option.data.status_id,
+                      status_name: option.data.status_name,
+                    });
+              }}
+            />
+          </Col>
+        </Row>
       </div>
     </>
   );

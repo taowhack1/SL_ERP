@@ -57,6 +57,9 @@ const Issue = (props) => {
       }, 1200);
     },
   };
+  useEffect(() => {
+    setData(issue_list);
+  }, [issue_list]);
   return (
     <div>
       <MainLayout {...config}>

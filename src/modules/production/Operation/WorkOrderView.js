@@ -153,7 +153,7 @@ const WorkOrderView = (props) => {
             <Col span={8}>
               <h2>
                 <strong>
-                  {"View"} Work Order
+                  {"View"} MRP
                   {data_head.wo_no && " #" + data_head.wo_no}
                 </strong>
               </h2>

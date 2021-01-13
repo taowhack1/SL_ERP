@@ -8,6 +8,8 @@ import {
   SyncOutlined,
 } from "@ant-design/icons";
 import numeral from "numeral";
+import Text from "antd/lib/typography/Text";
+import { convertDigit } from "./main_config";
 
 export const sortData = (arrObject) => {
   let copyData = arrObject;
@@ -339,4 +341,33 @@ export const speadArray2DTo1D = () => {
 
 export const pad2number = (number) => {
   return number < 10 ? "0" + number : number;
+};
+
+export const warningTextValue = (value, digit, typeDanger) => {
+  const valueType = typeof value;
+  let className = "text-value";
+  switch (valueType) {
+    case "number":
+      if (typeDanger) {
+        className = "text-right";
+      } else {
+        className += " text-right";
+      }
+      return (
+        <Text
+          className={className}
+          type={typeDanger ? "danger" : "default"}
+          strong={typeDanger}
+        >
+          {convertDigit(value, digit)}
+        </Text>
+      );
+
+    default:
+      return (
+        <Text className={className} type={"default"}>
+          {value ?? "-"}
+        </Text>
+      );
+  }
 };

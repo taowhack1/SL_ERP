@@ -85,7 +85,8 @@ const ItemView = (props) => {
     ],
     search: false,
     buttonAction: [
-      data_head.button_edit && "Edit",
+      "Edit",
+      // data_head.button_edit && "Edit",
       data_head.button_confirm && "Confirm",
       data_head.button_approve && "Approve",
       data_head.button_reject && "Reject",
@@ -140,13 +141,13 @@ const ItemView = (props) => {
         return false;
       } else {
         console.log("Approve");
-        // const app_detail = {
-        //   process_status_id: 5,
-        //   user_name: auth.user_name,
-        //   process_id: data_head.process_id,
-        //   process_member_remark: remark,
-        // };
-        // dispatch(item_actions(app_detail, data_head.item_id));
+        const app_detail = {
+          process_status_id: 5,
+          user_name: auth.user_name,
+          process_id: data_head.process_id,
+          process_member_remark: remark,
+        };
+        dispatch(item_actions(app_detail, data_head.item_id));
       }
     },
     onConfirm: () => {

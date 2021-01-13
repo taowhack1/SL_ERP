@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Typography } from "antd";
+import { Row, Col, Typography, message } from "antd";
 import MainLayout from "../../../components/MainLayout";
 import Comments from "../../../components/Comments";
 
@@ -11,6 +11,7 @@ import WorkOrderTabPanel from "./WorkOrderTabPanel";
 import {
   workOrderFields,
   workOrderPKDetailFields,
+  workOrderRequireFields,
   workOrderRMDetailFields,
 } from "../config/workOrder";
 import {
@@ -24,7 +25,7 @@ import {
 } from "../../../actions/production/workOrderActions";
 import ReducerClass from "../../../include/js/ReducerClass";
 import WorkOrderHead from "./WorkOrderHead";
-import { sortData } from "../../../include/js/function_main";
+import { sortData, validateFormHead } from "../../../include/js/function_main";
 import { WOContext } from "../../../include/js/context";
 import moment from "moment";
 // import WorkCenterDetail from "./WorkCenterDetail";
@@ -126,7 +127,7 @@ const WorkOrderCreate = (props) => {
     breadcrumb: [
       "Home",
       "Operations",
-      "Work Order",
+      "MRP",
       headReducer.data.wo_no ? "Edit" : "Create",
       headReducer.data.wo_no && headReducer.data.wo_no,
     ],
@@ -142,53 +143,49 @@ const WorkOrderCreate = (props) => {
     discard: "/production/operations/wo",
     onSave: (e) => {
       //e.preventDefault();
+      console.log("Save");
       console.log("HEAD DATA : ", headReducer.data);
       console.log("RM DATA : ", RMReducer.data);
       console.log("PK DATA : ", PKReducer.data);
-
-      // let copyData = RMReducer.data;
-      // copyData = copyData.map((obj) => {
-      //   return {
-      //     ...obj,
-      //     sum_lead_time:
-      //       obj.wo_detail_lead_time_day_pr + obj.wo_detail_lead_time_day_qa,
-      //   };
-      // });
-      // let copyData2 = PKReducer.data;
-      // copyData2 = copyData2.map((obj) => {
-      //   return {
-      //     ...obj,
-      //     sum_lead_time:
-      //       obj.wo_detail_lead_time_day_pr + obj.wo_detail_lead_time_day_qa,
-      //   };
-      // });
-      // const maxRMLeadTime = Math.max.apply(
-      //   Math,
-      //   copyData.map((obj) => obj.sum_lead_time)
-      // );
-      // const maxPKLeadTime = Math.max.apply(
-      //   Math,
-      //   copyData2.map((obj) => obj.sum_lead_time)
-      // );
-      // const maxRM = copyData.find((obj) => obj.sum_lead_time === maxRMLeadTime);
-      // const maxPK = copyData2.find(
-      //   (obj) => obj.sum_lead_time === maxPKLeadTime
-      // );
-      console.log("Save");
-      const saveData = {
-        data_head: headReducer.data,
-        data_material: sortData(RMReducer.data.concat(PKReducer.data)),
-      };
-      headReducer.data.wo_id
-        ? dispatch(
-            updateWorkOrder(
-              headReducer.data.wo_id,
-              saveData,
-              auth.user_name,
-              redirect_to_view
-            )
-          )
-        : dispatch(createWorkOrder(saveData, auth.user_name, redirect_to_view));
+      if (RMReducer.data.some((obj) => obj.auto_genarate_item === 0)) {
+        message.error({
+          content: "Can't Save !!. Some vendor of RM item not available.",
+          duration: 4,
+          key: "validate",
+        });
+        return false;
+      }
+      if (PKReducer.data.some((obj) => obj.auto_genarate_item === 0)) {
+        message.error({
+          content: "Can't Save !!. Some vendor of RM item not available.",
+          duration: 4,
+          key: "validate",
+        });
+        return false;
+      }
+      const validate = validateFormHead(
+        headReducer.data,
+        workOrderRequireFields
+      );
+      console.log(validate);
+      if (validate.validate) {
+        // const saveData = {
+        //   data_head: headReducer.data,
+        //   data_material: sortData(RMReducer.data.concat(PKReducer.data)),
+        // };
+        // headReducer.data.wo_id
+        //   ? dispatch(
+        //       updateWorkOrder(
+        //         headReducer.data.wo_id,
+        //         saveData,
+        //         auth.user_name,
+        //         redirect_to_view
+        //       )
+        //     )
+        //   : dispatch(
+        //       createWorkOrder(saveData, auth.user_name, redirect_to_view)
+        //     );
+      }
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -223,7 +220,7 @@ const WorkOrderCreate = (props) => {
             <Col span={8}>
               <h2>
                 <strong>
-                  {headReducer.data.wo_id ? "Edit" : "Create"} Work Order
+                  {headReducer.data.wo_id ? "Edit" : "Create"} MRP
                   {headReducer.data.wo_no && " #" + headReducer.data.wo_no}
                 </strong>
               </h2>

@@ -4,7 +4,10 @@ import Text from "antd/lib/typography/Text";
 import { Input, InputNumber, Popconfirm } from "antd";
 import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
 import { convertDigit } from "../../../include/js/main_config";
-import { pad2number } from "../../../include/js/function_main";
+import {
+  getSelfStepStatus,
+  pad2number,
+} from "../../../include/js/function_main";
 export const item_vendor_columns = [
   {
     id: 0,
@@ -162,6 +165,17 @@ export const item_show_columns = [
     title: "Description",
     dataIndex: "item_remark",
     ellipsis: true,
+  },
+  {
+    title: "Status",
+    dataIndex: "trans_status_name",
+    key: "trans_status_name",
+    width: "10%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record, index) => {
+      return record && getSelfStepStatus(record);
+    },
   },
 ];
 

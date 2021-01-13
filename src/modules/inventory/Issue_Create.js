@@ -251,7 +251,7 @@ const IssueCreate = (props) => {
             />
           </Col>
           <Col span={2}></Col>
-          <Col span={3}>
+          {/* <Col span={3}>
             <Text strong>Agreement :</Text>
           </Col>
           <Col span={8}>
@@ -262,7 +262,7 @@ const IssueCreate = (props) => {
                 upDateFormValue({ issue_agreement: e.target.value })
               }
             />
-          </Col>
+          </Col> */}
         </Row>
         <Row className="col-2 row-margin-vertical" />
         <Row className="col-2 row-tab-margin-l">

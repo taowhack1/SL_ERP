@@ -1,13 +1,8 @@
-import {  Row, Col,Typography } from "antd";
-import {
-  ProfileOutlined,
-} from "@ant-design/icons";
-import React, { useContext} from "react";
+import { Row, Col, Typography } from "antd";
+import { ProfileOutlined } from "@ant-design/icons";
+import React, { useContext } from "react";
 
-import {
-  workOrderRMColumns,
-
-} from "../config/workOrder";
+import { workOrderRMColumns } from "../config/workOrder";
 import CustomTable from "../../../components/CustomTable";
 
 import { useSelector } from "react-redux";
@@ -37,7 +32,12 @@ const TabWorkOrderRMDetail = () => {
       {/* Column Header */}
       <CustomTable
         rowKey="id"
-        rowClassName="row-table-detail"
+        rowClassName={(record) => {
+          return record.auto_genarate_item
+            ? "row-table-detail "
+            : "row-table-detail require";
+        }}
+        // rowClassName="row-error"
         pageSize={10}
         focusLastPage={true}
         columns={workOrderRMColumns(

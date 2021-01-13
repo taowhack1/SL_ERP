@@ -55,13 +55,13 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
         <Row className="col-2 row-margin-vertical">
           <Col span={2}></Col>
           <Col span={2}>
-            <Text strong>Work Order Code :</Text>
+            <Text strong>WO Code :</Text>
           </Col>
           <Col span={8}>
             <CustomSelect
               allowClear
               showSearch
-              placeholder={"Work order code"}
+              placeholder={"WO Code"}
               field_id="wo_id"
               field_name="wo_no_description"
               value={state.wo_no_description}

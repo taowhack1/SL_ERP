@@ -11,7 +11,6 @@ import {
   QASubjectColumns,
   qcTestItemMainColumns,
 } from "../../configs/qcTestItemConfig";
-import ModalCreateQCTestCase from "../../ModalCreateQCTestCase";
 import { sortData } from "../../../../include/js/function_main";
 import {
   getQATestByTypeID,
@@ -49,21 +48,21 @@ const QCItemTestMain = (props) => {
       console.log("Cancel");
     },
   };
-  // const expandedRowRender = () => {
-  //   const data = [];
-  //   return (
-  //     <Table
-  //       columns={QASubjectColumns}
-  //       dataSource={data}
-  //       pagination={{ pageSize: 20 }}
-  //     />
-  //   );
-  // };
   const redirect_to_view = (id) => {
     history.push("/qa/master_data/quality_test_item/view/" + (id ? id : "new"));
   };
   const viewRecord = (id) => {
     dispatch(getQATestByTypeID(id, redirect_to_view));
+  };
+  const expandedRowRender = () => {
+    const data = [];
+    return (
+      <Table
+        columns={QASubjectColumns}
+        dataSource={data}
+        pagination={{ pageSize: 20 }}
+      />
+    );
   };
 
   return (
@@ -92,10 +91,9 @@ const QCItemTestMain = (props) => {
               },
             };
           }}
-          // expandable={{ expandedRowRender }}
+          expandable={{ expandedRowRender }}
         />
       </MainLayout>
-      <ModalCreateQCTestCase visible={false} />
     </div>
   );
 };

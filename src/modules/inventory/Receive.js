@@ -61,6 +61,9 @@ const Receive = (props) => {
       }, 1200);
     },
   };
+  useEffect(() => {
+    setData(receive_list);
+  }, [receive_list]);
   return (
     <div>
       <MainLayout {...config}>

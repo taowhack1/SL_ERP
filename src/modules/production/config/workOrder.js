@@ -1,4 +1,7 @@
-import { getRefStatus } from "../../../include/js/function_main";
+import {
+  getRefStatus,
+  warningTextValue,
+} from "../../../include/js/function_main";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
 import React from "react";
 
@@ -113,6 +116,14 @@ export const workOrderFields = {
   wo_lead_time_day_rm: 0,
   wo_lead_time_day_rm_qa: 0,
 };
+
+export const workOrderRequireFields = [
+  "wo_description",
+  "so_id",
+  "item_id",
+  "wo_qty_produce",
+  "wo_plan_start_date",
+];
 export const workOrderRMColumns = (
   readOnly,
   onChange,
@@ -140,14 +151,32 @@ export const workOrderRMColumns = (
     dataIndex: "item_no_name",
     key: "item_no_name",
     align: "left",
-    width: "40%",
+    ellipsis: true,
     render: (value, record, index) => {
       return <Text className="text-value text-left">{value ?? "-"}</Text>;
     },
   },
   {
     id: 3,
-    title: <div className="text-center">System Cal. Qty.</div>,
+    title: <div className="text-center">On Hand Qty.</div>,
+    dataIndex: "wo_detail_qty_available",
+    key: "wo_detail_qty_available",
+    align: "right",
+    require: true,
+    width: "10%",
+    render: (value, record, index) => {
+      return warningTextValue(
+        value,
+        4,
+        record.wo_detail_qty_pr && value < record.wo_detail_qty_issue
+          ? true
+          : false
+      );
+    },
+  },
+  {
+    id: 4,
+    title: <div className="text-center">Qty. To Issue</div>,
     dataIndex: "wo_detail_qty_issue",
     key: "wo_detail_qty_issue",
     align: "right",
@@ -161,27 +190,21 @@ export const workOrderRMColumns = (
       );
     },
   },
+
   {
-    id: 4,
-    title: <div className="text-center">Stock Qty.</div>,
-    dataIndex: "wo_detail_qty_available",
-    key: "wo_detail_qty_available",
-    align: "right",
+    id: 5,
+    title: <div className="text-center">UoM (Stock)</div>,
+    dataIndex: "uom_name",
+    key: "uom_name",
+    align: "center",
     require: true,
     width: "10%",
     render: (value, record, index) => {
-      return (
-        <Text
-          className="text-value text-right"
-          type={value === 0 ? "warning" : "default"}
-        >
-          {convertDigit(value, 4)}
-        </Text>
-      );
+      return <Text className="text-value ">{value ?? "-"}</Text>;
     },
   },
   {
-    id: 5,
+    id: 6,
     title: <div className="text-center">Qty. To PR</div>,
     dataIndex: "wo_detail_qty_pr",
     key: "wo_detail_qty_pr",
@@ -201,8 +224,8 @@ export const workOrderRMColumns = (
             disabled={record.item_id !== null ? 0 : 1}
             {...numberFormat}
             placeholder={"Qty. to PR"}
-            min={0.0}
-            step={0.0001}
+            min={0}
+            step={record.item_vendor_min_qty}
             className="full-width"
             name="wo_detail_qty_pr"
             value={value}
@@ -214,10 +237,10 @@ export const workOrderRMColumns = (
     },
   },
   {
-    id: 6,
-    title: <div className="text-center">Unit</div>,
-    dataIndex: "uom_name",
-    key: "uom_name",
+    id: 7,
+    title: <div className="text-center">UoM (Vendor)</div>,
+    dataIndex: "item_vendor_uom_name",
+    key: "item_vendor_uom_name",
     align: "center",
     require: true,
     width: "10%",
@@ -228,7 +251,7 @@ export const workOrderRMColumns = (
   {
     title: <div className="text-center">Lead-Time (days)</div>,
     align: "center",
-    width: "10%",
+    width: "15%",
     render: (value, record, index) => {
       return (
         record.wo_detail_lead_time_day_pr + record.wo_detail_lead_time_day_qa
@@ -252,20 +275,38 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
     id: 2,
     title: (
       <div className="text-center">
-        {!readOnly && <span className="require">* </span>} RM Items
+        {!readOnly && <span className="require">* </span>} PK Items
       </div>
     ),
     dataIndex: "item_no_name",
     key: "item_no_name",
     align: "left",
-    width: "40%",
+    ellipsis: true,
     render: (value, record, index) => {
       return <Text className="text-value text-left">{value ?? "-"}</Text>;
     },
   },
   {
     id: 3,
-    title: <div className="text-center">System Cal. Qty.</div>,
+    title: <div className="text-center">On Hand Qty.</div>,
+    dataIndex: "wo_detail_qty_available",
+    key: "wo_detail_qty_available",
+    align: "right",
+    require: true,
+    width: "10%",
+    render: (value, record, index) => {
+      return warningTextValue(
+        value,
+        4,
+        record.wo_detail_qty_pr && value < record.wo_detail_qty_issue
+          ? true
+          : false
+      );
+    },
+  },
+  {
+    id: 4,
+    title: <div className="text-center">Qty. To Issue</div>,
     dataIndex: "wo_detail_qty_issue",
     key: "wo_detail_qty_issue",
     align: "right",
@@ -279,27 +320,21 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
       );
     },
   },
+
   {
-    id: 4,
-    title: <div className="text-center">Stock Qty.</div>,
-    dataIndex: "wo_detail_qty_available",
-    key: "wo_detail_qty_available",
-    align: "right",
+    id: 5,
+    title: <div className="text-center">UoM (Stock)</div>,
+    dataIndex: "uom_name",
+    key: "uom_name",
+    align: "center",
     require: true,
     width: "10%",
     render: (value, record, index) => {
-      return (
-        <Text
-          className="text-value text-right"
-          type={value === 0 ? "warning" : "default"}
-        >
-          {convertDigit(value, 4)}
-        </Text>
-      );
+      return <Text className="text-value ">{value ?? "-"}</Text>;
     },
   },
   {
-    id: 5,
+    id: 6,
     title: <div className="text-center">Qty. To PR</div>,
     dataIndex: "wo_detail_qty_pr",
     key: "wo_detail_qty_pr",
@@ -319,8 +354,8 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
             disabled={record.item_id !== null ? 0 : 1}
             {...numberFormat}
             placeholder={"Qty. to PR"}
-            min={0.0}
-            step={0.0001}
+            min={0}
+            step={record.item_vendor_min_qty}
             className="full-width"
             name="wo_detail_qty_pr"
             value={value}
@@ -332,10 +367,10 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
     },
   },
   {
-    id: 6,
-    title: <div className="text-center">Unit</div>,
-    dataIndex: "uom_name",
-    key: "uom_name",
+    id: 7,
+    title: <div className="text-center">UoM (Vendor)</div>,
+    dataIndex: "item_vendor_uom_name",
+    key: "item_vendor_uom_name",
     align: "center",
     require: true,
     width: "10%",
@@ -346,7 +381,7 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
   {
     title: <div className="text-center">Lead-Time (days)</div>,
     align: "center",
-    width: "10%",
+    width: "15%",
     render: (value, record, index) => {
       return (
         record.wo_detail_lead_time_day_pr + record.wo_detail_lead_time_day_qa

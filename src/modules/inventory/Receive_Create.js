@@ -306,7 +306,7 @@ const Receive_Create = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
+          {/* <Col span={3}>
             <Text strong>Agreement :</Text>
           </Col>
           <Col span={8}>
@@ -322,7 +322,7 @@ const Receive_Create = (props) => {
               placeholder="Agreement"
             />
           </Col>
-          <Col span={2}></Col>
+          <Col span={2}></Col> */}
           <Col span={3}>
             <Text strong>Order date :</Text>
           </Col>

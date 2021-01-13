@@ -14,6 +14,7 @@ import MainLayout from "../../../../components/MainLayout";
 
 import QCItemTestTabPanel from "./QCItemTestTabPanel";
 import { getMasterDataItem } from "../../../../actions/inventory";
+import ModalCreateQCTestCase from "./ModalCreateQCTestCase";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
 
@@ -40,6 +41,7 @@ const QCItemTestCreate = (props) => {
     branch_id: auth.branch_id,
     type_id: 1,
     type_name: "Raw Material",
+    type_no_name: "[ RM ] Raw Material",
     commit: 1,
   });
   const [subjectData, subjectDispatch] = useReducer(
@@ -153,7 +155,7 @@ const QCItemTestCreate = (props) => {
     <MainLayout {...config}>
       <div id="form">
         <Row className="col-2">
-          <Col span={8}>
+          <Col span={24}>
             <h2>
               <strong>
                 {data_head.type_id ? "Edit" : "Create"} Quality Test Case{" "}
@@ -161,7 +163,6 @@ const QCItemTestCreate = (props) => {
               </strong>
             </h2>
           </Col>
-          <Col span={16}></Col>
         </Row>
         <Row className="col-2 mt-2" gutter={[32, 0]}>
           <Col span={12}>
@@ -172,29 +173,9 @@ const QCItemTestCreate = (props) => {
                 </Text>
               </Col>
               <Col span={18}>
-                <CustomSelect
-                  allowClear
-                  showSearch
-                  placeholder={"Item type"}
-                  name="type_id"
-                  field_id="type_id"
-                  field_name="type_name"
-                  value={data_head.type_name}
-                  data={item_type_list}
-                  onChange={(data, option) => {
-                    data && data
-                      ? upDateFormValue({
-                          type_id: data,
-                          type_no: option.data.type_no,
-                          type_name: option.title,
-                        })
-                      : upDateFormValue({
-                          type_id: null,
-                          type_no: null,
-                          type_name: null,
-                        });
-                  }}
-                />
+                <Text className="text-value text-left">
+                  {data_head.type_no_name}
+                </Text>
               </Col>
             </Row>
           </Col>
