@@ -9,7 +9,7 @@ const { Header, Content } = Layout;
 
 function MainLayout(props) {
   const context = useContext(AppContext);
-  console.log(context);
+  console.log("mainLayout", context);
   return (
     <>
       <Layout>

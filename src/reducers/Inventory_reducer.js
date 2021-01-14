@@ -19,6 +19,10 @@ import {
   GET_REPORT_STOCK,
   GET_ITEM_BY_ID,
   GET_RECEIVE_BY_ID,
+  GET_ITEM_TYPE,
+  GET_ITEM_TYPE_IN_ROW,
+  GET_ITEM_CATEGORY,
+  GET_CATEGORY_IN_ROW,
 } from "../actions/types";
 const initialState = {
   item: {
@@ -42,6 +46,12 @@ const initialState = {
     item_list: [],
     shelf: [],
     item_part: [],
+  },
+  configurations: {
+    type: [],
+    typeInRow: [],
+    category: [],
+    categoryInRow: [],
   },
   stock: {
     item_location_shelf: [],
@@ -97,7 +107,33 @@ export default (state = initialState, action) => {
         ...state,
         stock: { ...state.stock, item_lot_batch: action.payload },
       };
-
+    // CONFIGURATIONS TYPE
+    case GET_ITEM_TYPE:
+      return {
+        ...state,
+        configurations: { ...state.configurations, type: action.payload },
+      };
+    case GET_ITEM_TYPE_IN_ROW:
+      return {
+        ...state,
+        configurations: {
+          ...state.configurations,
+          typeInRow: action.payload,
+        },
+      };
+    case GET_ITEM_CATEGORY:
+      return {
+        ...state,
+        configurations: { ...state.configurations, category: action.payload },
+      };
+    case GET_CATEGORY_IN_ROW:
+      return {
+        ...state,
+        configurations: {
+          ...state.configurations,
+          categoryInRow: action.payload,
+        },
+      };
     // RECEIVE
     case GET_RECEIVE_LIST:
       return {
