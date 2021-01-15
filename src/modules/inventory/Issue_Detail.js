@@ -95,6 +95,8 @@ const IssueDetail = ({
       />
     );
   };
+  console.log("data_detail", data_detail);
+
   return (
     <>
       {/* Column Header */}
@@ -177,9 +179,10 @@ const IssueDetail = ({
                     data={
                       line.item_id
                         ? select_location.filter(
-                            (location) =>
-                              location.type_id === line.type_id &&
-                              location.item_control_id === line.item_control_id
+                            (location) => location.type_id === line.type_id
+                            // &&
+                            // location.location_id === line.location_id
+                            // location.item_control_id === line.item_control_id
                           )
                         : select_location
                     }

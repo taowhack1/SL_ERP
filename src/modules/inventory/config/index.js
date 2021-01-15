@@ -201,8 +201,8 @@ export const receive_require_fields = ["receive_description", "po_id"];
 export const receive_sub_detail_require_fields = [
   "location_id",
   "receive_detail_sub_receive_date",
-  "receive_detail_sub_mfg_date",
-  "receive_detail_sub_exp_date",
+  // "receive_detail_sub_mfg_date",
+  // "receive_detail_sub_exp_date",
   "receive_detail_sub_qty",
 ];
 // ISSUE

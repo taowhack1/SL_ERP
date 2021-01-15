@@ -23,7 +23,6 @@ const PurchaseOrders = (props) => {
   const keepLog = useKeepLogs();
   const auth = useSelector((state) => state.auth.authData);
   const current_menu = useSelector((state) => state.auth.currentMenu);
-  // const create_btn = useSelector(state=>state.auth.)
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(get_po_list(auth.user_name));

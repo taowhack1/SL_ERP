@@ -48,7 +48,13 @@ const Items = (props) => {
       console.log("Cancel");
     },
   };
-  const onChangeSearch = ({ type_id, category_id, search_text, status_id }) => {
+  const onChangeSearch = ({
+    type_id,
+    category_id,
+    search_text,
+    status_id,
+    status_name,
+  }) => {
     let search_data = dataItems;
 
     if (type_id) {
@@ -60,35 +66,35 @@ const Items = (props) => {
             (item) => item.type_id === type_id
           ));
     }
-    console.log("status_id", status_id);
-    switch (status_id) {
-      case 99:
-        break;
-      case 1:
+    if (status_id !== 99) {
+      if (status_id !== 4) {
+        if (status_id === 1) {
+          //pending
+          search_data = search_data.filter(
+            (item) =>
+              item.button_confirm || item.button_approve || item.button_reject
+          );
+        } else if (status_name !== "Cancel") {
+          search_data = search_data.filter(
+            (item) =>
+              !item.button_confirm &&
+              !item.button_approve &&
+              !item.button_reject &&
+              item.process_complete === false
+          );
+        } else {
+          search_data = search_data.filter(
+            (item) => item.trans_status_id === 3
+          );
+        }
+      } else {
+        //complete
         search_data = search_data.filter(
-          (item) =>
-            !item.process_complete &&
-            (item.button_approve || item.button_reject || item.button_confirm)
+          (item) => item.process_complete === true
         );
-        break;
-      case 2:
-        search_data = search_data.filter(
-          (item) =>
-            !item.process_complete && item.trans_status_name !== "Cancel"
-        );
-        break;
-      case 3:
-        search_data = search_data.filter(
-          (item) =>
-            !item.process_complete && item.trans_status_name === "Cancel"
-        );
-        break;
-      case 4:
-        search_data = search_data.filter((item) => item.process_complete);
-        break;
-      default:
-        break;
+      }
     }
+
     setItems(
       search_data.filter((item) => item.item_no_name.indexOf(search_text) >= 0)
     );

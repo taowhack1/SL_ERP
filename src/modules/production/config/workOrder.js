@@ -7,6 +7,7 @@ import React from "react";
 
 import Text from "antd/lib/typography/Text";
 import { InputNumber } from "antd";
+import { FileSearchOutlined, SearchOutlined } from "@ant-design/icons";
 
 export const work_order_columns = [
   {
@@ -165,12 +166,17 @@ export const workOrderRMColumns = (
     require: true,
     width: "10%",
     render: (value, record, index) => {
-      return warningTextValue(
-        value,
-        4,
-        record.wo_detail_qty_pr && value < record.wo_detail_qty_issue
-          ? true
-          : false
+      return (
+        <>
+          {warningTextValue(
+            value,
+            4,
+            record.wo_detail_qty_pr && value < record.wo_detail_qty_issue
+              ? true
+              : false
+          )}
+          <FileSearchOutlined className="button-icon" />
+        </>
       );
     },
   },

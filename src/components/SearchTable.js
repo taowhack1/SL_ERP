@@ -14,6 +14,8 @@ const SearchTable = (props) => {
     category_id: null,
     category_no_name: null,
     search_text: "",
+    status_id: 99,
+    status_name: "All",
   });
   const changeState = (stateKeyValue, stateKey) => {
     setState({
@@ -34,6 +36,8 @@ const SearchTable = (props) => {
       category_id: null,
       category_no_name: null,
       search_text: "",
+      status_id: 99,
+      status_name: "All",
     });
   };
   useEffect(() => {
@@ -174,7 +178,7 @@ const SearchTable = (props) => {
                 {
                   id: 4,
                   status_id: 4,
-                  status_name: "Compelte",
+                  status_name: "Complete",
                 },
               ]}
               onChange={(data, option) => {
@@ -184,8 +188,8 @@ const SearchTable = (props) => {
                       status_name: option.data.status_name,
                     })
                   : changeState({
-                      status_id: option.data.status_id,
-                      status_name: option.data.status_name,
+                      status_id: 99,
+                      status_name: "All",
                     });
               }}
             />

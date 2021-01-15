@@ -27,11 +27,6 @@ const Modal_Select_Item = (props) => {
       ? data_detail[0].item_id && data_detail.map((detail) => detail.item_id)
       : []
   );
-  const select_location = useSelector((state) =>
-    state.inventory.master_data.shelf.filter(
-      (shelf) => shelf.shelf_status_id === 4
-    )
-  );
   const [item_list, setItemList] = useState(master_data.item_list);
   const [state, setState] = useState(
     filter && filter
@@ -99,7 +94,10 @@ const Modal_Select_Item = (props) => {
     hideSelectAll: true,
     onSelect: (record, selected, selectedRows, e) => {
       if (selected) {
-        set_selected_item([...selected_item, record]);
+        set_selected_item([
+          ...selected_item,
+          { ...record, issue_detail_qty: 0 },
+        ]);
         set_selected_key([...selected_key, record.item_id]);
       } else {
         set_selected_item(
@@ -192,7 +190,6 @@ const Modal_Select_Item = (props) => {
         </Col>
         <Col span={8}>
           <CustomSelect
-            // size="small"
             allowClear
             showSearch
             placeholder={"Item Type"}
@@ -226,7 +223,6 @@ const Modal_Select_Item = (props) => {
         </Col>
         <Col span={8}>
           <CustomSelect
-            // size="small"
             allowClear
             showSearch
             disabled={disable_category}

@@ -14,7 +14,7 @@ export const po_require_fields_detail = [
   "uom_id",
   "po_detail_qty",
   "po_detail_due_date",
-  "po_detail_price",
+  // "po_detail_price",
 ];
 
 export const po_list_columns = [
