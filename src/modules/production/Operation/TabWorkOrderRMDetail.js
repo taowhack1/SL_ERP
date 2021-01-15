@@ -19,6 +19,9 @@ const TabWorkOrderRMDetail = () => {
     itemList: itemList,
   };
   console.log(RMReducer.data);
+  const viewOnHandDetail = () => {
+    console.log("openModal");
+  };
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
@@ -45,6 +48,7 @@ const TabWorkOrderRMDetail = () => {
           RMReducer.onChangeDetailValue,
           RMReducer.deleteRow,
           null,
+          viewOnHandDetail,
           inputData
         )}
         dataSource={RMReducer.data}

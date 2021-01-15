@@ -44,9 +44,7 @@ const ItemLine = ({
   // master data
 
   const select_items = useSelector((state) =>
-    state.inventory.master_data.item_list.filter(
-      (item) => item.type_id === type_id
-    )
+    state.inventory.master_data.item_list.filter((item) => item.type_id === 9)
   );
   const select_uoms = useSelector(
     (state) => state.inventory.master_data.item_uom
@@ -120,15 +118,16 @@ const ItemLine = ({
                   className="col-2"
                 >
                   <Col span={6} className="text-string">
-                    <Select
+                    <CustomSelect
                       allowClear
                       showSearch
                       disabled={type_id ? 0 : 1}
-                      name={`item_id${key}`}
-                      placeholder="Item"
-                      size={"small"}
+                      size="small"
+                      placeholder={"Item"}
+                      data={select_items}
+                      name="item_id"
                       field_id="item_id"
-                      field_name="item_name"
+                      field_name="item_no_name"
                       value={line.item_no_name}
                       onChange={(data, option) => {
                         data && data
@@ -150,29 +149,7 @@ const ItemLine = ({
                               po_detail_due_date: null,
                             });
                       }}
-                      style={{ width: "100%" }}
-                      filterOption={(inputValue, option) =>
-                        option.title &&
-                        option.title
-                          .toUpperCase()
-                          .indexOf(inputValue.toUpperCase()) !== -1
-                      }
-                    >
-                      {select_items &&
-                        select_items.map((item, key) => {
-                          return (
-                            <Option
-                              key={key}
-                              value={item.item_id}
-                              title={item.item_no_name}
-                              uom_id={item.uom_id}
-                              uom_no={item.uom_no}
-                            >
-                              {item.item_no_name}
-                            </Option>
-                          );
-                        })}
-                    </Select>
+                    />
                   </Col>
                   <Col span={3} className="text-number">
                     <InputNumber
@@ -256,7 +233,6 @@ const ItemLine = ({
                       value={line.po_detail_discount}
                       min={0.0}
                       step={5}
-                      precision={3}
                       {...numberFormat}
                       onChange={(data) => {
                         onChangeValue(
@@ -277,7 +253,7 @@ const ItemLine = ({
                     />
                   </Col>
                   <Col span={3} className="text-number">
-                    <div className="total-number">
+                    <div className="total-number text-value">
                       {convertDigit(line.po_detail_total_price)}
                     </div>
                   </Col>

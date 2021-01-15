@@ -130,6 +130,7 @@ export const workOrderRMColumns = (
   onChange,
   onDelete,
   onToggle,
+  viewOnHandDetail,
   { itemList }
 ) => [
   {
@@ -175,7 +176,11 @@ export const workOrderRMColumns = (
               ? true
               : false
           )}
-          <FileSearchOutlined className="button-icon" />
+          <FileSearchOutlined
+            className="button-icon"
+            title="View Detail"
+            onClick={viewOnHandDetail}
+          />
         </>
       );
     },

@@ -38,7 +38,7 @@ const { TextArea } = Input;
 const { Text } = Typography;
 const initialStateHead = po_fields;
 const initialStateDetail = [po_detail_fields];
-
+const readOnly = false;
 const PurchaseOrderCreate = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
@@ -395,7 +395,7 @@ const PurchaseOrderCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
+          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
             <Text strong>Agreement :</Text>
           </Col>
 
@@ -409,7 +409,7 @@ const PurchaseOrderCreate = (props) => {
             ></Input>
           </Col>
           <Col span={2}></Col>
-          <Col span={3}>
+          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
             <Text strong>Currency :</Text>
           </Col>
           <Col span={8}>
@@ -417,11 +417,31 @@ const PurchaseOrderCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
+          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
+            <Text strong>Request By :</Text>
+          </Col>
+
+          <Col span={8} className="text-left">
+            <Text className={"text-value"}>
+              {data_head.po_created_by_no_name}
+            </Text>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
+            <Text strong>Cost Center :</Text>
+          </Col>
+          <Col span={8}>
+            <Text className={"text-value"}>
+              {data_head.cost_center_no_name}
+            </Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
             <Text strong>Item Type :</Text>
           </Col>
-          <Col span={8} className="text-view">
-            {data_head.type_no_name}
+          <Col span={8} className="text-left">
+            <Text className={"text-value"}>{data_head.type_no_name}</Text>
           </Col>
           <Col span={2}></Col>
         </Row>
@@ -434,7 +454,7 @@ const PurchaseOrderCreate = (props) => {
                   pr_id={data_head.pr_id && data_head.pr_id}
                   po_id={data_head.po_id && data_head.po_id}
                   data_detail={data_detail}
-                  readOnly={false}
+                  readOnly={readOnly}
                   detailDispatch={detailDispatch}
                   headDispatch={headDispatch}
                   vat_rate={data_head.vat_rate}

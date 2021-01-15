@@ -24,7 +24,7 @@ export const stock_on_hand_columns = [
     title: "Type",
     dataIndex: "type_name",
     key: "type_name",
-    width: "15%",
+    width: "10%",
     align: "left",
     sorter: {
       compare: (a, b) => a.type_id - b.type_id,
@@ -99,6 +99,19 @@ export const stock_on_hand_columns = [
   },
   {
     title: "Qty on QC",
+    dataIndex: "wait_qc",
+    key: "wait_qc",
+    width: "10%",
+    align: "right",
+    sorter: {
+      compare: (a, b) => a.wait_qc - b.wait_qc,
+      multiple: 3,
+    },
+    ellipsis: true,
+    render: (value) => numeral(value).format("0,0.0000"),
+  },
+  {
+    title: "View",
     dataIndex: "wait_qc",
     key: "wait_qc",
     width: "10%",

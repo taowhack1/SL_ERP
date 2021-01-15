@@ -15,7 +15,7 @@ import { convertDigit, report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 
 const { Text } = Typography;
-
+const readOnly = true;
 const PurchaseOrderCreate = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
@@ -242,6 +242,26 @@ const PurchaseOrderCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
+          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
+            <Text strong>Request By :</Text>
+          </Col>
+
+          <Col span={8} className="text-left">
+            <Text className={"text-value text-view"}>
+              {data_head.po_created_by_no_name}
+            </Text>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
+            <Text strong>Cost Center :</Text>
+          </Col>
+          <Col span={8}>
+            <Text className={"text-value text-view"}>
+              {data_head.cost_center_no_name}
+            </Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>Item Type :</Text>
           </Col>
@@ -258,7 +278,7 @@ const PurchaseOrderCreate = (props) => {
                   pr_id={data_head.pr_id}
                   po_id={data_head.po_id}
                   data_detail={data_detail}
-                  readOnly={true}
+                  readOnly={readOnly}
                   vat_rate={data_head.vat_rate}
                 />
               </Tabs.TabPane>
