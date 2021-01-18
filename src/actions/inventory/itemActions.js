@@ -374,86 +374,108 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         res_weight,
         res_packaging,
         res_file,
-      ]).then((data) => {
-        console.log("Promise.allSettled GET ITEM BY ID", data);
-        const packingItemData = (data) => {
-          const data_part = sortData(data[2].value.data);
-          let data_part_detail = [];
-          let data_part_mix = [];
-          let data_formula = [];
-          data_part.forEach((part, index) => {
-            data_part_detail.push(
-              sortData(part.item_part_specification_detail)
-            );
-            data_part_mix.push(sortData(part.item_part_mix));
-            data_formula.push(sortData(part.item_formula));
-          });
-          const data_file_temp = data[6].value.data[0];
-          const item = {
-            data_head: data[0].value.data.main_master,
-            data_detail: sortData(data[1].value.data[0]),
-            data_part: data_part,
-            data_part_detail: data_part_detail,
-            data_part_mix: data_part_mix,
-            data_formula: data_formula,
-            data_qa_detail: sortData(data[3].value.data[0]),
-            data_weight_detail: sortData(data[4].value.data[0]),
-            data_packaging_detail: sortData(data[5].value.data[0]),
-            data_file: {
-              item_image:
-                data_file_temp.length &&
-                convertFileField(
-                  data_file_temp.filter((file) => file.file_type_id === 1)[0]
-                ),
-              certificate: {
-                2:
+      ])
+        .then((data) => {
+          console.log("Promise.allSettled GET ITEM BY ID", data);
+          const packingItemData = (data) => {
+            const data_part = sortData(data[2].value.data);
+            let data_part_detail = [];
+            let data_part_mix = [];
+            let data_formula = [];
+            data_part.forEach((part, index) => {
+              data_part_detail.push(
+                sortData(part.item_part_specification_detail)
+              );
+              data_part_mix.push(sortData(part.item_part_mix));
+              data_formula.push(sortData(part.item_formula));
+            });
+            const data_file_temp = data[6].value.data[0];
+            const item = {
+              data_head: data[0].value.data.main_master,
+              data_detail: sortData(data[1].value.data[0]),
+              data_part: data_part,
+              data_part_detail: data_part_detail,
+              data_part_mix: data_part_mix,
+              data_formula: data_formula,
+              data_qa_detail: sortData(data[3].value.data[0]),
+              data_weight_detail: sortData(data[4].value.data[0]),
+              data_packaging_detail: sortData(data[5].value.data[0]),
+              data_file: {
+                item_image:
                   data_file_temp.length &&
                   convertFileField(
-                    data_file_temp.filter((file) => file.file_type_id === 2)[0]
+                    data_file_temp.filter((file) => file.file_type_id === 1)[0]
                   ),
-                3:
-                  data_file_temp.length &&
-                  convertFileField(
-                    data_file_temp.filter((file) => file.file_type_id === 3)[0]
-                  ),
-                4:
-                  data_file_temp.length &&
-                  convertFileField(
-                    data_file_temp.filter((file) => file.file_type_id === 4)[0]
-                  ),
-                5:
-                  data_file_temp.length &&
-                  convertFileField(
-                    data_file_temp.filter((file) => file.file_type_id === 5)[0]
-                  ),
-                6:
-                  data_file_temp.length &&
-                  convertFileField(
-                    data_file_temp.filter((file) => file.file_type_id === 6)[0]
-                  ),
-                7:
-                  data_file_temp.length &&
-                  convertFileField(
-                    data_file_temp.filter((file) => file.file_type_id === 7)[0]
-                  ),
-                8:
-                  data_file_temp.length &&
-                  convertFileField(
-                    data_file_temp.filter((file) => file.file_type_id === 8)[0]
-                  ),
+                certificate: {
+                  2:
+                    data_file_temp.length &&
+                    convertFileField(
+                      data_file_temp.filter(
+                        (file) => file.file_type_id === 2
+                      )[0]
+                    ),
+                  3:
+                    data_file_temp.length &&
+                    convertFileField(
+                      data_file_temp.filter(
+                        (file) => file.file_type_id === 3
+                      )[0]
+                    ),
+                  4:
+                    data_file_temp.length &&
+                    convertFileField(
+                      data_file_temp.filter(
+                        (file) => file.file_type_id === 4
+                      )[0]
+                    ),
+                  5:
+                    data_file_temp.length &&
+                    convertFileField(
+                      data_file_temp.filter(
+                        (file) => file.file_type_id === 5
+                      )[0]
+                    ),
+                  6:
+                    data_file_temp.length &&
+                    convertFileField(
+                      data_file_temp.filter(
+                        (file) => file.file_type_id === 6
+                      )[0]
+                    ),
+                  7:
+                    data_file_temp.length &&
+                    convertFileField(
+                      data_file_temp.filter(
+                        (file) => file.file_type_id === 7
+                      )[0]
+                    ),
+                  8:
+                    data_file_temp.length &&
+                    convertFileField(
+                      data_file_temp.filter(
+                        (file) => file.file_type_id === 8
+                      )[0]
+                    ),
+                },
               },
-            },
-          };
+            };
 
-          return item;
-        };
-        const itemData = packingItemData(data);
-        dispatch({ type: GET_ITEM_BY_ID, payload: itemData });
-        itemData.data_head && redirect && redirect(item_id);
-      });
+            return item;
+          };
+          const itemData = packingItemData(data);
+          dispatch({ type: GET_ITEM_BY_ID, payload: itemData });
+          itemData.data_head && redirect && redirect(item_id);
+        })
+        .catch((error) => {
+          message.error({
+            content: "Somethings went wrong or Network Error.",
+            key: "validate",
+            duration: 4,
+          });
+        });
     }
   } catch (error) {
-    console.log(error);
+    alert("Oops! Somethings went wrong..\n" + error);
   }
 };
 

@@ -4,6 +4,7 @@ import { totalFormulaColumns } from "../config/item";
 import SearchTable from "../../../components/SearchTable";
 import { sortData } from "../../../include/js/function_main";
 import { ItemContext } from "../../../include/js/context";
+import CustomTable from "../../../components/CustomTable";
 
 const TotalFormula = () => {
   const { PartReducer, FormulaReducer } = useContext(ItemContext);
@@ -148,9 +149,10 @@ const TotalFormula = () => {
   //   formulaData.map((arr) => combineData.push(...arr));
   return (
     <>
-      <Table
+      <CustomTable
         loading={false}
         columns={totalFormulaColumns}
+        rowClassName="row-table-detail"
         dataSource={combineData}
         onChange={() => console.log("change page")}
         bordered

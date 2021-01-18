@@ -36,17 +36,10 @@ const QCItemTestCreate = (props) => {
     (state) => state.inventory.master_data.item_type
   );
 
-  const [data_head, headDispatch] = useReducer(reducer, {
-    user_name: auth.user_name,
-    branch_id: auth.branch_id,
-    type_id: 1,
-    type_name: "Raw Material",
-    type_no_name: "[ RM ] Raw Material",
-    commit: 1,
-  });
+  const [data_head, headDispatch] = useReducer(reducer, data);
   const [subjectData, subjectDispatch] = useReducer(
     reducer,
-    initialStateSubject
+    data.qa_subject ?? initialStateSubject
   );
 
   const config = {

@@ -110,17 +110,21 @@ export const stock_on_hand_columns = [
     ellipsis: true,
     render: (value) => numeral(value).format("0,0.0000"),
   },
-  {
-    title: "View",
-    dataIndex: "wait_qc",
-    key: "wait_qc",
-    width: "10%",
-    align: "right",
-    sorter: {
-      compare: (a, b) => a.wait_qc - b.wait_qc,
-      multiple: 3,
-    },
-    ellipsis: true,
-    render: (value) => numeral(value).format("0,0.0000"),
-  },
+  // {
+  //   title: "View",
+  //   dataIndex: "wait_qc",
+  //   key: "wait_qc",
+  //   width: "10%",
+  //   align: "right",
+  //   sorter: {
+  //     compare: (a, b) => a.wait_qc - b.wait_qc,
+  //     multiple: 3,
+  //   },
+  //   ellipsis: true,
+  //   render: (value) => {
+  //     return (
+
+  //     )
+  //   },
+  // },
 ];

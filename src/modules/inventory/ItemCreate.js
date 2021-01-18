@@ -52,6 +52,7 @@ import { getAllWorkCenter } from "../../actions/production/workCenterActions";
 import { getAllMachine } from "../../actions/production/machineActions";
 import ReducerClass from "../../include/js/ReducerClass";
 import { ItemContext } from "../../include/js/context";
+import Barcode from "react-barcode";
 const { Text } = Typography;
 
 const ItemCreate = (props) => {
@@ -350,101 +351,128 @@ const ItemCreate = (props) => {
       <MainLayout {...config}>
         <div id="form">
           <Row className="col-2">
-            <Col span={11}>
-              <h2>
-                <strong>{data_head.item_no ? "Edit" : "Create"} Item</strong>
-              </h2>
-              <h3 style={{ marginBottom: 8 }}>
-                {data_head.item_no ? (
-                  <strong>Item Code # {data_head.item_no}</strong>
-                ) : (
-                  <strong style={{ color: "#FF8C00" }}>
-                    Pre-Running Item Code : [
-                    {data_head.item_pre_run_no.join("")}]
-                  </strong>
-                )}
-              </h3>
-            </Col>
-            <Col span={2}></Col>
-            <Col span={3}></Col>
-            <Col span={8} style={{ textAlign: "right" }}>
-              {/* BARCODE */}
-            </Col>
-          </Row>
-
-          <Row className="col-2">
-            <Col span={19} style={{ marginBottom: 8 }}>
-              <h3>
-                <strong>
-                  <span className="require">* </span>Description Name
-                </strong>
-              </h3>
-              <Col span={24}>
-                <Input
-                  name="item_name"
-                  placeholder={"Description Name"}
-                  onChange={(e) =>
-                    upDateFormValue({ item_name: e.target.value })
-                  }
-                  value={data_head.item_name}
-                />
-              </Col>
-              <div style={{ marginLeft: 10, marginTop: 10 }}>
-                <Space align="baseline">
-                  <Checkbox
-                    name="item_sale"
-                    checked={data_head.item_sale}
+            <Col span={19}>
+              <Row>
+                <Col span={24}>
+                  <h2>
+                    <strong>
+                      {data_head.item_no ? "Edit" : "Create"} Item
+                    </strong>
+                  </h2>
+                </Col>
+              </Row>
+              <Row className={"col-2 row-margin-vertical"}>
+                <Col span={24}>
+                  <h3 style={{ marginBottom: 8 }}>
+                    {data_head.item_no ? (
+                      <strong>Item Code # {data_head.item_no}</strong>
+                    ) : (
+                      <strong style={{ color: "#FF8C00" }}>
+                        Pre-Running Item Code : [
+                        {data_head.item_pre_run_no.join("")}]
+                      </strong>
+                    )}
+                  </h3>
+                </Col>
+              </Row>
+              <Row className={"col-2 row-margin-vertical"}>
+                <Col span={24}>
+                  <h3>
+                    <strong>
+                      <span className="require">* </span>Description Name
+                    </strong>
+                  </h3>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={24}>
+                  <Input
+                    name="item_name"
+                    placeholder={"Description Name"}
                     onChange={(e) =>
-                      upDateFormValue({ item_sale: e.target.checked ? 1 : 0 })
+                      upDateFormValue({ item_name: e.target.value })
                     }
+                    value={data_head.item_name}
                   />
-                  <Text>Can be sold</Text>
-                </Space>
-                <br />
-                <Space align="baseline">
-                  <Checkbox
-                    name="item_purchase"
-                    checked={data_head.item_purchase}
-                    onChange={(e) =>
-                      upDateFormValue({
-                        item_purchase: e.target.checked ? 1 : 0,
-                      })
-                    }
-                  />
-                  <Text>Can be purchase</Text>
-                </Space>
-                {data_head.item_no && (
-                  <Space
-                    align="baseline"
-                    style={{ float: "right", marginRight: 10 }}
-                  >
-                    <Text strong>Active</Text>
-                    <Switch
-                      name="item_actived"
-                      checkedChildren={""}
-                      unCheckedChildren={""}
-                      checked={data_head.item_actived}
-                      style={{ width: 35 }}
-                      onClick={(data) =>
-                        upDateFormValue({ item_actived: data ? 1 : 0 })
-                      }
-                    />
-                  </Space>
-                )}
-              </div>
+                </Col>
+              </Row>
+              <Row className={"col-2 row-margin-vertical"}>
+                <Col span={24}>
+                  <div style={{ marginLeft: 10, marginTop: 10 }}>
+                    <Space align="baseline">
+                      <Checkbox
+                        name="item_sale"
+                        checked={data_head.item_sale}
+                        onChange={(e) =>
+                          upDateFormValue({
+                            item_sale: e.target.checked ? 1 : 0,
+                          })
+                        }
+                      />
+                      <Text>Can be sold</Text>
+                    </Space>
+                    <br />
+                    <Space align="baseline">
+                      <Checkbox
+                        name="item_purchase"
+                        checked={data_head.item_purchase}
+                        onChange={(e) =>
+                          upDateFormValue({
+                            item_purchase: e.target.checked ? 1 : 0,
+                          })
+                        }
+                      />
+                      <Text>Can be purchase</Text>
+                    </Space>
+                    {/* {data_head.item_no && (
+                      <Space
+                        align="baseline"
+                        style={{ float: "right", marginRight: 10 }}
+                      >
+                        <Text strong>Active</Text>
+                        <Switch
+                          name="item_actived"
+                          checkedChildren={""}
+                          unCheckedChildren={""}
+                          checked={data_head.item_actived}
+                          style={{ width: 35 }}
+                          onClick={(data) =>
+                            upDateFormValue({ item_actived: data ? 1 : 0 })
+                          }
+                        />
+                      </Space>
+                    )} */}
+                  </div>
+                </Col>
+              </Row>
             </Col>
             <Col span={1}></Col>
-            <Col span={4}>
-              <div>
-                <ItemFileUpload
-                  data_file={data_file}
-                  updateFile={updateFile}
-                  readOnly={false}
-                  maxFile={1}
-                  file_type_id={1}
-                  upload_type={"Card"}
-                />
-              </div>
+            <Col span={4} className="text-center">
+              {/* BARCODE */}
+              <Row className={"col-2 row-margin-vertical"}>
+                <Col span={24} className={"text-right"}>
+                  {data_head.item_no && (
+                    <Barcode
+                      value={data_head.item_no}
+                      width={1}
+                      height={50}
+                      fontSize={14}
+                    />
+                  )}
+                </Col>
+              </Row>
+              <Row className={"col-2 row-margin-vertical"}>
+                <Col span={24} className={"text-left"}>
+                  <ItemFileUpload
+                    data_file={data_file}
+                    updateFile={updateFile}
+                    readOnly={false}
+                    maxFile={1}
+                    file_type_id={1}
+                    upload_type={"Card"}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
 
@@ -464,10 +492,6 @@ const ItemCreate = (props) => {
                 packagingDetailDispatch={packagingDetailDispatch}
                 data_weight_detail={data_weight_detail}
                 weightDetailDispatch={weightDetailDispatch}
-                // data_production_process_detail={data_production_process_detail}
-                // productionProcessDetailDispatch={
-                //   productionProcessDetailDispatch
-                // }
                 upDateFormValue={upDateFormValue}
                 readOnly={false}
               />

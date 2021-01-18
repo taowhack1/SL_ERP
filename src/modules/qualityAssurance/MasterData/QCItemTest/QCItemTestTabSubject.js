@@ -1,5 +1,5 @@
 import { Button, Table } from "antd";
-import React, { useContext, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import {
   qcTestItemSubjectColumns,
   qcTestItemSubjectFields,
@@ -19,6 +19,12 @@ const QCItemTestTabSubject = () => {
     QCContext
   );
   const [state, stateDispatch] = useReducer(reducer, [initialStateSubject]);
+  useEffect(() => {
+    stateDispatch({
+      type: "SET_DETAIL",
+      payload: subjectData,
+    });
+  }, []);
   const addNewRow = () => {
     stateDispatch({
       type: "ADD_ROW",
@@ -51,6 +57,7 @@ const QCItemTestTabSubject = () => {
     // keySave === "item_formula_percent_qty" &&
     //   sumPercent(FormulaReducer.data, "item_formula_percent_qty");
   };
+
   console.log("qc subject render", state);
   return (
     <>

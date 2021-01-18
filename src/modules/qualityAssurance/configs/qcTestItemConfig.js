@@ -20,24 +20,33 @@ export const qcTestItemMainColumns = [
   },
   {
     title: "Number of Subject",
-    dataIndex: "count_subject",
+    // dataIndex: "count_subject",
     key: "count_subject",
     align: "right",
     width: "15%",
+    render: (value, record, index) => {
+      return record.qa_subject && record.qa_subject.length;
+    },
   },
   {
     title: "Number of Specification",
-    dataIndex: "count_specification",
+    // dataIndex: "count_specification",
     key: "count_specification",
     align: "right",
     width: "15%",
+    render: (value, record, index) => {
+      return record.qa_specification && record.qa_specification.length;
+    },
   },
   {
     title: "Number of Method",
-    dataIndex: "count_method",
+    // dataIndex: "count_method",
     key: "count_method",
     align: "right",
     width: "15%",
+    render: (value, record, index) => {
+      return record.qa_method && record.qa_method.length;
+    },
   },
 ];
 
@@ -85,8 +94,8 @@ export const qcTestItemSubjectColumns = (
     align: "left",
     width: "50%",
     render: (value, record, index) => {
-      if (readOnly) {
-        return value;
+      if (readOnly || record.qa_subject_id !== null) {
+        return <Text className="pd-left-1">{value ?? "-"}</Text>;
       } else {
         return (
           <Input
@@ -111,8 +120,8 @@ export const qcTestItemSubjectColumns = (
     key: "qa_subject_remark",
     align: "left",
     render: (value, record, index) => {
-      if (readOnly) {
-        return value;
+      if (readOnly || record.qa_subject_id !== null) {
+        return <Text className="pd-left-1">{value ? value : "-"}</Text>;
       } else {
         return (
           <Input

@@ -52,6 +52,7 @@ const TabPanel = ({
             data_head={data_head}
             upDateFormValue={upDateFormValue}
             master_data={master_data}
+            customers={customers}
             readOnly={readOnly}
           />
         </Tabs.TabPane>
@@ -73,7 +74,6 @@ const TabPanel = ({
                 updateFile={updateFile}
                 data_head={data_head}
                 master_data={master_data}
-                customers={customers}
                 upDateFormValue={upDateFormValue}
                 readOnly={readOnly}
               />

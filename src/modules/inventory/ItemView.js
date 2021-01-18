@@ -13,6 +13,7 @@ import { get_log_by_id } from "../../actions/comment&log";
 import ModalRemark from "../../components/Modal_Remark";
 import { FileContext, ItemContext } from "../../include/js/context";
 import { sum2DArrOdjWithField } from "../../include/js/function_main";
+import Barcode from "react-barcode";
 
 const { Text } = Typography;
 const ItemView = (props) => {
@@ -203,77 +204,78 @@ const ItemView = (props) => {
       <FileContext.Provider value={{ data_file }}>
         <MainLayout {...config}>
           <div id="form">
-            <Row className="col-2">
-              <Col span={11}>
-                <h3 style={{ marginBottom: 8 }}>
-                  {data_head.item_no && (
-                    <strong>
-                      Item Code{" "}
-                      {data_head.item_no ? "#" + data_head.item_no : "-"}
-                    </strong>
-                  )}
-                </h3>
-              </Col>
-              <Col span={2}></Col>
-              <Col span={3}></Col>
-              <Col span={8} style={{ textAlign: "right" }}></Col>
-            </Row>
-            <Row className="col-2">
-              <Col span={19} style={{ marginBottom: 15 }}>
-                <h3>
-                  <strong>Description Name</strong>
-                </h3>
-                <Text className="item_name text-view">
-                  {data_head.item_name ? data_head.item_name : "-"}
-                </Text>
-                <Col span={24} style={{ marginLeft: 5, marginTop: 10 }}>
-                  <Space align="baseline">
-                    {data_head.item_sale ? (
-                      <CheckSquareOutlined />
-                    ) : (
-                      <BorderOutlined />
-                    )}
-                    <Text>Can be sold</Text>
-                  </Space>
-                  <br />
-                  <Space align="baseline">
-                    {data_head.item_purchase ? (
-                      <CheckSquareOutlined />
-                    ) : (
-                      <BorderOutlined />
-                    )}
-                    <Text>Can be purchase</Text>
-                  </Space>
-
-                  {data_head.item_no && (
-                    <Space
-                      align="baseline"
-                      style={{ float: "right", marginRight: 10 }}
-                    >
-                      <Text strong>Active</Text>
-                      <Switch
-                        checkedChildren={""}
-                        unCheckedChildren={""}
-                        disabled
-                        checked={data_head.item_actived}
-                        style={{ width: 35 }}
-                      />
+            <Row>
+              <Col span={19}>
+                <Row className="col-2 mt-1">
+                  <Col span={12}>
+                    <h3 style={{ marginBottom: 8 }}>
+                      {data_head.item_no && (
+                        <strong>
+                          Item Code{" "}
+                          {data_head.item_no ? "#" + data_head.item_no : "-"}
+                        </strong>
+                      )}
+                    </h3>
+                  </Col>
+                </Row>
+                <Row>
+                  <h3>
+                    <strong>Description Name</strong>
+                  </h3>
+                </Row>
+                <Row>
+                  <Text className="item_name text-view">
+                    {data_head.item_name ? data_head.item_name : "-"}
+                  </Text>
+                </Row>
+                <Row>
+                  <Col span={24} style={{ marginLeft: 5, marginTop: 10 }}>
+                    <Space align="baseline">
+                      {data_head.item_sale ? (
+                        <CheckSquareOutlined />
+                      ) : (
+                        <BorderOutlined />
+                      )}
+                      <Text>Can be sold</Text>
                     </Space>
-                  )}
-                </Col>
+                    <br />
+                    <Space align="baseline">
+                      {data_head.item_purchase ? (
+                        <CheckSquareOutlined />
+                      ) : (
+                        <BorderOutlined />
+                      )}
+                      <Text>Can be purchase</Text>
+                    </Space>
+                  </Col>
+                </Row>
               </Col>
               <Col span={1}></Col>
               <Col span={4}>
-                <div>
-                  <ItemPreview
-                    data_file={data_file}
-                    // updateFile={updateFile}
-                    readOnly={true}
-                    maxFile={1}
-                    file_type_id={1}
-                    upload_type={"Card"}
-                  />
-                </div>
+                <Row>
+                  <Col span={24} className="text-center">
+                    {data_head.item_no && (
+                      <Barcode
+                        value={data_head.item_no}
+                        width={1}
+                        height={40}
+                        fontSize={14}
+                      />
+                    )}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24} className="text-left">
+                    <ItemPreview
+                      data_file={data_file}
+                      // updateFile={updateFile}
+                      readOnly={true}
+                      maxFile={1}
+                      file_type_id={1}
+                      upload_type={"Card"}
+                    />
+                  </Col>
+                </Row>
               </Col>
             </Row>
 

@@ -6,9 +6,14 @@ import {
   api_qa_specification_list,
   api_qa_subject,
   api_qa_subject_list,
+  api_qa_test_case,
 } from "../../include/js/api";
 import { header_config } from "../../include/js/main_config";
-import { GET_QA_MASTER_DATA, GET_QA_TEST_BY_ID } from "../types";
+import {
+  GET_ALL_TEST_CASE,
+  GET_QA_MASTER_DATA,
+  GET_QA_TEST_BY_ID,
+} from "../types";
 
 export const get_qa_subject_by_type_id = (type_id) => {
   console.log(`${api_qa_subject_list}/${type_id}`);
@@ -53,19 +58,22 @@ export const get_qa_test_case_master = (
   }
 };
 
-export const get_qa_test_case = async () => {
+export const getAllQATestCaseGroupByItemType = () => async (dispatch) => {
   console.log("get_qa_test_case");
+
   try {
-    const get_subject = axios.get(api_qa_subject, header_config);
-    const get_spec = axios.get(api_qa_specification, header_config);
-    const get_method = axios.get(api_qa_method, header_config);
-    await Promise.allSettled([get_subject, get_spec, get_method])
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    await axios.get(api_qa_test_case, header_config).then((res) => {
+      dispatch({ type: GET_ALL_TEST_CASE, payload: res.data ?? [] });
+    });
+
+    // await Promise.allSettled([qa_group])
+    //   .then((res) => {
+    //     console.log(res);
+    //     return res.value.data;
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   } catch (error) {
     console.log(error);
   }

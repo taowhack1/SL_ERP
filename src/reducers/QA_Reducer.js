@@ -3,6 +3,7 @@ import {
   GET_QC_RECEIVE_LIST,
   GET_QA_MASTER_DATA,
   GET_QA_TEST_BY_ID,
+  GET_ALL_TEST_CASE,
 } from "../actions/types";
 
 const initialState = {
@@ -13,7 +14,8 @@ const initialState = {
     test_case_specification: [],
     test_case_method: [],
   },
-  qa_test: {
+  qaTestCase: {
+    list: [],
     type: {},
     subject: [],
     specification: [],
@@ -30,6 +32,11 @@ export default (state = initialState, action) => {
       return { ...state, qa_master_data: action.payload };
     case GET_QA_TEST_BY_ID:
       return { ...state, qa_test: action.payload };
+    case GET_ALL_TEST_CASE:
+      return {
+        ...state,
+        qaTestCase: { ...state.qaTestCase, list: action.payload },
+      };
     default:
       return state;
   }

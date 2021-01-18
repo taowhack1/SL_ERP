@@ -13,6 +13,7 @@ import {
 } from "../../configs/qcTestItemConfig";
 import { sortData } from "../../../../include/js/function_main";
 import {
+  getAllQATestCaseGroupByItemType,
   getQATestByTypeID,
   get_qa_test_case_master,
 } from "../../../../actions/qa/qaTestAction";
@@ -29,7 +30,10 @@ const QCItemTestMain = (props) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-
+  useEffect(() => {
+    dispatch(getAllQATestCaseGroupByItemType());
+  }, []);
+  const testCaseList = useSelector((state) => state.qa.qaTestCase.list);
   const config = {
     projectId: current_project && current_project.project_id,
     title: current_project && current_project.project_name,
@@ -48,30 +52,33 @@ const QCItemTestMain = (props) => {
       console.log("Cancel");
     },
   };
-  const redirect_to_view = (id) => {
-    history.push("/qa/master_data/quality_test_item/view/" + (id ? id : "new"));
+  const redirect_to_view = (id, record) => {
+    console.log(id, record);
+    history.push({
+      path: "/qa/master_data/quality_test_item/edit/" + (id ? id : "new"),
+      state: record,
+    });
   };
   const viewRecord = (id) => {
     dispatch(getQATestByTypeID(id, redirect_to_view));
   };
-  const expandedRowRender = () => {
-    const data = [];
-    return (
-      <Table
-        columns={QASubjectColumns}
-        dataSource={data}
-        pagination={{ pageSize: 20 }}
-      />
-    );
-  };
-
+  // const expandedRowRender = () => {
+  //   const data = [];
+  //   return (
+  //     <Table
+  //       columns={QASubjectColumns}
+  //       dataSource={data}
+  //       pagination={{ pageSize: 20 }}
+  //     />
+  //   );
+  // };
   return (
     <div>
       <MainLayout {...config}>
         <Table
           loading={loading}
           columns={qcTestItemMainColumns}
-          dataSource={sortData(item_test_case)}
+          dataSource={sortData(testCaseList)}
           onChange={onChange}
           bordered
           pagination={{ pageSize: 10 }}
@@ -87,11 +94,16 @@ const QCItemTestMain = (props) => {
                   .removeClass("selected-row");
                 $(e.target).closest("tr").addClass("selected-row");
                 keepLog.keep_log_action(record.type_no_name);
-                viewRecord(record.type_id);
+                // redirect_to_view(record.type_id, record);
+                history.push({
+                  pathname:
+                    "/qa/master_data/quality_test_item/edit/" + record.type_id,
+                  state: record,
+                });
               },
             };
           }}
-          expandable={{ expandedRowRender }}
+          // expandable={{ expandedRowRender }}
         />
       </MainLayout>
     </div>
