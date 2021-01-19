@@ -12,7 +12,9 @@ const CustomTable = (props) => {
     rowClassName,
     pageSize,
     focusLastPage,
+    title,
     onAdd,
+    disabledAddRow,
   } = props;
   const [state, setState] = useState({
     pagination: {
@@ -38,6 +40,7 @@ const CustomTable = (props) => {
   return (
     <>
       <Table
+        title={title}
         className="table-detail"
         rowClassName={rowClassName}
         loading={loading}
@@ -48,6 +51,7 @@ const CustomTable = (props) => {
         size="small"
         rowKey={rowKey}
         pagination={state.pagination}
+        summary={props.summary ?? null}
         footer={
           onAdd
             ? () => (
@@ -55,6 +59,7 @@ const CustomTable = (props) => {
                   {!readOnly && (
                     <div className="mt-1">
                       <Button
+                        disabled={disabledAddRow ?? false}
                         type="dashed"
                         onClick={() => {
                           onAdd();

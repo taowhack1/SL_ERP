@@ -169,22 +169,22 @@ const WorkOrderCreate = (props) => {
       );
       console.log(validate);
       if (validate.validate) {
-        // const saveData = {
-        //   data_head: headReducer.data,
-        //   data_material: sortData(RMReducer.data.concat(PKReducer.data)),
-        // };
-        // headReducer.data.wo_id
-        //   ? dispatch(
-        //       updateWorkOrder(
-        //         headReducer.data.wo_id,
-        //         saveData,
-        //         auth.user_name,
-        //         redirect_to_view
-        //       )
-        //     )
-        //   : dispatch(
-        //       createWorkOrder(saveData, auth.user_name, redirect_to_view)
-        //     );
+        const saveData = {
+          data_head: headReducer.data,
+          data_material: sortData(RMReducer.data.concat(PKReducer.data)),
+        };
+        headReducer.data.wo_id
+          ? dispatch(
+              updateWorkOrder(
+                headReducer.data.wo_id,
+                saveData,
+                auth.user_name,
+                redirect_to_view
+              )
+            )
+          : dispatch(
+              createWorkOrder(saveData, auth.user_name, redirect_to_view)
+            );
       }
     },
     onEdit: (e) => {

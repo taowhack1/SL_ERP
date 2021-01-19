@@ -9,6 +9,9 @@ export default function Search(props) {
   return (
     <>
       <Input
+        style={props.style}
+        size={props.size ?? "middle"}
+        className={props.className ?? ""}
         placeholder="Search"
         value={props.search}
         allowClear

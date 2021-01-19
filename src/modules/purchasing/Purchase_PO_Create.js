@@ -160,6 +160,7 @@ const PurchaseOrderCreate = (props) => {
         data_detail,
         po_require_fields_detail
       );
+      console.log(data_head);
       if (validate.validate && validate_detail.validate) {
         console.log("pass");
         data_head.po_id

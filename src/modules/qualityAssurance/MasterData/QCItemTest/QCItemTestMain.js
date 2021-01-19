@@ -12,11 +12,7 @@ import {
   qcTestItemMainColumns,
 } from "../../configs/qcTestItemConfig";
 import { sortData } from "../../../../include/js/function_main";
-import {
-  getAllQATestCaseGroupByItemType,
-  getQATestByTypeID,
-  get_qa_test_case_master,
-} from "../../../../actions/qa/qaTestAction";
+import { getAllQATestCaseGroupByItemType } from "../../../../actions/qa/qaTestAction";
 const QCItemTestMain = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
@@ -58,9 +54,6 @@ const QCItemTestMain = (props) => {
       path: "/qa/master_data/quality_test_item/edit/" + (id ? id : "new"),
       state: record,
     });
-  };
-  const viewRecord = (id) => {
-    dispatch(getQATestByTypeID(id, redirect_to_view));
   };
   // const expandedRowRender = () => {
   //   const data = [];

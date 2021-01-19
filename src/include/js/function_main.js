@@ -22,7 +22,7 @@ export const sortData = (arrObject) => {
       data_id: obj.data_id ?? key,
     });
   });
-  return temp;
+  return arrObject.length ? temp : [];
 };
 
 export const sortDataWithoutCommit = (arrObject) => {
@@ -34,7 +34,7 @@ export const sortDataWithoutCommit = (arrObject) => {
       id: key,
     });
   });
-  return temp;
+  return arrObject.length ? temp : [];
 };
 
 export const editFieldArrObj = (arrObj, objKeyValue, commit = 0) => {
@@ -111,7 +111,7 @@ export const validateFormHead = (obj_data, require_field) => {
         obj_data[req_field] === null ||
         (typeof obj_data[req_field] === "string" &&
           obj_data[req_field].trim() === "") ||
-        !obj_data[req_field]
+        obj_data[req_field] === undefined
       ) {
         objKey.push(`[name=${req_field}]`);
         validate = false;

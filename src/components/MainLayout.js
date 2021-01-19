@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Layout } from "antd";
+import { Layout, Skeleton, Spin } from "antd";
 import TopContent from "./TopComponent";
 import MainHeader from "./MainHeader";
 import MainFooter from "./MainFooter";
@@ -12,14 +12,16 @@ function MainLayout(props) {
   // console.log(context);
   return (
     <>
-      <Layout>
-        <Header>
-          <MainHeader title={props.title} projectId={props.projectId} />
-        </Header>
-        {props.show && <TopContent {...props} />}
-        <Content id="content">{props.children}</Content>
-        <MainFooter />
-      </Layout>
+      <Spin tip="Loading..." spinning={props.pageLoad ?? false}>
+        <Layout>
+          <Header>
+            <MainHeader title={props.title} projectId={props.projectId} />
+          </Header>
+          {props.show && <TopContent {...props} />}
+          <Content id="content">{props.children}</Content>
+          <MainFooter />
+        </Layout>
+      </Spin>
     </>
   );
 }

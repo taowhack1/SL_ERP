@@ -19,11 +19,16 @@ import {
   api_get_item_control,
 } from "../../include/js/api";
 
-export const getMasterDataItem = (user) => async (dispatch) => {
+export const getItemType = () => {
+  return axios
+    .get(api_get_item_type, header_config)
+    .catch((error) => console.error(error));
+};
+export const getMasterDataItem = (user, setLoading) => async (dispatch) => {
   try {
     const user_name = user ?? "";
     const get_type = axios.get(
-      `${api_get_item_type}/${user_name}`,
+      `${api_get_item_type}/${user_name ?? ""}`,
       header_config
     );
     const get_categoty = axios.get(`${api_get_item_category}`, header_config);
@@ -35,31 +40,33 @@ export const getMasterDataItem = (user) => async (dispatch) => {
     const get_item = axios.get(api_get_item_list, header_config);
     const get_shelf = axios.get(api_shelf, header_config);
     const get_item_control = axios.get(api_get_item_control, header_config);
-    let master_data = {
-      item_type: await get_type.then((res) => {
-        console.log(res.data);
-        return res.data[0];
-      }),
-      item_category: await get_categoty.then((res) => {
-        return res.data[0];
-      }),
-      item_uom: await get_uom.then((res) => {
-        return res.data[0];
-      }),
-      item_benefit: await get_benefit.then((res) => {
-        return res.data[0];
-      }),
-      item_control: await get_item_control.then((res) => {
-        return res.data[0];
-      }),
-      item_list: await get_item.then((res) => {
-        return res.data[0];
-      }),
-      shelf: await get_shelf.then((res) => {
-        return res.data[0];
-      }),
-    };
-    await dispatch({ type: GET_MASTER_DATA_ITEM, payload: master_data });
+    Promise.allSettled([
+      get_type,
+      get_categoty,
+      get_uom,
+      get_benefit,
+      get_item_control,
+      get_item,
+      get_shelf,
+    ])
+      .then((res) => {
+        console.log(res);
+        let master_data = {
+          item_type: res[0].value.data[0] ?? [],
+          item_category: res[1].value.data[0] ?? [],
+          item_uom: res[2].value.data[0] ?? [],
+          item_benefit: res[3].value.data[0] ?? [],
+          item_control: res[4].value.data[0] ?? [],
+          item_list: res[5].value.data[0] ?? [],
+          shelf: res[6].value.data[0] ?? [],
+        };
+        dispatch({ type: GET_MASTER_DATA_ITEM, payload: master_data });
+        setLoading && setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading && setLoading(false);
+      });
   } catch (error) {
     console.log(error);
   }

@@ -11,71 +11,106 @@ import {
   sortData,
   sortDataWithoutCommit,
 } from "../../../../include/js/function_main";
-import { reducer } from "../../../inventory/reducers";
 import CustomTable from "../../../../components/CustomTable";
+import Search from "../../../../components/Search";
+import { mainReducer } from "../../../../include/reducer";
 const initialStateSubject = qcTestItemSubjectFields;
 const QCItemTestTabSubject = () => {
-  const { readOnly, data_head, subjectData, subjectDispatch } = useContext(
-    QCContext
-  );
-  const [state, stateDispatch] = useReducer(reducer, [initialStateSubject]);
+  const {
+    readOnly,
+    data_head,
+    subjectData,
+    subjectDispatch,
+    commonData,
+    form1,
+  } = useContext(QCContext);
+  const [state, stateDispatch] = useReducer(mainReducer, [initialStateSubject]);
+  const [searching, setSearching] = useState(false);
   useEffect(() => {
     stateDispatch({
       type: "SET_DETAIL",
       payload: subjectData,
     });
-  }, []);
+  }, [subjectData.length]);
   const addNewRow = () => {
-    stateDispatch({
-      type: "ADD_ROW",
-      payload: initialStateSubject,
+    console.log("add row");
+    subjectDispatch({
+      type: "ADD_ROW_WOC",
+      payload: { ...initialStateSubject, ...commonData },
     });
-    // FormulaReducer.addNewRow(item_formula_detail_fields, partId);
   };
   const onDelete = (id) => {
-    stateDispatch({
-      type: "DEL_ROW",
+    subjectDispatch({
+      type: "DEL_ROW_WOC",
       payload: {
         id: id,
       },
     });
-    // FormulaReducer.deleteRow2D(partId, id);
-    // sumPercent(FormulaReducer.data, "item_formula_percent_qty");
   };
   const onChange = (id, data) => {
     stateDispatch({
       type: "CHANGE_DETAIL_VALUE",
       payload: {
         id: id,
-        data: { ...data, commit: 1 },
+        data: { ...data, ...commonData },
       },
     });
   };
-  const Save = (id2, keySave) => {
+  const Save = (id) => {
     console.log("Save");
-    // FormulaReducer.onChangeDetailValue2D(partId, id2, state[id2]);
-    // keySave === "item_formula_percent_qty" &&
-    //   sumPercent(FormulaReducer.data, "item_formula_percent_qty");
+    subjectDispatch({
+      type: "CHANGE_DETAIL_VALUE",
+      payload: {
+        id: id,
+        data: { ...state.filter((obj) => obj.id === id)[0], commit: 1 },
+      },
+    });
   };
+  const onSearch = (text) => {
+    stateDispatch({
+      type: "SEARCH_DETAIL",
+      payload: text
+        ? subjectData.filter(
+            (obj) =>
+              (obj.qa_subject_name &&
+                obj.qa_subject_name.toUpperCase().indexOf(text.toUpperCase()) >=
+                  0) ||
+              (obj.qa_subject_remark &&
+                obj.qa_subject_remark
+                  .toUpperCase()
+                  .indexOf(text.toUpperCase()) >= 0)
+          )
+        : subjectData,
+    });
+    text ? setSearching(true) : setSearching(false);
+  };
+  const getRowClassName = (record, index) => {
+    let rowClass = "row-table-detail ";
+    rowClass += !record.qa_subject_actived ? "row-table-detail-inactive" : "";
+    return rowClass;
+  };
+  console.log("subjectData", subjectData);
 
   console.log("qc subject render", state);
   return (
     <>
       <CustomTable
-        rowKey="id"
-        rowClassName={(record, index) => {
-          let rowClass = "row-table-detail ";
-          rowClass += !record.qa_subject_actived
-            ? "row-table-detail-inactive"
-            : "";
-          return rowClass;
+        title={() => {
+          return (
+            <div style={{ textAlign: "right", backgroundColor: "#FAFAFA" }}>
+              <Search className={"half-width"} onSearch={onSearch} />
+            </div>
+          );
         }}
+        rowKey="id"
+        rowClassName={getRowClassName}
         pageSize={10}
         focusLastPage={true}
         columns={qcTestItemSubjectColumns(readOnly, onChange, onDelete, Save)}
         dataSource={state}
         readOnly={readOnly}
         onAdd={addNewRow}
+        disabledAddRow={searching}
       />
     </>
   );

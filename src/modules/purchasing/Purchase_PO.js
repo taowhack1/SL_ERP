@@ -24,6 +24,9 @@ const PurchaseOrders = (props) => {
   const auth = useSelector((state) => state.auth.authData);
   const current_menu = useSelector((state) => state.auth.currentMenu);
   const dispatch = useDispatch();
+
+  const [loading, setLoading] = useState(false);
+  const [rowClick, setRowClick] = useState(false);
   useEffect(() => {
     dispatch(get_po_list(auth.user_name));
     dispatch(get_open_po_list());
@@ -32,16 +35,17 @@ const PurchaseOrders = (props) => {
     dispatch(getMasterDataItem());
     return () => {
       dispatch(reset_comments());
+      setData([]);
     };
   }, [dispatch]);
 
   const po_list = useSelector((state) => state.purchase.po.po_list);
   useEffect(() => {
     setData(po_list);
-  }, [po_list.length]);
+    return () => setData([]);
+  }, [po_list]);
   const [data, setData] = useState(po_list);
-  const [loading, setLoading] = useState(false);
-  const [rowClick, setRowClick] = useState(false);
+
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };

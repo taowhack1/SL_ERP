@@ -12,6 +12,7 @@ import { item_show_columns } from "./config/item";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 import SearchTable from "../../components/SearchTable";
+import { getMasterDataItem } from "../../actions/inventory";
 const Items = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
@@ -21,7 +22,11 @@ const Items = (props) => {
   const current_menu = useSelector((state) => state.auth.currentMenu);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    dispatch(getAllItems(auth.user_name));
+    dispatch(getMasterDataItem(null, setLoading));
+  }, []);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -101,22 +106,18 @@ const Items = (props) => {
   };
 
   useEffect(() => {
-    dispatch(getAllItems(auth.user_name));
-  }, []);
-
-  useEffect(() => {
     setItems(dataItems);
   }, [dataItems.length]);
 
-  useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      return () => {
-        clearTimeout();
-      };
-    }, 1200);
-  }, [items]);
+  // useEffect(() => {
+  //   setLoading(true);
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //     return () => {
+  //       clearTimeout();
+  //     };
+  //   }, 1200);
+  // }, [items]);
 
   const redirect_to_view = (id) => {
     history.push("/inventory/items/view/" + (id ? id : "new"));

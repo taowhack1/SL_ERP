@@ -1,46 +1,64 @@
-import React, { useEffect, useMemo, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Typography } from "antd";
-import { useHistory } from "react-router-dom";
+import { Row, Col } from "antd";
+import { useHistory, useParams } from "react-router-dom";
 import { reducer } from "../../reducers";
 import Authorize from "../../../system/Authorize";
-import CustomSelect from "../../../../components/CustomSelect";
 import {
+  qcTestItemFields,
   qcTestItemSubjectFields,
-  subject_data,
 } from "../../configs/qcTestItemConfig";
 import Comments from "../../../../components/Comments";
 import MainLayout from "../../../../components/MainLayout";
 
 import QCItemTestTabPanel from "./QCItemTestTabPanel";
-import { getMasterDataItem } from "../../../../actions/inventory";
-import ModalCreateQCTestCase from "./ModalCreateQCTestCase";
-// import WorkCenterDetail from "./WorkCenterDetail";
-const { Text } = Typography;
+import { getItemType } from "../../../../actions/inventory";
+import {
+  getQATestByTypeID,
+  saveQATestCase,
+} from "../../../../actions/qa/qaTestAction";
+import SelectItemType from "./SelectItemType";
 
+let typeList = [];
+getItemType().then(
+  (res) =>
+    (typeList = res.data[0].filter((type) => type.type_verify_qc === true))
+);
 export const QCContext = React.createContext();
+const initialStateMain = qcTestItemFields;
 const initialStateSubject = [qcTestItemSubjectFields];
-
 const QCItemTestCreate = (props) => {
+  const [pageLoad, setPageLoad] = useState(true);
+  const params = useParams();
   const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth.authData);
   const readOnly = false;
-
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
+  // const data =
+  //   props.location && props.location.state ? props.location.state : 0;
   const current_project = useSelector((state) => state.auth.currentProject);
-  const item_type_list = useSelector(
-    (state) => state.inventory.master_data.item_type
-  );
 
-  const [data_head, headDispatch] = useReducer(reducer, data);
+  const [data_head, headDispatch] = useReducer(reducer, initialStateMain);
   const [subjectData, subjectDispatch] = useReducer(
     reducer,
-    data.qa_subject ?? initialStateSubject
+    initialStateSubject
   );
+  useEffect(() => {
+    params &&
+      getQATestByTypeID(params.id).then((res) => {
+        headDispatch({
+          type: "SET_HEAD",
+          payload: res.data[0],
+        });
+        subjectDispatch({
+          type: "SET_DETAIL_WOC",
+          payload: res.data[0].qa_subject,
+        });
+        setPageLoad(false);
+      });
+  }, []);
 
   const config = {
     projectId: current_project && current_project.project_id,
@@ -62,8 +80,16 @@ const QCItemTestCreate = (props) => {
     save: "function",
     discard: "/qa/master_data/quality_test_item",
     onSave: (e) => {
-      //e.preventDefault();
+      // e.preventDefault();
       console.log("Save");
+      const data = {
+        type_id: data_head.type_id,
+        subjectData: subjectData,
+        specData: [],
+        methodData: [],
+      };
+      console.log(data);
+      // saveQATestCase(data);
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -78,45 +104,6 @@ const QCItemTestCreate = (props) => {
     },
   };
 
-  const addLine = (dispatch) => {
-    dispatch({
-      type: "ADD_ROW_WOC",
-      payload: { ...qcTestItemSubjectFields, ...data_head },
-    });
-  };
-
-  const delLine = (id, qa_id, dispatch) => {
-    if (qa_id !== undefined && qa_id !== null) {
-      dispatch({
-        type: "CHANGE_DETAIL_VALUE",
-        payload: {
-          id: id,
-          data: { qa_subject_actived: 0, ...data_head },
-        },
-      });
-    } else {
-      dispatch({ type: "DEL_ROW", payload: { id: id } });
-    }
-  };
-
-  const onChangeValue = (rowId, data, dispatch) => {
-    dispatch({
-      type: "CHANGE_DETAIL_VALUE",
-      payload: {
-        id: rowId,
-        data: { ...data, ...data_head },
-      },
-    });
-  };
-
-  useEffect(() => {
-    dispatch(getMasterDataItem(auth.user_name));
-    subjectDispatch({
-      type: "SET_DETAIL_WOC",
-      payload: subject_data,
-    });
-  }, []);
-
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
@@ -130,55 +117,46 @@ const QCItemTestCreate = (props) => {
       readOnly,
       subjectData,
       subjectDispatch,
-      addLine,
-      delLine,
-      onChangeValue,
+      commonData: {
+        user_name: auth.user_name,
+        branch_id: auth.branch_id,
+        commit: 1,
+        type_id: data_head.type_id,
+      },
     };
-  }, [
-    data_head,
-    readOnly,
-    subjectData,
-    subjectDispatch,
-    addLine,
-    delLine,
-    onChangeValue,
-  ]);
-  console.log("Head render");
+  }, [data_head, readOnly, subjectData, subjectDispatch]);
+  console.log("QCMain Render..");
   return (
-    <MainLayout {...config}>
-      <div id="form">
-        <Row className="col-2">
-          <Col span={24}>
-            <h2>
-              <strong>
-                {data_head.type_id ? "Edit" : "Create"} Quality Test Case{" "}
-                {data_head.type_no_name && "#" + data_head.type_no_name}
-              </strong>
-            </h2>
-          </Col>
-        </Row>
-        <Row className="col-2 mt-2" gutter={[32, 0]}>
-          <Col span={12}>
-            <Row className="col-2 row-margin-vertical">
-              <Col span={6}>
-                <Text strong>
-                  <span className="require">* </span>Item Type :
-                </Text>
-              </Col>
-              <Col span={18}>
-                <Text className="text-value text-left">
-                  {data_head.type_no_name}
-                </Text>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+    <MainLayout {...config} pageLoad={pageLoad}>
+      <>
+        <div id="form">
+          <Row className="col-2">
+            <Col span={24}>
+              <h2>
+                <strong>
+                  {data_head.type_id ? "Edit" : "Create"} Quality Test Case{" "}
+                  {data_head.type_no_name && "#" + data_head.type_no_name}
+                </strong>
+              </h2>
+            </Col>
+          </Row>
+          <Row className="col-2 mt-2" gutter={[32, 0]}>
+            <Col span={12}>
+              <SelectItemType
+                data_head={data_head}
+                readOnly={readOnly}
+                item_type={typeList}
+                upDateFormValue={upDateFormValue}
+              />
+            </Col>
+          </Row>
 
-        <QCContext.Provider value={contextValue}>
-          <QCItemTestTabPanel />
-        </QCContext.Provider>
-      </div>
-      <Comments data={[]} />
+          <QCContext.Provider value={contextValue}>
+            <QCItemTestTabPanel />
+          </QCContext.Provider>
+        </div>
+        <Comments data={[]} />
+      </>
     </MainLayout>
   );
 };

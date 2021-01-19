@@ -72,7 +72,7 @@ export const qcTestItemSubjectColumns = (
   readOnly,
   onChange,
   onDelete,
-  updateRowStatus
+  Save
 ) => [
   {
     title: "No.",
@@ -95,7 +95,13 @@ export const qcTestItemSubjectColumns = (
     width: "50%",
     render: (value, record, index) => {
       if (readOnly || record.qa_subject_id !== null) {
-        return <Text className="pd-left-1">{value ?? "-"}</Text>;
+        return (
+          <Text
+            className={record.qa_subject_actived ? "pd-left-1" : "text-view"}
+          >
+            {value ?? "-"}
+          </Text>
+        );
       } else {
         return (
           <Input
@@ -106,6 +112,7 @@ export const qcTestItemSubjectColumns = (
                 qa_subject_name: e.target.value,
               })
             }
+            onBlur={() => Save(record.id)}
             value={value}
             placeholder="Subject Name"
             size="small"
@@ -121,7 +128,13 @@ export const qcTestItemSubjectColumns = (
     align: "left",
     render: (value, record, index) => {
       if (readOnly || record.qa_subject_id !== null) {
-        return <Text className="pd-left-1">{value ? value : "-"}</Text>;
+        return (
+          <Text
+            className={record.qa_subject_actived ? "pd-left-1" : "text-view"}
+          >
+            {value ? value : "-"}
+          </Text>
+        );
       } else {
         return (
           <Input
@@ -132,6 +145,9 @@ export const qcTestItemSubjectColumns = (
                 qa_subject_remark: e.target.value,
               })
             }
+            onBlur={() => {
+              Save(record.id);
+            }}
             value={value}
             placeholder="Description"
             size="small"
@@ -160,8 +176,9 @@ export const qcTestItemSubjectColumns = (
             title="Active / In-Active"
             checked={record.qa_subject_actived}
             onChange={(value) =>
-              updateRowStatus(record.id, { qa_subject_actived: value })
+              onChange(record.id, { qa_subject_actived: value })
             }
+            onBlur={(_) => Save(record.id)}
           />
         ) : (
           <Popconfirm
@@ -521,7 +538,16 @@ export const qcTestItemMethodColumns = [
 
 export const qcTestItemFields = {
   type_id: null,
+  type_no: null,
+  type_run_no: null,
+  type_name: null,
+  type_name_th: null,
   type_no_name: null,
+  commit: 1,
+  branch_id: 1,
+  qa_method: [],
+  qa_specification: [],
+  qa_subject: [],
 };
 export const qcTestItemSubjectFields = {
   id: null,

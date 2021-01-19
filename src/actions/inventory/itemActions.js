@@ -163,8 +163,8 @@ export const getAllItems = (user_name) => async (dispatch) => {
       header_config
     )
     .then((res) => {
-      console.log(`${api_get_all_item_list}/${user_name}`);
-      console.log(res.data);
+      // console.log(`${api_get_all_item_list}/${user_name}`);
+      // console.log(res.data);
       dispatch({
         type: GET_ALL_ITEMS,
         payload: res.data[0],

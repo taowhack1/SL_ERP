@@ -176,11 +176,13 @@ export const workOrderRMColumns = (
               ? true
               : false
           )}
-          <FileSearchOutlined
-            className="button-icon"
-            title="View Detail"
-            onClick={viewOnHandDetail}
-          />
+          {record.item_id && (
+            <FileSearchOutlined
+              className="button-icon"
+              title="View Detail"
+              onClick={() => viewOnHandDetail(record)}
+            />
+          )}
         </>
       );
     },

@@ -79,28 +79,103 @@ export const getAllQATestCaseGroupByItemType = () => async (dispatch) => {
   }
 };
 
-export const getQATestByTypeID = (type_id, redirect) => (dispatch) => {
+const saveSubject = (data, saveType) => {
+  if (!saveType) {
+    return false;
+  } else {
+    return saveType === "put"
+      ? axios.put(api_qa_subject, data, header_config)
+      : axios.post(api_qa_subject, data, header_config);
+  }
+};
+const saveSpecification = (data, saveType) => {
+  if (!saveType) {
+    return false;
+  } else {
+    return saveType === "put"
+      ? axios.put(api_qa_specification, data, header_config)
+      : axios.post(api_qa_specification, data, header_config);
+  }
+};
+const saveMethod = (data, saveType) => {
+  if (!saveType) {
+    return false;
+  } else {
+    return saveType === "put"
+      ? axios.put(api_qa_method, data, header_config)
+      : axios.post(api_qa_method, data, header_config);
+  }
+};
+export const getQATestByTypeID = (type_id, redirect) => {
   try {
-    Promise.allSettled([
-      get_qa_subject_by_type_id(type_id),
-      get_qa_specification_by_type_id(type_id),
-      get_qa_method_by_type_id(type_id),
-    ])
-      .then((res) => {
-        // console.log(res);
-        const data = {
-          subject: res[0].value ? res[0].value.data[0] : [],
-          specification: res[1].value ? res[1].value.data[0] : [],
-          method: res[2].value ? res[2].value.data[0] : [],
-        };
-        console.log("data", data);
-        // dispatch({ type: GET_QA_TEST_BY_ID, payload: data });
-        // redirect && redirect(type_id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    return (
+      type_id &&
+      axios
+        .get(`${api_qa_test_case}/${type_id}`, header_config)
+        .catch((error) => {
+          console.error(error);
+        })
+    );
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const saveQATestCase = (data) => {
+  console.log(data);
+  try {
+    const { type_id, subjectData, specData, methodData } = data;
+    const saveData = {
+      subject_create:
+        subjectData.length &&
+        subjectData.filter((obj) => obj.commit === 1 && !obj.qa_subject_id),
+      spec_create:
+        specData.length &&
+        specData.filter((obj) => obj.commit === 1 && !obj.qa_specification_id),
+      method_create:
+        methodData.length &&
+        methodData.filter((obj) => obj.commit === 1 && !obj.qa_method_id),
+      subject_update:
+        subjectData.length &&
+        subjectData.filter(
+          (obj) => obj.commit === 1 && obj.qa_subject_id !== null
+        ),
+      spec_update:
+        specData.length &&
+        specData.filter(
+          (obj) => obj.commit === 1 && obj.qa_specification_id !== null
+        ),
+      method_update:
+        methodData.length &&
+        methodData.filter(
+          (obj) => obj.commit === 1 && obj.qa_method_id !== null
+        ),
+    };
+    console.log(saveData);
+    const {
+      subject_create,
+      spec_create,
+      method_create,
+      subject_update,
+      spec_update,
+      method_update,
+    } = saveData;
+    Promise.allSettled([
+      subject_create.length && saveSubject(subject_create, "post"),
+      subject_update.length && saveSubject(subject_update, "put"),
+      spec_create.length && saveSpecification(spec_create, "post"),
+      spec_update.length && saveSpecification(spec_update, "put"),
+      method_create.length && saveMethod(method_create, "post"),
+      method_update.length && saveMethod(method_update, "put"),
+    ])
+      .then((res) => {
+        alert("Save Success..", res);
+        getQATestByTypeID(type_id);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  } catch (error) {
+    console.error(error);
   }
 };
