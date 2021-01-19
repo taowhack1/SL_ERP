@@ -84,6 +84,9 @@ import TypeView from "./modules/inventory/configurations/type/TypeView";
 import Category from "./modules/inventory/configurations/category/Category";
 import CategoryCreate from "./modules/inventory/configurations/category/CategoryCreate";
 import CategoryView from "./modules/inventory/configurations/category/CategoryView";
+import Uom from "./modules/inventory/configurations/uom/Uom";
+import UomCreate from "./modules/inventory/configurations/uom/UomCreate";
+import UomView from "./modules/inventory/configurations/uom/UomView";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -227,6 +230,7 @@ const App = (props) => {
                 path="/inventory/configurations/type/edit/:id"
                 component={TypeCreate}
               />
+              {/* {category} */}
               <Route exact path="/inventory/configurations/category">
                 <Category />
               </Route>
@@ -243,10 +247,28 @@ const App = (props) => {
                 path="/inventory/configurations/category/edit/:id"
                 component={CategoryCreate}
               />
-
-              <Route exact path="/inventory/warehouse">
-                <Warehouse />
+              <Route exact path="/inventory/configurations/uom">
+                <Uom />
               </Route>
+              {/* {uom} */}
+              <Route
+                exact
+                path="/inventory/configurations/uom/create"
+                component={UomCreate}
+              />
+              <Route
+                exact
+                path="/inventory/configurations/uom/view/:id"
+                component={UomView}
+              />
+              <Route
+                exact
+                path="/inventory/configurations/uom/edit/:id"
+                component={UomCreate}
+              />
+              <exact path="/inventory/warehouse">
+                <Warehouse />
+              </exact>
               <Route exact path="/inventory/location">
                 <Location />
               </Route>

@@ -1,75 +1,66 @@
-import React, { useContext, useEffect, useState } from "react";
+import { Col, Row, Table } from "antd";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table } from "antd";
+import { getUomList } from "../../../../actions/inventory";
 import MainLayout from "../../../../components/MainLayout";
-import $ from "jquery";
-import Authorize from "../../../system/Authorize";
-import { item_show_columns } from "./TypeConfig";
 import { sortData } from "../../../../include/js/function_main";
-import {
-  getConfigurationItemType,
-  getConfigurationItemTypeInRow,
-} from "../../../../actions/inventory/configurations/type/typeItemAction";
-import { AppContext } from "../../../../include/js/context";
-const Type = (props) => {
-  const { appContext, setAppContext } = useContext(AppContext);
-  console.log("appContext", appContext);
-  const authorize = Authorize();
-  authorize.check_authorize();
-  const [, setRowClick] = useState(false);
-  const auth = useSelector((state) => state.auth.authData);
+import Authorize from "../../../system/Authorize";
+import { uomShowColumns } from "./UomConfig";
+import $ from "jquery";
+import { getUomInRow } from "../../../../actions/inventory/configurations/uom/uomAction";
+
+function Uom(props) {
+  const authorzie = Authorize();
   const dispatch = useDispatch();
-  const type = useSelector((state) => state.inventory.configurations.type);
-  const [data, setData] = useState(type);
+  const uom = useSelector((state) => state.inventory.configurations.uom);
+  const current_project = useSelector((state) => state.auth.currentProject);
+  const [, setRowClick] = useState(false);
+  const [data, setData] = useState(uom);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    dispatch(getConfigurationItemType());
-    setAppContext({ ...appContext, config: { page: "Type.js" } });
+    dispatch(getUomList());
   }, []);
   useEffect(() => {
     const setStateData = () => {
-      setData(type);
+      setData(uom);
     };
     setStateData();
-  }, [type.length]);
-
-  const current_project = useSelector((state) => state.auth.currentProject);
+  }, [uom.length]);
   const config = {
     projectId: current_project && current_project.project_id,
     title: current_project && current_project.project_name,
     home: current_project && current_project.project_url,
     show: true,
-    breadcrumb: ["Home", "Type"],
+    breadcrumb: ["Home", "Uom"],
     search: true,
     onSearch: (value) => {
       console.log(value);
       setLoading(true);
       setTimeout(() => {
-        const search_type = type.filter(
-          (type) => type.type_name.indexOf(value) >= 0
+        const search_uom = uom.filter(
+          (uom) => uom.uom_name.indexOf(value) >= 0
         );
-        setData(search_type);
+        setData(search_uom);
         setLoading(false);
       }, 1200);
     },
-    create: "/inventory/configurations/type/create",
+    create: "/inventory/configurations/uom/create",
     buttonAction: ["Create"],
-    discard: "/Type/Create",
+    discard: "/uom/Create",
     onCancel: () => {
       console.log("Cancel");
     },
   };
-  console.log(type);
   return (
     <div>
       <MainLayout {...config}>
         <Row>
           <Col span={24}>
             <Table
-              columns={item_show_columns}
-              dataSource={sortData(data)}
-              rowKey={"type_id"}
+              columns={uomShowColumns}
+              dataSource={sortData(uom)}
+              rowKey={"uom_id"}
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
@@ -79,10 +70,10 @@ const Type = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    dispatch(getConfigurationItemTypeInRow(record));
+                    dispatch(getUomInRow(record));
                     props.history.push({
                       pathname:
-                        "/inventory/configurations/type/view/" + record.type_id,
+                        "/inventory/configurations/uom/view/" + record.uom_id,
                       data: record,
                     });
                   },
@@ -94,6 +85,6 @@ const Type = (props) => {
       </MainLayout>
     </div>
   );
-};
+}
 
-export default withRouter(Type);
+export default withRouter(Uom);

@@ -5,8 +5,12 @@ import {
   GET_REPORT_STOCK,
   GET_ITEM_TYPE,
   GET_ITEM_CATEGORY,
+  GET_UOM,
 } from "../types";
-import { api_get_item_list } from "../../include/js/api";
+import {
+  api_get_configuration_type,
+  api_get_item_list,
+} from "../../include/js/api";
 import { header_config } from "../../include/js/main_config";
 import axios from "axios";
 import {
@@ -100,14 +104,14 @@ export const get_report_stock = () => (dispatch) => {
   });
 };
 
-export const getItemTypeList = () => (dispatch) => {
-  axios.get(api_get_item_type, header_config).then((res) => {
-    dispatch({ type: GET_ITEM_TYPE, payload: res.data[0] });
-  });
-};
 export const getItemCategoryList = () => (dispatch) => {
   axios.get(api_get_item_category, header_config).then((res) => {
     console.log(res);
     dispatch({ type: GET_ITEM_CATEGORY, payload: res.data[0] });
+  });
+};
+export const getUomList = () => (dispatch) => {
+  axios.get(api_get_item_uom, header_config).then((res) => {
+    dispatch({ type: GET_UOM, payload: res.data[0] });
   });
 };

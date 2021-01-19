@@ -23,6 +23,11 @@ import {
   GET_ITEM_TYPE_IN_ROW,
   GET_ITEM_CATEGORY,
   GET_CATEGORY_IN_ROW,
+  GET_TYPE_UOM,
+  GET_TYPE_UOM_IN_ROW,
+  GET_UOM,
+  GET_UOM_IN_ROW,
+  GET_ITEM_TYPE_BY_ID,
 } from "../actions/types";
 const initialState = {
   item: {
@@ -52,6 +57,10 @@ const initialState = {
     typeInRow: [],
     category: [],
     categoryInRow: [],
+    typeUom: [],
+    typeUomInRow: [],
+    uom: [],
+    uomInRow: [],
   },
   stock: {
     item_location_shelf: [],
@@ -121,6 +130,14 @@ export default (state = initialState, action) => {
           typeInRow: action.payload,
         },
       };
+    case GET_ITEM_TYPE_BY_ID:
+      return {
+        ...state,
+        configurations: {
+          ...state.configurations,
+          typeInRow: action.payload,
+        },
+      };
     case GET_ITEM_CATEGORY:
       return {
         ...state,
@@ -132,6 +149,38 @@ export default (state = initialState, action) => {
         configurations: {
           ...state.configurations,
           categoryInRow: action.payload,
+        },
+      };
+    case GET_TYPE_UOM:
+      return {
+        ...state,
+        configurations: {
+          ...state.configurations,
+          typeUom: action.payload,
+        },
+      };
+    case GET_TYPE_UOM_IN_ROW:
+      return {
+        ...state,
+        configurations: {
+          ...state.configurations,
+          typeUomInRow: action.payload,
+        },
+      };
+    case GET_UOM:
+      return {
+        ...state,
+        configurations: {
+          ...state.configurations,
+          uom: action.payload,
+        },
+      };
+    case GET_UOM_IN_ROW:
+      return {
+        ...state,
+        configurations: {
+          ...state.configurations,
+          uomInRow: action.payload,
         },
       };
     // RECEIVE

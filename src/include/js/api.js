@@ -101,6 +101,8 @@ export const api_get_pr_open_po = `${api_server}/api/list/pr`;
 // inventory
 export const api_get_uom_list = `${api_server}/api/list/uom`;
 export const api_get_item_list = `${api_server}/api/list/item`;
+// inventory -> configuration
+export const api_get_configuration_type = `${api_server}/api/configuration/inventory/type`;
 
 //Sale
 export const api_get_qn_by_id = `${api_server}/api/sales/qn`;

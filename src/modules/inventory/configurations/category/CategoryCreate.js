@@ -3,11 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Input, Tabs, Typography, message, Radio } from "antd";
 import { useHistory } from "react-router-dom";
 import Authorize from "../../../system/Authorize";
-import {
-  categoryFileds,
-  categoryFiledsRequire,
-  category_fileds,
-} from "./CategoryConfig";
+import { categoryFields, categoryFieldsRequire } from "./CategoryConfig";
 import moment from "moment";
 import MainLayout from "../../../../components/MainLayout";
 import { validateFormHead } from "../../../../include/js/function_main";
@@ -29,7 +25,7 @@ const CategoryCreate = (props) => {
     data && data
       ? { ...data, commit: 1, user_name: auth.user_name }
       : {
-          ...categoryFileds,
+          ...categoryFields,
           commit: 1,
           user_name: auth.user_name,
           cnvCategoryCreate: moment().format("DD/MM/YYYY"),
@@ -62,7 +58,7 @@ const CategoryCreate = (props) => {
       const key = "validate";
       const validate = validateFormHead(
         dataCategoryCreate,
-        categoryFiledsRequire
+        categoryFieldsRequire
       );
       if (validate.validate) {
         console.log("save", dataCategoryCreate);

@@ -47,7 +47,7 @@ const TypeView = (props) => {
         <Row className="col-2">
           <Col span={8}>
             <h2>
-              <strong>Type [{dataInRow.type_no}]</strong>
+              <strong>{dataInRow.type_no_name}</strong>
             </h2>
           </Col>
           <Col span={12}></Col>
@@ -55,7 +55,7 @@ const TypeView = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view"></Text>
+            <Text className="text-view">{dataInRow.type_created}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-tab-margin">
@@ -88,19 +88,39 @@ const TypeView = (props) => {
                     <Row className="row-margin">
                       <Col span={1}></Col>
                       <Col span={5}>
-                        <Text strong>QC</Text>
+                        <Text strong>Verify QC</Text>
                       </Col>
                       <Col span={18}>
                         <Radio.Group
-                          name="qc_status"
+                          name="type_verify_qc"
                           onChange={(e) => console.log(e.target.value)}
-                          value={dataInRow.qc_status}
+                          value={dataInRow.type_verify_qc ? 1 : 0}
                           disabled={true}
                         >
                           <Radio className="radio-vertical" value={1}>
                             Yes
                           </Radio>
-                          <Radio className="radio-vertical" value={2}>
+                          <Radio className="radio-vertical" value={0}>
+                            No
+                          </Radio>
+                        </Radio.Group>
+                      </Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={1}></Col>
+                      <Col span={5}>
+                        <Text strong>Verify Stock</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Radio.Group
+                          name="type_verify_stock"
+                          value={dataInRow.type_verify_stock ? 1 : 0}
+                          disabled={true}
+                        >
+                          <Radio className="radio-vertical" value={1}>
+                            Yes
+                          </Radio>
+                          <Radio className="radio-vertical" value={0}>
                             No
                           </Radio>
                         </Radio.Group>

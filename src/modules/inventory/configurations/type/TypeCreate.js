@@ -8,6 +8,10 @@ import { validateFormHead } from "../../../../include/js/function_main";
 import { type_fields, type_fields_require } from "./TypeConfig";
 import { useHistory } from "react-router-dom";
 import { AppContext } from "../../../../include/js/context";
+import {
+  createConfigurationItemType,
+  upDateConfigurationItemType,
+} from "../../../../actions/inventory/configurations/type/typeItemAction";
 
 const TypeCreate = (props) => {
   const { appContext, setAppContext } = useContext(AppContext);
@@ -32,7 +36,7 @@ const TypeCreate = (props) => {
           ...type_fields,
           commit: 1,
           user_name: auth.user_name,
-          cnv_type_created: moment().format("DD/MM/YYYY"),
+          type_created: moment().format("DD/MM/YYYY"),
         }
   );
   const upDateFormValue = (data) => {
@@ -61,13 +65,18 @@ const TypeCreate = (props) => {
       const key = "validate";
       const validate = validateFormHead(data_typeCreate, type_fields_require);
       if (validate.validate) {
-        console.log("pass");
-        console.log(data_typeCreate);
-        //data_typeCreate.type_no;
-        //     ? dispatch(
-        //         update_vendor(data_head.vendor_id, data_head, redirect_to_view)
-        //       )
-        //     : dispatch(create_vendor(data_head, redirect_to_view));
+        console.log("pass", data_typeCreate);
+        data_typeCreate.type_id
+          ? dispatch(
+              upDateConfigurationItemType(
+                data_typeCreate.type_id,
+                data_typeCreate,
+                redirect_to_view
+              )
+            )
+          : dispatch(
+              createConfigurationItemType(data_typeCreate, redirect_to_view)
+            );
       } else {
         message.warning({
           content: "Please fill your form completely.",
@@ -89,7 +98,7 @@ const TypeCreate = (props) => {
     },
   };
   const redirect_to_view = (id) => {
-    history.push("/inventory/configurations/type/view/");
+    history.push("/inventory/configurations/type/view/" + (id ? id : "new"));
   };
   return (
     <MainLayout {...config}>
@@ -109,9 +118,7 @@ const TypeCreate = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">
-              {data_typeCreate.cnv_type_created}
-            </Text>
+            <Text className="text-view">{data_typeCreate.type_created}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-tab-margin">
@@ -169,21 +176,47 @@ const TypeCreate = (props) => {
                       <Col span={1}></Col>
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">*</span>QC
+                          <span className="require">*</span>Verify QC
                         </Text>
                       </Col>
                       <Col span={18}>
                         <Radio.Group
-                          name="qc_status"
+                          name="type_verify_qc"
                           onChange={(e) =>
-                            upDateFormValue({ qc_status: e.target.value })
+                            upDateFormValue({ type_verify_qc: e.target.value })
                           }
-                          value={data_typeCreate.qc_status}
+                          value={data_typeCreate.type_verify_qc ? 1 : 0}
                         >
                           <Radio className="radio-vertical" value={1}>
                             Yes
                           </Radio>
-                          <Radio className="radio-vertical" value={2}>
+                          <Radio className="radio-vertical" value={0}>
+                            No
+                          </Radio>
+                        </Radio.Group>
+                      </Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={1}></Col>
+                      <Col span={5}>
+                        <Text strong>
+                          <span className="require">*</span>Verify Stock
+                        </Text>
+                      </Col>
+                      <Col span={18}>
+                        <Radio.Group
+                          name="type_verify_stock"
+                          value={data_typeCreate.type_verify_stock ? 1 : 0}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              type_verify_stock: e.target.value,
+                            })
+                          }
+                        >
+                          <Radio className="radio-vertical" value={1}>
+                            Yes
+                          </Radio>
+                          <Radio className="radio-vertical" value={0}>
                             No
                           </Radio>
                         </Radio.Group>

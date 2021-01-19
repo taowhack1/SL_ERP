@@ -46,7 +46,7 @@ const CategoryView = (props) => {
         <Row className="col-2">
           <Col span={8}>
             <h2>
-              <strong>Category {dataInRow.category_no}</strong>
+              <strong>{dataInRow.category_no_name}</strong>
             </h2>
           </Col>
           <Col span={12}></Col>

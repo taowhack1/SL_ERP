@@ -1,8 +1,8 @@
-export const categoryFileds = {
+export const categoryFields = {
   category_name: null,
   type_id: null,
 };
-export const categoryFiledsRequire = ["category_name", "type_id"];
+export const categoryFieldsRequire = ["category_name", "type_id"];
 export const categoryShowColumns = [
   {
     width: "6%",
