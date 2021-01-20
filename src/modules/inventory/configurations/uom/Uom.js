@@ -33,7 +33,7 @@ function Uom(props) {
     title: current_project && current_project.project_name,
     home: current_project && current_project.project_url,
     show: true,
-    breadcrumb: ["Home", "Uom"],
+    breadcrumb: ["Home", "UoM"],
     search: true,
     onSearch: (value) => {
       console.log(value);
@@ -63,6 +63,7 @@ function Uom(props) {
               columns={uomShowColumns}
               dataSource={sortData(uom)}
               rowKey={"uom_id"}
+              size="small"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

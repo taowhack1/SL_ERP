@@ -55,7 +55,7 @@ const TypeView = (props) => {
         </Row>
         <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
-            <Title level={5}>Name </Title>
+            <Title level={5}>Name :</Title>
             <Col span={24}>
               <Text className="text-view">{dataInRow.type_name}</Text>
             </Col>
@@ -71,7 +71,7 @@ const TypeView = (props) => {
                   <Col span={12}>
                     <Row className="row-margin">
                       <Col span={5}>
-                        <Text strong>Short Name</Text>
+                        <Text strong>Short Name :</Text>
                       </Col>
                       <Col span={18}>
                         <Text className="text-view">{dataInRow.type_no}</Text>
@@ -105,7 +105,7 @@ const TypeView = (props) => {
                     <Row className="row-margin">
                       <Col span={1}></Col>
                       <Col span={5}>
-                        <Text strong>Verify QC</Text>
+                        <Text strong>Verify QC :</Text>
                       </Col>
                       <Col span={18}>
                         <Radio.Group
@@ -126,7 +126,7 @@ const TypeView = (props) => {
                     <Row className="row-margin">
                       <Col span={1}></Col>
                       <Col span={5}>
-                        <Text strong>Verify Stock</Text>
+                        <Text strong>Verify Stock :</Text>
                       </Col>
                       <Col span={18}>
                         <Radio.Group

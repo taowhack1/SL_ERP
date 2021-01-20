@@ -44,7 +44,7 @@ function UomCreate(props) {
     show: true,
     breadcrumb: [
       "Home",
-      "Uom",
+      "UoM",
       dataUomCreate.uom_id ? "Edit" : "Create",
       dataUomCreate.uom_id &&
         " [ " + dataUomCreate.uom_id + " ] " + dataUomCreate.uom_name,
@@ -98,7 +98,7 @@ function UomCreate(props) {
           <Col span={8}>
             <h2>
               <strong>
-                {dataUomCreate.uom_id ? "Edit" : "Create"} Uom{" "}
+                {dataUomCreate.uom_id ? "Edit" : "Create"} UoM{" "}
                 {dataUomCreate.uom_id && "#" + dataUomCreate.uom_no}
               </strong>
             </h2>
@@ -115,7 +115,7 @@ function UomCreate(props) {
         <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
             <Title level={5}>
-              <span className="require">* </span>Name{" "}
+              <span className="require">* </span>Name :{" "}
             </Title>
             <Col span={24}>
               <Input
@@ -145,7 +145,7 @@ function UomCreate(props) {
                     <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">*</span> Short Name
+                          <span className="require">*</span> Short Name :
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -163,11 +163,11 @@ function UomCreate(props) {
                     <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">*</span> Unit Value
+                          <span className="require">*</span> Unit Value :
                         </Text>
                       </Col>
                       <Col span={18}>
-                        <Input placeholder="value" />
+                        <Input placeholder="Unit Value" />
                       </Col>
                       <Col span={1}></Col>
                     </Row>
@@ -178,7 +178,7 @@ function UomCreate(props) {
                       <Col span={18}>
                         <Input
                           name="uom_name_th"
-                          placeholder={"Name Thai"}
+                          placeholder={"Thai Name"}
                           onChange={(e) =>
                             upDateFormValue({
                               uom_name_th: e.target.value,
@@ -212,7 +212,7 @@ function UomCreate(props) {
                       <Col span={1}></Col>
                       <Col span={6}>
                         <Text strong>
-                          <span className="require">*</span> Reference Unit
+                          <span className="require">*</span> Reference Unit :
                         </Text>
                       </Col>
                       <Col span={15}>
@@ -246,7 +246,7 @@ function UomCreate(props) {
                       <Col span={1}></Col>
                       <Col span={6}>
                         <Text strong>
-                          <span className="require">*</span> Ratio
+                          <span className="require">*</span> Ratio :
                         </Text>
                       </Col>
                       <Col span={15}>

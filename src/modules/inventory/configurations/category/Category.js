@@ -104,6 +104,7 @@ const Category = (props) => {
           columns={itemShowColumns}
           dataSource={sortData(dataType)}
           bordered
+          size="small"
           pagination={{ pageSize: 20 }}
           rowKey={"type_id"}
           expandable={{ expandedRowRender }}
