@@ -210,6 +210,8 @@ const WorkOrderCreate = (props) => {
       headReducer,
       RMReducer,
       PKReducer,
+      so_id: headReducer.data.so_id,
+      so_detail_id: headReducer.data.so_detail_id,
     };
   }, [readOnly, headReducer, RMReducer, PKReducer]);
   return (

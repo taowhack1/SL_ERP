@@ -16,6 +16,7 @@ const WorkOrderHead = () => {
     so_no_description,
     item_id,
     item_no_name,
+    so_detail_id,
   } = headReducer.data;
   const [state, setState] = useState({
     wo_description: wo_description,
@@ -24,6 +25,7 @@ const WorkOrderHead = () => {
     so_no_description: so_no_description,
     item_id: item_id,
     item_no_name: item_no_name,
+    so_detail_id: so_detail_id,
   });
   const onChange = (data) => {
     setState({ ...state, ...data });
@@ -31,18 +33,17 @@ const WorkOrderHead = () => {
   };
   const Reset = () => {
     headReducer.resetDataObject();
-
     setState({
-      wo_description: wo_description,
-      wo_due_date: wo_due_date,
-      so_id: so_id,
-      so_no_description: so_no_description,
-      item_id: item_id,
-      item_no_name: item_no_name,
+      wo_description: null,
+      wo_due_date: null,
+      so_id: null,
+      so_no_description: null,
+      item_id: null,
+      item_no_name: null,
+      so_detail_id: null,
     });
   };
-  useEffect(() => {}, [headReducer.so_id]);
-  console.log(state);
+  console.log("headReducer.data", headReducer.data);
   return (
     <>
       <Row className="col-2">
@@ -148,7 +149,7 @@ const WorkOrderHead = () => {
                       // size={"small"}
                       placeholder={"FG Item"}
                       name="item_id"
-                      field_id="item_id"
+                      field_id="so_detail_id"
                       field_name="item_no_name"
                       value={state.item_no_name}
                       data={state.so_detail ?? []}

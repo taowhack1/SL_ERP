@@ -1,6 +1,6 @@
 import { Row, Col, Typography, Tabs, Table } from "antd";
 import { ProfileOutlined } from "@ant-design/icons";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { workOrderRMColumns } from "../config/workOrder";
 import CustomTable from "../../../components/CustomTable";
@@ -12,104 +12,104 @@ import Modal from "antd/lib/modal/Modal";
 import Draggable from "react-draggable";
 import DragableModal from "./DragableModal";
 const { Text } = Typography;
-
+const initialState = {
+  item_id: null,
+  item_name: null,
+  item_no_name: null,
+  issue_list: [
+    {
+      id: 0,
+      issue_id: 1,
+      issue_no_description: "TEST ISSUE 01",
+      issue_detail_qty: 20.5,
+      uom_no_name: "kg [ Kilogram ]",
+      issue_due_date: "20/01/2021",
+    },
+    {
+      id: 1,
+      issue_id: 2,
+      issue_no_description: "TEST ISSUE 06",
+      issue_detail_qty: 3.5,
+      uom_no_name: "kg [ Kilogram ]",
+      issue_due_date: "23/01/2021",
+    },
+  ],
+  po_list: [
+    {
+      id: 0,
+      po_id: 0,
+      po_no_description: "TEST PO 01",
+      po_detail_qty: 100,
+      uom_no_name: "kg [ Kilogram ]",
+      po_due_date: "02/02/2021",
+    },
+  ],
+  history_list: [
+    {
+      id: 0,
+      transfer_date: "15/01/2021",
+      transfer_type: "Receive",
+      transfer_from: "Vendor Location",
+      transfer_to: "Location 01",
+      transfer_qty: 10.5,
+      available_qty: 28.521,
+      uom_no: "kg",
+    },
+    {
+      id: 1,
+      transfer_date: "16/01/2021",
+      transfer_type: "Issue",
+      transfer_from: "Location 01",
+      transfer_to: "Location 02",
+      transfer_qty: 25,
+      available_qty: 3.521,
+      uom_no: "kg",
+    },
+    {
+      id: 2,
+      transfer_date: "22/01/2021",
+      transfer_type: "Receive",
+      transfer_from: "Vendor Location",
+      transfer_to: "Location 01",
+      transfer_qty: 85,
+      available_qty: 88.521,
+      uom_no: "kg",
+    },
+    {
+      id: 3,
+      transfer_date: "23/01/2021",
+      transfer_type: "Issue",
+      transfer_from: "Location 01",
+      transfer_to: "Production Location",
+      transfer_qty: 20,
+      available_qty: 68.521,
+      uom_no: "kg",
+    },
+    {
+      id: 4,
+      transfer_date: "31/01/2021",
+      transfer_type: "Issue",
+      transfer_from: "Location 01",
+      transfer_to: "Production Location",
+      transfer_qty: 30.521,
+      available_qty: 38,
+      uom_no: "kg",
+    },
+  ],
+  visible: false,
+  bounds: { left: 0, top: 0, bottom: 0, right: 0 },
+  disabled: true,
+};
 const TabWorkOrderRMDetail = () => {
   const draggleRef = React.createRef();
-  const { RMReducer, readOnly } = useContext(WOContext);
+  const { RMReducer, readOnly, so_id, so_detail_id } = useContext(WOContext);
   const itemList = useSelector((state) =>
     state.inventory.master_data.item_list.filter((item) => item.type_id === 1)
   );
   const inputData = {
     itemList: itemList,
   };
-  const [itemDetail, setItemDetail] = useState({
-    item_id: null,
-    item_name: null,
-    item_no_name: null,
-    issue_list: [
-      {
-        id: 0,
-        issue_id: 1,
-        issue_no_description: "TEST ISSUE 01",
-        issue_detail_qty: 20.5,
-        uom_no_name: "kg [ Kilogram ]",
-        issue_due_date: "20/01/2021",
-      },
-      {
-        id: 1,
-        issue_id: 2,
-        issue_no_description: "TEST ISSUE 06",
-        issue_detail_qty: 3.5,
-        uom_no_name: "kg [ Kilogram ]",
-        issue_due_date: "23/01/2021",
-      },
-    ],
-    po_list: [
-      {
-        id: 0,
-        po_id: 0,
-        po_no_description: "TEST PO 01",
-        po_detail_qty: 100,
-        uom_no_name: "kg [ Kilogram ]",
-        po_due_date: "02/02/2021",
-      },
-    ],
-    history_list: [
-      {
-        id: 0,
-        transfer_date: "15/01/2021",
-        transfer_type: "Receive",
-        transfer_from: "Vendor Location",
-        transfer_to: "Location 01",
-        transfer_qty: 10.5,
-        available_qty: 28.521,
-        uom_no: "kg",
-      },
-      {
-        id: 1,
-        transfer_date: "16/01/2021",
-        transfer_type: "Issue",
-        transfer_from: "Location 01",
-        transfer_to: "Location 02",
-        transfer_qty: 25,
-        available_qty: 3.521,
-        uom_no: "kg",
-      },
-      {
-        id: 2,
-        transfer_date: "22/01/2021",
-        transfer_type: "Receive",
-        transfer_from: "Vendor Location",
-        transfer_to: "Location 01",
-        transfer_qty: 85,
-        available_qty: 88.521,
-        uom_no: "kg",
-      },
-      {
-        id: 3,
-        transfer_date: "23/01/2021",
-        transfer_type: "Issue",
-        transfer_from: "Location 01",
-        transfer_to: "Production Location",
-        transfer_qty: 20,
-        available_qty: 68.521,
-        uom_no: "kg",
-      },
-      {
-        id: 4,
-        transfer_date: "31/01/2021",
-        transfer_type: "Issue",
-        transfer_from: "Location 01",
-        transfer_to: "Production Location",
-        transfer_qty: 30.521,
-        available_qty: 38,
-        uom_no: "kg",
-      },
-    ],
-    visible: false,
-    bounds: { left: 0, top: 0, bottom: 0, right: 0 },
-    disabled: true,
-  });
+  const [itemDetail, setItemDetail] = useState(initialState);
   const viewOnHandDetail = (record) => {
     console.log(record);
     setItemDetail({
@@ -132,6 +132,9 @@ const TabWorkOrderRMDetail = () => {
       },
     });
   };
+  useEffect(() => {
+    // setItemDetail()
+  }, [so_detail_id]);
   console.log("state", itemDetail);
   return (
     <>
@@ -402,7 +405,7 @@ const TabWorkOrderRMDetail = () => {
           </Tabs.TabPane>
         </Tabs>
       </Modal>
-      <DragableModal />
+      {/* <DragableModal /> */}
     </>
   );
 };

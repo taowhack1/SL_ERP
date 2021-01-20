@@ -223,7 +223,7 @@ export const workOrderRMColumns = (
     key: "wo_detail_qty_pr",
     require: true,
     align: "right",
-    width: "10%",
+    width: "15%",
     render: (value, record, index) => {
       if (readOnly) {
         return (
@@ -262,9 +262,9 @@ export const workOrderRMColumns = (
     },
   },
   {
-    title: <div className="text-center">Lead-Time (days)</div>,
+    title: <div className="text-center">Lead-Time(days)</div>,
     align: "center",
-    width: "15%",
+    width: "12%",
     render: (value, record, index) => {
       return (
         record.wo_detail_lead_time_day_pr + record.wo_detail_lead_time_day_qa
@@ -353,7 +353,7 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
     key: "wo_detail_qty_pr",
     require: true,
     align: "right",
-    width: "10%",
+    width: "15%",
     render: (value, record, index) => {
       if (readOnly) {
         return (
@@ -392,9 +392,9 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
     },
   },
   {
-    title: <div className="text-center">Lead-Time (days)</div>,
+    title: <div className="text-center">Lead-Time(days)</div>,
     align: "center",
-    width: "15%",
+    width: "12%",
     render: (value, record, index) => {
       return (
         record.wo_detail_lead_time_day_pr + record.wo_detail_lead_time_day_qa
