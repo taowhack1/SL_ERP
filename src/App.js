@@ -87,6 +87,10 @@ import CategoryView from "./modules/inventory/configurations/category/CategoryVi
 import Uom from "./modules/inventory/configurations/uom/Uom";
 import UomCreate from "./modules/inventory/configurations/uom/UomCreate";
 import UomView from "./modules/inventory/configurations/uom/UomView";
+import TransFer from "./modules/inventory/operation/transfer/Transfer";
+import Transfer from "./modules/inventory/operation/transfer/Transfer";
+import TransFerCreate from "./modules/inventory/operation/transfer/TransFerCreate";
+import TransferCreate from "./modules/inventory/operation/transfer/TransFerCreate";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -193,7 +197,15 @@ const App = (props) => {
                 path="/inventory/receive/view/:id"
                 component={ReceiveView}
               />
-
+              {/* {INVENTORY/operation/transfer} */}
+              <Route exact path="/inventory/transfer">
+                <Transfer />
+              </Route>
+              <Route
+                exact
+                path="/inventory/transfer/create"
+                component={TransferCreate}
+              />
               {/* INVENTORY MASTER DATA */}
               <Route exact path="/inventory/items">
                 <Items />
