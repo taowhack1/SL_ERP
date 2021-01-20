@@ -27,6 +27,7 @@ const PurchaseOrders = (props) => {
 
   const [loading, setLoading] = useState(false);
   const [rowClick, setRowClick] = useState(false);
+
   useEffect(() => {
     dispatch(get_po_list(auth.user_name));
     dispatch(get_open_po_list());
