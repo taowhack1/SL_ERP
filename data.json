@@ -163,5 +163,19 @@
         }
       ]
     }
+  ],
+  "type": [
+    {
+      "No": 1,
+      "type_name": "test name",
+      "type_no": "tens-01",
+      "qc_status": "Yes"
+    },
+    {
+      "No": 2,
+      "type_name": "test name 2",
+      "type_no": "tens-02",
+      "qc_status": "No"
+    }
   ]
 }

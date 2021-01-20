@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MainLayout from "../../components/MainLayout";
+import { AppContext } from "../../include/js/context";
 import Authorize from "../system/Authorize";
 
 const Inventory = (props) => {
@@ -11,6 +12,11 @@ const Inventory = (props) => {
   // const onChange = (pagination, filters, sorter, extra) => {
   //   console.log("params", pagination, filters, sorter, extra);
   // };
+  const { appContext, setAppContext } = useContext(AppContext);
+  console.log("appContext", appContext);
+  useEffect(() => {
+    setAppContext({ ...appContext, config: { page: "inventory.js" } });
+  }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
