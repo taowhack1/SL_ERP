@@ -79,36 +79,45 @@ const WorkOrderCreate = (props) => {
       wo_qty_produce,
       wo_qty_percent_spare_rm,
       wo_qty_percent_spare_pk,
+      so_detail_id,
     } = headReducer.data;
-
+    console.log("useEffect change so_id", headReducer.data);
     const getMaterial = async () => {
-      const materialDetail = await getFGMaterialList(
-        so_id,
-        item_id,
-        wo_qty_produce,
-        wo_qty_percent_spare_rm,
-        wo_qty_percent_spare_pk
-      );
-      console.log(materialDetail);
-      RMReducer.setDataArray(await materialDetail.item_formula);
-      PKReducer.setDataArray(await materialDetail.item_packaging);
-      headReducer.onChangeHeadValue({
-        wo_lead_time_day_pk: materialDetail.wo_lead_time_day_pk,
-        wo_lead_time_day_pk_qa: materialDetail.wo_lead_time_day_pk_qa,
-        wo_lead_time_day_rm: materialDetail.wo_lead_time_day_rm,
-        wo_lead_time_day_rm_qa: materialDetail.wo_lead_time_day_rm_qa,
-        wo_qty_produce_ref: materialDetail.item_qty_produce_ref,
-        branch_id: auth.branch_id,
-        item_id_ref: materialDetail.item_id_ref,
-        item_qty_produce_ref: materialDetail.item_qty_produce_ref,
-        user_name: auth.user_name,
-        tg_trans_status_id: 1,
-        uom_no: materialDetail.uom_no,
-      });
+      try {
+        const materialDetail =
+          so_id && so_detail_id
+            ? await getFGMaterialList(
+                so_id,
+                item_id,
+                wo_qty_produce,
+                wo_qty_percent_spare_rm,
+                wo_qty_percent_spare_pk
+              )
+            : [];
+        console.log("materialDetail", materialDetail);
+        RMReducer.setDataArray((await materialDetail.item_formula) ?? []);
+        PKReducer.setDataArray((await materialDetail.item_packaging) ?? []);
+        headReducer.onChangeHeadValue({
+          wo_lead_time_day_pk: materialDetail.wo_lead_time_day_pk ?? 0,
+          wo_lead_time_day_pk_qa: materialDetail.wo_lead_time_day_pk_qa ?? 0,
+          wo_lead_time_day_rm: materialDetail.wo_lead_time_day_rm ?? 0,
+          wo_lead_time_day_rm_qa: materialDetail.wo_lead_time_day_rm_qa ?? 0,
+          wo_qty_produce_ref: materialDetail.item_qty_produce_ref ?? 0,
+          branch_id: auth.branch_id,
+          item_id_ref: materialDetail.item_id_ref,
+          item_qty_produce_ref: materialDetail.item_qty_produce_ref ?? 0,
+          user_name: auth.user_name,
+          tg_trans_status_id: 1,
+          uom_no: materialDetail.uom_no,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     };
-    so_id && item_id && getMaterial();
+    // so_id && so_detail_id && getMaterial();
+    getMaterial();
   }, [
-    headReducer.data.item_id,
+    headReducer.data.so_detail_id,
     headReducer.data.wo_qty_produce,
     headReducer.data.wo_qty_percent_spare_rm,
     headReducer.data.wo_qty_percent_spare_pk,

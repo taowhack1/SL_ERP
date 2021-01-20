@@ -100,6 +100,7 @@ const Category = (props) => {
     <div>
       <MainLayout {...config}>
         <Table
+          size={"small"}
           loading={loading}
           columns={itemShowColumns}
           dataSource={sortData(dataType)}

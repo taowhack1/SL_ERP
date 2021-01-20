@@ -134,7 +134,9 @@ const TabWorkOrderRMDetail = () => {
   };
   useEffect(() => {
     // setItemDetail()
+    console.log("RMReducer data", RMReducer.data);
   }, [so_detail_id]);
+  console.log("so_detail_id", so_detail_id);
   console.log("state", itemDetail);
   return (
     <>

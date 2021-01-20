@@ -134,7 +134,7 @@ const Items = (props) => {
               dataSource={items}
               onChange={onChange}
               bordered
-              size="small"
+              size={"small"}
               rowKey="item_id"
               onRow={(record, rowIndex) => {
                 return {

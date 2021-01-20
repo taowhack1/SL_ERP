@@ -71,6 +71,7 @@ const Type = (props) => {
               columns={item_show_columns}
               dataSource={sortData(data)}
               rowKey={"type_id"}
+              size={"small"}
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

@@ -63,6 +63,7 @@ function Uom(props) {
               columns={uomShowColumns}
               dataSource={sortData(uom)}
               rowKey={"uom_id"}
+              size={"small"}
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

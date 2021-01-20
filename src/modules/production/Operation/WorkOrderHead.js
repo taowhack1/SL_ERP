@@ -156,6 +156,7 @@ const WorkOrderHead = () => {
                       onChange={(data, option) => {
                         data && data
                           ? onChange({
+                              so_detail_id: option.data.so_detail_id,
                               item_id: option.data.item_id,
                               item_no_name: option.data.item_no_name,
                               wo_due_date: option.data.so_detail_delivery_date,
@@ -165,6 +166,7 @@ const WorkOrderHead = () => {
                               uom_no: option.data.uom_no,
                             })
                           : onChange({
+                              so_detail_id: null,
                               item_id: null,
                               item_no_name: null,
                               wo_due_date: null,
