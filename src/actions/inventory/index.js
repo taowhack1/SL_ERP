@@ -3,8 +3,16 @@ import {
   GET_LOCATION_SHELF_BY_ITEM_ID,
   GET_LOT_BATCH_BY_ITEM_ID_SHELF,
   GET_REPORT_STOCK,
+  GET_ITEM_TYPE,
+  GET_ITEM_CATEGORY,
+  GET_UOM,
 } from "../types";
-import { api_get_all_item_list, api_get_item_list } from "../../include/js/api";
+
+import {
+  api_get_configuration_type,
+  api_get_item_list,
+} from "../../include/js/api";
+
 import { header_config } from "../../include/js/main_config";
 import axios from "axios";
 import {
@@ -102,5 +110,17 @@ export const get_lot_batch_by_item_id_shelf = (item_id) => async (dispatch) => {
 export const get_report_stock = () => (dispatch) => {
   axios.get(get_stock_on_hand, header_config).then((res) => {
     dispatch({ type: GET_REPORT_STOCK, payload: res.data[0] });
+  });
+};
+
+export const getItemCategoryList = () => (dispatch) => {
+  axios.get(api_get_item_category, header_config).then((res) => {
+    console.log(res);
+    dispatch({ type: GET_ITEM_CATEGORY, payload: res.data[0] });
+  });
+};
+export const getUomList = () => (dispatch) => {
+  axios.get(api_get_item_uom, header_config).then((res) => {
+    dispatch({ type: GET_UOM, payload: res.data[0] });
   });
 };

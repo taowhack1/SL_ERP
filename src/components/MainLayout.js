@@ -10,6 +10,7 @@ const { Header, Content } = Layout;
 function MainLayout(props) {
   // const context = useContext(AppContext);
   // console.log(context);
+
   return (
     <>
       <Spin tip="Loading..." spinning={props.pageLoad ?? false}>

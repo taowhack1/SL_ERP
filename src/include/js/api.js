@@ -65,6 +65,10 @@ export const api_issue = `${api_server}/api/inventory/issue`;
 export const api_issue_detail = `${api_server}/api/inventory/issue_detail`;
 
 export const api_shelf = `${api_server}/api/list/shelf`;
+// inventory -> configuration
+export const api_get_configuration_type = `${api_server}/api/configuration/inventory/type`;
+export const api_get_configuration_category = `${api_server}/api/configuration/inventory/category`;
+export const api_get_configuration_uom = `${api_server}/api/configuration/inventory/uom`;
 
 // disburse
 export const api_issue_ref_list = `${api_server}/api/list/issue`;
