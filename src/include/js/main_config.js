@@ -20,8 +20,8 @@ export const convertDigit = (value, decimalPoint = 3) => {
   return typeof value === "number" && numeral(value).format(format);
 };
 // Sv.Test
-export const api_server = `http://192.168.5.222:3009`;
+// export const api_server = `http://192.168.5.222:3009`;
 export const report_server = `http://192.168.1.211`;
 // Sv.Production
-// export const api_server = `http://192.168.1.210:3009`;
+export const api_server = `http://192.168.1.210:3009`;
 // export const report_server = `http://192.168.5.207`;
