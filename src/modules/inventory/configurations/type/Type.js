@@ -9,7 +9,7 @@ import { item_show_columns } from "./TypeConfig";
 import { sortData } from "../../../../include/js/function_main";
 import {
   getConfigurationItemType,
-  getConfigurationItemTypeInRow,
+  getConfigurationItemTypeById,
 } from "../../../../actions/inventory/configurations/type/typeItemAction";
 import { AppContext } from "../../../../include/js/context";
 const Type = (props) => {
@@ -67,6 +67,7 @@ const Type = (props) => {
         <Row>
           <Col span={24}>
             <Table
+              loading={loading}
               columns={item_show_columns}
               dataSource={sortData(data)}
               rowKey={"type_id"}
@@ -79,7 +80,7 @@ const Type = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    dispatch(getConfigurationItemTypeInRow(record));
+                    dispatch(getConfigurationItemTypeById(record.type_id));
                     props.history.push({
                       pathname:
                         "/inventory/configurations/type/view/" + record.type_id,

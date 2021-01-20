@@ -1,4 +1,4 @@
-import { Col, Input, message, Radio, Row, Tabs, Typography } from "antd";
+import { Col, Input, message, Row, Tabs, Typography } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../../../components/CustomSelect";
@@ -8,6 +8,10 @@ import { dataOptions, uomFields, uomFieldsReQuire } from "./UomConfig";
 import moment from "moment";
 import { validateFormHead } from "../../../../include/js/function_main";
 import { useHistory } from "react-router-dom";
+import {
+  createConfigurationUom,
+  upDateConfigurationUom,
+} from "../../../../actions/inventory/configurations/uom/uomAction";
 function UomCreate(props) {
   const { Title, Text } = Typography;
   const history = useHistory();
@@ -27,7 +31,7 @@ function UomCreate(props) {
           ...uomFields,
           commit: 1,
           user_name: auth.user_name,
-          cnvUomCreate: moment().format("DD/MM/YYYY"),
+          uom_created: moment().format("DD/MM/YYYY"),
         }
   );
   const upDateFormValue = (data) => {
@@ -54,7 +58,15 @@ function UomCreate(props) {
       const key = "validate";
       const validate = validateFormHead(dataUomCreate, uomFieldsReQuire);
       if (validate.validate) {
-        console.log("save", dataUomCreate);
+        dataUomCreate.uom_id
+          ? dispatch(
+              upDateConfigurationUom(
+                dataUomCreate.uom_id,
+                dataUomCreate,
+                redirectToView
+              )
+            )
+          : dispatch(createConfigurationUom(dataUomCreate, redirectToView));
       } else {
         message.warning({
           content: "Please fill your form completely.",
@@ -76,7 +88,7 @@ function UomCreate(props) {
     },
   };
   const redirectToView = (id) => {
-    history.push("/inventory/configurations/uom/view/");
+    history.push("/inventory/configurations/uom/view/" + (id ? id : "new"));
   };
   return (
     <MainLayout {...config}>
@@ -96,7 +108,7 @@ function UomCreate(props) {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{dataUomCreate.cnvUomCreate}</Text>
+            <Text className="text-view">{dataUomCreate.uom_created}</Text>
           </Col>
         </Row>
 
@@ -138,6 +150,7 @@ function UomCreate(props) {
                       </Col>
                       <Col span={18}>
                         <Input
+                          name="uom_no"
                           placeholder="Shrot Name"
                           onChange={(e) =>
                             upDateFormValue({ uom_no: e.target.value })
@@ -155,6 +168,40 @@ function UomCreate(props) {
                       </Col>
                       <Col span={18}>
                         <Input placeholder="value" />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Thai Name :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="uom_name_th"
+                          placeholder={"Name Thai"}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              uom_name_th: e.target.value,
+                            })
+                          }
+                          value={dataUomCreate.uom_name_th}
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Description :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="uom_remark"
+                          placeholder={"Description"}
+                          onChange={(e) =>
+                            upDateFormValue({ uom_remark: e.target.value })
+                          }
+                          value={dataUomCreate.uom_remark}
+                        />
                       </Col>
                       <Col span={1}></Col>
                     </Row>

@@ -1,18 +1,12 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Typography, message, Radio } from "antd";
-import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Row, Col, Input, Tabs, Typography } from "antd";
 import Authorize from "../../../system/Authorize";
 import MainLayout from "../../../../components/MainLayout";
-import CustomSelect from "../../../../components/CustomSelect";
-
 const CategoryView = (props) => {
   const { TextArea } = Input;
   const { Title, Text } = Typography;
-  const history = useHistory();
   const authorize = Authorize();
-  const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth.authData);
   const current_project = useSelector((state) => state.auth.currentProject);
   const dataInRow = useSelector(
     (state) => state.inventory.configurations.categoryInRow
@@ -54,7 +48,7 @@ const CategoryView = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{dataInRow.cnvCategoryCreate}</Text>
+            <Text className="text-view">{dataInRow.category_created}</Text>
           </Col>
         </Row>
 
@@ -79,6 +73,28 @@ const CategoryView = (props) => {
                       </Col>
                       <Col span={18}>
                         <Text className="text-view">{dataInRow.type_name}</Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Thai Name :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {dataInRow.category_name_th}
+                        </Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Description :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {dataInRow.category_remark}
+                        </Text>
                       </Col>
                       <Col span={1}></Col>
                     </Row>

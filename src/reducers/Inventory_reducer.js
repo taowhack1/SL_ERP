@@ -28,6 +28,8 @@ import {
   GET_UOM,
   GET_UOM_IN_ROW,
   GET_ITEM_TYPE_BY_ID,
+  GET_ITEM_CATEGORY_BY_ID,
+  GET_UOM_BY_ID,
 } from "../actions/types";
 const initialState = {
   item: {
@@ -151,6 +153,14 @@ export default (state = initialState, action) => {
           categoryInRow: action.payload,
         },
       };
+    case GET_ITEM_CATEGORY_BY_ID:
+      return {
+        ...state,
+        configurations: {
+          ...state.configurations,
+          categoryInRow: action.payload,
+        },
+      };
     case GET_TYPE_UOM:
       return {
         ...state,
@@ -176,6 +186,14 @@ export default (state = initialState, action) => {
         },
       };
     case GET_UOM_IN_ROW:
+      return {
+        ...state,
+        configurations: {
+          ...state.configurations,
+          uomInRow: action.payload,
+        },
+      };
+    case GET_UOM_BY_ID:
       return {
         ...state,
         configurations: {

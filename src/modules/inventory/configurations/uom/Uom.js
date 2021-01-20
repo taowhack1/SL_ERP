@@ -2,16 +2,17 @@ import { Col, Row, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { getUomList } from "../../../../actions/inventory";
 import MainLayout from "../../../../components/MainLayout";
 import { sortData } from "../../../../include/js/function_main";
 import Authorize from "../../../system/Authorize";
 import { uomShowColumns } from "./UomConfig";
 import $ from "jquery";
-import { getUomInRow } from "../../../../actions/inventory/configurations/uom/uomAction";
+import {
+  getConfigurationUom,
+  getUomInRow,
+} from "../../../../actions/inventory/configurations/uom/uomAction";
 
 function Uom(props) {
-  const authorzie = Authorize();
   const dispatch = useDispatch();
   const uom = useSelector((state) => state.inventory.configurations.uom);
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -19,7 +20,7 @@ function Uom(props) {
   const [data, setData] = useState(uom);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    dispatch(getUomList());
+    dispatch(getConfigurationUom());
   }, []);
   useEffect(() => {
     const setStateData = () => {
@@ -58,6 +59,7 @@ function Uom(props) {
         <Row>
           <Col span={24}>
             <Table
+              loading={loading}
               columns={uomShowColumns}
               dataSource={sortData(uom)}
               rowKey={"uom_id"}

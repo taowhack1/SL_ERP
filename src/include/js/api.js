@@ -103,7 +103,8 @@ export const api_get_uom_list = `${api_server}/api/list/uom`;
 export const api_get_item_list = `${api_server}/api/list/item`;
 // inventory -> configuration
 export const api_get_configuration_type = `${api_server}/api/configuration/inventory/type`;
-
+export const api_get_configuration_category = `${api_server}/api/configuration/inventory/category`;
+export const api_get_configuration_uom = `${api_server}/api/configuration/inventory/uom`;
 //Sale
 export const api_get_qn_by_id = `${api_server}/api/sales/qn`;
 export const api_qn_detail = `${api_server}/api/sales/qn_detail`;

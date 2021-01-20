@@ -1,19 +1,14 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Typography, message, Radio } from "antd";
+import { useSelector } from "react-redux";
+import { Row, Col, Input, Tabs, Typography, Radio } from "antd";
 import MainLayout from "../../../../components/MainLayout";
-import moment from "moment";
 import Authorize from "../../../system/Authorize";
-import { useHistory } from "react-router-dom";
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 const TypeView = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
-  const dispatch = useDispatch();
-  const history = useHistory();
-  let data = props.location.data;
   const dataInRow = useSelector(
     (state) => state.inventory.configurations.typeInRow
   );
@@ -80,6 +75,28 @@ const TypeView = (props) => {
                       </Col>
                       <Col span={18}>
                         <Text className="text-view">{dataInRow.type_no}</Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Thai Name :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {dataInRow.type_name_th}
+                        </Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Description :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {dataInRow.type_remark}
+                        </Text>
                       </Col>
                       <Col span={1}></Col>
                     </Row>

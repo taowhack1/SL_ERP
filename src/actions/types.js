@@ -41,10 +41,12 @@ export const GET_ITEM_TYPE = "GET_ITEM_TYPE";
 export const GET_ITEM_TYPE_BY_ID = "GET_ITEM_TYPE_BY_ID";
 export const GET_ITEM_TYPE_IN_ROW = "GET_ITEM_TYPE_IN_ROW";
 export const GET_ITEM_CATEGORY = "GET_ITEM_CATEGORY";
+export const GET_ITEM_CATEGORY_BY_ID = "GET_ITEM_CATEGORY_BY_ID";
 export const GET_CATEGORY_IN_ROW = "GET_CATEGORY_IN_ROW";
 export const GET_TYPE_UOM = "GET_TYPE_UOM";
 export const GET_TYPE_UOM_IN_ROW = "GET_TYPE_UOM_IN_ROW";
 export const GET_UOM = "GET_UOM";
+export const GET_UOM_BY_ID = "GET_ITEM_UOM_BY_ID";
 export const GET_UOM_IN_ROW = "GET_UOM_IN_ROW";
 //Inventory -> Receive
 export const RESET_RECEIVE = "RESET_RECEIVE";

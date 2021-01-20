@@ -47,8 +47,7 @@ export const createConfigurationItemType = (data_typeCreate, redirect) => (
       .post(`${api_get_configuration_type}`, dataCreate, header_config)
       .then((res) => {
         console.log("actionres", res);
-
-        const type_id = res.data[0].type_id;
+        const type_id = res.data[0][0].type_id;
         dispatch(getConfigurationItemTypeById(type_id, redirect));
         message.success({
           content: "Type Created",

@@ -1,9 +1,10 @@
 export const uomFields = {
-  uom_id: null,
   uom_no: null,
   uom_name: null,
-  uom_no_name: null,
-  commit: null,
+  user_name: null,
+  uom_remark: "",
+  uom_name_th: "",
+  commit: 0,
 };
 export const uomFieldsReQuire = ["uom_no", "uom_name"];
 export const uomShowColumns = [

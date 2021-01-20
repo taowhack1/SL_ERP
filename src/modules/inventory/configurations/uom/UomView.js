@@ -1,19 +1,11 @@
-import { Col, Input, message, Row, Tabs, Typography } from "antd";
+import { Col, Row, Tabs, Typography } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CustomSelect from "../../../../components/CustomSelect";
 import MainLayout from "../../../../components/MainLayout";
 import Authorize from "../../../system/Authorize";
-import { dataOptions, uomFields, uomFieldsReQuire } from "./UomConfig";
-import moment from "moment";
-import { validateFormHead } from "../../../../include/js/function_main";
-import { useHistory } from "react-router-dom";
 function UomView(props) {
   const { Title, Text } = Typography;
-  const history = useHistory();
   const authorize = Authorize();
-  const dispatch = useDispatch();
-  const uom = useSelector((state) => state.inventory.configurations.uom);
   const current_project = useSelector((state) => state.auth.currentProject);
   const auth = useSelector((state) => state.auth.authData);
   const [loading, setLoading] = useState(false);
@@ -56,7 +48,7 @@ function UomView(props) {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{dataInRow.cnvUomCreate}</Text>
+            <Text className="text-view">{dataInRow.uom_created}</Text>
           </Col>
         </Row>
 
@@ -90,6 +82,28 @@ function UomView(props) {
                       </Col>
                       <Col span={18}>
                         <Text className="text-view">{""}</Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Thai Name :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {dataInRow.uom_name_th}
+                        </Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Description :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className="text-view">
+                          {dataInRow.uom_remark}
+                        </Text>
                       </Col>
                       <Col span={1}></Col>
                     </Row>

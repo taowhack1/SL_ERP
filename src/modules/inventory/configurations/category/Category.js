@@ -5,11 +5,12 @@ import MainLayout from "../../../../components/MainLayout";
 import Authorize from "../../../system/Authorize";
 import { categoryShowColumns, itemShowColumns } from "./CategoryConfig";
 import $ from "jquery";
-import { Row, Col, Table, Space, Badge } from "antd";
+import { Table } from "antd";
 import { sortData } from "../../../../include/js/function_main";
-import { getItemCategoryList } from "../../../../actions/inventory";
-import { get_category_in_row } from "../../../../actions/inventory/configurations/category/categoryAction";
-
+import {
+  getConfigurationCategory,
+  getConfigurationCategoryById,
+} from "../../../../actions/inventory/configurations/category/categoryAction";
 const Category = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
@@ -25,7 +26,7 @@ const Category = (props) => {
   const [data, setData] = useState(category);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    dispatch(getItemCategoryList(auth.user_name));
+    dispatch(getConfigurationCategory());
   }, []);
   useEffect(() => {
     const setStateData = () => {
@@ -81,7 +82,7 @@ const Category = (props) => {
                 .find("tr")
                 .removeClass("selected-row");
               $(e.target).closest("tr").addClass("selected-row");
-              dispatch(get_category_in_row(record));
+              dispatch(getConfigurationCategoryById(record.category_id));
               props.history.push({
                 pathname:
                   "/inventory/configurations/category/view/" +

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Typography, message, Radio } from "antd";
+import { Row, Col, Input, Tabs, Typography, message } from "antd";
 import { useHistory } from "react-router-dom";
 import Authorize from "../../../system/Authorize";
 import { categoryFields, categoryFieldsRequire } from "./CategoryConfig";
@@ -8,6 +8,10 @@ import moment from "moment";
 import MainLayout from "../../../../components/MainLayout";
 import { validateFormHead } from "../../../../include/js/function_main";
 import CustomSelect from "../../../../components/CustomSelect";
+import {
+  createConfigurationCategory,
+  upDateConfigurationCategory,
+} from "../../../../actions/inventory/configurations/category/categoryAction";
 
 const CategoryCreate = (props) => {
   const { TextArea } = Input;
@@ -28,7 +32,7 @@ const CategoryCreate = (props) => {
           ...categoryFields,
           commit: 1,
           user_name: auth.user_name,
-          cnvCategoryCreate: moment().format("DD/MM/YYYY"),
+          category_created: moment().format("DD/MM/YYYY"),
         }
   );
   const upDateFormValue = (data) => {
@@ -61,7 +65,17 @@ const CategoryCreate = (props) => {
         categoryFieldsRequire
       );
       if (validate.validate) {
-        console.log("save", dataCategoryCreate);
+        dataCategoryCreate.category_id
+          ? dispatch(
+              upDateConfigurationCategory(
+                dataCategoryCreate.category_id,
+                dataCategoryCreate,
+                redirectToView
+              )
+            )
+          : dispatch(
+              createConfigurationCategory(dataCategoryCreate, redirectToView)
+            );
       } else {
         message.warning({
           content: "Please fill your form completely.",
@@ -83,7 +97,9 @@ const CategoryCreate = (props) => {
     },
   };
   const redirectToView = (id) => {
-    history.push("/inventory/configurations/category/view/");
+    history.push(
+      "/inventory/configurations/category/view/" + (id ? id : "new")
+    );
   };
   return (
     <MainLayout {...config}>
@@ -105,7 +121,7 @@ const CategoryCreate = (props) => {
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
             <Text className="text-view">
-              {dataCategoryCreate.cnvCategoryCreate}
+              {dataCategoryCreate.category_created}
             </Text>
           </Col>
         </Row>
@@ -113,7 +129,7 @@ const CategoryCreate = (props) => {
         <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
             <Title level={5}>
-              <span className="require">* </span>Name{" "}
+              <span className="require">* </span>Name :{" "}
             </Title>
             <Col span={24}>
               <Input
@@ -145,7 +161,7 @@ const CategoryCreate = (props) => {
                     <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">*</span>Type
+                          <span className="require">*</span> Type :
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -162,13 +178,45 @@ const CategoryCreate = (props) => {
                             data && data
                               ? upDateFormValue({
                                   type_id: data,
-                                  type_name: option.title,
                                 })
                               : upDateFormValue({
                                   type_id: null,
-                                  type_name: null,
                                 });
                           }}
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Thai Name :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="category_name_th"
+                          placeholder={"Name Thai"}
+                          onChange={(e) =>
+                            upDateFormValue({
+                              category_name_th: e.target.value,
+                            })
+                          }
+                          value={dataCategoryCreate.category_name_th}
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Description :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="category_remark"
+                          placeholder={"Description"}
+                          onChange={(e) =>
+                            upDateFormValue({ category_remark: e.target.value })
+                          }
+                          value={dataCategoryCreate.category_remark}
                         />
                       </Col>
                       <Col span={1}></Col>

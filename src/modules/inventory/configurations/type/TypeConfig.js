@@ -5,6 +5,7 @@ export const type_fields = {
   type_verify_stock: 0,
   type_created: null,
   type_remark: "",
+  type_name_th: "",
   user_name: null,
   commit: 0,
 };

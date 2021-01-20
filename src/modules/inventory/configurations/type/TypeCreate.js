@@ -61,11 +61,9 @@ const TypeCreate = (props) => {
     discard: "/inventory/configurations/type/",
     onSave: (e) => {
       //e.preventDefault();
-      console.log("Save");
       const key = "validate";
       const validate = validateFormHead(data_typeCreate, type_fields_require);
       if (validate.validate) {
-        console.log("pass", data_typeCreate);
         data_typeCreate.type_id
           ? dispatch(
               upDateConfigurationItemType(
@@ -124,7 +122,7 @@ const TypeCreate = (props) => {
         <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
             <Title level={5}>
-              <span className="require">* </span>Name{" "}
+              <span className="require">*</span> Name :{" "}
             </Title>
             <Col span={24}>
               <Input
@@ -155,7 +153,7 @@ const TypeCreate = (props) => {
                     <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">*</span>Short Name
+                          <span className="require">*</span> Short Name :
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -170,13 +168,45 @@ const TypeCreate = (props) => {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Thai Name :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="type_name_th"
+                          placeholder={"Name Thai"}
+                          onChange={(e) =>
+                            upDateFormValue({ type_name_th: e.target.value })
+                          }
+                          value={data_typeCreate.type_name_th}
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Description :</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="type_remark"
+                          placeholder={"Description"}
+                          onChange={(e) =>
+                            upDateFormValue({ type_remark: e.target.value })
+                          }
+                          value={data_typeCreate.type_remark}
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
                   </Col>
                   <Col span={12}>
                     <Row className="row-margin">
                       <Col span={1}></Col>
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">*</span>Verify QC
+                          <span className="require">*</span>Verify QC :
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -200,7 +230,7 @@ const TypeCreate = (props) => {
                       <Col span={1}></Col>
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">*</span>Verify Stock
+                          <span className="require">*</span>Verify Stock :
                         </Text>
                       </Col>
                       <Col span={18}>
