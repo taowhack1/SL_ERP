@@ -161,7 +161,7 @@ const CategoryCreate = (props) => {
                     <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">*</span> Type :
+                          <span className="require">*</span> Item Type :
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -194,7 +194,7 @@ const CategoryCreate = (props) => {
                       <Col span={18}>
                         <Input
                           name="category_name_th"
-                          placeholder={"Name Thai"}
+                          placeholder={"Thai Name"}
                           onChange={(e) =>
                             upDateFormValue({
                               category_name_th: e.target.value,

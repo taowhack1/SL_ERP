@@ -159,7 +159,7 @@ const TypeCreate = (props) => {
                       <Col span={18}>
                         <Input
                           name="type_no"
-                          placeholder={"SRL"}
+                          placeholder={"Short Name"}
                           onChange={(e) =>
                             upDateFormValue({ type_no: e.target.value })
                           }
@@ -175,7 +175,7 @@ const TypeCreate = (props) => {
                       <Col span={18}>
                         <Input
                           name="type_name_th"
-                          placeholder={"Name Thai"}
+                          placeholder={"Thai Name"}
                           onChange={(e) =>
                             upDateFormValue({ type_name_th: e.target.value })
                           }

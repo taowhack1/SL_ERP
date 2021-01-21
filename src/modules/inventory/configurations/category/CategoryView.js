@@ -54,7 +54,7 @@ const CategoryView = (props) => {
 
         <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
-            <Title level={5}>Name </Title>
+            <Title level={5}>Name :</Title>
             <Col span={24}>
               <Text className="text-view">{dataInRow.category_name}</Text>
             </Col>
@@ -69,7 +69,7 @@ const CategoryView = (props) => {
                   <Col span={12}>
                     <Row className="row-margin">
                       <Col span={5}>
-                        <Text strong>Type</Text>
+                        <Text strong>Item Type :</Text>
                       </Col>
                       <Col span={18}>
                         <Text className="text-view">{dataInRow.type_name}</Text>

@@ -20,7 +20,7 @@ function UomView(props) {
     show: true,
     breadcrumb: [
       "Home",
-      "Uom",
+      "UoM",
       "View",
       dataInRow.uom_no && " [ " + dataInRow.uom_no + " ] " + dataInRow.uom_name,
     ],
@@ -54,7 +54,7 @@ function UomView(props) {
 
         <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
-            <Title level={5}>Name </Title>
+            <Title level={5}>Name :</Title>
             <Col span={24}>
               <Text className="text-view">{dataInRow.uom_name}</Text>
             </Col>
