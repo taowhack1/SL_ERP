@@ -1,46 +1,39 @@
-import { Button, Table } from "antd";
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import {
   qcTestItemSubjectColumns,
   qcTestItemSubjectFields,
 } from "../../configs/qcTestItemConfig";
-import { PlusOutlined } from "@ant-design/icons";
 import { QCContext } from "./QCItemTestCreate";
-import ReducerClass from "../../../../include/js/ReducerClass";
-import {
-  sortData,
-  sortDataWithoutCommit,
-} from "../../../../include/js/function_main";
 import CustomTable from "../../../../components/CustomTable";
 import Search from "../../../../components/Search";
 import { mainReducer } from "../../../../include/reducer";
-const initialStateSubject = qcTestItemSubjectFields;
-const QCItemTestTabSubject = () => {
-  const {
-    readOnly,
-    data_head,
-    subjectData,
-    subjectDispatch,
-    commonData,
-    form1,
-  } = useContext(QCContext);
-  const [state, stateDispatch] = useReducer(mainReducer, [initialStateSubject]);
+const QCItemTestTable = ({
+  field,
+  initialState,
+  dataSource,
+  dispatchData,
+  commonData,
+  columns,
+}) => {
+  const { readOnly } = useContext(QCContext);
+  const [state, stateDispatch] = useReducer(mainReducer, [initialState]);
   const [searching, setSearching] = useState(false);
   useEffect(() => {
     stateDispatch({
       type: "SET_DETAIL",
-      payload: subjectData,
+      payload: dataSource,
     });
-  }, [subjectData.length]);
+  }, [dataSource.length]);
   const addNewRow = () => {
     console.log("add row");
-    subjectDispatch({
+    dispatchData({
       type: "ADD_ROW_WOC",
-      payload: { ...initialStateSubject, ...commonData },
+      payload: { ...initialState, ...commonData },
     });
   };
   const onDelete = (id) => {
-    subjectDispatch({
+    console.log("id", id);
+    dispatchData({
       type: "DEL_ROW_WOC",
       payload: {
         id: id,
@@ -57,8 +50,7 @@ const QCItemTestTabSubject = () => {
     });
   };
   const Save = (id) => {
-    console.log("Save");
-    subjectDispatch({
+    dispatchData({
       type: "CHANGE_DETAIL_VALUE",
       payload: {
         id: id,
@@ -70,43 +62,41 @@ const QCItemTestTabSubject = () => {
     stateDispatch({
       type: "SEARCH_DETAIL",
       payload: text
-        ? subjectData.filter(
+        ? dataSource.filter(
             (obj) =>
-              (obj.qa_subject_name &&
-                obj.qa_subject_name.toUpperCase().indexOf(text.toUpperCase()) >=
+              (obj[field["name"]] &&
+                obj[field["name"]].toUpperCase().indexOf(text.toUpperCase()) >=
                   0) ||
-              (obj.qa_subject_remark &&
-                obj.qa_subject_remark
+              (obj[field.description] &&
+                obj[field.description]
                   .toUpperCase()
                   .indexOf(text.toUpperCase()) >= 0)
           )
-        : subjectData,
+        : dataSource,
     });
     text ? setSearching(true) : setSearching(false);
   };
   const getRowClassName = (record, index) => {
     let rowClass = "row-table-detail ";
-    rowClass += !record.qa_subject_actived ? "row-table-detail-inactive" : "";
+    rowClass += !record[field.status] ? "row-table-detail-inactive" : "";
     return rowClass;
   };
-  console.log("subjectData", subjectData);
-
-  console.log("qc subject render", state);
+  console.log("Table Render..", field.title);
   return (
     <>
       <CustomTable
         title={() => {
           return (
-            <div style={{ textAlign: "right", backgroundColor: "#FAFAFA" }}>
+            <div className="text-right table-color">
               <Search className={"half-width"} onSearch={onSearch} />
             </div>
           );
         }}
-        rowKey="id"
+        rowKey={"id"}
         rowClassName={getRowClassName}
         pageSize={10}
         focusLastPage={true}
-        columns={qcTestItemSubjectColumns(readOnly, onChange, onDelete, Save)}
+        columns={columns(field, readOnly, onChange, onDelete, Save)}
         dataSource={state}
         readOnly={readOnly}
         onAdd={addNewRow}
@@ -115,5 +105,4 @@ const QCItemTestTabSubject = () => {
     </>
   );
 };
-// export default QCItemTestTabSubject;
-export default React.memo(QCItemTestTabSubject);
+export default React.memo(QCItemTestTable);

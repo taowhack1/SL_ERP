@@ -13,8 +13,8 @@ import {
 } from "../../../../actions/inventory/configurations/type/typeItemAction";
 import { AppContext } from "../../../../include/js/context";
 const Type = (props) => {
-  const { appContext, setAppContext } = useContext(AppContext);
-  console.log("appContext", appContext);
+  const { mainContext, setMainContext } = useContext(AppContext);
+  console.log("mainContext", mainContext);
   const authorize = Authorize();
   authorize.check_authorize();
   const [, setRowClick] = useState(false);
@@ -25,7 +25,7 @@ const Type = (props) => {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     dispatch(getConfigurationItemType());
-    setAppContext({ ...appContext, config: { page: "Type.js" } });
+    setMainContext({ ...mainContext, config: { page: "Type.js" } });
   }, []);
   useEffect(() => {
     const setStateData = () => {

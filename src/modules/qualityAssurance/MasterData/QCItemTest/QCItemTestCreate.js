@@ -1,11 +1,17 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, {
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import { Row, Col } from "antd";
 import { useHistory, useParams } from "react-router-dom";
-import { reducer } from "../../reducers";
 import Authorize from "../../../system/Authorize";
 import {
   qcTestItemFields,
+  qcTestItemMethodFields,
+  qcTestItemSpecFields,
   qcTestItemSubjectFields,
 } from "../../configs/qcTestItemConfig";
 import Comments from "../../../../components/Comments";
@@ -17,7 +23,9 @@ import {
   getQATestByTypeID,
   saveQATestCase,
 } from "../../../../actions/qa/qaTestAction";
+import { mainReducer } from "../../../../include/reducer";
 import SelectItemType from "./SelectItemType";
+import { AppContext } from "../../../../include/js/context";
 
 let typeList = [];
 getItemType().then(
@@ -27,27 +35,34 @@ getItemType().then(
 export const QCContext = React.createContext();
 const initialStateMain = qcTestItemFields;
 const initialStateSubject = [qcTestItemSubjectFields];
+const initialStateSpecification = [qcTestItemSpecFields];
+const initialStateMethod = [qcTestItemMethodFields];
+
 const QCItemTestCreate = (props) => {
+  const { auth, current_project } = useContext(AppContext);
   const [pageLoad, setPageLoad] = useState(true);
   const params = useParams();
   const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
-  const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth.authData);
   const readOnly = false;
-  // const data =
-  //   props.location && props.location.state ? props.location.state : 0;
-  const current_project = useSelector((state) => state.auth.currentProject);
-
-  const [data_head, headDispatch] = useReducer(reducer, initialStateMain);
+  const [data_head, headDispatch] = useReducer(mainReducer, initialStateMain);
   const [subjectData, subjectDispatch] = useReducer(
-    reducer,
+    mainReducer,
     initialStateSubject
   );
+  const [specificationData, specificationDispatch] = useReducer(
+    mainReducer,
+    initialStateSpecification
+  );
+  const [methodData, methodDispatch] = useReducer(
+    mainReducer,
+    initialStateMethod
+  );
   useEffect(() => {
-    params &&
-      getQATestByTypeID(params.id).then((res) => {
+    const getData = async () =>
+      await getQATestByTypeID(params.id).then((res) => {
+        console.log("getQATestByTypeID", res.data[0]);
         headDispatch({
           type: "SET_HEAD",
           payload: res.data[0],
@@ -56,8 +71,17 @@ const QCItemTestCreate = (props) => {
           type: "SET_DETAIL_WOC",
           payload: res.data[0].qa_subject,
         });
+        specificationDispatch({
+          type: "SET_DETAIL_WOC",
+          payload: res.data[0].qa_specification,
+        });
+        methodDispatch({
+          type: "SET_DETAIL_WOC",
+          payload: res.data[0].qa_method,
+        });
         setPageLoad(false);
       });
+    params && getData();
   }, []);
 
   const config = {
@@ -85,11 +109,11 @@ const QCItemTestCreate = (props) => {
       const data = {
         type_id: data_head.type_id,
         subjectData: subjectData,
-        specData: [],
-        methodData: [],
+        specData: specificationData,
+        methodData: methodData,
       };
       console.log(data);
-      // saveQATestCase(data);
+      saveQATestCase(data);
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -117,6 +141,10 @@ const QCItemTestCreate = (props) => {
       readOnly,
       subjectData,
       subjectDispatch,
+      specificationData,
+      specificationDispatch,
+      methodData,
+      methodDispatch,
       commonData: {
         user_name: auth.user_name,
         branch_id: auth.branch_id,
@@ -124,7 +152,7 @@ const QCItemTestCreate = (props) => {
         type_id: data_head.type_id,
       },
     };
-  }, [data_head, readOnly, subjectData, subjectDispatch]);
+  }, [data_head, readOnly, subjectData, specificationData, methodData]);
   console.log("QCMain Render..");
   return (
     <MainLayout {...config} pageLoad={pageLoad}>

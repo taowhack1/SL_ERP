@@ -7,7 +7,7 @@ import {
   CURRENT_MENU,
 } from "../actions/types";
 export const initialStateAuth = {
-  authData: [],
+  authData: {},
   authenticated: false,
   projects: [],
   menus: [],

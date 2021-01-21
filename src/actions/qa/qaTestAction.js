@@ -152,29 +152,29 @@ export const saveQATestCase = (data) => {
         ),
     };
     console.log(saveData);
-    const {
-      subject_create,
-      spec_create,
-      method_create,
-      subject_update,
-      spec_update,
-      method_update,
-    } = saveData;
-    Promise.allSettled([
-      subject_create.length && saveSubject(subject_create, "post"),
-      subject_update.length && saveSubject(subject_update, "put"),
-      spec_create.length && saveSpecification(spec_create, "post"),
-      spec_update.length && saveSpecification(spec_update, "put"),
-      method_create.length && saveMethod(method_create, "post"),
-      method_update.length && saveMethod(method_update, "put"),
-    ])
-      .then((res) => {
-        alert("Save Success..", res);
-        getQATestByTypeID(type_id);
-      })
-      .catch((error) => {
-        alert(error);
-      });
+    // const {
+    //   subject_create,
+    //   spec_create,
+    //   method_create,
+    //   subject_update,
+    //   spec_update,
+    //   method_update,
+    // } = saveData;
+    // Promise.allSettled([
+    //   subject_create.length && saveSubject(subject_create, "post"),
+    //   subject_update.length && saveSubject(subject_update, "put"),
+    //   spec_create.length && saveSpecification(spec_create, "post"),
+    //   spec_update.length && saveSpecification(spec_update, "put"),
+    //   method_create.length && saveMethod(method_create, "post"),
+    //   method_update.length && saveMethod(method_update, "put"),
+    // ])
+    //   .then((res) => {
+    //     alert("Save Success..", res);
+    //     getQATestByTypeID(type_id);
+    //   })
+    //   .catch((error) => {
+    //     alert(error);
+    //   });
   } catch (error) {
     console.error(error);
   }

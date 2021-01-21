@@ -14,10 +14,10 @@ import {
 } from "../../../../actions/inventory/configurations/type/typeItemAction";
 
 const TypeCreate = (props) => {
-  const { appContext, setAppContext } = useContext(AppContext);
-  console.log("appContext", appContext);
+  const { mainContext, setMainContext } = useContext(AppContext);
+  console.log("mainContext", mainContext);
   useEffect(() => {
-    setAppContext({ ...appContext, config: { page: "TypeCreate.js" } });
+    setMainContext({ ...mainContext, config: { page: "TypeCreate.js" } });
   }, []);
   const { TextArea } = Input;
   const { Title, Text } = Typography;

@@ -1,7 +1,27 @@
 import { Row, Col, Tabs } from "antd";
-import React from "react";
-import QCItemTestTabSubject from "./QCItemTestTabSubject";
-const WorkOrderTabPanel = ({ readOnly }) => {
+import React, { useContext } from "react";
+import {
+  qcTestItemMethodFields,
+  qcTestItemSpecFields,
+  qcTestItemColumns,
+  qcTestItemSubjectFields,
+} from "../../configs/qcTestItemConfig";
+import { QCContext } from "./QCItemTestCreate";
+import QCItemTestTable from "./QCItemTestTable";
+const initialStateSubject = qcTestItemSubjectFields;
+const initialStateSpecification = qcTestItemSpecFields;
+const initialStateMethod = qcTestItemMethodFields;
+const WorkOrderTabPanel = () => {
+  const {
+    data_head,
+    subjectData,
+    subjectDispatch,
+    specificationData,
+    specificationDispatch,
+    methodData,
+    methodDispatch,
+    commonData,
+  } = useContext(QCContext);
   console.log("Panel Render");
   return (
     <Row className="col-2">
@@ -16,19 +36,58 @@ const WorkOrderTabPanel = ({ readOnly }) => {
             key={"1"}
           >
             {/* <TabWorkOrderDetail /> */}
-            <QCItemTestTabSubject />
+            <QCItemTestTable
+              field={{
+                title: "Subject",
+                id: "qa_subject_id",
+                name: "qa_subject_name",
+                description: "qa_subject_remark",
+                status: "qa_subject_actived",
+              }}
+              initialState={initialStateSubject}
+              dataSource={subjectData}
+              dispatchData={subjectDispatch}
+              commonData={commonData}
+              columns={qcTestItemColumns}
+            />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={<span className="tab_pane">{"Specification"}</span>}
             key={"2"}
           >
-            {/* <QCItemTestTabSubject readOnly={readOnly} /> */}
+            <QCItemTestTable
+              field={{
+                title: "Specification",
+                id: "qa_specification_id",
+                name: "qa_specification_name",
+                description: "qa_specification_remark",
+                status: "qa_specification_actived",
+              }}
+              initialState={initialStateSpecification}
+              dataSource={specificationData}
+              dispatchData={specificationDispatch}
+              commonData={commonData}
+              columns={qcTestItemColumns}
+            />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={<span className="tab_pane">{"Method"}</span>}
             key={"3"}
           >
-            {/* <QCItemTestTabSubject readOnly={readOnly} /> */}
+            <QCItemTestTable
+              field={{
+                title: "Method",
+                id: "qa_method_id",
+                name: "qa_method_name",
+                description: "qa_method_remark",
+                status: "qa_method_actived",
+              }}
+              initialState={initialStateMethod}
+              dataSource={methodData}
+              dispatchData={methodDispatch}
+              commonData={commonData}
+              columns={qcTestItemColumns}
+            />
           </Tabs.TabPane>
         </Tabs>
       </Col>

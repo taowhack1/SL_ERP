@@ -68,7 +68,8 @@ export const QASubjectColumns = [
   },
 ];
 
-export const qcTestItemSubjectColumns = (
+export const qcTestItemColumns = (
+  field,
   readOnly,
   onChange,
   onDelete,
@@ -86,35 +87,34 @@ export const qcTestItemSubjectColumns = (
   {
     title: (
       <div className="text-center">
-        {!readOnly && <span className="require">* </span>} Subject Name
+        {!readOnly && <span className="require">* </span>}
+        {field.title + " Name"}
       </div>
     ),
-    dataIndex: "qa_subject_name",
-    key: "qa_subject_name",
+    dataIndex: field.name,
+    key: field.name,
     align: "left",
     width: "50%",
     render: (value, record, index) => {
-      if (readOnly || record.qa_subject_id !== null) {
+      if (readOnly || record[field.id] !== null) {
         return (
-          <Text
-            className={record.qa_subject_actived ? "pd-left-1" : "text-view"}
-          >
+          <Text className={record[field.status] ? "pd-left-1" : "text-view"}>
             {value ?? "-"}
           </Text>
         );
       } else {
         return (
           <Input
-            disabled={record.qa_subject_actived ? 0 : 1}
-            name={"qa_subject_name"}
+            disabled={record[field.status] ? 0 : 1}
+            name={field.name}
             onChange={(e) =>
               onChange(record.id, {
-                qa_subject_name: e.target.value,
+                [field.name]: e.target.value,
               })
             }
             onBlur={() => Save(record.id)}
             value={value}
-            placeholder="Subject Name"
+            placeholder="Name"
             size="small"
           />
         );
@@ -123,26 +123,24 @@ export const qcTestItemSubjectColumns = (
   },
   {
     title: <div className="text-center">Description</div>,
-    dataIndex: "qa_subject_remark",
-    key: "qa_subject_remark",
+    dataIndex: field.description,
+    key: field.description,
     align: "left",
     render: (value, record, index) => {
-      if (readOnly || record.qa_subject_id !== null) {
+      if (readOnly || record[field.id] !== null) {
         return (
-          <Text
-            className={record.qa_subject_actived ? "pd-left-1" : "text-view"}
-          >
+          <Text className={record[field.status] ? "pd-left-1" : "text-view"}>
             {value ? value : "-"}
           </Text>
         );
       } else {
         return (
           <Input
-            disabled={record.qa_subject_actived ? 0 : 1}
-            name={"qa_subject_remark"}
+            disabled={record[field.status] ? 0 : 1}
+            name={field.description}
             onChange={(e) =>
               onChange(record.id, {
-                qa_subject_remark: e.target.value,
+                [field.description]: e.target.value,
               })
             }
             onBlur={() => {
@@ -170,14 +168,12 @@ export const qcTestItemSubjectColumns = (
       if (readOnly) {
         return null;
       } else {
-        return record.qa_subject_id !== null ? (
+        return record[field.id] !== null ? (
           <Switch
             size="small"
             title="Active / In-Active"
-            checked={record.qa_subject_actived}
-            onChange={(value) =>
-              onChange(record.id, { qa_subject_actived: value })
-            }
+            checked={record[field.status]}
+            onChange={(value) => onChange(record.id, { [field.status]: value })}
             onBlur={(_) => Save(record.id)}
           />
         ) : (
@@ -550,7 +546,7 @@ export const qcTestItemFields = {
   qa_subject: [],
 };
 export const qcTestItemSubjectFields = {
-  id: null,
+  id: 0,
   qa_subject_id: null,
   qa_subject_no: null,
   qa_subject_name: null,
@@ -573,6 +569,7 @@ export const qcTestItemSubjectFields = {
   qa_subject_actived: 1,
 };
 export const qcTestItemSpecFields = {
+  id: 0,
   qa_specification_id: null,
   qa_specification_no: null,
   qa_specification_name: null,
@@ -595,6 +592,7 @@ export const qcTestItemSpecFields = {
   qa_specification_actived: 1,
 };
 export const qcTestItemMethodFields = {
+  id: 0,
   qa_method_id: null,
   qa_method_no: null,
   qa_method_name: null,

@@ -44,7 +44,9 @@ const ItemLine = ({
   // master data
 
   const select_items = useSelector((state) =>
-    state.inventory.master_data.item_list.filter((item) => item.type_id === 9)
+    state.inventory.master_data.item_list.filter(
+      (item) => item.type_id === 9 || item.type_id === 10
+    )
   );
   const select_uoms = useSelector(
     (state) => state.inventory.master_data.item_uom

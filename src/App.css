@@ -731,3 +731,6 @@ input.ant-input.hover-border:hover {
   border: 1px solid #40a9ff;
   animation-duration: 2s;
 }
+.table-color {
+  background-color: #fafafa;
+}

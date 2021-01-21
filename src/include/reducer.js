@@ -30,6 +30,7 @@ export const mainReducer = (state, action) => {
             return { ...data, [action.payload.field_id]: index + 1 };
           })
         : state;
+      console.log(state);
       return state;
     case "DEL_ROW_2D":
       return state.filter((state, index) => index !== action.payload.id);
@@ -57,6 +58,8 @@ export const mainReducer = (state, action) => {
       return state;
     case "SET_DETAIL":
       return sortData(action.payload);
+    case "SET_DETAIL_WOC":
+      return sortDataWithoutCommit(action.payload);
     case "SET_ARRAY_2D":
       // console.log("SET_ARRAY_2D", action.payload);
       return action.payload.map((data) => sortData(data));
@@ -66,5 +69,7 @@ export const mainReducer = (state, action) => {
       return action.payload;
     case "CHANGE_HEAD_VALUE":
       return { ...state, ...action.payload };
+    case "SEARCH_DETAIL":
+      return action.payload;
   }
 };

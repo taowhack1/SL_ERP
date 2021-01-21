@@ -12,10 +12,10 @@ const Inventory = (props) => {
   // const onChange = (pagination, filters, sorter, extra) => {
   //   console.log("params", pagination, filters, sorter, extra);
   // };
-  const { appContext, setAppContext } = useContext(AppContext);
-  console.log("appContext", appContext);
+  const { mainContext, setMainContext } = useContext(AppContext);
+  console.log("mainContext", mainContext);
   useEffect(() => {
-    setAppContext({ ...appContext, config: { page: "inventory.js" } });
+    setMainContext({ ...mainContext, config: { page: "inventory.js" } });
   }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
