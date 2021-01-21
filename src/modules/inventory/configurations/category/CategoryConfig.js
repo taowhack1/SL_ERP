@@ -1,3 +1,6 @@
+import React from "react";
+import { Input } from "antd";
+
 export const categoryFields = {
   type_id: null,
   category_name: null,
@@ -7,7 +10,7 @@ export const categoryFields = {
   commit: 0,
 };
 export const categoryFieldsRequire = ["category_name", "type_id"];
-export const categoryShowColumns = [
+export const categoryShowColumns = (onSearch) => [
   {
     width: "6%",
   },
@@ -22,6 +25,15 @@ export const categoryShowColumns = [
   },
   {
     title: "Category Name",
+    dataIndex: "category_name",
+    ellipsis: true,
+  },
+  {
+    title: (
+      <>
+        <Input onChange={onSearch} />
+      </>
+    ),
     dataIndex: "category_name",
     ellipsis: true,
   },

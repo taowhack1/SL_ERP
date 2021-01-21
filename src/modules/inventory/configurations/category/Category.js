@@ -35,6 +35,9 @@ const Category = (props) => {
     setStateData();
   }, [category.length]);
 
+  const onSearch = (e) => {
+    console.log(e.target.value);
+  };
   const config = {
     projectId: current_project && current_project.project_id,
     title: current_project && current_project.project_name,
@@ -68,7 +71,7 @@ const Category = (props) => {
 
     return (
       <Table
-        columns={categoryShowColumns}
+        columns={categoryShowColumns(onSearch)}
         dataSource={sortData(result)}
         rowKey={"category_id"}
         pagination={{ pageSize: 10 }}
