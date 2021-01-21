@@ -6,7 +6,16 @@ export const uomFields = {
   uom_name_th: "",
   commit: 0,
 };
-export const uomFieldsReQuire = ["uom_no", "uom_name"];
+export const uomFieldsReQuire = ["uom_no", "uom_name", "unit_value"];
+export const uomFieldsReQuire2 = [
+  "uom_no",
+  "uom_name",
+  "unit_value",
+  "uom_name_ref",
+  "ratio",
+  "size_of_ref",
+];
+
 export const uomShowColumns = [
   {
     title: "No",
@@ -18,7 +27,7 @@ export const uomShowColumns = [
     },
   },
   {
-    title: "Uom Name",
+    title: "UoM Name",
     dataIndex: "uom_name",
     ellipsis: true,
   },

@@ -47,7 +47,9 @@ const Type = (props) => {
       setLoading(true);
       setTimeout(() => {
         const search_type = type.filter(
-          (type) => type.type_name.indexOf(value) >= 0
+          (type) =>
+            type.type_name &&
+            type.type_name.toUpperCase().indexOf(value.toUpperCase()) >= 0
         );
         setData(search_type);
         setLoading(false);

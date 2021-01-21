@@ -1,5 +1,6 @@
 import React from "react";
 import { Input } from "antd";
+import Search from "../../../../components/Search";
 
 export const categoryFields = {
   type_id: null,
@@ -31,10 +32,9 @@ export const categoryShowColumns = (onSearch) => [
   {
     title: (
       <>
-        <Input onChange={onSearch} />
+        <Search onSearch={(e) => onSearch(e, "category")} />
       </>
     ),
-    dataIndex: "category_name",
     ellipsis: true,
   },
 ];

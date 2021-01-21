@@ -40,7 +40,9 @@ function Uom(props) {
       setLoading(true);
       setTimeout(() => {
         const search_uom = uom.filter(
-          (uom) => uom.uom_name.indexOf(value) >= 0
+          (uom) =>
+            uom.uom_name &&
+            uom.uom_name.toUpperCase().indexOf(value.toUpperCase()) >= 0
         );
         setData(search_uom);
         setLoading(false);
@@ -61,7 +63,7 @@ function Uom(props) {
             <Table
               loading={loading}
               columns={uomShowColumns}
-              dataSource={sortData(uom)}
+              dataSource={sortData(data)}
               rowKey={"uom_id"}
               size={"small"}
               onRow={(record, rowIndex) => {
