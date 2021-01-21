@@ -24,7 +24,7 @@ const Transfer = () => {
     //     setLoading(false);
     //   }, 1200);
     // },
-    create: "/inventory/operation/transfer/create",
+    create: "/inventory/transfer/create",
     buttonAction: ["Create"],
     discard: "/transfer/create",
     onCancel: () => {
