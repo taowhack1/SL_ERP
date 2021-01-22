@@ -4,7 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../../../components/CustomSelect";
 import MainLayout from "../../../../components/MainLayout";
 import Authorize from "../../../system/Authorize";
-import { dataOptions, uomFields, uomFieldsReQuire } from "./UomConfig";
+import {
+  dataOptions,
+  uomFields,
+  uomFieldsReQuire,
+  uomFieldsReQuire2,
+} from "./UomConfig";
 import moment from "moment";
 import { validateFormHead } from "../../../../include/js/function_main";
 import { useHistory } from "react-router-dom";
@@ -24,6 +29,7 @@ function UomCreate(props) {
   authorize.check_authorize();
   const data =
     props.location && props.location.state ? props.location.state : 0;
+
   const [dataUomCreate, setDataUomCreate] = useState(
     data && data
       ? { ...data, commit: 1, user_name: auth.user_name }
@@ -56,7 +62,7 @@ function UomCreate(props) {
     discard: "/inventory/configurations/uom",
     onSave: (e) => {
       const key = "validate";
-      const validate = validateFormHead(dataUomCreate, uomFieldsReQuire);
+      const validate = validateFormHead(dataUomCreate, Fields);
       if (validate.validate) {
         dataUomCreate.uom_id
           ? dispatch(
@@ -90,6 +96,10 @@ function UomCreate(props) {
   const redirectToView = (id) => {
     history.push("/inventory/configurations/uom/view/" + (id ? id : "new"));
   };
+
+  const Fields = dataUomCreate.uom_name_ref
+    ? uomFieldsReQuire2
+    : uomFieldsReQuire;
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -151,7 +161,7 @@ function UomCreate(props) {
                       <Col span={18}>
                         <Input
                           name="uom_no"
-                          placeholder="Shrot Name"
+                          placeholder="Short Name"
                           onChange={(e) =>
                             upDateFormValue({ uom_no: e.target.value })
                           }
@@ -167,7 +177,7 @@ function UomCreate(props) {
                         </Text>
                       </Col>
                       <Col span={18}>
-                        <Input placeholder="Unit Value" />
+                        <Input placeholder="Unit Value" name="unit_value" />
                       </Col>
                       <Col span={1}></Col>
                     </Row>
@@ -211,9 +221,7 @@ function UomCreate(props) {
                     <Row className="col-2 row-margin-vertical">
                       <Col span={1}></Col>
                       <Col span={6}>
-                        <Text strong>
-                          <span className="require">*</span> Reference Unit :
-                        </Text>
+                        <Text strong>Reference Unit :</Text>
                       </Col>
                       <Col span={15}>
                         <CustomSelect
@@ -236,6 +244,8 @@ function UomCreate(props) {
                               : upDateFormValue({
                                   uom_id_ref: null,
                                   uom_name_ref: null,
+                                  size_of_ref: null,
+                                  ratio: null,
                                 });
                           }}
                         />
@@ -246,11 +256,23 @@ function UomCreate(props) {
                       <Col span={1}></Col>
                       <Col span={6}>
                         <Text strong>
-                          <span className="require">*</span> Ratio :
+                          <span className="require">
+                            {" "}
+                            {dataUomCreate.uom_name_ref ? "*" : ""}
+                          </span>{" "}
+                          Ratio :
                         </Text>
                       </Col>
                       <Col span={15}>
-                        <Input placeholder="e.g: 1*(reference unit)=ratio*(this unit)" />
+                        <Input
+                          disabled={dataUomCreate.uom_name_ref ? false : true}
+                          placeholder="e.g: 1*(reference unit)=ratio*(this unit)"
+                          name="ratio"
+                          onChange={(e) =>
+                            upDateFormValue({ ratio: e.target.value })
+                          }
+                          value={dataUomCreate.ratio}
+                        />
                       </Col>
                       <Col span={1}></Col>
                     </Row>
@@ -258,32 +280,34 @@ function UomCreate(props) {
                       <Col span={1}></Col>
                       <Col span={6}>
                         <Text strong>
-                          <span className="require">*</span> Type :
+                          <span className="require">
+                            {dataUomCreate.uom_name_ref ? "*" : ""}
+                          </span>{" "}
+                          Type :
                         </Text>
                       </Col>
                       <Col span={15}>
                         <CustomSelect
                           allowClear
                           showSearch
+                          disabled={dataUomCreate.uom_name_ref ? false : true}
                           placeholder={
                             "Bigger,Smaller,Equal than the reference Unit of Measure"
                           }
-                          //name="uom_name"
+                          name="size_of_ref"
                           field_id="uom_id"
                           field_name="uom_name"
-                          //value={optionSelect.value}
+                          value={dataUomCreate.size_of_ref}
                           options={dataOptions}
-                          // onChange={(dataOptions, option) => {
-                          //   data && data
-                          //     ? upDateFormValue({
-                          //         type_id: data,
-                          //         type_name: option.title,
-                          //       })
-                          //     : upDateFormValue({
-                          //         type_id: null,
-                          //         type_name: null,
-                          //       });
-                          // }}
+                          onChange={(dataOption, option) => {
+                            dataOption && dataOption
+                              ? upDateFormValue({
+                                  size_of_ref: dataOption,
+                                })
+                              : upDateFormValue({
+                                  size_of_ref: null,
+                                });
+                          }}
                         />
                       </Col>
                       <Col span={1}></Col>

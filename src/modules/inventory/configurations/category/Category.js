@@ -35,8 +35,30 @@ const Category = (props) => {
     setStateData();
   }, [category.length]);
 
-  const onSearch = (e) => {
-    console.log(e.target.value);
+  const onSearch = (value, search) => {
+    console.log(value);
+    setLoading(true);
+    search == "category"
+      ? setTimeout(() => {
+          const search_category = category.filter(
+            (category) =>
+              category.category_name &&
+              category.category_name
+                .toUpperCase()
+                .indexOf(value.toUpperCase()) >= 0
+          );
+          setData(search_category);
+          setLoading(false);
+        }, 1200)
+      : setTimeout(() => {
+          const search_type = type.filter(
+            (type) =>
+              type.type_name &&
+              type.type_name.toUpperCase().indexOf(value.toUpperCase()) >= 0
+          );
+          setDataType(search_type);
+          setLoading(false);
+        }, 1200);
   };
   const config = {
     projectId: current_project && current_project.project_id,
@@ -45,17 +67,7 @@ const Category = (props) => {
     show: true,
     breadcrumb: ["Home", "Category"],
     search: true,
-    onSearch: (value) => {
-      console.log(value);
-      setLoading(true);
-      setTimeout(() => {
-        const search_category = category.filter(
-          (category) => category.category_name.indexOf(value) >= 0
-        );
-        setData(search_category);
-        setLoading(false);
-      }, 1200);
-    },
+    onSearch,
     create: "/inventory/configurations/category/create",
     buttonAction: ["Create"],
     discard: "/category/create",
