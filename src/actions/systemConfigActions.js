@@ -1,8 +1,8 @@
-// import axios from "axios";
-import { DECIMAL_UPDATE } from "../actions/types";
+import { DECIMAL_UPDATE, GET_VAT } from "../actions/types";
+import { api_query } from "../include/js/api";
+import axios from "axios";
 // const url = "http://192.168.5.230:8080/upload";
-const url = "";
-export const decimalUpdate = (config) => {
+export const decimalUpdate = (config) => (dispatch) => {
   const configs = {
     unitDigit: config.unitDigit,
     priceDigit: config.priceDigit,
@@ -16,4 +16,22 @@ export const decimalUpdate = (config) => {
   } catch (err) {
     console.log(err);
   }
+};
+
+export const getVat = () => (dispatch) => {
+  const query = {
+    query_sql:
+      "SELECT vat_id, vat_no, vat_name,vat_cost FROM [PURCHASE].[dbo].[tb_vat] WHERE vat_actived = 1",
+  };
+  axios
+    .post(api_query, query)
+    .then((res) => {
+      dispatch({
+        type: GET_VAT,
+        payload: res.data[0],
+      });
+    })
+    .then(() => {
+      console.log("GET_VAT");
+    });
 };

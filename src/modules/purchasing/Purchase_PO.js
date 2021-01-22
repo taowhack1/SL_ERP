@@ -1,38 +1,82 @@
 import React, { useState, useEffect } from "react";
-import { withRouter, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { poColumns, poData } from "../../data/purchase/data";
+import { po_list_columns } from "./config/po";
+import {
+  get_po_list,
+  reset_po_data,
+  get_po_by_id,
+  get_open_po_list,
+} from "../../actions/purchase/PO_Actions";
+import { reset_comments } from "../../actions/comment&log";
 import $ from "jquery";
-import axios from "axios";
+import { getMasterDataItem } from "../../actions/inventory";
+import { get_vendor_payment_term_list } from "../../actions/accounting";
+
+import useKeepLogs from "../logs/useKeepLogs";
+import Authorize from "../system/Authorize";
 const PurchaseOrders = (props) => {
-  const [selectedRow, setSelectedRow] = useState();
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const keepLog = useKeepLogs();
+  const auth = useSelector((state) => state.auth.authData);
+  const current_menu = useSelector((state) => state.auth.currentMenu);
+  const dispatch = useDispatch();
+
+  const [loading, setLoading] = useState(false);
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState(poData);
+
+  useEffect(() => {
+    dispatch(get_po_list(auth.user_name));
+    dispatch(get_open_po_list());
+    dispatch(reset_po_data());
+    dispatch(get_vendor_payment_term_list());
+    dispatch(getMasterDataItem());
+    return () => {
+      dispatch(reset_comments());
+      setData([]);
+    };
+  }, [dispatch]);
+
+  const po_list = useSelector((state) => state.purchase.po.po_list);
+  useEffect(() => {
+    setData(po_list);
+    return () => setData([]);
+  }, [po_list]);
+  const [data, setData] = useState(po_list);
+
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  // useEffect(() => {
-  //   axios.get("http://localhost:3001/requisition").then((res) => {
-  //     setDataTable(res.data);
-  //   });
-  // }, []);
+
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: 2,
-    title: "PURCHASE",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Purchase Orders"],
     search: true,
     create: "/purchase/po/create",
-    buttonAction: ["Create", "Edit"],
-    edit: {
-      data: dataTable,
-      path: dataTable && "/purchase/po/edit/" + dataTable.id,
-    },
+    buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
+    edit: {},
     disabledEditBtn: !rowClick,
     discard: "/purchase/po",
     onCancel: () => {
       console.log("Cancel");
+    },
+    onSearch: (value) => {
+      console.log(value);
+      setLoading(true);
+      setTimeout(() => {
+        const search_data = po_list.filter(
+          (po) => po.po_no.indexOf(value) >= 0
+        );
+        setData(search_data);
+        setLoading(false);
+      }, 1200);
     },
   };
   return (
@@ -41,8 +85,10 @@ const PurchaseOrders = (props) => {
         <Row>
           <Col span={24}>
             <Table
-              columns={poColumns}
-              dataSource={dataTable}
+              columns={po_list_columns}
+              dataSource={data}
+              rowKey="po_id"
+              loading={loading}
               onChange={onChange}
               size="small"
               onRow={(record, rowIndex) => {
@@ -54,10 +100,10 @@ const PurchaseOrders = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    setSelectedRow(record);
+                    dispatch(get_po_by_id(record.po_id, auth.user_name));
+                    keepLog.keep_log_action(record.po_no);
                     props.history.push({
-                      pathname: "/purchase/po/view/" + record.id,
-                      state: record,
+                      pathname: "/purchase/po/view/" + record.po_id,
                     });
                   },
                 };

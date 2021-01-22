@@ -90,7 +90,7 @@ const RequisitionCreate = (props) => {
     buttonAction: editForm
       ? ["Save", "SaveConfirm", "Discard"]
       : ["Edit", "Approve", "Reject"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    action: [{ name: "Print", link: "www.google.co.th" }],
     step: {
       current: 2,
       step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
@@ -102,16 +102,16 @@ const RequisitionCreate = (props) => {
     },
     discard: "/inventory/requisition",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Save");
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
       setEdit(true);
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {
@@ -229,7 +229,7 @@ const RequisitionCreate = (props) => {
             </Col>
           </Row>
         </Form>
-        <Row className="col-2 space-top-md">
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">

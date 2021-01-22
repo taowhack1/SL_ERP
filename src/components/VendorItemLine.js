@@ -1,5 +1,4 @@
 import {
-  Form,
   Button,
   Row,
   Col,
@@ -16,6 +15,7 @@ import {
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import numeral from "numeral";
+import { convertDigit } from "../include/js/main_config";
 const { RangePicker } = DatePicker;
 const { Text } = Typography;
 
@@ -33,7 +33,7 @@ const VendorLine = ({
 
   useEffect(() => {
     updateData({ dataLine: [...lineItem] });
-  }, [lineItem]);
+  }, [lineItem, updateData]);
 
   const addLine = () => {
     setLine([
@@ -61,7 +61,7 @@ const VendorLine = ({
   const getValidate = (dateArr, type) => {
     let date = [];
     if (dateArr) {
-      if (type == "text") {
+      if (type === "text") {
         date =
           moment(dateArr[0]).format("DD/MM/YYYY") +
           "  -  " +
@@ -76,13 +76,7 @@ const VendorLine = ({
   return (
     <>
       {/* Column Header */}
-      <Row
-        style={{
-          backgroundColor: "#C6C6C6",
-          textAlign: "center",
-          // paddingLeft: 10,
-        }}
-      >
+      <Row gutter={2} className="detail-table-head">
         {columns &&
           columns.map((col, key) => {
             return (
@@ -202,7 +196,7 @@ const VendorLine = ({
               }}
               block
             >
-              <PlusOutlined /> Add field
+              <PlusOutlined /> Add a line
             </Button>
           </div>
         </>
@@ -227,14 +221,14 @@ const VendorLine = ({
                 <Text>{getValidate(line.itemValidate, "text")}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{numeral(line.itemQty).format("0,0.0000")}</Text>
+                <Text>{convertDigit(line.itemQty)}</Text>
               </Col>
 
               <Col span={3} className="text-string">
                 <Text>{line.itemUnit}</Text>
               </Col>
               <Col span={3} className="text-number">
-                <Text>{numeral(line.itemPrice).format("0,0.000")}</Text>
+                <Text>{convertDigit(line.itemPrice)}</Text>
               </Col>
             </Row>
           ))}

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Row, Col, Table, Modal } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { whColumns, warehouses, companys } from "../../data/locationData";
 import { Form, Input, Select } from "antd";
 import $ from "jquery";
+import Authorize from "../system/Authorize";
 const { Option } = Select;
 const layout = {
   labelCol: {
@@ -14,6 +15,9 @@ const layout = {
   },
 };
 const Warehouse = () => {
+  const { whColumns, warehouses, companys } = [];
+  const authorize = Authorize();
+  authorize.check_authorize();
   const [warehouseData, setwarehouseData] = useState([...warehouses]);
   const [count, setCount] = useState(warehouseData.length);
   const [visible, setVisible] = useState(false);
@@ -41,9 +45,11 @@ const Warehouse = () => {
     });
   };
 
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Warehouse"],
     search: true,
@@ -141,7 +147,7 @@ const Warehouse = () => {
           {...layout}
           preserve={false}
           name="nest-messages"
-          initialValues={modalTitle == "Create" ? newWh : editRow}
+          initialValues={modalTitle === "Create" ? newWh : editRow}
         >
           <Form.Item
             name={"whName"}

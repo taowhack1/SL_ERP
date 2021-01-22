@@ -1,108 +1,292 @@
-import React, { useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
   Col,
   Input,
-  Tabs,
-  Radio,
-  Select,
-  AutoComplete,
   Typography,
-  InputNumber,
   Checkbox,
   Space,
+  Switch,
+  message,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
-import Line from "../../components/VendorLine";
-import {
-  autoCompleteUser,
-  locationData,
-  autoCompleteUnit,
-} from "../../data/inventoryData";
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
+import {
+  createNewItems,
+  upDateItem,
+} from "../../actions/inventory/itemActions";
+import {
+  item_detail_fields,
+  item_fields,
+  item_file,
+  item_packaging_detail_fields,
+  item_formula_detail_fields,
+  item_part_specification_detail_fields,
+  item_part_specification_fields,
+  item_qa_detail_fields,
+  item_require_fields,
+  item_weight_detail,
+  item_part_mix_fields,
+} from "./config/item";
+import {
+  sum2DArrOdjWithField,
+  validateFormHead,
+} from "../../include/js/function_main";
+import { getMasterDataItem } from "../../actions/inventory";
+import { reducer } from "./reducers";
+import Authorize from "../system/Authorize";
+import { useHistory } from "react-router-dom";
+import TabPanel from "./item/TabPanel";
+import { get_all_vendor } from "../../actions/purchase/vendorActions";
+import ItemFileUpload from "./item/ItemFileUpload";
+import { get_qa_conditions_master } from "../../actions/qa/qaTestAction";
+import { get_sale_master_data } from "../../actions/sales";
+import { getAllWorkCenter } from "../../actions/production/workCenterActions";
+import { getAllMachine } from "../../actions/production/machineActions";
+import ReducerClass from "../../include/js/ReducerClass";
+import { ItemContext } from "../../include/js/context";
 import Barcode from "react-barcode";
-import { vendorColumns, vendors, companys } from "../../data/itemData";
-const { Option } = Select;
-const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+const { Text } = Typography;
 
 const ItemCreate = (props) => {
-  const data = props.location.state ? props.location.state : 0;
-  const [editForm, setEdit] = useState(true);
+  const initialStateHead = item_fields;
+  const initialStateDetail = [item_detail_fields];
+  const initialStateQA = [item_qa_detail_fields];
+  const initialStatePackaging = [item_packaging_detail_fields];
+  const initialStateWeight = item_weight_detail;
 
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          id: 0,
-          itemCode: null,
-          // itemCode: "102SLA03" + Math.floor(Math.random() * 10020),
-          itemBarcode: Math.floor(Math.random() * 12351123122122453).toString(),
-          itemName: null,
-          itemQtyOnhand: null,
-          itemUnit: 0,
-          itemCateg: "",
-          itemDesc: 0,
-          itemSold: 0,
-          itemPurchase: 1,
-          itemSalePrice: 100,
-          itemType: 0,
-          itemImg: "/",
-          vendor: [
-            {
-              id: 0,
-              vendorName: "",
-              companyName: "",
-              itemQty: 0,
-              itemUnit: "pc",
-              itemPrice: 0,
-            },
-          ],
-        }
+  const readOnly = false;
+  const history = useHistory();
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth.authData);
+  const { department_id } = useSelector((state) => state.auth.authData);
+  const itemList = useSelector((state) =>
+    state.inventory.master_data.item_list.filter((item) =>
+      [1, 2, 3, 4].includes(item.type_id)
+    )
   );
 
-  const callback = (key) => {};
+  useEffect(() => {
+    dispatch(getMasterDataItem(auth.user_name));
+    dispatch(getAllWorkCenter());
+    dispatch(get_all_vendor());
+  }, []);
 
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
-  };
+  const data = props.location.state ? props.location.state : 0;
+
+  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
+  const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
+
+  const [data_qa_detail, qaDetailDispatch] = useReducer(
+    reducer,
+    initialStateQA
+  );
+  const [data_weight_detail, weightDetailDispatch] = useReducer(
+    reducer,
+    initialStateWeight
+  );
+  const [data_packaging_detail, packagingDetailDispatch] = useReducer(
+    reducer,
+    initialStatePackaging
+  );
+  const PartReducer = new ReducerClass(
+    data.data_part,
+    null,
+    item_part_specification_fields
+  );
+  const PartDetailReducer = new ReducerClass(data.data_part_detail, null, [
+    item_part_specification_detail_fields,
+  ]);
+  const PMReducer = new ReducerClass(data.data_part_mix, null, [
+    item_part_mix_fields,
+  ]);
+  const FormulaReducer = new ReducerClass(data.data_formula, null, [
+    item_formula_detail_fields,
+  ]);
+  PartReducer.setReducer(
+    data ? (data.data_head.item_id ? "object" : "array") : "array"
+  );
+  PartDetailReducer.setReducer("array");
+  PMReducer.setReducer("array");
+  FormulaReducer.setReducer("array");
+
+  const [data_file, setFile] = useState({
+    item_image: null,
+    certificate: {
+      2: null,
+      3: null,
+      4: null,
+      5: null,
+      6: null,
+      7: null,
+      8: null,
+    },
+  });
+
+  const [formulaPercent, setPercent] = useState(0);
+  const sumPercent = useCallback((data, field) => {
+    return setPercent(sum2DArrOdjWithField(data, field));
+  }, []);
+  console.log("data.data_part", data.data_part);
+  useEffect(() => {
+    dispatch(get_sale_master_data());
+    dispatch(getAllMachine());
+    headDispatch({
+      type: "SET_HEAD",
+      payload:
+        data && data.data_head
+          ? { ...data.data_head, commit: 1, user_name: auth.user_name }
+          : { ...item_fields, commit: 1, user_name: auth.user_name },
+    });
+
+    detailDispatch({
+      type: "SET_DETAIL",
+      payload:
+        data && data.data_detail.length
+          ? data.data_detail
+          : [item_detail_fields],
+    });
+
+    qaDetailDispatch({
+      type: "SET_DETAIL",
+      payload:
+        data && data.data_qa_detail.length
+          ? data.data_qa_detail
+          : [item_qa_detail_fields],
+    });
+    weightDetailDispatch({
+      type: "SET_DETAIL",
+      payload:
+        data && data.data_weight_detail.length
+          ? data.data_weight_detail
+          : item_weight_detail,
+    });
+    packagingDetailDispatch({
+      type: "SET_DETAIL",
+      payload:
+        data && data.data_packaging_detail.length
+          ? data.data_packaging_detail
+          : [item_packaging_detail_fields],
+    });
+    console.log("data part", data.data_part);
+    PartReducer.setDataArray(data.data_part);
+    PartDetailReducer.setDataArray2D(data.data_part_detail);
+    PMReducer.setDataArray2D(data.data_part_mix);
+    FormulaReducer.setDataArray2D(data.data_formula);
+    sumPercent(data.data_formula, "item_formula_percent_qty");
+    setFile(data.data_file ?? item_file);
+  }, []);
+
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Items",
-      formData.itemCode ? "Edit" : "Create",
-      formData.itemCode && "[ " + formData.itemCode + " ] " + formData.itemName,
+      data_head.item_no ? "Edit" : "Create",
+      data_head.item_no &&
+        "[ " + data_head.item_no + " ] " + data_head.item_name,
     ],
     search: false,
-    buttonAction: editForm
-      ? ["Save", "SaveConfirm", "Discard"]
-      : ["Edit", "Approve", "Reject"],
-    action: [{ name: "print", link: "www.google.co.th" }],
-    step: {
-      // current: formData.req_step,
-      // step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
-    },
+    buttonAction: ["Save", "Discard"],
     create: "",
-    save: {
-      data: formData,
-      path: formData && "/inventory/items/view/" + formData.id,
-    },
+
+    save: "function",
     discard: "/inventory/items",
     onSave: (e) => {
-      e.preventDefault();
+      console.log("Save");
+      console.log("SAVE HEAD", data_head);
+      console.log("SAVE VENDOR DETAIL", data_detail);
+      console.log("SAVE PART", PartReducer.data);
+      console.log("SAVE PART DETAIL", PartDetailReducer.data);
+      console.log("SAVE PART MIX", PMReducer.data);
+      console.log("SAVE FORMULA", FormulaReducer.data);
+      console.log("SAVE QA", data_qa_detail);
+      console.log("SAVE WEIGHT", data_weight_detail);
+      console.log("SAVE PACKAGING", data_packaging_detail);
+      console.log("SAVE FILES", data_file);
+
+      const key = "validate";
+      const validate = validateFormHead(data_head, item_require_fields);
+      if (PartReducer.data.length > 1 && formulaPercent !== 100) {
+        message.warning({
+          content: "Please check Bulk Formula %(W/W) !!.",
+          key,
+          duration: 4,
+        });
+        return false;
+      }
+      if (
+        department_id === 13 &&
+        [1, 2].includes(data_head.type_id) &&
+        !data_detail[0].vendor_id
+      ) {
+        console.log("Purchase Person");
+        message.warning({
+          content: 'Please fill "Purchase Vendor" form completely.',
+          key,
+          duration: 4,
+        });
+        return false;
+      }
+      if (validate.validate) {
+        const data = {
+          access_right: {
+            vendor: true,
+            formula: true,
+            process: true,
+            qa: true,
+            weight: true,
+            packaging: true,
+            attach_file: true,
+          },
+          data_head: data_head,
+          data_detail: data_detail,
+          data_part: PartReducer.data,
+          data_part_detail: PartDetailReducer.data,
+          data_part_mix: PMReducer.data,
+          data_formula: FormulaReducer.data,
+          // data_process: data_production_process_detail,
+          data_qa_detail: data_qa_detail,
+          data_weight_detail: data_weight_detail,
+          data_packaging_detail: data_packaging_detail,
+          data_file: data_file,
+        };
+        data_head.item_id
+          ? dispatch(
+              upDateItem(
+                data_head.item_id,
+                data,
+                auth.user_name,
+                redirect_to_view
+              )
+            )
+          : dispatch(createNewItems(data, auth.user_name, redirect_to_view));
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+        return false;
+      }
     },
     onEdit: (e) => {
-      e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
-      e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {
@@ -110,213 +294,215 @@ const ItemCreate = (props) => {
     },
   };
 
-  const dateConfig = {
-    format: "DD/MM/YYYY HH:mm:ss",
-    value: moment(),
-    disabled: 1,
+  const upDateFormValue = (data) => {
+    headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
+  const updateFile = useCallback(
+    (data, type) => {
+      type === 1
+        ? setFile({ ...data_file, ...data })
+        : setFile({
+            ...data_file,
+            certificate: { ...data_file.certificate, ...data },
+          });
+    },
+    [data_file]
+  );
+
+  const redirect_to_view = (id) => {
+    history.push("/inventory/items/view/" + (id ? id : "new"));
+  };
+
+  useEffect(() => {
+    data_head.type_id &&
+      dispatch(get_qa_conditions_master(data_head.type_id, 1, 1, 1));
+  }, [data_head.type_id]);
+
+  const ContextValue = useMemo(() => {
+    return {
+      PartReducer,
+      PartDetailReducer,
+      PMReducer,
+      FormulaReducer,
+      readOnly,
+      data_file,
+      updateFile,
+      RMList: itemList.filter((item) => item.type_id === 1),
+      PKList: itemList.filter(
+        (item) => item.type_id === 2 || item.type_id === 4
+      ),
+      BULKList: itemList.filter((item) => item.type_id === 3),
+      formulaPercent,
+      sumPercent,
+    };
+  }, [
+    PartReducer,
+    PartDetailReducer,
+    PMReducer.data,
+    FormulaReducer,
+    readOnly,
+    data_file,
+    updateFile,
+  ]);
+  // console.log("initialStateHead ", initialStateHead);
+  // console.log("Item Pre-run :", data_head.item_pre_run_no);
   return (
-    <MainLayout {...config} data={formData}>
-      <div id="form">
-        <Row className="col-2">
-          <Col span={11}>
-            <h2>
-              <strong>{formData.itemCode ? "Edit" : "Create"} Item</strong>
-            </h2>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}></Col>
-          <Col span={8} style={{ textAlign: "right" }}>
-            <Barcode
-              value={formData.itemBarcode}
-              width={1.5}
-              height={30}
-              fontSize={14}
-            />
-          </Col>
-        </Row>
-        <Row className="col-2">
-          <Col span={24} style={{ padding: "0px 5px", marginBottom: 8 }}>
-            <Title level={5}>Name </Title>
-            <Input
-              onChange={(e) => upDateFormValue({ itemName: e.target.value })}
-              defaultValue={formData.itemName}
-            />
-          </Col>
-        </Row>
-        <Row className="col-2">
-          <Col span={24} style={{ marginLeft: 5 }}>
-            <Space align="baseline">
-              <Checkbox
-                defaultChecked={formData.itemSold}
-                onChange={(e) =>
-                  upDateFormValue({ itemSold: e.target.checked })
-                }
-              />
-              <Text>Can be sold</Text>
-            </Space>
-            <br />
-            <Space align="baseline">
-              <Checkbox
-                defaultChecked={formData.itemPurchase}
-                onChange={(e) =>
-                  upDateFormValue({ itemPurchase: e.target.checked })
-                }
-              />
-              <Text>Can be purchase</Text>
-            </Space>
-          </Col>
-        </Row>
-
-        <Row className="col-2 row-tab-margin">
-          <Col span={24}>
-            <Tabs defaultActiveKey="1" onChange={callback}>
-              <Tabs.TabPane tab="Detail" key="1">
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>Item Code </Text>
-                  </Col>
-                  <Col span={8}>
-                    <Input
-                      onChange={(e) =>
-                        upDateFormValue({ itemCode: e.target.value })
-                      }
-                      defaultValue={formData.itemCode}
-                    />
-                  </Col>
-                  <Col span={2}></Col>
-                  <Col span={3}>
-                    <Text strong>Category </Text>
-                  </Col>
-                  <Col span={8}>
-                    <Select
-                      placeholder={"Select Location"}
-                      onSelect={(data) =>
-                        upDateFormValue({
-                          itemCateg: data,
-                        })
-                      }
-                      style={{ width: "100%" }}
-                      defaultValue={formData.itemCateg}
-                    >
-                      <Option value="null"> </Option>
-                      {locationData.map((location) => {
-                        return (
-                          <Option key={location.id} value={location.id}>
-                            {location.name}
-                          </Option>
-                        );
-                      })}
-                    </Select>
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>Item barcode</Text>
-                  </Col>
-                  <Col span={8}>
-                    <Input
-                      onChange={(e) =>
-                        upDateFormValue({ itemBarcode: e.target.value })
-                      }
-                      defaultValue={formData.itemBarcode}
-                    />
-                  </Col>
-
-                  <Col span={2}></Col>
-
-                  <Col span={3}>
-                    <Text strong>Sale Price</Text>
-                  </Col>
-                  <Col span={8}>
-                    <InputNumber
-                      style={{ width: "100%" }}
-                      defaultValue={formData.itemSalePrice}
-                      precision={3}
-                      onChange={(data) => upDateFormValue({ itemPrice: data })}
-                    />
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>Unit of measure</Text>
-                  </Col>
-                  <Col span={8}>
-                    <AutoComplete
-                      options={autoCompleteUser}
-                      placceholder={"Unit of measure..."}
-                      defaultValue={formData.itemUnit}
-                      filterOption={(inputValue, option) =>
-                        option.value
-                          .toUpperCase()
-                          .indexOf(inputValue.toUpperCase()) !== -1
-                      }
-                      onSelect={(data) => upDateFormValue({ itemUnit: data })}
-                      onChange={(data) => upDateFormValue({ itemUnit: data })}
-                      style={{ width: "100%" }}
-                    />
-                  </Col>
-                  <Col span={2}></Col>
-                  <Col span={3}>
-                    <Text strong>Item Type </Text>
-                  </Col>
-                  <Col span={8}>
-                    <Radio.Group
-                      onChange={(e) =>
-                        upDateFormValue({ itemType: e.target.value })
-                      }
-                      defaultValue={formData.itemType}
-                    >
-                      <Radio value={0}>RM</Radio>
-                      <Radio value={1}>PK</Radio>
-                      <Radio value={2}>BULK</Radio>
-                      <Radio value={3}>FG</Radio>
-                      <Radio value={4}>Others</Radio>
-                    </Radio.Group>
-                  </Col>
-                </Row>
-                <Row className="col-2">
-                  <Col span={24}>
-                    <Space direction="vertical" style={{ width: "100%" }}>
-                      <Text strong>Description </Text>
-                      <TextArea
+    <ItemContext.Provider value={ContextValue}>
+      <MainLayout {...config}>
+        <div id="form">
+          <Row className="col-2">
+            <Col span={19}>
+              <Row>
+                <Col span={24}>
+                  <h2>
+                    <strong>
+                      {data_head.item_no ? "Edit" : "Create"} Item
+                    </strong>
+                  </h2>
+                </Col>
+              </Row>
+              <Row className={"col-2 row-margin-vertical"}>
+                <Col span={24}>
+                  <h3 style={{ marginBottom: 8 }}>
+                    {data_head.item_no ? (
+                      <strong>Item Code # {data_head.item_no}</strong>
+                    ) : (
+                      <strong style={{ color: "#FF8C00" }}>
+                        Pre-Running Item Code : [
+                        {data_head.item_pre_run_no.join("")}]
+                      </strong>
+                    )}
+                  </h3>
+                </Col>
+              </Row>
+              <Row className={"col-2 row-margin-vertical"}>
+                <Col span={24}>
+                  <h3>
+                    <strong>
+                      <span className="require">* </span>Description Name
+                    </strong>
+                  </h3>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={24}>
+                  <Input
+                    name="item_name"
+                    placeholder={"Description Name"}
+                    onChange={(e) =>
+                      upDateFormValue({ item_name: e.target.value })
+                    }
+                    value={data_head.item_name}
+                  />
+                </Col>
+              </Row>
+              <Row className={"col-2 row-margin-vertical"}>
+                <Col span={24}>
+                  <div style={{ marginLeft: 10, marginTop: 10 }}>
+                    <Space align="baseline">
+                      <Checkbox
+                        name="item_sale"
+                        checked={data_head.item_sale}
                         onChange={(e) =>
-                          upDateFormValue({ itemDesc: e.target.value })
+                          upDateFormValue({
+                            item_sale: e.target.checked ? 1 : 0,
+                          })
                         }
-                        defaultValue={formData.itemDesc}
                       />
+                      <Text>Can be sold</Text>
                     </Space>
-                  </Col>
-                </Row>
-              </Tabs.TabPane>
-              <Tabs.TabPane tab="Purchase" key="2">
-                <Line
-                  vendors={vendors}
-                  companys={companys}
-                  units={autoCompleteUnit}
-                  dataLine={formData.vendor ? formData.vendor : []}
-                  // autoData={autoCompleteItem}
-                  columns={vendorColumns}
-                  // readOnly={false}
-                  updateData={upDateFormValue}
-                />
-              </Tabs.TabPane>
-              {/* <Tabs.TabPane tab="Note" key="3">
-                <TextArea
-                  rows={3}
-                  placeholder={"Remark your request"}
-                  onChange={(e) =>
-                    upDateFormValue({ req_note: e.target.value })
-                  }
-                />
-              </Tabs.TabPane> */}
-            </Tabs>
-          </Col>
-        </Row>
-      </div>
-      <Comments data={[...dataComments]} />
-    </MainLayout>
+                    <br />
+                    <Space align="baseline">
+                      <Checkbox
+                        name="item_purchase"
+                        checked={data_head.item_purchase}
+                        onChange={(e) =>
+                          upDateFormValue({
+                            item_purchase: e.target.checked ? 1 : 0,
+                          })
+                        }
+                      />
+                      <Text>Can be purchase</Text>
+                    </Space>
+                    {/* {data_head.item_no && (
+                      <Space
+                        align="baseline"
+                        style={{ float: "right", marginRight: 10 }}
+                      >
+                        <Text strong>Active</Text>
+                        <Switch
+                          name="item_actived"
+                          checkedChildren={""}
+                          unCheckedChildren={""}
+                          checked={data_head.item_actived}
+                          style={{ width: 35 }}
+                          onClick={(data) =>
+                            upDateFormValue({ item_actived: data ? 1 : 0 })
+                          }
+                        />
+                      </Space>
+                    )} */}
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+            <Col span={1}></Col>
+            <Col span={4} className="text-center">
+              {/* BARCODE */}
+              <Row className={"col-2 row-margin-vertical"}>
+                <Col span={24} className={"text-right"}>
+                  {data_head.item_no && (
+                    <Barcode
+                      value={data_head.item_no}
+                      width={1}
+                      height={50}
+                      fontSize={14}
+                    />
+                  )}
+                </Col>
+              </Row>
+              <Row className={"col-2 row-margin-vertical"}>
+                <Col span={24} className={"text-left"}>
+                  <ItemFileUpload
+                    data_file={data_file}
+                    updateFile={updateFile}
+                    readOnly={false}
+                    maxFile={1}
+                    file_type_id={1}
+                    upload_type={"Card"}
+                  />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+
+          <Row className="col-2 row-tab-margin">
+            <Col span={24}>
+              {/* <FileContext.Provider value={{ data_file, updateFile }}> */}
+              <TabPanel
+                data_file={data_file}
+                updateFile={updateFile}
+                data_head={data_head}
+                headDispatch={headDispatch}
+                data_detail={data_detail}
+                detailDispatch={detailDispatch}
+                data_qa_detail={data_qa_detail}
+                qaDetailDispatch={qaDetailDispatch}
+                data_packaging_detail={data_packaging_detail}
+                packagingDetailDispatch={packagingDetailDispatch}
+                data_weight_detail={data_weight_detail}
+                weightDetailDispatch={weightDetailDispatch}
+                upDateFormValue={upDateFormValue}
+                readOnly={false}
+              />
+              {/* </FileContext.Provider> */}
+            </Col>
+          </Row>
+        </div>
+        <Comments data={[]} />
+      </MainLayout>
+    </ItemContext.Provider>
   );
 };
 
-export default ItemCreate;
+export default React.memo(ItemCreate);

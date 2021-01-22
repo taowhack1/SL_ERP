@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Row, Col, Table, Modal } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { columns, locations, warehouses } from "../../data/locationData";
 import { Form, Input, Select } from "antd";
 import $ from "jquery";
+import Authorize from "../system/Authorize";
 const { Option } = Select;
 const layout = {
   labelCol: {
@@ -14,6 +15,9 @@ const layout = {
   },
 };
 const Location = () => {
+  const { columns, locations, warehouses } = [];
+  const authorize = Authorize();
+  authorize.check_authorize();
   const [locationData, setLocationData] = useState([...locations]);
   const [count, setCount] = useState(locationData.length);
   const [visible, setVisible] = useState(false);
@@ -41,9 +45,11 @@ const Location = () => {
     });
   };
 
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Location"],
     search: true,
@@ -141,7 +147,7 @@ const Location = () => {
           {...layout}
           preserve={false}
           name="nest-messages"
-          initialValues={modalTitle == "Create" ? newLo : editRow}
+          initialValues={modalTitle === "Create" ? newLo : editRow}
         >
           <Form.Item
             name={"locationName"}

@@ -1,231 +1,279 @@
-import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Select,
-  AutoComplete,
-  Typography,
-  DatePicker,
-} from "antd";
+import React, { useEffect, useState } from "react";
+import { Row, Col, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
-
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
-import { states } from "../../data/index";
-import ItemLine from "./Sales_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
-import { items } from "../../data/items";
-import { units } from "../../data/units";
-import { itemLineColumns } from "../../data/sale/data";
-import { payment_terms } from "../../data/payment_terms";
-import { customerData, quotationData } from "../../data/sale/data";
-import numeral from "numeral";
-const { Option } = Select;
-const { TextArea } = Input;
-const { Title, Text } = Typography;
+import { useDispatch, useSelector } from "react-redux";
+import { so_actions } from "../../actions/sales";
+import Detail from "./Sales_Order_Detail";
+import ModalRemark from "../../components/Modal_Remark";
+import { get_log_by_id } from "../../actions/comment&log";
+import { report_server } from "../../include/js/main_config";
+import Authorize from "../system/Authorize";
 
+const { Text } = Typography;
 const SaleOrderView = (props) => {
-  const [tab, setTab] = useState(1);
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
-
-  // prepare autocomplete value
-  let quotationsRef = [];
-  quotationData.map((quo) => {
-    return quotationsRef.push({
-      id: quo.id,
-      name: quo.q_code,
-      value:
-        "[" +
-        quo.q_code +
-        "] " +
-        quo.c_name +
-        " ( " +
-        numeral(quo.q_total).format("0,0.00") +
-        " )",
-    });
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const dispatch = useDispatch();
+  const [tab, setTab] = useState("1");
+  const data_head = useSelector((state) => state.sales.so.so_head);
+  const data_detail = useSelector((state) => state.sales.so.so_detail);
+  const auth = useSelector((state) => state.auth.authData);
+  const dataComment = useSelector((state) => state.log.comment_log);
+  const current_project = useSelector((state) => state.auth.currentProject);
+  const [remark, setRemark] = useState("");
+  const [openRemarkModal, setOpenRemarkModal] = useState({
+    visible: false,
+    loading: false,
   });
-  let customers = [];
-  customerData.map((cus) => {
-    return customers.push({
-      id: cus.id,
-      name: cus.c_name,
-      value: "[" + cus.c_code + "] " + cus.c_name,
+  const flow =
+    data_head &&
+    data_head.data_flow_process &&
+    data_head.data_flow_process.map((step) => {
+      return step.all_group_in_node;
     });
-  });
-
-  // main data
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          id: 0,
-          so_code: null,
-          q_code: null,
-          so_delivery_date: null,
-          so_create_date: moment().format("YYYY-MM-DD"),
-          c_name: null,
-          c_company: null,
-          so_sale_person: "Sale User 1",
-          so_payment_term: null,
-          so_total: 0,
-          so_status: 0,
-          so_remark: null,
-          dataLine: [
-            {
-              id: 0,
-              item: null,
-              item_qty: 0,
-              item_unit: null,
-              item_unit_price: 0,
-              item_subtotal: 0,
-            },
-          ],
-        }
-  );
-  const isEditPage = formData && formData.so_code ? 1 : 0;
   const callback = (key) => {
     setTab(key);
   };
+  useEffect(() => {
+    console.log("get log");
+    data_head &&
+      data_head.process_id &&
+      dispatch(get_log_by_id(data_head.process_id));
+  }, [data_head]);
 
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
+  const changeProcessStatus = (process_status_id) => {
+    if (remark.trim() === "") {
+      alert("Plase write remark");
+      return false;
+    }
+    setOpenRemarkModal({ visible: false, loading: false });
+    const app_detail = {
+      //6 = reject
+      process_status_id: process_status_id,
+      user_name: auth.user_name,
+      process_id: data_head.process_id,
+      process_member_remark: remark,
+    };
+    message.success({ content: "Reject", key: "validate", duration: 1 });
+    dispatch(so_actions(app_detail, data_head.so_id));
   };
 
   const config = {
-    projectId: 3,
-    title: "SALES",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Sales Order",
-      formData.so_code ? "Edit" : "Create",
-      formData.so_code && formData.so_code,
+      "View",
+      data_head.so_no && data_head.so_no,
     ],
     search: false,
-    buttonAction: ["Edit", "Approve", "Reject", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    buttonAction: [
+      data_head && data_head.button_edit && "Edit",
+      data_head && data_head.button_confirm && "Confirm",
+      data_head && data_head.button_approve && "Approve",
+      data_head && data_head.button_reject && "Reject",
+      "Back",
+    ],
+    action: [
+      {
+        name: "Print",
+        link: `${report_server}/Report_purch/report_so.aspx?so_no=${
+          data_head && data_head.so_no
+        }`,
+      },
+      data_head &&
+        data_head.button_cancel && {
+          name: "Cancel",
+          cancel: true,
+          link: ``,
+        },
+    ],
     step: {
-      current: formData.so_status,
-      step: ["Draft", "Confirm", "Approve", "Done"],
+      current: data_head.node_stay - 1,
+      step: flow,
+      process_complete: data_head.process_complete,
     },
     create: "",
-    save: {
-      data: formData,
-      path: formData && "/sales/orders/view/" + formData.id,
-    },
     edit: {
-      data: formData,
-      path: formData && "/sales/orders/edit/" + formData.id,
+      data: { data_head: data_head, data_detail: data_detail },
+      path: data_head && "/sales/orders/edit/" + data_head.so_id,
     },
     discard: "/sales/orders",
+    back: "/sales/orders",
+    onDiscard: (e) => {
+      console.log("Discard");
+    },
+    onBack: (e) => {
+      console.log("Back");
+    },
+
     onSave: (e) => {
-      e.preventDefault();
-      setData({ so_code: "Q2002-0099", c_company: "Test Company" });
-      console.log(formData);
+      //e.preventDefault();
+      console.log("Save");
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
+      const app_detail = {
+        process_status_id: 5,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+        process_member_remark: remark,
+      };
+      dispatch(so_actions(app_detail, data_head.so_id));
     },
     onConfirm: () => {
       console.log("Confirm");
+      const app_detail = {
+        process_status_id: 2,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+      };
+      dispatch(so_actions(app_detail, data_head.so_id));
+    },
+    onReject: () => {
+      console.log("Reject");
+      setOpenRemarkModal({
+        visible: true,
+        loading: false,
+      });
+    },
+    onCancel: () => {
+      console.log("Cancel");
+      const app_detail = {
+        process_status_id: 3,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+      };
+      dispatch(so_actions(app_detail, data_head.so_id));
     },
   };
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config}>
       <div id="form">
         {/* Head */}
         <Row className="col-2">
-          <Col span={11}>
+          <Col span={8}>
             <h2>
               <strong>
-                Sales Order {isEditPage ? "#" + formData.so_code : null}
+                Sales Order {data_head.so_no ? "#" + data_head.so_no : null}
+                {data_head.tg_trans_status_id === 3 && (
+                  <Text strong type="danger">
+                    #{data_head.trans_status_name}
+                  </Text>
+                )}
               </strong>
             </h2>
           </Col>
-          <Col span={9}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
-            <Text strong>Order Date :</Text>
+            <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            {moment(
-              formData.so_create_date,
-              isEditPage ? "DD/MM/YYYY" : "YYYY-MM-DD"
-            ).format("DD/MM/YYYY")}
+            <Text className="text-view">{data_head.so_created}</Text>
           </Col>
         </Row>
 
         {/* Address & Information */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Quotations Ref.</Text>
+            <Text strong>Delivery Date</Text>
           </Col>
           <Col span={8}>
-            <Text>{formData.q_code}</Text>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Deliver Date </Text>
-          </Col>
-          <Col span={8}>
-            <Text>{formData.so_delivery_date}</Text>
+            <Text className="text-view">{data_head.tg_so_delivery_date}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Quotations Ref.</Text>
+          </Col>
+          <Col span={8}>
+            <Text className="text-view">{data_head.qn_no_description}</Text>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}>
+            <Text strong>Order Date</Text>
+          </Col>
+          <Col span={8}>
+            <Text className="text-view"> {data_head.so_order_date}</Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Description :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Text className="text-view">{data_head.so_description}</Text>
+          </Col>
+          <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Customer </Text>
           </Col>
 
           <Col span={8}>
-            <Text>{formData.c_name}</Text>
+            <Text className="text-view">{data_head.customer_no_name}</Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Agreement :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Text className="text-view">{data_head.so_agreement}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Payment Terms</Text>
           </Col>
           <Col span={8}>
-            <Text>{formData.so_payment_term}</Text>
+            <Text className="text-view">{data_head.payment_term_no_name}</Text>
           </Col>
         </Row>
-        <Row className="col-2 space-top-md">
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
-                <ItemLine
-                  items={items}
-                  units={units}
-                  // itemLots={itemLots}
-                  columns={itemLineColumns}
-                  updateData={upDateFormValue}
-                  dataLine={formData.dataLine ? formData.dataLine : [{}]}
-                  readOnly={true}
-                  formData={formData}
-                />
+                <Detail readOnly={true} data_detail={data_detail} />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key="2">
-                <Text>{formData.so_remark}</Text>
+                <Text className="text-view">{data_head.so_remark}</Text>
               </Tabs.TabPane>
             </Tabs>
           </Col>
         </Row>
-        {tab === 1 ? (
+        {tab === "1" ? (
           <TotalFooter
-            excludeVat={formData.so_total}
-            vat={formData.so_vat}
-            includeVat={formData.so_include_vat}
+            excludeVat={data_head.tg_so_sum_amount}
+            vat={data_head.tg_so_vat_amount}
+            includeVat={data_head.tg_so_total_amount}
             currency={"THB"}
           />
         ) : null}
       </div>
-      <Comments data={[...dataComments]} />
+      <ModalRemark
+        title={"Reject Remark"}
+        state={openRemarkModal}
+        onChange={setRemark}
+        onOk={() => {
+          changeProcessStatus(6);
+        }}
+        onCancel={() => {
+          setOpenRemarkModal({ visible: false, loading: false });
+          setRemark("");
+        }}
+      />
+      <Comments data={dataComment} />
     </MainLayout>
   );
 };

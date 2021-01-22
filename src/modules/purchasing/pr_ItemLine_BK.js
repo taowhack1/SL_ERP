@@ -17,7 +17,6 @@ import {
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 const { Option } = Select;
-// import { columns } from "../data";
 
 const { Text } = Typography;
 
@@ -72,13 +71,7 @@ const VendorLine = ({
   return (
     <>
       {/* Column Header */}
-      <Row
-        style={{
-          backgroundColor: "#C6C6C6",
-          textAlign: "center",
-          // paddingLeft: 10,
-        }}
-      >
+      <Row gutter={2} className="detail-table-head">
         {columns &&
           columns.map((col, key) => {
             return (
@@ -186,7 +179,7 @@ const VendorLine = ({
               }}
               block
             >
-              <PlusOutlined /> Add field
+              <PlusOutlined /> Add a line
             </Button>
           </div>
         </>

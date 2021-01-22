@@ -1,238 +1,365 @@
-import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Select,
-  AutoComplete,
-  Typography,
-  DatePicker,
-} from "antd";
+import React, { useState, useEffect, useReducer } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Row, Col, Input, Tabs, Typography, DatePicker, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
-
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
-import { states } from "../../data/index";
-import ItemLine from "./Sales_ItemLine";
 import TotalFooter from "../../components/TotalFooter";
-import { items } from "../../data/items";
-import { units } from "../../data/units";
-import { itemLineColumns } from "../../data/sale/data";
-import { payment_terms } from "../../data/payment_terms";
-import { customerData } from "../../data/sale/data";
-const { Option } = Select;
+import {
+  quotation_detail_fields,
+  quotation_fields,
+  quotation_require_fields,
+  quotation_require_fields_detail,
+} from "./configs";
+import CustomSelect from "../../components/CustomSelect";
+import { update_quotation } from "../../actions/sales";
+import { create_quotation } from "../../actions/sales";
+import axios from "axios";
+import { api_server, header_config } from "../../include/js/main_config";
+import {
+  validateFormDetail,
+  validateFormHead,
+} from "../../include/js/function_main";
+import { reducer } from "./reducers";
+import Authorize from "../system/Authorize";
+
+import { useHistory } from "react-router-dom";
+import ItemLine from "./Sales_Detail";
 const { TextArea } = Input;
-const { Title, Text } = Typography;
+const { Text } = Typography;
+
+const initialStateHead = quotation_fields;
+const initialStateDetail = [quotation_detail_fields];
 
 const CustomerCreate = (props) => {
-  const [tab, setTab] = useState(1);
+  const history = useHistory();
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const dispatch = useDispatch();
+  const [tab, setTab] = useState("1");
+  const auth = useSelector((state) => state.auth.authData);
+  const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
+  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
+  const dataComment = useSelector((state) => state.log.comment_log);
+  const current_project = useSelector((state) => state.auth.currentProject);
+  const masterData = useSelector((state) => state.sales.master_data);
+  const customer_payment_terms = useSelector(
+    (state) => state.accounting.master_data.customer_payment_terms
+  );
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  let customers = [];
-  customerData.map((cus) => {
-    return customers.push({
-      id: cus.id,
-      name: cus.c_name,
-      value: "[" + cus.c_code + "] " + cus.c_name,
+  useEffect(() => {
+    headDispatch({
+      type: "SET_HEAD",
+      payload: data
+        ? {
+            ...data,
+            commit: 1,
+            user_name: auth.user_name,
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+          }
+        : {
+            ...quotation_fields,
+            commit: 1,
+            user_name: auth.user_name,
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+            qn_created: moment().format("DD/MM/YYYY"),
+          },
     });
-  });
-  const [editForm, setEdit] = useState(true);
+  }, []);
 
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          id: 0,
-          q_code: null,
-          q_create_date: moment().format("DD/MM/YYYY"),
-          q_expire_date: null,
-          c_name: null,
-          c_company: null,
-          q_sale_person: "Sale User 1",
-          c_payment_term: null,
-          q_total: 0,
-          q_vat: 0,
-          q_include_vat: 0,
-          q_status: 0,
-          q_remark: null,
-          dataLine: [
-            {
-              id: 0,
-              item: null,
-              item_qty: 0,
-              item_unit: null,
-              item_unit_price: 0,
-              item_subtotal: 0,
-            },
-          ],
-        }
-  );
-  const callback = (key) => {
-    setTab(key);
-  };
-
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
-  };
+  useEffect(() => {
+    function getDetail() {
+      axios
+        .get(`${api_server}/api/sales/qn_detail/${data.qn_id}`, header_config)
+        .then((res) => {
+          detailDispatch({ type: "SET_DETAIL", payload: res.data[0] });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    data && getDetail();
+  }, []);
 
   const config = {
-    projectId: 3,
-    title: "SALES",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Quotations",
-      formData.q_code ? "Edit" : "Create",
-      formData.q_code && formData.q_code,
+      data_head.qn_no ? "Edit" : "Create",
+      data_head.qn_no && data_head.qn_no,
     ],
     search: false,
-    buttonAction: editForm
-      ? ["Save", "SaveConfirm", "Discard"]
-      : ["Edit", "Approve", "Reject", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
-    step: {
-      current: formData.c_status,
-      step: ["Draft", "Confirm", "Approve", "Done"],
-    },
+    buttonAction: ["Save", "Discard"],
+    step: data_head.qn_id
+      ? {
+          current: data_head.node_stay,
+          step: ["Draft", "Confirm", "Approve", "Done"],
+        }
+      : {},
     create: "",
-    save: {
-      data: formData,
-      path: formData && "/sales/quotations/view/" + formData.id,
-    },
+    save: "function",
     discard: "/sales/quotations",
     onSave: (e) => {
-      e.preventDefault();
-      setData({ q_code: "Q2002-0099", c_company: "Test Company" });
+      //e.preventDefault();
+      console.log("Save");
+      const key = "validate";
+      const validate = validateFormHead(data_head, quotation_require_fields);
+      const validate_detail = validateFormDetail(
+        data_detail,
+        quotation_require_fields_detail
+      );
+      if (validate.validate && validate_detail.validate) {
+        console.log("pass");
+        data_head.qn_id
+          ? dispatch(
+              update_quotation(
+                data_head.qn_id,
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            )
+          : dispatch(
+              create_quotation(
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            );
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {
       console.log("Confirm");
     },
   };
+  const callback = (key) => {
+    setTab(key);
+  };
+
+  const upDateFormValue = (data) => {
+    headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
+  };
+  const resetForm = () => {
+    headDispatch({
+      type: "RESET_DATA",
+      payload: {
+        ...initialStateHead,
+        commit: 1,
+        user_name: auth.user_name,
+        branch_id: auth.branch_id,
+        branch_name: auth.branch_name,
+        qn_created: moment().format("DD/MM/YYYY"),
+      },
+    });
+    detailDispatch({
+      type: "RESET_DATA",
+      payload: initialStateDetail,
+    });
+  };
+  const redirect_to_view = (id) => {
+    history.push("/sales/quotations/view/" + (id ? id : "new"));
+  };
 
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config}>
       <div id="form">
         {/* Head */}
         <Row className="col-2">
-          <Col span={11}>
+          <Col span={8}>
             <h2>
               <strong>
-                {formData.q_code ? "Edit" : "Create"} Quotations #
-                {formData.q_code && formData.q_code}
+                {data_head.qn_no ? "Edit" : "Create"} Quotations #
+                {data_head.qn_no && data_head.qn_no}
               </strong>
             </h2>
           </Col>
-          <Col span={9}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            {moment(formData.q_create_date, "DD/MM/YYYY").format("DD/MM/YYYY")}
+            {moment(data_head.qn_created, "DD/MM/YYYY").format("DD/MM/YYYY")}
           </Col>
         </Row>
-        {/* <Row className="col-2">
-          <Col span={24} style={{ marginBottom: 8 }}>
-            
-          </Col>
-        </Row> */}
-
         {/* Address & Information */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Customer </Text>
+            <Text strong>
+              <span className="require">* </span>Customer{" "}
+            </Text>
           </Col>
           <Col span={8}>
-            <AutoComplete
-              options={customers}
-              placeholder="Customer.."
-              defaultValue={formData.c_name}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ c_name: data })}
-              onChange={(data) => upDateFormValue({ c_name: data })}
-              style={{ width: "100%" }}
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"Customer"}
+              field_id="customer_id"
+              name="customer_id"
+              field_name="customer_no_name"
+              value={data_head.customer_no_name}
+              data={masterData.customers}
+              onChange={(data, option) => {
+                console.log(option);
+                data && data
+                  ? upDateFormValue({
+                      currency_id: option.data.currency_id,
+                      currency_no: option.data.currency_no,
+                      customer_id: option.data.customer_id,
+                      customer_no_name: option.data.customer_no_name,
+                      payment_term_id: option.data.payment_term_id,
+                      payment_term_no_name: option.data.payment_term_no_name,
+                      vat_id: option.data.vat_id,
+                      vat_rate: option.data.vat_rate,
+                      vat_name: option.data.vat_name,
+                    })
+                  : resetForm();
+              }}
             />
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Expire Date </Text>
+            <Text strong>
+              <span className="require">* </span>Expire Date{" "}
+            </Text>
           </Col>
           <Col span={8}>
             <DatePicker
-              name={"q_expire_date"}
               format={"DD/MM/YYYY"}
               style={{ width: "100%" }}
-              placeholder="Due date..."
-              defaultValue={
-                formData.q_expire_date
-                  ? moment(formData.q_expire_date, "DD/MM/YYYY")
+              name="qn_exp_date"
+              placeholder="Expire Date"
+              value={
+                data_head.qn_exp_date
+                  ? moment(data_head.qn_exp_date, "DD/MM/YYYY")
                   : ""
               }
               onChange={(data) => {
                 upDateFormValue({
-                  q_expire_date: data.format("DD/MM/YYYY"),
+                  qn_exp_date: data.format("DD/MM/YYYY"),
                 });
               }}
             />
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}></Col>
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Description :
+            </Text>
+          </Col>
 
-          <Col span={8}></Col>
+          <Col span={8}>
+            <Input
+              name="qn_description"
+              onChange={(e) =>
+                upDateFormValue({ qn_description: e.target.value })
+              }
+              value={data_head.qn_description}
+              placeholder="Description"
+            ></Input>
+          </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Payment Terms</Text>
+            <Text strong>
+              <span className="require">* </span>Payment Terms
+            </Text>
           </Col>
           <Col span={8}>
-            <AutoComplete
-              options={payment_terms}
-              placeholder="Payment Terms..."
-              defaultValue={formData.c_payment_term}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ c_payment_term: data })}
-              onChange={(data) => upDateFormValue({ c_payment_term: data })}
-              style={{ width: "100%" }}
+            <CustomSelect
+              allowClear
+              showSearch
+              name="payment_term_id"
+              placeholder={"Payment Term"}
+              field_id="payment_term_id"
+              field_name="payment_term_no_name"
+              value={data_head.payment_term_no_name}
+              data={customer_payment_terms}
+              onChange={(data, option) => {
+                data && data
+                  ? upDateFormValue({
+                      ...option.data,
+                    })
+                  : upDateFormValue({
+                      payment_term_no_name: null,
+                      payment_term_id: null,
+                      payment_term_name: null,
+                      payment_term_no: null,
+                    });
+              }}
             />
           </Col>
         </Row>
-        <Row className="col-2 space-top-md">
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Agreement :
+            </Text>
+          </Col>
+
+          <Col span={8}>
+            <Input
+              name="qn_agreement"
+              onChange={(e) =>
+                upDateFormValue({ qn_agreement: e.target.value })
+              }
+              value={data_head.qn_agreement}
+              placeholder="Agreement"
+            ></Input>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}>
+            <Text strong>Currency :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Text>{data_head.currency_no}</Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
                 <ItemLine
-                  items={items}
-                  units={units}
-                  // itemLots={itemLots}
-                  columns={itemLineColumns}
-                  updateData={upDateFormValue}
-                  dataLine={formData.dataLine ? formData.dataLine : []}
+                  qn_id={data_head.qn_id}
                   readOnly={false}
+                  data_detail={data_detail}
+                  vat_rate={data_head.vat_rate}
+                  detailDispatch={detailDispatch}
+                  headDispatch={headDispatch}
+                  project="quotation"
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key="2">
                 <TextArea
                   rows={2}
+                  name="qn_remark"
                   placeholder={"Remark..."}
-                  defaultValue={formData.q_remark}
+                  defaultValue={data_head.qn_remark}
                   onChange={(e) =>
-                    upDateFormValue({ q_remark: e.target.value })
+                    upDateFormValue({ qn_remark: e.target.value })
                   }
                   style={{ width: "100%" }}
                 />
@@ -240,18 +367,18 @@ const CustomerCreate = (props) => {
             </Tabs>
           </Col>
         </Row>
-        {tab === 1 ? (
+        {tab === "1" && (
           <TotalFooter
-            excludeVat={formData.q_total}
-            vat={formData.q_vat}
-            includeVat={formData.q_include_vat}
+            excludeVat={data_head.tg_qn_sum_amount}
+            vat={data_head.tg_qn_vat_amount}
+            includeVat={data_head.tg_qn_total_amount}
             currency={"THB"}
           />
-        ) : null}
+        )}
       </div>
-      <Comments data={[...dataComments]} />
+      <Comments data={dataComment} />
     </MainLayout>
   );
 };
 
-export default CustomerCreate;
+export default React.memo(CustomerCreate);

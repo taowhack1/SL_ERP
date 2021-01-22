@@ -1,41 +1,54 @@
-import React, { useState, useEffect } from "react";
-import { withRouter, Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { quotationColumns, quotationData } from "../../data/sale/data";
-import $ from "jquery";
-import axios from "axios";
+import { quotationColumns } from "./configs";
+import {
+  get_sale_master_data,
+  get_quotation_by_id,
+  get_quotation_list,
+  reset_qn,
+} from "../../actions/sales";
+import { reset_comments } from "../../actions/comment&log";
+import { getMasterDataItem } from "../../actions/inventory";
+import Authorize from "../system/Authorize";
+import useKeepLogs from "../logs/useKeepLogs";
 const Quotations = (props) => {
-  const [selectedRow, setSelectedRow] = useState();
-  const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState(quotationData && quotationData);
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const current_menu = useSelector((state) => state.auth.currentMenu);
+  const auth = useSelector((state) => state.auth.authData);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(reset_qn());
+    dispatch(reset_comments());
+    dispatch(get_sale_master_data());
+    dispatch(get_quotation_list(auth.user_name));
+    dispatch(getMasterDataItem());
+  }, []);
+
+  const dataTable = useSelector((state) => state.sales.qn.qn_list);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  // useEffect(() => {
-  //   axios.get("http://localhost:3001/requisition").then((res) => {
-  //     setDataTable(res.data);
-  //   });
-  // }, []);
+
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: 3,
-    title: "SALES",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Quotations"],
     search: true,
     create: "/sales/quotations/create",
-    buttonAction: ["Create", "Edit"],
-    edit: {
-      data: selectedRow,
-      path: selectedRow && "/sales/quotations/edit/" + selectedRow.id,
-    },
-    disabledEditBtn: !rowClick,
+    buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     discard: "/sales/quotations",
     onCancel: () => {
       console.log("Cancel");
     },
   };
-
   return (
     <div>
       <MainLayout {...config}>
@@ -45,21 +58,16 @@ const Quotations = (props) => {
               columns={quotationColumns}
               dataSource={dataTable}
               onChange={onChange}
+              rowKey="qn_id"
               size="small"
               rowClassName="row-pointer"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
-                    setRowClick(true);
-                    $(e.target)
-                      .closest("tbody")
-                      .find("tr")
-                      .removeClass("selected-row");
-                    $(e.target).closest("tr").addClass("selected-row");
-                    setSelectedRow(record);
+                    dispatch(get_quotation_by_id(record.qn_id, auth.user_name));
+                    keepLog.keep_log_action(record.qn_no);
                     props.history.push({
-                      pathname: "/sales/quotations/view/" + record.id,
-                      state: record,
+                      pathname: "/sales/quotations/view/" + record.qn_id,
                     });
                   },
                 };

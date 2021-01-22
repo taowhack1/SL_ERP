@@ -1,19 +1,23 @@
-import React, { Component, useState } from "react";
-import { withRouter, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
-import { columnsMove, dataMove } from "../../data/inventoryData";
 import $ from "jquery";
-const Requisition = (props) => {
-  const [selectedRow, setSelectedRow] = useState();
+import Authorize from "../system/Authorize";
+const StockMove = (props) => {
+  const { columnsMove, dataMove } = [];
+  const authorize = Authorize();
+  authorize.check_authorize();
   const [rowClick, setRowClick] = useState(false);
-  const [dataTable, setDataTable] = useState(dataMove);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Stock move"],
     search: true,
@@ -37,7 +41,7 @@ const Requisition = (props) => {
           <Col span={24}>
             <Table
               columns={columnsMove}
-              dataSource={dataTable}
+              dataSource={dataMove}
               onChange={onChange}
               size="small"
               onRow={(record, rowIndex) => {
@@ -49,7 +53,6 @@ const Requisition = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    setSelectedRow(record);
                   },
                 };
               }}
@@ -61,4 +64,4 @@ const Requisition = (props) => {
   );
 };
 
-export default withRouter(Requisition);
+export default withRouter(StockMove);

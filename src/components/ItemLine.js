@@ -1,5 +1,4 @@
 import {
-  Form,
   Button,
   Row,
   Col,
@@ -14,9 +13,7 @@ import {
   EllipsisOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import CustomAutoComplete from "./AutoComplete";
 const { Option } = Select;
-// import { columns } from "../data";
 
 const { Text } = Typography;
 
@@ -66,13 +63,7 @@ const VendorLine = ({
   return (
     <>
       {/* Column Header */}
-      <Row
-        style={{
-          backgroundColor: "#C6C6C6",
-          textAlign: "center",
-          // paddingLeft: 10,
-        }}
-      >
+      <Row gutter={2} className="detail-table-head">
         {columns &&
           columns.map((col, key) => {
             return (
@@ -116,6 +107,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { item_name: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={3} className="text-number">
@@ -130,6 +122,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { item_qty: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={3} className="text-string">
@@ -142,6 +135,7 @@ const VendorLine = ({
                   }
                   style={{ width: "100%" }}
                   defaultValue={line.item_lot}
+                  size="small"
                 >
                   <Option value="null"> </Option>
                   {itemLots.map((lot) => {
@@ -166,6 +160,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { item_qty_done: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={3} className="text-string">
@@ -182,6 +177,7 @@ const VendorLine = ({
                   onChange={(data) =>
                     onChangeValue(line.id, { item_unit: data })
                   }
+                  size="small"
                 />
               </Col>
               <Col span={1} style={{ textAlign: "center" }}>
@@ -197,7 +193,7 @@ const VendorLine = ({
               }}
               block
             >
-              <PlusOutlined /> Add field
+              <PlusOutlined /> Add a line
             </Button>
           </div>
         </>

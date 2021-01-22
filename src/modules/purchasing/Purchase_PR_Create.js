@@ -1,254 +1,360 @@
-import React, { useState, useEffect } from "react";
-import {
-  Row,
-  Col,
-  Form,
-  Input,
-  Tabs,
-  DatePicker,
-  Radio,
-  Select,
-  AutoComplete,
-  Typography,
-  Space,
-} from "antd";
+import React, { useState, useEffect, useReducer } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Row, Col, Input, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import ItemLine from "./pr_ItemLine";
 import {
-  autoCompleteUser,
-  autoCompleteItem,
-  locationData,
-  autoCompleteUnit,
-  reqItemLine,
-} from "../../data/inventoryData";
-import { costcenter } from "../../data/costcenterData";
+  validateFormDetail,
+  validateFormHead,
+} from "../../include/js/function_main";
 import Comments from "../../components/Comments";
-import { dataComments, itemLots } from "../../data";
-import { prItemColumns } from "../../data/purchase/pr_ItemLineData";
-import { vendors } from "../../data/purchase/data";
-import $ from "jquery";
-import axios from "axios";
-const { Option } = Select;
+import {
+  pr_fields,
+  pr_detail_fields,
+  pr_require_fields,
+  pr_require_fields_detail,
+} from "./config/pr";
+import {
+  reset_pr_data,
+  create_pr,
+  update_pr,
+} from "../../actions/purchase/PR_Actions";
+import CustomSelect from "../../components/CustomSelect";
+import TotalFooter from "../../components/TotalFooter";
+import { reducer } from "./reducers";
+import { withRouter } from "react-router-dom";
+
+import Authorize from "../system/Authorize";
+
 const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+const { Text } = Typography;
+
+const initialStateHead = pr_fields;
+const initialStateDetail = [pr_detail_fields];
 
 const PurchaseRequisitionCreate = (props) => {
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const dispatch = useDispatch();
+  const [tab, setTab] = useState("1");
+  const auth = useSelector((state) => state.auth.authData);
+  const dataComments = useSelector((state) => state.log.comment_log);
+  const cost_centers = useSelector((state) => state.hrm.cost_center);
+  const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
+  const { item_type } = useSelector((state) => state.inventory.master_data);
+
+  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
+  const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  const [editForm, setEdit] = useState(true);
+  console.log("data", data);
+  const flow =
+    data_head &&
+    data_head.data_flow_process &&
+    data_head.data_flow_process.map((step) => {
+      return step.all_group_in_node;
+    });
+  useEffect(() => {
+    headDispatch({
+      type: "SET_HEAD",
+      payload: data.data_head
+        ? {
+            ...data.data_head,
+            commit: 1,
+            user_name: auth.user_name,
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+          }
+        : {
+            ...pr_fields,
+            commit: 1,
+            pr_created_by_no_name: auth.employee_no_name_eng,
+            user_name: auth.user_name,
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+            pr_created: moment().format("DD/MM/YYYY"),
+          },
+    });
+    detailDispatch({
+      type: "SET_DETAIL",
+      payload: data.data_detail ? data.data_detail : [pr_detail_fields],
+    });
+  }, [dispatch]);
 
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          id: 0,
-          pr_code: null,
-          pr_date: moment().format("DD/MM/YYYY"),
-          pr_empId: "",
-          pr_dueDate: "",
-          pr_desc: null,
-          pr_costCenter: null,
-          v_id: 0,
-          v_name: "",
-          dataLine: [{}],
-        }
-  );
-  const callback = (key) => {};
+  const callback = (key) => {
+    setTab(key);
+  };
 
   const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
+    Object.keys(data).includes("type_id") &&
+      detailDispatch({ type: "SET_DETAIL", payload: [pr_detail_fields] });
+    headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
-
-  const updateItemLine = (data) => {
-    setData({ ...formData, ...data });
-  };
-  const submitForm = (values) => {};
-
-  const getItemType = (typeId) => {
-    switch (typeId) {
-      case 0:
-        return "Raw Material";
-      case 1:
-        return "Packaging";
-      case 2:
-        return "Bluk";
-      case 3:
-        return "Finish Good";
-      default:
-        return "Others";
-    }
-  };
-
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: 2,
-    title: "PURCHASE",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Purchase Requisition",
-      formData.pr_code ? "Edit" : "Create",
-      formData.pr_code && formData.pr_code,
+      data_head.pr_no ? "Edit" : "Create",
+      data_head.pr_no && data_head.pr_no,
     ],
     search: false,
-    buttonAction: editForm
-      ? ["Save", "SaveConfirm", "Discard"]
-      : ["Edit", "Approve", "Reject"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    buttonAction: ["Save", "Discard"],
     step: {
-      current: formData.req_step,
-      step: ["User", "Manager", "Purchase", "Manager Purchase", "Board"],
+      current: data_head.node_stay - 1,
+      step: flow,
+      process_complete: data_head.process_complete,
     },
     create: "",
-    save: {
-      data: formData,
-      path: formData && "/purchase/pr/view/" + formData.id,
-    },
+    save: "function",
     discard: "/purchase/pr",
+    onDiscard: (e) => {
+      dispatch(reset_pr_data());
+    },
     onSave: (e) => {
-      e.preventDefault();
       console.log("Save");
-    },
-    onEdit: (e) => {
-      e.preventDefault();
-      console.log("Edit");
-      setEdit(true);
-    },
-    onApprove: (e) => {
-      e.preventDefault();
-      console.log("Approve");
+      const key = "validate";
+      message.loading({ content: "Validating...", key });
+      const validate = validateFormHead(data_head, pr_require_fields);
+      const validate_detail = validateFormDetail(
+        data_detail,
+        pr_require_fields_detail
+      );
+      if (validate.validate && validate_detail.validate) {
+        data_head.pr_id
+          ? dispatch(
+              update_pr(
+                data_head.pr_id,
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            )
+          : dispatch(
+              create_pr(
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            );
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
     onConfirm: () => {
       console.log("Confirm");
     },
   };
-
-  const dateConfig = {
-    format: "DD/MM/YYYY HH:mm:ss",
-    value: moment(),
-    disabled: 1,
+  const redirect_to_view = () => {
+    props.history.push(
+      "/purchase/pr/view/" + (data_head.pr_id ? data_head.pr_id : "new")
+    );
   };
-
-  const formConfig = {
-    name: "req_form",
-    size: "small",
-    onFinish: (values) => {
-      submitForm(values);
-    },
-  };
+  console.log("PR DATA", data_head, data_detail);
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config}>
       <div id="form">
+        {/* Head */}
         <Row className="col-2">
-          <Col span={20}>
+          <Col span={8}>
             <h2>
               <strong>
-                {formData.pr_code ? "Edit" : "Create"} Purchase Requisition
+                <Text strong>
+                  {data_head.pr_no ? "Edit" : "Create"} Purchase Requisition
+                </Text>
               </strong>
             </h2>
           </Col>
-          <Col span={4}>
+          <Col span={12}></Col>
+          <Col span={2}>
             <Text strong>PR Date : </Text>
-            {formData.pr_date}
+          </Col>
+          <Col span={2} className="text-center">
+            <Text>{data_head.pr_created}</Text>
           </Col>
         </Row>
         <Row className="col-2" style={{ marginBottom: 20 }}>
-          {formData.pr_code && (
+          {data_head.pr_no && (
             <h3>
-              <b>Ref. Code : </b>
-              {formData.pr_code}
+              <b>PR No. : </b>
+              {data_head.pr_no}
             </h3>
           )}
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className="col-2 row-margin-vertical-lg">
           <Col span={3}>
-            <Text strong>Cost Center :</Text>
+            <Text strong>Request by :</Text>
           </Col>
 
+          <Col span={8}>{data_head.pr_created_by_no_name}</Col>
+          <Col span={2}></Col>
+        </Row>
+
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Cost center :
+            </Text>
+          </Col>
           <Col span={8}>
-            <AutoComplete
-              name={"pr_costCenter"}
-              options={costcenter}
-              placceholder={"Costcenter..."}
-              defaultValue={formData.pr_costCenter}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ pr_costCenter: data })}
-              onChange={(data) => upDateFormValue({ pr_costCenter: data })}
-              style={{ width: "100%" }}
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"Cost Center"}
+              name="cost_center_id"
+              field_id="cost_center_id"
+              field_name="cost_center_no_name"
+              value={data_head.cost_center_no_name}
+              data={cost_centers}
+              onChange={(data, option) => {
+                data && data
+                  ? upDateFormValue({
+                      cost_center_id: data,
+                      cost_center_no_name: option.title,
+                    })
+                  : upDateFormValue({
+                      cost_center_id: null,
+                      cost_center_no_name: null,
+                    });
+              }}
             />
           </Col>
-          <Col span={1}></Col>
-          <Col span={4}>{/* <Text strong>Due Date :</Text> */}</Col>
-          <Col span={8}>
-            {/* <DatePicker
-              name={"pr_dueDate"}
-              format={dateConfig.format}
-              style={{ width: "100%" }}
-              placeholder="Due date..."
-              defaultValue={
-                formData.pr_dueDate
-                  ? moment(formData.pr_dueDate, "YYYY-MM-DD HH:mm:ss")
-                  : ""
-              }
-              onChange={(data) => {
-                upDateFormValue({
-                  pr_dueDate: data.format("YYYY-MM-DD HH:mm:ss"),
-                });
-              }}
-            /> */}
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
+          <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Vendor :</Text>
           </Col>
           <Col span={8}>
-            <AutoComplete
-              name={"v_name"}
-              options={vendors}
-              placceholder={"Vendor..."}
-              defaultValue={formData.v_name}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ v_name: data })}
-              onChange={(data) => upDateFormValue({ v_name: data })}
-              style={{ width: "100%" }}
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"Vendor"}
+              name="vendor_id"
+              field_id="vendor_id"
+              field_name="vendor_no_name"
+              value={data_head.vendor_no_name}
+              data={vendors}
+              onChange={(data, option) => {
+                data && data
+                  ? upDateFormValue({
+                      vendor_id: data,
+                      vendor_no_name: option.title,
+                    })
+                  : upDateFormValue({
+                      vendor_id: null,
+                      vendor_no_name: null,
+                    });
+              }}
             />
           </Col>
         </Row>
-        <Row className="col-2 space-top-md">
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Description :
+            </Text>
+          </Col>
+
+          <Col span={8}>
+            <Input
+              onChange={(e) =>
+                upDateFormValue({ pr_description: e.target.value })
+              }
+              name={"pr_description"}
+              value={data_head.pr_description}
+              placeholder="Description"
+            ></Input>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}>
+            <Text strong>Currency :</Text>
+          </Col>
+          <Col span={8}>
+            {data_head.currency_no ? data_head.currency_no : "THB"}
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Item Type :
+            </Text>
+          </Col>
+
+          <Col span={8}>
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"Item type"}
+              name="type_id"
+              field_id="type_id"
+              field_name="type_name"
+              value={data_head.type_name}
+              data={item_type.filter(
+                (type) =>
+                  type.type_id !== 3 && type.type_id !== 4 && type.type_id !== 5
+              )}
+              onChange={(data, option) => {
+                data && data
+                  ? upDateFormValue({
+                      type_id: data,
+                      type_name: option.title,
+                    })
+                  : upDateFormValue({
+                      type_id: null,
+                      type_name: null,
+                    });
+              }}
+            />
+          </Col>
+        </Row>
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
                 <ItemLine
-                  items={autoCompleteItem}
-                  units={autoCompleteUnit}
-                  itemLots={itemLots}
-                  columns={prItemColumns}
-                  updateData={updateItemLine}
-                  dataLine={formData.dataLine ? formData.dataLine : []}
+                  type_id={data_head.type_id}
+                  data_detail={data_detail}
                   readOnly={false}
+                  detailDispatch={detailDispatch}
+                  headDispatch={headDispatch}
+                  vat_rate={data_head.vat_rate}
                 />
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Reason & Description" key="2">
+              <Tabs.TabPane tab="Notes" key="2">
                 <TextArea
-                  onChange={(e) => upDateFormValue({ pr_desc: e.target.value })}
-                  defaultValue={formData.pr_desc}
-                  placeholder="Reason & Description"
+                  onChange={(e) =>
+                    upDateFormValue({ pr_remark: e.target.value })
+                  }
+                  value={data_head.pr_remark}
+                  placeholder="Remark"
                 />
               </Tabs.TabPane>
             </Tabs>
           </Col>
         </Row>
+        {tab === "1" && (
+          <TotalFooter
+            excludeVat={data_head.tg_pr_sum_amount}
+            vat={data_head.tg_pr_vat_amount}
+            includeVat={data_head.tg_pr_total_amount}
+            currency={data_head.currency_no}
+          />
+        )}
       </div>
-      <Comments data={[...dataComments]} />
+
+      <Comments data={dataComments} />
     </MainLayout>
   );
 };
 
-export default PurchaseRequisitionCreate;
+export default withRouter(PurchaseRequisitionCreate);

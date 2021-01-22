@@ -1,281 +1,316 @@
-import React, { useState } from "react";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Radio,
-  Select,
-  AutoComplete,
-  Typography,
-  InputNumber,
-  Checkbox,
-  Space,
-} from "antd";
-import { CheckSquareOutlined, BorderOutlined } from "@ant-design/icons";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Row, Col, Typography, Space, Switch, message } from "antd";
 import MainLayout from "../../components/MainLayout";
-import moment from "moment";
-import Line from "../../components/VendorLine";
-import {
-  autoCompleteUser,
-  locationData,
-  autoCompleteUnit,
-} from "../../data/inventoryData";
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
+import { item_actions } from "../../actions/inventory/itemActions";
+import { getMasterDataItem } from "../../actions/inventory";
+import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import Authorize from "../system/Authorize";
+import ItemPreview from "./item/ItemFileUpload";
+import TabPanel from "./item/TabPanel";
+import { get_log_by_id } from "../../actions/comment&log";
+import ModalRemark from "../../components/Modal_Remark";
+import { FileContext, ItemContext } from "../../include/js/context";
+import { sum2DArrOdjWithField } from "../../include/js/function_main";
 import Barcode from "react-barcode";
-import { vendorColumns, vendors, companys } from "../../data/itemData";
-const { Option } = Select;
-const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
 
+const { Text } = Typography;
 const ItemView = (props) => {
-  const data = props.location.state ? props.location.state : 0;
-  const [editForm, setEdit] = useState(true);
+  const readOnly = true;
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth.authData);
+  const { department_id } = useSelector((state) => state.auth.authData);
+  const {
+    data_head,
+    data_detail,
+    data_part,
+    data_part_detail,
+    data_part_mix,
+    data_formula,
+    data_qa_detail,
+    data_weight_detail,
+    data_packaging_detail,
+    data_file,
+  } = useSelector((state) => state.inventory.item);
 
-  const [formData, setData] = useState(
-    // data && data
-    //   ? data
-    //   :
-    {
-      id: 0,
-      itemName: "TEST PRODUCT NAME",
-      itemCode: "102SLA03" + Math.floor(Math.random() * 10020),
-      itemBarcode: Math.floor(Math.random() * 12351123122122453).toString(),
+  const dataComment = useSelector((state) => state.log.comment_log);
+  const [remark, setRemark] = useState("");
+  const [openRemarkModal, setOpenRemarkModal] = useState({
+    visible: false,
+    loading: false,
+  });
+  const flow =
+    data_head.data_flow_process &&
+    data_head.data_flow_process.map((step) => {
+      return step.all_group_in_node;
+    });
+  const changeProcessStatus = (process_status_id) => {
+    if (remark.trim() === "") {
+      alert("Plase write remark");
+      return false;
+    }
+    setOpenRemarkModal({ visible: false, loading: false });
+    const app_detail = {
+      process_status_id: process_status_id,
+      user_name: auth.user_name,
+      process_id: data_head.process_id,
+      process_member_remark: remark,
+    };
+    message.success({ content: "Reject", key: "validate", duration: 1 });
+    dispatch(item_actions(app_detail, data_head.item_id));
+    setRemark("");
+  };
 
-      itemQtyOnhand: null,
-      itemUnit: 0,
-      itemCateg: 0,
-      itemDesc: "ทดสอบบันทึก",
-      itemSold: 0,
-      itemPurchase: 1,
-      itemSalePrice: 100,
-      itemType: 0,
-      itemImg: "/",
-      vendor: [
-        {
-          id: 0,
-          vendorName: "vendorName",
-          companyName: "companyName",
-          itemQty: 0,
-          itemUnit: "pc",
-          itemPrice: 100.25,
-        },
-      ],
-    }
-  );
-  const callback = (key) => {};
+  useEffect(() => {
+    dispatch(getMasterDataItem());
+  }, []);
+  useEffect(() => {
+    data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
+  }, [data_head]);
 
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
-  };
-  const getCategName = (id) => {
-    switch (id) {
-      case 0:
-        return "Raw Material";
-      case 1:
-        return "Packaging";
-      case 2:
-        return "Bulk";
-      case 3:
-        return "Finish Good";
-      default:
-        break;
-    }
-  };
-  const getUnitName = (id) => {
-    switch (id) {
-      case 0:
-        return "unit";
-      case 1:
-        return "pc";
-      case 2:
-        return "liter";
-      case 3:
-        return "pack";
-      default:
-        return id;
-    }
-  };
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Items",
       "View",
-      formData.itemCode && "[ " + formData.itemCode + " ] " + formData.itemName,
+      data_head.item_no &&
+        "[ " + data_head.item_no + " ] " + data_head.item_name,
     ],
     search: false,
-    buttonAction: ["Edit", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
-    step: {},
+    buttonAction: [
+      "Edit",
+      // data_head.button_edit && "Edit",
+      data_head.button_confirm && "Confirm",
+      data_head.button_approve && "Approve",
+      data_head.button_reject && "Reject",
+      "Back",
+    ],
     create: "",
-    save: {},
     edit: {
-      data: formData,
-      path: formData && "/inventory/items/edit/" + formData.id,
+      data: {
+        data_head: data_head,
+        data_detail: data_detail,
+        data_part: data_part,
+        data_part_detail: data_part_detail,
+        data_part_mix: data_part_mix,
+        data_formula: data_formula,
+        // data_process: data_process,
+        data_qa_detail: data_qa_detail,
+        data_weight_detail: data_weight_detail,
+        data_packaging_detail: data_packaging_detail,
+        data_file: data_file,
+      },
+      path: data_head && "/inventory/items/edit/" + data_head.item_id,
     },
+    step: {
+      current: data_head.node_stay - 1,
+      step: flow,
+      process_complete: data_head.process_complete,
+    },
+    // save: "function",
     discard: "/inventory/items",
+    back: "/inventory/items",
     onSave: (e) => {
-      e.preventDefault();
-      console.log(formData);
+      //e.preventDefault();
+      console.log("Save");
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
-      e.preventDefault();
-      console.log("Approve");
+      if (
+        department_id === 13 &&
+        [1, 2].includes(data_head.type_id) &&
+        !data_detail.length
+        // !data_detail[0].vendor_id
+      ) {
+        console.log("Purchase Person");
+        message.warning({
+          content: 'Please fill "Purchase Vendor" form completely.',
+          key: "validate",
+          duration: 4,
+        });
+        return false;
+      } else {
+        console.log("Approve");
+        const app_detail = {
+          process_status_id: 5,
+          user_name: auth.user_name,
+          process_id: data_head.process_id,
+          process_member_remark: remark,
+        };
+        dispatch(item_actions(app_detail, data_head.item_id));
+      }
     },
     onConfirm: () => {
+      const app_detail = {
+        process_status_id: 2,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+      };
+      dispatch(item_actions(app_detail, data_head.item_id));
       console.log("Confirm");
     },
+    onReject: () => {
+      console.log("Reject");
+      setOpenRemarkModal({
+        visible: true,
+        loading: false,
+      });
+    },
+    onCancel: () => {
+      console.log("Cancel");
+      const app_detail = {
+        process_status_id: 3,
+        user_name: auth.user_name,
+        process_id: data_head.process_id,
+      };
+      dispatch(item_actions(app_detail, data_head.item_id));
+    },
   };
+  const ContextValue = useMemo(() => {
+    return {
+      readOnly,
+      data_file,
+      PartReducer: {
+        data: data_part,
+      },
+      PMReducer: {
+        data: data_part_mix,
+      },
+      PartDetailReducer: {
+        data: data_part_detail,
+      },
+      FormulaReducer: {
+        data: data_formula,
+      },
+      formulaPercent: sum2DArrOdjWithField(
+        data_formula,
+        "item_formula_percent_qty"
+      ),
+    };
+  }, [readOnly, data_file]);
   return (
-    <MainLayout {...config}>
-      <div id="form">
-        <Row className="col-2">
-          <Col span={11}>
-            {/* <h2>
-              <strong>Item</strong>
-            </h2> */}
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}></Col>
-          <Col span={8} style={{ textAlign: "right" }}>
-            <Barcode
-              value={formData.itemBarcode}
-              width={1.5}
-              height={30}
-              fontSize={14}
-            />
-          </Col>
-        </Row>
-        <Row className="col-2">
-          <Col span={24} style={{ padding: "0px 5px", marginBottom: 8 }}>
-            {/* <Input
-              onChange={(e) => upDateFormValue({ itemName: e.target.value })}
-              defaultValue={formData.itemName}
-            /> */}
-            <Title level={4}>{formData.itemName}</Title>
-          </Col>
-        </Row>
-        <Row className="col-2">
-          <Col span={24} style={{ marginLeft: 5 }}>
-            <Space align="baseline">
-              {formData.itemSold ? <CheckSquareOutlined /> : <BorderOutlined />}
-              <Text>Can be sold</Text>
-            </Space>
-            <br />
-            <Space align="baseline">
-              {formData.itemPurchase ? (
-                <CheckSquareOutlined />
-              ) : (
-                <BorderOutlined />
-              )}
-              <Text>Can be purchase</Text>
-            </Space>
-          </Col>
-        </Row>
-
-        <Row className="col-2 row-tab-margin">
-          <Col span={24}>
-            <Tabs defaultActiveKey="1" onChange={callback}>
-              <Tabs.TabPane tab="Detail" key="1">
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>Item Code </Text>
-                  </Col>
-                  <Col span={8}>
-                    <Text>{formData.itemCode}</Text>
-                  </Col>
-                  <Col span={2}></Col>
-                  <Col span={3}>
-                    <Text strong>Category </Text>
-                  </Col>
-                  <Col span={8}>
-                    <Text>{getCategName(formData.itemCateg)}</Text>
+    <ItemContext.Provider value={ContextValue}>
+      <FileContext.Provider value={{ data_file }}>
+        <MainLayout {...config}>
+          <div id="form">
+            <Row>
+              <Col span={19}>
+                <Row className="col-2 mt-1">
+                  <Col span={12}>
+                    <h3 style={{ marginBottom: 8 }}>
+                      {data_head.item_no && (
+                        <strong>
+                          Item Code{" "}
+                          {data_head.item_no ? "#" + data_head.item_no : "-"}
+                        </strong>
+                      )}
+                    </h3>
                   </Col>
                 </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>Item barcode</Text>
-                  </Col>
-                  <Col span={8}>
-                    <Text>{formData.itemBarcode}</Text>
-                  </Col>
-
-                  <Col span={2}></Col>
-
-                  <Col span={3}>
-                    <Text strong>Sale Price</Text>
-                  </Col>
-                  <Col span={8}>
-                    <Text>{formData.itemSalePrice}</Text>
-                  </Col>
+                <Row>
+                  <h3>
+                    <strong>Description Name</strong>
+                  </h3>
                 </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>Unit of measure</Text>
-                  </Col>
-                  <Col span={8}>
-                    <Text>{getUnitName(formData.itemUnit)}</Text>
-                  </Col>
-                  <Col span={2}></Col>
-                  <Col span={3}>
-                    <Text strong>Item Type </Text>
-                  </Col>
-                  <Col span={8}>
-                    <Text>{getCategName(formData.itemType)}</Text>
-                  </Col>
+                <Row>
+                  <Text className="item_name text-view">
+                    {data_head.item_name ? data_head.item_name : "-"}
+                  </Text>
                 </Row>
-                <Row className="col-2">
-                  <Col span={24}>
-                    <Space
-                      direction="vertical"
-                      style={{ width: "100%", marginTop: 10 }}
-                    >
-                      <Text strong type="warning">
-                        Description
-                      </Text>
-                      <Text style={{ paddingLeft: 10 }}>
-                        {formData.itemDesc}
-                      </Text>
+                <Row>
+                  <Col span={24} style={{ marginLeft: 5, marginTop: 10 }}>
+                    <Space align="baseline">
+                      {data_head.item_sale ? (
+                        <CheckSquareOutlined />
+                      ) : (
+                        <BorderOutlined />
+                      )}
+                      <Text>Can be sold</Text>
+                    </Space>
+                    <br />
+                    <Space align="baseline">
+                      {data_head.item_purchase ? (
+                        <CheckSquareOutlined />
+                      ) : (
+                        <BorderOutlined />
+                      )}
+                      <Text>Can be purchase</Text>
                     </Space>
                   </Col>
                 </Row>
-              </Tabs.TabPane>
-              <Tabs.TabPane tab="Purchase" key="2">
-                <Line
-                  vendors={vendors}
-                  companys={companys}
-                  units={autoCompleteUnit}
-                  dataLine={formData.vendor ? formData.vendor : []}
-                  // autoData={autoCompleteItem}
-                  columns={vendorColumns}
-                  readOnly={true}
-                  updateData={upDateFormValue}
+              </Col>
+              <Col span={1}></Col>
+              <Col span={4}>
+                <Row>
+                  <Col span={24} className="text-center">
+                    {data_head.item_no && (
+                      <Barcode
+                        value={data_head.item_no}
+                        width={1}
+                        height={40}
+                        fontSize={14}
+                      />
+                    )}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24} className="text-left">
+                    <ItemPreview
+                      data_file={data_file}
+                      // updateFile={updateFile}
+                      readOnly={true}
+                      maxFile={1}
+                      file_type_id={1}
+                      upload_type={"Card"}
+                    />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+
+            <Row className="col-2 row-tab-margin">
+              <Col span={24}>
+                <TabPanel
+                  data_file={data_file}
+                  data_head={data_head}
+                  data_detail={data_detail}
+                  // QA
+                  data_qa_detail={data_qa_detail}
+                  data_packaging_detail={data_packaging_detail}
+                  data_weight_detail={data_weight_detail}
+                  // data_production_process_detail={data_production_process_detail}
+                  readOnly={readOnly}
                 />
-              </Tabs.TabPane>
-              {/* <Tabs.TabPane tab="Note" key="3">
-                <TextArea
-                  rows={3}
-                  placeholder={"Remark your request"}
-                  onChange={(e) =>
-                    upDateFormValue({ req_note: e.target.value })
-                  }
-                />
-              </Tabs.TabPane> */}
-            </Tabs>
-          </Col>
-        </Row>
-      </div>
-      <Comments data={[...dataComments]} />
-    </MainLayout>
+              </Col>
+            </Row>
+          </div>
+          <ModalRemark
+            title={"Remark"}
+            state={openRemarkModal}
+            onChange={setRemark}
+            onOk={() => {
+              changeProcessStatus(6);
+            }}
+            onCancel={() => {
+              setOpenRemarkModal({ visible: false, loading: false });
+              setRemark("");
+            }}
+          />
+          <Comments data={dataComment} />
+        </MainLayout>
+      </FileContext.Provider>
+    </ItemContext.Provider>
   );
 };
 

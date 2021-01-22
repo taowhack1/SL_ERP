@@ -1,22 +1,67 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Drawer, Row, Col, Avatar, Dropdown, Button } from "antd";
+import { useSelector } from "react-redux";
+import { Link, Redirect, withRouter } from "react-router-dom";
+import { Drawer, Row, Col, Avatar, Dropdown, Button, Menu } from "antd";
 import {
   UserOutlined,
   MenuOutlined,
   CaretDownOutlined,
+  DatabaseOutlined,
 } from "@ant-design/icons";
-import { menuProfile } from "../data";
 import MainConfig from "./MainConfig";
-
-function MainHead(props) {
+import { signOut, change_working_project } from "../actions/authActions";
+import { useDispatch } from "react-redux";
+import Text from "antd/lib/typography/Text";
+import { api_server } from "../include/js/main_config";
+const MainHead = (props) => {
+  const auth = useSelector(
+    (state) => state.auth.authData && state.auth.authData
+  );
+  const redirect_fn = () => {
+    return <Redirect to="/login" />;
+  };
+  if (!auth) {
+    redirect_fn();
+  }
+  const dispatch = useDispatch();
+  const projects = useSelector((state) => state.auth.projects);
+  const currentProject = useSelector((state) => state.auth.currentProject);
   const [visible, setVisible] = useState(false);
+
   const onCloseDrawer = () => {
     setVisible(false);
   };
   const onOpenDrawer = () => {
     setVisible(true);
   };
+  const userMenu = () => {
+    return (
+      <Menu>
+        <Menu.Item>
+          <Link
+            to="/change_password"
+            onClick={() => {
+              // keepLog.keep_log_action(`Click Change Password`);
+            }}
+          >
+            Change Password
+          </Link>
+        </Menu.Item>
+        <Menu.Item>
+          <Link
+            to="/login"
+            onClick={() => {
+              // keepLog.keep_log_action(`Click Logout`);
+              dispatch(signOut());
+            }}
+          >
+            Logout
+          </Link>
+        </Menu.Item>
+      </Menu>
+    );
+  };
+
   return (
     <>
       <Row>
@@ -24,7 +69,10 @@ function MainHead(props) {
           <Row>
             <Col span={6}>
               <MenuOutlined onClick={onOpenDrawer} />{" "}
-              <Link to="/" style={{ color: "white" }}>
+              <Link
+                to={currentProject && currentProject.project_url}
+                style={{ color: "white" }}
+              >
                 {props.title}
               </Link>
             </Col>
@@ -34,12 +82,33 @@ function MainHead(props) {
           </Row>
         </Col>
         <Col span={12} id="column-right">
-          <Avatar icon={<UserOutlined />} />
-          <Dropdown overlay={menuProfile} trigger={["click"]}>
-            <Button type="text" className="ant-dropdown-link">
-              Administrator <CaretDownOutlined />
-            </Button>
-          </Dropdown>
+          <Row>
+            <Col span={24}>
+              {api_server === `http://192.168.5.222:3009` ? (
+                <>
+                  <Text className="server-status status-dev" strong>
+                    <DatabaseOutlined /> Development
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Text className="server-status status-production" strong>
+                    <DatabaseOutlined /> Production
+                  </Text>
+                </>
+              )}
+
+              <Text style={{ color: "white", marginRight: 30 }}>
+                {auth && auth.branch_name}
+              </Text>
+              <Avatar icon={<UserOutlined />} />
+              <Dropdown overlay={userMenu()} trigger={["click"]}>
+                <Button type="text" className="ant-dropdown-link">
+                  {auth && auth.employee_name_eng} <CaretDownOutlined />
+                </Button>
+              </Dropdown>
+            </Col>
+          </Row>
         </Col>
       </Row>
 
@@ -50,24 +119,30 @@ function MainHead(props) {
         onClose={onCloseDrawer}
         visible={visible}
       >
-        <p>
-          <Link to="/">DASHBOARD</Link>
-        </p>
-        <p>
-          <Link to="/inventory">INVERTORY</Link>
-        </p>
-        <p>
-          <Link to="/purchase">PURCHASE</Link>
-        </p>
-        <p>
-          <Link to="/sales">SALES</Link>
-        </p>
-        <p>
+        {projects &&
+          projects.map((project) => {
+            return (
+              <p key={project.project_id}>
+                <Link
+                  to={{
+                    pathname: project.project_url,
+                    state: project,
+                  }}
+                  onClick={() => {
+                    dispatch(change_working_project(project));
+                  }}
+                >
+                  {project.project_name}
+                </Link>
+              </p>
+            );
+          })}
+        {/* <p>
           <Link to="/settings">SETTINGS</Link>
-        </p>
+        </p> */}
       </Drawer>
     </>
   );
-}
+};
 
-export default MainHead;
+export default React.memo(withRouter(MainHead));

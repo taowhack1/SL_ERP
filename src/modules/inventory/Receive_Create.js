@@ -1,146 +1,144 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
+import { Row, Col, Input, Tabs, Typography, message } from "antd";
+import { reducer } from "./reducers";
 import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Select,
-  AutoComplete,
-  Typography,
-  DatePicker,
-} from "antd";
+  receive_fields,
+  receive_detail_fields,
+  receive_require_fields,
+} from "./config";
+import {
+  create_receive,
+  get_po_receive_list,
+  update_receive,
+} from "../../actions/inventory/receiveActions";
+import { header_config, report_server } from "../../include/js/main_config";
+import { api_receive_get_ref_po_detail } from "../../include/js/api";
+import { get_log_by_id, reset_comments } from "../../actions/comment&log";
+
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
-
 import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
-import { states } from "../../data/index";
-import ItemLine from "./Receive_ItemLine";
-import TotalFooter from "../../components/TotalFooter";
-import { items } from "../../data/items";
-import { units } from "../../data/units";
-import { receiveLineColumns } from "../../data/inventory/data";
-import { payment_terms } from "../../data/payment_terms";
-import { vendorData, poData } from "../../data/purchase/data";
-import { locations } from "../../data/locationData";
-import numeral from "numeral";
-const { Option } = Select;
+import Detail from "./Receive_Detail";
+
+import CustomSelect from "../../components/CustomSelect";
+import axios from "axios";
+import Authorize from "../system/Authorize";
+import { validateFormHead } from "../../include/js/function_main";
+
 const { TextArea } = Input;
 const { Text } = Typography;
 
+const initialStateHead = receive_fields;
+const initialStateDetail = [receive_detail_fields];
 const Receive_Create = (props) => {
-  const [tab, setTab] = useState("1");
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
+  const history = useHistory();
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const dispatch = useDispatch();
+  const [, setTab] = useState("1");
+  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
+  const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
 
-  let poRef = [];
-  poData.map((po) => {
-    return poRef.push({
-      id: po.id,
-      name: po.po_code,
-      value: "[" + po.po_code + "] Due date: " + po.po_dueDate,
+  const auth = useSelector((state) => state.auth.authData);
+  const dataComments = useSelector((state) => state.log.comment_log);
+  const current_project = useSelector((state) => state.auth.currentProject);
+  const po_list = useSelector((state) => state.inventory.receive.po_ref);
+
+  const flow =
+    data_head &&
+    data_head.data_flow_process &&
+    data_head.data_flow_process.map((step) => {
+      return step.all_group_in_node;
     });
-  });
 
-  let vendors = [];
-  vendorData.map((ven) => {
-    return vendors.push({
-      id: ven.id,
-      name: ven.v_name,
-      value: "[" + ven.v_code + "] " + ven.v_name,
-    });
-  });
-
-  const [refData] = useState(poData && poData);
-  const [formData, setData] = useState(
-    data && data
-      ? data
-      : {
-          id: 0,
-          r_code: null,
-          po_code: null,
-          v_name: null,
-          v_company: null,
-          r_location: null,
-          r_create_date: moment().format("YYYY-MM-DD"),
-          r_schedule_date: null,
-          r_status: 0,
-          r_total: 0,
-          r_vat: 0,
-          r_include_vat: 0,
-          r_remark: null,
-          dataLine: [
-            {
-              id: 0,
-              item: null,
-              item_qty: 0,
-              item_unit: null,
-              item_qty_done: 0,
-              item_unit_price: 0,
-              item_subtotal: 0,
-              item_qty_done_detail: [
-                {
-                  id: 0,
-                  d_batch_no: null,
-                  d_receive_date: null,
-                  d_mfg: null,
-                  d_exp: null,
-                  d_qty: 0,
-                  d_unit: null,
-                },
-              ],
-            },
-          ],
-        }
-  );
-  useEffect(() => {}, [formData.po_code]);
-  const isEditPage = formData && formData.r_code ? 1 : 0;
   const callback = (key) => {
     setTab(key);
   };
 
-  const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
-  };
+  const data =
+    props.location && props.location.state ? props.location.state : 0;
 
   const config = {
-    projectId: 1,
-    title: "INVENTORY",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Inventory",
       "Receive",
-      formData.r_code ? "Edit" : "Create",
-      formData.r_code && formData.r_code,
+      data_head.receive_no ? "Edit" : "Create",
+      data_head.receive_no && data_head.receive_no,
     ],
     search: false,
-    buttonAction: ["Save", "SaveConfirm", "Validate", "Discard"],
-    action: [{ name: "print", link: "www.google.co.th" }],
+    buttonAction: ["Save", "Validate", "Discard"],
+    // action: [
+    //   {
+    //     name: "Print",
+    //     link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${
+    //       data_head && data_head.receive_id
+    //     }`,
+    //   },
+    //   data_head &&
+    //     data_head.button_cancel && {
+    //       name: "Cancel",
+    //       cancel: true,
+    //       link: ``,
+    //     },
+    // ],
     step: {
-      current: formData.r_status,
-      step: ["Draft", "Confirm", "Validate", "Done"],
+      current: data_head && data_head.node_stay - 1,
+      step: flow,
+      process_complete: data_head.process_complete,
     },
     create: "",
-    save: {
-      data: formData,
-      path: formData && "/inventory/receive/view/" + formData.id,
-    },
-    edit: {
-      data: formData,
-      path: formData && "/inventory/receive/edit/" + formData.id,
-    },
+    save: "function",
     discard: "/inventory/receive",
     onSave: (e) => {
-      e.preventDefault();
-      setData({ r_code: "R2009-00099" });
+      console.log("Save");
+      const key = "validate";
+
+      const validate = validateFormHead(data_head, receive_require_fields);
+      // const validate_detail = validateFormDetail(
+      //   data_detail,
+      //   receive_detail_require_fields
+      // );
+      if (validate.validate) {
+        console.log("pass");
+        data_head.receive_id
+          ? dispatch(
+              update_receive(
+                data_head.receive_id,
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            )
+          : dispatch(
+              create_receive(
+                auth.user_name,
+                data_head,
+                data_detail,
+                redirect_to_view
+              )
+            );
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {
@@ -148,160 +146,221 @@ const Receive_Create = (props) => {
     },
   };
 
-  const getDataRef = (refId, mainData, refData) => {
-    let copyMain = { ...mainData };
-    let copyRef = { ...refData[refId] };
-    copyMain.po_code = copyRef.po_code;
-    copyMain.v_name = copyRef.v_name;
-    copyMain.v_company = copyRef.v_company;
-    copyMain.r_total = copyRef.po_total;
-    copyMain.r_vat = copyRef.po_vat;
-    copyMain.r_schedule_date = copyRef.po_dueDate;
-    copyMain.r_include_vat = copyRef.po_include_vat;
-    copyMain.dataLine = copyRef.dataLine;
-    setData({ ...formData, ...copyMain });
+  useEffect(() => {
+    dispatch(get_po_receive_list());
+    headDispatch({
+      type: "SET_HEAD",
+      payload: data.data_head
+        ? {
+            ...data.data_head,
+            commit: 1,
+            user_name: auth.user_name,
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+          }
+        : {
+            ...receive_fields,
+            commit: 1,
+            user_name: auth.user_name,
+            branch_id: auth.branch_id,
+            branch_name: auth.branch_name,
+            receive_created: moment().format("DD/MM/YYYY"),
+          },
+    });
+    detailDispatch({
+      type: "SET_DETAIL",
+      payload: data.data_detail ? data.data_detail : [receive_detail_fields],
+    });
+  }, []);
+
+  useEffect(() => {
+    if (data_head.po_id && !data_head.receive_id) {
+      // Create Receive Only GET PO Reference
+      axios
+        .get(
+          `${api_receive_get_ref_po_detail}/${data_head.po_id}`,
+          header_config
+        )
+        .then((res) => {
+          const details = res.data[0];
+          details.map((detail) => (detail.receive_sub_detail = []));
+          detailDispatch({ type: "SET_DETAIL", payload: details });
+        });
+    }
+  }, [data_head.po_id]);
+
+  useEffect(() => {
+    // GET LOG
+    data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
+    return () => {
+      dispatch(reset_comments());
+    };
+  }, [data_head]);
+
+  const resetForm = () => {
+    headDispatch({
+      type: "RESET_DATA",
+      payload: {
+        ...initialStateHead,
+        commit: 1,
+        user_name: auth.user_name,
+        branch_id: auth.branch_id,
+        branch_name: auth.branch_name,
+        receive_created: moment().format("DD/MM/YYYY"),
+      },
+    });
+    detailDispatch({
+      type: "RESET_DATA",
+      payload: initialStateDetail,
+    });
   };
-  console.log("formData:", formData);
+
+  const upDateFormValue = (data) => {
+    headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
+  };
+  const redirect_to_view = (id) => {
+    history.push("/inventory/receive/view/" + (id ? id : "new"));
+  };
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config}>
       <div id="form">
         {/* Head */}
         <Row className="col-2">
-          <Col span={11}>
+          <Col span={8}>
             <h2>
               <strong>
-                {isEditPage ? "Edit" : "Create"} Receive{" "}
-                {isEditPage ? "#" + formData.r_code : null}
+                {data_head.receive_no ? "Edit" : "Create"} Receive{" "}
+                {data_head.receive_no ? "#" + data_head.receive_no : null}
               </strong>
             </h2>
           </Col>
-          <Col span={9}></Col>
+          <Col span={12}></Col>
           <Col span={2}>
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            {moment(
-              formData.r_create_date,
-              isEditPage ? "DD/MM/YYYY" : "YYYY-MM-DD"
-            ).format("DD/MM/YYYY")}
+            <Text className="text-view">{data_head.receive_created}</Text>
           </Col>
         </Row>
 
-        {/* Address & Information */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>PO Ref.</Text>
+            <Text strong>
+              <span className="require">* </span>PO Ref. :
+            </Text>
           </Col>
           <Col span={8}>
-            <Select
-              placeholder={"PO. ex.PO2009-00xx"}
-              onSelect={(data) => {
-                getDataRef(data, formData, refData);
+            {/* PO Ref */}
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"PO No. ex.PO2009000x"}
+              name="po_id"
+              field_id="po_id"
+              field_name="po_no_description"
+              value={data_head.po_no_description}
+              data={po_list}
+              onChange={(data, option) => {
+                if (data) {
+                  upDateFormValue(
+                    ...po_list.filter((po) => po.po_id === data, data)
+                  );
+                } else {
+                  resetForm();
+                }
               }}
-              style={{ width: "100%" }}
-              defaultValue={formData.po_code}
-            >
-              <Option value="null"> </Option>
-              {poRef.map((po) => {
-                return (
-                  <Option key={po.id} value={po.po_code}>
-                    {po.value}
-                  </Option>
-                );
-              })}
-            </Select>
+            />
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Schedule Date </Text>
+            <Text strong>Vendor :</Text>
           </Col>
           <Col span={8}>
-            <DatePicker
-              name={"r_schedule_date"}
-              format={"DD/MM/YYYY"}
-              style={{ width: "100%" }}
-              placeholder="Due date..."
-              value={
-                formData.r_schedule_date
-                  ? moment(formData.r_schedule_date, "DD/MM/YYYY")
-                  : ""
-              }
-              defaultValue={
-                formData.r_schedule_date
-                  ? moment(formData.r_schedule_date, "DD/MM/YYYY")
-                  : ""
-              }
-              onChange={(data) => {
+            <Text className="text-view">{data_head.vendor_no_name}</Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical ">
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Description :
+            </Text>
+          </Col>
+          <Col span={8}>
+            <Input
+              name="receive_description"
+              onChange={(e) =>
                 upDateFormValue({
-                  r_schedule_date: data.format("DD/MM/YYYY"),
-                });
-              }}
-            />
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Form Vendor </Text>
-          </Col>
-
-          <Col span={8}>
-            <AutoComplete
-              options={vendors}
-              placeholder="Vendor.."
-              defaultValue={formData.v_name}
-              value={formData.v_name}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
+                  receive_description: e.target.value,
+                })
               }
-              onSelect={(data) => upDateFormValue({ v_name: data })}
-              onChange={(data) => upDateFormValue({ v_name: data })}
-              style={{ width: "100%" }}
+              value={data_head.receive_description}
+              placeholder="Description"
             />
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Destination Location</Text>
+            <Text strong>Currency :</Text>
           </Col>
           <Col span={8}>
-            <AutoComplete
-              options={locations}
-              placeholder="Location..."
-              defaultValue={formData.r_location}
-              value={formData.r_location}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              }
-              onSelect={(data) => upDateFormValue({ r_location: data })}
-              onChange={(data) => upDateFormValue({ r_location: data })}
-              style={{ width: "100%" }}
-            />
+            <Text className="text-view">{data_head.currency_no}</Text>
           </Col>
         </Row>
-        <Row className="col-2 space-top-md">
+        <Row className="col-2 row-margin-vertical">
+          {/* <Col span={3}>
+            <Text strong>Agreement :</Text>
+          </Col>
+          <Col span={8}>
+            <Input
+              name="receive_agreement"
+              value={data_head.receive_agreement}
+              onChange={(e) =>
+                upDateFormValue({
+                  receive_agreement: e.target.value,
+                })
+              }
+              value={data_head.receive_agreement}
+              placeholder="Agreement"
+            />
+          </Col>
+          <Col span={2}></Col> */}
+          <Col span={3}>
+            <Text strong>Order date :</Text>
+          </Col>
+          <Col span={8}>
+            <Text className="text-view">{data_head.receive_order_date}</Text>
+          </Col>
+        </Row>
+
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey={"1"} onChange={callback}>
-              <Tabs.TabPane tab="Request Detail" key={"1"}>
-                <ItemLine
-                  items={items}
-                  units={units}
-                  // itemLots={itemLots}
-                  columns={receiveLineColumns}
-                  updateData={upDateFormValue}
-                  dataLine={formData.dataLine ? formData.dataLine : [{}]}
+              <Tabs.TabPane
+                tab={
+                  <span>
+                    <span className="require">* </span>
+                    Receive Detail
+                  </span>
+                }
+                key={"1"}
+              >
+                <Detail
                   readOnly={false}
-                  formData={formData}
+                  po_id={data_head.po_id}
+                  data_detail={data_detail}
+                  headDispatch={headDispatch}
+                  detailDispatch={detailDispatch}
+                  vat_rate={data_head.vat_rate}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key={"2"}>
                 <TextArea
                   rows={2}
-                  placeholder={"Remark..."}
-                  defaultValue={formData.r_remark}
-                  value={formData.r_remark}
+                  name="receive_remark"
+                  placeholder={"Remark"}
+                  defaultValue={data_head.receive_remark}
+                  value={data_head.receive_remark}
                   onChange={(e) =>
-                    upDateFormValue({ r_remark: e.target.value })
+                    upDateFormValue({ receive_remark: e.target.value })
                   }
                   style={{ width: "100%" }}
                 />
@@ -309,16 +368,16 @@ const Receive_Create = (props) => {
             </Tabs>
           </Col>
         </Row>
-        {tab === "1" ? (
+        {/* {tab === "1" && (
           <TotalFooter
-            excludeVat={formData.r_total}
-            vat={formData.r_vat}
-            includeVat={formData.r_include_vat}
-            currency={"THB"}
+            excludeVat={data_head.tg_receive_sum_amount}
+            vat={data_head.tg_receive_vat_amount}
+            includeVat={data_head.tg_receive_total_amount}
+            currency={data_head.currency_no}
           />
-        ) : null}
+        )} */}
       </div>
-      <Comments data={[...dataComments]} />
+      <Comments data={dataComments} />
     </MainLayout>
   );
 };

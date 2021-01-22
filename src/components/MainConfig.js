@@ -1,26 +1,50 @@
 import React from "react";
 import { Dropdown, Button, Menu } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
-import {
-  operationsMenu,
-  masterDataMenu,
-  menuConfig,
-  menuLevel1,
-  menuReport,
-} from "../data";
 import { Link } from "react-router-dom";
-import { projects, menus } from "../data/menu";
+import { useDispatch, useSelector } from "react-redux";
+import { set_working_menu } from "../actions/authActions";
+import useKeepLogs from "../modules/logs/useKeepLogs";
 
 export default function MainConfig(props) {
+  const keepLog = useKeepLogs();
+  const dispatch = useDispatch();
   const projectId = props.projectId && props.projectId ? props.projectId : 0;
-  const projectMenu = menus.filter((menu) => menu.projectId === projectId);
+  const menusLocal = useSelector((state) => state.auth.menus);
+  let projectMenus = menusLocal
+    ? menusLocal.filter(
+        (menu) => menu.project_id === projectId && menu.menu_parent === 0
+      )
+    : [];
+
+  const set_log_detail = (data) => {
+    keepLog.keep_log_action(data);
+  };
+
   const getSubMenu = (menu) => {
+    const menulevel2 = menusLocal.filter(
+      (menu2) =>
+        menu2.menu_parent !== 0 &&
+        menu2.menu_parent === menu.menu_level &&
+        menu2.project_id === menu.project_id
+    );
+
     let sub = (
       <Menu>
-        {menu.subMenu.map((sub, key) => {
+        {menulevel2.map((sub, key) => {
           return (
             <Menu.Item key={key}>
-              <Link to={sub.link}>{sub.name}</Link>
+              <Link
+                to={{
+                  pathname: sub.menu_url,
+                }}
+                onClick={() => {
+                  dispatch(set_working_menu(sub));
+                  set_log_detail(`Click Menu ${sub.menu_name}`);
+                }}
+              >
+                {sub.menu_name}
+              </Link>
             </Menu.Item>
           );
         })}
@@ -28,29 +52,22 @@ export default function MainConfig(props) {
     );
     return sub;
   };
+
   return (
     <>
       <div>
-        {projectMenu.map((menu, key) => {
-          return menu.subMenu.length > 0 ? (
+        {projectMenus.map((menu, key) => {
+          return (
             <Dropdown
+              key={key}
               overlay={getSubMenu(menu)}
               trigger={["click"]}
-              key={menu.id}
+              key={menu.menu_id}
             >
               <Button type="text" className="ant-dropdown-link">
-                {menu.name}{" "}
-                {menu.subMenu && menu.subMenu.length > 0 ? (
-                  <CaretDownOutlined />
-                ) : null}
+                {menu.menu_name} <CaretDownOutlined />
               </Button>
             </Dropdown>
-          ) : (
-            <Link to={menu.link} key={menu.id}>
-              <Button type="text" className="ant-dropdown-link">
-                {menu.name}
-              </Button>
-            </Link>
           );
         })}
       </div>

@@ -1,311 +1,371 @@
 import React, { useState } from "react";
-import { Row, Col, Input, Tabs, Select, AutoComplete, Typography } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { Row, Col, Input, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
-import ItemLine from "../../components/VendorItemLine";
 import {
-  autoCompleteUser,
-  autoCompleteUnit,
-  autoCompleteItem,
-} from "../../data/inventoryData";
+  create_vendor,
+  update_vendor,
+} from "../../actions/purchase/vendorActions";
+import { vendor_fields, vendor_require_fields } from "./config/vendor";
+import CustomSelect from "../../components/CustomSelect";
+import Authorize from "../system/Authorize";
+import { validateFormHead } from "../../include/js/function_main";
+import { useHistory } from "react-router-dom";
 
-import Comments from "../../components/Comments";
-import { dataComments } from "../../data";
-import { states } from "../../data/index";
-import { currencyData } from "../../data/currencyData";
-import { vendorItemColumns } from "../../data/purchase/data";
-const { Option } = Select;
 const { TextArea } = Input;
-const { Title, Paragraph, Text } = Typography;
+const { Title, Text } = Typography;
 
 const VendorCreate = (props) => {
+  const history = useHistory();
+  const authorize = Authorize();
+  authorize.check_authorize();
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth.authData);
+  const vendor_payment_terms = useSelector(
+    (state) => state.accounting.master_data.vendor_payment_terms
+  );
+  const currency_list = useSelector(
+    (state) => state.accounting.master_data.currency
+  );
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  const [editForm, setEdit] = useState(true);
-
-  const [formData, setData] = useState(
+  const [data_head, set_data_head] = useState(
     data && data
-      ? data
+      ? { ...data, commit: 1, user_name: auth.user_name }
       : {
-          id: 0,
-          v_code: null,
-          v_name: null,
-          v_company: null,
-          v_phone: null,
-          v_mobile: null,
-          v_email: null,
-          v_tax_id: null,
-          v_type: null,
-          v_desc: null,
-          v_adr_street: null,
-          v_adr_street2: null,
-          v_adr_city: null,
-          v_adr_state: null,
-          v_adr_zip: null,
-          v_adr_country: null,
-          v_payment_term: null,
-          v_currency: null,
-          v_status: 0,
-          dataLine: [
-            {
-              id: 0,
-              item: null,
-              itemValidate: null,
-              itemQty: 0,
-              itemUnit: "pc",
-              itemPrice: 0,
-            },
-          ],
+          ...vendor_fields,
+          commit: 1,
+          user_name: auth.user_name,
+          cnv_vendor_created: moment().format("DD/MM/YYYY"),
         }
   );
+  console.log(data_head);
   const callback = (key) => {};
 
   const upDateFormValue = (data) => {
-    setData({ ...formData, ...data });
+    set_data_head({ ...data_head, ...data });
   };
 
+  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: 2,
-    title: "PURCHASE",
+    projectId: current_project && current_project.project_id,
+    title: current_project && current_project.project_name,
+    home: current_project && current_project.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "Vendor",
-      formData.itemCode ? "Edit" : "Create",
-      formData.itemCode && "[ " + formData.itemCode + " ] " + formData.itemName,
+      data_head.vendor_no ? "Edit" : "Create",
+      data_head.vendor_no &&
+        "[ " + data_head.vendor_no + " ] " + data_head.vendor_name,
     ],
     search: false,
-    buttonAction: editForm
-      ? ["Save", "SaveConfirm", "Discard"]
-      : ["Edit", "Approve", "Reject"],
-    action: [{ name: "print", link: "www.google.co.th" }],
-    step: {
-      current: formData.v_status,
-      step: ["Draft", "Confirm", "Verify", "Approve", "Done"],
-    },
+    buttonAction: ["Save", "Discard"],
     create: "",
-    save: {
-      data: formData,
-      path: formData && "/purchase/vendor/view/" + formData.id,
-    },
+    save: "function",
     discard: "/purchase/vendor",
     onSave: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
+      console.log("Save");
+      const key = "validate";
+      const validate = validateFormHead(data_head, vendor_require_fields);
+      if (validate.validate) {
+        console.log("pass");
+        data_head.vendor_id
+          ? dispatch(
+              update_vendor(data_head.vendor_id, data_head, redirect_to_view)
+            )
+          : dispatch(create_vendor(data_head, redirect_to_view));
+      } else {
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
     onEdit: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Edit");
-      setEdit(true);
     },
     onApprove: (e) => {
-      e.preventDefault();
+      //e.preventDefault();
       console.log("Approve");
     },
     onConfirm: () => {
       console.log("Confirm");
     },
   };
+  const redirect_to_view = (id) => {
+    history.push("/purchase/vendor/view/" + (id ? id : "new"));
+  };
 
   return (
-    <MainLayout {...config} data={formData}>
+    <MainLayout {...config}>
       <div id="form">
         {/* Head */}
         <Row className="col-2">
-          <Col span={11}>
+          <Col span={8}>
             <h2>
-              <strong>{formData.itemCode ? "Edit" : "Create"} Vendor</strong>
+              <strong>
+                {data_head.vendor_no ? "Edit" : "Create"} Vendor{" "}
+                {data_head.vendor_no && "#" + data_head.vendor_no}
+              </strong>
             </h2>
           </Col>
-          <Col span={2}></Col>
-          <Col span={3}></Col>
-          <Col span={8} style={{ textAlign: "right" }}>
-            {/* <Image width={200} src="{require('/company-icon.png)}" /> */}
+          <Col span={12}></Col>
+          <Col span={2}>
+            <Text strong>Create Date :</Text>
+          </Col>
+          <Col span={2} style={{ textAlign: "right" }}>
+            <Text className="text-view">{data_head.cnv_vendor_created}</Text>
           </Col>
         </Row>
-        <Row className="col-2">
-          <Col span={24} style={{ marginBottom: 8 }}>
-            <Title level={5}>Name </Title>
-            <Input
-              onChange={(e) => upDateFormValue({ v_name: e.target.value })}
-              defaultValue={formData.v_name}
-            />
-          </Col>
-        </Row>
-
-        {/* Address & Information */}
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Phone </Text>
-          </Col>
-          <Col span={8}>
-            <Input
-              onChange={(e) => upDateFormValue({ v_phone: e.target.value })}
-              placeholder={"Phone..."}
-              defaultValue={formData.v_phone}
-            />
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Company Address </Text>
-          </Col>
-          <Col span={8}>
-            <Input
-              onChange={(e) =>
-                upDateFormValue({ v_adr_street: e.target.value })
-              }
-              placeholder={"Street..."}
-              defaultValue={formData.v_adr_street}
-            />
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Mobile</Text>
-          </Col>
-          <Col span={8}>
-            <Input
-              onChange={(e) => upDateFormValue({ v_mobile: e.target.value })}
-              placeholder={"Mobile..."}
-              defaultValue={formData.v_mobile}
-            />
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong></Text>
-          </Col>
-          <Col span={8}>
-            <Input
-              onChange={(e) =>
-                upDateFormValue({ v_adr_street2: e.target.value })
-              }
-              placeholder={"Street 2..."}
-              defaultValue={formData.v_adr_street2}
-            />
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Email</Text>
-          </Col>
-          <Col span={8}>
-            <Input
-              onChange={(e) => upDateFormValue({ v_email: e.target.value })}
-              placeholder={"example@gmail.co.th"}
-              defaultValue={formData.v_email}
-            />
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong></Text>
-          </Col>
-          <Col span={8}>
-            <Row>
-              <Col span={8}>
-                <Input
-                  onChange={(e) =>
-                    upDateFormValue({ v_adr_city: e.target.value })
-                  }
-                  placeholder={"City"}
-                  defaultValue={formData.v_adr_city}
-                  style={{ width: "100%" }}
-                />
-              </Col>
-              <Col span={1}></Col>
-              <Col span={8}>
-                <AutoComplete
-                  options={states}
-                  placeholder="State"
-                  defaultValue={formData.v_adr_state}
-                  filterOption={(inputValue, option) =>
-                    option.value
-                      .toUpperCase()
-                      .indexOf(inputValue.toUpperCase()) !== -1
-                  }
-                  onSelect={(data) => upDateFormValue({ v_adr_state: data })}
-                  onChange={(data) => upDateFormValue({ v_adr_state: data })}
-                  style={{ width: "100%" }}
-                />
-              </Col>
-              <Col span={1}></Col>
-              <Col span={6}>
-                <Input
-                  onChange={(e) =>
-                    upDateFormValue({ v_adr_zip: e.target.value })
-                  }
-                  placeholder={"ZIP"}
-                  defaultValue={formData.v_adr_zip}
-                  style={{ width: "100%" }}
-                />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={3}>
-            <Text strong>Currency</Text>
-          </Col>
-          <Col span={8}>
-            <Select
-              placeholder={"Select Currency"}
-              onSelect={(data) =>
-                upDateFormValue({
-                  v_currency: data,
-                })
-              }
-              style={{ width: "100%" }}
-              defaultValue={formData.v_currency}
-            >
-              <Option value="null"> </Option>
-              {currencyData.map((currency) => {
-                return (
-                  <Option key={currency.id} value={currency.name}>
-                    {currency.name}
-                  </Option>
-                );
-              })}
-            </Select>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Tax ID</Text>
-          </Col>
-          <Col span={8}>
-            <Input
-              onChange={(e) => upDateFormValue({ v_tax_id: e.target.value })}
-              placeholder={"e.g. BE0477472701"}
-              defaultValue={formData.v_tax_id}
-              style={{ width: "100%" }}
-            />
-          </Col>
-        </Row>
-
-        {/* Product & Notes */}
         <Row className="col-2 row-tab-margin">
+          <Col span={24} style={{ marginBottom: 8 }}>
+            <Title level={5}>
+              <span className="require">* </span>Name{" "}
+            </Title>
+            <Col span={24}>
+              <Input
+                name="vendor_name"
+                onChange={(e) =>
+                  upDateFormValue({ vendor_name: e.target.value })
+                }
+                value={data_head.vendor_name}
+                placeholder="Name"
+              />
+            </Col>
+          </Col>
+        </Row>
+
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
-              <Tabs.TabPane tab="Products" key="1">
-                <ItemLine
-                  // vendors={vendors}
-                  items={autoCompleteItem}
-                  units={autoCompleteUnit}
-                  dataLine={formData.dataLine ? formData.dataLine : [{}]}
-                  columns={vendorItemColumns}
-                  readOnly={false}
-                  updateData={upDateFormValue}
-                />
+              <Tabs.TabPane
+                tab={
+                  <span>
+                    <span className="require">* </span>
+                    Contact & Detail
+                  </span>
+                }
+                key="1"
+              >
+                {/* Address & Information */}
+                <Row className="col-2 row-margin-vertical">
+                  <Col span={12}>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Short Name</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="vendor_name_short"
+                          onChange={(e) =>
+                            upDateFormValue({
+                              vendor_name_short: e.target.value,
+                            })
+                          }
+                          placeholder={"SRL"}
+                          value={data_head.vendor_name_short}
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Phone</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="vendor_phone"
+                          onChange={(e) =>
+                            upDateFormValue({ vendor_phone: e.target.value })
+                          }
+                          placeholder={"e.g. BE0477472701"}
+                          value={data_head.vendor_phone}
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Mobile</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="vendor_mobile"
+                          onChange={(e) =>
+                            upDateFormValue({ vendor_mobile: e.target.value })
+                          }
+                          placeholder={"Mobile"}
+                          value={data_head.vendor_mobile}
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>Email</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="vendor_email"
+                          onChange={(e) =>
+                            upDateFormValue({ vendor_email: e.target.value })
+                          }
+                          placeholder={"example@gmail.co.th"}
+                          value={data_head.vendor_email}
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>
+                          <span className="require">* </span>Currency
+                        </Text>
+                      </Col>
+                      <Col span={18}>
+                        <CustomSelect
+                          placeholder={"Currency"}
+                          allowClear
+                          showSearch
+                          name="currency_id"
+                          field_id="currency_id"
+                          field_name="currency_no"
+                          value={data_head.currency_no}
+                          data={currency_list}
+                          onChange={(data, option) =>
+                            data
+                              ? upDateFormValue({
+                                  currency_id: data,
+                                  currency_no: option.title,
+                                })
+                              : upDateFormValue({
+                                  currency_id: null,
+                                  currency_no: null,
+                                })
+                          }
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                  </Col>
+                  <Col span={12}>
+                    <Row className="row-margin">
+                      <Col span={1}></Col>
+                      <Col span={5}>
+                        <Text strong>
+                          <span className="require">* </span>Address
+                        </Text>
+                      </Col>
+                      <Col span={18}>
+                        <TextArea
+                          name="vendor_address"
+                          placeholder="Address"
+                          style={{ width: "100%", height: "110px" }}
+                          value={data_head.vendor_address}
+                          onChange={(e) =>
+                            upDateFormValue({ vendor_address: e.target.value })
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={1}></Col>
+                      <Col span={5}>
+                        <Text strong>Tax ID</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="vendor_tax_no"
+                          placeholder="Tax ID"
+                          style={{ width: "100%" }}
+                          value={data_head.vendor_tax_no}
+                          onChange={(e) =>
+                            upDateFormValue({ vendor_tax_no: e.target.value })
+                          }
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Notes" key="2">
+              <Tabs.TabPane
+                tab={
+                  <span>
+                    <span className="require">* </span>
+                    Purchase
+                  </span>
+                }
+                key="2"
+              >
+                <Row className="col-2 row-margin-vertical">
+                  <Col span={12}>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>
+                          <span className="require">* </span>Payment Terms
+                        </Text>
+                      </Col>
+                      <Col span={18}>
+                        <CustomSelect
+                          placeholder={"Payment Term"}
+                          allowClear
+                          showSearch
+                          name="payment_term_id"
+                          field_id="payment_term_id"
+                          field_name="payment_term_no_name"
+                          value={data_head.payment_term_no_name}
+                          data={vendor_payment_terms}
+                          onChange={(data, option) =>
+                            data
+                              ? upDateFormValue({
+                                  payment_term_id: data,
+                                  payment_term_no_name: option.title,
+                                })
+                              : upDateFormValue({
+                                  payment_term_id: null,
+                                  payment_term_no_name: null,
+                                })
+                          }
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                  </Col>
+                  <Col span={12}>
+                    <Row className="row-margin">
+                      <Col span={1}></Col>
+                      <Col span={5}></Col>
+                      <Col span={18}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={1}></Col>
+                      <Col span={5}></Col>
+                      <Col span={18}></Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Notes" key="3">
                 <TextArea
                   rows={3}
-                  placeholder={"Remark..."}
-                  onChange={(e) => upDateFormValue({ v_desc: e.target.value })}
+                  name="vendor_remark"
+                  placeholder={"Notes"}
+                  value={data_head.vendor_remark}
+                  onChange={(e) =>
+                    upDateFormValue({ vendor_remark: e.target.value })
+                  }
                 />
               </Tabs.TabPane>
             </Tabs>
           </Col>
         </Row>
       </div>
-      <Comments data={[...dataComments]} />
+      {/* <Comments data={dataComments} /> */}
     </MainLayout>
   );
 };
