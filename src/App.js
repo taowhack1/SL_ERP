@@ -75,7 +75,7 @@ import { log_detail } from "./modules/system/configs/log";
 import { keep_log } from "./actions/comment&log";
 
 import QCItemTestMain from "./modules/qualityAssurance/MasterData/QCItemTest/QCItemTestMain";
-import QCItemTestCreate from "./modules/qualityAssurance/MasterData/QCItemTest/QCItemTestCreate";
+import QCItemTestForm from "./modules/qualityAssurance/MasterData/QCItemTest/QCItemTestForm";
 import ItemType from "./modules/inventory/item/masterData/type/ItemType";
 import MainLayout from "./components/MainLayout";
 import Type from "./modules/inventory/configurations/type/Type";
@@ -100,7 +100,7 @@ const initialContext = {
 // class App extends Component {
 const App = (props) => {
   const auth = useSelector((state) => state.auth.authData);
-  const current_project = useSelector((state) => state.auth.currentProject);
+  const { currentProject, currentMenu } = useSelector((state) => state.auth);
 
   const [context, setContext] = useState(initialContext);
   useEffect(() => {
@@ -115,9 +115,10 @@ const App = (props) => {
       mainContext,
       setMainContext,
       auth: auth,
-      current_project: current_project,
+      currentProject,
+      currentMenu,
     };
-  }, [mainContext, auth, current_project]);
+  }, [mainContext, auth, currentProject, currentMenu]);
   return (
     // <Provider store={store}>
     <Context.Provider value={[context, setContext]}>
@@ -414,23 +415,15 @@ const App = (props) => {
             <Route exact path="/qa/qc/receive">
               <QCReceive />
             </Route>
-            <Route exact path="/qa/master_data/quality_test_item">
+            <Route exact path="/qa/master_data/conditions">
               <QCItemTestMain />
-              {/* <QualityTest /> */}
             </Route>
-            <Route exact path="/qa/master_data/quality_test_item/create">
-              <QCItemTestCreate />
-            </Route>
-            {/* <Route
-              exact
-              path="/qa/master_data/quality_test_item/view/:id"
-              component={QCItemTestView}
-            /> */}
             <Route
               exact
-              path="/qa/master_data/quality_test_item/edit/:id"
-              component={QCItemTestCreate}
+              path="/qa/master_data/conditions/:action/:id"
+              component={QCItemTestForm}
             />
+
             {/* PRODUCTION */}
             <Route exact path="/production">
               <Production />

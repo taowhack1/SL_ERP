@@ -46,7 +46,7 @@ import { useHistory } from "react-router-dom";
 import TabPanel from "./item/TabPanel";
 import { get_all_vendor } from "../../actions/purchase/vendorActions";
 import ItemFileUpload from "./item/ItemFileUpload";
-import { get_qa_test_case_master } from "../../actions/qa/qaTestAction";
+import { get_qa_conditions_master } from "../../actions/qa/qaTestAction";
 import { get_sale_master_data } from "../../actions/sales";
 import { getAllWorkCenter } from "../../actions/production/workCenterActions";
 import { getAllMachine } from "../../actions/production/machineActions";
@@ -315,7 +315,7 @@ const ItemCreate = (props) => {
 
   useEffect(() => {
     data_head.type_id &&
-      dispatch(get_qa_test_case_master(data_head.type_id, 1, 1, 1));
+      dispatch(get_qa_conditions_master(data_head.type_id, 1, 1, 1));
   }, [data_head.type_id]);
 
   const ContextValue = useMemo(() => {

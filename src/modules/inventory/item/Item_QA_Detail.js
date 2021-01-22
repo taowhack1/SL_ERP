@@ -14,9 +14,9 @@ const { Text } = Typography;
 
 const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
   const {
-    test_case_subject,
-    test_case_specification,
-    test_case_method,
+    conditions_subject,
+    conditions_specification,
+    conditions_method,
   } = useSelector((state) => state.qa.qa_master_data);
   const addLine = () => {
     qaDetailDispatch({ type: "ADD_ROW", payload: item_qa_detail_fields });
@@ -42,7 +42,7 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
           <Space>
             <Text strong style={{ fontSize: 16, marginRight: 10 }}>
               <ProfileOutlined style={{ marginRight: 10 }} />
-              Test Case
+              Condition
             </Text>
           </Space>
         </Col>
@@ -94,7 +94,7 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
                   field_id="qa_subject_id"
                   field_name="qa_subject_name"
                   value={line.qa_subject_name}
-                  data={test_case_subject}
+                  data={conditions_subject}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
@@ -118,7 +118,7 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
                   field_id="qa_specification_id"
                   field_name="qa_specification_name"
                   value={line.qa_specification_name}
-                  data={test_case_specification}
+                  data={conditions_specification}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {
@@ -143,7 +143,7 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
                   field_id="qa_method_id"
                   field_name="qa_method_name"
                   value={line.qa_method_name}
-                  data={test_case_method}
+                  data={conditions_method}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {

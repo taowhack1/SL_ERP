@@ -163,10 +163,35 @@ h6 {
 .mr-4 {
   margin-right: 40px;
 }
+.pt-1 {
+  padding-top: 10px;
+}
+.pt-2 {
+  padding-top: 20px;
+}
+.pt-3 {
+  padding-top: 30px;
+}
+.pt-4 {
+  padding-top: 40px;
+}
+.pb-1 {
+  padding-bottom: 10px;
+}
+.pb-2 {
+  padding-bottom: 20px;
+}
+.pb-3 {
+  padding-bottom: 30px;
+}
+.pb-4 {
+  padding-bottom: 40px;
+}
 
 #top-content {
   padding: 0px 20px;
   padding-bottom: 10px;
+  min-height: 82px;
   border-bottom: 1px solid #ddd;
 }
 button.ant-btn-primary,
@@ -206,12 +231,16 @@ button.primary:hover {
 }
 #form {
   width: 80%;
+  min-height: 350px;
   margin: 0 auto;
   padding: 20px;
   background: #fff;
   margin-top: 10px;
   border: 1px solid #ddd;
   box-shadow: 0px 0px 10px #ccc;
+}
+.loading {
+  background-color: #f1f1f1;
 }
 #comment {
   width: 80%;

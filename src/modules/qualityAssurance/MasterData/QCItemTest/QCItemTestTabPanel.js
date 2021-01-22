@@ -6,7 +6,7 @@ import {
   qcTestItemColumns,
   qcTestItemSubjectFields,
 } from "../../configs/qcTestItemConfig";
-import { QCContext } from "./QCItemTestCreate";
+import { QCContext } from "./QCItemTestForm";
 import QCItemTestTable from "./QCItemTestTable";
 const initialStateSubject = qcTestItemSubjectFields;
 const initialStateSpecification = qcTestItemSpecFields;
@@ -22,7 +22,7 @@ const WorkOrderTabPanel = () => {
     methodDispatch,
     commonData,
   } = useContext(QCContext);
-  console.log("Panel Render");
+  console.log("Panel Render", subjectData);
   return (
     <Row className="col-2">
       <Col span={24}>

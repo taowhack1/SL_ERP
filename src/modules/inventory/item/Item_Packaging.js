@@ -22,8 +22,8 @@ const Packaging = ({
   packagingDetailDispatch,
 }) => {
   const { PKList } = useContext(ItemContext);
-  const test_case_method = useSelector(
-    (state) => state.qa.qa_master_data.test_case_method
+  const conditions_method = useSelector(
+    (state) => state.qa.qa_master_data.conditions_method
   );
   const addLine = () => {
     packagingDetailDispatch({
@@ -150,7 +150,7 @@ const Packaging = ({
                   field_id="qa_method_id"
                   field_name="qa_method_name"
                   value={line.qa_method_name}
-                  data={test_case_method}
+                  data={conditions_method}
                   onChange={(data, option) => {
                     data && data
                       ? onChangeValue(line.id, {

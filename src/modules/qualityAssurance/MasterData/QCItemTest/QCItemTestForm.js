@@ -18,34 +18,31 @@ import Comments from "../../../../components/Comments";
 import MainLayout from "../../../../components/MainLayout";
 
 import QCItemTestTabPanel from "./QCItemTestTabPanel";
-import { getItemType } from "../../../../actions/inventory";
 import {
   getQATestByTypeID,
-  saveQATestCase,
+  saveQAConditions,
 } from "../../../../actions/qa/qaTestAction";
 import { mainReducer } from "../../../../include/reducer";
 import SelectItemType from "./SelectItemType";
 import { AppContext } from "../../../../include/js/context";
 
-let typeList = [];
-getItemType().then(
-  (res) =>
-    (typeList = res.data[0].filter((type) => type.type_verify_qc === true))
-);
 export const QCContext = React.createContext();
 const initialStateMain = qcTestItemFields;
 const initialStateSubject = [qcTestItemSubjectFields];
 const initialStateSpecification = [qcTestItemSpecFields];
 const initialStateMethod = [qcTestItemMethodFields];
 
-const QCItemTestCreate = (props) => {
-  const { auth, current_project } = useContext(AppContext);
-  const [pageLoad, setPageLoad] = useState(true);
-  const params = useParams();
+const QCItemTestForm = (props) => {
+  const { auth, currentProject, currentMenu } = useContext(AppContext);
+  const { action, id } = useParams();
+  const { readOnly } = props?.location?.state ?? {
+    readOnly: action !== "view" ? false : true,
+  };
   const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
-  const readOnly = false;
+  // const readOnly = false;
+  const [loading, setLoading] = useState(true);
   const [data_head, headDispatch] = useReducer(mainReducer, initialStateMain);
   const [subjectData, subjectDispatch] = useReducer(
     mainReducer,
@@ -60,8 +57,9 @@ const QCItemTestCreate = (props) => {
     initialStateMethod
   );
   useEffect(() => {
+    setLoading(true);
     const getData = async () =>
-      await getQATestByTypeID(params.id).then((res) => {
+      await getQATestByTypeID(id).then((res) => {
         console.log("getQATestByTypeID", res.data[0]);
         headDispatch({
           type: "SET_HEAD",
@@ -79,31 +77,42 @@ const QCItemTestCreate = (props) => {
           type: "SET_DETAIL_WOC",
           payload: res.data[0].qa_method,
         });
-        setPageLoad(false);
+        setLoading(false);
       });
-    params && getData();
-  }, []);
+    id && getData();
+  }, [readOnly]);
 
   const config = {
-    projectId: current_project && current_project.project_id,
-    title: current_project && current_project.project_name,
-    home: current_project && current_project.project_url,
+    projectId: currentProject && currentProject.project_id,
+    title: currentProject && currentProject.project_name,
+    home: currentProject && currentProject.project_url,
     show: true,
     breadcrumb: [
       "Home",
       "QA",
       "Master Data",
-      "Quality Test Item",
+      "Conditions",
       data_head.type_no ? "Edit" : "Create",
       data_head.type_no && data_head.type_no,
     ],
     search: false,
-    buttonAction: ["Save", "Discard"],
+    buttonAction:
+      action !== "create" && readOnly ? ["Edit", "Back"] : ["Save", "Discard"],
     step: {},
     create: "",
     save: "function",
-    discard: "/qa/master_data/quality_test_item",
+    discard: currentMenu.menu_url,
+    back: currentMenu.menu_url,
+    edit: {
+      path: `${currentMenu.menu_url}/edit/` + (id ?? "new"),
+      data: { readOnly: false },
+    },
     onSave: (e) => {
+      const redirectToView = () =>
+        history.push({
+          pathname: `${currentMenu.menu_url}/view/` + (id ?? "new"),
+          state: { readOnly: true },
+        });
       // e.preventDefault();
       console.log("Save");
       const data = {
@@ -113,7 +122,10 @@ const QCItemTestCreate = (props) => {
         methodData: methodData,
       };
       console.log(data);
-      saveQATestCase(data);
+      saveQAConditions(data, redirectToView);
+      // return () => {
+
+      // };
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -131,10 +143,6 @@ const QCItemTestCreate = (props) => {
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
-  const redirect_to_view = (id) => {
-    history.push("/qa/master_data/quality_test_item/view/" + (id ? id : "new"));
-  };
-  // const
   const contextValue = useMemo(() => {
     return {
       data_head,
@@ -153,35 +161,38 @@ const QCItemTestCreate = (props) => {
       },
     };
   }, [data_head, readOnly, subjectData, specificationData, methodData]);
-  console.log("QCMain Render..");
+  console.log("itemType");
   return (
-    <MainLayout {...config} pageLoad={pageLoad}>
+    <MainLayout {...config} loading={loading}>
       <>
         <div id="form">
-          <Row className="col-2">
-            <Col span={24}>
-              <h2>
-                <strong>
-                  {data_head.type_id ? "Edit" : "Create"} Quality Test Case{" "}
-                  {data_head.type_no_name && "#" + data_head.type_no_name}
-                </strong>
-              </h2>
-            </Col>
-          </Row>
-          <Row className="col-2 mt-2" gutter={[32, 0]}>
-            <Col span={12}>
-              <SelectItemType
-                data_head={data_head}
-                readOnly={readOnly}
-                item_type={typeList}
-                upDateFormValue={upDateFormValue}
-              />
-            </Col>
-          </Row>
+          <>
+            <Row className="col-2">
+              <Col span={24}>
+                <h2>
+                  <strong>
+                    {!readOnly ? (data_head.type_id ? "Edit " : "Create ") : ""}
+                    {"Condition "}
+                    {data_head.type_no_name && "#" + data_head.type_no_name}
+                  </strong>
+                </h2>
+              </Col>
+            </Row>
+            <Row className="col-2 mt-2" gutter={[32, 0]}>
+              <Col span={12}>
+                <SelectItemType
+                  data_head={data_head}
+                  action={action}
+                  readOnly={readOnly}
+                  upDateFormValue={upDateFormValue}
+                />
+              </Col>
+            </Row>
 
-          <QCContext.Provider value={contextValue}>
-            <QCItemTestTabPanel />
-          </QCContext.Provider>
+            <QCContext.Provider value={contextValue}>
+              <QCItemTestTabPanel />
+            </QCContext.Provider>
+          </>
         </div>
         <Comments data={[]} />
       </>
@@ -189,4 +200,4 @@ const QCItemTestCreate = (props) => {
   );
 };
 
-export default React.memo(QCItemTestCreate);
+export default React.memo(QCItemTestForm);

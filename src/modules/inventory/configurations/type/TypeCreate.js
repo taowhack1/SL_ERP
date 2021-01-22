@@ -19,7 +19,6 @@ const TypeCreate = (props) => {
   useEffect(() => {
     setMainContext({ ...mainContext, config: { page: "TypeCreate.js" } });
   }, []);
-  const { TextArea } = Input;
   const { Title, Text } = Typography;
   const history = useHistory();
   const authorize = Authorize();

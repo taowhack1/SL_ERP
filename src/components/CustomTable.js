@@ -41,7 +41,7 @@ const CustomTable = (props) => {
     <>
       <Table
         title={title}
-        className="table-detail"
+        className={props.className ?? "table-detail"}
         rowClassName={rowClassName}
         loading={loading}
         columns={columns}

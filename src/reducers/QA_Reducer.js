@@ -3,39 +3,61 @@ import {
   GET_QC_RECEIVE_LIST,
   GET_QA_MASTER_DATA,
   GET_QA_TEST_BY_ID,
-  GET_ALL_TEST_CASE,
+  GET_ALL_CONDITIONS,
+  SET_DEFUALT_CONDITIONS,
+  SET_LOADING,
 } from "../actions/types";
 
 const initialState = {
   qc_receive_list: [],
   qc_receive_detail_list: [],
   qa_master_data: {
-    test_case_subject: [],
-    test_case_specification: [],
-    test_case_method: [],
+    conditions_subject: [],
+    conditions_specification: [],
+    conditions_method: [],
   },
-  qaTestCase: {
+  conditions: {
     list: [],
     type: {},
     subject: [],
     specification: [],
     method: [],
   },
+  loading: false,
 };
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_QC_RECEIVE_LIST:
-      return { ...state, qc_receive_list: action.payload };
+      return { ...state, qc_receive_list: action.payload, loading: false };
     case GET_QC_RECEIVE_DETAIL_LIST:
-      return { ...state, qc_receive_detail_list: action.payload };
-    case GET_QA_MASTER_DATA:
-      return { ...state, qa_master_data: action.payload };
-    case GET_QA_TEST_BY_ID:
-      return { ...state, qa_test: action.payload };
-    case GET_ALL_TEST_CASE:
       return {
         ...state,
-        qaTestCase: { ...state.qaTestCase, list: action.payload },
+        qc_receive_detail_list: action.payload,
+        loading: false,
+      };
+    case GET_QA_MASTER_DATA:
+      return { ...state, qa_master_data: action.payload, loading: false };
+    case GET_QA_TEST_BY_ID:
+      return { ...state, qa_test: action.payload, loading: false };
+    case GET_ALL_CONDITIONS:
+      return {
+        ...state,
+        conditions: { ...state.conditions, list: action.payload },
+        loading: false,
+      };
+    case SET_DEFUALT_CONDITIONS:
+      return {
+        ...state,
+        conditions: {
+          ...state.conditions,
+          list: initialState.conditions.list,
+        },
+        loading: false,
+      };
+    case SET_LOADING:
+      return {
+        ...state,
+        loading: action.payload,
       };
     default:
       return state;

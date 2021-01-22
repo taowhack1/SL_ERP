@@ -28,6 +28,7 @@ import {
 } from "../../include/js/api";
 
 export const getItemType = () => {
+  console.log("getItemType");
   return axios
     .get(api_get_item_type, header_config)
     .catch((error) => console.error(error));

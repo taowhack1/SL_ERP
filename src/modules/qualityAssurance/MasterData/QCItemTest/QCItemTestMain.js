@@ -1,77 +1,75 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
+import { SET_DEFUALT_CONDITIONS } from "../../../../actions/types";
 import { Row, Col, Table } from "antd";
 import $ from "jquery";
 import Authorize from "../../../system/Authorize";
 import useKeepLogs from "../../../logs/useKeepLogs";
 import MainLayout from "../../../../components/MainLayout";
 import {
-  item_test_case,
+  item_conditions,
   QASubjectColumns,
   qcTestItemMainColumns,
 } from "../../configs/qcTestItemConfig";
 import { sortData } from "../../../../include/js/function_main";
-import { getAllQATestCaseGroupByItemType } from "../../../../actions/qa/qaTestAction";
+import { getAllQAConditionsGroupByItemType } from "../../../../actions/qa/qaTestAction";
+import CustomTable from "../../../../components/CustomTable";
+import { AppContext } from "../../../../include/js/context";
 const QCItemTestMain = (props) => {
+  const { currentProject, currentMenu } = useContext(AppContext);
   const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
-  const current_project = useSelector((state) => state.auth.currentProject);
-
-  const [rowClick, setRowClick] = useState(false);
-  const [loading, setLoading] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
+  const { loading, conditions } = useSelector((state) => state.qa);
+  const [data, setData] = useState(conditions?.list);
   useEffect(() => {
-    dispatch(getAllQATestCaseGroupByItemType());
+    dispatch(getAllQAConditionsGroupByItemType());
+    return () => dispatch({ type: SET_DEFUALT_CONDITIONS });
   }, []);
-  const testCaseList = useSelector((state) => state.qa.qaTestCase.list);
+
+  useEffect(() => {
+    setData(conditions?.list);
+  }, [conditions]);
+
   const config = {
-    projectId: current_project && current_project.project_id,
-    title: current_project && current_project.project_name,
-    home: current_project && current_project.project_url,
+    projectId: currentProject && currentProject.project_id,
+    title: currentProject && currentProject.project_name,
+    home: currentProject && currentProject.project_url,
     show: true,
-    breadcrumb: ["Home", "QA", "Master Data", "Quality Test Item"],
-    search: false,
-    // create: "modal",
-    create: "/qa/master_data/quality_test_item/create",
-    // buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
-    buttonAction: ["Create"],
+    breadcrumb: ["Home", "QA", "Master Data", "Conditions"],
+    search: true,
+    create: "",
+    buttonAction: [],
     edit: {},
-    disabledEditBtn: !rowClick,
-    discard: "/qa",
+    back: currentProject.project_url ?? "#",
     onCancel: () => {
       console.log("Cancel");
     },
+    onSearch: (text) => {
+      console.log(text);
+      setData(
+        text
+          ? conditions.list.filter(
+              (type) =>
+                type.type_no_name.toUpperCase().indexOf(text.toUpperCase()) >= 0
+            )
+          : conditions.list
+      );
+    },
   };
-  const redirect_to_view = (id, record) => {
-    console.log(id, record);
-    history.push({
-      path: "/qa/master_data/quality_test_item/edit/" + (id ? id : "new"),
-      state: record,
-    });
-  };
-  // const expandedRowRender = () => {
-  //   const data = [];
-  //   return (
-  //     <Table
-  //       columns={QASubjectColumns}
-  //       dataSource={data}
-  //       pagination={{ pageSize: 20 }}
-  //     />
-  //   );
-  // };
   return (
-    <div>
-      <MainLayout {...config}>
+    <>
+      <MainLayout {...config} loading={loading}>
         <Table
           loading={loading}
           columns={qcTestItemMainColumns}
-          dataSource={sortData(testCaseList)}
+          dataSource={sortData(data)}
           onChange={onChange}
           bordered
           pagination={{ pageSize: 10 }}
@@ -80,26 +78,17 @@ const QCItemTestMain = (props) => {
           onRow={(record, rowIndex) => {
             return {
               onClick: (e) => {
-                setRowClick(true);
-                $(e.target)
-                  .closest("tbody")
-                  .find("tr")
-                  .removeClass("selected-row");
-                $(e.target).closest("tr").addClass("selected-row");
                 keepLog.keep_log_action(record.type_no_name);
-                // redirect_to_view(record.type_id, record);
                 history.push({
-                  pathname:
-                    "/qa/master_data/quality_test_item/edit/" + record.type_id,
-                  state: record,
+                  pathname: `${currentMenu.menu_url}/view/` + record.type_id,
+                  state: { readOnly: true },
                 });
               },
             };
           }}
-          // expandable={{ expandedRowRender }}
         />
       </MainLayout>
-    </div>
+    </>
   );
 };
 

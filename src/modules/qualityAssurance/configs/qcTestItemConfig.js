@@ -212,7 +212,7 @@ export const subject_data = [
     qa_subject_actived: 1,
   },
 ];
-export const item_test_case = [
+export const item_conditions = [
   {
     type_id: 1,
     type_no: "RM",

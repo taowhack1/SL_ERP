@@ -13,16 +13,27 @@ function MainLayout(props) {
 
   return (
     <>
-      <Spin tip="Loading..." spinning={props.pageLoad ?? false}>
-        <Layout>
-          <Header>
-            <MainHeader title={props.title} projectId={props.projectId} />
-          </Header>
-          {props.show && <TopContent {...props} />}
-          <Content id="content">{props.children}</Content>
-          <MainFooter />
-        </Layout>
-      </Spin>
+      <Layout>
+        <Header>
+          <MainHeader title={props.title} projectId={props.projectId} />
+        </Header>
+        {props.loading ? (
+          <>
+            <Spin tip="Loading..." spinning={props.loading}>
+              <div id="top-content"></div>
+              <Content id="content">
+                <div id="form"></div>
+              </Content>
+            </Spin>
+          </>
+        ) : (
+          <>
+            {props.show && <TopContent {...props} />}
+            <Content id="content">{props.children}</Content>
+          </>
+        )}
+        <MainFooter />
+      </Layout>
     </>
   );
 }

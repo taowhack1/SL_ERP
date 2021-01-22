@@ -30,6 +30,14 @@ export const rootReducer = (state, action) => {
     state = undefined;
   }
 
+  switch (action.type) {
+    case USER_LOGOUT:
+      state = undefined;
+      break;
+    default:
+      break;
+  }
+
   return appReducer(state, action);
 };
 // export default combineReducers({
