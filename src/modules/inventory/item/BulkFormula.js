@@ -54,6 +54,7 @@ const BulkFormula = ({ partId }) => {
       payload: FormulaReducer.data[partId],
     });
   }, [FormulaReducer.data[partId].length]);
+  console.log("bulkformula");
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">

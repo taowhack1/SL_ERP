@@ -252,8 +252,8 @@ export const issue_columns = [
     title: "Description",
     dataIndex: "issue_description",
     key: "issue_description",
-    width: "20%",
     align: "left",
+    ellipsis: true,
   },
 
   {
@@ -371,26 +371,31 @@ export const issue_detail_columns = [
     id: 0,
     name: "Item",
     size: 9,
+    require: true,
   },
   {
     id: 1,
     name: "Destination Location",
     size: 5,
+    require: true,
   },
   {
     id: 2,
     name: "Quantity",
     size: 3,
+    require: true,
   },
   {
     id: 3,
     name: "Unit",
     size: 3,
+    require: true,
   },
   {
     id: 4,
     name: "Due Date",
     size: 3,
+    require: true,
   },
 ];
 
@@ -445,7 +450,6 @@ export const disburse_columns = [
     title: "Description",
     dataIndex: "disburse_no_description",
     key: "disburse_no_description",
-    width: "20%",
     align: "left",
   },
 

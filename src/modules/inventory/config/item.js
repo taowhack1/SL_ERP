@@ -1,13 +1,14 @@
 import React from "react";
 import CustomSelect from "../../../components/CustomSelect";
 import Text from "antd/lib/typography/Text";
-import { Input, InputNumber, Popconfirm } from "antd";
+import { Input, InputNumber, Popconfirm, TimePicker } from "antd";
 import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
 import { convertDigit } from "../../../include/js/main_config";
 import {
   getSelfStepStatus,
   pad2number,
 } from "../../../include/js/function_main";
+import moment from "moment";
 export const item_vendor_columns = [
   {
     id: 0,
@@ -71,12 +72,13 @@ export const item_fields = {
   item_min: 0,
   item_max: 0,
   item_customer_run_no: "SRL",
-
   item_price_approve: 1,
   uom_id: null,
   uom_name: null,
   type_id: null,
+  // type_id: 4,
   type_name: null,
+  // type_name: "Finish Good",
   category_id: null,
   category_name: null,
   tg_item_qty: null,
@@ -857,3 +859,160 @@ export const totalFormulaColumns = [
     },
   },
 ];
+export const fillingProcessColumns = (
+  readOnly,
+  { id, name, time, worker },
+  onChange,
+  onDelete,
+  onSave
+) => [
+  {
+    title: "No.",
+    dataIndex: "id",
+    width: "5%",
+    align: "center",
+    ellipsis: true,
+    render: (value) => {
+      return <Text className={readOnly ? "text-value" : ""}>{value + 1}</Text>;
+    },
+  },
+  {
+    title: (
+      <div className="text-center">
+        {!readOnly && <span className="require">* </span>}
+        {"Description"}
+      </div>
+    ),
+    dataIndex: name,
+    align: "left",
+    // width: "10%",
+    ellipsis: true,
+    render: (value, record) => {
+      return readOnly ? (
+        <Text className="text-value">{value}</Text>
+      ) : (
+        <Input
+          placeholder={"Description"}
+          size={"small"}
+          value={value}
+          name={name}
+          onChange={(e) => onChange(record.id, { [name]: e.target.value })}
+          onBlur={(e) => onSave(record.id, name)}
+        />
+      );
+    },
+  },
+  {
+    title: (
+      <div className="text-center">
+        {!readOnly && <span className="require">* </span>}
+        {"Worker"}
+      </div>
+    ),
+    dataIndex: worker,
+    align: "center",
+    ellipsis: true,
+    width: "10%",
+    render: (value, record) => {
+      return readOnly ? (
+        <Text className="text-value">{value ? value : "-"}</Text>
+      ) : (
+        <InputNumber
+          className="full-width"
+          name={worker}
+          placeholder="Amount of Worker"
+          min={0}
+          step={1}
+          defaultValue={0}
+          precision={0}
+          value={value}
+          onChange={(data) => {
+            console.log(data);
+            onChange(record.id, {
+              [worker]: data ?? 0,
+            });
+          }}
+          onBlur={(e) => {
+            console.log(e.target.value);
+            onSave(record.id, worker);
+          }}
+          size="small"
+        />
+      );
+    },
+  },
+  {
+    title: (
+      <div className="text-center">
+        {!readOnly && <span className="require">* </span>}
+        {"Used Time"}
+      </div>
+    ),
+    dataIndex: time,
+    align: "center",
+    ellipsis: true,
+    width: "10%",
+    render: (value, record) => {
+      return readOnly ? (
+        <Text className="text-value">{value ? value : "00:00:00"}</Text>
+      ) : (
+        <TimePicker
+          className="full-width"
+          size={"small"}
+          format={"HH:mm:ss"}
+          showNow={false}
+          name={time}
+          placeholder="HH:mm:ss"
+          required
+          value={value ? moment(value, "HH:mm:ss") : ""}
+          onChange={(data) => {
+            const timestamp = moment(data, "HH:mm:ss").format("HH:mm:ss");
+            console.log(timestamp);
+            onChange(record.id, {
+              [time]: timestamp ?? null,
+            });
+          }}
+          onBlur={() => onSave(record.id, time)}
+        />
+      );
+    },
+  },
+  {
+    title: (
+      <Text strong>
+        <EllipsisOutlined />
+      </Text>
+    ),
+    align: "center",
+    width: "5%",
+    render: (_, record) => {
+      if (readOnly) {
+        return null;
+      } else {
+        return (
+          <Popconfirm
+            onConfirm={() => {
+              onDelete(record.id);
+            }}
+            title="Are you sure you want to delete this row？"
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteTwoTone />
+          </Popconfirm>
+        );
+      }
+    },
+  },
+];
+
+export const fillingProcessFields = {
+  id: 0,
+  item_filling_process_id: null,
+  item_filling_process_no: null,
+  item_filling_process_description: null,
+  item_filling_process_lead_time: "00:00:00",
+  item_filling_process_worker: 0,
+  item_filling_process_remark: null,
+  commit: 1,
+};

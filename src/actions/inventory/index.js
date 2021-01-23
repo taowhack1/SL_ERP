@@ -9,6 +9,7 @@ import {
 } from "../types";
 
 import {
+  api_get_all_item_list,
   api_get_configuration_type,
   api_get_item_list,
 } from "../../include/js/api";
@@ -46,7 +47,10 @@ export const getMasterDataItem = (user, setLoading) => async (dispatch) => {
       `${api_get_item_identify_benefit}`,
       header_config
     );
-    const get_item = axios.get(api_get_item_list, header_config);
+    const get_item = axios.get(
+      user_name ? `${api_get_all_item_list}/${user_name}` : api_get_item_list,
+      header_config
+    );
     const get_shelf = axios.get(api_shelf, header_config);
     const get_item_control = axios.get(api_get_item_control, header_config);
     Promise.allSettled([

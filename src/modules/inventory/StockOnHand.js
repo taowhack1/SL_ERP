@@ -165,6 +165,7 @@ const StockMove = (props) => {
               dataSource={state}
               onChange={onChange}
               rowKey={"item_id"}
+              pagination={{ pageSize: 15 }}
               size="small"
               onRow={(record, rowIndex) => {
                 return {

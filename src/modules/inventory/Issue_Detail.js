@@ -105,6 +105,7 @@ const IssueDetail = ({
           issue_detail_columns.map((col, key) => {
             return (
               <Col key={key} span={col.size} className="col-outline">
+                {!readOnly && <span className="require">* </span>}
                 <Text strong>{col.name}</Text>
               </Col>
             );
@@ -161,10 +162,15 @@ const IssueDetail = ({
                           })
                         : onChangeValue(line.id, {
                             item_id: null,
-                            uom_id: null,
                             item_no_name: null,
-                            uom_no: null,
                             item_control_id: null,
+                            uom_id: null,
+                            uom_no: null,
+                            uom_no_name: null,
+                            location_id: null,
+                            location_shelf_no_name: null,
+                            issue_detail_due_date: null,
+                            issue_detail_qty: 0,
                           });
                     }}
                   />
@@ -264,9 +270,13 @@ const IssueDetail = ({
                         : ""
                     }
                     onChange={(data) => {
-                      onChangeValue(line.id, {
-                        issue_detail_due_date: data.format("DD/MM/YYYY"),
-                      });
+                      data
+                        ? onChangeValue(line.id, {
+                            issue_detail_due_date: data.format("DD/MM/YYYY"),
+                          })
+                        : onChangeValue(line.id, {
+                            issue_detail_due_date: null,
+                          });
                     }}
                   />
                 </Col>

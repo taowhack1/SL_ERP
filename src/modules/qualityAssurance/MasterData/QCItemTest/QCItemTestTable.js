@@ -1,8 +1,4 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
-import {
-  qcTestItemSubjectColumns,
-  qcTestItemSubjectFields,
-} from "../../configs/qcTestItemConfig";
 import { QCContext } from "./QCItemTestForm";
 import CustomTable from "../../../../components/CustomTable";
 import Search from "../../../../components/Search";

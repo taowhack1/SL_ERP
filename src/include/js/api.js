@@ -110,7 +110,8 @@ export const api_item_weight = `${api_server}/api/inventory/item_weight`;
 export const api_item_packaging = `${api_server}/api/inventory/item_packaging`;
 // item -> process
 export const api_item_process = `${api_server}/api/inventory/item_process`;
-
+// item -> filling process
+export const api_filling_process = `${api_server}/api/inventory/item_filling_process`;
 //Sale
 export const api_get_qn_by_id = `${api_server}/api/sales/qn`;
 export const api_qn_detail = `${api_server}/api/sales/qn_detail`;

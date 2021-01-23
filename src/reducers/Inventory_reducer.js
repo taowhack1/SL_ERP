@@ -43,6 +43,7 @@ const initialState = {
     data_weight_detail: [],
     data_packaging_detail: [],
     data_file: [],
+    data_filling: [],
   },
   master_data: {
     item_uom: [],

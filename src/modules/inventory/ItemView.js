@@ -34,6 +34,7 @@ const ItemView = (props) => {
     data_weight_detail,
     data_packaging_detail,
     data_file,
+    data_filling,
   } = useSelector((state) => state.inventory.item);
 
   const dataComment = useSelector((state) => state.log.comment_log);
@@ -107,6 +108,7 @@ const ItemView = (props) => {
         data_weight_detail: data_weight_detail,
         data_packaging_detail: data_packaging_detail,
         data_file: data_file,
+        data_filling: data_filling,
       },
       path: data_head && "/inventory/items/edit/" + data_head.item_id,
     },
@@ -197,6 +199,7 @@ const ItemView = (props) => {
         data_formula,
         "item_formula_percent_qty"
       ),
+      filling: data_filling,
     };
   }, [readOnly, data_file]);
   return (

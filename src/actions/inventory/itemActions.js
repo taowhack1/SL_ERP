@@ -15,6 +15,7 @@ import {
   api_get_part_and_formula_all,
   api_get_fg_material,
   api_get_all_item_list,
+  api_filling_process,
 } from "../../include/js/api";
 import axios from "axios";
 import { message, notification } from "antd";
@@ -56,7 +57,6 @@ const bind_vendor_fn = (item_id, data_detail) => {
   const data_detail_temp = data_detail.filter(
     (detail) =>
       detail.vendor_id !== null &&
-      detail.item_vendor_price !== 0 &&
       detail.uom_id !== null &&
       detail.type_id !== null &&
       detail.category_id !== null
@@ -155,6 +155,30 @@ const bind_packaging = (item_id, data_packaging_detail) => {
       })
   );
 };
+const bind_filling = (item_id, data_filling) => {
+  console.log("bind_filling", data_filling);
+  const data_filling_temp = data_filling.filter(
+    (detail) =>
+      detail.item_filling_process_description &&
+      detail.item_filling_process_description !== null &&
+      detail.item_filling_process_worker &&
+      detail.item_filling_process_worker !== null &&
+      detail.commit === 1
+  );
+  console.log("filling data temp ", data_filling_temp);
+  return (
+    data_filling_temp.length &&
+    axios
+      .post(
+        `${api_filling_process}/${item_id}`,
+        data_filling_temp,
+        header_config
+      )
+      .then((res) => {
+        console.log("BIND FILLING");
+      })
+  );
+};
 
 export const getAllItems = (user_name) => async (dispatch) => {
   await axios
@@ -187,6 +211,7 @@ export const createNewItems = (data, user_name, redirect) => async (
     data_weight_detail,
     data_packaging_detail,
     data_file,
+    data_filling,
   } = data;
   console.log("createNewItems RawData :", data);
   try {
@@ -221,6 +246,7 @@ export const createNewItems = (data, user_name, redirect) => async (
               bind_packaging(item_id, data_packaging_detail),
             access_right.attach_file &&
               item_save_file(item_id, data_file, user_name),
+            access_right.filling && bind_filling(item_id, data_filling),
           ])
             .then(async (data) => {
               console.log("Promise.allSettled. THEN ", data);
@@ -278,6 +304,7 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
     data_weight_detail,
     data_packaging_detail,
     data_file,
+    data_filling,
   } = data;
   console.log("upDateItem RawData :", data);
   try {
@@ -303,6 +330,7 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
               bind_packaging(item_id, data_packaging_detail),
             access_right.attach_file &&
               item_save_file(item_id, data_file, user_name),
+            access_right.filling && bind_filling(item_id, data_filling),
           ])
             .then((data) => {
               console.log("Promise Then");
@@ -366,6 +394,10 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         `${api_upload_file}/${item_id}`,
         header_config
       );
+      const res_filling = axios.get(
+        `${api_filling_process}/${item_id}`,
+        header_config
+      );
       Promise.allSettled([
         res_head,
         res_detail,
@@ -374,6 +406,7 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         res_weight,
         res_packaging,
         res_file,
+        res_filling,
       ])
         .then((data) => {
           console.log("Promise.allSettled GET ITEM BY ID", data);
@@ -458,6 +491,7 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
                     ),
                 },
               },
+              data_filling: sortData(data[7].value.data[0]),
             };
 
             return item;
@@ -516,7 +550,6 @@ export const item_actions = (data, item_id) => (dispatch) => {
             key: "validate",
             duration: 2,
           });
-          console.log(res);
           dispatch(get_item_by_id(item_id, data.user_name));
         })
     : message.error({
@@ -572,9 +605,6 @@ export const getFGMaterialList = async (
   wo_qty_percent_spare_pk
 ) => {
   // so_id, item_id, item_qty_produce, wo_qty_percent_spare_rm, wo_qty_percent_spare_pk
-  console.log(
-    `${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}&${wo_qty_percent_spare_rm}&${wo_qty_percent_spare_pk}`
-  );
   return await axios
     .get(
       `${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}&${wo_qty_percent_spare_rm}&${wo_qty_percent_spare_pk}`

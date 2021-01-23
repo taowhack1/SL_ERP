@@ -34,6 +34,7 @@ import {
   item_require_fields,
   item_weight_detail,
   item_part_mix_fields,
+  fillingProcessFields,
 } from "./config/item";
 import {
   sum2DArrOdjWithField,
@@ -61,6 +62,7 @@ const ItemCreate = (props) => {
   const initialStateQA = [item_qa_detail_fields];
   const initialStatePackaging = [item_packaging_detail_fields];
   const initialStateWeight = item_weight_detail;
+  const initialStateFillingProcess = [fillingProcessFields];
 
   const readOnly = false;
   const history = useHistory();
@@ -115,6 +117,7 @@ const ItemCreate = (props) => {
   PartReducer.setReducer(
     data ? (data.data_head.item_id ? "object" : "array") : "array"
   );
+  const [filling, setFilling] = useState(initialStateFillingProcess);
   PartDetailReducer.setReducer("array");
   PMReducer.setReducer("array");
   FormulaReducer.setReducer("array");
@@ -136,7 +139,6 @@ const ItemCreate = (props) => {
   const sumPercent = useCallback((data, field) => {
     return setPercent(sum2DArrOdjWithField(data, field));
   }, []);
-  console.log("data.data_part", data.data_part);
   useEffect(() => {
     dispatch(get_sale_master_data());
     dispatch(getAllMachine());
@@ -184,6 +186,7 @@ const ItemCreate = (props) => {
     FormulaReducer.setDataArray2D(data.data_formula);
     sumPercent(data.data_formula, "item_formula_percent_qty");
     setFile(data.data_file ?? item_file);
+    setFilling(data.data_filling ?? []);
   }, []);
 
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -217,6 +220,7 @@ const ItemCreate = (props) => {
       console.log("SAVE WEIGHT", data_weight_detail);
       console.log("SAVE PACKAGING", data_packaging_detail);
       console.log("SAVE FILES", data_file);
+      console.log("SAVE FILLING", filling);
 
       const key = "validate";
       const validate = validateFormHead(data_head, item_require_fields);
@@ -251,6 +255,7 @@ const ItemCreate = (props) => {
             weight: true,
             packaging: true,
             attach_file: true,
+            filling: true,
           },
           data_head: data_head,
           data_detail: data_detail,
@@ -258,12 +263,13 @@ const ItemCreate = (props) => {
           data_part_detail: PartDetailReducer.data,
           data_part_mix: PMReducer.data,
           data_formula: FormulaReducer.data,
-          // data_process: data_production_process_detail,
           data_qa_detail: data_qa_detail,
           data_weight_detail: data_weight_detail,
           data_packaging_detail: data_packaging_detail,
           data_file: data_file,
+          data_filling: filling,
         };
+
         data_head.item_id
           ? dispatch(
               upDateItem(
@@ -295,6 +301,7 @@ const ItemCreate = (props) => {
   };
 
   const upDateFormValue = (data) => {
+    console.log("upDateFormValue", data);
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
   const updateFile = useCallback(
@@ -324,6 +331,8 @@ const ItemCreate = (props) => {
       PartDetailReducer,
       PMReducer,
       FormulaReducer,
+      filling,
+      setFilling,
       readOnly,
       data_file,
       updateFile,
@@ -340,6 +349,8 @@ const ItemCreate = (props) => {
     PartDetailReducer,
     PMReducer.data,
     FormulaReducer,
+    filling,
+    setFilling,
     readOnly,
     data_file,
     updateFile,

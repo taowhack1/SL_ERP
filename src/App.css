@@ -645,10 +645,6 @@ div.ant-tabs-tab > div {
   border-radius: 5px;
   padding: 2px;
   margin: 2px 0px 5px 0px;
-  /* -webkit-box-shadow: 6px 1px 15px 1px rgba(203, 203, 203, 0.81);
-  box-shadow: 6px 1px 15px 1px rgba(203, 203, 203, 0.81); */
-  /* -webkit-box-shadow: 6px 1px 15px 1px rgba(212, 212, 212, 0.81);
-  box-shadow: 6px 1px 15px 1px rgba(212, 212, 212, 0.81); */
   -webkit-box-shadow: 11px 14px 18px -16px rgba(213, 213, 213, 0.63);
   box-shadow: 11px 14px 18px -16px rgba(213, 213, 213, 0.63);
 }

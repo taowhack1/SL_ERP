@@ -1,6 +1,7 @@
 import { Tabs } from "antd";
 import React from "react";
 import { useSelector } from "react-redux";
+import FillingProcess from "./FillingProcess";
 import TabItemDetail from "./TabItemDetail";
 import TabPackaging from "./TabItemFG_Packaging";
 import TabItemPurchase from "./TabItemPurchase";
@@ -129,7 +130,8 @@ const TabPanel = ({
         {type_id !== undefined &&
           type_id &&
           [1, 2, 3, 4, 5].includes(type_id) &&
-          [1, 10, 11, 18].includes(department_id) && (
+          [1, 10, 11].includes(department_id) && (
+            // [1, 10, 11, 18].includes(department_id) && (
             <Tabs.TabPane
               tab={
                 <span className="tab_pane">
@@ -173,17 +175,45 @@ const TabPanel = ({
         {type_id !== undefined &&
           type_id &&
           [4, 5].includes(type_id) &&
-          [1, 10, 11, 18].includes(department_id) && (
+          [1, 10, 11].includes(department_id) && (
+            // [1, 10, 11, 18].includes(department_id) && (
             <Tabs.TabPane
               tab={
                 <span className="tab_pane">
                   {!readOnly && <span className="require">* </span>}
-                  {"FG Packaging & Filling Process"}
+                  {"Packaging"}
                 </span>
               }
               key={"7"}
             >
               <TabPackaging
+                data_file={data_file}
+                data_head={data_head}
+                upDateFormValue={upDateFormValue}
+                uom_name={data_head.uom_name}
+                data_packaging_detail={data_packaging_detail}
+                packagingDetailDispatch={packagingDetailDispatch}
+                data_weight_detail={data_weight_detail}
+                weightDetailDispatch={weightDetailDispatch}
+                readOnly={readOnly}
+              />
+            </Tabs.TabPane>
+          )}
+        {type_id !== undefined &&
+          type_id &&
+          [4, 5].includes(type_id) &&
+          [1, 10, 11, 20].includes(department_id) && (
+            // [1, 10, 11, 18, 20].includes(department_id) && (
+            <Tabs.TabPane
+              tab={
+                <span className="tab_pane">
+                  {!readOnly && <span className="require">* </span>}
+                  {"Filling Process"}
+                </span>
+              }
+              key={"8"}
+            >
+              <FillingProcess
                 data_file={data_file}
                 data_head={data_head}
                 upDateFormValue={upDateFormValue}
