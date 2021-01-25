@@ -294,7 +294,7 @@ const IssueDetail = ({
                 </Col>
               </Row>
             ))}
-          <div style={{ marginTop: 10 }}>
+          {/* <div style={{ marginTop: 10 }}>
             <Button
               type="dashed"
               onClick={() => {
@@ -304,7 +304,7 @@ const IssueDetail = ({
             >
               <PlusOutlined /> Add a line
             </Button>
-          </div>
+          </div> */}
           <div style={{ marginTop: 10 }}>
             <Button
               type="dashed"
