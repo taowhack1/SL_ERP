@@ -13,14 +13,8 @@ import { issue_detail_columns, issue_detail_fields } from "./config";
 import CustomSelect from "../../components/CustomSelect";
 
 import ModalSelectItem from "./Modal_Select_Item";
-import { convertDigit } from "../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../include/js/main_config";
 const { Text } = Typography;
-
-const numberFormat = {
-  precision: 3,
-  formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-  parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
-};
 
 const IssueDetail = ({
   readOnly,
@@ -29,6 +23,7 @@ const IssueDetail = ({
   detailDispatch,
 
   type_id,
+  data_head,
   filter,
 }) => {
   console.log("Render : IssueDetail");
@@ -51,9 +46,9 @@ const IssueDetail = ({
     setVisible(true);
     console.log("Select multiple item modal open");
   };
-  // const addLine = () => {
-  //   detailDispatch({ type: "ADD_ROW", payload: issue_detail_fields });
-  // };
+  const addLine = () => {
+    detailDispatch({ type: "ADD_ROW", payload: issue_detail_fields });
+  };
   const delLine = (id) => {
     detailDispatch({ type: "DEL_ROW", payload: { id: id } });
   };
@@ -84,6 +79,7 @@ const IssueDetail = ({
         modalSave={modalSave}
         modalCancel={modalCancel}
         data_detail={data_detail}
+        data_head={data_head}
         headDispatch={headDispatch}
         okTitle="Select"
         cancelTitle="Discard"
@@ -97,7 +93,7 @@ const IssueDetail = ({
       />
     );
   };
-  console.log("data_detail", data_detail);
+  console.log("select_location", data_detail, select_location);
 
   return (
     <>
@@ -161,6 +157,9 @@ const IssueDetail = ({
                             item_no_name: option.title,
                             uom_no: option.data.uom_no,
                             item_control_id: option.data.item_control_id,
+                            type_id: option.data.type_id,
+                            type_no_name: option.data.type_no_name,
+                            issue_detail_qty: 0,
                           })
                         : onChangeValue(line.id, {
                             item_id: null,
@@ -173,7 +172,13 @@ const IssueDetail = ({
                             location_shelf_no_name: null,
                             issue_detail_due_date: null,
                             issue_detail_qty: 0,
+                            type_id: null,
+                            type_no_name: null,
                           });
+                      headDispatch({
+                        type_id: data ? option.data.type_id : null,
+                        type_no_name: data ? option.data.type_no_name : null,
+                      });
                     }}
                   />
                 </Col>
@@ -283,13 +288,13 @@ const IssueDetail = ({
                   />
                 </Col>
                 <Col span={1} style={{ textAlign: "center" }}>
-                  {line.item_id && (
+                  {data_detail.length > 1 && (
                     <DeleteTwoTone onClick={() => delLine(line.id)} />
                   )}
                 </Col>
               </Row>
             ))}
-          {/* <div style={{ marginTop: 10 }}>
+          <div style={{ marginTop: 10 }}>
             <Button
               type="dashed"
               onClick={() => {
@@ -299,7 +304,7 @@ const IssueDetail = ({
             >
               <PlusOutlined /> Add a line
             </Button>
-          </div> */}
+          </div>
           <div style={{ marginTop: 10 }}>
             <Button
               type="dashed"

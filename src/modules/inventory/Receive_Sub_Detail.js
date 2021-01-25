@@ -21,13 +21,8 @@ import {
 } from "./config";
 import moment from "moment";
 
-import { convertDigit } from "../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../include/js/main_config";
 const { Text } = Typography;
-const numberFormat = {
-  precision: 3,
-  formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-  parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
-};
 
 const SubDetail = ({
   readOnly,
@@ -152,11 +147,15 @@ const SubDetail = ({
                         : ""
                     }
                     onChange={(data) => {
-                      onChangeValue(line.id, {
-                        receive_detail_sub_receive_date: data.format(
-                          "DD/MM/YYYY"
-                        ),
-                      });
+                      data
+                        ? onChangeValue(line.id, {
+                            receive_detail_sub_receive_date: data.format(
+                              "DD/MM/YYYY"
+                            ),
+                          })
+                        : onChangeValue(line.id, {
+                            receive_detail_sub_receive_date: null,
+                          });
                     }}
                   />
                 </Col>
@@ -174,9 +173,15 @@ const SubDetail = ({
                         : ""
                     }
                     onChange={(data) => {
-                      onChangeValue(line.id, {
-                        receive_detail_sub_mfg_date: data.format("DD/MM/YYYY"),
-                      });
+                      data
+                        ? onChangeValue(line.id, {
+                            receive_detail_sub_mfg_date: data.format(
+                              "DD/MM/YYYY"
+                            ),
+                          })
+                        : onChangeValue(line.id, {
+                            receive_detail_sub_mfg_date: null,
+                          });
                     }}
                   />
                 </Col>
@@ -194,9 +199,15 @@ const SubDetail = ({
                         : ""
                     }
                     onChange={(data) => {
-                      onChangeValue(line.id, {
-                        receive_detail_sub_exp_date: data.format("DD/MM/YYYY"),
-                      });
+                      data
+                        ? onChangeValue(line.id, {
+                            receive_detail_sub_exp_date: data.format(
+                              "DD/MM/YYYY"
+                            ),
+                          })
+                        : onChangeValue(line.id, {
+                            receive_detail_sub_exp_date: null,
+                          });
                     }}
                   />
                 </Col>

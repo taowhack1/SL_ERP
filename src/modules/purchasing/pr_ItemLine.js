@@ -12,16 +12,10 @@ import { prItemColumns, pr_detail_fields } from "./config/pr";
 import CustomSelect from "../../components/CustomSelect";
 import { calSubtotal, sumArrObj } from "../../include/js/function_main";
 
-import { convertDigit } from "../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../include/js/main_config";
 import TextArea from "antd/lib/input/TextArea";
 
 const { Text } = Typography;
-
-const numberFormat = {
-  precision: 3,
-  formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-  parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
-};
 
 const ItemLine = ({
   type_id,

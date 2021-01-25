@@ -283,6 +283,7 @@ const IssueCreate = (props) => {
                   readOnly={false}
                   category_id={data_head.category_id}
                   type_id={data_head.type_id}
+                  data_head={data_head}
                   headDispatch={upDateFormValue}
                   filter={filter && filter}
                 />

@@ -13,14 +13,10 @@ import Authorize from "../system/Authorize";
 
 import { validateFormHead } from "../../include/js/function_main";
 import { useHistory } from "react-router-dom";
+import { numberFormat } from "../../include/js/main_config";
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
-const numberFormat = {
-  precision: 3,
-  formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-  parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
-};
 
 const CustomerCreate = (props) => {
   const history = useHistory();

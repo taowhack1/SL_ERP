@@ -8,13 +8,7 @@ import { reducer } from "./reducers";
 import { get_qc_receive_list, update_qc_receive_list } from "../../actions/qa";
 import Authorize from "../system/Authorize";
 
-import { convertDigit } from "../../include/js/main_config";
-
-const numberFormat = {
-  precision: 3,
-  formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-  parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
-};
+import { convertDigit, numberFormat } from "../../include/js/main_config";
 
 const QCReceive = () => {
   const authorize = Authorize();

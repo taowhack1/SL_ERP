@@ -10,12 +10,24 @@ export const header_config_form = {
     "Content-Type": "multipart/form-data",
   },
 };
+// export const numberFormat = {
+//   precision: 6,
+//   formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+//   parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
+// };
 export const numberFormat = {
-  precision: 3,
-  formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+  precision: 6,
+  formatter: (value) => {
+    const checkDecimal = value.toString().includes(".");
+    const copyValue = value.toString().split(".");
+    const number1 = `${copyValue[0]}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const number2 = copyValue[1] ?? 0;
+    const totalNumber = checkDecimal ? number1 + "." + number2 : number1;
+    return totalNumber;
+  },
   parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
 };
-export const convertDigit = (value, decimalPoint = 3) => {
+export const convertDigit = (value, decimalPoint = 6) => {
   const format = "0,0." + "0".repeat(decimalPoint);
   return typeof value === "number" && numeral(value).format(format);
 };

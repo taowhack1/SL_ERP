@@ -15,15 +15,9 @@ import {
 import CustomSelect from "../../components/CustomSelect";
 import { calSubtotal, sumArrObj } from "../../include/js/function_main";
 
-import { convertDigit } from "../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../include/js/main_config";
 const { Text } = Typography;
 const { Option } = Select;
-
-const numberFormat = {
-  precision: 3,
-  formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-  parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
-};
 
 const ItemLine = ({
   readOnly,

@@ -16,13 +16,8 @@ import moment from "moment";
 
 import CustomSelect from "../../components/CustomSelect";
 
-import { convertDigit } from "../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../include/js/main_config";
 const { Text } = Typography;
-const numberFormat = {
-  precision: 3,
-  formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-  parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
-};
 
 const SubDetail = ({
   readOnly,

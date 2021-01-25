@@ -20,15 +20,10 @@ import { poItemColumns, po_detail_fields } from "./config/po";
 import CustomSelect from "../../components/CustomSelect";
 import { calSubtotal } from "../../include/js/function_main";
 import moment from "moment";
-import { convertDigit } from "../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../include/js/main_config";
 import TextArea from "antd/lib/input/TextArea";
 const { Option } = Select;
 const { Text } = Typography;
-const numberFormat = {
-  precision: 3,
-  formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-  parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
-};
 
 const ItemLine = ({
   type_id,

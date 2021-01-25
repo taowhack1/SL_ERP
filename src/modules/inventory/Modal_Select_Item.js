@@ -94,11 +94,16 @@ const Modal_Select_Item = (props) => {
     hideSelectAll: true,
     onSelect: (record, selected, selectedRows, e) => {
       if (selected) {
-        set_selected_item([
-          ...selected_item,
-          { ...record, issue_detail_qty: 0 },
-        ]);
-        set_selected_key([...selected_key, record.item_id]);
+        if (record.type_id !== props.data_head.type_id) {
+          set_selected_item([{ ...record, issue_detail_qty: 0 }]);
+          set_selected_key([record.item_id]);
+        } else {
+          set_selected_item([
+            ...selected_item,
+            { ...record, issue_detail_qty: 0 },
+          ]);
+          set_selected_key([...selected_key, record.item_id]);
+        }
       } else {
         set_selected_item(
           selected_item.filter((item) => item.item_id !== record.item_id)
@@ -133,6 +138,11 @@ const Modal_Select_Item = (props) => {
   const reset_selected = () => {
     set_selected_key([]);
     set_selected_item([]);
+    headDispatch({
+      ...props.data_head,
+      type_id: null,
+      type_no_name: null,
+    });
   };
 
   const onSearch = (word) => {
@@ -171,7 +181,7 @@ const Modal_Select_Item = (props) => {
       setLoading(false);
     }, 1200);
   };
-
+  console.log("modal Select", selected_item);
   return (
     <Modal
       style={{ top: 50 }}
