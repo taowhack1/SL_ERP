@@ -36,7 +36,6 @@ export const get_po_receive_list = () => async (dispatch) => {
   return await axios
     .get(api_receive_get_ref_po_head, header_config)
     .then((res) => {
-      console.log("GET_PO_RECEIVE_LIST");
       dispatch({ type: GET_PO_RECEIVE_LIST, payload: res.data[0] });
     })
     .catch((error) => {
