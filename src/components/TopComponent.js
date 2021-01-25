@@ -10,6 +10,7 @@ import {
   Typography,
   message,
   Space,
+  Badge,
 } from "antd";
 import { CaretDownOutlined, RollbackOutlined } from "@ant-design/icons";
 import Search from "./Search";
@@ -162,9 +163,11 @@ function TopContent(props) {
           <Col span={8}>
             <Space size={8}>
               {props.buttonAction.includes("Create") && (
-                <Button className="primary" onClick={onCreate}>
-                  Create
-                </Button>
+                <Badge count={props.badgeCount ?? 0}>
+                  <Button className="primary" onClick={onCreate}>
+                    Create
+                  </Button>
+                </Badge>
               )}
               {props.buttonAction.includes("Save") &&
                 (props.save === "function" || props.save === "table_loading" ? (

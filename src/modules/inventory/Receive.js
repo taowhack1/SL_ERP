@@ -5,6 +5,7 @@ import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
 import {
+  get_po_receive_list,
   get_receive_by_id,
   get_receive_list,
   reset_receive,
@@ -23,8 +24,8 @@ const Receive = (props) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  const receive_list = useSelector(
-    (state) => state.inventory.receive.receive_list
+  const { po_ref, receive_list } = useSelector(
+    (state) => state.inventory.receive
   );
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(receive_list);
@@ -32,6 +33,7 @@ const Receive = (props) => {
   useEffect(() => {
     dispatch(reset_comments());
     dispatch(reset_receive());
+    dispatch(get_po_receive_list());
     dispatch(get_receive_list(auth.user_name));
   }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -46,6 +48,7 @@ const Receive = (props) => {
     buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     disabledEditBtn: !rowClick,
     discard: "/inventory/receive",
+    badgeCount: po_ref.length,
     onCancel: () => {
       console.log("Cancel");
     },

@@ -43,7 +43,7 @@ export default function MainConfig(props) {
                   set_log_detail(`Click Menu ${sub.menu_name}`);
                 }}
               >
-                {sub.menu_name}
+                {sub.menu_name + "   " + sub.menu_name_th}
               </Link>
             </Menu.Item>
           );

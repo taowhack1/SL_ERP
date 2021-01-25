@@ -5,6 +5,7 @@ import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  get_quotation_list,
   get_sale_master_data,
   get_so_by_id,
   get_so_list,
@@ -27,11 +28,12 @@ const SaleOrder = (props) => {
     dispatch(get_sale_master_data());
     dispatch(reset_so());
     dispatch(reset_comments());
+    dispatch(get_quotation_list(auth.user_name));
     dispatch(get_so_list(auth.user_name));
     dispatch(getMasterDataItem());
   }, []);
 
-  const data = useSelector((state) => state.sales.so.so_list);
+  const { so_list, qn_ref } = useSelector((state) => state.sales.so);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -48,6 +50,7 @@ const SaleOrder = (props) => {
     buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     disabledEditBtn: !rowClick,
     discard: "/sales/orders",
+    badgeCount: qn_ref.length,
     onCancel: () => {
       console.log("Cancel");
     },
@@ -60,7 +63,7 @@ const SaleOrder = (props) => {
           <Col span={24}>
             <Table
               columns={so_columns}
-              dataSource={data}
+              dataSource={so_list}
               onChange={onChange}
               rowKey={"so_id"}
               size="small"

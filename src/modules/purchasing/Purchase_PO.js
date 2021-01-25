@@ -40,7 +40,7 @@ const PurchaseOrders = (props) => {
     };
   }, [dispatch]);
 
-  const po_list = useSelector((state) => state.purchase.po.po_list);
+  const { po_list, pr_ref } = useSelector((state) => state.purchase.po);
   useEffect(() => {
     setData(po_list);
     return () => setData([]);
@@ -64,6 +64,7 @@ const PurchaseOrders = (props) => {
     edit: {},
     disabledEditBtn: !rowClick,
     discard: "/purchase/po",
+    badgeCount: pr_ref.length,
     onCancel: () => {
       console.log("Cancel");
     },
@@ -87,7 +88,7 @@ const PurchaseOrders = (props) => {
             <Table
               columns={po_list_columns}
               dataSource={data}
-              rowKey="po_id"
+              rowKey={"po_id"}
               loading={loading}
               onChange={onChange}
               size="small"

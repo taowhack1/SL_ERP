@@ -31,7 +31,6 @@ export const get_disburse_list = (user_name) => async (dispatch) => {
   return await axios
     .get(`${api_disburse}/all/${user_name}`, header_config)
     .then((res) => {
-      console.log("get all disburse", `${api_disburse}/all/${user_name}`);
       dispatch({ type: GET_DISBURSE_LIST, payload: res.data[0] });
     });
 };

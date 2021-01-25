@@ -30,7 +30,7 @@ const WorkOrderMain = (props) => {
     console.log("params", pagination, filters, sorter, extra);
   };
 
-  const { workOrderList } = useSelector(
+  const { workOrderList, workOrder } = useSelector(
     (state) => state.production.operations.workOrder
   );
   const [stateWO, setStateWO] = useState(workOrderList);
@@ -48,6 +48,7 @@ const WorkOrderMain = (props) => {
     edit: {},
     disabledEditBtn: !rowClick,
     discard: "/production",
+    badgeCount: workOrder.data_so_ref.length,
     onCancel: () => {
       console.log("Cancel");
     },

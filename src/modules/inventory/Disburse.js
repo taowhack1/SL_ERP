@@ -9,6 +9,7 @@ import { disburse_columns } from "./config";
 import {
   get_disburse_by_id,
   get_disburse_list,
+  get_issue_ref_list,
 } from "../../actions/inventory/disburseActions";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
@@ -21,14 +22,15 @@ const Disburse = (props) => {
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   const auth = useSelector((state) => state.auth.authData);
-  const disburse_list = useSelector(
-    (state) => state.inventory.disburse.disburse_list
+  const { disburse_list, issue_ref } = useSelector(
+    (state) => state.inventory.disburse
   );
   const [state, setState] = useState(disburse_list);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
   useEffect(() => {
+    dispatch(get_issue_ref_list());
     dispatch(get_disburse_list(auth.user_name));
     dispatch(getMasterDataItem());
   }, []);
@@ -44,6 +46,7 @@ const Disburse = (props) => {
     buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     disabledEditBtn: !rowClick,
     discard: "/inventory/disburse",
+    badgeCount: issue_ref.length,
     onCancel: () => {
       console.log("Cancel");
     },
