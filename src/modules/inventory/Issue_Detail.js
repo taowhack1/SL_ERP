@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import React, { useState } from "react";
 import moment from "moment";
 
-import { issue_detail_columns } from "./config";
+import { issue_detail_columns, issue_detail_fields } from "./config";
 import CustomSelect from "../../components/CustomSelect";
 
 import ModalSelectItem from "./Modal_Select_Item";
@@ -51,7 +51,9 @@ const IssueDetail = ({
     setVisible(true);
     console.log("Select multiple item modal open");
   };
-
+  // const addLine = () => {
+  //   detailDispatch({ type: "ADD_ROW", payload: issue_detail_fields });
+  // };
   const delLine = (id) => {
     detailDispatch({ type: "DEL_ROW", payload: { id: id } });
   };
@@ -137,7 +139,7 @@ const IssueDetail = ({
                   <CustomSelect
                     allowClear
                     showSearch
-                    disabled={line.item_id ? false : true}
+                    // disabled={line.item_id ? false : true}
                     size="small"
                     placeholder={"Item"}
                     data={

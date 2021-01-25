@@ -34,11 +34,13 @@ export const getItemType = () => {
     .get(api_get_item_type, header_config)
     .catch((error) => console.error(error));
 };
-export const getMasterDataItem = (user, setLoading) => async (dispatch) => {
+export const getMasterDataItem = (user, setLoading, auth) => async (
+  dispatch
+) => {
   try {
     const user_name = user ?? "";
     const get_type = axios.get(
-      `${api_get_item_type}/${user_name ?? ""}`,
+      `${api_get_item_type}/${user_name && auth ? user_name : ""}`,
       header_config
     );
     const get_categoty = axios.get(`${api_get_item_category}`, header_config);

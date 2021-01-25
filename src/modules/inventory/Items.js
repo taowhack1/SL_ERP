@@ -25,7 +25,7 @@ const Items = (props) => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     // dispatch(getAllItems(auth.user_name));
-    dispatch(getMasterDataItem(auth.user_name, setLoading));
+    dispatch(getMasterDataItem(auth.user_name, setLoading, false));
   }, []);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
