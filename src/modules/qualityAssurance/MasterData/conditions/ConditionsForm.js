@@ -17,7 +17,7 @@ import {
 import Comments from "../../../../components/Comments";
 import MainLayout from "../../../../components/MainLayout";
 
-import QCItemTestTabPanel from "./QCItemTestTabPanel";
+import QCItemTestTabPanel from "./ConditionsTab";
 import {
   getQATestByTypeID,
   saveQAConditions,
@@ -32,7 +32,7 @@ const initialStateSubject = [qcTestItemSubjectFields];
 const initialStateSpecification = [qcTestItemSpecFields];
 const initialStateMethod = [qcTestItemMethodFields];
 
-const QCItemTestForm = (props) => {
+const ConditionsForm = (props) => {
   const { auth, currentProject, currentMenu } = useContext(AppContext);
   const { action, id } = useParams();
   const { readOnly } = props?.location?.state ?? {
@@ -200,4 +200,4 @@ const QCItemTestForm = (props) => {
   );
 };
 
-export default React.memo(QCItemTestForm);
+export default React.memo(ConditionsForm);

@@ -158,7 +158,7 @@ const ItemLine = ({
                       {...numberFormat}
                       name={`po_detail_qty${key}`}
                       value={line.po_detail_qty}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       onChange={(data) => {
                         onChangeValue(line.id, {
                           po_detail_qty: data,
@@ -218,7 +218,7 @@ const ItemLine = ({
                           ),
                         });
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   </Col>
@@ -245,7 +245,7 @@ const ItemLine = ({
                           true
                         );
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   </Col>
@@ -260,7 +260,7 @@ const ItemLine = ({
                       name={`po_detail_due_date${key}`}
                       format={"DD/MM/YYYY"}
                       size="small"
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       placeholder="Due date..."
                       value={
                         line.po_detail_due_date && line.po_detail_due_date
@@ -310,7 +310,7 @@ const ItemLine = ({
                           po_detail_remark: e.target.value,
                         })
                       }
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                     />
                   </Col>
                   <Col span={1}></Col>

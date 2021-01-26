@@ -131,7 +131,7 @@ const Packaging = ({
                       item_packaging_qty: data,
                     });
                   }}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   size="small"
                 />
               </Col>

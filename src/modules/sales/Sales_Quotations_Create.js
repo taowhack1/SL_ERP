@@ -248,7 +248,7 @@ const CustomerCreate = (props) => {
           <Col span={8}>
             <DatePicker
               format={"DD/MM/YYYY"}
-              style={{ width: "100%" }}
+              className={"full-width"}
               name="qn_exp_date"
               placeholder="Expire Date"
               value={
@@ -361,7 +361,7 @@ const CustomerCreate = (props) => {
                   onChange={(e) =>
                     upDateFormValue({ qn_remark: e.target.value })
                   }
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                 />
               </Tabs.TabPane>
             </Tabs>

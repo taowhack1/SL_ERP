@@ -89,7 +89,7 @@ const ItemLine = ({
       >
         <Col span={11} className="text-string">
           <AutoComplete
-            style={{ width: "100%" }}
+            className={"full-width"}
             options={items}
             placeholder="Item Name..."
             defaultValue={line.item}
@@ -109,7 +109,7 @@ const ItemLine = ({
             step={0.0001}
             precision={4}
             value={line.item_qty}
-            style={{ width: "100%" }}
+            className={"full-width"}
             disabled={0}
             defaultValue={line.item_qty}
             onChange={(data) => {
@@ -123,7 +123,7 @@ const ItemLine = ({
         </Col>
         <Col span={3} className="text-string">
           <AutoComplete
-            style={{ width: "100%" }}
+            className={"full-width"}
             options={units}
             placeholder="Unit"
             defaultValue={line.item_unit}
@@ -150,7 +150,7 @@ const ItemLine = ({
                 item_subtotal: calSubtotal(line.item_qty, data),
               });
             }}
-            style={{ width: "100%" }}
+            className={"full-width"}
             size="small"
           />
         </Col>
@@ -162,7 +162,7 @@ const ItemLine = ({
             value={line.item_subtotal}
             precision={2}
             onChange={(data) => onChangeValue(line.id, { item_subtotal: data })}
-            style={{ width: "100%" }}
+            className={"full-width"}
             size="small"
           />
         </Col>

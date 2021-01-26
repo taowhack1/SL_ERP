@@ -125,7 +125,7 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
                   min={0}
                   step={1}
                   precision={0}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   disabled={0}
                   name="item_vendor_lead_time_day"
                   value={line.item_vendor_lead_time_day}
@@ -141,7 +141,7 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
                   min={0.0}
                   step={0.0001}
                   precision={4}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   disabled={0}
                   name="item_vendor_min_qty"
                   value={line.item_vendor_min_qty}
@@ -185,7 +185,7 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
                   min={0.0}
                   step={50.0}
                   precision={3}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   disabled={0}
                   name="item_vendor_price"
                   value={line.item_vendor_price}
@@ -198,7 +198,7 @@ const VendorLine = ({ data_head, data_detail, readOnly, detailDispatch }) => {
               <Col span={5} className="text-number">
                 <Input
                   placeholder={"Remark"}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   disabled={0}
                   name="item_vendor_remark"
                   value={line.item_vendor_remark}

@@ -112,7 +112,7 @@ const TabBulkFormula = ({
                 <DatePicker
                   name={"item_effective_date"}
                   format={"DD/MM/YYYY"}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   placeholder="Effective Date"
                   required
                   value={

@@ -86,7 +86,7 @@ const FillingWeight = ({ data_weight_detail, weightDetailDispatch }) => {
                           item_weight_standard_qty: data,
                         });
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   )}
@@ -119,7 +119,7 @@ const FillingWeight = ({ data_weight_detail, weightDetailDispatch }) => {
                           item_weight_min_qty: data,
                         });
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   )}
@@ -153,7 +153,7 @@ const FillingWeight = ({ data_weight_detail, weightDetailDispatch }) => {
                           item_weight_max_qty: data,
                         });
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   )}
@@ -206,7 +206,7 @@ const FillingWeight = ({ data_weight_detail, weightDetailDispatch }) => {
                           item_weight_standard_qty: data,
                         });
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   )}
@@ -242,7 +242,7 @@ const FillingWeight = ({ data_weight_detail, weightDetailDispatch }) => {
                           item_weight_min_qty: data,
                         });
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   )}
@@ -276,7 +276,7 @@ const FillingWeight = ({ data_weight_detail, weightDetailDispatch }) => {
                           item_weight_max_qty: data,
                         });
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   )}
@@ -329,7 +329,7 @@ const FillingWeight = ({ data_weight_detail, weightDetailDispatch }) => {
                           item_weight_standard_qty: data,
                         });
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   )}
@@ -362,7 +362,7 @@ const FillingWeight = ({ data_weight_detail, weightDetailDispatch }) => {
                           item_weight_min_qty: data,
                         });
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   )}
@@ -396,7 +396,7 @@ const FillingWeight = ({ data_weight_detail, weightDetailDispatch }) => {
                           item_weight_max_qty: data,
                         });
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   )}

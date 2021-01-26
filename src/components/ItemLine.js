@@ -95,7 +95,7 @@ const VendorLine = ({
             >
               <Col span={11} className="text-string">
                 <AutoComplete
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   options={items}
                   placeholder="Name..."
                   defaultValue={line.item_name}
@@ -116,7 +116,7 @@ const VendorLine = ({
                   min={0.0}
                   step={0.0001}
                   precision={4}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   disabled={0}
                   defaultValue={line.item_qty}
                   onChange={(data) =>
@@ -133,7 +133,7 @@ const VendorLine = ({
                       item_lot: data,
                     })
                   }
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   defaultValue={line.item_lot}
                   size="small"
                 >
@@ -154,7 +154,7 @@ const VendorLine = ({
                   min={0.0}
                   step={0.0001}
                   precision={4}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   disabled={0}
                   defaultValue={line.item_qty_done}
                   onChange={(data) =>
@@ -165,7 +165,7 @@ const VendorLine = ({
               </Col>
               <Col span={3} className="text-string">
                 <AutoComplete
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   options={units}
                   placeholder="Unit..."
                   defaultValue={line.item_unit}

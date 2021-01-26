@@ -194,7 +194,7 @@ const RequisitionCreate = (props) => {
                 <DatePicker
                   name={"req_date"}
                   format={dateConfig.format}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   // defaultValue={
                   //   formData.req_date
                   //     ? moment(formData.req_date, "YYYY-MM-DD")

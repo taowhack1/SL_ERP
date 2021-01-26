@@ -207,7 +207,7 @@ const SubDetail = ({
                     step={0.001}
                     size="small"
                     name="disburse_detail_sub_qty"
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     disabled={0}
                     value={line.disburse_detail_sub_qty}
                     onChange={(data) => {
@@ -230,7 +230,7 @@ const SubDetail = ({
                     name={"disburse_detail_sub_disburse_date"}
                     format={"DD/MM/YYYY"}
                     size="small"
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     placeholder="Disburse date..."
                     value={
                       line.disburse_detail_sub_disburse_date &&

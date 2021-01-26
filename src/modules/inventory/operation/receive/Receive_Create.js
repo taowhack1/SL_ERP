@@ -2,30 +2,33 @@ import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { Row, Col, Input, Tabs, Typography, message } from "antd";
-import { reducer } from "./reducers";
+import { reducer } from "../../reducers";
 import {
   receive_fields,
   receive_detail_fields,
   receive_require_fields,
-} from "./config";
+} from "../../config";
 import {
   create_receive,
   get_po_receive_list,
   update_receive,
-} from "../../actions/inventory/receiveActions";
-import { header_config, report_server } from "../../include/js/main_config";
-import { api_receive_get_ref_po_detail } from "../../include/js/api";
-import { get_log_by_id, reset_comments } from "../../actions/comment&log";
+} from "../../../../actions/inventory/receiveActions";
+import {
+  header_config,
+  report_server,
+} from "../../../../include/js/main_config";
+import { api_receive_get_ref_po_detail } from "../../../../include/js/api";
+import { get_log_by_id, reset_comments } from "../../../../actions/comment&log";
 
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../../../components/MainLayout";
 import moment from "moment";
-import Comments from "../../components/Comments";
+import Comments from "../../../../components/Comments";
 import Detail from "./Receive_Detail";
 
-import CustomSelect from "../../components/CustomSelect";
+import CustomSelect from "../../../../components/CustomSelect";
 import axios from "axios";
-import Authorize from "../system/Authorize";
-import { validateFormHead } from "../../include/js/function_main";
+import Authorize from "../../../system/Authorize";
+import { validateFormHead } from "../../../../include/js/function_main";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -362,7 +365,7 @@ const Receive_Create = (props) => {
                   onChange={(e) =>
                     upDateFormValue({ receive_remark: e.target.value })
                   }
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                 />
               </Tabs.TabPane>
             </Tabs>

@@ -6,8 +6,8 @@ import {
   qcTestItemColumns,
   qcTestItemSubjectFields,
 } from "../../configs/qcTestItemConfig";
-import { QCContext } from "./QCItemTestForm";
-import QCItemTestTable from "./QCItemTestTable";
+import { QCContext } from "./ConditionsForm";
+import QCItemTestTable from "./ConditionsDetail";
 const initialStateSubject = qcTestItemSubjectFields;
 const initialStateSpecification = qcTestItemSpecFields;
 const initialStateMethod = qcTestItemMethodFields;

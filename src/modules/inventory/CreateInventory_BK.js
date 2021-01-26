@@ -141,7 +141,7 @@ class CreateInventory extends Component {
                 >
                   <DatePicker
                     format={this.dateConfig.format}
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                   />
                 </Form.Item>
                 <Form.Item

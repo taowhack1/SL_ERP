@@ -347,7 +347,7 @@ const DisburseCreate = (props) => {
                   onChange={(e) =>
                     upDateFormValue({ disburse_remark: e.target.value })
                   }
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                 />
               </Tabs.TabPane>
             </Tabs>

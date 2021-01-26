@@ -103,7 +103,7 @@ const VendorLine = ({
             >
               <Col span={12} className="text-string">
                 <AutoComplete
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   options={items}
                   placeholder="Name..."
                   defaultValue={line.item_name}
@@ -123,7 +123,7 @@ const VendorLine = ({
                   min={0.0}
                   step={0.0001}
                   precision={4}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   disabled={0}
                   defaultValue={line.item_qty}
                   onChange={(data) =>
@@ -133,7 +133,7 @@ const VendorLine = ({
               </Col>
               <Col span={3} className="text-string">
                 <AutoComplete
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   options={units}
                   placeholder="Unit..."
                   defaultValue={line.item_unit}
@@ -152,7 +152,7 @@ const VendorLine = ({
                 <DatePicker
                   name={"item_dueDate"}
                   format={dateConfig.format}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   placeholder="Due date..."
                   defaultValue={
                     line.item_dueDate

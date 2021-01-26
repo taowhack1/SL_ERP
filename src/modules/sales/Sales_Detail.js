@@ -136,7 +136,7 @@ const ItemLine = ({
                             uom_no: null,
                           });
                     }}
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     filterOption={(inputValue, option) =>
                       option.title &&
                       option.title
@@ -168,7 +168,7 @@ const ItemLine = ({
                     min={0.0}
                     step={0.001}
                     size="small"
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     disabled={0}
                     value={line.qn_detail_qty}
                     onChange={(data) => {
@@ -224,7 +224,7 @@ const ItemLine = ({
                       });
                       updateAmount();
                     }}
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     size="small"
                   />
                 </Col>
@@ -248,7 +248,7 @@ const ItemLine = ({
                       });
                       updateAmount();
                     }}
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     size="small"
                   />
                 </Col>

@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../../../components/MainLayout";
 import $ from "jquery";
 import {
   get_po_receive_list,
   get_receive_by_id,
   get_receive_list,
   reset_receive,
-} from "../../actions/inventory/receiveActions";
-import { receive_columns } from "./config";
-import { reset_comments } from "../../actions/comment&log";
-import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
+} from "../../../../actions/inventory/receiveActions";
+import { receive_columns } from "../../config";
+import { reset_comments } from "../../../../actions/comment&log";
+import Authorize from "../../../system/Authorize";
+import useKeepLogs from "../../../logs/useKeepLogs";
 const Receive = (props) => {
   const keepLog = useKeepLogs();
   const authorize = Authorize();

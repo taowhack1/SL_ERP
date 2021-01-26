@@ -147,7 +147,7 @@ const TabItemDetail = ({
                   min={0}
                   step={1}
                   precision={0}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   disabled={0}
                   value={data_head.item_shelf_life}
                   onChange={(data) =>
@@ -281,7 +281,7 @@ const TabItemDetail = ({
                   <DatePicker
                     name={"item_formula_effective_date"}
                     format={"DD/MM/YYYY"}
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     placeholder="Effective Date"
                     required
                     value={
@@ -502,7 +502,7 @@ const TabItemDetail = ({
 
       <Row className="col-2 mt-2">
         <Col span={24}>
-          <Space direction="vertical" style={{ width: "100%" }}>
+          <Space direction="vertical" className={"full-width"}>
             <Text strong>Notes </Text>
             {readOnly ? (
               <Text className="text-view">

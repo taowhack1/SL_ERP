@@ -153,7 +153,7 @@ const ItemLine = ({
                       min={0.0}
                       step={0.001}
                       size="small"
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       disabled={type_id ? 0 : 1}
                       defaultValue={line.pr_detail_qty}
                       value={line.pr_detail_qty}
@@ -217,7 +217,7 @@ const ItemLine = ({
                           true
                         );
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   </Col>
@@ -245,7 +245,7 @@ const ItemLine = ({
                           true
                         );
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       size="small"
                     />
                   </Col>
@@ -260,7 +260,7 @@ const ItemLine = ({
                       name={"pr_detail_due_date"}
                       format={dateConfig.format}
                       size="small"
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       placeholder="Due date..."
                       value={
                         line.pr_detail_due_date
@@ -305,7 +305,7 @@ const ItemLine = ({
                           pr_detail_remark: e.target.value,
                         });
                       }}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                     />
                   </Col>
                   <Col span={1}></Col>

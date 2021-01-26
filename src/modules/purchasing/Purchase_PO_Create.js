@@ -471,7 +471,7 @@ const PurchaseOrderCreate = (props) => {
                   onChange={(e) =>
                     upDateFormValue({ po_remark: e.target.value })
                   }
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                 />
               </Tabs.TabPane>
             </Tabs>

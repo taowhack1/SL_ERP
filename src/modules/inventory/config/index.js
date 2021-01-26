@@ -70,6 +70,7 @@ export const receive_columns = [
     key: "tg_receive_total_amount",
     width: "10%",
     align: "right",
+    ellipsis: true,
     sorter: {
       compare: (a, b) => a.tg_receive_total_amount - b.tg_receive_total_amount,
       multiple: 3,
@@ -83,6 +84,7 @@ export const receive_columns = [
     key: "trans_status_name",
     width: "8%",
     align: "center",
+    ellipsis: true,
     sorter: {
       compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
       multiple: 3,
@@ -94,12 +96,12 @@ export const receive_columns = [
   },
 ];
 export const recieve_detail_columns = [
-  { id: 0, name: "Item", size: 7, require: true },
+  { id: 0, name: "Item", size: 6, require: true },
   { id: 1, name: "Qty.( PO )", size: 3, require: true },
   { id: 2, name: "Qty. Balance", size: 3 },
   { id: 3, name: "Qty. Done", size: 3, require: true },
   { id: 4, name: "Unit", size: 2, require: true },
-  { id: 5, name: "Unit Price", size: 2, require: true },
+  { id: 5, name: "Unit Price", size: 3, require: true },
   { id: 6, name: "Due Date", size: 3 },
 ];
 

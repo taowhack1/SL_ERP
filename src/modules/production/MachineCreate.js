@@ -249,7 +249,7 @@ const MachineCreate = (props) => {
                   <Col span={8}>
                     <DatePicker
                       format={"DD/MM/YYYY"}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       name="machine_mfg_date"
                       placeholder="MFG Date"
                       value={
@@ -307,7 +307,7 @@ const MachineCreate = (props) => {
                   <Col span={8}>
                     <DatePicker
                       format={"DD/MM/YYYY"}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       name="machine_exp_date"
                       placeholder="EXP Date"
                       value={

@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
-import { QCContext } from "./QCItemTestForm";
+import { QCContext } from "./ConditionsForm";
 import CustomTable from "../../../../components/CustomTable";
 import Search from "../../../../components/Search";
 import { mainReducer } from "../../../../include/reducer";
-const QCItemTestTable = ({
+const ConditionsDetail = ({
   field,
   initialState,
   dataSource,
@@ -101,4 +101,4 @@ const QCItemTestTable = ({
     </>
   );
 };
-export default React.memo(QCItemTestTable);
+export default React.memo(ConditionsDetail);

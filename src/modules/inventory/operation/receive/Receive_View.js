@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Tabs, Typography, message } from "antd";
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../../../components/MainLayout";
 
-import Comments from "../../components/Comments";
+import Comments from "../../../../components/Comments";
 import Detail from "./Receive_Detail";
-import { get_log_by_id } from "../../actions/comment&log";
-import { receive_actions } from "../../actions/inventory/receiveActions";
-import ModalRemark from "../../components/Modal_Remark";
-import { report_server } from "../../include/js/main_config";
-import Authorize from "../system/Authorize";
+import { get_log_by_id } from "../../../../actions/comment&log";
+import { receive_actions } from "../../../../actions/inventory/receiveActions";
+import ModalRemark from "../../../../components/Modal_Remark";
+import { report_server } from "../../../../include/js/main_config";
+import Authorize from "../../../system/Authorize";
 const { Text } = Typography;
 
 const Receive_View = (props) => {

@@ -33,7 +33,7 @@ export const convertDigit = (value, decimalPoint = 6) => {
 };
 // Sv.Test
 export const api_server = `http://192.168.5.222:3009`;
-export const report_server = `http://192.168.1.211`;
+export const report_server = `http://192.168.1.211:8080`;
 // Sv.Production
 // export const api_server = `http://192.168.1.210:3009`;
 // export const report_server = `http://192.168.5.207`;

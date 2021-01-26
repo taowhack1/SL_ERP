@@ -282,7 +282,7 @@ const VendorCreate = (props) => {
                         <Input
                           name="vendor_tax_no"
                           placeholder="Tax ID"
-                          style={{ width: "100%" }}
+                          className={"full-width"}
                           value={data_head.vendor_tax_no}
                           onChange={(e) =>
                             upDateFormValue({ vendor_tax_no: e.target.value })

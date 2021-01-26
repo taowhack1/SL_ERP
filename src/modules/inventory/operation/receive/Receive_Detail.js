@@ -23,20 +23,20 @@ import {
   sumArrObj,
   sumArrOdjWithField,
   validateFormDetail,
-} from "../../include/js/function_main";
+} from "../../../../include/js/function_main";
 import {
   receive_detail_fields,
   recieve_detail_columns,
   receive_sub_detail_fields,
   receive_sub_detail_require_fields,
-} from "./config";
-import { reducer } from "./reducers";
+} from "../../config";
 import { useDispatch, useSelector } from "react-redux";
-import CustomSelect from "../../components/CustomSelect";
+import CustomSelect from "../../../../components/CustomSelect";
 import moment from "moment";
 
-import { get_location_shelf_by_item_id } from "../../actions/inventory";
-import { convertDigit, numberFormat } from "../../include/js/main_config";
+import { get_location_shelf_by_item_id } from "../../../../actions/inventory";
+import { convertDigit, numberFormat } from "../../../../include/js/main_config";
+import { mainReducer } from "../../../../include/reducer";
 const { Text } = Typography;
 
 const ReceiveDetail = ({
@@ -57,7 +57,7 @@ const ReceiveDetail = ({
 
   const [visible, setVisible] = useState(false);
   const [temp_detail, setTempDetail] = useState(null);
-  const [temp_sub_detail, tempSubDetailDispatch] = useReducer(reducer, [
+  const [temp_sub_detail, tempSubDetailDispatch] = useReducer(mainReducer, [
     receive_sub_detail_fields,
   ]);
 
@@ -196,7 +196,7 @@ const ReceiveDetail = ({
                 {po_id ? (
                   <>
                     {/* RECEIVE FROM PO */}
-                    <Col span={7} className="text-string">
+                    <Col span={6} className="text-string">
                       <div
                         className="input-string-disabled text-value"
                         placeholder="Item"
@@ -233,21 +233,11 @@ const ReceiveDetail = ({
                         {line.uom_no}
                       </div>
                     </Col>
-                    <Col span={2} className="text-number">
+                    <Col span={3} className="text-number">
                       <div className="total-number text-value">
                         {convertDigit(line.receive_detail_price)}
                       </div>
                     </Col>
-                    {/* <Col span={2} className="text-number">
-                  <div className="total-number text-value">
-                    {convertDigit(line.receive_detail_discount) }
-                  </div>
-                </Col>
-                <Col span={3} className="text-number text-value">
-                  <div className="total-number">
-                    {convertDigit(line.receive_detail_total_price) }
-                  </div>
-                </Col> */}
                     <Col span={3} className="text-number text-value">
                       <div
                         className="input-string-disabled text-center"
@@ -277,13 +267,7 @@ const ReceiveDetail = ({
                 ) : (
                   <>
                     {/* RECEIVE WITHOUT PO */}
-                    <Col span={7} className="text-string">
-                      {/* <div
-                        className="input-string-disabled text-value"
-                        placeholder="Item"
-                      >
-                        {line.item_no_name}
-                      </div> */}
+                    <Col span={6} className="text-string">
                       <CustomSelect
                         allowClear
                         showSearch
@@ -321,22 +305,13 @@ const ReceiveDetail = ({
                       </div>
                     </Col>
                     <Col span={3} className="text-number">
-                      {/* <div
-                        className={
-                          line.tg_receive_detail_qty_balance > 0
-                            ? "total-number-modal text-value"
-                            : "total-number text-value"
-                        }
-                      >
-                        {convertDigit(line.tg_receive_detail_qty) }
-                      </div> */}
                       <InputNumber
                         {...numberFormat}
                         placeholder={"Qty"}
                         min={0.0}
-                        step={0.001}
+                        step={1}
                         size="small"
-                        style={{ width: "100%" }}
+                        className={"full-width"}
                         disabled={0}
                         value={line.tg_receive_detail_qty}
                         onChange={(data) => {
@@ -348,17 +323,10 @@ const ReceiveDetail = ({
                             //   line.so_detail_discount
                             // ),
                           });
-                          // updateAmount();
                         }}
                       />
                     </Col>
                     <Col span={2} className="text-string">
-                      {/* <div
-                        className="input-string-disabled text-value"
-                        placeholder="Unit"
-                      >
-                        {line.uom_no}
-                      </div> */}
                       <CustomSelect
                         allowClear
                         showSearch
@@ -381,45 +349,29 @@ const ReceiveDetail = ({
                         }
                       />
                     </Col>
-                    <Col span={2} className="text-number">
-                      {/* <div className="total-number text-value">
-                        {convertDigit(line.receive_detail_price) }
-                      </div> */}
+                    <Col span={3} className="text-number">
                       <InputNumber
                         {...numberFormat}
                         name="receive_detail_price"
                         placeholder="Unit Price"
                         value={line.receive_detail_price}
                         min={0.0}
-                        precision={3}
                         step={5}
                         onChange={(data) => {
                           onChangeValue(line.id, {
                             receive_detail_price: data,
-                            // so_detail_total_price: calSubtotal(
-                            //   line.so_detail_qty,
-                            //   data,
-                            //   line.so_detail_discount
-                            // ),
                           });
-                          // updateAmount();
                         }}
-                        style={{ width: "100%" }}
+                        className={"full-width"}
                         size="small"
                       />
                     </Col>
                     <Col span={3} className="text-number text-value">
-                      {/* <div
-                        className="input-string-disabled text-center"
-                        placeholder="Due Date"
-                      >
-                        {line.receive_detail_due_date}
-                      </div> */}
                       <DatePicker
                         name={"receive_detail_due_date"}
                         format={"DD/MM/YYYY"}
                         size="small"
-                        style={{ width: "100%" }}
+                        className={"full-width"}
                         placeholder="Due Date"
                         value={
                           line.receive_detail_due_date &&

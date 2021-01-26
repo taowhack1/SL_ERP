@@ -129,7 +129,7 @@ const ItemLine = ({
                     min={0.0001}
                     step={0.0001}
                     precision={4}
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     defaultValue={line.item_qty}
                   />
                 </Form.Item>
@@ -151,7 +151,7 @@ const ItemLine = ({
                     min={0.0}
                     step={0.0001}
                     precision={4}
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     disabled={1}
                     defaultValue={line.item_qty_done}
                   />

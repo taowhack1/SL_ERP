@@ -283,7 +283,7 @@ const SaleOrderCreate = (props) => {
             <DatePicker
               name={"so_order_date"}
               format={"DD/MM/YYYY"}
-              style={{ width: "100%" }}
+              className={"full-width"}
               placeholder="Order date"
               required
               value={
@@ -435,7 +435,7 @@ const SaleOrderCreate = (props) => {
                       payload: { so_remark: e.target.value },
                     })
                   }
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                 />
               </Tabs.TabPane>
             </Tabs>

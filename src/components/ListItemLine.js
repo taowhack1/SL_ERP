@@ -78,7 +78,7 @@ const ListItemLine = ({ items, units }) => {
                       min={0.0001}
                       step={0.0001}
                       precision={4}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       // defaultValue={line.qty}
                     />
                   </Form.Item>
@@ -110,7 +110,7 @@ const ListItemLine = ({ items, units }) => {
                       min={0.0}
                       step={0.0001}
                       precision={4}
-                      style={{ width: "100%" }}
+                      className={"full-width"}
                       // disabled={1}
                       // defaultValue={0}
                     />

@@ -215,7 +215,7 @@ const ProductionProcess = ({
                   format={"HH:mm"}
                   showNow={false}
                   name={"work_center_time"}
-                  style={{ width: "100%" }}
+                  className={"full-width"}
                   placeholder="Hour : Minute"
                   required
                   size="small"

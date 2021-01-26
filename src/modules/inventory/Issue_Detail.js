@@ -230,7 +230,7 @@ const IssueDetail = ({
                     name="issue_detail_qty"
                     disabled={line.item_id ? false : true}
                     size="small"
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     value={line.issue_detail_qty}
                     onChange={(data) => {
                       onChangeValue(line.id, {
@@ -269,7 +269,7 @@ const IssueDetail = ({
                     name={"issue_detail_due_date"}
                     format={"DD/MM/YYYY"}
                     size="small"
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     placeholder="Due Date"
                     value={
                       line.issue_detail_due_date && line.issue_detail_due_date

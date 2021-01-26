@@ -2,21 +2,15 @@ import React, { useState, useEffect, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
 import { SET_DEFUALT_CONDITIONS } from "../../../../actions/types";
-import { Row, Col, Table } from "antd";
-import $ from "jquery";
+import { Table } from "antd";
 import Authorize from "../../../system/Authorize";
 import useKeepLogs from "../../../logs/useKeepLogs";
 import MainLayout from "../../../../components/MainLayout";
-import {
-  item_conditions,
-  QASubjectColumns,
-  qcTestItemMainColumns,
-} from "../../configs/qcTestItemConfig";
+import { qcTestItemMainColumns } from "../../configs/qcTestItemConfig";
 import { sortData } from "../../../../include/js/function_main";
 import { getAllQAConditionsGroupByItemType } from "../../../../actions/qa/qaTestAction";
-import CustomTable from "../../../../components/CustomTable";
 import { AppContext } from "../../../../include/js/context";
-const QCItemTestMain = (props) => {
+const ConditionsMain = (props) => {
   const { currentProject, currentMenu } = useContext(AppContext);
   const history = useHistory();
   const keepLog = useKeepLogs();
@@ -92,4 +86,4 @@ const QCItemTestMain = (props) => {
   );
 };
 
-export default withRouter(QCItemTestMain);
+export default withRouter(ConditionsMain);

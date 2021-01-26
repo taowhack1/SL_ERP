@@ -288,7 +288,7 @@ const CustomerCreate = (props) => {
                         <Input
                           name="customer_tax_no"
                           placeholder="Tax ID"
-                          style={{ width: "100%" }}
+                          className={"full-width"}
                           value={data_head.customer_tax_no}
                           onChange={(e) =>
                             upDateFormValue({ customer_tax_no: e.target.value })
@@ -362,7 +362,7 @@ const CustomerCreate = (props) => {
                                   customer_limit_credit: data,
                                 });
                               }}
-                              style={{ width: "100%" }}
+                              className={"full-width"}
                               // size="small"
                             />
                           </Col>

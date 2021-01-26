@@ -327,7 +327,7 @@ const WorkCenterCreate = (props) => {
                               work_center_worker: data,
                             });
                           }}
-                          style={{ width: "100%" }}
+                          className={"full-width"}
                         />
                       </Col>
                       <Col span={1}></Col>
@@ -381,7 +381,7 @@ const WorkCenterCreate = (props) => {
                           format={"HH:mm"}
                           showNow={false}
                           name={"work_center_time"}
-                          style={{ width: "100%" }}
+                          className={"full-width"}
                           placeholder="Hour : Minute"
                           required
                           value={

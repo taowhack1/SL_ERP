@@ -134,7 +134,7 @@ const SO_Detail = ({
                             uom_no: null,
                           });
                     }}
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     filterOption={(inputValue, option) =>
                       option.title &&
                       option.title
@@ -166,7 +166,7 @@ const SO_Detail = ({
                     min={0.0}
                     step={0.001}
                     size="small"
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     disabled={0}
                     value={line.so_detail_qty}
                     onChange={(data) => {
@@ -222,7 +222,7 @@ const SO_Detail = ({
                       });
                       updateAmount();
                     }}
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     size="small"
                   />
                 </Col>
@@ -245,7 +245,7 @@ const SO_Detail = ({
                       });
                       updateAmount();
                     }}
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     size="small"
                   />
                 </Col>
@@ -259,7 +259,7 @@ const SO_Detail = ({
                     name={"so_detail_delivery_date"}
                     format={"DD/MM/YYYY"}
                     size="small"
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     placeholder="Delivery date..."
                     value={
                       line.so_detail_delivery_date &&

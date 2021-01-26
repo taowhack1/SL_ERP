@@ -18,10 +18,10 @@ import { useSelector } from "react-redux";
 import {
   receive_sub_detail_fields,
   receive_sub_detail_columns,
-} from "./config";
+} from "../../config";
 import moment from "moment";
 
-import { convertDigit, numberFormat } from "../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../../../include/js/main_config";
 const { Text } = Typography;
 
 const SubDetail = ({
@@ -135,7 +135,7 @@ const SubDetail = ({
                     name={"receive_detail_sub_receive_date"}
                     format={"DD/MM/YYYY"}
                     size="small"
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     placeholder="Receive date..."
                     value={
                       line.receive_detail_sub_receive_date &&
@@ -164,7 +164,7 @@ const SubDetail = ({
                     name={"receive_detail_sub_mfg_date"}
                     format={"DD/MM/YYYY"}
                     size="small"
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     placeholder="MFG date..."
                     value={
                       line.receive_detail_sub_mfg_date &&
@@ -190,7 +190,7 @@ const SubDetail = ({
                     name={"receive_detail_sub_exp_date"}
                     format={"DD/MM/YYYY"}
                     size="small"
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     placeholder="EXP date..."
                     value={
                       line.receive_detail_sub_exp_date &&
@@ -218,7 +218,7 @@ const SubDetail = ({
                     min={0.0}
                     step={0.001}
                     size="small"
-                    style={{ width: "100%" }}
+                    className={"full-width"}
                     disabled={0}
                     value={line.receive_detail_sub_qty}
                     onChange={(data) => {
