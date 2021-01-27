@@ -10,7 +10,7 @@ import {
   get_receive_list,
   reset_receive,
 } from "../../../../actions/inventory/receiveActions";
-import { receive_columns } from "../../config";
+import { receive_columns } from "../../config/receiveConfig";
 import { reset_comments } from "../../../../actions/comment&log";
 import Authorize from "../../../system/Authorize";
 import useKeepLogs from "../../../logs/useKeepLogs";

@@ -4,7 +4,9 @@ const { Footer } = Layout;
 function MainFooter() {
   return (
     <>
-      <Footer>System v1.1 Sirilaboratories co.,ltd.</Footer>
+      <Footer>
+        System v{process.env.REACT_APP_ERP_VERSION} Sirilaboratories co.,ltd.
+      </Footer>
     </>
   );
 }

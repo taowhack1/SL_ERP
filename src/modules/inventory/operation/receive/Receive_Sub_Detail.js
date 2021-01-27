@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 import {
   receive_sub_detail_fields,
   receive_sub_detail_columns,
-} from "../../config";
+} from "../../config/receiveConfig";
 import moment from "moment";
 
 import { convertDigit, numberFormat } from "../../../../include/js/main_config";
