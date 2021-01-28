@@ -10,9 +10,13 @@ import { sortData } from "../../../include/js/function_main";
 const { Text } = Typography;
 
 const BulkFormula = ({ partId }) => {
-  const { FormulaReducer, readOnly, RMList, sumPercent } = useContext(
-    ItemContext
-  );
+  const {
+    FormulaReducer,
+    readOnly,
+    RMList,
+    formulaPercent,
+    sumPercent,
+  } = useContext(ItemContext);
   const [state, stateDispatch] = useReducer(
     reducer,
     sortData(FormulaReducer.data[partId])
@@ -73,6 +77,7 @@ const BulkFormula = ({ partId }) => {
         focusLastPage={true}
         columns={itemFormulaColumns(readOnly, onChange, onDelete, Save, {
           itemList: RMList,
+          maxPercent: formulaPercent,
         })}
         dataSource={state}
         readOnly={readOnly}

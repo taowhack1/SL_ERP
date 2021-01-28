@@ -54,6 +54,7 @@ import { getAllMachine } from "../../actions/production/machineActions";
 import ReducerClass from "../../include/js/ReducerClass";
 import { ItemContext } from "../../include/js/context";
 import Barcode from "react-barcode";
+import { convertDigit } from "../../include/js/main_config";
 const { Text } = Typography;
 
 const ItemCreate = (props) => {
@@ -224,7 +225,11 @@ const ItemCreate = (props) => {
 
       const key = "validate";
       const validate = validateFormHead(data_head, item_require_fields);
-      if (PartReducer.data.length > 1 && formulaPercent !== 100) {
+      console.log("formulaPercent", formulaPercent);
+      if (
+        PartReducer.data.length > 1 &&
+        convertDigit(formulaPercent, 4) !== convertDigit(100, 4)
+      ) {
         message.warning({
           content: "Please check Bulk Formula %(W/W) !!.",
           key,

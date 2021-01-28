@@ -3,12 +3,17 @@ import {
   EllipsisOutlined,
   FormOutlined,
 } from "@ant-design/icons";
-import { Popconfirm } from "antd";
+import { DatePicker, Input, InputNumber, Popconfirm } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import CustomSelect from "../../../components/CustomSelect";
 import { getSelfStepStatus } from "../../../include/js/function_main";
-import { convertDigit } from "../../../include/js/main_config";
+import {
+  convertDigit,
+  getNumberFormat,
+  numberFormat,
+} from "../../../include/js/main_config";
+import moment from "moment";
 
 export const receive_columns = [
   {
@@ -84,7 +89,6 @@ export const receive_columns = [
     },
     render: (value) => convertDigit(value),
   },
-
   {
     title: "Status",
     dataIndex: "trans_status_name",
@@ -102,31 +106,28 @@ export const receive_columns = [
     },
   },
 ];
-export const recieve_detail_columns = [
-  { id: 0, name: "Item", size: 6, require: true },
-  { id: 1, name: "Qty.( PO )", size: 3, require: true },
-  { id: 2, name: "Qty. Balance", size: 3 },
-  { id: 3, name: "Qty. Done", size: 3, require: true },
-  { id: 4, name: "Unit", size: 2, require: true },
-  { id: 5, name: "Unit Price", size: 3, require: true },
-  { id: 6, name: "Due Date", size: 3 },
-];
 
-export const receiveDetailColumns = ({
+export const receiveDetailColumns = (
   readOnly,
   onChange,
   itemList,
   onDelete,
-}) => [
+  onOpenDetail
+) => [
   {
     title: "No.",
-    render: (_, record) => <Text className="text-value">{record.id}</Text>,
+    render: (_, record) => <Text className="text-value">{record.id + 1}</Text>,
     width: "5%",
     align: "center",
   },
   {
-    title: <Text strong>{"Item"}</Text>,
-    align: "center",
+    title: (
+      <div className="text-center">
+        <Text strong>{"Item"}</Text>
+      </div>
+    ),
+    align: "left",
+    ellipsis: true,
     dataIndex: "item_no_name",
     render: (value, record) =>
       readOnly ? (
@@ -160,53 +161,330 @@ export const receiveDetailColumns = ({
       ),
   },
   {
-    title: "Qty.( PO )",
+    title: (
+      <div className="text-center">
+        <Text strong>{"Qty.( PO )"}</Text>
+      </div>
+    ),
+    align: "right",
+    dataIndex: "po_detail_qty",
+    width: "10%",
+    ellipsis: true,
+    render: (value) => (
+      <Text className="text-value">{convertDigit(value, 4)}</Text>
+    ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"Qty.Balance"}</Text>
+      </div>
+    ),
+    align: "right",
+    dataIndex: "tg_receive_detail_qty_balance",
+    width: "10%",
+    ellipsis: true,
+    render: (value) => (
+      <Text className="text-value">{convertDigit(value, 4)}</Text>
+    ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        {!readOnly && <span className="require">{"* "}</span>}
+        <Text strong>{"Qty.Done"}</Text>
+      </div>
+    ),
     align: "right",
     dataIndex: "tg_receive_detail_qty",
     width: "10%",
-    render: (value) => (
-      <Text className="text-value">{convertDigit(value)}</Text>
+    ellipsis: true,
+    render: (value, record) => (
+      <div
+        className={
+          record.tg_receive_detail_qty_balance > 0
+            ? "total-number-modal text-value"
+            : "total-number text-value"
+        }
+      >
+        <Text className="text-value">{convertDigit(value, 4)}</Text>
+      </div>
     ),
   },
   {
-    title: "Qty.Balance",
-    align: "right",
-    dataIndex: "tg_receive_detail_qty",
-    width: "10%",
-    render: (value) => (
-      <Text className="text-value">{convertDigit(value)}</Text>
+    title: (
+      <div className="text-center">
+        <Text strong>{"Unit Price"}</Text>
+      </div>
     ),
-  },
-  {
-    title: "Qty.Done",
-    align: "right",
-    dataIndex: "receive_detail_price",
-    width: "10%",
-    render: (value) => (
-      <Text className="text-value">{convertDigit(value)}</Text>
-    ),
-  },
-  {
-    title: "Unit Price",
     align: "right",
     dataIndex: "receive_detail_price",
     width: "10%",
+    ellipsis: true,
     render: (value) => (
-      <Text className="text-value">{convertDigit(value)}</Text>
+      <Text className="text-value">{convertDigit(value, 4)}</Text>
     ),
   },
   {
-    title: "Due Date",
+    title: (
+      <div className="text-center">
+        <Text strong>{"Due Date"}</Text>
+      </div>
+    ),
     align: "center",
     dataIndex: "receive_detail_due_date",
     width: "10%",
+    ellipsis: true,
     render: (value) => <Text className="text-value">{value}</Text>,
   },
   {
-    title: "UoM",
-    align: "left",
+    title: (
+      <div className="text-center">
+        <Text strong>{"UoM"}</Text>
+      </div>
+    ),
+    align: "center",
     dataIndex: "uom_no",
-    width: "10%",
+    ellipsis: true,
+    width: "7%",
+    render: (value) => <Text className="text-value">{value}</Text>,
+  },
+  {
+    title: (
+      <Text strong>
+        <EllipsisOutlined />
+      </Text>
+    ),
+    align: "center",
+    width: "5%",
+
+    render: (_, record) => {
+      if (readOnly) {
+        return null;
+      } else {
+        return (
+          // <Popconfirm
+          //   onConfirm={() => {
+          //     onDelete(record.id);
+          //   }}
+          //   title="Are you sure you want to delete this row？"
+          //   okText="Yes"
+          //   cancelText="No"
+          // >
+          //   <DeleteTwoTone />
+          // </Popconfirm>
+          record.tg_receive_detail_qty_balance_temp > 0 && (
+            <FormOutlined
+              onClick={() => {
+                onOpenDetail(record);
+                // setVisible(true);
+                // tempSubDetailDispatch({
+                //   type: "SET_DETAIL",
+                //   payload: line.receive_sub_detail,
+                // });
+                // setTempDetail(line);
+                // get_location_shelf(line.item_id);
+              }}
+              className="button-icon"
+            />
+          )
+        );
+      }
+    },
+  },
+];
+export const receiveSubDetailColumns = (
+  readOnly,
+  onChange,
+  locationList,
+  onDelete
+) => [
+  {
+    title: "No.",
+    render: (_, record) => <Text className="text-value">{record.id + 1}</Text>,
+    width: "5%",
+    align: "center",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"Receive To"}</Text>
+      </div>
+    ),
+    align: "left",
+    dataIndex: "location_no_name",
+    // width: "10%",
+    ellipsis: true,
+    render: (value) => <Text className="text-value">{value}</Text>,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"Lot No."}</Text>
+      </div>
+    ),
+    align: "left",
+    dataIndex: "receive_detail_sub_lot_no",
+    // width: "10%",
+    ellipsis: true,
+    render: (value, record) =>
+      readOnly ? (
+        <Text className="text-value">{value}</Text>
+      ) : (
+        <Input
+          placeholder="Lot No."
+          size="small"
+          value={value}
+          onChange={(e) => {
+            onChange(record.id, {
+              receive_detail_sub_lot_no: e.target.value,
+            });
+          }}
+        />
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        {!readOnly && <span className="require">{"* "}</span>}
+        <Text strong>{"Receive Date"}</Text>
+      </div>
+    ),
+    align: "center",
+    dataIndex: "receive_detail_sub_receive_date",
+    width: "12%",
+    ellipsis: true,
+    render: (value, record) =>
+      readOnly ? (
+        <Text className="text-value">{value}</Text>
+      ) : (
+        <DatePicker
+          name={"receive_detail_sub_receive_date"}
+          format={"DD/MM/YYYY"}
+          size="small"
+          className={"full-width"}
+          placeholder="Receive Date"
+          value={value ? moment(value, "DD/MM/YYYY") : null}
+          onChange={(data) => {
+            data
+              ? onChange(record.id, {
+                  receive_detail_sub_receive_date: data.format("DD/MM/YYYY"),
+                })
+              : onChange(record.id, {
+                  receive_detail_sub_receive_date: null,
+                });
+          }}
+        />
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"MFG Date"}</Text>
+      </div>
+    ),
+    align: "center",
+    dataIndex: "receive_detail_sub_mfg_date",
+    width: "12%",
+    ellipsis: true,
+    render: (value, record) =>
+      readOnly ? (
+        <Text className="text-value">{value}</Text>
+      ) : (
+        <DatePicker
+          name={"receive_detail_sub_mfg_date"}
+          format={"DD/MM/YYYY"}
+          size="small"
+          className={"full-width"}
+          placeholder="MFG Date"
+          value={value ? moment(value, "DD/MM/YYYY") : null}
+          onChange={(data) => {
+            data
+              ? onChange(record.id, {
+                  receive_detail_sub_mfg_date: data.format("DD/MM/YYYY"),
+                })
+              : onChange(record.id, {
+                  receive_detail_sub_mfg_date: null,
+                });
+          }}
+        />
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"EXP Date"}</Text>
+      </div>
+    ),
+    align: "center",
+    dataIndex: "receive_detail_sub_exp_date",
+    width: "12%",
+    ellipsis: true,
+    render: (value, record) =>
+      readOnly ? (
+        <Text className="text-value">{value}</Text>
+      ) : (
+        <DatePicker
+          name={"receive_detail_sub_exp_date"}
+          format={"DD/MM/YYYY"}
+          size="small"
+          className={"full-width"}
+          placeholder="EXP Date"
+          value={value ? moment(value, "DD/MM/YYYY") : null}
+          onChange={(data) => {
+            data
+              ? onChange(record.id, {
+                  receive_detail_sub_exp_date: data.format("DD/MM/YYYY"),
+                })
+              : onChange(record.id, {
+                  receive_detail_sub_exp_date: null,
+                });
+          }}
+        />
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        {!readOnly && <span className="require">{"* "}</span>}
+        <Text strong>{"Qty. Done"}</Text>
+      </div>
+    ),
+    align: "right",
+    dataIndex: "receive_detail_sub_qty",
+    width: "12%",
+    ellipsis: true,
+    render: (value, record) =>
+      readOnly ? (
+        <Text className="text-value">{value}</Text>
+      ) : (
+        <InputNumber
+          {...getNumberFormat(3)}
+          placeholder={"Qty Done"}
+          min={0.0}
+          step={0.001}
+          size="small"
+          className={"full-width"}
+          disabled={0}
+          value={value}
+          onChange={(data) => {
+            onChange(record.id, {
+              receive_detail_sub_qty: data,
+            });
+          }}
+        />
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"UoM"}</Text>
+      </div>
+    ),
+    align: "center",
+    dataIndex: "uom_no",
+    ellipsis: true,
+    width: "7%",
     render: (value) => <Text className="text-value">{value}</Text>,
   },
   {
@@ -238,16 +516,6 @@ export const receiveDetailColumns = ({
   },
 ];
 
-export const receive_sub_detail_columns = [
-  { id: 1, name: "Destination Location", size: 5, require: true },
-  { id: 2, name: "Lot No.", size: 4, require: false },
-  { id: 3, name: "Receive Date", size: 3, require: true },
-  { id: 4, name: "MFG Date", size: 3, require: false },
-  { id: 5, name: "EXP Date", size: 3, require: false },
-  { id: 6, name: "Quantity Done", size: 3, require: true },
-  { id: 7, name: "Unit", size: 2, require: true },
-];
-
 export const receive_fields = {
   receive_id: null,
   receive_no: null,
@@ -273,6 +541,8 @@ export const receive_fields = {
   vendor_id: null,
   vat_id: 1,
   vat_rate: 0.07,
+  vendor_id: null,
+  vendor_no_name: null,
   currency_id: 1,
   currency_no: null,
   process_id: null,
@@ -312,7 +582,7 @@ export const receive_sub_detail_fields = {
   receive_detail_sub_receive_date: null,
   receive_detail_sub_mfg_date: null,
   receive_detail_sub_exp_date: null,
-  receive_detail_sub_qty: null,
+  receive_detail_sub_qty: 0,
   receive_detail_sub_remark: null,
   shelf_id: null,
   shelf_no: null,

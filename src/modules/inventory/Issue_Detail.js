@@ -357,7 +357,7 @@ const IssueDetail = ({
                 </Col>
               </Row>
             ))}
-        </> //close tag
+        </>
       )}
       {/* end readonly */}
       <Row

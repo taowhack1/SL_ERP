@@ -20,6 +20,8 @@ const QCReceive = () => {
   const auth = useSelector((state) => state.auth.authData);
   const current_project = useSelector((state) => state.auth.currentProject);
   const qc_receive_list = useSelector((state) => state.qa.qc_receive_list);
+  const [itemList, setItemList] = useState(qc_receive_list);
+
   const qc_receive_detail_list = useSelector(
     (state) => state.qa.qc_receive_detail_list
   );
@@ -56,6 +58,17 @@ const QCReceive = () => {
       setUpdate(!update);
       const data_update = qc_list.filter((row) => row.commit === 1);
       dispatch(update_qc_receive_list(data_update, setLoading));
+    },
+    onSearch: (text) => {
+      console.log(text);
+      setItemList(
+        text
+          ? qc_receive_list.filter(
+              (item) =>
+                item.item_no_name.toUpperCase().indexOf(text.toUpperCase()) >= 0
+            )
+          : qc_receive_list
+      );
     },
   };
 
@@ -235,7 +248,7 @@ const QCReceive = () => {
               loading={loading}
               columns={mainColumns}
               rowKey={"item_id"}
-              dataSource={qc_receive_list}
+              dataSource={itemList}
               expandable={{ expandedRowRender }}
               onChange={onChange}
               size="small"

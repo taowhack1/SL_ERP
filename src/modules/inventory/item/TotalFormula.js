@@ -128,7 +128,8 @@ const TotalFormula = () => {
         "isMixPart",
         PartReducer.data[partIndex].item_part_description.indexOf("+")
       );
-      return PartReducer.data[partIndex].item_part_description.indexOf("+") >= 1
+      return PartReducer.data[partIndex].item_part_description.indexOf("+") >=
+        1 || PartReducer.data[partIndex].item_part_description.length > 1
         ? false
         : temp.push(
             ...arr.map((item, index) => {
@@ -156,7 +157,7 @@ const TotalFormula = () => {
         dataSource={combineData}
         onChange={() => console.log("change page")}
         bordered
-        pagination={{ pageSize: 100 }}
+        pageSize={100}
         size="small"
         rowKey="id"
       />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Row, Col, Input, Typography } from "antd";
 import { useSelector } from "react-redux";
 import CustomSelect from "../../../../components/CustomSelect";
@@ -7,10 +7,18 @@ import {
   receive_fields,
 } from "../../config/receiveConfig";
 import moment from "moment";
+import { ReceiveContext } from "./Receive_Create";
 const { Text } = Typography;
-const initialStateHead = receive_fields;
+
 const initialStateDetail = [receive_detail_fields];
-const ReceiveHead = ({ mainState, saveForm }) => {
+const ReceiveHead = () => {
+  const {
+    readOnly,
+    mainState,
+    initialStateHead,
+    saveForm,
+    loading,
+  } = useContext(ReceiveContext);
   const auth = useSelector((state) => state.auth.authData);
   const po_list = useSelector((state) => state.inventory.receive.po_ref);
   const [state, setState] = useState(mainState);
@@ -23,15 +31,8 @@ const ReceiveHead = ({ mainState, saveForm }) => {
     setState({ ...state, ...data });
   };
   const resetForm = () => {
-    setState({
-      ...initialStateHead,
-      commit: 1,
-      user_name: auth.user_name,
-      branch_id: auth.branch_id,
-      branch_name: auth.branch_name,
-      receive_created: moment().format("DD/MM/YYYY"),
-      receive_detail: initialStateDetail,
-    });
+    setState(initialStateHead);
+    save(initialStateHead);
   };
   useEffect(() => {
     console.log("effect head");
@@ -105,7 +106,9 @@ const ReceiveHead = ({ mainState, saveForm }) => {
       </Row>
       <Row className="col-2 row-margin-vertical">
         <Col span={3}>
-          <Text strong>Order date :</Text>
+          <Text strong className={!readOnly ? "pd-left-1" : ""}>
+            {"Order date :"}
+          </Text>
         </Col>
         <Col span={8}>
           <Text className="text-view">{state.receive_order_date}</Text>

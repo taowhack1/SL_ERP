@@ -3,7 +3,7 @@ import CustomSelect from "../../../components/CustomSelect";
 import Text from "antd/lib/typography/Text";
 import { Input, InputNumber, Popconfirm, TimePicker } from "antd";
 import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
-import { convertDigit } from "../../../include/js/main_config";
+import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 import {
   getSelfStepStatus,
   pad2number,
@@ -612,7 +612,7 @@ export const itemFormulaColumns = (
   onChange,
   onDelete,
   Save,
-  { itemList }
+  { itemList, maxPercent }
 ) => [
   {
     id: 1,
@@ -688,10 +688,10 @@ export const itemFormulaColumns = (
             disabled={record.item_id_formula ? 0 : 1}
             defaultValue={0.0}
             min={0.0}
-            max={100.0}
-            formatter={(value) => `${value}%`}
-            parser={(value) => value.replace("%", "")}
-            precision={4}
+            max={100}
+            {...getNumberFormat(4)}
+            // formatter={(value) => `${value}%`}
+            // parser={(value) => value.replace("%", "")}
             step={0.0001}
             onChange={(data) => {
               onChange(record.id, {

@@ -61,6 +61,7 @@ const TabBulkFormula = () => {
     FormulaReducer.deleteRow2D(rowId);
   };
   console.log("PartReducer data", PartReducer.data);
+  console.log("FormulaReducer data", FormulaReducer.data);
   return (
     <>
       <Row className="col-2 mt-3  detail-tab-row">

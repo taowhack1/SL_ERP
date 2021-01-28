@@ -14,15 +14,19 @@ import { convertDigit } from "./main_config";
 export const sortData = (arrObject) => {
   let copyData = arrObject;
   let temp = [];
-  copyData.map((obj, key) => {
-    return temp.push({
-      ...obj,
-      id: key,
-      commit: 1,
-      data_id: obj.data_id ?? key,
+  if (copyData.length) {
+    copyData.map((obj, key) => {
+      return temp.push({
+        ...obj,
+        id: key,
+        commit: 1,
+        data_id: obj.data_id ?? key,
+      });
     });
-  });
-  return arrObject.length ? temp : [];
+    return arrObject.length ? temp : [];
+  } else {
+    return [];
+  }
 };
 
 export const sortDataWithoutCommit = (arrObject) => {

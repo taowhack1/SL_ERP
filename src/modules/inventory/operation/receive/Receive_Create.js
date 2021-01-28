@@ -1,7 +1,13 @@
-import React, { useEffect, useReduce, useReducer, useState } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useReduce,
+  useReducer,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { Row, Col, Typography, message } from "antd";
+import { Row, Col, Typography, message, Spin, Skeleton } from "antd";
 import { reducer } from "../../reducers";
 import {
   receive_fields,
@@ -23,22 +29,34 @@ import Comments from "../../../../components/Comments";
 
 import axios from "axios";
 import Authorize from "../../../system/Authorize";
-import { validateFormHead } from "../../../../include/js/function_main";
+import {
+  sortData,
+  validateFormHead,
+} from "../../../../include/js/function_main";
 import ReceiveHead from "./ReceiveHead";
 import ReceiveTabs from "./ReceiveTabs";
+import DetailLoading from "../../../../components/DetailLoading";
 
 const { Text } = Typography;
 
-const initialStateHead = receive_fields;
 const readOnly = false;
+export const ReceiveContext = React.createContext();
 const Receive_Create = (props) => {
   const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth.authData);
+  const initialStateHead = {
+    ...receive_fields,
+    commit: 1,
+    user_name: auth.user_name,
+    branch_id: auth.branch_id,
+    branch_name: auth.branch_name,
+    receive_created: moment().format("DD/MM/YYYY"),
+  };
   const [state, stateDispatch] = useReducer(reducer, initialStateHead);
   const [loading, setLoading] = useState(false);
-  const auth = useSelector((state) => state.auth.authData);
   const dataComments = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
 
@@ -130,43 +148,45 @@ const Receive_Create = (props) => {
             branch_id: auth.branch_id,
             branch_name: auth.branch_name,
           }
-        : {
-            ...receive_fields,
-            commit: 1,
-            user_name: auth.user_name,
-            branch_id: auth.branch_id,
-            branch_name: auth.branch_name,
-            receive_created: moment().format("DD/MM/YYYY"),
-          },
+        : initialStateHead,
     });
   }, []);
 
   const getDetail = async (data, po_id) => {
     setLoading(true);
-    console.log("getDetail");
-    await axios
-      .get(`${api_receive_get_ref_po_detail}/${po_id}`, header_config)
-      .then((res) => {
-        const details = res.data[0];
-        details.map((detail) => (detail.receive_sub_detail = []));
-        stateDispatch({
-          type: "CHANGE_HEAD_VALUE",
-          payload: { ...data, receive_detail: details },
-        });
-        setLoading(false);
+    console.log("getDetail", po_id);
+    if (!po_id) {
+      stateDispatch({
+        type: "SET_HEAD",
+        payload: initialStateHead,
       });
+    } else {
+      await axios
+        .get(`${api_receive_get_ref_po_detail}/${po_id}`, header_config)
+        .then((res) => {
+          const details = res.data[0];
+          details.map((detail) => (detail.receive_sub_detail = []));
+          stateDispatch({
+            type: "CHANGE_HEAD_VALUE",
+            payload: { ...data, receive_detail: sortData(details) },
+          });
+
+          // setLoading(false);
+        });
+    }
+    setTimeout(() => setLoading(false), 800);
   };
   const saveForm = async (data, po_id) => {
     console.log("save Data", data);
-    if (po_id) {
-      console.log("have po_id");
-      state.po_id === data.po_id
-        ? stateDispatch({ type: "CHANGE_HEAD_VALUE", payload: data })
-        : getDetail(data, po_id);
-    } else {
-      console.log("else po_id");
-      stateDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
-    }
+    // if (po_id !== undefined) {
+    console.log("have po_id");
+    state.po_id === data.po_id
+      ? stateDispatch({ type: "CHANGE_HEAD_VALUE", payload: data })
+      : getDetail(data, po_id);
+    // } else {
+    //   console.log("else po_id");
+    //   stateDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
+    // }
   };
 
   const redirect_to_view = (id) => {
@@ -187,43 +207,58 @@ const Receive_Create = (props) => {
     };
   }, [state.tg_trans_status_id]);
   console.log("Receive Create", state);
+  const contextValue = useMemo(() => {
+    return {
+      readOnly,
+      mainState: state,
+      initialStateHead,
+      saveForm,
+      loading,
+    };
+  }, [readOnly, state, initialStateHead, saveForm, loading]);
   return (
     <MainLayout {...config}>
-      <div id="form">
-        <Row className="col-2">
-          <Col span={8}>
-            <h2>
-              <strong>
-                {state.receive_no ? "Edit" : "Create"} {"Receive "}
-                {state.receive_no && "#" + state.receive_no}
-              </strong>
-            </h2>
-          </Col>
-          <Col span={12}></Col>
-          <Col span={2}>
-            <Text strong>Create Date :</Text>
-          </Col>
-          <Col span={2} className="text-right">
-            <Text className="text-view">{state.receive_created}</Text>
-          </Col>
-        </Row>
-        {!loading && (
+      <ReceiveContext.Provider value={contextValue}>
+        <div id="form">
+          <Row className="col-2">
+            <Col span={8}>
+              <h2>
+                <strong>
+                  {state.receive_no ? "Edit" : "Create"} {"Receive "}
+                  {state.receive_no && "#" + state.receive_no}
+                </strong>
+              </h2>
+            </Col>
+            <Col span={12}></Col>
+            <Col span={2}>
+              <Text strong>Create Date :</Text>
+            </Col>
+            <Col span={2} className="text-right">
+              <Text className="text-view">{state.receive_created}</Text>
+            </Col>
+          </Row>
+
           <>
             <ReceiveHead
+              initialStateHead={initialStateHead}
               mainState={state}
               saveForm={saveForm}
               readOnly={readOnly}
             />
-            <ReceiveTabs
-              state={state}
-              remarkFields={remarkFields}
-              saveForm={saveForm}
-              readOnly={readOnly}
-            />
+            {loading ? (
+              <DetailLoading loading={loading} />
+            ) : (
+              <ReceiveTabs
+                mainState={state}
+                remarkFields={remarkFields}
+                saveForm={saveForm}
+                readOnly={readOnly}
+              />
+            )}
           </>
-        )}
-      </div>
-      <Comments data={dataComments} />
+        </div>
+        <Comments data={dataComments} />
+      </ReceiveContext.Provider>
     </MainLayout>
   );
 };
