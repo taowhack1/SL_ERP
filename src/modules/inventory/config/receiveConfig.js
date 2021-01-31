@@ -145,7 +145,9 @@ export const receiveDetailColumns = (
     align: "left",
     ellipsis: true,
     dataIndex: "item_no_name",
-    render: (value, record) => <Text className="text-value">{value}</Text>,
+    render: (value, record) => (
+      <Text className="text-value">{value ?? "-"}</Text>
+    ),
   },
   {
     title: (
@@ -158,7 +160,7 @@ export const receiveDetailColumns = (
     width: "10%",
     ellipsis: true,
     render: (value) => (
-      <Text className="text-value">{convertDigit(value, 4)}</Text>
+      <Text className="text-value">{value ? convertDigit(value, 4) : "-"}</Text>
     ),
   },
   {
@@ -172,7 +174,7 @@ export const receiveDetailColumns = (
     width: "10%",
     ellipsis: true,
     render: (value) => (
-      <Text className="text-value">{convertDigit(value, 4)}</Text>
+      <Text className="text-value">{value ? convertDigit(value, 4) : "-"}</Text>
     ),
   },
   {
@@ -194,7 +196,9 @@ export const receiveDetailColumns = (
             : "total-number text-value"
         }
       >
-        <Text className="text-value">{convertDigit(value, 4)}</Text>
+        <Text className="text-value">
+          {value ? convertDigit(value, 4) : "-"}
+        </Text>
       </div>
     ),
   },
@@ -209,7 +213,7 @@ export const receiveDetailColumns = (
     width: "10%",
     ellipsis: true,
     render: (value) => (
-      <Text className="text-value">{convertDigit(value, 4)}</Text>
+      <Text className="text-value">{convertDigit(value, 4) ?? 0}</Text>
     ),
   },
   {
@@ -222,7 +226,7 @@ export const receiveDetailColumns = (
     dataIndex: "receive_detail_due_date",
     width: "10%",
     ellipsis: true,
-    render: (value) => <Text className="text-value">{value}</Text>,
+    render: (value) => <Text className="text-value">{value ?? "-"}</Text>,
   },
   {
     title: (
@@ -234,7 +238,7 @@ export const receiveDetailColumns = (
     dataIndex: "uom_no",
     ellipsis: true,
     width: "7%",
-    render: (value) => <Text className="text-value">{value}</Text>,
+    render: (value) => <Text className="text-value">{value ?? "-"}</Text>,
   },
   {
     title: (

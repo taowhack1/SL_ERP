@@ -1,7 +1,13 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table, InputNumber } from "antd";
+import { Row, Col, Table, InputNumber, message, Spin } from "antd";
 import MainLayout from "../../components/MainLayout";
 
 import { reducer } from "./reducers";
@@ -9,18 +15,19 @@ import { get_qc_receive_list, update_qc_receive_list } from "../../actions/qa";
 import Authorize from "../system/Authorize";
 
 import { convertDigit, numberFormat } from "../../include/js/main_config";
+import { AppContext } from "../../include/js/context";
+import DetailLoading from "../../components/DetailLoading";
 
 const QCReceive = () => {
+  const tempItemList = useRef();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
+  const { currentProject, auth } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
   const [qc_list, qcListDispatch] = useReducer(reducer, []);
   const [update, setUpdate] = useState(0);
-  const auth = useSelector((state) => state.auth.authData);
-  const current_project = useSelector((state) => state.auth.currentProject);
-  const qc_receive_list = useSelector((state) => state.qa.qc_receive_list);
-  const [itemList, setItemList] = useState(qc_receive_list);
+  const [itemList, setItemList] = useState([]);
 
   const qc_receive_detail_list = useSelector(
     (state) => state.qa.qc_receive_detail_list
@@ -30,9 +37,9 @@ const QCReceive = () => {
   };
 
   const config = {
-    projectId: current_project && current_project.project_id,
-    title: current_project && current_project.project_name,
-    home: current_project && current_project.project_url,
+    projectId: currentProject && currentProject.project_id,
+    title: currentProject && currentProject.project_name,
+    home: currentProject && currentProject.project_url,
     show: true,
     breadcrumb: ["Home", "QC Receive"],
     search: true,
@@ -52,22 +59,31 @@ const QCReceive = () => {
     },
     onSave: (e) => {
       //e.preventDefault();
-
-      setLoading(true);
       console.log("Save");
       setUpdate(!update);
       const data_update = qc_list.filter((row) => row.commit === 1);
-      dispatch(update_qc_receive_list(data_update, setLoading));
+      update_qc_receive_list(data_update).then((res) => {
+        console.log(res.data);
+        // dispatch(get_qc_receive_list());
+        setTimeout(() => {
+          message.success({
+            content: "QC Receive Updated.",
+            key: "validate",
+            duration: 2,
+          });
+          setLoading(true);
+        }, 1000);
+      });
     },
     onSearch: (text) => {
       console.log(text);
       setItemList(
         text
-          ? qc_receive_list.filter(
+          ? tempItemList.current.filter(
               (item) =>
                 item.item_no_name.toUpperCase().indexOf(text.toUpperCase()) >= 0
             )
-          : qc_receive_list
+          : tempItemList.current
       );
     },
   };
@@ -224,35 +240,52 @@ const QCReceive = () => {
   };
 
   useEffect(() => {
-    dispatch(get_qc_receive_list());
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
+    const getQCList = () =>
+      get_qc_receive_list().then((res) => {
+        console.log(res);
+        setItemList(res[0].value);
+        tempItemList.current = res[0].value;
+        qcListDispatch({
+          type: "SET_DETAIL_WOC",
+          payload: res[1].value,
+        });
+        setTimeout(() => setLoading(false), 800);
+      });
+    getQCList();
+    // dispatch(get_qc_receive_list());
+    // setTimeout(() => {
+    //   setLoading(false);
+    // }, 1000);
+  }, [loading]);
 
-  useEffect(() => {
-    qcListDispatch({
-      type: "SET_DETAIL_WOC",
-      payload: qc_receive_detail_list,
-    });
-  }, [qc_receive_detail_list]);
+  // useEffect(() => {
+  //   qcListDispatch({
+  //     type: "SET_DETAIL_WOC",
+  //     payload: qc_receive_detail_list,
+  //   });
+  // }, [qc_receive_detail_list]);
 
-  console.log("qc_list", qc_list);
+  console.log("qc_list", qc_list, tempItemList);
   return (
     <div>
       <MainLayout {...config}>
         <Row>
           <Col span={24}>
-            <Table
-              bordered
-              loading={loading}
-              columns={mainColumns}
-              rowKey={"item_id"}
-              dataSource={itemList}
-              expandable={{ expandedRowRender }}
-              onChange={onChange}
-              size="small"
-            />
+            {loading ? (
+              <Spin active>
+                <DetailLoading />
+              </Spin>
+            ) : (
+              <Table
+                bordered
+                columns={mainColumns}
+                rowKey={"item_id"}
+                dataSource={itemList}
+                expandable={{ expandedRowRender }}
+                onChange={onChange}
+                size="small"
+              />
+            )}
           </Col>
         </Row>
       </MainLayout>
