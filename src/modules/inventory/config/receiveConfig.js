@@ -1,9 +1,18 @@
 import {
+  DeleteOutlined,
   DeleteTwoTone,
   EllipsisOutlined,
   FormOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
-import { DatePicker, Input, InputNumber, Popconfirm } from "antd";
+import {
+  DatePicker,
+  Input,
+  InputNumber,
+  message,
+  Popconfirm,
+  Space,
+} from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import CustomSelect from "../../../components/CustomSelect";
@@ -13,6 +22,7 @@ import {
   getNumberFormat,
   numberFormat,
 } from "../../../include/js/main_config";
+import $ from "jquery";
 import moment from "moment";
 
 export const receive_columns = [
@@ -21,7 +31,7 @@ export const receive_columns = [
     dataIndex: "receive_no",
     key: "receive_no",
     width: "10%",
-    align: "left",
+    align: "center",
     sorter: {
       compare: (a, b) => a.receive_id - b.receive_id,
       multiple: 3,
@@ -32,11 +42,12 @@ export const receive_columns = [
     dataIndex: "po_no",
     key: "po_no",
     width: "10%",
-    align: "left",
+    align: "center",
     sorter: {
       compare: (a, b) => a.po_id - b.po_id,
       multiple: 3,
     },
+    render: (value, record) => value ?? "-",
   },
   {
     title: "Order Date",
@@ -44,6 +55,7 @@ export const receive_columns = [
     key: "receive_order_date",
     width: "7%",
     align: "center",
+    render: (value, record) => value ?? "-",
   },
   {
     title: "Receive Date",
@@ -51,6 +63,7 @@ export const receive_columns = [
     key: "tg_receive_date",
     width: "7%",
     align: "center",
+    render: (value, record) => value ?? "-",
   },
   {
     title: "Vendor",
@@ -59,14 +72,16 @@ export const receive_columns = [
     width: "20%",
     align: "left",
     ellipsis: true,
+    render: (value, record) => value ?? "-",
   },
   {
     title: "Description",
     dataIndex: "receive_description",
     key: "receive_description",
-    width: "15%",
+    // width: "15%",
     align: "left",
     ellipsis: true,
+    render: (value, record) => value ?? "-",
   },
   {
     title: "Receive By",
@@ -75,20 +90,21 @@ export const receive_columns = [
     width: "15%",
     align: "left",
     ellipsis: true,
+    render: (value, record) => value ?? "-",
   },
-  {
-    title: "Total Value",
-    dataIndex: "tg_receive_total_amount",
-    key: "tg_receive_total_amount",
-    width: "10%",
-    align: "right",
-    ellipsis: true,
-    sorter: {
-      compare: (a, b) => a.tg_receive_total_amount - b.tg_receive_total_amount,
-      multiple: 3,
-    },
-    render: (value) => convertDigit(value),
-  },
+  // {
+  //   title: "Total Value",
+  //   dataIndex: "tg_receive_total_amount",
+  //   key: "tg_receive_total_amount",
+  //   width: "10%",
+  //   align: "right",
+  //   ellipsis: true,
+  //   sorter: {
+  //     compare: (a, b) => a.tg_receive_total_amount - b.tg_receive_total_amount,
+  //     multiple: 3,
+  //   },
+  //   render: (value) => convertDigit(value),
+  // },
   {
     title: "Status",
     dataIndex: "trans_status_name",
@@ -129,36 +145,7 @@ export const receiveDetailColumns = (
     align: "left",
     ellipsis: true,
     dataIndex: "item_no_name",
-    render: (value, record) =>
-      readOnly ? (
-        <CustomSelect
-          allowClear
-          showSearch
-          size="small"
-          placeholder={"Item"}
-          data={itemList}
-          field_id="item_id"
-          field_name="item_no_name"
-          value={value}
-          onChange={(data, option) =>
-            data && data
-              ? onChange(record.id, {
-                  item_id: data,
-                  uom_id: option.data.uom_id,
-                  item_no_name: option.title,
-                  uom_no: option.data.uom_no,
-                })
-              : onChange(record.id, {
-                  item_id: null,
-                  uom_id: null,
-                  item_no_name: null,
-                  uom_no: null,
-                })
-          }
-        />
-      ) : (
-        <Text className="text-value">{value}</Text>
-      ),
+    render: (value, record) => <Text className="text-value">{value}</Text>,
   },
   {
     title: (
@@ -260,34 +247,218 @@ export const receiveDetailColumns = (
 
     render: (_, record) => {
       if (readOnly) {
-        return null;
+        return (
+          <InfoCircleOutlined
+            onClick={() => {
+              onOpenDetail(record);
+            }}
+            className="button-icon"
+          />
+        );
       } else {
         return (
-          // <Popconfirm
-          //   onConfirm={() => {
-          //     onDelete(record.id);
-          //   }}
-          //   title="Are you sure you want to delete this row？"
-          //   okText="Yes"
-          //   cancelText="No"
-          // >
-          //   <DeleteTwoTone />
-          // </Popconfirm>
           record.tg_receive_detail_qty_balance_temp > 0 && (
             <FormOutlined
               onClick={() => {
                 onOpenDetail(record);
-                // setVisible(true);
-                // tempSubDetailDispatch({
-                //   type: "SET_DETAIL",
-                //   payload: line.receive_sub_detail,
-                // });
-                // setTempDetail(line);
-                // get_location_shelf(line.item_id);
               }}
               className="button-icon"
             />
           )
+        );
+      }
+    },
+  },
+];
+export const receiveDetailWithNoPOColumns = (
+  readOnly,
+  onChange,
+  itemList,
+  onDelete,
+  onOpenDetail
+) => [
+  {
+    title: "No.",
+    render: (_, record) => <Text className="text-value">{record.id + 1}</Text>,
+    width: "5%",
+    align: "center",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>
+          {!readOnly && <span className="require">{"* "}</span>}
+          {"Item"}
+        </Text>
+      </div>
+    ),
+    align: "left",
+    ellipsis: true,
+    dataIndex: "item_no_name",
+    render: (value, record) =>
+      !readOnly ? (
+        <CustomSelect
+          allowClear
+          showSearch
+          size="small"
+          placeholder={"Item"}
+          data={itemList}
+          field_id="item_id"
+          field_name="item_no_name"
+          value={value}
+          onChange={(data, option) =>
+            data && data
+              ? onChange(record.id, {
+                  item_id: data,
+                  uom_id: option.data.uom_id,
+                  item_no_name: option.title,
+                  uom_no: option.data.uom_no,
+                  shelf_id: option.data.shelf_id,
+                  location_id: option.data.location_id,
+                  location_no_name: option.data.location_no_name,
+                })
+              : onChange(record.id, {
+                  item_id: null,
+                  uom_id: null,
+                  item_no_name: null,
+                  uom_no: null,
+                  shelf_id: null,
+                  location_id: null,
+                  location_no_name: null,
+                })
+          }
+        />
+      ) : (
+        <Text className="text-value">{value}</Text>
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        {!readOnly && <span className="require">{"* "}</span>}
+        <Text strong>{"Qty.Done"}</Text>
+      </div>
+    ),
+    align: "right",
+    dataIndex: "tg_receive_detail_qty",
+    width: "12%",
+    ellipsis: true,
+    render: (value, record) =>
+      readOnly ? (
+        <Text className="text-value">{value}</Text>
+      ) : (
+        <div
+          className={
+            record.item_id
+              ? "total-number-modal text-value"
+              : "total-number text-value"
+          }
+          title="Click edit icon to fullfill"
+          onClick={() => message.warning("Click edit icon to fullfill", 3)}
+        >
+          <Text className="text-value">{convertDigit(value, 4)}</Text>
+        </div>
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>
+          {!readOnly && <span className="require">{"* "}</span>}
+          {"Unit Price"}
+        </Text>
+      </div>
+    ),
+    align: "right",
+    dataIndex: "receive_detail_price",
+    width: "12%",
+    ellipsis: true,
+    render: (value, record, key) =>
+      readOnly ? (
+        <Text className="text-value">{convertDigit(value, 4)}</Text>
+      ) : record.item_id ? (
+        <InputNumber
+          {...getNumberFormat(4)}
+          placeholder={"Item Price"}
+          min={0}
+          step={1}
+          disabled={record.item_id ? 0 : 1}
+          size="small"
+          className={"full-width check-field"}
+          name={`receive_detail_price-${key}`}
+          value={value}
+          onChange={(data) => {
+            onChange(record.id, {
+              receive_detail_price: data,
+            });
+          }}
+        />
+      ) : (
+        <div
+          className={"total-number text-value"}
+          title="Please select item"
+          onClick={() => message.warning("Please select item", 3)}
+        >
+          <Text className="text-value">{convertDigit(value, 4)}</Text>
+        </div>
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"UoM"}</Text>
+      </div>
+    ),
+    align: "center",
+    dataIndex: "uom_no",
+    ellipsis: true,
+    width: "10%",
+    render: (value) => <Text className="text-value">{value ?? "-"}</Text>,
+  },
+  {
+    title: (
+      <Text strong>
+        <EllipsisOutlined />
+      </Text>
+    ),
+    align: "center",
+    width: "10%",
+
+    render: (_, record) => {
+      if (readOnly) {
+        return (
+          <InfoCircleOutlined
+            onClick={() => {
+              onOpenDetail(record);
+            }}
+            className="button-icon"
+          />
+        );
+      } else {
+        return (
+          <>
+            <Space size={24}>
+              {record.item_id && (
+                <FormOutlined
+                  onClick={() => {
+                    onOpenDetail(record);
+                  }}
+                  className="button-icon"
+                />
+              )}
+
+              <Popconfirm
+                onConfirm={() => {
+                  onDelete(record.id);
+                }}
+                title="Are you sure you want to delete this row？"
+                okText="Yes"
+                cancelText="No"
+              >
+                <DeleteOutlined style={{ color: "red" }} />
+              </Popconfirm>
+            </Space>
+          </>
         );
       }
     },
@@ -315,7 +486,7 @@ export const receiveSubDetailColumns = (
     dataIndex: "location_no_name",
     // width: "10%",
     ellipsis: true,
-    render: (value) => <Text className="text-value">{value}</Text>,
+    render: (value) => <Text className="text-value">{value ?? "-"}</Text>,
   },
   {
     title: (
@@ -329,7 +500,7 @@ export const receiveSubDetailColumns = (
     ellipsis: true,
     render: (value, record) =>
       readOnly ? (
-        <Text className="text-value">{value}</Text>
+        <Text className="text-value">{value ?? "-"}</Text>
       ) : (
         <Input
           placeholder="Lot No."
@@ -354,15 +525,15 @@ export const receiveSubDetailColumns = (
     dataIndex: "receive_detail_sub_receive_date",
     width: "12%",
     ellipsis: true,
-    render: (value, record) =>
+    render: (value, record, key) =>
       readOnly ? (
-        <Text className="text-value">{value}</Text>
+        <Text className="text-value">{value ?? "-"}</Text>
       ) : (
         <DatePicker
-          name={"receive_detail_sub_receive_date"}
           format={"DD/MM/YYYY"}
           size="small"
-          className={"full-width"}
+          className={"full-width check-field"}
+          name={`receive_detail_sub_receive_date-${key}`}
           placeholder="Receive Date"
           value={value ? moment(value, "DD/MM/YYYY") : null}
           onChange={(data) => {
@@ -389,7 +560,7 @@ export const receiveSubDetailColumns = (
     ellipsis: true,
     render: (value, record) =>
       readOnly ? (
-        <Text className="text-value">{value}</Text>
+        <Text className="text-value">{value ?? "-"}</Text>
       ) : (
         <DatePicker
           name={"receive_detail_sub_mfg_date"}
@@ -422,7 +593,7 @@ export const receiveSubDetailColumns = (
     ellipsis: true,
     render: (value, record) =>
       readOnly ? (
-        <Text className="text-value">{value}</Text>
+        <Text className="text-value">{value ?? "-"}</Text>
       ) : (
         <DatePicker
           name={"receive_detail_sub_exp_date"}
@@ -454,7 +625,7 @@ export const receiveSubDetailColumns = (
     dataIndex: "receive_detail_sub_qty",
     width: "12%",
     ellipsis: true,
-    render: (value, record) =>
+    render: (value, record, key) =>
       readOnly ? (
         <Text className="text-value">{value}</Text>
       ) : (
@@ -464,7 +635,9 @@ export const receiveSubDetailColumns = (
           min={0.0}
           step={0.001}
           size="small"
-          className={"full-width"}
+          className={"full-width check-field"}
+          name={`receive_detail_sub_qty-${key}`}
+          // className={value ? "full-width" : "full-width input-require"}
           disabled={0}
           value={value}
           onChange={(data) => {
@@ -602,7 +775,7 @@ export const receive_sub_detail_fields = {
   commit: 1,
 };
 
-export const receive_require_fields = ["receive_description", "po_id"];
+export const receive_require_fields = ["receive_description"];
 // export const receive_detail_require_fields = ["item_id"];
 export const receive_sub_detail_require_fields = [
   "location_id",

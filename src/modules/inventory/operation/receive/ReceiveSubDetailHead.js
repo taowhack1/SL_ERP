@@ -2,7 +2,7 @@ import { Row, Col, Typography } from "antd";
 import React from "react";
 import { convertDigit } from "../../../../include/js/main_config";
 const { Text } = Typography;
-const ReceiveSubDetailHead = ({ selectData }) => {
+const ReceiveSubDetailHead = ({ selectData, qtyRef = false }) => {
   return (
     <>
       <Row className="row-margin-vertical">
@@ -15,26 +15,33 @@ const ReceiveSubDetailHead = ({ selectData }) => {
           </Text>
         </Col>
       </Row>
-      <Row className="row-margin-vertical">
-        <Col span={3}>
-          <Text strong>Quantity Balance :</Text>
-        </Col>
-        <Col span={21}>
-          <Text className="text-value">
-            {selectData &&
-              convertDigit(selectData.tg_receive_detail_qty_balance, 4)}
-          </Text>
-          <Text className="text-value">{selectData && selectData.uom_no}</Text>
-        </Col>
-      </Row>
-      <Row style={{ height: 10 }}>
-        <Col
-          span={7}
-          className="text-number"
-          style={{ borderBottom: "0.2vh solid #E7E7E7" }}
-        ></Col>
-        <Col span={17}></Col>
-      </Row>
+      {qtyRef && (
+        <>
+          <Row className="row-margin-vertical">
+            <Col span={3}>
+              <Text strong>Quantity Balance :</Text>
+            </Col>
+            <Col span={21}>
+              <Text className="text-value">
+                {selectData &&
+                  convertDigit(selectData.tg_receive_detail_qty_balance, 4)}
+              </Text>
+              <Text className="text-value">
+                {selectData && selectData.uom_no}
+              </Text>
+            </Col>
+          </Row>
+          <Row style={{ height: 10 }}>
+            <Col
+              span={7}
+              className="text-number"
+              style={{ borderBottom: "0.2vh solid #E7E7E7" }}
+            ></Col>
+            <Col span={17}></Col>
+          </Row>
+        </>
+      )}
+
       <Row className="row-margin-vertical">
         <Col span={3}>
           <Text strong>Quantity Done :</Text>
@@ -45,12 +52,21 @@ const ReceiveSubDetailHead = ({ selectData }) => {
               {convertDigit(selectData.tg_receive_detail_qty, 4)}
             </Text>
           )}
-          {"  /  "}
-          <Text strong>
-            {selectData &&
-              convertDigit(selectData.tg_receive_detail_qty_balance_temp, 4)}
+          {qtyRef && (
+            <>
+              {"  /  "}
+              <Text strong>
+                {selectData &&
+                  convertDigit(
+                    selectData.tg_receive_detail_qty_balance_temp,
+                    4
+                  )}
+              </Text>
+            </>
+          )}
+          <Text strong className={"pd-left-1"}>
+            {selectData && selectData.uom_no}
           </Text>
-          <Text strong>{selectData && selectData.uom_no}</Text>
         </Col>
       </Row>
     </>

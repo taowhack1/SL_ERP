@@ -55,6 +55,42 @@ export const get_po_detail_ref = (po_id) => async (dispatch) => {
     });
 };
 
+export const getReceiveById = (id, user_name) => {
+  console.log("getReceiveById New");
+  console.log(`${api_receive}/${id}&${user_name}`);
+
+  try {
+    const get_head = axios.get(
+      `${api_receive}/${id}&${user_name}`,
+      header_config
+    );
+
+    const get_detail = axios.get(`${api_receive_detail}/${id}`).then((res) => {
+      let details = res.data[0];
+      return axios
+        .get(`${api_receive_sub_detail}/${id}`, header_config)
+        .then((res) => {
+          const sub_detail = res.data[0];
+          details.forEach((detail) => {
+            detail.receive_sub_detail = sortData(
+              sub_detail.filter(
+                (sub) => sub.receive_detail_id === detail.receive_detail_id
+              )
+            );
+          });
+          return details;
+        });
+    });
+    return Promise.allSettled([get_head, get_detail]);
+  } catch (error) {
+    console.log(error);
+    message.error({
+      content: "Somethings went wrong. \n" + error,
+      key: "validate",
+      duration: 2,
+    });
+  }
+};
 export const get_receive_by_id = (id, user_name) => async (dispatch) => {
   console.log("get_receive_by_id");
   console.log(`${api_receive}/${id}&${user_name}`);
@@ -110,35 +146,19 @@ export const get_receive_by_id = (id, user_name) => async (dispatch) => {
       duration: 2,
     });
   }
-
-  axios
-    .get(`${api_receive}/${id}&${user_name}`, header_config)
-    .then((res) => {
-      console.log("GET_RECEIVE_HEAD");
-      dispatch({
-        type: GET_RECEIVE_HEAD,
-        payload: res.data.main_master,
-      });
-      axios.get(`${api_receive_detail}/${id}`);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
 };
 
-export const create_receive = (
-  user_name,
-  data_head,
-  data_detail,
-  redirect
-) => async (dispatch) => {
+export const create_receive = (user_name, data, redirect) => async (
+  dispatch
+) => {
+  const data_detail = data.receive_detail ?? [];
   let temp_sub_detail = [];
   let temp_detail = data_detail;
   temp_detail.map((detail) => temp_sub_detail.push(detail.receive_sub_detail));
-  console.log("Create Receive", data_head, data_detail);
+  console.log("Create Receive", data, data_detail);
   try {
     await axios
-      .post(api_receive, data_head, header_config)
+      .post(api_receive, data, header_config)
       .then(async (res) => {
         console.log("INSERT_HEAD", res);
         if (res.data[0][0]) {
@@ -200,22 +220,19 @@ export const create_receive = (
   }
 };
 
-export const update_receive = (
-  receive_id,
-  user_name,
-  data_head,
-  data_detail,
-  redirect
-) => async (dispatch) => {
+export const update_receive = (receive_id, user_name, data, redirect) => async (
+  dispatch
+) => {
+  const data_detail = data.receive_detail;
   let temp_sub_detail = [];
   let temp_detail = data_detail;
   temp_detail.map((detail) => temp_sub_detail.push(detail.receive_sub_detail));
   const agi_post_sub_detail = `${api_server}/api/inventory/receive_detail_sub/receive_detail`;
 
-  console.log("update_receive_data", receive_id, data_head, data_detail);
+  console.log("update_receive_data", receive_id, data, data_detail);
   try {
     await axios
-      .put(`${api_receive}/${receive_id}`, data_head, header_config)
+      .put(`${api_receive}/${receive_id}`, data, header_config)
       .then(async (res) => {
         console.log("Update Receive");
         await axios
@@ -275,15 +292,13 @@ export const update_receive = (
   }
 };
 
-export const receive_actions = (data, receive_id) => async (dispatch) => {
+export const receive_actions = async (data, receive_id, setReload) => {
   console.log("receive_actions");
   data.commit = 1;
   console.log(data);
   // data = {process_status_id : '3', user_name : '2563003', process_id : '30', commit : 1}
-  data.process_id &&
-    axios
-      .put(`${api_approve}/${data.process_id}`, data, header_config)
-      .then((res) => {
-        dispatch(get_receive_by_id(receive_id, data.user_name));
-      });
+  return (
+    data.process_id &&
+    (await axios.put(`${api_approve}/${data.process_id}`, data, header_config))
+  );
 };

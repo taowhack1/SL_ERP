@@ -30,6 +30,9 @@ import {
   GET_ITEM_TYPE_BY_ID,
   GET_ITEM_CATEGORY_BY_ID,
   GET_UOM_BY_ID,
+  GET_PD_RECEIVE_LIST,
+  RESET_PD_RECEIVE,
+  GET_PD_RECEIVE_JOB_LIST,
 } from "../actions/types";
 const initialState = {
   item: {
@@ -90,6 +93,12 @@ const initialState = {
   },
   report: {
     stock_on_hand: [],
+  },
+  operations: {
+    productionReceive: {
+      list: [],
+      jobList: [],
+    },
   },
 };
 export default (state = initialState, action) => {
@@ -237,6 +246,38 @@ export default (state = initialState, action) => {
       return {
         ...state,
         receive: initialState.receive,
+      };
+
+    // RECEIVE -> PRODUCTION
+    case GET_PD_RECEIVE_LIST:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          productionReceive: {
+            ...state.operations.productionReceive,
+            list: action.payload,
+          },
+        },
+      };
+    case GET_PD_RECEIVE_JOB_LIST:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          productionReceive: {
+            ...state.operations.productionReceive,
+            jobList: action.payload,
+          },
+        },
+      };
+    case RESET_PD_RECEIVE:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          productionReceive: initialState.operations.productionReceive,
+        },
       };
     case GET_ALL_SHELF:
       return {

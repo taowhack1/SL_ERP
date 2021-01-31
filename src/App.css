@@ -736,7 +736,15 @@ tr.row-table-detail.require > td:first-child {
 tr.row-table-detail.require > td:last-child {
   border-right: 2px solid red !important;
 }
-
+.input-require {
+  border: 1px solid red;
+  /* background-color: #ffeded; */
+}
+.input-require:hover,
+.input-require > div > div > input:hover,
+.input-require > div > div > input:focus {
+  border: 1px solid red;
+}
 tr.row-table-detail-inactive {
   background-color: #e3e3e3;
   color: #717171;

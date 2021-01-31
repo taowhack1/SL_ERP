@@ -90,7 +90,9 @@ import UomView from "./modules/inventory/configurations/uom/UomView";
 
 import Transfer from "./modules/inventory/operation/transfer/Transfer";
 import TransferCreate from "./modules/inventory/operation/transfer/TransferCreate";
-
+import ReceiveRoute from "./modules/inventory/operation/receive/ReceiveRoute";
+import ReceivePDCreate from "./modules/inventory/operation/receive_production/ReceivePDCreate";
+import ReceivePDList from "./modules/inventory/operation/receive_production/ReceivePDList";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -189,19 +191,22 @@ const App = (props) => {
             <Route exact path="/inventory/receive">
               <Receive />
             </Route>
-            <Route exact path="/inventory/receive/create">
+            <Route exact path="/inventory/receive/:action">
               <ReceiveCreate />
             </Route>
             <Route
               exact
-              path="/inventory/receive/edit/:id"
-              component={ReceiveCreate}
+              path="/inventory/receive/:action/:id"
+              component={ReceiveRoute}
             />
-            <Route
-              exact
-              path="/inventory/receive/view/:id"
-              component={ReceiveView}
-            />
+
+            {/*RECEIVE PRODUCTION */}
+            <Route exact path="/inventory/receive_pd">
+              <ReceivePDList />
+            </Route>
+            <Route exact path="/inventory/receive_pd/create">
+              <ReceivePDCreate />
+            </Route>
 
             {/* INVENTORY MASTER DATA */}
             <Route exact path="/inventory/items">

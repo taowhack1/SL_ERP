@@ -1,25 +1,29 @@
 import React, {
+  useContext,
   useEffect,
   useMemo,
-  useReduce,
   useReducer,
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
-import { Row, Col, Typography, message, Spin, Skeleton } from "antd";
+import { useHistory, useParams } from "react-router";
+import { Row, Col, Typography, message } from "antd";
 import { reducer } from "../../reducers";
 import {
   receive_fields,
-  receive_detail_fields,
   receive_require_fields,
 } from "../../config/receiveConfig";
 import {
   create_receive,
+  getReceiveById,
   get_po_receive_list,
+  receive_actions,
   update_receive,
 } from "../../../../actions/inventory/receiveActions";
-import { header_config } from "../../../../include/js/main_config";
+import {
+  header_config,
+  report_server,
+} from "../../../../include/js/main_config";
 import { api_receive_get_ref_po_detail } from "../../../../include/js/api";
 import { get_log_by_id, reset_comments } from "../../../../actions/comment&log";
 
@@ -36,17 +40,26 @@ import {
 import ReceiveHead from "./ReceiveHead";
 import ReceiveTabs from "./ReceiveTabs";
 import DetailLoading from "../../../../components/DetailLoading";
+import { AppContext, ReceiveContext } from "../../../../include/js/context";
+import ModalRemark from "../../../../components/Modal_Remark";
+import { getAllItems } from "../../../../actions/inventory/itemActions";
+import { get_all_vendor } from "../../../../actions/purchase/vendorActions";
 
 const { Text } = Typography;
 
-const readOnly = false;
-export const ReceiveContext = React.createContext();
 const Receive_Create = (props) => {
   const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth.authData);
+
+  const { auth, currentProject, currentMenu } = useContext(AppContext);
+  const { action, id } = useParams();
+  console.log("action", action);
+  const { readOnly } = props?.location?.state ?? {
+    readOnly: action !== "view" ? false : true,
+  };
+
   const initialStateHead = {
     ...receive_fields,
     commit: 1,
@@ -58,7 +71,7 @@ const Receive_Create = (props) => {
   const [state, stateDispatch] = useReducer(reducer, initialStateHead);
   const [loading, setLoading] = useState(false);
   const dataComments = useSelector((state) => state.log.comment_log);
-  const current_project = useSelector((state) => state.auth.currentProject);
+  // const currentProject = useSelector((state) => state.auth.currentProject);
 
   const flow =
     state &&
@@ -67,13 +80,25 @@ const Receive_Create = (props) => {
       return step.all_group_in_node;
     });
 
+  const remarkFields = {
+    name: "receive_remark",
+    value: state.receive_remark,
+    placeholder: "Remark",
+  };
+
   const data =
     props.location && props.location.state ? props.location.state : 0;
-
+  const redirectToView = (id) => {
+    console.log("redirect id", id);
+    return history.push({
+      pathname: `${currentMenu.menu_url}/view/` + (id ?? "new"),
+      state: { readOnly: true },
+    });
+  };
   const config = {
-    projectId: current_project && current_project.project_id,
-    title: current_project && current_project.project_name,
-    home: current_project && current_project.project_url,
+    projectId: currentProject && currentProject.project_id,
+    title: currentProject && currentProject.project_name,
+    home: currentProject && currentProject.project_url,
     show: true,
     breadcrumb: [
       "Home",
@@ -83,7 +108,32 @@ const Receive_Create = (props) => {
       state.receive_no && state.receive_no,
     ],
     search: false,
-    buttonAction: ["Save", "Validate", "Discard"],
+    buttonAction:
+      action !== "create" && readOnly
+        ? [
+            state && state.button_edit && "Edit",
+            state && state.button_confirm && "Confirm",
+            state && state.button_approve && "Approve",
+            state && state.button_reject && "Reject",
+            "Back",
+          ]
+        : ["Save", "Discard"],
+    action: readOnly
+      ? [
+          readOnly && {
+            name: "Print",
+            link: `${report_server}/Report_purch/report_receive2.aspx?receive_no=${
+              state && state.receive_no
+            }`,
+          },
+          state &&
+            state.button_cancel && {
+              name: "Cancel",
+              cancel: true,
+              link: ``,
+            },
+        ]
+      : null,
     step: {
       current: state && state.node_stay - 1,
       step: flow,
@@ -91,65 +141,56 @@ const Receive_Create = (props) => {
     },
     create: "",
     save: "function",
-    discard: "/inventory/receive",
+
+    discard: currentMenu.menu_url,
+    back: currentMenu.menu_url,
     onSave: (e) => {
-      console.log("Save");
+      console.log("Save", state);
       const key = "validate";
-      console.log(state);
-      // const validate = validateFormHead(state, receive_require_fields);
-      // if (validate.validate) {
-      //   console.log("pass");
-      //   state.receive_id
-      //     ? dispatch(
-      //         update_receive(
-      //           state.receive_id,
-      //           auth.user_name,
-      //           state,
-      //           data_detail,
-      //           redirect_to_view
-      //         )
-      //       )
-      //     : dispatch(
-      //         create_receive(
-      //           auth.user_name,
-      //           state,
-      //           data_detail,
-      //           redirect_to_view
-      //         )
-      //       );
-      // } else {
-      //   message.warning({
-      //     content: "Please fill your form completely.",
-      //     key,
-      //     duration: 2,
-      //   });
-      // }
-    },
-    onEdit: (e) => {
-      console.log("Edit");
-    },
-    onApprove: (e) => {
-      console.log("Approve");
-    },
-    onConfirm: () => {
-      console.log("Confirm");
+      const validate = validateFormHead(state, receive_require_fields);
+      if (validate.validate) {
+        console.log("pass", state);
+        state.receive_id
+          ? dispatch(
+              update_receive(
+                state.receive_id,
+                auth.user_name,
+                state,
+                redirectToView
+              )
+            )
+          : dispatch(create_receive(auth.user_name, state, redirectToView));
+      } else {
+        console.log("not pass", state);
+        message.warning({
+          content: "Please fill your form completely.",
+          key,
+          duration: 2,
+        });
+      }
     },
   };
 
   useEffect(() => {
+    setLoading(true);
+    dispatch(get_all_vendor());
     dispatch(get_po_receive_list());
-    stateDispatch({
-      type: "SET_HEAD",
-      payload: data.state
-        ? {
-            ...data.state,
-            commit: 1,
-            user_name: auth.user_name,
-            branch_id: auth.branch_id,
-            branch_name: auth.branch_name,
-          }
-        : initialStateHead,
-    });
+    dispatch(getAllItems());
+    const getData = async () =>
+      await getReceiveById(id, auth.user_name).then((res) => {
+        const receiveData = {
+          ...res[0].value.data.main_master,
+          receive_detail: sortData(res[1].value),
+        };
+        console.log("receiveData", receiveData);
+        stateDispatch({
+          type: "SET_HEAD",
+          payload: receiveData,
+        });
+        setLoading(false);
+      });
+    id && getData();
+    action === "create" && setLoading(false);
   }, []);
 
   const getDetail = async (data, po_id) => {
@@ -176,37 +217,14 @@ const Receive_Create = (props) => {
     }
     setTimeout(() => setLoading(false), 800);
   };
+
   const saveForm = async (data, po_id) => {
     console.log("save Data", data);
-    // if (po_id !== undefined) {
-    console.log("have po_id");
     state.po_id === data.po_id
       ? stateDispatch({ type: "CHANGE_HEAD_VALUE", payload: data })
       : getDetail(data, po_id);
-    // } else {
-    //   console.log("else po_id");
-    //   stateDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
-    // }
   };
 
-  const redirect_to_view = (id) => {
-    history.push("/inventory/receive/view/" + (id ? id : "new"));
-  };
-
-  const remarkFields = {
-    name: "receive_remark",
-    value: state.receive_remark,
-    placeholder: "Remark",
-  };
-
-  useEffect(() => {
-    // GET LOG
-    state.process_id && dispatch(get_log_by_id(state.process_id));
-    return () => {
-      dispatch(reset_comments());
-    };
-  }, [state.tg_trans_status_id]);
-  console.log("Receive Create", state);
   const contextValue = useMemo(() => {
     return {
       readOnly,
@@ -216,6 +234,7 @@ const Receive_Create = (props) => {
       loading,
     };
   }, [readOnly, state, initialStateHead, saveForm, loading]);
+  console.log("Receive State", state);
   return (
     <MainLayout {...config}>
       <ReceiveContext.Provider value={contextValue}>
@@ -224,7 +243,8 @@ const Receive_Create = (props) => {
             <Col span={8}>
               <h2>
                 <strong>
-                  {state.receive_no ? "Edit" : "Create"} {"Receive "}
+                  {!readOnly ? (state.receive_id ? "Edit" : "Create") : ""}{" "}
+                  {"Receive "}
                   {state.receive_no && "#" + state.receive_no}
                 </strong>
               </h2>

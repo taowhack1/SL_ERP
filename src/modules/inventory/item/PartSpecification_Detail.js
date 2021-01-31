@@ -67,7 +67,7 @@ const PartSpecification = ({ partId }) => {
       <CustomTable
         rowKey="id"
         rowClassName="row-table-detail"
-        pageSize={5}
+        pageSize={10}
         focusLastPage={true}
         columns={itemPartConditionColumns(
           readOnly,

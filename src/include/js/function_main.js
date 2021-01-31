@@ -132,9 +132,10 @@ export const validateFormHead = (obj_data, require_field) => {
 
 export const validateFormDetail = (ArrayObj, require_field) => {
   if (Array.isArray(ArrayObj) && Array.isArray(require_field)) {
-    $("*").removeClass("require-row-field-alert");
+    $("tr div").removeClass("require-row-field-alert require");
     let validate = true;
     let objKey = [];
+    let fieldKey = [];
     ArrayObj.map((obj_data, key) => {
       require_field.map((req_field) => {
         if (
@@ -145,18 +146,24 @@ export const validateFormDetail = (ArrayObj, require_field) => {
           obj_data[req_field] <= 0
         ) {
           objKey.push(`[name=row-${key}]`);
-          // objKey.push(`[name=${req_field}]`);
+          fieldKey.push(`[name=${req_field + "-" + key}]`);
+          $(`[name=${req_field + "-" + key}]`)
+            .closest("tr")
+            .find("div.check-field")
+            .addClass("input-require");
+          obj_data.validate = false;
           validate = false;
         }
       });
     });
 
     const require_fields = `${objKey.toString()}`;
-    // $(`${require_fields}`).addClass("require-field-alert");
+    const require_fields2 = `${fieldKey.toString()}`;
+    // $(`${require_fields2}`).closest("tr").find("div").addClass("input-require");
+    $(`${require_fields}`).addClass("require-field-alert");
     $(`${require_fields}`).addClass("require-row-field-alert");
-    $(`${require_fields}`).focus();
 
-    return { validate: validate, objKey: objKey };
+    return { validate: validate, objKey: objKey, data: ArrayObj };
   } else {
     console.log("Wrong type of parameter.");
   }

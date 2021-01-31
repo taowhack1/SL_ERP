@@ -73,7 +73,7 @@ const BulkFormula = ({ partId }) => {
       <CustomTable
         rowKey="id"
         rowClassName="row-table-detail"
-        pageSize={5}
+        pageSize={10}
         focusLastPage={true}
         columns={itemFormulaColumns(readOnly, onChange, onDelete, Save, {
           itemList: RMList,

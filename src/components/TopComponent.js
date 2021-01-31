@@ -286,7 +286,7 @@ function TopContent(props) {
               )}
             </Space>
           </Col>
-          <Col span={4}>
+          <Col span={4} className="text-right">
             {props.action && (
               <Dropdown overlay={menuAction()} trigger={["click"]}>
                 <Button type="text">

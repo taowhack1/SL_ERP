@@ -61,6 +61,8 @@ export const api_receive = `/inventory/receive`;
 export const api_receive_detail = `/inventory/receive_detail`;
 export const api_receive_sub_detail = `/inventory/receive_detail_sub/receive_detail`;
 
+export const api_pd_receive = `/inventory/receive_pd`;
+
 export const api_issue = `/inventory/issue`;
 export const api_issue_detail = `/inventory/issue_detail`;
 

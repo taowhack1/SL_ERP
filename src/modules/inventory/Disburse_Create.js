@@ -257,28 +257,34 @@ const DisburseCreate = (props) => {
           </Col>
           <Col span={8}>
             {/* Issue Ref */}
-            <CustomSelect
-              allowClear
-              showSearch
-              placeholder={"Issue No. ex.ISS2009000x"}
-              name="issue_id"
-              field_id="issue_id"
-              field_name="issue_no_description"
-              value={data_head.issue_no_description}
-              data={issue_list}
-              onChange={(data, option) => {
-                if (data) {
-                  upDateFormValue(
-                    ...issue_list.filter(
-                      (issue) => issue.issue_id === data,
-                      data
-                    )
-                  );
-                } else {
-                  resetForm();
-                }
-              }}
-            />
+            {data_head.disburse_id ? (
+              <Text className="text-value">
+                {data_head.issue_no_description}
+              </Text>
+            ) : (
+              <CustomSelect
+                allowClear
+                showSearch
+                placeholder={"Issue No. ex.ISS2009000x"}
+                name="issue_id"
+                field_id="issue_id"
+                field_name="issue_no_description"
+                value={data_head.issue_no_description}
+                data={issue_list}
+                onChange={(data, option) => {
+                  if (data) {
+                    upDateFormValue(
+                      ...issue_list.filter(
+                        (issue) => issue.issue_id === data,
+                        data
+                      )
+                    );
+                  } else {
+                    resetForm();
+                  }
+                }}
+              />
+            )}
           </Col>
           <Col span={2}></Col>
           <Col span={3}>

@@ -1,76 +1,105 @@
-import { Button, Row, Col, Typography, Modal } from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, Row, Col, Typography, Modal, Popconfirm, message } from "antd";
+import React, { useEffect, useRef, useState } from "react";
 
 import ReceiveSubDetailTable from "./ReceiveSubDetailTable";
 import { convertDigit } from "../../../../include/js/main_config";
 import ReceiveSubDetailHead from "./ReceiveSubDetailHead";
-import { sortData } from "../../../../include/js/function_main";
-import { receive_sub_detail_fields } from "../../config/receiveConfig";
+import {
+  sortData,
+  sumArrOdjWithField,
+  validateFormDetail,
+} from "../../../../include/js/function_main";
+import {
+  receive_sub_detail_fields,
+  receive_sub_detail_require_fields,
+} from "../../config/receiveConfig";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 const { Text } = Typography;
-const ReceiveSubDetail = ({ selectData, modalSave, modalCancel, readOnly }) => {
+const ReceiveSubDetail = ({
+  selectData,
+  modalSave,
+  modalCancel,
+  readOnly,
+  qtyRef,
+}) => {
+  const btnSave = useRef();
   console.log("ReceiveSubDetail", selectData);
-  const [state, setState] = useState(selectData.receive_sub_detail);
+  const [state, setState] = useState(selectData);
+  const saveModal = (arrObjData) => {
+    console.log(arrObjData);
 
-  const addLine = () => {
-    setState(
-      sortData([
-        ...state,
-        {
-          ...receive_sub_detail_fields,
-          receive_detail_id: selectData.receive_detail_id,
-          shelf_id: selectData.shelf_id,
-          shelf_no: selectData.shelf_no,
-          shelf_name: selectData.shelf_name,
-          shelf_no_name: selectData.shelf_no_name,
-          location_id: selectData.location_id,
-          location_no_name: selectData.location_no_name,
-          location_no: selectData.location_no,
-          uom_id: selectData.uom_id,
-          uom_no: selectData.uom_no,
-        },
-      ])
-    );
+    modalSave(selectData.id, arrObjData);
   };
-
-  const delLine = (id) => {
-    setState(sortData(state.filter((obj) => obj.id !== id)));
-  };
-
-  useEffect(() => {
-    selectData.receive_sub_detail.length === 0 && addLine();
-  }, []);
-
   console.log("main sub detail", state);
   return (
     <>
       <Modal
         width={1100}
+        closable={false}
         title="Receive Detail"
         visible={selectData.visible}
         destroyOnClose
         onOk={modalSave}
-        onCancel={modalCancel}
+        // onCancel={modalCancel}
         footer={[
-          <Button
-            key="back"
-            className={readOnly ? "primary" : ""}
-            onClick={modalCancel}
-          >
-            Discard
-          </Button>,
-          !readOnly && (
-            <Button key="submit" className="primary" onClick={modalSave}>
-              Confirm
+          readOnly ? (
+            <Button key="back" className={"primary"} onClick={modalCancel}>
+              Back
             </Button>
+          ) : (
+            <Popconfirm
+              key="discard"
+              icon={<QuestionCircleOutlined style={{ color: "red" }} />}
+              onConfirm={() => {
+                modalCancel();
+              }}
+              title={
+                <Text strong>
+                  {"Are you sure to "}
+                  <span className="require">Discard</span>
+                  {" ?"}
+                </Text>
+              }
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button key="back">Discard</Button>
+            </Popconfirm>
+          ),
+          !readOnly && (
+            <Popconfirm
+              key="confirm"
+              onConfirm={() => {
+                btnSave.current.click();
+              }}
+              icon={<QuestionCircleOutlined style={{ color: "green" }} />}
+              title={
+                <Text strong>
+                  {"Are you sure to "}
+                  <span style={{ color: "green" }}>Confirm</span>
+                  {" ?"}
+                </Text>
+              }
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button key="submit" className="primary">
+                Confirm
+              </Button>
+            </Popconfirm>
           ),
         ]}
       >
-        <ReceiveSubDetailHead readOnly={readOnly} selectData={selectData} />
+        <ReceiveSubDetailHead
+          readOnly={readOnly}
+          selectData={selectData}
+          qtyRef={qtyRef}
+        />
         <ReceiveSubDetailTable
           readOnly={readOnly}
-          subDetailData={state}
-          addLine={addLine}
-          delLine={delLine}
+          selectData={selectData}
+          btnSave={btnSave}
+          saveModal={saveModal}
         />
       </Modal>
     </>
