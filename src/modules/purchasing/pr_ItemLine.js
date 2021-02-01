@@ -174,24 +174,39 @@ const ItemLine = ({
                     />
                   </Col>
                   <Col span={2} className="text-string">
-                    <CustomSelect
-                      allowClear
-                      showSearch
-                      disabled={type_id ? 0 : 1}
-                      size="small"
-                      placeholder={"Unit"}
-                      data={select_uoms}
-                      field_id="uom_id"
-                      field_name="uom_no"
-                      value={line.uom_no}
-                      onSelect={(data, option) =>
-                        onChangeValue(line.id, {
-                          uom_id: data,
-                          uom_no: option.title,
-                        })
-                      }
-                      onChange={(data) => onChangeValue({ uom_id: data })}
-                    />
+                    {type_id > 6 ? (
+                      <CustomSelect
+                        allowClear
+                        showSearch
+                        disabled={type_id ? 0 : 1}
+                        size="small"
+                        placeholder={"Unit"}
+                        data={select_uoms}
+                        field_id="uom_id"
+                        field_name="uom_no"
+                        value={line.uom_no}
+                        onSelect={(data, option) =>
+                          data
+                            ? onChangeValue(line.id, {
+                                uom_id: data,
+                                uom_no: option.title,
+                              })
+                            : onChangeValue(line.id, {
+                                uom_id: null,
+                                uom_no: null,
+                              })
+                        }
+                        onChange={(data) => onChangeValue({ uom_id: data })}
+                      />
+                    ) : (
+                      <div
+                        className={"total-number text-value text-center"}
+                        title="Please select item"
+                        // onClick={() => message.warning("Please select item", 3)}
+                      >
+                        <Text className="text-value">{line.uom_no}</Text>
+                      </div>
+                    )}
                   </Col>
                   <Col span={3} className="text-number">
                     <InputNumber

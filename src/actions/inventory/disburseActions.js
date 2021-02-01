@@ -148,7 +148,8 @@ export const create_disburse = (
               await dispatch(
                 get_disburse_by_id(disburse_id, user_name, redirect)
               );
-            });
+            })
+            .catch((error) => console.error(error));
         })
         .catch((error) => {
           console.log(error);
@@ -188,45 +189,50 @@ export const update_disburse = (
         .then(async (res) => {
           console.log("UPDATE_DISBURSE", res);
 
-          await axios
-            .post(
-              `${api_disburse_detail}/${disburse_id}`,
-              data_detail,
-              header_config
-            )
-            .then(async (res) => {
-              const data_detail = res.data[0];
-              let data_sub_detail = [];
+          try {
+            await axios
+              .post(
+                `${api_disburse_detail}/${disburse_id}`,
+                data_detail,
+                header_config
+              )
+              .then(async (res) => {
+                const data_detail = res.data[0];
+                let data_sub_detail = [];
 
-              data_detail.map((detail, index) => {
-                temp_sub_detail[index].map((sub) => {
-                  sub.disburse_detail_id = detail.disburse_detail_id;
-                  data_sub_detail.push(sub);
+                data_detail.map((detail, index) => {
+                  temp_sub_detail[index].map((sub) => {
+                    sub.disburse_detail_id = detail.disburse_detail_id;
+                    data_sub_detail.push(sub);
+                  });
                 });
-              });
 
-              console.log("temp_sub_detail", temp_sub_detail);
-              console.log("data_sub_detail", data_sub_detail);
-              console.log("UPDATE_DETAIL", res);
+                console.log("temp_sub_detail", temp_sub_detail);
+                console.log("data_sub_detail", data_sub_detail);
+                console.log("UPDATE_DETAIL", res);
 
-              await axios
-                .post(
-                  `${api_disburse_sub_detail_by_disburse_id}/${disburse_id}`,
-                  data_sub_detail,
-                  header_config
-                )
-                .then((res) => {
-                  console.log("UPDATE SUB DETAIL", res);
+                await axios
+                  .post(
+                    `${api_disburse_sub_detail_by_disburse_id}/${disburse_id}`,
+                    data_sub_detail,
+                    header_config
+                  )
+                  .then((res) => {
+                    console.log("UPDATE SUB DETAIL", res);
+                  });
+                message.success({
+                  content: "Disburse Updated.",
+                  key: "validate",
+                  duration: 2,
                 });
-              message.success({
-                content: "Disburse Updated.",
-                key: "validate",
-                duration: 2,
-              });
-              await dispatch(
-                get_disburse_by_id(disburse_id, user_name, redirect)
-              );
-            });
+                await dispatch(
+                  get_disburse_by_id(disburse_id, user_name, redirect)
+                );
+              })
+              .catch((error) => console.log("error !!!!!!!!!", error));
+          } catch (error) {
+            console.log("error !!!!!!!!!", error);
+          }
         })
         .catch((error) => {
           console.log(error);

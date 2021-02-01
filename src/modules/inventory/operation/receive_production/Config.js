@@ -92,3 +92,5 @@ export const receivePDColumns = [
     },
   },
 ];
+
+export const receivePDfields = {};

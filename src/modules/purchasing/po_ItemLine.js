@@ -133,6 +133,7 @@ const ItemLine = ({
                               uom_id: option.uom_id,
                               item_no_name: option.title,
                               uom_no: option.uom_no,
+                              type_id: option.data.type_id,
                             })
                           : onChangeValue(line.id, {
                               item_id: null,
@@ -144,6 +145,7 @@ const ItemLine = ({
                               po_detail_discount: 0,
                               po_detail_total_price: 0,
                               po_detail_due_date: null,
+                              type_id: null,
                             });
                       }}
                     />
@@ -173,29 +175,39 @@ const ItemLine = ({
                     />
                   </Col>
                   <Col span={2} className="text-string">
-                    <CustomSelect
-                      allowClear
-                      showSearch
-                      disabled={type_id ? 0 : 1}
-                      size={"small"}
-                      name={`uom_id${key}`}
-                      placeholder={"Unit"}
-                      data={select_uoms}
-                      field_id="uom_id"
-                      field_name="uom_no"
-                      value={line.uom_no}
-                      onChange={(data, option) =>
-                        data
-                          ? onChangeValue(line.id, {
-                              uom_id: data,
-                              uom_no: option.title,
-                            })
-                          : onChangeValue(line.id, {
-                              uom_id: null,
-                              uom_no: null,
-                            })
-                      }
-                    />
+                    {line.type_id > 6 ? (
+                      <CustomSelect
+                        allowClear
+                        showSearch
+                        disabled={line.type_id ? 0 : 1}
+                        size={"small"}
+                        name={`uom_id${key}`}
+                        placeholder={"Unit"}
+                        data={select_uoms}
+                        field_id="uom_id"
+                        field_name="uom_no"
+                        value={line.uom_no}
+                        onChange={(data, option) =>
+                          data
+                            ? onChangeValue(line.id, {
+                                uom_id: data,
+                                uom_no: option.title,
+                              })
+                            : onChangeValue(line.id, {
+                                uom_id: null,
+                                uom_no: null,
+                              })
+                        }
+                      />
+                    ) : (
+                      <div
+                        className={"total-number text-value text-center"}
+                        title="Please select item"
+                        // onClick={() => message.warning("Please select item", 3)}
+                      >
+                        <Text className="text-value">{line.uom_no}</Text>
+                      </div>
+                    )}
                   </Col>
 
                   <Col span={3} className="text-number">

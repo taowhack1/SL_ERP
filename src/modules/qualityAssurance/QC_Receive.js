@@ -252,18 +252,7 @@ const QCReceive = () => {
         setTimeout(() => setLoading(false), 800);
       });
     getQCList();
-    // dispatch(get_qc_receive_list());
-    // setTimeout(() => {
-    //   setLoading(false);
-    // }, 1000);
   }, [loading]);
-
-  // useEffect(() => {
-  //   qcListDispatch({
-  //     type: "SET_DETAIL_WOC",
-  //     payload: qc_receive_detail_list,
-  //   });
-  // }, [qc_receive_detail_list]);
 
   console.log("qc_list", qc_list, tempItemList);
   return (

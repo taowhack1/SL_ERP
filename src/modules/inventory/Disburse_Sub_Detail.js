@@ -93,6 +93,7 @@ const SubDetail = ({
   console.log("sub detail page 2", temp_sub_detail);
   console.log("data_detail", data_detail);
   console.log("location_shelf_list", location_shelf_list);
+  console.log("lot_batch_list", lot_batch_list);
   return (
     <>
       {/* Column Header */}
@@ -195,6 +196,8 @@ const SubDetail = ({
                             stock_batch: null,
                             stock_lot_no: null,
                             stock_lot_no_batch_qty_balance: null,
+                            stock_mfg_date: null,
+                            stock_exp_date: null,
                           });
                     }}
                   />
