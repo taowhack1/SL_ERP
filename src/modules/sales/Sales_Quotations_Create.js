@@ -84,6 +84,13 @@ const CustomerCreate = (props) => {
     data && getDetail();
   }, []);
 
+  const flow =
+    data_head &&
+    data_head.data_flow_process &&
+    data_head.data_flow_process.map((step) => {
+      return step.all_group_in_node;
+    });
+
   const config = {
     projectId: current_project && current_project.project_id,
     title: current_project && current_project.project_name,
@@ -97,12 +104,11 @@ const CustomerCreate = (props) => {
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
-    step: data_head.qn_id
-      ? {
-          current: data_head.node_stay,
-          step: ["Draft", "Confirm", "Approve", "Done"],
-        }
-      : {},
+    step: {
+      current: data_head.node_stay - 1,
+      step: flow,
+      process_complete: data_head.process_complete,
+    },
     create: "",
     save: "function",
     discard: "/sales/quotations",

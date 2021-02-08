@@ -54,7 +54,7 @@ const getIssueRefList = () => async (dispatch) => {
 
 const saveIssueReturn = (data) => {
   try {
-    console.log("saveIssue", data.return_id);
+    console.log("saveIssue", data);
     return data.return_id
       ? axios.put(`${api_return}/${data.return_id}`, [data], header_config)
       : axios.post(`${api_return}`, [data], header_config);

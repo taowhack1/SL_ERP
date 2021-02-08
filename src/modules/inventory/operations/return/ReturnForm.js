@@ -69,23 +69,26 @@ const ReturnForm = () => {
       console.log("validate", validate, objKey);
       if (validate) {
         console.log(state);
-        saveIssueReturn({ ...state, user_name: auth.user_name, commit: 1 })
-          .then((res) => {
-            console.log(res);
-            message.success(
-              state.return_id ? "Update Success.." : "Create Created..",
-              3
-            );
-            res.data[0].Success &&
-              history.push(
-                `${currentMenu.menu_url}/view/${res.data[0].return_id}`
+        const dataSave = { ...state, user_name: auth.user_name, commit: 1 };
+        const save = async (data) =>
+          await saveIssueReturn(data)
+            .then((res) => {
+              console.log(res);
+              message.success(
+                state.return_id ? "Update Success.." : "Create Created..",
+                3
               );
-          })
-          .catch((error) => {
-            message.error(
-              "Error. Somethings went wrong. Please contact programmer"
-            );
-          });
+              res.data[0].Success &&
+                history.push(
+                  `${currentMenu.menu_url}/view/${res.data[0].return_id}`
+                );
+            })
+            .catch((error) => {
+              message.error(
+                "Error. Somethings went wrong. Please contact programmer"
+              );
+            });
+        save(dataSave);
       } else {
         console.log(state);
       }
