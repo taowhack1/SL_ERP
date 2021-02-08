@@ -1,28 +1,34 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Input, Tabs, Typography, message } from "antd";
-import { reducer } from "./reducers";
-import { disburse_fields, disburse_detail_fields } from "./config";
+import { reducer } from "../../reducers";
 import {
   create_disburse,
   update_disburse,
-} from "../../actions/inventory/disburseActions";
-import { header_config, report_server } from "../../include/js/main_config";
-import { api_disburse_get_ref_issue_detail } from "../../include/js/api";
-import { get_log_by_id, reset_comments } from "../../actions/comment&log";
+} from "../../../../actions/inventory/disburseActions";
+import {
+  header_config,
+  report_server,
+} from "../../../../include/js/main_config";
+import { api_disburse_get_ref_issue_detail } from "../../../../include/js/api";
+import { get_log_by_id, reset_comments } from "../../../../actions/comment&log";
 
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../../../components/MainLayout";
 import moment from "moment";
-import Comments from "../../components/Comments";
+import Comments from "../../../../components/Comments";
 import Detail from "./Disburse_Detail";
 
-import CustomSelect from "../../components/CustomSelect";
+import CustomSelect from "../../../../components/CustomSelect";
 import axios from "axios";
-import { get_issue_ref_list } from "../../actions/inventory/disburseActions";
-import Authorize from "../system/Authorize";
+import { get_issue_ref_list } from "../../../../actions/inventory/disburseActions";
+import Authorize from "../../../system/Authorize";
 import { useHistory } from "react-router-dom";
-import { validateFormHead } from "../../include/js/function_main";
-import { disburse_require_fields } from "./config/disburse";
+import { validateFormHead } from "../../../../include/js/function_main";
+import {
+  disburse_require_fields,
+  disburse_fields,
+  disburse_detail_fields,
+} from "./config";
 
 const { TextArea } = Input;
 const { Text } = Typography;

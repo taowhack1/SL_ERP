@@ -42,10 +42,6 @@ const PurchaseOrderCreate = (props) => {
       return step.all_group_in_node;
     });
 
-  const callback = (key) => {
-    setTab(key);
-  };
-
   const changeProcessStatus = (process_status_id) => {
     if (remark.trim() === "") {
       alert("Plase write remark");
@@ -62,7 +58,9 @@ const PurchaseOrderCreate = (props) => {
     };
     dispatch(po_actions(app_detail, data_head.po_id));
   };
-
+  const callback = (key) => {
+    setTab(key);
+  };
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,

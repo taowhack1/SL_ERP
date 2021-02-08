@@ -81,6 +81,9 @@ export const api_disburse_sub_detail_by_disburse_id = `/inventory/disburse_detai
 export const api_disburse_get_ref_issue_head = `/list/po`;
 export const api_disburse_get_ref_issue_detail = `/inventory/issue_detail/ref`;
 
+// return
+export const api_return = `/inventory/return`;
+export const api_return_issue_ref = `/inventory/return/list/issue`;
 // item
 export const api_get_all_item_list = `/inventory/item/all`;
 export const api_get_item_type = `/list/type`;

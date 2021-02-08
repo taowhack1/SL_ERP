@@ -2,17 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../../../components/MainLayout";
 import $ from "jquery";
-import { getMasterDataItem } from "../../actions/inventory";
+import { getMasterDataItem } from "../../../../actions/inventory";
 import { disburse_columns } from "./config";
 import {
   get_disburse_by_id,
   get_disburse_list,
   get_issue_ref_list,
-} from "../../actions/inventory/disburseActions";
-import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
+} from "../../../../actions/inventory/disburseActions";
+import Authorize from "../../../system/Authorize";
+import useKeepLogs from "../../../logs/useKeepLogs";
 
 const Disburse = (props) => {
   const keepLog = useKeepLogs();

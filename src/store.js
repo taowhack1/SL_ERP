@@ -21,13 +21,11 @@ const loadFromLocalStorage = () => {
     return undefined;
   }
 };
-// const initialState = {};
 const middleware = [thunk];
 const persistedState = loadFromLocalStorage();
 const store = createStore(
   rootReducer,
   persistedState,
-  // initialState,
   composeWithDevTools(applyMiddleware(...middleware))
 );
 store.subscribe(() => saveToLocalStorage(store.getState()));

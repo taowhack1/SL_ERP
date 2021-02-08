@@ -274,7 +274,6 @@ const ItemCreate = (props) => {
           data_file: data_file,
           data_filling: filling,
         };
-
         data_head.item_id
           ? dispatch(
               upDateItem(
@@ -348,6 +347,8 @@ const ItemCreate = (props) => {
       BULKList: itemList.filter((item) => item.type_id === 3),
       formulaPercent,
       sumPercent,
+      saveForm: upDateFormValue,
+      data_head,
     };
   }, [
     PartReducer,
@@ -359,9 +360,11 @@ const ItemCreate = (props) => {
     readOnly,
     data_file,
     updateFile,
+    upDateFormValue,
+    data_head,
   ]);
   // console.log("initialStateHead ", initialStateHead);
-  // console.log("Item Pre-run :", data_head.item_pre_run_no);
+  console.log("Item Create ", data_head);
   return (
     <ItemContext.Provider value={ContextValue}>
       <MainLayout {...config}>

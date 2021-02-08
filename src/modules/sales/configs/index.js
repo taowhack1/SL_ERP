@@ -178,7 +178,7 @@ export const quotation_detail_fields = {
 export const quotation_require_fields = [
   "qn_exp_date",
   "qn_description",
-  "qn_agreement",
+  // "qn_agreement",
   "payment_term_id",
   "customer_id",
 ];
@@ -440,7 +440,7 @@ export const so_detail_fields = {
 export const so_require_fields = [
   "so_order_date",
   "so_description",
-  "so_agreement",
+  // "so_agreement",
   "qn_id",
   "payment_term_id",
   "customer_id",

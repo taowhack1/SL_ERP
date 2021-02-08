@@ -13,17 +13,20 @@ import QCReceive from "./modules/qualityAssurance/QC_Receive";
 
 import Inventory from "./modules/inventory/Inventory";
 
-import Receive from "./modules/inventory/operation/receive/Receive";
-import ReceiveCreate from "./modules/inventory/operation/receive/Receive_Create";
-import ReceiveView from "./modules/inventory/operation/receive/Receive_View";
+import Receive from "./modules/inventory/operations/receive/Receive";
+import ReceiveCreate from "./modules/inventory/operations/receive/Receive_Create";
+import ReceiveView from "./modules/inventory/operations/receive/Receive_View";
+import ReceiveRoute from "./modules/inventory/operations/receive/ReceiveRoute";
+import ReceivePDCreate from "./modules/inventory/operations/receive_production/ReceivePDCreate";
+import ReceivePDList from "./modules/inventory/operations/receive_production/ReceivePDList";
 
 import Issue from "./modules/inventory/Issue";
 import IssueView from "./modules/inventory/Issue_View";
 import IssueCreate from "./modules/inventory/Issue_Create";
 
-import Disburse from "./modules/inventory/Disburse";
-import DisburseView from "./modules/inventory/Disburse_View";
-import DisburseCreate from "./modules/inventory/Disburse_Create";
+import Disburse from "./modules/inventory/operations/disburse/Disburse";
+import DisburseView from "./modules/inventory/operations/disburse/Disburse_View";
+import DisburseCreate from "./modules/inventory/operations/disburse/Disburse_Create";
 
 import Purchase from "./modules/purchasing/Purchase";
 import PurchPR from "./modules/purchasing/Purchase_PR";
@@ -88,11 +91,10 @@ import Uom from "./modules/inventory/configurations/uom/Uom";
 import UomCreate from "./modules/inventory/configurations/uom/UomCreate";
 import UomView from "./modules/inventory/configurations/uom/UomView";
 
-import Transfer from "./modules/inventory/operation/transfer/Transfer";
-import TransferCreate from "./modules/inventory/operation/transfer/TransferCreate";
-import ReceiveRoute from "./modules/inventory/operation/receive/ReceiveRoute";
-import ReceivePDCreate from "./modules/inventory/operation/receive_production/ReceivePDCreate";
-import ReceivePDList from "./modules/inventory/operation/receive_production/ReceivePDList";
+import Transfer from "./modules/inventory/operations/transfer/Transfer";
+import TransferCreate from "./modules/inventory/operations/transfer/TransferCreate";
+import ReturnRoutes from "./modules/inventory/operations/return/ReturnRoutes";
+
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -299,6 +301,11 @@ const App = (props) => {
               path="/inventory/transfer/create"
               component={TransferCreate}
             />
+
+            {/* INVENTORY -> OPERATIONS -> RETURN */}
+            <Route path="/inventory/return">
+              <ReturnRoutes />
+            </Route>
 
             {/* INVENTORY REPORT */}
             <Route exact path="/inventory/stock_move">

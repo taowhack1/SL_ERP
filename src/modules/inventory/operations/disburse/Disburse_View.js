@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Tabs, Typography } from "antd";
-import { disburse_actions } from "../../actions/inventory/disburseActions";
-import { report_server } from "../../include/js/main_config";
-import { get_log_by_id, reset_comments } from "../../actions/comment&log";
-import MainLayout from "../../components/MainLayout";
-import Comments from "../../components/Comments";
+import { disburse_actions } from "../../../../actions/inventory/disburseActions";
+import { report_server } from "../../../../include/js/main_config";
+import { get_log_by_id, reset_comments } from "../../../../actions/comment&log";
+import MainLayout from "../../../../components/MainLayout";
+import Comments from "../../../../components/Comments";
 import Detail from "./Disburse_Detail";
-import ModalRemark from "../../components/Modal_Remark";
-import Authorize from "../system/Authorize";
+import ModalRemark from "../../../../components/Modal_Remark";
+import Authorize from "../../../system/Authorize";
 const { Text } = Typography;
 
 const DisburseView = (props) => {

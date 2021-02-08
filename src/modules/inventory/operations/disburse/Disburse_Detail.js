@@ -6,24 +6,25 @@ import {
   InfoCircleTwoTone,
 } from "@ant-design/icons";
 import React, { useState, useReducer } from "react";
-import SubDetail from "./Disburse_Sub_Detail";
 import {
   sumArrOdjWithField,
   validateFormDetail,
-} from "../../include/js/function_main";
+} from "../../../../include/js/function_main";
 import {
   disburse_detail_fields,
-  disburse_detail_columns,
   disburse_sub_detail_fields,
+  disburse_sub_detail_require_fields,
 } from "./config";
-import { reducer } from "./reducers";
+import { reducer } from "../../reducers";
 import { useDispatch } from "react-redux";
 import {
   get_location_shelf_by_item_id,
   get_lot_batch_by_item_id_shelf,
-} from "../../actions/inventory";
-import { disburse_sub_detail_require_fields } from "./config/disburse";
-import { convertDigit } from "../../include/js/main_config";
+} from "../../../../actions/inventory";
+import { convertDigit } from "../../../../include/js/main_config";
+import { disburse_detail_columns } from "./config";
+import SubDetail from "./Disburse_Sub_Detail";
+
 const { Text } = Typography;
 const DisburseDetail = ({
   readOnly,

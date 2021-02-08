@@ -251,7 +251,9 @@ const SaleOrderCreate = (props) => {
         {/* Address & Information */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Quotations Ref.</Text>
+            <Text strong>
+              <span className="require">* </span>Quotations Ref.
+            </Text>
           </Col>
           <Col span={8}>
             <CustomSelect
@@ -277,7 +279,9 @@ const SaleOrderCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Order Date</Text>
+            <Text strong>
+              <span className="require">* </span>Order Date
+            </Text>
           </Col>
           <Col span={8}>
             <DatePicker
@@ -309,7 +313,9 @@ const SaleOrderCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Description :</Text>
+            <Text strong>
+              <span className="require">* </span>Description :
+            </Text>
           </Col>
 
           <Col span={8}>
@@ -327,7 +333,9 @@ const SaleOrderCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Customer </Text>
+            <Text strong>
+              <span className="require">* </span>Customer{" "}
+            </Text>
           </Col>
 
           <Col span={8}>
@@ -362,7 +370,9 @@ const SaleOrderCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Agreement :</Text>
+            <Text strong className={"pd-left-1"}>
+              Agreement :
+            </Text>
           </Col>
 
           <Col span={8}>
@@ -380,7 +390,10 @@ const SaleOrderCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Payment Terms</Text>
+            <Text strong>
+              <span className="require">* </span>
+              Payment Terms
+            </Text>
           </Col>
           <Col span={8}>
             <CustomSelect

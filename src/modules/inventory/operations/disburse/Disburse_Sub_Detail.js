@@ -7,16 +7,16 @@ import {
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import { sortData } from "../../include/js/function_main";
+import { sortData } from "../../../../include/js/function_main";
 import {
   disburse_sub_detail_columns,
   disburse_sub_detail_fields,
 } from "./config";
 import moment from "moment";
 
-import CustomSelect from "../../components/CustomSelect";
+import CustomSelect from "../../../../components/CustomSelect";
 
-import { convertDigit, numberFormat } from "../../include/js/main_config";
+import { convertDigit, numberFormat } from "../../../../include/js/main_config";
 const { Text } = Typography;
 
 const SubDetail = ({
@@ -48,6 +48,7 @@ const SubDetail = ({
         location_id: null,
         location_name: null,
         location_no: null,
+        disburse_detail_sub_disburse_date: moment().format("DD/MM/YYYY"),
       },
     });
   };
@@ -190,6 +191,10 @@ const SubDetail = ({
                             shelf_name: option.data.shelf_name,
                             stock_mfg_date: option.data.stock_mfg_date,
                             stock_exp_date: option.data.stock_exp_date,
+                            tg_stock_qty_balance:
+                              option.data.tg_stock_qty_balance,
+                            disburse_detail_sub_qty:
+                              option.data.tg_stock_qty_balance,
                           })
                         : onChangeValue(line.id, {
                             stock_id: null,
@@ -198,6 +203,8 @@ const SubDetail = ({
                             stock_lot_no_batch_qty_balance: null,
                             stock_mfg_date: null,
                             stock_exp_date: null,
+                            tg_stock_qty_balance: null,
+                            disburse_detail_sub_qty: 0,
                           });
                     }}
                   />
@@ -207,6 +214,7 @@ const SubDetail = ({
                     {...numberFormat}
                     placeholder={"Quantity Done"}
                     min={0.0}
+                    max={line.tg_stock_qty_balance}
                     step={0.001}
                     size="small"
                     name="disburse_detail_sub_qty"

@@ -8,6 +8,8 @@ import FillingProcessDetail from "./FillingProcessDetail";
 import { fillingProcessFields } from "../config/item";
 import FillingWeight from "./FillingWeight";
 import SelectBulk from "./SelectBulk";
+import FillingProcessHead from "./FillingProcessHead";
+import CustomLabel from "../../../components/CustomLabel";
 
 const FillingProcess = (props) => {
   const { readOnly, data_file, updateFile } = useContext(ItemContext);
@@ -45,10 +47,12 @@ const FillingProcess = (props) => {
       </Row>
       <FillingWeight {...props} />
       <Row className="col-2 detail-tab-row mt-4 mb-1">
-        <Col span={24}>
-          <Text strong className="detail-tab-header">
-            {"Filling Process Specify"}
-          </Text>
+        <Col span={18}>
+          <div style={{ position: "absolute", bottom: 0 }}>
+            <Text strong className="detail-tab-header">
+              {"Filling Process Specify"}
+            </Text>
+          </div>
         </Col>
       </Row>
       <FillingProcessDetail />

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Button, Table } from "antd";
+import { Button, Col, Row, Table } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import CustomLabel from "./CustomLabel";
+import Text from "antd/lib/typography/Text";
 const CustomTable = (props) => {
   const {
     loading,
@@ -15,6 +17,7 @@ const CustomTable = (props) => {
     title,
     onAdd,
     disabledAddRow,
+    footer,
   } = props;
   const [state, setState] = useState({
     pagination: {
@@ -56,6 +59,7 @@ const CustomTable = (props) => {
           onAdd
             ? () => (
                 <>
+                  {footer}
                   {!readOnly && (
                     <div className="mt-1">
                       <Button
@@ -73,7 +77,7 @@ const CustomTable = (props) => {
                   )}
                 </>
               )
-            : null
+            : footer ?? null
         }
         onRow={(record, rowIndex) => {
           return {

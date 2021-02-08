@@ -13,6 +13,7 @@ import {
   receive_sub_detail_fields,
   receive_sub_detail_require_fields,
 } from "../../config/receiveConfig";
+import moment from "moment";
 
 const ReceiveSubDetailTable = ({
   readOnly,
@@ -47,6 +48,7 @@ const ReceiveSubDetailTable = ({
           location_no: selectData.location_no,
           uom_id: selectData.uom_id,
           uom_no: selectData.uom_no,
+          receive_detail_sub_receive_date: moment().format("DD/MM/YYYY"),
         },
       ])
     );

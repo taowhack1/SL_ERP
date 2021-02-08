@@ -1,3 +1,4 @@
+import { combineReducers } from "redux";
 import {
   GET_ALL_ITEMS,
   GET_RECEIVE_LIST,
@@ -34,6 +35,15 @@ import {
   RESET_PD_RECEIVE,
   GET_PD_RECEIVE_JOB_LIST,
 } from "../actions/types";
+
+import {
+  GET_RETURN_ISSUE_REF_FAILURE,
+  GET_RETURN_ISSUE_REF_REQUEST,
+  GET_RETURN_ISSUE_REF_SUCCESS,
+  GET_RETURN_LIST_FAILURE,
+  GET_RETURN_LIST_REQUEST,
+  GET_RETURN_LIST_SUCCESS,
+} from "../actions/inventory/operation/return/returnActions";
 const initialState = {
   item: {
     data_head: {},
@@ -98,6 +108,11 @@ const initialState = {
     productionReceive: {
       list: [],
       jobList: [],
+    },
+    issueReturn: {
+      isLoading: false,
+      issueRef: [],
+      issueReturnList: [],
     },
   },
 };
@@ -323,6 +338,70 @@ export default (state = initialState, action) => {
         ...state,
         report: { ...state.report, stock_on_hand: action.payload },
       };
+
+    //ISSUE RETURN
+    case GET_RETURN_ISSUE_REF_REQUEST:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          issueReturn: { ...state.issueReturn, isLoading: true, issueRef: [] },
+        },
+      };
+    case GET_RETURN_ISSUE_REF_SUCCESS:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          issueReturn: {
+            ...state.issueReturn,
+            isLoading: false,
+
+            issueRef: action.payload.issueRef,
+          },
+        },
+      };
+    case GET_RETURN_ISSUE_REF_FAILURE:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          issueReturn: { ...state.issueReturn, isLoading: false },
+        },
+      };
+    case GET_RETURN_LIST_REQUEST:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          issueReturn: {
+            ...state.issueReturn,
+            isLoading: true,
+            issueReturnList: [],
+          },
+        },
+      };
+    case GET_RETURN_LIST_SUCCESS:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          issueReturn: {
+            ...state.issueReturn,
+            isLoading: false,
+            issueReturnList: action.payload.issueReturnList,
+          },
+        },
+      };
+    case GET_RETURN_LIST_FAILURE:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          issueReturn: { ...state.issueReturn, isLoading: false },
+        },
+      };
+
     default:
       return state;
   }

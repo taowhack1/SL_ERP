@@ -114,6 +114,8 @@ export const item_fields = {
   item_qa_lead_time_day: 0,
   item_qa_lead_time: null,
   item_packaging_lead_time: null,
+  item_filling_worker: 0,
+  item_filling_lead_time: "00:00:00",
   commit: 1,
 };
 
@@ -945,13 +947,13 @@ export const fillingProcessColumns = (
     title: (
       <div className="text-center">
         {!readOnly && <span className="require">* </span>}
-        {"Used Time"}
+        {"Time (HH:mm:ss)"}
       </div>
     ),
     dataIndex: time,
     align: "center",
     ellipsis: true,
-    width: "10%",
+    width: "15%",
     render: (value, record) => {
       return readOnly ? (
         <Text className="text-value">{value ? value : "00:00:00"}</Text>
@@ -960,6 +962,7 @@ export const fillingProcessColumns = (
           className="full-width"
           size={"small"}
           format={"HH:mm:ss"}
+          secondStep={10}
           showNow={false}
           name={time}
           placeholder="HH:mm:ss"
@@ -969,7 +972,7 @@ export const fillingProcessColumns = (
             const timestamp = moment(data, "HH:mm:ss").format("HH:mm:ss");
             console.log(timestamp);
             onChange(record.id, {
-              [time]: timestamp ?? null,
+              [time]: data ? timestamp : "00:00:00",
             });
           }}
           onBlur={() => onSave(record.id, time)}

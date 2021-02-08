@@ -18,7 +18,7 @@ const CustomRemark = ({ fields = mockupFields, saveForm }) => {
         placeholder={fields.placeholder ?? "Remark"}
         value={state[fields.name]}
         onChange={(e) => setState({ [fields.name]: e.target.value })}
-        onBlur={() => saveForm(state)}
+        onBlur={() => saveForm && saveForm(state)}
         className={"full-width"}
       />
     </>

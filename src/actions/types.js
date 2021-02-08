@@ -49,6 +49,8 @@ export const GET_TYPE_UOM_IN_ROW = "GET_TYPE_UOM_IN_ROW";
 export const GET_UOM = "GET_UOM";
 export const GET_UOM_BY_ID = "GET_ITEM_UOM_BY_ID";
 export const GET_UOM_IN_ROW = "GET_UOM_IN_ROW";
+
+//Inventory -> Operation
 //Inventory -> Receive
 export const RESET_RECEIVE = "RESET_RECEIVE";
 export const GET_RECEIVE_LIST = "GET_RECEIVE_LIST";
@@ -62,6 +64,7 @@ export const GET_RECEIVE_SUB_DETAIL = "GET_RECEIVE_SUB_DETAIL";
 export const GET_PD_RECEIVE_LIST = "GET_PD_RECEIVE_LIST";
 export const GET_PD_RECEIVE_JOB_LIST = "GET_PD_RECEIVE_JOB_LIST";
 export const RESET_PD_RECEIVE = "RESET_PD_RECEIVE";
+
 // item
 export const GET_ITEM_BY_ID = "GET_ITEM_BY_ID";
 export const GET_ITEM_DETAIL = "GET_ITEM_DETAIL";

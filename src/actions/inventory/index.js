@@ -9,6 +9,7 @@ import {
 } from "../types";
 
 import {
+  api_approve,
   api_get_all_item_list,
   api_get_configuration_type,
   api_get_item_list,
@@ -130,4 +131,10 @@ export const getUomList = () => (dispatch) => {
   axios.get(api_get_item_uom, header_config).then((res) => {
     dispatch({ type: GET_UOM, payload: res.data[0] });
   });
+};
+
+export const updateProcessStatus = (data, callback) => {
+  data.commit = 1;
+  // data = {process_status_id : '3', user_name : '2563003', process_id : '30', commit : 1}
+  return axios.put(`${api_approve}/${data.process_id}`, data, header_config);
 };

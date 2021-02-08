@@ -67,6 +67,8 @@ export const mainReducer = (state, action) => {
       return action.payload;
     case "RESET_DATA":
       return action.payload;
+    case "RESET_DETAIL":
+      return action.payload ?? [];
     case "CHANGE_HEAD_VALUE":
       return { ...state, ...action.payload };
     case "SEARCH_DETAIL":

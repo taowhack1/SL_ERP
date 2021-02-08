@@ -314,8 +314,8 @@ const CustomerCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Agreement :
+            <Text strong className={"pd-left-1"}>
+              Agreement :
             </Text>
           </Col>
 
@@ -331,7 +331,9 @@ const CustomerCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Currency :</Text>
+            <Text strong className={"pd-left-1"}>
+              Currency :
+            </Text>
           </Col>
 
           <Col span={8}>

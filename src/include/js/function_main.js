@@ -289,7 +289,8 @@ export const convertNumberToTime = (number = 0) => {
 export const convertTimeToNumber = (time = "00:00:00") => {
   const timeTemp = time ? time : "00:00:00";
   const timeArray = timeTemp.split(":");
-  const minutes = parseInt(timeArray[0] * 60) + parseInt(timeArray[1]);
+  let minutes = parseInt(timeArray[0] * 60) + parseInt(timeArray[1]);
+  // timeTemp[2] && minutes+""
   // console.log("convertTimeToNumber Before : ", time, " After : ", minutes);
   return minutes;
 };
@@ -381,4 +382,46 @@ export const warningTextValue = (value, digit, typeDanger) => {
         </Text>
       );
   }
+};
+
+export const getPageReadOnlyStatus = (action) => {
+  console.log("getPageStatus", action);
+  let readOnly = true;
+  switch (action) {
+    case "create":
+    case "edit":
+      readOnly = false;
+      break;
+    case "view":
+      readOnly = true;
+      break;
+    default:
+      break;
+  }
+  console.log(readOnly);
+  return readOnly;
+};
+
+export const capitalizeFirstLetter = (str) =>
+  str && str.charAt(0).toUpperCase() + str.slice(1);
+
+export const getPageButton = (action, obj) => {
+  let button = [];
+  switch (action) {
+    case "create":
+    case "edit":
+      button = ["Save", "Discard"];
+      break;
+    case "view":
+      button = [
+        "Back",
+        "Edit",
+        obj && obj.button_edit && "Edit",
+        obj && obj.button_confirm && "Confirm",
+        obj && obj.button_approve && "Approve",
+        obj && obj.button_reject && "Reject",
+      ];
+  }
+  console.log("button", button);
+  return button;
 };

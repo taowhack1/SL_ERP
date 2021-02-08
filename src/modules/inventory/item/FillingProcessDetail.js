@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import CustomTable from "../../../components/CustomTable";
-import Search from "../../../components/Search";
 import { ItemContext } from "../../../include/js/context";
 import { sortData } from "../../../include/js/function_main";
 import { mainReducer } from "../../../include/reducer";
 import { fillingProcessColumns, fillingProcessFields } from "../config/item";
+import FillingProcessSummary from "./FillingProcessSummary";
 const field = {
   id: "item_filling_process_id",
   name: "item_filling_process_description",
@@ -12,7 +12,7 @@ const field = {
   worker: "item_filling_process_worker",
 };
 const FillingProcessDetail = () => {
-  const { filling, setFilling, readOnly } = useContext(ItemContext);
+  const { filling, setFilling, readOnly, data_head } = useContext(ItemContext);
   const [state, stateDispatch] = useReducer(mainReducer, filling);
   const [searching, setSearching] = useState(false);
   useEffect(() => {
@@ -50,7 +50,7 @@ const FillingProcessDetail = () => {
       <CustomTable
         rowKey={"id"}
         rowClassName={"row-table-detail"}
-        pageSize={10}
+        pageSize={100}
         focusLastPage={true}
         columns={fillingProcessColumns(
           readOnly,
@@ -62,6 +62,14 @@ const FillingProcessDetail = () => {
         dataSource={state}
         readOnly={readOnly}
         onAdd={addNewRow}
+        footer={
+          readOnly && (
+            <FillingProcessSummary
+              worker={data_head.item_filling_worker}
+              time={data_head.item_filling_lead_time}
+            />
+          )
+        }
         disabledAddRow={searching}
       />
     </>
