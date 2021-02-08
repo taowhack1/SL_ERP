@@ -90,6 +90,7 @@ import UomView from "./modules/inventory/configurations/uom/UomView";
 
 import Transfer from "./modules/inventory/operation/transfer/Transfer";
 import TransferCreate from "./modules/inventory/operation/transfer/TransferCreate";
+import TransferView from "./modules/inventory/operation/transfer/TransferView";
 
 const initialContext = {
   log_detail: log_detail,
@@ -130,20 +131,16 @@ const App = (props) => {
             <Route exact path="/change_password">
               <ChangePassword />
             </Route>
-
             <Route exact path="/">
               <Dashboard />
             </Route>
-
             <Route exact path="/settings">
               <Settings />
             </Route>
-
             {/* INVENTORY */}
             <Route exact path="/inventory">
               <Inventory />
             </Route>
-
             {/* ISSUE */}
             <Route exact path="/inventory/issue">
               <Issue />
@@ -163,7 +160,6 @@ const App = (props) => {
               path="/inventory/issue/view/:id"
               component={IssueView}
             />
-
             {/* DISBURSE */}
             <Route exact path="/inventory/disburse">
               <Disburse />
@@ -183,7 +179,6 @@ const App = (props) => {
               path="/inventory/disburse/view/:id"
               component={DisburseView}
             />
-
             {/* RECEIVE */}
             <Route exact path="/inventory/receive">
               <Receive />
@@ -201,7 +196,6 @@ const App = (props) => {
               path="/inventory/receive/view/:id"
               component={ReceiveView}
             />
-
             {/* INVENTORY MASTER DATA */}
             <Route exact path="/inventory/items">
               <Items />
@@ -280,7 +274,6 @@ const App = (props) => {
             <Route exact path="/inventory/location">
               <Location />
             </Route>
-
             <Route exact path="/inventory/items/type">
               <ItemType />
             </Route>
@@ -292,8 +285,12 @@ const App = (props) => {
               exact
               path="/inventory/transfer/create"
               component={TransferCreate}
+            />{" "}
+            <Route
+              exact
+              path="/inventory/transfer/view/"
+              component={TransferView}
             />
-
             {/* INVENTORY REPORT */}
             <Route exact path="/inventory/stock_move">
               <StockMove />
@@ -301,7 +298,6 @@ const App = (props) => {
             <Route exact path="/inventory/stock_on_hand">
               <StockOnHand />
             </Route>
-
             {/* PURCHASE */}
             <Route exact path="/purchase">
               <Purchase />
@@ -318,7 +314,6 @@ const App = (props) => {
               path="/purchase/pr/edit/:id"
               component={PurchPRCreate}
             />
-
             <Route exact path="/purchase/po">
               <PurchPO />
             </Route>
@@ -331,7 +326,6 @@ const App = (props) => {
               component={PurchPOCreate}
             />
             <Route exact path="/purchase/po/view/:id" component={PurchPOView} />
-
             <Route exact path="/purchase/vendor">
               <Vendor />
             </Route>
@@ -348,12 +342,10 @@ const App = (props) => {
               path="/purchase/vendor/edit/:id"
               component={VendorCreate}
             />
-
             {/* SALES */}
             <Route exact path="/sales">
               <Sales />
             </Route>
-
             {/* SALES  Quotations */}
             <Route exact path="/sales/quotations">
               <Quotations />
@@ -388,7 +380,6 @@ const App = (props) => {
               path="/sales/orders/edit/:id"
               component={SaleOrderCreate}
             />
-
             {/* SALES CONFIGURATION */}
             <Route exact path="/sales/config/customers">
               <Customer />
@@ -406,7 +397,6 @@ const App = (props) => {
               path="/sales/config/customers/edit/:id"
               component={CustomerCreate}
             />
-
             {/* QA QC */}
             <Route exact path="/qa">
               <QualityAssurance />
@@ -452,7 +442,6 @@ const App = (props) => {
               path="/production/operations/wo/edit/:id"
               component={WorkOrderCreate}
             />
-
             {/* PRODUCTION MASTER DATA */}
             <Route exact path="/production/work_center">
               <WorkCenter />
@@ -470,7 +459,6 @@ const App = (props) => {
               path="/production/work_center/edit/:id"
               component={WorkCenterCreate}
             />
-
             <Route exact path="/production/machine">
               <Machine />
             </Route>
@@ -487,7 +475,6 @@ const App = (props) => {
               path="/production/machine/edit/:id"
               component={MachineCreate}
             />
-
             <Route>
               <NotFound />
             </Route>
