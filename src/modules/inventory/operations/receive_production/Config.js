@@ -15,12 +15,12 @@ export const receivePDColumns = [
   },
   {
     title: "Job Ref.",
-    dataIndex: "wo_no",
-    key: "wo_no",
+    dataIndex: "mrp_no",
+    key: "mrp_no",
     width: "10%",
     align: "center",
     sorter: {
-      compare: (a, b) => a.wo_id - b.wo_id,
+      compare: (a, b) => a.mrp_id - b.mrp_id,
       multiple: 3,
     },
     render: (value, record) => value ?? "-",

@@ -1,39 +1,47 @@
-import { DatePicker, Row, Col, InputNumber } from "antd";
-
+import { DatePicker, Row, Col, Tabs, InputNumber } from "antd";
+import TextArea from "antd/lib/input/TextArea";
 import Text from "antd/lib/typography/Text";
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import moment from "moment";
 import { convertDigit, numberFormat } from "../../../include/js/main_config";
-
+import ReducerClass from "../../../include/js/ReducerClass";
 import CustomText from "../../../components/CustomText";
 import ToggleReadOnlyElement from "../../../components/ToggleReadOnlyElement";
-
-import { WOContext } from "../../../include/js/context";
+import { reducer } from "../reducers";
+import { MRPContext } from "../../../include/js/context";
+import { get } from "jquery";
 
 const { RangePicker } = DatePicker;
-const TabWorkOrderDetail = () => {
-  const { headReducer, readOnly } = useContext(WOContext);
+const TabMRPDetail = () => {
+  const { headReducer, readOnly } = useContext(MRPContext);
   const [state, setState] = useState({
-    wo_qty_produce: headReducer.data.wo_qty_produce,
-    wo_spare_qty: headReducer.data.wo_spare_qty,
-    wo_plan_start_date: headReducer.data.wo_plan_start_date,
-    wo_plan_end_date: headReducer.data.wo_plan_end_date,
-    wo_qty_percent_spare_rm: headReducer.data.wo_qty_percent_spare_rm,
-    wo_qty_percent_spare_pk: headReducer.data.wo_qty_percent_spare_pk,
+    mrp_qty_produce: headReducer.data.mrp_qty_produce,
+    mrp_spare_qty: headReducer.data.mrp_spare_qty,
+    mrp_plan_start_date: headReducer.data.mrp_plan_start_date,
+    mrp_plan_end_date: headReducer.data.mrp_plan_end_date,
+    mrp_qty_percent_spare_rm: headReducer.data.mrp_qty_percent_spare_rm,
+    mrp_qty_percent_spare_pk: headReducer.data.mrp_qty_percent_spare_pk,
     uom_no: headReducer.data.uom_no,
   });
   useEffect(() => {
-    state.wo_qty_produce !== headReducer.data.wo_qty_produce &&
+    state.mrp_qty_produce !== headReducer.data.mrp_qty_produce &&
       setState({
-        wo_qty_produce: headReducer.data.wo_qty_produce,
-        wo_spare_qty: headReducer.data.wo_spare_qty,
-        wo_plan_start_date: headReducer.data.wo_plan_start_date,
-        wo_plan_end_date: headReducer.data.wo_plan_end_date,
-        wo_qty_percent_spare_rm: headReducer.data.wo_qty_percent_spare_rm,
-        wo_qty_percent_spare_pk: headReducer.data.wo_qty_percent_spare_pk,
+        mrp_qty_produce: headReducer.data.mrp_qty_produce,
+        mrp_spare_qty: headReducer.data.mrp_spare_qty,
+        mrp_plan_start_date: headReducer.data.mrp_plan_start_date,
+        mrp_plan_end_date: headReducer.data.mrp_plan_end_date,
+        mrp_qty_percent_spare_rm: headReducer.data.mrp_qty_percent_spare_rm,
+        mrp_qty_percent_spare_pk: headReducer.data.mrp_qty_percent_spare_pk,
         uom_no: headReducer.data.uom_no,
       });
-  }, [headReducer.data.wo_qty_produce]);
+  }, [headReducer.data.mrp_qty_produce]);
   function disabledDate(current) {
     // Can not select days before today and today
     return current && current - 1 < moment().subtract(1, "days").endOf("day");
@@ -52,25 +60,25 @@ const TabWorkOrderDetail = () => {
               Qty. To Produce :
             </CustomText>
           </Col>
-          <Col span={15} className={readOnly ? "text-right" : ""}>
+          <Col span={15} className="text-right">
             <ToggleReadOnlyElement
               readOnly={readOnly}
-              value={convertDigit(state.wo_qty_produce)}
+              value={convertDigit(state.mrp_qty_produce)}
             >
               <InputNumber
                 {...numberFormat}
                 min={0}
                 step={1}
                 placeholder={"Qty. to produce"}
-                name={"wo_qty_produce"}
+                name={"mrp_qty_produce"}
                 defaultValue={0}
                 className="full-width"
-                value={state.wo_qty_produce}
+                value={state.mrp_qty_produce}
                 onChange={(data) => {
-                  setState({ ...state, wo_qty_produce: data });
+                  setState({ ...state, mrp_qty_produce: data });
                 }}
                 onBlur={(data) => {
-                  Save("wo_qty_produce");
+                  Save("mrp_qty_produce");
                 }}
               />
             </ToggleReadOnlyElement>
@@ -87,13 +95,13 @@ const TabWorkOrderDetail = () => {
               RM. To Spare (%) :
             </CustomText>
           </Col>
-          <Col span={15} className={readOnly ? "text-right" : ""}>
+          <Col span={15} className="text-right">
             <ToggleReadOnlyElement
               readOnly={readOnly}
-              value={convertDigit(state.wo_qty_percent_spare_rm)}
+              value={convertDigit(state.mrp_qty_percent_spare_rm)}
             >
               <InputNumber
-                name="wo_qty_percent_spare_rm"
+                name="mrp_qty_percent_spare_rm"
                 placeholder="Percentage"
                 defaultValue={0.0}
                 min={0.0}
@@ -102,12 +110,12 @@ const TabWorkOrderDetail = () => {
                 parser={(value) => value.replace("%", "")}
                 precision={3}
                 step={1.0}
-                value={state.wo_qty_percent_spare_rm}
+                value={state.mrp_qty_percent_spare_rm}
                 onChange={(data) => {
-                  setState({ ...state, wo_qty_percent_spare_rm: data });
+                  setState({ ...state, mrp_qty_percent_spare_rm: data });
                 }}
                 onBlur={() => {
-                  Save("wo_qty_percent_spare_rm");
+                  Save("mrp_qty_percent_spare_rm");
                 }}
                 className="full-width"
               />
@@ -123,13 +131,13 @@ const TabWorkOrderDetail = () => {
               PK To Spare (%) :
             </CustomText>
           </Col>
-          <Col span={15} className={readOnly ? "text-right" : ""}>
+          <Col span={15} className="text-right">
             <ToggleReadOnlyElement
               readOnly={readOnly}
-              value={convertDigit(state.wo_qty_percent_spare_pk)}
+              value={convertDigit(state.mrp_qty_percent_spare_pk)}
             >
               <InputNumber
-                name="wo_qty_percent_spare_pk"
+                name="mrp_qty_percent_spare_pk"
                 placeholder="Percentage"
                 defaultValue={0.0}
                 min={0.0}
@@ -138,12 +146,12 @@ const TabWorkOrderDetail = () => {
                 parser={(value) => value.replace("%", "")}
                 precision={3}
                 step={1.0}
-                value={state.wo_qty_percent_spare_pk}
+                value={state.mrp_qty_percent_spare_pk}
                 onChange={(data) => {
-                  setState({ ...state, wo_qty_percent_spare_pk: data });
+                  setState({ ...state, mrp_qty_percent_spare_pk: data });
                 }}
                 onBlur={() => {
-                  Save("wo_qty_percent_spare_pk");
+                  Save("mrp_qty_percent_spare_pk");
                 }}
                 className="full-width"
               />
@@ -164,36 +172,36 @@ const TabWorkOrderDetail = () => {
           <Col span={18}>
             {readOnly ? (
               <Text className="text-value text-left">
-                {state.wo_plan_start_date + " - " + state.wo_plan_end_date}
+                {state.mrp_plan_start_date + " - " + state.mrp_plan_end_date}
               </Text>
             ) : (
               <RangePicker
                 format={"DD/MM/YYYY"}
-                name="wo_plan_start_date"
+                name="qn_exp_date"
                 className="full-width"
                 disabledDate={disabledDate}
                 onChange={(data) => {
                   data
                     ? setState({
                         ...state,
-                        wo_plan_start_date: data[0].format("DD/MM/YYYY"),
-                        wo_plan_end_date: data[1].format("DD/MM/YYYY"),
+                        mrp_plan_start_date: data[0].format("DD/MM/YYYY"),
+                        mrp_plan_end_date: data[1].format("DD/MM/YYYY"),
                       })
                     : setState({
                         ...state,
-                        wo_plan_start_date: null,
-                        wo_plan_end_date: null,
+                        mrp_plan_start_date: null,
+                        mrp_plan_end_date: null,
                       });
                 }}
                 onBlur={() => {
-                  Save("wo_plan_start_date");
+                  Save("mrp_plan_start_date");
                 }}
                 value={[
-                  state.wo_plan_start_date
-                    ? moment(state.wo_plan_start_date, "DD/MM/YYYY")
+                  state.mrp_plan_start_date
+                    ? moment(state.mrp_plan_start_date, "DD/MM/YYYY")
                     : "",
-                  state.wo_plan_end_date
-                    ? moment(state.wo_plan_end_date, "DD/MM/YYYY")
+                  state.mrp_plan_end_date
+                    ? moment(state.mrp_plan_end_date, "DD/MM/YYYY")
                     : "",
                 ]}
               />
@@ -201,30 +209,30 @@ const TabWorkOrderDetail = () => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={9}>
+          <Col span={6}>
             <Text className="require" strong>
               <span className="require">* </span>
               RM Lead Time (days):
             </Text>
           </Col>
-          <Col span={15}>
+          <Col span={18}>
             <Text className="text-left">
-              {headReducer.data.wo_lead_time_day_rm +
-                headReducer.data.wo_lead_time_day_rm_qa}
+              {headReducer.data.mrp_lead_time_day_rm +
+                headReducer.data.mrp_lead_time_day_rm_qa}
             </Text>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={9}>
+          <Col span={6}>
             <Text className="require" strong>
               <span className="require">* </span>
               PK Lead Time (days):
             </Text>
           </Col>
-          <Col span={15}>
+          <Col span={18}>
             <Text className="text-left">
-              {headReducer.data.wo_lead_time_day_pk +
-                headReducer.data.wo_lead_time_day_pk_qa}
+              {headReducer.data.mrp_lead_time_day_pk +
+                headReducer.data.mrp_lead_time_day_pk_qa}
             </Text>
           </Col>
         </Row>
@@ -233,4 +241,4 @@ const TabWorkOrderDetail = () => {
   );
 };
 
-export default React.memo(TabWorkOrderDetail);
+export default React.memo(TabMRPDetail);

@@ -165,6 +165,6 @@ export const GET_WORK_CENTER_BY_ID = "GET_WORK_CENTER_BY_ID";
 export const GET_ALL_MACHINE = "GET_ALL_MACHINE";
 export const GET_MACHINE_BY_ID = "GET_MACHINE_BY_ID";
 
-export const GET_WO_SO_REF = "GET_WO_SO_REF";
-export const GET_ALL_WORK_ORDER = "GET_ALL_WORK_ORDER";
-export const GET_WORK_ORDER_BY_ID = "GET_WORK_ORDER_BY_ID";
+export const GET_MRP_SO_REF = "GET_MRP_SO_REF";
+export const GET_ALL_MRP = "GET_ALL_MRP";
+export const GET_MRP_BY_ID = "GET_MRP_BY_ID";

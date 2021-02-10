@@ -9,10 +9,10 @@ import Text from "antd/lib/typography/Text";
 import { InputNumber } from "antd";
 import { FileSearchOutlined, SearchOutlined } from "@ant-design/icons";
 
-export const work_order_columns = [
+export const mrp_columns = [
   {
-    title: "WO Code",
-    dataIndex: "wo_no",
+    title: "MRP Code",
+    dataIndex: "mrp_no",
     width: "8%",
     align: "left",
     ellipsis: true,
@@ -32,34 +32,34 @@ export const work_order_columns = [
   },
   {
     title: "Job Name",
-    dataIndex: "wo_description",
+    dataIndex: "mrp_description",
     ellipsis: true,
   },
 
   {
     title: "Plan Start",
-    dataIndex: "wo_plan_start_date",
+    dataIndex: "mrp_plan_start_date",
     width: "8%",
     align: "center",
     ellipsis: true,
   },
   {
     title: "Plan End",
-    dataIndex: "wo_plan_end_date",
+    dataIndex: "mrp_plan_end_date",
     width: "8%",
     align: "center",
     ellipsis: true,
   },
   {
     title: "Due Date",
-    dataIndex: "wo_due_date",
+    dataIndex: "mrp_due_date",
     width: "8%",
     align: "center",
     ellipsis: true,
   },
   {
     title: "Qty.",
-    dataIndex: "wo_qty_produce",
+    dataIndex: "mrp_qty_produce",
     width: "8%",
     align: "right",
     ellipsis: true,
@@ -75,7 +75,7 @@ export const work_order_columns = [
     ellipsis: true,
   },
   {
-    title: "WO Status",
+    title: "MRP Status",
     dataIndex: "trans_close_name",
     key: "trans_close_name",
     width: "8%",
@@ -86,46 +86,46 @@ export const work_order_columns = [
     },
   },
 ];
-export const workOrderFields = {
-  wo_id: null,
-  wo_no: null,
-  wo_order_date: null,
-  wo_plan_start_date: null,
-  wo_plan_end_date: null,
-  wo_due_date: null,
-  wo_description: null,
-  wo_agreement: null,
-  wo_qty_produce: 0,
-  wo_qty_percent_spare_rm: 0,
-  wo_qty_percent_spare_pk: 0,
-  wo_remark: null,
-  wo_lock: null,
-  wo_rows: null,
-  wo_actived: null,
-  wo_created: null,
-  wo_created_by: null,
-  wo_updated: null,
-  wo_updated_by: null,
+export const mrpFields = {
+  mrp_id: null,
+  mrp_no: null,
+  mrp_order_date: null,
+  mrp_plan_start_date: null,
+  mrp_plan_end_date: null,
+  mrp_due_date: null,
+  mrp_description: null,
+  mrp_agreement: null,
+  mrp_qty_produce: 0,
+  mrp_qty_percent_spare_rm: 0,
+  mrp_qty_percent_spare_pk: 0,
+  mrp_remark: null,
+  mrp_lock: null,
+  mrp_rows: null,
+  mrp_actived: null,
+  mrp_created: null,
+  mrp_created_by: null,
+  mrp_updated: null,
+  mrp_updated_by: null,
   so_id: null,
   branch_id: null,
   item_id: null,
   process_id: null,
   tg_trans_status_id: null,
   tg_trans_close_id: null,
-  wo_lead_time_day_pk: 0,
-  wo_lead_time_day_pk_qa: 0,
-  wo_lead_time_day_rm: 0,
-  wo_lead_time_day_rm_qa: 0,
+  mrp_lead_time_day_pk: 0,
+  mrp_lead_time_day_pk_qa: 0,
+  mrp_lead_time_day_rm: 0,
+  mrp_lead_time_day_rm_qa: 0,
 };
 
-export const workOrderRequireFields = [
-  "wo_description",
+export const mrpRequireFields = [
+  "mrp_description",
   "so_id",
   "item_id",
-  "wo_qty_produce",
-  "wo_plan_start_date",
+  "mrp_qty_produce",
+  "mrp_plan_start_date",
 ];
-export const workOrderRMColumns = (
+export const mrpRMColumns = (
   readOnly,
   onChange,
   onDelete,
@@ -161,8 +161,8 @@ export const workOrderRMColumns = (
   {
     id: 3,
     title: <div className="text-center">On Hand Qty.</div>,
-    dataIndex: "wo_detail_qty_available",
-    key: "wo_detail_qty_available",
+    dataIndex: "mrp_detail_qty_available",
+    key: "mrp_detail_qty_available",
     align: "right",
     require: true,
     width: "10%",
@@ -172,7 +172,7 @@ export const workOrderRMColumns = (
           {warningTextValue(
             value,
             4,
-            record.wo_detail_qty_pr && value < record.wo_detail_qty_issue
+            record.mrp_detail_qty_pr && value < record.mrp_detail_qty_issue
               ? true
               : false
           )}
@@ -190,8 +190,8 @@ export const workOrderRMColumns = (
   {
     id: 4,
     title: <div className="text-center">Qty. To Issue</div>,
-    dataIndex: "wo_detail_qty_issue",
-    key: "wo_detail_qty_issue",
+    dataIndex: "mrp_detail_qty_issue",
+    key: "mrp_detail_qty_issue",
     align: "right",
     require: true,
     width: "10%",
@@ -219,8 +219,8 @@ export const workOrderRMColumns = (
   {
     id: 6,
     title: <div className="text-center">Qty. To PR</div>,
-    dataIndex: "wo_detail_qty_pr",
-    key: "wo_detail_qty_pr",
+    dataIndex: "mrp_detail_qty_pr",
+    key: "mrp_detail_qty_pr",
     require: true,
     align: "right",
     width: "15%",
@@ -240,9 +240,11 @@ export const workOrderRMColumns = (
             min={0}
             step={record.item_vendor_min_qty}
             className="full-width"
-            name="wo_detail_qty_pr"
+            name="mrp_detail_qty_pr"
             value={value}
-            onChange={(data) => onChange(record.id, { wo_detail_qty_pr: data })}
+            onChange={(data) =>
+              onChange(record.id, { mrp_detail_qty_pr: data })
+            }
             size="small"
           />
         );
@@ -267,13 +269,13 @@ export const workOrderRMColumns = (
     width: "12%",
     render: (value, record, index) => {
       return (
-        record.wo_detail_lead_time_day_pr + record.wo_detail_lead_time_day_qa
+        record.mrp_detail_lead_time_day_pr + record.mrp_detail_lead_time_day_qa
       );
     },
   },
 ];
 
-export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
+export const mrpPKColumns = (readOnly, onChange, onDelete, onToggle) => [
   {
     id: 1,
     title: "No.",
@@ -302,8 +304,8 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
   {
     id: 3,
     title: <div className="text-center">On Hand Qty.</div>,
-    dataIndex: "wo_detail_qty_available",
-    key: "wo_detail_qty_available",
+    dataIndex: "mrp_detail_qty_available",
+    key: "mrp_detail_qty_available",
     align: "right",
     require: true,
     width: "10%",
@@ -311,7 +313,7 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
       return warningTextValue(
         value,
         4,
-        record.wo_detail_qty_pr && value < record.wo_detail_qty_issue
+        record.mrp_detail_qty_pr && value < record.mrp_detail_qty_issue
           ? true
           : false
       );
@@ -320,8 +322,8 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
   {
     id: 4,
     title: <div className="text-center">Qty. To Issue</div>,
-    dataIndex: "wo_detail_qty_issue",
-    key: "wo_detail_qty_issue",
+    dataIndex: "mrp_detail_qty_issue",
+    key: "mrp_detail_qty_issue",
     align: "right",
     require: true,
     width: "10%",
@@ -349,8 +351,8 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
   {
     id: 6,
     title: <div className="text-center">Qty. To PR</div>,
-    dataIndex: "wo_detail_qty_pr",
-    key: "wo_detail_qty_pr",
+    dataIndex: "mrp_detail_qty_pr",
+    key: "mrp_detail_qty_pr",
     require: true,
     align: "right",
     width: "15%",
@@ -370,9 +372,11 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
             min={0}
             step={record.item_vendor_min_qty}
             className="full-width"
-            name="wo_detail_qty_pr"
+            name="mrp_detail_qty_pr"
             value={value}
-            onChange={(data) => onChange(record.id, { wo_detail_qty_pr: data })}
+            onChange={(data) =>
+              onChange(record.id, { mrp_detail_qty_pr: data })
+            }
             size="small"
           />
         );
@@ -397,13 +401,13 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
     width: "12%",
     render: (value, record, index) => {
       return (
-        record.wo_detail_lead_time_day_pr + record.wo_detail_lead_time_day_qa
+        record.mrp_detail_lead_time_day_pr + record.mrp_detail_lead_time_day_qa
       );
     },
   },
 ];
 
-export const workOrderRMDetailFields = {
+export const mrpRMDetailFields = {
   id: 0,
   item_id: null,
   item_no_name: null,
@@ -412,11 +416,11 @@ export const workOrderRMDetailFields = {
   item_qty: 0,
   item_cal_qty: 0,
   item_on_stock_qty: 0,
-  wo_detail_lead_time_day_qa: 0,
-  wo_detail_lead_time_day_pr: 0,
+  mrp_detail_lead_time_day_qa: 0,
+  mrp_detail_lead_time_day_pr: 0,
 };
 
-export const workOrderPKDetailFields = {
+export const mrpPKDetailFields = {
   id: 0,
   item_id: null,
   item_no_name: null,
@@ -425,6 +429,6 @@ export const workOrderPKDetailFields = {
   item_qty: 0,
   item_cal_qty: 0,
   item_on_stock_qty: 0,
-  wo_detail_lead_time_day_qa: 0,
-  wo_detail_lead_time_day_pr: 0,
+  mrp_detail_lead_time_day_qa: 0,
+  mrp_detail_lead_time_day_pr: 0,
 };

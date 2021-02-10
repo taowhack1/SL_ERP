@@ -137,7 +137,7 @@ export const api_work_center_category = `/list/work_center_category`;
 export const api_work_center_capacity_categ = `/list/capacity_category`;
 
 // Work Order
-export const api_work_order = `/production/wo`;
-export const api_work_order_detail = `/production/wo_detail`;
-export const api_wo_so_ref = `/list/so`;
-export const api_get_fg_material = `/production/wo/calculate`;
+export const api_mrp = `/production/mrp`;
+export const api_mrp_detail = `/production/mrp_detail`;
+export const api_mrp_so_ref = `/list/so`;
+export const api_get_fg_material = `/production/mrp/calculate`;

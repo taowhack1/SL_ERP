@@ -6,16 +6,16 @@ import Comments from "../../../components/Comments";
 import { get_log_by_id } from "../../../actions/comment&log";
 import Authorize from "../../system/Authorize";
 
-import WorkOrderTabPanel from "./WorkOrderTabPanel";
-import { wo_actions } from "../../../actions/production/workOrderActions";
-import WorkOrderHead from "./WorkOrderHead";
+import MRPTabPanel from "./MRPTabPanel";
+import { mrp_actions } from "../../../actions/production/mrpActions";
+import MRPHead from "./MRPHead";
 import { sortData } from "../../../include/js/function_main";
-import { WOContext } from "../../../include/js/context";
+import { MRPContext } from "../../../include/js/context";
 import ModalRemark from "../../../components/Modal_Remark";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
 
-const WorkOrderView = (props) => {
+const MRPView = (props) => {
   const readOnly = true;
   const authorize = Authorize();
 
@@ -25,7 +25,7 @@ const WorkOrderView = (props) => {
   const current_project = useSelector((state) => state.auth.currentProject);
   const dataComments = useSelector((state) => state.log.comment_log);
   const { data_head, data_material } = useSelector(
-    (state) => state.production.operations.workOrder.workOrder
+    (state) => state.production.operations.mrp.mrp
   );
   const [remark, setRemark] = useState("");
   const [openRemarkModal, setOpenRemarkModal] = useState({
@@ -52,7 +52,7 @@ const WorkOrderView = (props) => {
       "Operations",
       "Work Order",
       "View",
-      data_head.wo_no && data_head.wo_no,
+      data_head.mrp_no && data_head.mrp_no,
     ],
     search: false,
     buttonAction: [
@@ -69,15 +69,15 @@ const WorkOrderView = (props) => {
     },
     create: "",
     save: "function",
-    back: "/production/operations/wo",
-    discard: "/production/operations/wo",
+    back: "/production/operations/mrp",
+    discard: "/production/operations/mrp",
     edit: {
       data: {
         data_head: data_head,
         data_rm: sortData(data_material.filter((item) => item.type_id === 1)),
         data_pk: sortData(data_material.filter((item) => item.type_id === 2)),
       },
-      path: data_head && "/production/operations/wo/edit/" + data_head.wo_id,
+      path: data_head && "/production/operations/mrp/edit/" + data_head.mrp_id,
     },
     onApprove: (e) => {
       const app_detail = {
@@ -86,7 +86,7 @@ const WorkOrderView = (props) => {
         process_id: data_head.process_id,
         process_member_remark: remark,
       };
-      dispatch(wo_actions(app_detail, data_head.wo_id));
+      dispatch(mrp_actions(app_detail, data_head.mrp_id));
     },
     onConfirm: () => {
       const app_detail = {
@@ -94,7 +94,7 @@ const WorkOrderView = (props) => {
         user_name: auth.user_name,
         process_id: data_head.process_id,
       };
-      dispatch(wo_actions(app_detail, data_head.wo_id));
+      dispatch(mrp_actions(app_detail, data_head.mrp_id));
       console.log("Confirm");
     },
     onReject: () => {
@@ -111,7 +111,7 @@ const WorkOrderView = (props) => {
         user_name: auth.user_name,
         process_id: data_head.process_id,
       };
-      dispatch(wo_actions(app_detail, data_head.wo_id));
+      dispatch(mrp_actions(app_detail, data_head.mrp_id));
     },
   };
   const changeProcessStatus = (process_status_id) => {
@@ -127,7 +127,7 @@ const WorkOrderView = (props) => {
       process_member_remark: remark,
     };
     message.success({ content: "Reject", key: "validate", duration: 1 });
-    dispatch(wo_actions(app_detail, data_head.wo_id));
+    dispatch(mrp_actions(app_detail, data_head.mrp_id));
     setRemark("");
   };
 
@@ -146,7 +146,7 @@ const WorkOrderView = (props) => {
     };
   }, []);
   return (
-    <WOContext.Provider value={headContextValue}>
+    <MRPContext.Provider value={headContextValue}>
       <MainLayout {...config}>
         <div id="form">
           <Row className="col-2">
@@ -154,7 +154,7 @@ const WorkOrderView = (props) => {
               <h2>
                 <strong>
                   {"View"} MRP
-                  {data_head.wo_no && " #" + data_head.wo_no}
+                  {data_head.mrp_no && " #" + data_head.mrp_no}
                 </strong>
               </h2>
             </Col>
@@ -163,12 +163,12 @@ const WorkOrderView = (props) => {
               <Text strong>Create Date :</Text>
             </Col>
             <Col span={2} style={{ textAlign: "right" }}>
-              <Text className="text-view">{data_head.wo_created}</Text>
+              <Text className="text-view">{data_head.mrp_created}</Text>
             </Col>
           </Row>
 
-          <WorkOrderHead />
-          <WorkOrderTabPanel />
+          <MRPHead />
+          <MRPTabPanel />
         </div>
         <ModalRemark
           title={"Remark"}
@@ -184,8 +184,8 @@ const WorkOrderView = (props) => {
         />
         <Comments data={dataComments} />
       </MainLayout>
-    </WOContext.Provider>
+    </MRPContext.Provider>
   );
 };
 
-export default React.memo(WorkOrderView);
+export default React.memo(MRPView);

@@ -8,14 +8,11 @@ import $ from "jquery";
 import Authorize from "../../system/Authorize";
 import useKeepLogs from "../../logs/useKeepLogs";
 
-import { work_order_columns } from "../config/workOrder";
-import WorkOrderSearchTool from "./WorkOrderSearchTool";
-import {
-  getAllWorkOrder,
-  getWorkOrderByID,
-} from "../../../actions/production/workOrderActions";
+import { mrp_columns } from "../config/mrp";
+import MRPSearchTool from "./MRPSearchTool";
+import { getAllMRP, getMRPByID } from "../../../actions/production/mrpActions";
 import { reset_comments } from "../../../actions/comment&log";
-const WorkOrderMain = (props) => {
+const MRPMain = (props) => {
   const dispatch = useDispatch();
 
   const history = useHistory();
@@ -30,10 +27,10 @@ const WorkOrderMain = (props) => {
     console.log("params", pagination, filters, sorter, extra);
   };
 
-  const { workOrderList, workOrder } = useSelector(
-    (state) => state.production.operations.workOrder
+  const { mrpList, mrp } = useSelector(
+    (state) => state.production.operations.mrp
   );
-  const [stateWO, setStateWO] = useState(workOrderList);
+  const [stateMRP, setStateMRP] = useState(mrpList);
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
@@ -43,77 +40,77 @@ const WorkOrderMain = (props) => {
     show: true,
     breadcrumb: ["Home", "Operations", "MRP"],
     search: true,
-    create: "/production/operations/wo/create",
+    create: "/production/operations/mrp/create",
     buttonAction: ["Create"],
     edit: {},
     disabledEditBtn: !rowClick,
     discard: "/production",
-    badgeCount: workOrder.data_so_ref.length,
+    badgeCount: mrp.data_so_ref.length,
     onCancel: () => {
       console.log("Cancel");
     },
     onSearch: (searchText) => {
       searchText
-        ? setStateWO(
-            workOrderList.filter(
-              (wo) =>
-                wo.item_no_name.indexOf(searchText) >= 0 ||
-                wo.wo_no_description.indexOf(searchText) >= 0
+        ? setStateMRP(
+            mrpList.filter(
+              (mrp) =>
+                mrp.item_no_name.indexOf(searchText) >= 0 ||
+                mrp.mrp_no_description.indexOf(searchText) >= 0
             )
           )
-        : setStateWO(workOrderList);
+        : setStateMRP(mrpList);
     },
   };
   const onChangeSeach = ({
-    wo_id,
+    mrp_id,
     item_id,
-    wo_plan_start_date,
-    wo_plan_end_date,
-    wo_due_date_start,
-    wo_due_date_end,
+    mrp_plan_start_date,
+    mrp_plan_end_date,
+    mrp_due_date_start,
+    mrp_due_date_end,
   }) => {
-    let search_data = workOrderList;
+    let search_data = mrpList;
 
     console.log(
-      wo_id,
+      mrp_id,
       item_id,
-      wo_plan_start_date,
-      wo_plan_end_date,
-      wo_due_date_start,
-      wo_due_date_end
+      mrp_plan_start_date,
+      mrp_plan_end_date,
+      mrp_due_date_start,
+      mrp_due_date_end
     );
-    if (wo_id) {
-      search_data = search_data.filter((data) => data.wo_id === wo_id);
+    if (mrp_id) {
+      search_data = search_data.filter((data) => data.mrp_id === mrp_id);
     }
     if (item_id) {
       search_data = search_data.filter((data) => data.item_id === item_id);
     }
-    if (wo_plan_start_date) {
+    if (mrp_plan_start_date) {
       search_data = search_data.filter(
         (data) =>
-          data.wo_plan_start_date >= wo_plan_start_date &&
-          data.wo_plan_end_date <= wo_plan_end_date
+          data.mrp_plan_start_date >= mrp_plan_start_date &&
+          data.mrp_plan_end_date <= mrp_plan_end_date
       );
     }
-    if (wo_due_date_start) {
+    if (mrp_due_date_start) {
       search_data = search_data.filter(
         (data) =>
-          data.wo_due_date >= wo_due_date_start &&
-          data.wo_due_date <= wo_due_date_end
+          data.mrp_due_date >= mrp_due_date_start &&
+          data.mrp_due_date <= mrp_due_date_end
       );
     }
-    setStateWO(search_data);
+    setStateMRP(search_data);
   };
 
   useEffect(() => {
-    dispatch(getAllWorkOrder(auth.user_name));
+    dispatch(getAllMRP(auth.user_name));
     dispatch(reset_comments());
   }, []);
   useEffect(() => {
-    setStateWO(workOrderList);
-  }, [workOrderList.length]);
+    setStateMRP(mrpList);
+  }, [mrpList.length]);
   const redirect_to_view = (id) => {
-    history.push("wo/view/" + (id ? id : "new"));
+    history.push("mrp/view/" + (id ? id : "new"));
   };
 
   return (
@@ -122,16 +119,14 @@ const WorkOrderMain = (props) => {
         <Row className="row-tab-margin-lg">
           <Col span={24}>
             <Table
-              title={() => (
-                <WorkOrderSearchTool onChangeSeach={onChangeSeach} />
-              )}
+              title={() => <MRPSearchTool onChangeSeach={onChangeSeach} />}
               loading={loading}
-              columns={work_order_columns}
-              dataSource={stateWO}
+              columns={mrp_columns}
+              dataSource={stateMRP}
               onChange={onChange}
               bordered
               size="small"
-              rowKey="wo_id"
+              rowKey="mrp_id"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
@@ -141,10 +136,10 @@ const WorkOrderMain = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    keepLog.keep_log_action(record.wo_no);
+                    keepLog.keep_log_action(record.mrp_no);
                     dispatch(
-                      getWorkOrderByID(
-                        record.wo_id,
+                      getMRPByID(
+                        record.mrp_id,
                         auth.user_name,
                         redirect_to_view
                       )
@@ -160,4 +155,4 @@ const WorkOrderMain = (props) => {
   );
 };
 
-export default withRouter(WorkOrderMain);
+export default withRouter(MRPMain);

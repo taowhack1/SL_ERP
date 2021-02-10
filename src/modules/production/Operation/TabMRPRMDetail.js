@@ -2,11 +2,11 @@ import { Row, Col, Typography, Tabs, Table } from "antd";
 import { ProfileOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 
-import { workOrderRMColumns } from "../config/workOrder";
+import { mrpRMColumns } from "../config/mrp";
 import CustomTable from "../../../components/CustomTable";
 
 import { useSelector } from "react-redux";
-import { WOContext } from "../../../include/js/context";
+import { MRPContext } from "../../../include/js/context";
 import { convertDigit } from "../../../include/js/main_config";
 import Modal from "antd/lib/modal/Modal";
 import Draggable from "react-draggable";
@@ -100,9 +100,9 @@ const initialState = {
   bounds: { left: 0, top: 0, bottom: 0, right: 0 },
   disabled: true,
 };
-const TabWorkOrderRMDetail = () => {
+const TabMRPRMDetail = () => {
   const draggleRef = React.createRef();
-  const { RMReducer, readOnly, so_id, so_detail_id } = useContext(WOContext);
+  const { RMReducer, readOnly, so_id, so_detail_id } = useContext(MRPContext);
   const itemList = useSelector((state) =>
     state.inventory.master_data.item_list.filter((item) => item.type_id === 1)
   );
@@ -159,7 +159,7 @@ const TabWorkOrderRMDetail = () => {
         // rowClassName="row-error"
         pageSize={10}
         focusLastPage={true}
-        columns={workOrderRMColumns(
+        columns={mrpRMColumns(
           readOnly,
           RMReducer.onChangeDetailValue,
           RMReducer.deleteRow,
@@ -412,4 +412,4 @@ const TabWorkOrderRMDetail = () => {
   );
 };
 
-export default React.memo(TabWorkOrderRMDetail);
+export default React.memo(TabMRPRMDetail);

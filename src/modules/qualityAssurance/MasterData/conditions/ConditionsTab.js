@@ -11,7 +11,7 @@ import QCItemTestTable from "./ConditionsDetail";
 const initialStateSubject = qcTestItemSubjectFields;
 const initialStateSpecification = qcTestItemSpecFields;
 const initialStateMethod = qcTestItemMethodFields;
-const WorkOrderTabPanel = () => {
+const MRPTabPanel = () => {
   const {
     data_head,
     subjectData,
@@ -35,7 +35,7 @@ const WorkOrderTabPanel = () => {
             tab={<span className="tab_pane">{"Subject"}</span>}
             key={"1"}
           >
-            {/* <TabWorkOrderDetail /> */}
+            {/* <TabMRPDetail /> */}
             <QCItemTestTable
               field={{
                 title: "Subject",
@@ -95,4 +95,4 @@ const WorkOrderTabPanel = () => {
   );
 };
 
-export default React.memo(WorkOrderTabPanel);
+export default React.memo(MRPTabPanel);

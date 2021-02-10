@@ -7,45 +7,37 @@ import Comments from "../../../components/Comments";
 import { get_log_by_id } from "../../../actions/comment&log";
 import Authorize from "../../system/Authorize";
 import { useHistory } from "react-router-dom";
-import WorkOrderTabPanel from "./WorkOrderTabPanel";
+import MRPTabPanel from "./MRPTabPanel";
 import {
-  workOrderFields,
-  workOrderPKDetailFields,
-  workOrderRequireFields,
-  workOrderRMDetailFields,
-} from "../config/workOrder";
+  mrpFields,
+  mrpPKDetailFields,
+  mrpRequireFields,
+  mrpRMDetailFields,
+} from "../config/mrp";
 import {
   getAllItems,
   getFGMaterialList,
 } from "../../../actions/inventory/itemActions";
 import {
-  createWorkOrder,
+  createMRP,
   getSOReference,
-  updateWorkOrder,
-} from "../../../actions/production/workOrderActions";
+  updateMRP,
+} from "../../../actions/production/mrpActions";
 import ReducerClass from "../../../include/js/ReducerClass";
-import WorkOrderHead from "./WorkOrderHead";
+import MRPHead from "./MRPHead";
 import { sortData, validateFormHead } from "../../../include/js/function_main";
-import { WOContext } from "../../../include/js/context";
+import { MRPContext } from "../../../include/js/context";
 import moment from "moment";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
 
-const WorkOrderCreate = (props) => {
+const MRPCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
 
-  const headReducer = new ReducerClass(data.data_head, null, workOrderFields);
-  const RMReducer = new ReducerClass(
-    data.data_rm,
-    null,
-    workOrderPKDetailFields
-  );
-  const PKReducer = new ReducerClass(
-    data.data_pk,
-    null,
-    workOrderRMDetailFields
-  );
+  const headReducer = new ReducerClass(data.data_head, null, mrpFields);
+  const RMReducer = new ReducerClass(data.data_rm, null, mrpPKDetailFields);
+  const PKReducer = new ReducerClass(data.data_pk, null, mrpRMDetailFields);
   headReducer.setReducer("object");
   RMReducer.setReducer("array");
   PKReducer.setReducer("array");
@@ -64,21 +56,21 @@ const WorkOrderCreate = (props) => {
     dispatch(getSOReference());
 
     headReducer.setDataObject({
-      ...(data.data_head ?? workOrderFields),
+      ...(data.data_head ?? mrpFields),
       commit: 1,
       user_name: auth.user_name,
     });
-    RMReducer.setDataArray(data.data_rm ?? workOrderPKDetailFields);
-    PKReducer.setDataArray(data.data_pk ?? workOrderRMDetailFields);
+    RMReducer.setDataArray(data.data_rm ?? mrpPKDetailFields);
+    PKReducer.setDataArray(data.data_pk ?? mrpRMDetailFields);
   }, []);
 
   useEffect(() => {
     const {
       so_id,
       item_id,
-      wo_qty_produce,
-      wo_qty_percent_spare_rm,
-      wo_qty_percent_spare_pk,
+      mrp_qty_produce,
+      mrp_qty_percent_spare_rm,
+      mrp_qty_percent_spare_pk,
       so_detail_id,
     } = headReducer.data;
     console.log("useEffect change so_id", headReducer.data);
@@ -89,20 +81,20 @@ const WorkOrderCreate = (props) => {
             ? await getFGMaterialList(
                 so_id,
                 item_id,
-                wo_qty_produce,
-                wo_qty_percent_spare_rm,
-                wo_qty_percent_spare_pk
+                mrp_qty_produce,
+                mrp_qty_percent_spare_rm,
+                mrp_qty_percent_spare_pk
               )
             : [];
         console.log("materialDetail", materialDetail);
         RMReducer.setDataArray((await materialDetail.item_formula) ?? []);
         PKReducer.setDataArray((await materialDetail.item_packaging) ?? []);
         headReducer.onChangeHeadValue({
-          wo_lead_time_day_pk: materialDetail.wo_lead_time_day_pk ?? 0,
-          wo_lead_time_day_pk_qa: materialDetail.wo_lead_time_day_pk_qa ?? 0,
-          wo_lead_time_day_rm: materialDetail.wo_lead_time_day_rm ?? 0,
-          wo_lead_time_day_rm_qa: materialDetail.wo_lead_time_day_rm_qa ?? 0,
-          wo_qty_produce_ref: materialDetail.item_qty_produce_ref ?? 0,
+          mrp_lead_time_day_pk: materialDetail.mrp_lead_time_day_pk ?? 0,
+          mrp_lead_time_day_pk_qa: materialDetail.mrp_lead_time_day_pk_qa ?? 0,
+          mrp_lead_time_day_rm: materialDetail.mrp_lead_time_day_rm ?? 0,
+          mrp_lead_time_day_rm_qa: materialDetail.mrp_lead_time_day_rm_qa ?? 0,
+          mrp_qty_produce_ref: materialDetail.item_qty_produce_ref ?? 0,
           branch_id: auth.branch_id,
           item_id_ref: materialDetail.item_id_ref,
           item_qty_produce_ref: materialDetail.item_qty_produce_ref ?? 0,
@@ -118,9 +110,9 @@ const WorkOrderCreate = (props) => {
     getMaterial();
   }, [
     headReducer.data.so_detail_id,
-    headReducer.data.wo_qty_produce,
-    headReducer.data.wo_qty_percent_spare_rm,
-    headReducer.data.wo_qty_percent_spare_pk,
+    headReducer.data.mrp_qty_produce,
+    headReducer.data.mrp_qty_percent_spare_rm,
+    headReducer.data.mrp_qty_percent_spare_pk,
   ]);
   useEffect(() => {
     // GET LOG
@@ -137,8 +129,8 @@ const WorkOrderCreate = (props) => {
       "Home",
       "Operations",
       "MRP",
-      headReducer.data.wo_no ? "Edit" : "Create",
-      headReducer.data.wo_no && headReducer.data.wo_no,
+      headReducer.data.mrp_no ? "Edit" : "Create",
+      headReducer.data.mrp_no && headReducer.data.mrp_no,
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
@@ -149,7 +141,7 @@ const WorkOrderCreate = (props) => {
     },
     create: "",
     save: "function",
-    discard: "/production/operations/wo",
+    discard: "/production/operations/mrp",
     onSave: (e) => {
       //e.preventDefault();
       console.log("Save");
@@ -172,28 +164,23 @@ const WorkOrderCreate = (props) => {
         });
         return false;
       }
-      const validate = validateFormHead(
-        headReducer.data,
-        workOrderRequireFields
-      );
+      const validate = validateFormHead(headReducer.data, mrpRequireFields);
       console.log(validate);
       if (validate.validate) {
         const saveData = {
           data_head: headReducer.data,
           data_material: sortData(RMReducer.data.concat(PKReducer.data)),
         };
-        headReducer.data.wo_id
+        headReducer.data.mrp_id
           ? dispatch(
-              updateWorkOrder(
-                headReducer.data.wo_id,
+              updateMRP(
+                headReducer.data.mrp_id,
                 saveData,
                 auth.user_name,
                 redirect_to_view
               )
             )
-          : dispatch(
-              createWorkOrder(saveData, auth.user_name, redirect_to_view)
-            );
+          : dispatch(createMRP(saveData, auth.user_name, redirect_to_view));
       }
     },
     onEdit: (e) => {
@@ -210,7 +197,7 @@ const WorkOrderCreate = (props) => {
   };
 
   const redirect_to_view = (id) => {
-    history.push("/production/operations/wo/view/" + (id ? id : "new"));
+    history.push("/production/operations/mrp/view/" + (id ? id : "new"));
   };
 
   const headContextValue = useMemo(() => {
@@ -224,15 +211,15 @@ const WorkOrderCreate = (props) => {
     };
   }, [readOnly, headReducer, RMReducer, PKReducer]);
   return (
-    <WOContext.Provider value={headContextValue}>
+    <MRPContext.Provider value={headContextValue}>
       <MainLayout {...config}>
         <div id="form">
           <Row className="col-2">
             <Col span={8}>
               <h2>
                 <strong>
-                  {headReducer.data.wo_id ? "Edit" : "Create"} MRP
-                  {headReducer.data.wo_no && " #" + headReducer.data.wo_no}
+                  {headReducer.data.mrp_id ? "Edit" : "Create"} MRP
+                  {headReducer.data.mrp_no && " #" + headReducer.data.mrp_no}
                 </strong>
               </h2>
             </Col>
@@ -242,17 +229,17 @@ const WorkOrderCreate = (props) => {
             </Col>
             <Col span={2} style={{ textAlign: "right" }}>
               <Text className="text-view">
-                {headReducer.data.wo_created ?? moment().format("DD/MM/YYYY")}
+                {headReducer.data.mrp_created ?? moment().format("DD/MM/YYYY")}
               </Text>
             </Col>
           </Row>
-          <WorkOrderHead />
-          <WorkOrderTabPanel />
+          <MRPHead />
+          <MRPTabPanel />
         </div>
         <Comments data={dataComments} />
       </MainLayout>
-    </WOContext.Provider>
+    </MRPContext.Provider>
   );
 };
 
-export default React.memo(WorkOrderCreate);
+export default React.memo(MRPCreate);

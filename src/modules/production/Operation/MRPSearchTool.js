@@ -6,20 +6,18 @@ import { useSelector } from "react-redux";
 import CustomSelect from "../../../components/CustomSelect";
 import moment from "moment";
 const { RangePicker } = DatePicker;
-const WorkOrderSearchTool = ({ onChangeSeach }) => {
+const MRPSearchTool = ({ onChangeSeach }) => {
   const { item_list } = useSelector((state) => state.inventory.master_data);
-  const { workOrderList } = useSelector(
-    (state) => state.production.operations.workOrder
-  );
+  const { mrpList } = useSelector((state) => state.production.operations.mrp);
   const [state, setState] = useState({
-    wo_id: null,
-    wo_no_description: null,
+    mrp_id: null,
+    mrp_no_description: null,
     item_id: null,
     item_no_name: null,
-    wo_plan_start_date: null,
-    wo_plan_end_date: null,
-    wo_due_date_start: null,
-    wo_due_date_end: null,
+    mrp_plan_start_date: null,
+    mrp_plan_end_date: null,
+    mrp_due_date_start: null,
+    mrp_due_date_end: null,
   });
   const changeState = (stateKeyValue) => {
     setState({
@@ -29,14 +27,14 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
   };
   const reset_state = () => {
     setState({
-      wo_id: null,
-      wo_no_description: null,
+      mrp_id: null,
+      mrp_no_description: null,
       item_id: null,
       item_no_name: null,
-      wo_plan_start_date: null,
-      wo_plan_end_date: null,
-      wo_due_date_start: null,
-      wo_due_date_end: null,
+      mrp_plan_start_date: null,
+      mrp_plan_end_date: null,
+      mrp_due_date_start: null,
+      mrp_due_date_end: null,
     });
   };
   useEffect(() => {
@@ -55,22 +53,22 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
         <Row className="col-2 row-margin-vertical">
           <Col span={2}></Col>
           <Col span={2}>
-            <Text strong>WO Code :</Text>
+            <Text strong>MRP Code :</Text>
           </Col>
           <Col span={8}>
             <CustomSelect
               allowClear
               showSearch
-              placeholder={"WO Code"}
-              field_id="wo_id"
-              field_name="wo_no_description"
-              value={state.wo_no_description}
-              data={workOrderList}
+              placeholder={"MRP Code"}
+              field_id="mrp_id"
+              field_name="mrp_no_description"
+              value={state.mrp_no_description}
+              data={mrpList}
               onChange={(data, option) => {
                 data && data
                   ? changeState({
-                      wo_id: data,
-                      wo_no_description: option.title,
+                      mrp_id: data,
+                      mrp_no_description: option.title,
                       item_id: option.data.item_id,
                       item_no_name: option.data.item_no_name,
                     })
@@ -86,25 +84,25 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
           <Col span={8}>
             <RangePicker
               format={"DD/MM/YYYY"}
-              name="wo_plan_start_date"
+              name="mrp_plan_start_date"
               className="full-width"
               value={[
-                state.wo_plan_start_date
-                  ? moment(state.wo_plan_start_date, "DD/MM/YYYY")
+                state.mrp_plan_start_date
+                  ? moment(state.mrp_plan_start_date, "DD/MM/YYYY")
                   : "",
-                state.wo_plan_end_date
-                  ? moment(state.wo_plan_end_date, "DD/MM/YYYY")
+                state.mrp_plan_end_date
+                  ? moment(state.mrp_plan_end_date, "DD/MM/YYYY")
                   : "",
               ]}
               onChange={(data) => {
                 data
                   ? changeState({
-                      wo_plan_start_date: data[0].format("DD/MM/YYYY"),
-                      wo_plan_end_date: data[1].format("DD/MM/YYYY"),
+                      mrp_plan_start_date: data[0].format("DD/MM/YYYY"),
+                      mrp_plan_end_date: data[1].format("DD/MM/YYYY"),
                     })
                   : changeState({
-                      wo_plan_start_date: null,
-                      wo_plan_end_date: null,
+                      mrp_plan_start_date: null,
+                      mrp_plan_end_date: null,
                     });
               }}
             />
@@ -149,25 +147,25 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
           <Col span={8}>
             <RangePicker
               format={"DD/MM/YYYY"}
-              name="wo_due_date"
+              name="mrp_due_date"
               className="full-width"
               value={[
-                state.wo_due_date_start
-                  ? moment(state.wo_due_date_start, "DD/MM/YYYY")
+                state.mrp_due_date_start
+                  ? moment(state.mrp_due_date_start, "DD/MM/YYYY")
                   : "",
-                state.wo_due_date_end
-                  ? moment(state.wo_due_date_end, "DD/MM/YYYY")
+                state.mrp_due_date_end
+                  ? moment(state.mrp_due_date_end, "DD/MM/YYYY")
                   : "",
               ]}
               onChange={(data) => {
                 data
                   ? changeState({
-                      wo_due_date_start: data[0].format("DD/MM/YYYY"),
-                      wo_due_date_end: data[1].format("DD/MM/YYYY"),
+                      mrp_due_date_start: data[0].format("DD/MM/YYYY"),
+                      mrp_due_date_end: data[1].format("DD/MM/YYYY"),
                     })
                   : changeState({
-                      wo_due_date_start: null,
-                      wo_due_date_end: null,
+                      mrp_due_date_start: null,
+                      mrp_due_date_end: null,
                     });
               }}
             />
@@ -200,4 +198,4 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
   );
 };
 
-export default React.memo(WorkOrderSearchTool);
+export default React.memo(MRPSearchTool);

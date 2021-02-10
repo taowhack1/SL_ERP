@@ -34,7 +34,7 @@ const { Item } = Form;
 const initialStateHead = work_center_fields;
 const initialStateDetail = [work_center_detail_fields];
 
-const WorkOrderCreate = (props) => {
+const MRPCreate = (props) => {
   const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
@@ -65,8 +65,8 @@ const WorkOrderCreate = (props) => {
       "Home",
       "Operations",
       "Work Order",
-      data_head.work_order_no ? "Edit" : "Create",
-      data_head.work_order_no && data_head.work_order_no,
+      data_head.mrp_no ? "Edit" : "Create",
+      data_head.mrp_no && data_head.mrp_no,
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
@@ -77,7 +77,7 @@ const WorkOrderCreate = (props) => {
     },
     create: "",
     save: "function",
-    discard: "/production/operations/wo",
+    discard: "/production/operations/mrp",
     onSave: (e) => {
       //e.preventDefault();
       console.log("Save");
@@ -137,8 +137,8 @@ const WorkOrderCreate = (props) => {
           <Col span={8}>
             <h2>
               <strong>
-                {data_head.work_order_id ? "Edit" : "Create"} Work Order{" "}
-                {data_head.work_order_no && "#" + data_head.work_order_no}
+                {data_head.mrp_id ? "Edit" : "Create"} Work Order{" "}
+                {data_head.mrp_no && "#" + data_head.mrp_no}
               </strong>
             </h2>
           </Col>
@@ -147,7 +147,7 @@ const WorkOrderCreate = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{data_head.work_order_created}</Text>
+            <Text className="text-view">{data_head.mrp_created}</Text>
           </Col>
         </Row>
 
@@ -163,7 +163,7 @@ const WorkOrderCreate = (props) => {
             <Col span={24}>
               <Item
                 // className="ml-1"
-                name={"work_order_description"}
+                name={"mrp_description"}
                 label={"Description / Job name"}
                 validateTrigger={["onChange", "onBlur"]}
                 style={{ fontWeight: "bold" }}
@@ -254,4 +254,4 @@ const WorkOrderCreate = (props) => {
   );
 };
 
-export default WorkOrderCreate;
+export default MRPCreate;

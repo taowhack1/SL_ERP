@@ -52,9 +52,9 @@ import CustomerCreate from "./modules/sales/Customer_Create";
 
 import Production from "./modules/production/Production";
 // Operation
-import WorkOrderMain from "./modules/production/Operation/WorkOrderMain";
-import WorkOrderCreate from "./modules/production/Operation/WorkOrderCreate";
-import WorkOrderView from "./modules/production/Operation/WorkOrderView";
+import MRPMain from "./modules/production/Operation/MRPMain";
+import MRPCreate from "./modules/production/Operation/MRPCreate";
+import MRPView from "./modules/production/Operation/MRPView";
 // Master Data
 import WorkCenter from "./modules/production/WorkCenter";
 import WorkCenterCreate from "./modules/production/WorkCenterCreate";
@@ -441,21 +441,21 @@ const App = (props) => {
               <Production />
             </Route>
             {/* PRODUCTION OPERATION */}
-            <Route exact path="/production/operations/wo">
-              <WorkOrderMain />
+            <Route exact path="/production/operations/mrp">
+              <MRPMain />
             </Route>
-            <Route exact path="/production/operations/wo/create">
-              <WorkOrderCreate />
+            <Route exact path="/production/operations/mrp/create">
+              <MRPCreate />
             </Route>
             <Route
               exact
-              path="/production/operations/wo/view/:id"
-              component={WorkOrderView}
+              path="/production/operations/mrp/view/:id"
+              component={MRPView}
             />
             <Route
               exact
-              path="/production/operations/wo/edit/:id"
-              component={WorkOrderCreate}
+              path="/production/operations/mrp/edit/:id"
+              component={MRPCreate}
             />
 
             {/* PRODUCTION MASTER DATA */}

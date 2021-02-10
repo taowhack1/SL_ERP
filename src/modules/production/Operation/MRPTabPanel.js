@@ -1,14 +1,14 @@
 import { Row, Col, Tabs } from "antd";
 import React, { useContext } from "react";
-import TabWorkOrderDetail from "./TabWorkOrderDetail";
-import TabWorkOrderRM from "./TabWorkOrderRM";
-import TabWorkOrderPKDetail from "./TabWorkOrderPKDetail";
-import TabWorkOrderRemark from "./TabWorkOrderRemark";
-import { WOContext } from "../../../include/js/context";
+import TabMRPDetail from "./TabMRPDetail";
+import TabMRPRM from "./TabMRPRM";
+import TabMRPPKDetail from "./TabMRPPKDetail";
+import TabMRPRemark from "./TabMRPRemark";
+import { MRPContext } from "../../../include/js/context";
 
-const WorkOrderTabPanel = () => {
-  const { readOnly } = useContext(WOContext);
-  console.log("WorkOrderTabPanel");
+const MRPTabPanel = () => {
+  const { readOnly } = useContext(MRPContext);
+  console.log("MRPTabPanel");
   return (
     <Row className="col-2">
       <Col span={24}>
@@ -22,7 +22,7 @@ const WorkOrderTabPanel = () => {
             }
             key={"1"}
           >
-            <TabWorkOrderDetail />
+            <TabMRPDetail />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={
@@ -33,7 +33,7 @@ const WorkOrderTabPanel = () => {
             }
             key={"2"}
           >
-            <TabWorkOrderRM />
+            <TabMRPRM />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={
@@ -44,13 +44,13 @@ const WorkOrderTabPanel = () => {
             }
             key={"3"}
           >
-            <TabWorkOrderPKDetail />
+            <TabMRPPKDetail />
           </Tabs.TabPane>
           <Tabs.TabPane
             tab={<span className="tab_pane">{"Notes"}</span>}
             key={"4"}
           >
-            <TabWorkOrderRemark />
+            <TabMRPRemark />
           </Tabs.TabPane>
         </Tabs>
       </Col>
@@ -58,4 +58,4 @@ const WorkOrderTabPanel = () => {
   );
 };
 
-export default React.memo(WorkOrderTabPanel);
+export default React.memo(MRPTabPanel);

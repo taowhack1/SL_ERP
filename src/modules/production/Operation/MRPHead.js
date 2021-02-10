@@ -2,16 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { Row, Col, Input, Typography } from "antd";
 import CustomSelect from "../../../components/CustomSelect";
 import { useSelector } from "react-redux";
-import { WOContext } from "../../../include/js/context";
+import { MRPContext } from "../../../include/js/context";
 const { Text } = Typography;
-const WorkOrderHead = () => {
+const MRPHead = () => {
   const SOList = useSelector(
-    (state) => state.production.operations.workOrder.workOrder.data_so_ref
+    (state) => state.production.operations.mrp.mrp.data_so_ref
   );
-  const { headReducer, readOnly } = useContext(WOContext);
+  const { headReducer, readOnly } = useContext(MRPContext);
   const {
-    wo_description,
-    wo_due_date,
+    mrp_description,
+    mrp_due_date,
     so_id,
     so_no_description,
     item_id,
@@ -19,8 +19,8 @@ const WorkOrderHead = () => {
     so_detail_id,
   } = headReducer.data;
   const [state, setState] = useState({
-    wo_description: wo_description,
-    wo_due_date: wo_due_date,
+    mrp_description: mrp_description,
+    mrp_due_date: mrp_due_date,
     so_id: so_id,
     so_no_description: so_no_description,
     item_id: item_id,
@@ -34,8 +34,8 @@ const WorkOrderHead = () => {
   const Reset = () => {
     headReducer.resetDataObject();
     setState({
-      wo_description: null,
-      wo_due_date: null,
+      mrp_description: null,
+      mrp_due_date: null,
       so_id: null,
       so_no_description: null,
       item_id: null,
@@ -57,19 +57,19 @@ const WorkOrderHead = () => {
           <Col span={24}>
             {readOnly ? (
               <Text className="text-value text-left">
-                {state.wo_description}
+                {state.mrp_description}
               </Text>
             ) : (
               <Input
-                name="wo_description"
+                name="mrp_description"
                 required
                 placeholder={"Description / Job Name."}
                 onChange={(e) =>
                   onChange({
-                    wo_description: e.target.value,
+                    mrp_description: e.target.value,
                   })
                 }
-                value={state.wo_description}
+                value={state.mrp_description}
               />
             )}
           </Col>
@@ -107,8 +107,8 @@ const WorkOrderHead = () => {
                               so_detail: option.data.so_detail,
                               item_id: null,
                               item_no_name: null,
-                              wo_due_date: null,
-                              wo_qty_produce: 0,
+                              mrp_due_date: null,
+                              mrp_qty_produce: 0,
                               uom_id: null,
                               uom_no: null,
                             })
@@ -124,7 +124,7 @@ const WorkOrderHead = () => {
                 </Col>
                 <Col span={18}>
                   <Text className="text-view">
-                    {state.wo_due_date ?? "DD/MM/YYYY"}
+                    {state.mrp_due_date ?? "DD/MM/YYYY"}
                   </Text>
                 </Col>
               </Row>
@@ -159,8 +159,8 @@ const WorkOrderHead = () => {
                               so_detail_id: option.data.so_detail_id,
                               item_id: option.data.item_id,
                               item_no_name: option.data.item_no_name,
-                              wo_due_date: option.data.so_detail_delivery_date,
-                              wo_qty_produce:
+                              mrp_due_date: option.data.so_detail_delivery_date,
+                              mrp_qty_produce:
                                 option.data.tg_so_detail_qty_balance,
                               uom_id: option.data.uom_id,
                               uom_no: option.data.uom_no,
@@ -169,8 +169,8 @@ const WorkOrderHead = () => {
                               so_detail_id: null,
                               item_id: null,
                               item_no_name: null,
-                              wo_due_date: null,
-                              wo_qty_produce: 0,
+                              mrp_due_date: null,
+                              mrp_qty_produce: 0,
                               uom_id: null,
                               uom_no: null,
                             });
@@ -187,4 +187,4 @@ const WorkOrderHead = () => {
   );
 };
 
-export default React.memo(WorkOrderHead);
+export default React.memo(MRPHead);

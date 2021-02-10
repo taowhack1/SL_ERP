@@ -1,16 +1,16 @@
 import { Row, Col, Typography } from "antd";
 import { ProfileOutlined } from "@ant-design/icons";
 import React, { useContext } from "react";
-import { workOrderPKColumns } from "../config/workOrder";
+import { mrpPKColumns } from "../config/mrp";
 import CustomTable from "../../../components/CustomTable";
-import { WOContext } from "../../../include/js/context";
+import { MRPContext } from "../../../include/js/context";
 
 const { Text } = Typography;
 
-const TabWorkOrderPKDetail = () => {
-  const { PKReducer, readOnly } = useContext(WOContext);
+const TabMRPPKDetail = () => {
+  const { PKReducer, readOnly } = useContext(MRPContext);
 
-  console.log("TabWorkOrderPKDetail", PKReducer.data);
+  console.log("TabMRPPKDetail", PKReducer.data);
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
@@ -31,7 +31,7 @@ const TabWorkOrderPKDetail = () => {
         }}
         pageSize={10}
         focusLastPage={true}
-        columns={workOrderPKColumns(
+        columns={mrpPKColumns(
           readOnly,
           PKReducer.onChangeDetailValue,
           PKReducer.deleteRow,
@@ -45,4 +45,4 @@ const TabWorkOrderPKDetail = () => {
   );
 };
 
-export default React.memo(TabWorkOrderPKDetail);
+export default React.memo(TabMRPPKDetail);
