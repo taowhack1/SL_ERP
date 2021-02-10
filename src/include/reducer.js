@@ -1,3 +1,5 @@
+import { data } from "jquery";
+import { api_create_quotation } from "./js/api";
 import { sortData, sortDataWithoutCommit } from "./js/function_main";
 
 export const mainReducer = (state, action) => {
@@ -56,6 +58,7 @@ export const mainReducer = (state, action) => {
           : line;
       });
       return state;
+    case "SET_ARRAY":
     case "SET_DETAIL":
       return sortData(action.payload);
     case "SET_DETAIL_WOC":
@@ -73,5 +76,48 @@ export const mainReducer = (state, action) => {
       return { ...state, ...action.payload };
     case "SEARCH_DETAIL":
       return action.payload;
+    case "ADD_ROW_ARRAY_OBJ_DETAIL":
+      return state.map((obj, index) =>
+        obj.id === action.payload.headId
+          ? {
+              ...obj,
+              [action.payload.key]: sortData([
+                ...obj[action.payload.key],
+                action.payload.data,
+              ]),
+            }
+          : obj
+      );
+    case "DEL_ROW_ARRAY_OBJ_DETAIL":
+      return state.map((obj) =>
+        obj.id === action.payload.headId
+          ? {
+              ...obj,
+              [action.payload.key]: sortData(
+                obj[action.payload.key].filter(
+                  (obj) => obj.id !== action.payload.rowId
+                )
+              ),
+            }
+          : obj
+      );
+    case "CHANGE_OBJ_ARRAY_DETAIL_VALUE":
+      console.log(action.payload);
+      const newState = state.map((obj) =>
+        obj.id === action.payload.headId
+          ? {
+              ...obj,
+              [action.payload.key]: obj[action.payload.key].map((objDetail) =>
+                objDetail.id === action.payload.rowId
+                  ? { ...objDetail, ...action.payload.data }
+                  : objDetail
+              ),
+            }
+          : obj
+      );
+      console.log("newState", newState);
+      return newState;
+    default:
+      return state;
   }
 };

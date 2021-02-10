@@ -108,7 +108,7 @@ export const item_fields = {
   item_control_id: 1,
   item_control_name: "None",
   item_effective_date: null,
-  item_pre_run_no: ["-", "--", "SRL", "A", "-----"],
+  item_pre_run_no: ["-", "--", "SRL", "A", "------"],
   customer_id: 1,
   customer_no_name: "[ CUS0001 ] Siri Laboratories Co., Ltd.",
   item_qa_lead_time_day: 0,
@@ -538,6 +538,30 @@ export const item_production_process_columns = [
   },
 ];
 
+// PART DETAIL
+
+export const item_part_specification_detail_fields = {
+  id: 0,
+  item_part_specification_id: null,
+  item_part_specification_detail_id: null,
+  item_part_specification_detail_condition: null,
+  item_part_specification_detail_set: "",
+  item_part_specification_detail_remark: null,
+};
+//PART FORMULA
+
+export const item_formula_detail_fields = {
+  id: 0,
+  item_formula_id: null,
+  item_id: null,
+  item_id_formula: null,
+  item_formula_percent_qty: 0,
+  item_part_specification_id: null,
+  item_formula_remark: null,
+  machine_id_formula: null,
+  commit: 1,
+};
+
 // PART
 
 export const item_part_specification_fields = {
@@ -566,30 +590,11 @@ export const item_part_specification_fields = {
   machine_name_sub: null,
   machine_no_name_sub: null,
   data_id: 0,
+  item_part_specification_detail: [item_part_specification_detail_fields],
+  item_formula: [item_formula_detail_fields],
+  item_part_mix: [],
 };
-// PART DETAIL
 
-export const item_part_specification_detail_fields = {
-  id: 0,
-  item_part_specification_id: null,
-  item_part_specification_detail_id: null,
-  item_part_specification_detail_condition: null,
-  item_part_specification_detail_set: null,
-  item_part_specification_detail_remark: null,
-};
-//PART FORMULA
-
-export const item_formula_detail_fields = {
-  id: 0,
-  item_formula_id: null,
-  item_id: null,
-  item_id_formula: null,
-  item_formula_percent_qty: 0,
-  item_part_specification_id: null,
-  item_formula_remark: null,
-  machine_id_formula: null,
-  commit: 1,
-};
 // PRODUCTION PROCESS
 export const item_production_process_fields = {
   id: null,

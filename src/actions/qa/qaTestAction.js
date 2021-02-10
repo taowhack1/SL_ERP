@@ -46,7 +46,6 @@ export const get_qa_conditions_master = (
           conditions_specification: res[1].value ? res[1].value.data[0] : [],
           conditions_method: res[2].value ? res[2].value.data[0] : [],
         };
-        console.log("conditions_master", conditions_master);
         dispatch({ type: GET_QA_MASTER_DATA, payload: conditions_master });
         redirect && redirect(type_id);
       })

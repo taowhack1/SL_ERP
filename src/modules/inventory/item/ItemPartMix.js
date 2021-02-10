@@ -8,27 +8,28 @@ import { getFieldNameById, sortData } from "../../../include/js/function_main";
 import { itemPartMixColumns, item_part_mix_fields } from "../config/item";
 import { reducer } from "../reducers";
 
-const ItemPartMix = ({ partId }) => {
-  const { PartReducer, PMReducer, readOnly } = useContext(ItemContext);
-  const [state, stateDispatch] = useReducer(
-    reducer,
-    sortData(PMReducer.data[partId])
-  );
+const ItemPartMix = ({ id, partMix }) => {
+  const { statePart, statePartDispatch, readOnly } = useContext(ItemContext);
+  const [state, stateDispatch] = useReducer(reducer, sortData(partMix));
   const addNewRow = () => {
-    stateDispatch({
-      type: "ADD_ROW",
-      payload: item_part_mix_fields,
-    });
-    PMReducer.addNewRow(item_part_mix_fields, partId);
-  };
-  const onDelete = (id) => {
-    stateDispatch({
-      type: "DEL_ROW",
+    statePartDispatch({
+      type: "ADD_ROW_ARRAY_OBJ_DETAIL",
       payload: {
-        id: id,
+        headId: id,
+        key: "item_part_mix",
+        data: item_part_mix_fields,
       },
     });
-    PMReducer.deleteRow2D(partId, id);
+  };
+  const onDelete = (rowId) => {
+    statePartDispatch({
+      type: "DEL_ROW_ARRAY_OBJ_DETAIL",
+      payload: {
+        headId: id,
+        key: "item_part_mix",
+        rowId,
+      },
+    });
   };
   const onChange = (id, data) => {
     stateDispatch({
@@ -39,25 +40,34 @@ const ItemPartMix = ({ partId }) => {
       },
     });
   };
-  const Save = (id2) => {
-    PMReducer.onChangeDetailValue2D(partId, id2, state[id2]);
+  const Save = (rowId) => {
+    statePartDispatch({
+      type: "CHANGE_OBJ_ARRAY_DETAIL_VALUE",
+      payload: {
+        headId: id,
+        rowId,
+        key: "item_part_mix",
+        data: state[rowId],
+      },
+    });
   };
 
   useEffect(() => {
     stateDispatch({
       type: "SET_DETAIL",
-      payload: PMReducer.data[partId],
+      payload: partMix,
     });
-  }, [PMReducer.data[partId].length]);
+  }, [partMix.length]);
 
   const getPartName = (item_part_sort) => {
     return getFieldNameById(
-      PartReducer.data,
+      statePart,
       item_part_sort,
       "item_part_sort",
       "item_part_description"
     );
   };
+  console.log("PartMix", partMix, state);
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
@@ -80,7 +90,7 @@ const ItemPartMix = ({ partId }) => {
           getPartName,
           Save,
           {
-            data_part: PartReducer.data,
+            data_part: statePart,
           }
         )}
         dataSource={state}

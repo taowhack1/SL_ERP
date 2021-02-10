@@ -1,42 +1,44 @@
 import { Row, Col, Typography } from "antd";
 import { ProfileOutlined } from "@ant-design/icons";
-import React, { useContext, useEffect, useReducer } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import { itemFormulaColumns, item_formula_detail_fields } from "../config/item";
-import { reducer } from "../reducers";
 import CustomTable from "../../../components/CustomTable";
 import { ItemContext } from "../../../include/js/context";
 import { sortData } from "../../../include/js/function_main";
+import { mainReducer } from "../../../include/reducer";
 
 const { Text } = Typography;
 
-const BulkFormula = ({ partId }) => {
+const BulkFormula = ({ id, formula }) => {
   const {
-    FormulaReducer,
+    statePartDispatch,
     readOnly,
     RMList,
     formulaPercent,
     sumPercent,
   } = useContext(ItemContext);
-  const [state, stateDispatch] = useReducer(
-    reducer,
-    sortData(FormulaReducer.data[partId])
-  );
+  const [state, stateDispatch] = useReducer(mainReducer, sortData(formula));
+  const [isUpdatePercent, setUpdatePercent] = useState(true);
   const addNewRow = () => {
-    stateDispatch({
-      type: "ADD_ROW",
-      payload: item_formula_detail_fields,
-    });
-    FormulaReducer.addNewRow(item_formula_detail_fields, partId);
-  };
-  const onDelete = (id) => {
-    stateDispatch({
-      type: "DEL_ROW",
+    statePartDispatch({
+      type: "ADD_ROW_ARRAY_OBJ_DETAIL",
       payload: {
-        id: id,
+        headId: id,
+        key: "item_formula",
+        data: item_formula_detail_fields,
       },
     });
-    FormulaReducer.deleteRow2D(partId, id);
-    sumPercent(FormulaReducer.data, "item_formula_percent_qty");
+  };
+  const onDelete = (rowId) => {
+    statePartDispatch({
+      type: "DEL_ROW_ARRAY_OBJ_DETAIL",
+      payload: {
+        headId: id,
+        key: "item_formula",
+        rowId,
+      },
+    });
+    setUpdatePercent(true);
   };
   const onChange = (id, data) => {
     stateDispatch({
@@ -47,18 +49,32 @@ const BulkFormula = ({ partId }) => {
       },
     });
   };
-  const Save = (id2, keySave) => {
-    FormulaReducer.onChangeDetailValue2D(partId, id2, state[id2]);
-    keySave === "item_formula_percent_qty" &&
-      sumPercent(FormulaReducer.data, "item_formula_percent_qty");
+  const Save = (rowId, keySave) => {
+    console.log("Saveeeeee", id, state[rowId]);
+    statePartDispatch({
+      type: "CHANGE_OBJ_ARRAY_DETAIL_VALUE",
+      payload: {
+        headId: id,
+        rowId,
+        key: "item_formula",
+        data: state[rowId],
+      },
+    });
+    keySave === "item_formula_percent_qty" && setUpdatePercent(true);
   };
   useEffect(() => {
     stateDispatch({
       type: "SET_DETAIL",
-      payload: FormulaReducer.data[partId],
+      payload: formula,
     });
-  }, [FormulaReducer.data[partId].length]);
-  console.log("bulkformula");
+  }, [formula.length]);
+  useEffect(() => {
+    if (isUpdatePercent) {
+      sumPercent();
+      setUpdatePercent(false);
+    }
+  }, [isUpdatePercent]);
+  console.log("bulkformula", formula, state);
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">

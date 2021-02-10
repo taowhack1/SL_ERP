@@ -67,6 +67,7 @@ export const get_disburse_by_id = (disburse_id, user_name, redirect) => async (
             header_config
           )
           .then(async (res) => {
+            console.log("res sub Detail ", res);
             console.log("details_temp before", details_temp);
             const sub_detail = res.data[0];
             await details_temp.map((detail) => {
@@ -79,6 +80,7 @@ export const get_disburse_by_id = (disburse_id, user_name, redirect) => async (
             console.log("details_temp after", details_temp);
             return details_temp;
           });
+        console.log("disburse detail ", details);
         return details;
       });
       console.log(`GET_DISBURSE_BY_ID ${disburse_id}/${user_name}`, disburse);

@@ -17,19 +17,8 @@ const ReturnDetail = () => {
   const onSaveDetail = () => saveForm({ return_detail: state });
   useEffect(() => {
     stateDispatch({ type: "SET_DETAIL", payload: return_detail });
-    // return () => stateDispatch({ type: "RESET_DETAIL" });
   }, [return_detail]);
 
-  // console.log("readOnly", readOnly);
-  // const [state, setState] = useState(return_detail);
-  // const addLine = () => {
-  //   setState([...state, { ...initialState, id: state.length }]);
-  // };
-  // const onChange = (id, data) => {
-  //   setState(state.map((obj) => (obj.id === id ? { ...obj, ...data } : obj)));
-  // };
-  // const delLine = (id) => setState(state.filter((obj) => obj.id !== id));
-  console.log("ReturnDetail Render", state);
   return (
     <>
       <CustomTable

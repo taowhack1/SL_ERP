@@ -3,8 +3,7 @@ import { getSelfStepStatus } from "../../../../include/js/function_main";
 import CustomColumnTitle from "../../../../components/CustomColumnTitle";
 import moment from "moment";
 import Text from "antd/lib/typography/Text";
-import { InputNumber, Popconfirm } from "antd";
-import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
+import { InputNumber } from "antd";
 import { convertDigit, numberFormat } from "../../../../include/js/main_config";
 const dateNow = moment().format("DD/MM/YYYY");
 export const returnListColumns = [
@@ -47,20 +46,10 @@ export const returnListColumns = [
     align: "center",
     render: (value, record) => value ?? "-",
   },
-  // {
-  //   title: "Vendor",
-  //   dataIndex: "vendor_no_name",
-  //   key: "vendor_no_name",
-  //   width: "20%",
-  //   align: "left",
-  //   ellipsis: true,
-  //   render: (value, record) => value ?? "-",
-  // },
   {
     title: "Description",
     dataIndex: "return_description",
     key: "return_description",
-    // width: "15%",
     align: "left",
     ellipsis: true,
     render: (value, record) => value ?? "-",
@@ -74,19 +63,6 @@ export const returnListColumns = [
     ellipsis: true,
     render: (value, record) => value ?? "-",
   },
-  // {
-  //   title: "Total Value",
-  //   dataIndex: "tg_receive_total_amount",
-  //   key: "tg_receive_total_amount",
-  //   width: "10%",
-  //   align: "right",
-  //   ellipsis: true,
-  //   sorter: {
-  //     compare: (a, b) => a.tg_receive_total_amount - b.tg_receive_total_amount,
-  //     multiple: 3,
-  //   },
-  //   render: (value) => convertDigit(value),
-  // },
   {
     title: "Status",
     dataIndex: "trans_status_name",
@@ -180,7 +156,6 @@ export const returnDetailColumns = (
             onChange(record.id, {
               return_detail_qty: data,
             });
-            // updateAmount();
           }}
           onBlur={onSaveDetail}
         />

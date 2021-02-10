@@ -11,7 +11,6 @@ const ReturnTabs = () => {
     <>
       <Tabs
         defaultActiveKey="1"
-        // type={"card"}
         size={"small"}
         style={{ marginBottom: 32 }}
         className="mt-4"

@@ -36,6 +36,16 @@ const ItemView = (props) => {
     data_file,
     data_filling,
   } = useSelector((state) => state.inventory.item);
+  const [formulaPercent, setPercent] = useState(0);
+  const sumPercent = () => {
+    console.log("sumPercent", data_part);
+    return setPercent(
+      sum2DArrOdjWithField(
+        data_part.map((obj) => obj.item_formula),
+        "item_formula_percent_qty"
+      )
+    );
+  };
 
   const dataComment = useSelector((state) => state.log.comment_log);
   const [remark, setRemark] = useState("");
@@ -71,6 +81,11 @@ const ItemView = (props) => {
   useEffect(() => {
     data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
   }, [data_head]);
+  useEffect(
+    () => sumPercent(),
+
+    [data_part]
+  );
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
@@ -183,27 +198,23 @@ const ItemView = (props) => {
     return {
       readOnly,
       data_file,
-      PartReducer: {
-        data: data_part,
-      },
-      PMReducer: {
-        data: data_part_mix,
-      },
-      PartDetailReducer: {
-        data: data_part_detail,
-      },
-      FormulaReducer: {
-        data: data_formula,
-      },
-      formulaPercent: sum2DArrOdjWithField(
-        data_formula,
-        "item_formula_percent_qty"
-      ),
+      statePart: data_part,
+      // PMReducer: {
+      //   data: data_part_mix,
+      // },
+      // PartDetailReducer: {
+      //   data: data_part_detail,
+      // },
+      // FormulaReducer: {
+      //   data: data_formula,
+      // },
+      formulaPercent,
+      sumPercent,
       filling: data_filling,
       data_head,
     };
-  }, [readOnly, data_file]);
-  console.log("data_head", data_head);
+  }, [readOnly, data_file, formulaPercent]);
+  console.log("data_part", formulaPercent, data_part);
   return (
     <ItemContext.Provider value={ContextValue}>
       <FileContext.Provider value={{ data_file }}>

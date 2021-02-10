@@ -1,22 +1,14 @@
-import { Col, Input, Row, Space } from "antd";
+import { Col, Input, Row } from "antd";
 import Title from "antd/lib/typography/Title";
 import Text from "antd/lib/typography/Text";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import {
-  capitalizeFirstLetter,
-  sortData,
-} from "../../../../include/js/function_main";
+import { sortData } from "../../../../include/js/function_main";
 import CustomLabel from "../../../../components/CustomLabel";
 import CustomSelect from "../../../../components/CustomSelect";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { ReturnContext } from "../../../../include/js/context";
-import { getIssueRefList } from "../../../../actions/inventory/operation/return/returnActions";
-import { SecurityScanTwoTone } from "@ant-design/icons";
 
 const ReturnHead = () => {
-  const dispatch = useDispatch();
-  const { action } = useParams();
   const { data, saveForm, readOnly } = useContext(ReturnContext);
   const { issueRef } = useSelector(
     (state) => state.inventory.operations.issueReturn

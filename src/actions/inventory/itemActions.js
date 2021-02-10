@@ -73,14 +73,6 @@ const bind_vendor_fn = (item_id, data_detail) => {
 
 const bind_part_and_formula = (item_id, data_part) => {
   console.log("bind_part_and_formula");
-  // const data_formula_detail_temp = data_formula_detail.filter(
-  //   (detail) =>
-  //     detail.item_id !== null &&
-  //     detail.item_part_sort !== null &&
-  //     // detail.item_formula_part_no !== null &&
-  //     detail.item_formula_percent_qty !== 0 &&
-  //     detail.commit === 1
-  // );
   return (
     // data_formula_detail_temp.length &&
     axios
@@ -204,9 +196,9 @@ export const createNewItems = (data, user_name, redirect) => async (
     data_head,
     data_detail,
     data_part,
-    data_part_detail,
-    data_part_mix,
-    data_formula,
+    // data_part_detail,
+    // data_part_mix,
+    // data_formula,
     data_qa_detail,
     data_weight_detail,
     data_packaging_detail,
@@ -215,14 +207,14 @@ export const createNewItems = (data, user_name, redirect) => async (
   } = data;
   console.log("createNewItems RawData :", data);
   try {
-    const groupPartData = data_part.map((part, index) => {
-      return {
-        ...part,
-        item_part_specification_detail: data_part_detail[index],
-        item_part_mix: data_part_mix[index],
-        item_formula: data_formula[index],
-      };
-    });
+    // const groupPartData = data_part.map((part, index) => {
+    //   return {
+    //     ...part,
+    //     item_part_specification_detail: data_part_detail[index],
+    //     item_part_mix: data_part_mix[index],
+    //     item_formula: data_formula[index],
+    //   };
+    // });
     axios
       .post(api_url + "/inventory/item", data_head, header_config)
       .then(async (res, rej) => {
@@ -238,8 +230,7 @@ export const createNewItems = (data, user_name, redirect) => async (
           // },
           Promise.allSettled([
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
-            access_right.formula &&
-              bind_part_and_formula(item_id, groupPartData),
+            access_right.formula && bind_part_and_formula(item_id, data_part),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
             access_right.weight && bind_weight(item_id, data_weight_detail),
             access_right.packaging &&
@@ -297,9 +288,9 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
     data_head,
     data_detail,
     data_part,
-    data_part_detail,
-    data_part_mix,
-    data_formula,
+    // data_part_detail,
+    // data_part_mix,
+    // data_formula,
     data_qa_detail,
     data_weight_detail,
     data_packaging_detail,
@@ -308,22 +299,21 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
   } = data;
   console.log("upDateItem RawData :", data);
   try {
-    const groupPartData = data_part.map((part, index) => {
-      return {
-        ...part,
-        item_part_specification_detail: data_part_detail[index],
-        item_part_mix: data_part_mix[index],
-        item_formula: data_formula[index],
-      };
-    });
+    // const groupPartData = data_part.map((part, index) => {
+    //   return {
+    //     ...part,
+    //     item_part_specification_detail: data_part_detail[index],
+    //     item_part_mix: data_part_mix[index],
+    //     item_formula: data_formula[index],
+    //   };
+    // });
     axios
       .put(api_url + "/inventory/item/" + item_id, data_head, header_config)
       .then(async (res) => {
         if (res.status === 200 && res.data[0].length) {
           Promise.allSettled([
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
-            access_right.formula &&
-              bind_part_and_formula(item_id, groupPartData),
+            access_right.formula && bind_part_and_formula(item_id, data_part),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
             access_right.weight && bind_weight(item_id, data_weight_detail),
             access_right.packaging &&
@@ -411,25 +401,37 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         .then((data) => {
           console.log("Promise.allSettled GET ITEM BY ID", data);
           const packingItemData = (data) => {
-            const data_part = sortData(data[2].value.data);
-            let data_part_detail = [];
-            let data_part_mix = [];
-            let data_formula = [];
-            data_part.forEach((part, index) => {
-              data_part_detail.push(
-                sortData(part.item_part_specification_detail)
-              );
-              data_part_mix.push(sortData(part.item_part_mix));
-              data_formula.push(sortData(part.item_formula));
-            });
+            const data_part = sortData(
+              data[2].value.data &&
+                data[2].value.data.map((obj) => {
+                  return {
+                    ...obj,
+                    item_part_specification_detail: sortData(
+                      obj.item_part_specification_detail
+                    ),
+                    item_formula: sortData(obj.item_formula),
+                    item_part_mix: sortData(obj.item_part_mix),
+                  };
+                })
+            );
+            // let data_part_detail = [];
+            // let data_part_mix = [];
+            // let data_formula = [];
+            // data_part.forEach((part, index) => {
+            //   data_part_detail.push(
+            //     sortData(part.item_part_specification_detail)
+            //   );
+            //   data_part_mix.push(sortData(part.item_part_mix));
+            //   data_formula.push(sortData(part.item_formula));
+            // });
             const data_file_temp = data[6].value.data[0];
             const item = {
               data_head: data[0].value.data.main_master,
               data_detail: sortData(data[1].value.data[0]),
               data_part: data_part,
-              data_part_detail: data_part_detail,
-              data_part_mix: data_part_mix,
-              data_formula: data_formula,
+              // data_part_detail: data_part_detail,
+              // data_part_mix: data_part_mix,
+              // data_formula: data_formula,
               data_qa_detail: sortData(data[3].value.data[0]),
               data_weight_detail: sortData(data[4].value.data[0]),
               data_packaging_detail: sortData(data[5].value.data[0]),
@@ -497,10 +499,12 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
             return item;
           };
           const itemData = packingItemData(data);
+          console.log("itemData", itemData);
           dispatch({ type: GET_ITEM_BY_ID, payload: itemData });
           itemData.data_head && redirect && redirect(item_id);
         })
         .catch((error) => {
+          console.log(error);
           message.error({
             content: "Somethings went wrong or Network Error.",
             key: "validate",

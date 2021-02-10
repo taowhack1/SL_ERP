@@ -1,29 +1,33 @@
 import { Input } from "antd";
-import Text from "antd/lib/typography/Text";
 import Title from "antd/lib/typography/Title";
 import React, { useContext, useEffect, useState } from "react";
 import { ItemContext } from "../../../include/js/context";
-const ItemPartName = ({ partId }) => {
-  const { PartReducer, readOnly } = useContext(ItemContext);
+const ItemPartName = ({ id, part }) => {
+  const { statePartDispatch, readOnly } = useContext(ItemContext);
   const [state, setState] = useState({
     onEdit: false,
-    item_part_sort: PartReducer.data[partId].item_part_sort,
-    item_part_description: PartReducer.data[partId].item_part_description,
+    item_part_sort: part.item_part_sort,
+    item_part_description: part.item_part_description,
   });
   const [focus, setFocus] = useState(false);
   const Save = () => {
-    PartReducer.onChangeDetailValue(partId, {
-      item_part_description: state.item_part_description,
+    statePartDispatch({
+      type: "CHANGE_DETAIL_VALUE",
+      payload: {
+        id: id,
+        data: {
+          item_part_description: state.item_part_description,
+        },
+      },
     });
   };
   useEffect(() => {
     setState({
       onEdit: false,
-      item_part_sort: PartReducer.data[partId].item_part_sort,
-      item_part_description: PartReducer.data[partId].item_part_description,
+      item_part_sort: part.item_part_sort,
+      item_part_description: part.item_part_description,
     });
-  }, [PartReducer.data[partId].data_id]);
-
+  }, [part]);
   return (
     <>
       {readOnly ? (

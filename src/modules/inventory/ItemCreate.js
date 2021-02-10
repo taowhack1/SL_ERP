@@ -55,6 +55,7 @@ import ReducerClass from "../../include/js/ReducerClass";
 import { ItemContext } from "../../include/js/context";
 import Barcode from "react-barcode";
 import { convertDigit } from "../../include/js/main_config";
+import { mainReducer } from "../../include/reducer";
 const { Text } = Typography;
 
 const ItemCreate = (props) => {
@@ -64,6 +65,7 @@ const ItemCreate = (props) => {
   const initialStatePackaging = [item_packaging_detail_fields];
   const initialStateWeight = item_weight_detail;
   const initialStateFillingProcess = [fillingProcessFields];
+  const initialStatePart = [item_part_specification_fields];
 
   const readOnly = false;
   const history = useHistory();
@@ -101,27 +103,26 @@ const ItemCreate = (props) => {
     reducer,
     initialStatePackaging
   );
-  const PartReducer = new ReducerClass(
-    data.data_part,
-    null,
-    item_part_specification_fields
+  const [statePart, statePartDispatch] = useReducer(
+    mainReducer,
+    initialStatePart
   );
-  const PartDetailReducer = new ReducerClass(data.data_part_detail, null, [
-    item_part_specification_detail_fields,
-  ]);
-  const PMReducer = new ReducerClass(data.data_part_mix, null, [
-    item_part_mix_fields,
-  ]);
-  const FormulaReducer = new ReducerClass(data.data_formula, null, [
-    item_formula_detail_fields,
-  ]);
-  PartReducer.setReducer(
-    data ? (data.data_head.item_id ? "object" : "array") : "array"
-  );
+  // const PartDetailReducer = new ReducerClass(data.data_part_detail, null, [
+  //   item_part_specification_detail_fields,
+  // ]);
+  // const PMReducer = new ReducerClass(data.data_part_mix, null, [
+  //   item_part_mix_fields,
+  // ]);
+  // const FormulaReducer = new ReducerClass(data.data_formula, null, [
+  //   item_formula_detail_fields,
+  // ]);
+  // PartReducer.setReducer(
+  //   data ? (data.data_head.item_id ? "object" : "array") : "array"
+  // );
   const [filling, setFilling] = useState(initialStateFillingProcess);
-  PartDetailReducer.setReducer("array");
-  PMReducer.setReducer("array");
-  FormulaReducer.setReducer("array");
+  // PartDetailReducer.setReducer("array");
+  // PMReducer.setReducer("array");
+  // FormulaReducer.setReducer("array");
 
   const [data_file, setFile] = useState({
     item_image: null,
@@ -137,9 +138,7 @@ const ItemCreate = (props) => {
   });
 
   const [formulaPercent, setPercent] = useState(0);
-  const sumPercent = useCallback((data, field) => {
-    return setPercent(sum2DArrOdjWithField(data, field));
-  }, []);
+
   useEffect(() => {
     dispatch(get_sale_master_data());
     dispatch(getAllMachine());
@@ -181,11 +180,15 @@ const ItemCreate = (props) => {
           : [item_packaging_detail_fields],
     });
     console.log("data part", data.data_part);
-    PartReducer.setDataArray(data.data_part);
-    PartDetailReducer.setDataArray2D(data.data_part_detail);
-    PMReducer.setDataArray2D(data.data_part_mix);
-    FormulaReducer.setDataArray2D(data.data_formula);
-    sumPercent(data.data_formula, "item_formula_percent_qty");
+    // PartReducer.setDataArray(data.data_part);
+    statePartDispatch({
+      type: "SET_ARRAY",
+      payload: data.data_part ?? [item_part_specification_fields],
+    });
+    // PartDetailReducer.setDataArray2D(data.data_part_detail);
+    // PMReducer.setDataArray2D(data.data_part_mix);
+    // FormulaReducer.setDataArray2D(data.data_formula);
+    sumPercent();
     setFile(data.data_file ?? item_file);
     setFilling(data.data_filling ?? []);
   }, []);
@@ -213,10 +216,10 @@ const ItemCreate = (props) => {
       console.log("Save");
       console.log("SAVE HEAD", data_head);
       console.log("SAVE VENDOR DETAIL", data_detail);
-      console.log("SAVE PART", PartReducer.data);
-      console.log("SAVE PART DETAIL", PartDetailReducer.data);
-      console.log("SAVE PART MIX", PMReducer.data);
-      console.log("SAVE FORMULA", FormulaReducer.data);
+      console.log("SAVE PART", statePart);
+      // console.log("SAVE PART DETAIL", PartDetailReducer.data);
+      // console.log("SAVE PART MIX", PMReducer.data);
+      // console.log("SAVE FORMULA", FormulaReducer.data);
       console.log("SAVE QA", data_qa_detail);
       console.log("SAVE WEIGHT", data_weight_detail);
       console.log("SAVE PACKAGING", data_packaging_detail);
@@ -227,7 +230,7 @@ const ItemCreate = (props) => {
       const validate = validateFormHead(data_head, item_require_fields);
       console.log("formulaPercent", formulaPercent);
       if (
-        PartReducer.data.length > 1 &&
+        statePart.length > 1 &&
         convertDigit(formulaPercent, 4) !== convertDigit(100, 4)
       ) {
         message.warning({
@@ -264,16 +267,17 @@ const ItemCreate = (props) => {
           },
           data_head: data_head,
           data_detail: data_detail,
-          data_part: PartReducer.data,
-          data_part_detail: PartDetailReducer.data,
-          data_part_mix: PMReducer.data,
-          data_formula: FormulaReducer.data,
+          data_part: statePart,
+          // data_part_detail: PartDetailReducer.data,
+          // data_part_mix: PMReducer.data,
+          // data_formula: FormulaReducer.data,
           data_qa_detail: data_qa_detail,
           data_weight_detail: data_weight_detail,
           data_packaging_detail: data_packaging_detail,
           data_file: data_file,
           data_filling: filling,
         };
+        console.log("saveeeeeee", data);
         data_head.item_id
           ? dispatch(
               upDateItem(
@@ -329,12 +333,23 @@ const ItemCreate = (props) => {
       dispatch(get_qa_conditions_master(data_head.type_id, 1, 1, 1));
   }, [data_head.type_id]);
 
+  const sumPercent = () => {
+    console.log("sumPercent", statePart);
+    return setPercent(
+      sum2DArrOdjWithField(
+        statePart.map((obj) => obj.item_formula),
+        "item_formula_percent_qty"
+      )
+    );
+  };
+
   const ContextValue = useMemo(() => {
     return {
-      PartReducer,
-      PartDetailReducer,
-      PMReducer,
-      FormulaReducer,
+      statePart,
+      statePartDispatch,
+      // PartDetailReducer,
+      // PMReducer,
+      // FormulaReducer,
       filling,
       setFilling,
       readOnly,
@@ -351,10 +366,11 @@ const ItemCreate = (props) => {
       data_head,
     };
   }, [
-    PartReducer,
-    PartDetailReducer,
-    PMReducer.data,
-    FormulaReducer,
+    statePart,
+    statePartDispatch,
+    // PartDetailReducer,
+    // PMReducer.data,
+    // FormulaReducer,
     filling,
     setFilling,
     readOnly,
@@ -364,7 +380,7 @@ const ItemCreate = (props) => {
     data_head,
   ]);
   // console.log("initialStateHead ", initialStateHead);
-  console.log("Item Create ", data_head);
+  // console.log("Item Create ", data_head);
   return (
     <ItemContext.Provider value={ContextValue}>
       <MainLayout {...config}>

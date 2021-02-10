@@ -1,79 +1,78 @@
-import { Row, Col, InputNumber, Typography, TimePicker, Space } from "antd";
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { Row, Col, InputNumber, Typography, Space } from "antd";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import CustomSelect from "../../../components/CustomSelect";
 import PartSpecificationDetail from "./PartSpecification_Detail";
 import BulkFormula from "./BulkFormula";
 import { getWorkCenterDetailByID } from "../../../actions/production/workCenterActions";
-import moment from "moment";
-import ItemPartMix from "./ItemPartMix";
 import ItemPartName from "./ItemPartName";
 import { ItemContext } from "../../../include/js/context";
+import ItemPartMix from "./ItemPartMix";
 import {
   convertNumberToTime,
   convertTimeToNumber,
 } from "../../../include/js/function_main";
-const { RangePicker } = TimePicker;
 
 const { Text } = Typography;
 
-const PartSpecification = ({ partId }) => {
-  const { PartReducer, readOnly } = useContext(ItemContext);
+const PartSpecification = ({ id, part }) => {
+  const { statePartDispatch, readOnly } = useContext(ItemContext);
   const { workCenterList } = useSelector(
     (state) => state.production.workCenter
   );
   const [workCenterMachine, setWorkCenterMachine] = useState([]);
   const [state, setState] = useState({
     item_part_specification_lead_time_start:
-      PartReducer.data[partId].item_part_specification_lead_time_start,
+      part.item_part_specification_lead_time_start,
     item_part_specification_lead_time_end:
-      PartReducer.data[partId].item_part_specification_lead_time_end,
-    item_part_specification_remark:
-      PartReducer.data[partId].item_part_specification_remark,
-    item_part_specification_worker:
-      PartReducer.data[partId].item_part_specification_worker,
-    machine_id_main: PartReducer.data[partId].machine_id_main,
-    machine_no_name_main: PartReducer.data[partId].machine_no_name_main,
-    machine_id_sub: PartReducer.data[partId].machine_id_sub,
-    machine_no_name_sub: PartReducer.data[partId].machine_no_name_sub,
-    work_center_id: PartReducer.data[partId].work_center_id,
-    work_center_no_description:
-      PartReducer.data[partId].work_center_no_description,
+      part.item_part_specification_lead_time_end,
+    item_part_specification_remark: part.item_part_specification_remark,
+    item_part_specification_worker: part.item_part_specification_worker,
+    machine_id_main: part.machine_id_main,
+    machine_no_name_main: part.machine_no_name_main,
+    machine_id_sub: part.machine_id_sub,
+    machine_no_name_sub: part.machine_no_name_sub,
+    work_center_id: part.work_center_id,
+    work_center_no_description: part.work_center_no_description,
   });
 
   const onChangeValue = (data) => {
     setState({ ...state, ...data });
   };
   const Save = () => {
-    PartReducer.onChangeDetailValue(partId, state);
+    statePartDispatch({
+      type: "CHANGE_DETAIL_VALUE",
+      payload: {
+        id: id,
+        data: state,
+      },
+    });
   };
 
   useEffect(() => {
     setState({
       item_part_specification_lead_time_start:
-        PartReducer.data[partId].item_part_specification_lead_time_start,
+        part.item_part_specification_lead_time_start,
       item_part_specification_lead_time_end:
-        PartReducer.data[partId].item_part_specification_lead_time_end,
-      item_part_specification_remark:
-        PartReducer.data[partId].item_part_specification_remark,
-      item_part_specification_worker:
-        PartReducer.data[partId].item_part_specification_worker,
-      machine_id_main: PartReducer.data[partId].machine_id_main,
-      machine_no_name_main: PartReducer.data[partId].machine_no_name_main,
-      machine_id_sub: PartReducer.data[partId].machine_id_sub,
-      machine_no_name_sub: PartReducer.data[partId].machine_no_name_sub,
-      work_center_id: PartReducer.data[partId].work_center_id,
-      work_center_no_description:
-        PartReducer.data[partId].work_center_no_description,
+        part.item_part_specification_lead_time_end,
+      item_part_specification_remark: part.item_part_specification_remark,
+      item_part_specification_worker: part.item_part_specification_worker,
+      machine_id_main: part.machine_id_main,
+      machine_no_name_main: part.machine_no_name_main,
+      machine_id_sub: part.machine_id_sub,
+      machine_no_name_sub: part.machine_no_name_sub,
+      work_center_id: part.work_center_id,
+      work_center_no_description: part.work_center_no_description,
     });
-  }, [PartReducer.data[partId].data_id]);
-  console.log(state);
+  }, [part.data_id]);
+
+  useEffect(() => {
+    const getWorkCenter = async (id) =>
+      await getWorkCenterDetailByID(id).then((res) =>
+        setWorkCenterMachine(res.data[0])
+      );
+    state.work_center_id && getWorkCenter(state.work_center_id);
+  }, [state.work_center_id]);
   return (
     <>
       <div className="group-row">
@@ -83,7 +82,7 @@ const PartSpecification = ({ partId }) => {
               <Col span={12}>
                 <Row className="row-head">
                   <Col span={24}>
-                    <ItemPartName partId={partId} />
+                    <ItemPartName id={id} part={part} />
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -133,12 +132,11 @@ const PartSpecification = ({ partId }) => {
                                 work_center_id: null,
                                 work_center_no_description: null,
                               });
-                          const workCenterDetail = await getWorkCenterDetailByID(
-                            option.data.work_center_id
-                          );
-                          setWorkCenterMachine(workCenterDetail);
+                          // const workCenterDetail = await getWorkCenterDetailByID(
+                          //   option.data.work_center_id
+                          // );
                         }}
-                        onBlur={() => Save()}
+                        onBlur={Save}
                       />
                     )}
                   </Col>
@@ -176,7 +174,7 @@ const PartSpecification = ({ partId }) => {
                             item_part_specification_worker: data ?? 0,
                           });
                         }}
-                        onBlur={() => Save()}
+                        onBlur={Save}
                         size="small"
                       />
                     )}
@@ -223,7 +221,7 @@ const PartSpecification = ({ partId }) => {
                                 machine_no_name_main: null,
                               });
                         }}
-                        onBlur={() => Save()}
+                        onBlur={Save}
                       />
                     )}
                   </Col>
@@ -266,7 +264,7 @@ const PartSpecification = ({ partId }) => {
                                 machine_no_name_sub: null,
                               });
                         }}
-                        onBlur={() => Save()}
+                        onBlur={Save}
                       />
                     )}
                   </Col>
@@ -274,7 +272,10 @@ const PartSpecification = ({ partId }) => {
               </Col>
             </Row>
             <div className="detail-container">
-              <PartSpecificationDetail partId={partId} />
+              <PartSpecificationDetail
+                id={id}
+                partDetail={part.item_part_specification_detail}
+              />
             </div>
             <Row className="col-2 row-margin-vertical">
               <Col span={12}>
@@ -319,7 +320,7 @@ const PartSpecification = ({ partId }) => {
                               ),
                             });
                           }}
-                          onBlur={() => Save()}
+                          onBlur={Save}
                           size="small"
                         />
                         <Text strong>To</Text>
@@ -340,7 +341,7 @@ const PartSpecification = ({ partId }) => {
                               ),
                             });
                           }}
-                          onBlur={() => Save()}
+                          onBlur={Save}
                           size="small"
                         />
                       </Space>
@@ -356,10 +357,10 @@ const PartSpecification = ({ partId }) => {
               <Col span={12}></Col>
             </Row>
             <div className="detail-container mt-2">
-              <BulkFormula partId={partId} />
+              <BulkFormula id={id} formula={part.item_formula} />
             </div>
             <div className="detail-container mt-2">
-              <ItemPartMix partId={partId} />
+              <ItemPartMix id={id} partMix={part.item_part_mix} />
             </div>
           </Col>
         </Row>

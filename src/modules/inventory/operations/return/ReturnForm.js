@@ -1,4 +1,4 @@
-import { message, Spin } from "antd";
+import { message } from "antd";
 import React, {
   useCallback,
   useContext,
@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import {
   getIssueRefList,
@@ -16,16 +16,9 @@ import {
 import DetailLoading from "../../../../components/DetailLoading";
 import FormLayout from "../../../../components/FormLayout";
 import MainLayout from "../../../../components/MainLayout";
-import MainLayoutLoading from "../../../../components/MainLayoutLoading";
 import { AppContext, ReturnContext } from "../../../../include/js/context";
-import {
-  capitalizeFirstLetter,
-  getPageButton,
-  validateFormHead,
-} from "../../../../include/js/function_main";
+import { validateFormHead } from "../../../../include/js/function_main";
 import { returnFields, returnRequireFields } from "./config";
-
-import ReturnDetail from "./ReturnDetail";
 import ReturnHead from "./ReturnHead";
 import ReturnTabs from "./ReturnTabs";
 const initialState = returnFields;

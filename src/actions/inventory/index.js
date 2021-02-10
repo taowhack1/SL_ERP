@@ -66,7 +66,7 @@ export const getMasterDataItem = (user, setLoading, auth) => async (
       get_shelf,
     ])
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         let master_data = {
           item_type: res[0].value.data[0] ?? [],
           item_category: res[1].value.data[0] ?? [],
