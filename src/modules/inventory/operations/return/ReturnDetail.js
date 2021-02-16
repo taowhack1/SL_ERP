@@ -23,6 +23,7 @@ const ReturnDetail = () => {
     <>
       <CustomTable
         rowKey="id"
+        rowClassName={"row-table-detail"}
         pageSize={20}
         focusLastPage={true}
         columns={returnDetailColumns(readOnly, onSaveDetail, onChange, delLine)}
