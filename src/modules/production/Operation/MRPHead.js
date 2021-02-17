@@ -44,6 +44,7 @@ const MRPHead = () => {
     });
   };
   console.log("headReducer.data", headReducer.data);
+  console.log("so_list", SOList);
   return (
     <>
       <Row className="col-2">

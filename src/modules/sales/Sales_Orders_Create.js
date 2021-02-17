@@ -241,9 +241,7 @@ const SaleOrderCreate = (props) => {
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
             {data_head.so_id
-              ? moment(data_head.so_create_date, "DD/MM/YYYY").format(
-                  "DD/MM/YYYY"
-                )
+              ? moment(data_head.so_created, "DD/MM/YYYY").format("DD/MM/YYYY")
               : moment().format("DD/MM/YYYY")}
           </Col>
         </Row>

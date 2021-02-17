@@ -14,6 +14,7 @@ import ModalRemark from "../../components/Modal_Remark";
 import { FileContext, ItemContext } from "../../include/js/context";
 import { sum2DArrOdjWithField } from "../../include/js/function_main";
 import Barcode from "react-barcode";
+import { report_server } from "../../include/js/main_config";
 
 const { Text } = Typography;
 const ItemView = (props) => {
@@ -132,6 +133,17 @@ const ItemView = (props) => {
       step: flow,
       process_complete: data_head.process_complete,
     },
+    action: [
+      {
+        name: "Master Formula",
+        link: `${report_server}/report_purch/report_bulk_formula.aspx?item_code=${data_head.item_no}`,
+      },
+      data_head.button_cancel && {
+        name: "Cancel",
+        cancel: true,
+        link: ``,
+      },
+    ],
     // save: "function",
     discard: "/inventory/items",
     back: "/inventory/items",

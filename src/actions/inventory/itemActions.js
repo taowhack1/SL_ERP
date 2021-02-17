@@ -33,10 +33,10 @@ const convertFileField = (file) => {
   let file_temp = file;
 
   let path = file.item_file_path
-    ? api_server + file.item_file_path
+    ? process.env.REACT_APP_SERVER + file.item_file_path
     : require("./no_image.svg");
   if (file.item_file_path) {
-    path = api_server + file.item_file_path;
+    path = process.env.REACT_APP_SERVER + file.item_file_path;
   } else {
     path = file.file_type_id === 1 ? require("./no_image.svg") : null;
     file_temp.item_file_original_type =
