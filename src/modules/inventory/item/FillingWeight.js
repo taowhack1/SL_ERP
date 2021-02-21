@@ -48,7 +48,7 @@ const FillingWeight = ({ data_weight_detail, weightDetailDispatch }) => {
           </Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={4}>
-              <Text strong>Packaging Weight</Text>
+              <Text strong>Filling Weight</Text>
             </Col>
             <Col span={18}>
               {/* weight */}

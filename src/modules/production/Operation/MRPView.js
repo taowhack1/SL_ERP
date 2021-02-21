@@ -7,16 +7,25 @@ import { get_log_by_id } from "../../../actions/comment&log";
 import Authorize from "../../system/Authorize";
 
 import MRPTabPanel from "./MRPTabPanel";
-import { mrp_actions } from "../../../actions/production/mrpActions";
+import {
+  getMRPByID,
+  mrp_actions,
+} from "../../../actions/production/mrpActions";
 import MRPHead from "./MRPHead";
 import { sortData } from "../../../include/js/function_main";
 import { MRPContext } from "../../../include/js/context";
 import ModalRemark from "../../../components/Modal_Remark";
+import { updateProcessStatus } from "../../../actions/inventory";
+import MainLayoutLoading from "../../../components/MainLayoutLoading";
+import DetailLoading from "../../../components/DetailLoading";
+import { useParams } from "react-router-dom";
+import { SecurityScanTwoTone } from "@ant-design/icons";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
 
 const MRPView = (props) => {
   const readOnly = true;
+  const { id } = useParams();
   const authorize = Authorize();
 
   const dispatch = useDispatch();
@@ -24,23 +33,24 @@ const MRPView = (props) => {
   const auth = useSelector((state) => state.auth.authData);
   const current_project = useSelector((state) => state.auth.currentProject);
   const dataComments = useSelector((state) => state.log.comment_log);
-  const { data_head, data_material } = useSelector(
-    (state) => state.production.operations.mrp.mrp
-  );
+  // const { data_head, data_material } = useSelector(
+  //   (state) => state.production.operations.mrp.mrp
+  // );
+  const [state, setState] = useState({
+    data_head: null,
+    data_material: null,
+  });
+  const [loading, setLoading] = useState(true);
   const [remark, setRemark] = useState("");
   const [openRemarkModal, setOpenRemarkModal] = useState({
     visible: false,
     loading: false,
   });
   const flow =
-    data_head.data_flow_process &&
-    data_head.data_flow_process.map((step) => {
+    // state?.data_head?.data_flow_process &&
+    state?.data_head?.data_flow_process?.map((step) => {
       return step.all_group_in_node;
     });
-  useEffect(() => {
-    // GET LOG
-    data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
-  }, [data_head]);
 
   const config = {
     projectId: current_project && current_project.project_id,
@@ -52,50 +62,53 @@ const MRPView = (props) => {
       "Operations",
       "Work Order",
       "View",
-      data_head.mrp_no && data_head.mrp_no,
+      state?.data_head?.mrp_no && state?.data_head?.mrp_no,
     ],
     search: false,
     buttonAction: [
-      data_head.button_edit && "Edit",
-      data_head.button_confirm && "Confirm",
-      data_head.button_approve && "Approve",
-      data_head.button_reject && "Reject",
+      state?.data_head?.button_edit && "Edit",
+      state?.data_head?.button_confirm && "Confirm",
+      state?.data_head?.button_approve && "Approve",
+      state?.data_head?.button_reject && "Reject",
       "Back",
     ],
     step: {
-      current: data_head.node_stay - 1,
+      current: state?.data_head?.node_stay - 1,
       step: flow,
-      process_complete: data_head.process_complete,
+      process_complete: state?.data_head?.process_complete,
     },
     create: "",
     save: "function",
     back: "/production/operations/mrp",
     discard: "/production/operations/mrp",
+    action: [
+      state?.data_head?.button_cancel && {
+        name: "Cancel",
+        cancel: true,
+        link: ``,
+      },
+    ],
     edit: {
       data: {
-        data_head: data_head,
-        data_rm: sortData(data_material.filter((item) => item.type_id === 1)),
-        data_pk: sortData(data_material.filter((item) => item.type_id === 2)),
+        data_head: state.data_head,
+        data_rm: sortData(
+          state?.data_material?.filter((item) => item.type_id === 1) ?? []
+        ),
+        data_pk: sortData(
+          state?.data_material?.filter((item) => item.type_id === 2) ?? []
+        ),
       },
-      path: data_head && "/production/operations/mrp/edit/" + data_head.mrp_id,
+      path:
+        state.data_head &&
+        "/production/operations/mrp/edit/" + state?.data_head?.mrp_id,
     },
     onApprove: (e) => {
-      const app_detail = {
-        process_status_id: 5,
-        user_name: auth.user_name,
-        process_id: data_head.process_id,
-        process_member_remark: remark,
-      };
-      dispatch(mrp_actions(app_detail, data_head.mrp_id));
+      console.log("Approve");
+      changeProcessStatus(5, "Approve");
     },
     onConfirm: () => {
-      const app_detail = {
-        process_status_id: 2,
-        user_name: auth.user_name,
-        process_id: data_head.process_id,
-      };
-      dispatch(mrp_actions(app_detail, data_head.mrp_id));
       console.log("Confirm");
+      changeProcessStatus(2, "Confirm");
     },
     onReject: () => {
       console.log("Reject");
@@ -105,85 +118,127 @@ const MRPView = (props) => {
       });
     },
     onCancel: () => {
-      console.log("Cancel");
-      const app_detail = {
-        process_status_id: 3,
-        user_name: auth.user_name,
-        process_id: data_head.process_id,
-      };
-      dispatch(mrp_actions(app_detail, data_head.mrp_id));
+      console.log("Confirm");
+      changeProcessStatus(3, "Cancel");
     },
   };
-  const changeProcessStatus = (process_status_id) => {
-    if (remark.trim() === "") {
-      alert("Plase write remark");
-      return false;
+  const changeProcessStatus = (process_status_id, remark) => {
+    if (process_status_id === 6) {
+      if (remark.trim() === "") {
+        // alert("Plase write remark");
+        message.warning("Please write remark", 4);
+        return false;
+      }
+      message.success({ content: "Reject", key: "validate", duration: 1 });
+      setOpenRemarkModal({ visible: false, loading: false });
     }
-    setOpenRemarkModal({ visible: false, loading: false });
-    const app_detail = {
+    const statusDetail = {
+      //6 = reject
       process_status_id: process_status_id,
       user_name: auth.user_name,
-      process_id: data_head.process_id,
+      process_id: state?.data_head?.process_id,
       process_member_remark: remark,
     };
-    message.success({ content: "Reject", key: "validate", duration: 1 });
-    dispatch(mrp_actions(app_detail, data_head.mrp_id));
-    setRemark("");
+    console.log(statusDetail);
+    updateProcessStatus(statusDetail).then((res) => setLoading(true));
+    // setLoading(true);
   };
 
+  useEffect(() => {
+    // dispatch(getMRPByID(id, auth.user_name));
+    console.log(1);
+    const getData = async (id, user_name) =>
+      // console.log(getMRPByID(id, user_name));
+      await getMRPByID(id, user_name).then((res) => {
+        console.log(2);
+        const data = {
+          data_head: res[0].value.data[0],
+          data_material: res[1].value.data[0],
+        };
+        setState(data);
+        dispatch(get_log_by_id(data?.data_head?.process_id));
+        setLoading(false);
+        console.log(3);
+      });
+
+    id ? getData(id, auth.user_name) : setLoading(false);
+    console.log(4);
+    // data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
+    // setLoading(false);
+  }, [id, loading]);
   const headContextValue = useMemo(() => {
     return {
       readOnly,
       headReducer: {
-        data: data_head,
+        data: state?.data_head ?? {},
       },
       RMReducer: {
-        data: sortData(data_material.filter((item) => item.type_id === 1)),
+        data: sortData(
+          state?.data_material?.filter((item) => item.type_id === 1) ?? []
+        ),
       },
       PKReducer: {
-        data: sortData(data_material.filter((item) => item.type_id === 2)),
+        data: sortData(
+          state?.data_material?.filter((item) => item.type_id === 2) ?? []
+        ),
       },
     };
-  }, []);
+  }, [loading, id]);
+
   return (
     <MRPContext.Provider value={headContextValue}>
-      <MainLayout {...config}>
-        <div id="form">
-          <Row className="col-2">
-            <Col span={8}>
-              <h2>
-                <strong>
-                  {"View"} MRP
-                  {data_head.mrp_no && " #" + data_head.mrp_no}
-                </strong>
-              </h2>
-            </Col>
-            <Col span={12}></Col>
-            <Col span={2}>
-              <Text strong>Create Date :</Text>
-            </Col>
-            <Col span={2} style={{ textAlign: "right" }}>
-              <Text className="text-view">{data_head.mrp_created}</Text>
-            </Col>
-          </Row>
+      {loading ? (
+        <MainLayoutLoading>
+          <DetailLoading />
+        </MainLayoutLoading>
+      ) : (
+        <MainLayout {...config}>
+          {/* Form */}
+          <div id="form">
+            <Row className="col-2">
+              <Col span={8}>
+                <h2>
+                  <strong>
+                    {"View"} MRP
+                    {state?.data_head?.mrp_no &&
+                      " #" + state?.data_head?.mrp_no}
+                    {state?.data_head?.tg_trans_status_id === 3 && (
+                      <Text strong type="danger">
+                        #{state?.data_head?.trans_status_name}
+                      </Text>
+                    )}
+                  </strong>
+                </h2>
+              </Col>
+              <Col span={12}></Col>
+              <Col span={2}>
+                <Text strong>Create Date :</Text>
+              </Col>
+              <Col span={2} style={{ textAlign: "right" }}>
+                <Text className="text-view">
+                  {state?.data_head?.mrp_created}
+                </Text>
+              </Col>
+            </Row>
 
-          <MRPHead />
-          <MRPTabPanel />
-        </div>
-        <ModalRemark
-          title={"Remark"}
-          state={openRemarkModal}
-          onChange={setRemark}
-          onOk={() => {
-            changeProcessStatus(6);
-          }}
-          onCancel={() => {
-            setOpenRemarkModal({ visible: false, loading: false });
-            setRemark("");
-          }}
-        />
-        <Comments data={dataComments} />
-      </MainLayout>
+            <MRPHead />
+            <MRPTabPanel />
+          </div>
+          <Comments data={dataComments} />
+        </MainLayout>
+      )}
+      <ModalRemark
+        title={"Remark"}
+        state={openRemarkModal}
+        onChange={setRemark}
+        onOk={() => {
+          changeProcessStatus(6, remark);
+        }}
+        onCancel={() => {
+          setOpenRemarkModal({ visible: false, loading: false });
+          setRemark("");
+        }}
+      />
     </MRPContext.Provider>
   );
 };

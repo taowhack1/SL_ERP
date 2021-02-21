@@ -1,9 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Row, Col, Input, Typography } from "antd";
+import { Row, Col, Input, Typography, InputNumber, DatePicker } from "antd";
 import CustomSelect from "../../../components/CustomSelect";
 import { useSelector } from "react-redux";
 import { MRPContext } from "../../../include/js/context";
+import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
+import CustomLabel from "../../../components/CustomLabel";
+import ToggleReadOnlyElement from "../../../components/ToggleReadOnlyElement";
+import moment from "moment";
 const { Text } = Typography;
+const { RangePicker } = DatePicker;
+const disabledDate = (current) => {
+  // Can not select days before today and today
+  return current && current - 1 < moment().subtract(1, "days").endOf("day");
+};
 const MRPHead = () => {
   const SOList = useSelector(
     (state) => state.production.operations.mrp.mrp.data_so_ref
@@ -83,7 +92,7 @@ const MRPHead = () => {
                     SO Document :
                   </Text>
                 </Col>
-                <Col span={18}>
+                <Col span={17}>
                   {/* data_so_ref */}
                   {readOnly ? (
                     <Text className="text-value text-left">
@@ -121,11 +130,78 @@ const MRPHead = () => {
               </Row>
               <Row className="col-2 row-margin-vertical">
                 <Col span={6}>
-                  <Text strong>Due Date :</Text>
+                  <CustomLabel
+                    title={"Plan Date :"}
+                    readOnly={readOnly}
+                    require
+                  />
                 </Col>
-                <Col span={18}>
-                  <Text className="text-view">
-                    {state.mrp_due_date ?? "DD/MM/YYYY"}
+                <Col span={17}>
+                  {readOnly ? (
+                    <Text className="text-value text-left">
+                      {state.mrp_plan_start_date +
+                        " - " +
+                        state.mrp_plan_end_date}
+                    </Text>
+                  ) : (
+                    <RangePicker
+                      format={"DD/MM/YYYY"}
+                      name="mrp_plan_start_date"
+                      className="full-width"
+                      disabledDate={disabledDate}
+                      onChange={(data) => {
+                        data
+                          ? onChange({
+                              ...state,
+                              mrp_plan_start_date: data[0].format("DD/MM/YYYY"),
+                              mrp_plan_end_date: data[1].format("DD/MM/YYYY"),
+                            })
+                          : onChange({
+                              ...state,
+                              mrp_plan_start_date: null,
+                              mrp_plan_end_date: null,
+                            });
+                      }}
+                      // onBlur={() => {
+                      //   Save("mrp_plan_start_date");
+                      // }}
+                      value={[
+                        state.mrp_plan_start_date
+                          ? moment(state.mrp_plan_start_date, "DD/MM/YYYY")
+                          : "",
+                        state.mrp_plan_end_date
+                          ? moment(state.mrp_plan_end_date, "DD/MM/YYYY")
+                          : "",
+                      ]}
+                    />
+                  )}
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={9}>
+                  <Text className="require" strong>
+                    <span className="require">* </span>
+                    RM Lead Time (days):
+                  </Text>
+                </Col>
+                <Col span={15}>
+                  <Text className="text-left">
+                    {headReducer.data.mrp_lead_time_day_rm +
+                      headReducer.data.mrp_lead_time_day_rm_qa}
+                  </Text>
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={9}>
+                  <Text className="require" strong>
+                    <span className="require">* </span>
+                    PK Lead Time (days):
+                  </Text>
+                </Col>
+                <Col span={15}>
+                  <Text className="text-left">
+                    {headReducer.data.mrp_lead_time_day_pk +
+                      headReducer.data.mrp_lead_time_day_pk_qa}
                   </Text>
                 </Col>
               </Row>
@@ -138,11 +214,13 @@ const MRPHead = () => {
                     FG Item :
                   </Text>
                 </Col>
-                <Col span={18}>
+                <Col span={17}>
                   {readOnly ? (
-                    <Text className="text-value text-left">
+                    <div className="col-wrap ">
+                      {/* <Text className="text-value text-left"> */}
                       {state.item_no_name}
-                    </Text>
+                      {/* </Text> */}
+                    </div>
                   ) : (
                     <CustomSelect
                       allowClear
@@ -178,6 +256,56 @@ const MRPHead = () => {
                       }}
                     />
                   )}
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={6}>
+                  <CustomLabel
+                    title={"Qty. To Produce"}
+                    require
+                    readOnly={readOnly}
+                  />
+                </Col>
+                <Col span={17} className={readOnly ? "text-right" : ""}>
+                  <ToggleReadOnlyElement
+                    readOnly={readOnly}
+                    value={convertDigit(state.mrp_qty_produce, 3)}
+                  >
+                    <InputNumber
+                      {...getNumberFormat(3)}
+                      min={0}
+                      step={1}
+                      placeholder={"Qty. to produce"}
+                      name={"mrp_qty_produce"}
+                      defaultValue={0}
+                      className="full-width"
+                      value={state.mrp_qty_produce}
+                      onChange={(data) => {
+                        onChange({ ...state, mrp_qty_produce: data });
+                      }}
+                      // onBlur={(data) => {
+                      //   Save("mrp_qty_produce");
+                      // }}
+                    />
+                  </ToggleReadOnlyElement>
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={6}>
+                  <CustomLabel title={"Unit of Measure"} readOnly={readOnly} />
+                </Col>
+                <Col span={18}>
+                  <Text className="text-view">{state.uom_no ?? "-"}</Text>
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={6}>
+                  <CustomLabel title={"Delivery Date : "} readOnly={readOnly} />
+                </Col>
+                <Col span={18}>
+                  <Text className="text-view">
+                    {state.mrp_due_date ?? "DD/MM/YYYY"}
+                  </Text>
                 </Col>
               </Row>
             </Col>

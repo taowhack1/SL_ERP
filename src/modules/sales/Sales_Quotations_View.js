@@ -75,6 +75,7 @@ const Sales_Quotations = (props) => {
     ],
     search: false,
     buttonAction: [
+      // "Edit",
       data_head && data_head.button_edit && "Edit",
       data_head && data_head.button_confirm && "Confirm",
       data_head && data_head.button_approve && "Approve",

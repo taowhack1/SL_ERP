@@ -1,5 +1,9 @@
 import { GET_ALL_ITEMS, GET_ITEM_BY_ID } from "../types";
-import { api_server, header_config } from "../../include/js/main_config";
+import {
+  api_server,
+  header_config,
+  report_server,
+} from "../../include/js/main_config";
 import {
   api_get_item_by_id,
   api_url,
@@ -22,6 +26,7 @@ import { message, notification } from "antd";
 import { item_save_file } from "../file&image/itemFileAction";
 import React from "react";
 import { sortData } from "../../include/js/function_main";
+import { DeleteOutlined, PrinterOutlined } from "@ant-design/icons";
 
 const openNotificationWithIcon = (type, title, text) => {
   notification[type]({
@@ -614,4 +619,81 @@ export const getFGMaterialList = async (
       `${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}`
     )
     .then((res) => res.data[0]);
+};
+
+export const getItemAction = ({ type_id, button_cancel, item_no }) => {
+  let action = [];
+  if (button_cancel)
+    action.push({
+      name: (
+        <span className="require">
+          <DeleteOutlined className="pd-right-1" />
+          Cancel
+        </span>
+      ),
+      cancel: true,
+      link: ``,
+    });
+  switch (type_id) {
+    case 1:
+    case 2:
+      break;
+    case 3:
+      return action.concat([
+        {
+          name: (
+            <span>
+              <PrinterOutlined className="pd-right-1 button-icon" />
+              Master Formula
+            </span>
+          ),
+          link: `${report_server}/report_purch/report_bulk_formula.aspx?item_code=${item_no}`,
+        },
+        {
+          name: (
+            <span>
+              <PrinterOutlined className="pd-right-1 button-icon" />
+              Bulk Specification
+            </span>
+          ),
+          link: `${report_server}/report_purch/report_bulk_specification.aspx?item_code=${item_no}`,
+        },
+        {
+          name: (
+            <span>
+              <PrinterOutlined className="pd-right-1 button-icon" />
+              Process Specification
+            </span>
+          ),
+          link: `${report_server}/report_purch/report_process_specification.aspx?item_no=${item_no}`,
+        },
+      ]);
+    case 4:
+      return action.concat([
+        {
+          name: (
+            <span>
+              <PrinterOutlined className="pd-right-1 button-icon" />
+              Finished Product Specification
+            </span>
+          ),
+          link: `${report_server}/report_purch/report_fg_package.aspx?item_code=${item_no}`,
+        },
+      ]);
+
+    default:
+      break;
+  }
+  return action.length > 0 ? action : null;
+  // return [
+  // {
+  //   name: "Export Master Formula",
+  //   link: `${report_server}/report_purch/report_bulk_formula.aspx?item_code=${data_head.item_no}`,
+  // },
+  // data_head.button_cancel && {
+  //   name: "Cancel",
+  //   cancel: true,
+  //   link: ``,
+  // },
+  // ]
 };

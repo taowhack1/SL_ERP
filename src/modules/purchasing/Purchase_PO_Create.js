@@ -301,7 +301,43 @@ const PurchaseOrderCreate = (props) => {
             />
           </Col>
           <Col span={2}></Col>
+          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
+            <Text strong>Job Name :</Text>
+          </Col>
+          <Col span={8} className="text-view">
+            {data_head.mrp_no_description ?? "-"}
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Description :
+            </Text>
+          </Col>
 
+          <Col span={8}>
+            <Input
+              name="po_description"
+              onChange={(e) =>
+                upDateFormValue({ po_description: e.target.value })
+              }
+              value={data_head.po_description}
+              placeholder="Description"
+            />
+          </Col>
+          <Col span={2}></Col>
+          {/* vendor */}
+          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
+            <Text strong>Request By :</Text>
+          </Col>
+
+          <Col span={8} className="text-left">
+            <Text className={"text-value"}>
+              {data_head.po_created_by_no_name}
+            </Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
               <span className="require">* </span>Vendor :
@@ -347,25 +383,32 @@ const PurchaseOrderCreate = (props) => {
               }
             />
           </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Description :
-            </Text>
+          {/* <Col span={3} className={readOnly ? "" : "pd-left-1"}>
+            <Text strong>Agreement :</Text>
           </Col>
 
           <Col span={8}>
             <Input
-              name="po_description"
               onChange={(e) =>
-                upDateFormValue({ po_description: e.target.value })
+                upDateFormValue({ po_agreement: e.target.value })
               }
-              value={data_head.po_description}
-              placeholder="Description"
-            />
-          </Col>
+              value={data_head.po_agreement}
+              placeholder="Agreement"
+            ></Input>
+          </Col> */}
+
           <Col span={2}></Col>
+          {/* 6 */}
+          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
+            <Text strong>Cost Center :</Text>
+          </Col>
+          <Col span={8} className="text-left">
+            <Text className={"text-value"}>
+              {data_head.cost_center_no_name}
+            </Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
               <span className="require">* </span>Payment Terms :
@@ -394,56 +437,23 @@ const PurchaseOrderCreate = (props) => {
               }
             />
           </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
-            <Text strong>Agreement :</Text>
-          </Col>
-
-          <Col span={8}>
-            <Input
-              onChange={(e) =>
-                upDateFormValue({ po_agreement: e.target.value })
-              }
-              value={data_head.po_agreement}
-              placeholder="Agreement"
-            ></Input>
-          </Col>
           <Col span={2}></Col>
-          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
-            <Text strong>Currency :</Text>
-          </Col>
-          <Col span={8}>
-            {data_head.currency_no ? data_head.currency_no : "THB"}
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
-            <Text strong>Request By :</Text>
-          </Col>
-
-          <Col span={8} className="text-left">
-            <Text className={"text-value"}>
-              {data_head.po_created_by_no_name}
-            </Text>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
-            <Text strong>Cost Center :</Text>
-          </Col>
-          <Col span={8}>
-            <Text className={"text-value"}>
-              {data_head.cost_center_no_name}
-            </Text>
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
+          {/* 8 */}
           <Col span={3} className={readOnly ? "" : "pd-left-1"}>
             <Text strong>Item Type :</Text>
           </Col>
           <Col span={8} className="text-left">
             <Text className={"text-value"}>{data_head.type_no_name}</Text>
           </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
+            <Text strong>Currency :</Text>
+          </Col>
+          <Col span={8}>
+            {data_head.currency_no ? data_head.currency_no : "THB"}
+          </Col>
+
           <Col span={2}></Col>
         </Row>
         <Row className="col-2 row-tab-margin-l">

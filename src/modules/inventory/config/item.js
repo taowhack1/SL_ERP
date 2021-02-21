@@ -1,7 +1,7 @@
 import React from "react";
 import CustomSelect from "../../../components/CustomSelect";
 import Text from "antd/lib/typography/Text";
-import { Input, InputNumber, Popconfirm, TimePicker } from "antd";
+import { Input, InputNumber, Popconfirm, Switch, TimePicker } from "antd";
 import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
 import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 import {
@@ -1024,3 +1024,189 @@ export const fillingProcessFields = {
   item_filling_process_remark: null,
   commit: 1,
 };
+export const UoMConversionFields = {
+  id: 0,
+  item_id: null,
+  uom_conversion_actived: 1,
+  uom_conversion_id: null,
+  uom_conversion_type_no: null,
+  uom_conversion_value: 1,
+  commit: 1,
+};
+
+export const itemUoMConversionColumns = ({
+  readOnly,
+  onChange,
+  onDelete,
+  onSwitch,
+  UoMList,
+}) => [
+  {
+    title: "No.",
+    dataIndex: "id",
+    width: "5%",
+    align: "center",
+    ellipsis: true,
+    render: (value) => {
+      return <Text className={readOnly ? "text-value" : ""}>{value + 1}</Text>;
+    },
+  },
+  {
+    title: "Main UoM",
+    dataIndex: "uom_no_name",
+    width: "20%",
+    align: "center",
+    render: (value) => <Text className="text-value">{value}</Text>,
+  },
+  {
+    title: "Type",
+    dataIndex: "uom_conversion_type_no",
+    width: "10%",
+    align: "center",
+    render: (value, record) => {
+      return readOnly ? (
+        <Text className="text-value">{value}</Text>
+      ) : (
+        <CustomSelect
+          allowClear
+          showSearch
+          size={"small"}
+          placeholder={"> , < , ="}
+          name="uom_conversion_type_no"
+          field_id="uom_conversion_type_id"
+          field_name="uom_conversion_type_no"
+          value={value}
+          data={[
+            {
+              uom_conversion_type_id: 0,
+              uom_conversion_type_no: ">",
+            },
+            {
+              uom_conversion_type_id: 1,
+              uom_conversion_type_no: "<",
+            },
+            {
+              uom_conversion_type_id: 2,
+              uom_conversion_type_no: "=",
+            },
+          ]}
+          onChange={(data, option) => {
+            console.log(data, option);
+            data !== null || data !== undefined
+              ? onChange(record.id, {
+                  uom_conversion_type_id: option.data.uom_conversion_type_id,
+                  uom_conversion_type_no: option.data.uom_conversion_type_no,
+                })
+              : onChange(record.id, {
+                  uom_conversion_type_id: null,
+                  uom_conversion_type_no: null,
+                });
+          }}
+        />
+      );
+    },
+  },
+  {
+    title: "To UoM",
+    dataIndex: "uom_no_name_2",
+    width: "20%",
+    align: "center",
+    render: (value, record) => {
+      return readOnly ? (
+        <Text className="text-value text-left">{value}</Text>
+      ) : (
+        <CustomSelect
+          allowClear
+          showSearch
+          size={"small"}
+          placeholder={"Unit of measure"}
+          name="uom_id"
+          field_id="uom_id"
+          field_name="uom_no_name"
+          value={value}
+          data={UoMList}
+          onChange={(data, option) => {
+            data && data
+              ? onChange(record.id, {
+                  uom_id_2: option.data.uom_id,
+                  uom_no_2: option.data.uom_no,
+                  uom_no_name_2: option.data.uom_no_name,
+                  uom_name_2: option.data.uom_name,
+                })
+              : onChange(record.id, {
+                  uom_id_2: null,
+                  uom_no_2: null,
+                  uom_no_name_2: null,
+                  uom_name_2: null,
+                });
+          }}
+        />
+      );
+    },
+  },
+  {
+    title: "Ratio",
+    dataIndex: "uom_conversion_value",
+    width: "20%",
+    align: "center",
+    render: (value, record) => {
+      return readOnly ? (
+        convertDigit(value, 4)
+      ) : (
+        <InputNumber
+          {...getNumberFormat(4)}
+          name="uom_conversion_value"
+          placeholder={"Ratio"}
+          min={0}
+          step={1}
+          size={"small"}
+          className={"full-width"}
+          value={value}
+          onChange={(data) =>
+            onChange(record.id, {
+              uom_conversion_value: data,
+            })
+          }
+        />
+      );
+    },
+  },
+
+  {
+    title: (
+      <Text strong>
+        <EllipsisOutlined />
+      </Text>
+    ),
+    dataIndex: "uom_conversion_actived",
+    // dataIndex: "actions",
+    // key: "actions",
+    align: "center",
+    width: "5%",
+    render: (value, record, index) => {
+      if (readOnly) {
+        return null;
+      } else {
+        return record.uom_conversion_id !== null ? (
+          <Switch
+            size="small"
+            title="Active / In-Active"
+            checked={value}
+            onChange={(_) => onSwitch(record.id)}
+          />
+        ) : (
+          <Popconfirm
+            onConfirm={() => {
+              onDelete(record.id);
+            }}
+            title="Are you sure you want to delete this row？"
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteTwoTone />
+          </Popconfirm>
+        );
+      }
+    },
+  },
+];

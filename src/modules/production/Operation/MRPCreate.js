@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Typography, message } from "antd";
 import MainLayout from "../../../components/MainLayout";
@@ -28,13 +28,21 @@ import MRPHead from "./MRPHead";
 import { sortData, validateFormHead } from "../../../include/js/function_main";
 import { MRPContext } from "../../../include/js/context";
 import moment from "moment";
+import MainLayoutLoading from "../../../components/MainLayoutLoading";
+import DetailLoading from "../../../components/DetailLoading";
+import { mainReducer } from "../../../include/reducer";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
-
+const initialState = {
+  ...mrpFields,
+  rm_detail: [],
+  pk_detail: [],
+};
 const MRPCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
-
+  const [loading, setLoading] = useState(true);
+  const [state, stateDispatch] = useReducer(mainReducer, initialState);
   const headReducer = new ReducerClass(data.data_head, null, mrpFields);
   const RMReducer = new ReducerClass(data.data_rm, null, mrpPKDetailFields);
   const PKReducer = new ReducerClass(data.data_pk, null, mrpRMDetailFields);
@@ -209,9 +217,17 @@ const MRPCreate = (props) => {
       so_id: headReducer.data.so_id,
       so_detail_id: headReducer.data.so_detail_id,
     };
-  }, [readOnly, headReducer, RMReducer, PKReducer]);
+  }, [readOnly, headReducer, RMReducer.data, PKReducer.data]);
+  console.log("MRPCreate", data);
+  console.log(RMReducer.data);
+  console.log(PKReducer.data);
   return (
     <MRPContext.Provider value={headContextValue}>
+      {/* {loading ? (
+        <MainLayoutLoading>
+          <DetailLoading />
+        </MainLayoutLoading>
+      ) : ( */}
       <MainLayout {...config}>
         <div id="form">
           <Row className="col-2">
@@ -238,6 +254,7 @@ const MRPCreate = (props) => {
         </div>
         <Comments data={dataComments} />
       </MainLayout>
+      {/* )} */}
     </MRPContext.Provider>
   );
 };

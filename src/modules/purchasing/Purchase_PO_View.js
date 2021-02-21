@@ -199,11 +199,10 @@ const PurchaseOrderCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Vendor :</Text>
+            <Text strong>Job Name :</Text>
           </Col>
-
-          <Col span={8}>
-            <Text className="text-view">{data_head.vendor_no_name}</Text>
+          <Col span={8} className="text-view">
+            {data_head.mrp_no_description ?? "-"}
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
@@ -217,29 +216,6 @@ const PurchaseOrderCreate = (props) => {
 
           <Col span={2}></Col>
 
-          <Col span={3}>
-            <Text strong>Payment Terms :</Text>
-          </Col>
-          <Col span={8}>
-            <Text className="text-view">{data_head.payment_term_no_name}</Text>
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Agreement :</Text>
-          </Col>
-          <Col span={8}>
-            <Text className="text-view">{data_head.po_agreement}</Text>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Currency :</Text>
-          </Col>
-          <Col span={8} className="text-view">
-            {data_head.currency_no}
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
           <Col span={3} className={readOnly ? "" : "pd-left-1"}>
             <Text strong>Request By :</Text>
           </Col>
@@ -248,6 +224,16 @@ const PurchaseOrderCreate = (props) => {
             <Text className={"text-value text-view"}>
               {data_head.po_created_by_no_name}
             </Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          {/* 5 */}
+          <Col span={3}>
+            <Text strong>Vendor :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Text className="text-view">{data_head.vendor_no_name}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3} className={readOnly ? "" : "pd-left-1"}>
@@ -260,11 +246,27 @@ const PurchaseOrderCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
+          {/* 7 */}
+          <Col span={3}>
+            <Text strong>Payment Terms :</Text>
+          </Col>
+          <Col span={8}>
+            <Text className="text-view">{data_head.payment_term_no_name}</Text>
+          </Col>
+          <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Item Type :</Text>
           </Col>
           <Col span={8} className="text-view">
             {data_head.type_name}
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Currency :</Text>
+          </Col>
+          <Col span={8} className="text-view">
+            {data_head.currency_no}
           </Col>
           <Col span={2}></Col>
         </Row>

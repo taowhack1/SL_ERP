@@ -7,13 +7,13 @@ import {
 import { header_config } from "../../../../include/js/main_config";
 import { GET_UOM, GET_UOM_IN_ROW, GET_UOM_BY_ID } from "../../../types";
 
-export const getConfigurationUom = () => (dispatch) => {
+export const getConfigurationUoM = () => (dispatch) => {
   axios.get(api_get_configuration_uom, header_config).then((res) => {
     dispatch({ type: GET_UOM, payload: res.data[0] });
   });
 };
 
-export const getConfigurationUomById = (uom_id, redirect) => (dispatch) => {
+export const getConfigurationUoMById = (uom_id, redirect) => (dispatch) => {
   axios
     .get(`${api_get_configuration_uom}/${uom_id}`, header_config)
     .then((res) => {
@@ -27,25 +27,25 @@ export const getConfigurationUomById = (uom_id, redirect) => (dispatch) => {
       console.log(err);
     });
 };
-export const getUomInRow = (record) => (dispatch) => {
+export const getUoMInRow = (record) => (dispatch) => {
   dispatch({
     type: GET_UOM_IN_ROW,
     payload: record,
   });
 };
 
-export const createConfigurationUom = (dataUomCreate, redirect) => (
+export const createConfigurationUoM = (dataUoMCreate, redirect) => (
   dispatch
 ) => {
-  console.log("actionSave", dataUomCreate);
-  const dataCreate = [dataUomCreate];
+  console.log("actionSave", dataUoMCreate);
+  const dataCreate = [dataUoMCreate];
   try {
     axios
       .post(`${api_get_configuration_uom}`, dataCreate, header_config)
       .then((res) => {
         console.log("actionres", res);
         const uom_id = res.data[0][0].uom_id;
-        dispatch(getConfigurationUomById(uom_id, redirect));
+        dispatch(getConfigurationUoMById(uom_id, redirect));
         message.success({
           content: "category Created",
           key: "validate",
@@ -68,17 +68,17 @@ export const createConfigurationUom = (dataUomCreate, redirect) => (
   }
 };
 
-export const upDateConfigurationUom = (uom_id, dataUomCreate, redirect) => (
+export const upDateConfigurationUoM = (uom_id, dataUoMCreate, redirect) => (
   dispatch
 ) => {
-  const dataUpDate = [dataUomCreate];
+  const dataUpDate = [dataUoMCreate];
   try {
     axios
       .put(`${api_get_configuration_uom}`, dataUpDate, header_config)
       .then((res) => {
         console.log(res.data);
         const uom_id = res.data[0][0].uom_id;
-        dispatch(getConfigurationUomById(uom_id, redirect));
+        dispatch(getConfigurationUoMById(uom_id, redirect));
         message.success({
           content: "Vendor Updated.",
           key: "validate",

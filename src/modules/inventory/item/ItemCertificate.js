@@ -20,12 +20,7 @@ const ItemCertificate = ({
         </Col>
       </Row>
       <Row className="col-2 row-tab-margin">
-        <Col
-          span={12}
-          style={{
-            borderRight: "1px solid #c4c4c4",
-          }}
-        >
+        <Col span={12} className={"col-border-right"}>
           <Row className="col-2 row-margin-vertical">
             <Col span={1}></Col>
             <Col span={2}>

@@ -46,41 +46,7 @@ const TabMRPDetail = () => {
   return (
     <Row className="col-2  mt-1" gutter={32}>
       <Col span={12} className="col-border-right">
-        <Row className="col-2 row-margin-vertical">
-          <Col span={6}>
-            <CustomText strong require label readOnly={readOnly}>
-              Qty. To Produce :
-            </CustomText>
-          </Col>
-          <Col span={15} className={readOnly ? "text-right" : ""}>
-            <ToggleReadOnlyElement
-              readOnly={readOnly}
-              value={convertDigit(state.mrp_qty_produce)}
-            >
-              <InputNumber
-                {...numberFormat}
-                min={0}
-                step={1}
-                placeholder={"Qty. to produce"}
-                name={"mrp_qty_produce"}
-                defaultValue={0}
-                className="full-width"
-                value={state.mrp_qty_produce}
-                onChange={(data) => {
-                  setState({ ...state, mrp_qty_produce: data });
-                }}
-                onBlur={(data) => {
-                  Save("mrp_qty_produce");
-                }}
-              />
-            </ToggleReadOnlyElement>
-          </Col>
-          <Col span={3} className="text-right">
-            <CustomText strong readOnly={readOnly}>
-              {state.uom_no ?? "Unit"}
-            </CustomText>
-          </Col>
-        </Row>
+        {/* 1 */}
         <Row className="col-2 row-margin-vertical">
           <Col span={6}>
             <CustomText label strong readOnly={readOnly}>

@@ -15,6 +15,7 @@ import {
   Space,
   Switch,
   message,
+  Popconfirm,
 } from "antd";
 import MainLayout from "../../components/MainLayout";
 import Comments from "../../components/Comments";
@@ -56,6 +57,8 @@ import { ItemContext } from "../../include/js/context";
 import Barcode from "react-barcode";
 import { convertDigit } from "../../include/js/main_config";
 import { mainReducer } from "../../include/reducer";
+import CustomLabel from "../../components/CustomLabel";
+import ItemRevisionDetail from "./item/ItemRevisionDetail";
 const { Text } = Typography;
 
 const ItemCreate = (props) => {
@@ -278,16 +281,28 @@ const ItemCreate = (props) => {
           data_filling: filling,
         };
         console.log("saveeeeeee", data);
-        data_head.item_id
-          ? dispatch(
-              upDateItem(
-                data_head.item_id,
-                data,
-                auth.user_name,
-                redirect_to_view
-              )
+        if (data_head.isChangeRevision || !data_head.item_id) {
+          dispatch(createNewItems(data, auth.user_name, redirect_to_view));
+        } else {
+          dispatch(
+            upDateItem(
+              data_head.item_id,
+              data,
+              auth.user_name,
+              redirect_to_view
             )
-          : dispatch(createNewItems(data, auth.user_name, redirect_to_view));
+          );
+        }
+        // data_head.item_id
+        //   ? dispatch(
+        //       upDateItem(
+        //         data_head.item_id,
+        //         data,
+        //         auth.user_name,
+        //         redirect_to_view
+        //       )
+        //     )
+        //   :
       } else {
         message.warning({
           content: "Please fill your form completely.",
@@ -510,10 +525,15 @@ const ItemCreate = (props) => {
               </Row>
             </Col>
           </Row>
-
-          <Row className="col-2 row-tab-margin">
+          {data_head.item_id ? (
+            <ItemRevisionDetail
+              data_head={data_head}
+              readOnly={readOnly}
+              upDateFormValue={upDateFormValue}
+            />
+          ) : null}
+          <Row>
             <Col span={24}>
-              {/* <FileContext.Provider value={{ data_file, updateFile }}> */}
               <TabPanel
                 data_file={data_file}
                 updateFile={updateFile}
@@ -530,7 +550,6 @@ const ItemCreate = (props) => {
                 upDateFormValue={upDateFormValue}
                 readOnly={false}
               />
-              {/* </FileContext.Provider> */}
             </Col>
           </Row>
         </div>

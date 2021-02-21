@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MainLayout from "../../../../components/MainLayout";
 import Authorize from "../../../system/Authorize";
-function UomView(props) {
+function UoMView(props) {
   const { Title, Text } = Typography;
   const authorize = Authorize();
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -151,4 +151,4 @@ function UomView(props) {
   );
 }
 
-export default UomView;
+export default UoMView;

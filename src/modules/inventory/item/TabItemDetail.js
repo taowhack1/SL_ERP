@@ -1,4 +1,5 @@
 import {
+  Button,
   Checkbox,
   Col,
   DatePicker,
@@ -7,13 +8,23 @@ import {
   Radio,
   Row,
   Space,
+  Tooltip,
 } from "antd";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useState } from "react";
 import CustomSelect from "../../../components/CustomSelect";
 import { get_pre_run_no } from "../../../include/js/function_main";
 import moment from "moment";
-import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import {
+  BorderOutlined,
+  CheckSquareOutlined,
+  PlusCircleTwoTone,
+  PlusOutlined,
+  SwapOutlined,
+} from "@ant-design/icons";
+import CustomLabel from "../../../components/CustomLabel";
+import ItemUoMConversion from "./ItemUoMConversion";
+import Modal from "antd/lib/modal/Modal";
 const { TextArea } = Input;
 
 const TabItemDetail = ({
@@ -23,22 +34,15 @@ const TabItemDetail = ({
   customers,
   readOnly,
 }) => {
+  const [modalVisible, setModalVisible] = useState(false);
   let disabled_field = data_head.item_id ? 1 : 0;
   return (
     <>
       <Row>
-        <Col
-          span={12}
-          style={{
-            borderRight: "1px solid #c4c4c4",
-          }}
-        >
+        <Col span={12} className={"col-border-right"}>
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
-              <Text strong>
-                {!readOnly && <span className="require">* </span>}
-                Item type
-              </Text>
+              <CustomLabel title={"Item type :"} require readOnly={readOnly} />
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -88,10 +92,11 @@ const TabItemDetail = ({
           </Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
-              <Text strong>
-                {!readOnly && <span className="require">* </span>}
-                Unit of measure
-              </Text>
+              <CustomLabel
+                title={"Unit of Measure :"}
+                require
+                readOnly={readOnly}
+              />
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -115,25 +120,74 @@ const TabItemDetail = ({
                           uom_no: option.data.uom_no,
                           uom_no_name: option.data.uom_no_name,
                           uom_name: option.data.uom_name,
+                          uom_conversion: data_head?.uom_conversion?.map(
+                            (obj) => {
+                              return {
+                                ...obj,
+                                uom_id: option.data.uom_id,
+                                uom_no_name: option.data.uom_no_name,
+                              };
+                            }
+                          ),
                         })
                       : upDateFormValue({
                           uom_id: null,
                           uom_no: null,
                           uom_no_name: null,
                           uom_name: null,
+                          uom_conversion: [],
                         });
                   }}
                 />
               )}
             </Col>
-            <Col span={2}></Col>
+            <Col span={2} className={"pd-left-1"}>
+              {data_head.uom_id && (
+                <Tooltip
+                  title="Config UoM Conversion"
+                  onClick={() => setModalVisible(true)}
+                >
+                  <SwapOutlined
+                    style={{ fontSize: 20 }}
+                    className="button-icon"
+                  />
+                </Tooltip>
+              )}
+            </Col>
           </Row>
+          {data_head.uom_id && (
+            <Row className="col-2 row-margin-vertical">
+              <Col span={6}></Col>
+              <Col span={16}>
+                <span className="require">* Click icon</span>
+                <SwapOutlined
+                  // style={{ fontSize: 20 }}
+                  onClick={() => setModalVisible(true)}
+                  className="button-icon pd-left-2 pd-right-2"
+                />
+                <span className="require">
+                  to 'Edit' or 'View' UOM conversion
+                </span>
+              </Col>
+            </Row>
+          )}
+          {modalVisible && (
+            <ItemUoMConversion
+              readOnly={readOnly}
+              data_head={data_head}
+              visible={modalVisible}
+              setModalVisible={setModalVisible}
+              upDateFormValue={upDateFormValue}
+              UoMList={master_data.item_uom}
+            />
+          )}
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
-              <Text strong>
-                {!readOnly && <span className="require">* </span>}
-                Shelf life (day)
-              </Text>
+              <CustomLabel
+                title={"Shelf life (day) :"}
+                require
+                readOnly={readOnly}
+              />
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -162,10 +216,11 @@ const TabItemDetail = ({
           </Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
-              <Text strong>
-                {!readOnly && <span className="require">* </span>}
-                Customer name
-              </Text>
+              <CustomLabel
+                title={"Customer name :"}
+                require
+                readOnly={readOnly}
+              />
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -215,10 +270,11 @@ const TabItemDetail = ({
           </Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
-              <Text strong>
-                {!readOnly && <span className="require">* </span>}
-                Identify benefit
-              </Text>
+              <CustomLabel
+                title={"Identify benefit :"}
+                require
+                readOnly={readOnly}
+              />
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -267,8 +323,8 @@ const TabItemDetail = ({
           </Row>
           {data_head.type_id === 3 && (
             <Row className="col-2 row-margin-vertical">
-              <Col span={6} className={readOnly ? "" : "pd-left-1"}>
-                <Text strong>Effective Date</Text>
+              <Col span={6}>
+                <CustomLabel title={"Effective Date :"} readOnly={readOnly} />
               </Col>
               <Col span={16}>
                 {readOnly ? (
@@ -318,10 +374,7 @@ const TabItemDetail = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
             <Col span={6}>
-              <Text strong>
-                {!readOnly && <span className="require">* </span>}
-                Category
-              </Text>
+              <CustomLabel title={"Category :"} require readOnly={readOnly} />
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -373,10 +426,11 @@ const TabItemDetail = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
             <Col span={6}>
-              <Text strong>
-                {!readOnly && <span className="require">* </span>}
-                Storage Condition
-              </Text>
+              <CustomLabel
+                title={"Storage Condition :"}
+                require
+                readOnly={readOnly}
+              />
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -414,8 +468,8 @@ const TabItemDetail = ({
 
           <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
-            <Col span={6} className={readOnly ? "" : "pd-left-1"}>
-              <Text strong>Price approve by</Text>
+            <Col span={6}>
+              <CustomLabel title={"Price approve by :"} readOnly={readOnly} />
             </Col>
             <Col span={16} className={readOnly ? "" : "pd-left-2"}>
               {readOnly ? (
@@ -444,8 +498,8 @@ const TabItemDetail = ({
           <Row className="col-2 row-tab-margin"></Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
-            <Col span={6} className={readOnly ? "" : "pd-left-1"}>
-              <Text strong>Sale to</Text>
+            <Col span={6}>
+              <CustomLabel title={"Sale to :"} readOnly={readOnly} />
             </Col>
             <Col span={16} className="pd-left-2">
               {readOnly ? (

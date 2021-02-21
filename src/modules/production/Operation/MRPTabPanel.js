@@ -12,8 +12,8 @@ const MRPTabPanel = () => {
   return (
     <Row className="col-2">
       <Col span={24}>
-        <Tabs defaultActiveKey={"1"} className="row-tab-margin-lg">
-          <Tabs.TabPane
+        <Tabs defaultActiveKey={"2"} className="row-tab-margin-lg">
+          {/* <Tabs.TabPane
             tab={
               <span className="tab_pane">
                 {!readOnly && <span className="require">* </span>}
@@ -23,7 +23,7 @@ const MRPTabPanel = () => {
             key={"1"}
           >
             <TabMRPDetail />
-          </Tabs.TabPane>
+          </Tabs.TabPane> */}
           <Tabs.TabPane
             tab={
               <span className="tab_pane">

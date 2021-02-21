@@ -191,27 +191,17 @@ const PRView = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Due Date :</Text>
+            <Text strong>Description :</Text>
           </Col>
-
           <Col span={8} className="text-view">
-            {data_head.tg_pr_due_date}
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Request by :</Text>
-          </Col>
-
-          <Col span={8} className="text-view">
-            {data_head.pr_created_by_no_name}
+            {data_head.pr_description}
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Vendor :</Text>
+            <Text strong>Job Name :</Text>
           </Col>
-          <Col span={8}>
-            <Text className="text-view">{data_head.vendor_no_name}</Text>
+          <Col span={8} className="text-view">
+            {data_head.mrp_no_description ?? "-"}
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
@@ -222,23 +212,17 @@ const PRView = (props) => {
             {data_head.cost_center_no_name}
           </Col>
           <Col span={2}></Col>
+
           <Col span={3}>
-            <Text strong>Currency :</Text>
+            <Text strong>Request by :</Text>
           </Col>
+
           <Col span={8} className="text-view">
-            {data_head.currency_no ? data_head.currency_no : "THB"}
+            {data_head.pr_created_by_no_name}
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Description :</Text>
-          </Col>
-          <Col span={8} className="text-view">
-            {data_head.pr_description}
-          </Col>
-          <Col span={2}></Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
+          {/* 5 */}
           <Col span={3}>
             <Text strong>Item Type :</Text>
           </Col>
@@ -246,6 +230,22 @@ const PRView = (props) => {
             {data_head.type_name}
           </Col>
           <Col span={2}></Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Vendor :</Text>
+          </Col>
+          <Col span={8}>
+            <Text className="text-view">{data_head.vendor_no_name}</Text>
+          </Col>
+
+          <Col span={2}></Col>
+          <Col span={3}>
+            <Text strong>Currency :</Text>
+          </Col>
+          <Col span={8} className="text-view">
+            {data_head.currency_no ? data_head.currency_no : "THB"}
+          </Col>
         </Row>
         <Row className="col-2 row-tab-margin-l">
           <Col span={24}>

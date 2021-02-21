@@ -2,7 +2,7 @@ import { Table } from "antd";
 import React from "react";
 import MainLayout from "../../../../components/MainLayout";
 
-function TypeUom() {
+function TypeUoM() {
   return (
     <div>
       <MainLayout></MainLayout>
@@ -10,4 +10,4 @@ function TypeUom() {
   );
 }
 
-export default TypeUom;
+export default TypeUoM;

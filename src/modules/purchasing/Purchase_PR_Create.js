@@ -26,13 +26,14 @@ import { reducer } from "./reducers";
 import { withRouter } from "react-router-dom";
 
 import Authorize from "../system/Authorize";
+import CustomLabel from "../../components/CustomLabel";
 
 const { TextArea } = Input;
 const { Text } = Typography;
 
 const initialStateHead = pr_fields;
 const initialStateDetail = [pr_detail_fields];
-
+const readOnly = false;
 const PurchaseRequisitionCreate = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
@@ -192,20 +193,32 @@ const PurchaseRequisitionCreate = (props) => {
             </h3>
           )}
         </Row>
-        <Row className="col-2 row-margin-vertical-lg">
+        <Row className="col-2 row-margin-vertical">
+          {/* 1 */}
           <Col span={3}>
-            <Text strong>Request by :</Text>
+            <CustomLabel title={"Description :"} require readOnly={readOnly} />
           </Col>
 
-          <Col span={8}>{data_head.pr_created_by_no_name}</Col>
+          <Col span={8}>
+            <Input
+              onChange={(e) =>
+                upDateFormValue({ pr_description: e.target.value })
+              }
+              name={"pr_description"}
+              value={data_head.pr_description}
+              placeholder="Description"
+            ></Input>
+          </Col>
           <Col span={2}></Col>
+          <Col span={3}>
+            <CustomLabel title={"Job Name :"} readOnly={readOnly} />
+          </Col>
+          <Col span={8}>{data_head.mrp_no_description ?? "-"}</Col>
         </Row>
 
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Cost center :
-            </Text>
+            <CustomLabel title={"Cost center :"} require readOnly={readOnly} />
           </Col>
           <Col span={8}>
             <CustomSelect
@@ -232,62 +245,16 @@ const PurchaseRequisitionCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong>Vendor :</Text>
-          </Col>
-          <Col span={8}>
-            <CustomSelect
-              allowClear
-              showSearch
-              placeholder={"Vendor"}
-              name="vendor_id"
-              field_id="vendor_id"
-              field_name="vendor_no_name"
-              value={data_head.vendor_no_name}
-              data={vendors}
-              onChange={(data, option) => {
-                data && data
-                  ? upDateFormValue({
-                      vendor_id: data,
-                      vendor_no_name: option.title,
-                    })
-                  : upDateFormValue({
-                      vendor_id: null,
-                      vendor_no_name: null,
-                    });
-              }}
-            />
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Description :
-            </Text>
+            <CustomLabel title={"Request by :"} readOnly={readOnly} />
           </Col>
 
-          <Col span={8}>
-            <Input
-              onChange={(e) =>
-                upDateFormValue({ pr_description: e.target.value })
-              }
-              name={"pr_description"}
-              value={data_head.pr_description}
-              placeholder="Description"
-            ></Input>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Currency :</Text>
-          </Col>
-          <Col span={8}>
-            {data_head.currency_no ? data_head.currency_no : "THB"}
-          </Col>
+          <Col span={8}>{data_head.pr_created_by_no_name}</Col>
+          {/* 4 */}
         </Row>
         <Row className="col-2 row-margin-vertical">
+          {/* 3 */}
           <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Item Type :
-            </Text>
+            <CustomLabel title={"Item Type :"} require readOnly={readOnly} />
           </Col>
 
           <Col span={8}>
@@ -316,6 +283,43 @@ const PurchaseRequisitionCreate = (props) => {
               }}
             />
           </Col>
+
+          <Col span={2}></Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <CustomLabel title={"Vendor :"} readOnly={readOnly} />
+          </Col>
+          <Col span={8}>
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"Vendor"}
+              name="vendor_id"
+              field_id="vendor_id"
+              field_name="vendor_no_name"
+              value={data_head.vendor_no_name}
+              data={vendors}
+              onChange={(data, option) => {
+                data && data
+                  ? upDateFormValue({
+                      vendor_id: data,
+                      vendor_no_name: option.title,
+                    })
+                  : upDateFormValue({
+                      vendor_id: null,
+                      vendor_no_name: null,
+                    });
+              }}
+            />
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}>
+            <CustomLabel title={"Currency :"} readOnly={readOnly} />
+          </Col>
+          <Col span={8}>
+            {data_head.currency_no ? data_head.currency_no : "THB"}
+          </Col>
         </Row>
         <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
@@ -324,7 +328,7 @@ const PurchaseRequisitionCreate = (props) => {
                 <ItemLine
                   type_id={data_head.type_id}
                   data_detail={data_detail}
-                  readOnly={false}
+                  readOnly={readOnly}
                   detailDispatch={detailDispatch}
                   headDispatch={headDispatch}
                   vat_rate={data_head.vat_rate}

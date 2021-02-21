@@ -17,7 +17,10 @@ import DetailLoading from "../../../../components/DetailLoading";
 import FormLayout from "../../../../components/FormLayout";
 import MainLayout from "../../../../components/MainLayout";
 import { AppContext, ReturnContext } from "../../../../include/js/context";
-import { validateFormHead } from "../../../../include/js/function_main";
+import {
+  sortData,
+  validateFormHead,
+} from "../../../../include/js/function_main";
 import { returnFields, returnRequireFields } from "./config";
 import ReturnHead from "./ReturnHead";
 import ReturnTabs from "./ReturnTabs";
@@ -98,7 +101,11 @@ const ReturnForm = () => {
     // setLoading(true);
     const getReturnData = async (id, user_name) =>
       await getReturnByID(id, user_name).then((res) => {
-        setState(res.data[0]);
+        console.log(res.data[0]);
+        setState({
+          ...res.data[0],
+          return_detail: sortData(res.data[0].return_detail),
+        });
         console.log("getReturnByID", res.data);
         setLoading(false);
       });

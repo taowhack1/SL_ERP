@@ -426,6 +426,11 @@ tr.selected-row:hover {
   color: #1890ff;
   cursor: pointer;
 }
+.col-wrap {
+  overflow: visible;
+  color: #717171;
+  word-break: keep-all;
+}
 .text-value {
   white-space: nowrap;
   overflow: hidden;

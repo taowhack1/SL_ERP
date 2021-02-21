@@ -1,9 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Typography, Space, Switch, message } from "antd";
+import { Row, Col, Typography, Space, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import Comments from "../../components/Comments";
-import { item_actions } from "../../actions/inventory/itemActions";
+import {
+  getItemAction,
+  item_actions,
+} from "../../actions/inventory/itemActions";
 import { getMasterDataItem } from "../../actions/inventory";
 import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
 import Authorize from "../system/Authorize";
@@ -15,6 +18,7 @@ import { FileContext, ItemContext } from "../../include/js/context";
 import { sum2DArrOdjWithField } from "../../include/js/function_main";
 import Barcode from "react-barcode";
 import { report_server } from "../../include/js/main_config";
+import ItemRevisionDetail from "./item/ItemRevisionDetail";
 
 const { Text } = Typography;
 const ItemView = (props) => {
@@ -133,17 +137,7 @@ const ItemView = (props) => {
       step: flow,
       process_complete: data_head.process_complete,
     },
-    action: [
-      {
-        name: "Master Formula",
-        link: `${report_server}/report_purch/report_bulk_formula.aspx?item_code=${data_head.item_no}`,
-      },
-      data_head.button_cancel && {
-        name: "Cancel",
-        cancel: true,
-        link: ``,
-      },
-    ],
+    action: getItemAction(data_head),
     // save: "function",
     discard: "/inventory/items",
     back: "/inventory/items",
@@ -160,7 +154,6 @@ const ItemView = (props) => {
         department_id === 13 &&
         [1, 2].includes(data_head.type_id) &&
         !data_detail.length
-        // !data_detail[0].vendor_id
       ) {
         console.log("Purchase Person");
         message.warning({
@@ -211,15 +204,6 @@ const ItemView = (props) => {
       readOnly,
       data_file,
       statePart: data_part,
-      // PMReducer: {
-      //   data: data_part_mix,
-      // },
-      // PartDetailReducer: {
-      //   data: data_part_detail,
-      // },
-      // FormulaReducer: {
-      //   data: data_formula,
-      // },
       formulaPercent,
       sumPercent,
       filling: data_filling,
@@ -306,7 +290,9 @@ const ItemView = (props) => {
                 </Row>
               </Col>
             </Row>
-
+            {data_head.item_id ? (
+              <ItemRevisionDetail data_head={data_head} readOnly={readOnly} />
+            ) : null}
             <Row className="col-2 row-tab-margin">
               <Col span={24}>
                 <TabPanel
@@ -317,7 +303,6 @@ const ItemView = (props) => {
                   data_qa_detail={data_qa_detail}
                   data_packaging_detail={data_packaging_detail}
                   data_weight_detail={data_weight_detail}
-                  // data_production_process_detail={data_production_process_detail}
                   readOnly={readOnly}
                 />
               </Col>

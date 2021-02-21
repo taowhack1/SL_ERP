@@ -5,14 +5,14 @@ import { withRouter } from "react-router-dom";
 import MainLayout from "../../../../components/MainLayout";
 import { sortData } from "../../../../include/js/function_main";
 import Authorize from "../../../system/Authorize";
-import { uomShowColumns } from "./UomConfig";
+import { uomShowColumns } from "./uomConfig";
 import $ from "jquery";
 import {
-  getConfigurationUom,
-  getUomInRow,
+  getConfigurationUoM,
+  getUoMInRow,
 } from "../../../../actions/inventory/configurations/uom/uomAction";
 
-function Uom(props) {
+function UoM(props) {
   const dispatch = useDispatch();
   const uom = useSelector((state) => state.inventory.configurations.uom);
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -20,7 +20,7 @@ function Uom(props) {
   const [data, setData] = useState(uom);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    dispatch(getConfigurationUom());
+    dispatch(getConfigurationUoM());
   }, []);
   useEffect(() => {
     const setStateData = () => {
@@ -75,7 +75,7 @@ function Uom(props) {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    dispatch(getUomInRow(record));
+                    dispatch(getUoMInRow(record));
                     props.history.push({
                       pathname:
                         "/inventory/configurations/uom/view/" + record.uom_id,
@@ -92,4 +92,4 @@ function Uom(props) {
   );
 }
 
-export default withRouter(Uom);
+export default withRouter(UoM);

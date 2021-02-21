@@ -15,6 +15,8 @@ const updateMRPMaterial = (id, data_material) => {
 const getMRPMaterial = (id) => {
   return axios.get(`${api_mrp_detail}/${id}`, header_config);
 };
+const getMRPHead = (id, user_name) =>
+  axios.get(`${api_mrp}/${id}&${user_name}`, header_config);
 
 export const getSOReference = () => (dispatch) => {
   axios.get(`${api_mrp_so_ref}`, header_config).then((res) => {
@@ -27,26 +29,21 @@ export const getAllMRP = (user_name) => async (dispatch) => {
     dispatch({ type: GET_ALL_MRP, payload: res.data[0] });
   });
 };
-export const getMRPByID = (id, user_name, redirect) => (dispatch) => {
+export const getMRPByID = (id, user_name, redirect) => {
   console.log("getMRPByID");
-  axios
-    .get(`${api_mrp}/${id}&${user_name}`, header_config)
-    .then((res1) => {
-      Promise.allSettled([getMRPMaterial(id)]).then((res2) => {
-        console.log(res1, res2);
-        dispatch({
-          type: GET_MRP_BY_ID,
-          payload: {
-            data_head: res1.data[0],
-            data_material: res2[0].value.data[0],
-          },
-        });
-        redirect && redirect(id);
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  return Promise.allSettled([
+    getMRPHead(id, user_name),
+    getMRPMaterial(id),
+  ]).catch((err) => {
+    console.log(err);
+  });
+  // .then((res) => {
+  //   console.log(res1, res2);
+  //   return {
+  //     data_head: res[0].value.data[0],
+  //     data_material: res[1].value.data[0],
+  //   };
+  // });
 };
 
 export const createMRP = (data, user_name, redirect) => async (dispatch) => {
@@ -62,7 +59,8 @@ export const createMRP = (data, user_name, redirect) => async (dispatch) => {
             duration: 2,
             key: "validate",
           });
-          dispatch(getMRPByID(mrp_id, user_name, redirect));
+          redirect && redirect();
+          // dispatch(getMRPByID(mrp_id, user_name, redirect));
         })
         .catch((error) => {
           console.log(error);
@@ -89,7 +87,8 @@ export const updateMRP = (id, data, user_name, redirect) => (dispatch) => {
             duration: 2,
             key: "validate",
           });
-          dispatch(getMRPByID(id, user_name, redirect));
+          redirect && redirect();
+          // dispatch(getMRPByID(id, user_name, redirect));
         })
         .catch((error) => {
           console.log(error);

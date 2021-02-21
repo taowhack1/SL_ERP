@@ -176,13 +176,13 @@ export const mrpRMColumns = (
               ? true
               : false
           )}
-          {record.item_id && (
+          {/* {record.item_id && (
             <FileSearchOutlined
               className="button-icon"
               title="View Detail"
               onClick={() => viewOnHandDetail(record)}
             />
-          )}
+          )} */}
         </>
       );
     },
@@ -218,7 +218,7 @@ export const mrpRMColumns = (
   },
   {
     id: 6,
-    title: <div className="text-center">Qty. To PR</div>,
+    title: <div className="text-center">MOQ</div>,
     dataIndex: "mrp_detail_qty_pr",
     key: "mrp_detail_qty_pr",
     require: true,
@@ -350,7 +350,7 @@ export const mrpPKColumns = (readOnly, onChange, onDelete, onToggle) => [
   },
   {
     id: 6,
-    title: <div className="text-center">Qty. To PR</div>,
+    title: <div className="text-center">MOQ</div>,
     dataIndex: "mrp_detail_qty_pr",
     key: "mrp_detail_qty_pr",
     require: true,

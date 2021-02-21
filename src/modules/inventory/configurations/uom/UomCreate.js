@@ -1,4 +1,4 @@
-import { Col, Input, message, Row, Tabs, Typography } from "antd";
+import { Col, Input, InputNumber, message, Row, Tabs, Typography } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../../../components/CustomSelect";
@@ -9,15 +9,16 @@ import {
   uomFields,
   uomFieldsReQuire,
   uomFieldsReQuire2,
-} from "./UomConfig";
+} from "./uomConfig";
 import moment from "moment";
 import { validateFormHead } from "../../../../include/js/function_main";
 import { useHistory } from "react-router-dom";
 import {
-  createConfigurationUom,
-  upDateConfigurationUom,
+  createConfigurationUoM,
+  upDateConfigurationUoM,
 } from "../../../../actions/inventory/configurations/uom/uomAction";
-function UomCreate(props) {
+import { getNumberFormat } from "../../../../include/js/main_config";
+function UoMCreate(props) {
   const { Title, Text } = Typography;
   const history = useHistory();
   const authorize = Authorize();
@@ -30,7 +31,7 @@ function UomCreate(props) {
   const data =
     props.location && props.location.state ? props.location.state : 0;
 
-  const [dataUomCreate, setDataUomCreate] = useState(
+  const [dataUoMCreate, setDataUoMCreate] = useState(
     data && data
       ? { ...data, commit: 1, user_name: auth.user_name }
       : {
@@ -41,7 +42,7 @@ function UomCreate(props) {
         }
   );
   const upDateFormValue = (data) => {
-    setDataUomCreate({ ...dataUomCreate, ...data });
+    setDataUoMCreate({ ...dataUoMCreate, ...data });
   };
   const config = {
     projectId: current_project && current_project.project_id,
@@ -51,9 +52,9 @@ function UomCreate(props) {
     breadcrumb: [
       "Home",
       "UoM",
-      dataUomCreate.uom_id ? "Edit" : "Create",
-      dataUomCreate.uom_id &&
-        " [ " + dataUomCreate.uom_id + " ] " + dataUomCreate.uom_name,
+      dataUoMCreate.uom_id ? "Edit" : "Create",
+      dataUoMCreate.uom_id &&
+        " [ " + dataUoMCreate.uom_id + " ] " + dataUoMCreate.uom_name,
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
@@ -62,17 +63,17 @@ function UomCreate(props) {
     discard: "/inventory/configurations/uom",
     onSave: (e) => {
       const key = "validate";
-      const validate = validateFormHead(dataUomCreate, Fields);
+      const validate = validateFormHead(dataUoMCreate, Fields);
       if (validate.validate) {
-        dataUomCreate.uom_id
+        dataUoMCreate.uom_id
           ? dispatch(
-              upDateConfigurationUom(
-                dataUomCreate.uom_id,
-                dataUomCreate,
+              upDateConfigurationUoM(
+                dataUoMCreate.uom_id,
+                dataUoMCreate,
                 redirectToView
               )
             )
-          : dispatch(createConfigurationUom(dataUomCreate, redirectToView));
+          : dispatch(createConfigurationUoM(dataUoMCreate, redirectToView));
       } else {
         message.warning({
           content: "Please fill your form completely.",
@@ -97,7 +98,7 @@ function UomCreate(props) {
     history.push("/inventory/configurations/uom/view/" + (id ? id : "new"));
   };
 
-  const Fields = dataUomCreate.uom_name_ref
+  const Fields = dataUoMCreate.uom_name_ref
     ? uomFieldsReQuire2
     : uomFieldsReQuire;
   return (
@@ -108,8 +109,8 @@ function UomCreate(props) {
           <Col span={8}>
             <h2>
               <strong>
-                {dataUomCreate.uom_id ? "Edit" : "Create"} UoM{" "}
-                {dataUomCreate.uom_id && "#" + dataUomCreate.uom_no}
+                {dataUoMCreate.uom_id ? "Edit" : "Create"} UoM{" "}
+                {dataUoMCreate.uom_id && "#" + dataUoMCreate.uom_no}
               </strong>
             </h2>
           </Col>
@@ -118,7 +119,7 @@ function UomCreate(props) {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{dataUomCreate.uom_created}</Text>
+            <Text className="text-view">{dataUoMCreate.uom_created}</Text>
           </Col>
         </Row>
 
@@ -132,7 +133,7 @@ function UomCreate(props) {
                 placeholder="Name"
                 name="uom_name"
                 onChange={(e) => upDateFormValue({ uom_name: e.target.value })}
-                value={dataUomCreate.uom_name}
+                value={dataUoMCreate.uom_name}
               />
             </Col>
           </Col>
@@ -165,7 +166,7 @@ function UomCreate(props) {
                           onChange={(e) =>
                             upDateFormValue({ uom_no: e.target.value })
                           }
-                          value={dataUomCreate.uom_no}
+                          value={dataUoMCreate.uom_no}
                         />
                       </Col>
                       <Col span={1}></Col>
@@ -177,7 +178,17 @@ function UomCreate(props) {
                         </Text>
                       </Col>
                       <Col span={18}>
-                        <Input placeholder="Unit Value" name="unit_value" />
+                        <InputNumber
+                          {...getNumberFormat(3)}
+                          className={"full-width"}
+                          min={0}
+                          placeholder="Value"
+                          name="unit_value"
+                          value={dataUoMCreate.unit_value}
+                          onChange={(value) =>
+                            upDateFormValue({ unit_value: value })
+                          }
+                        />
                       </Col>
                       <Col span={1}></Col>
                     </Row>
@@ -194,7 +205,7 @@ function UomCreate(props) {
                               uom_name_th: e.target.value,
                             })
                           }
-                          value={dataUomCreate.uom_name_th}
+                          value={dataUoMCreate.uom_name_th}
                         />
                       </Col>
                       <Col span={1}></Col>
@@ -210,7 +221,7 @@ function UomCreate(props) {
                           onChange={(e) =>
                             upDateFormValue({ uom_remark: e.target.value })
                           }
-                          value={dataUomCreate.uom_remark}
+                          value={dataUoMCreate.uom_remark}
                         />
                       </Col>
                       <Col span={1}></Col>
@@ -233,7 +244,7 @@ function UomCreate(props) {
                           name="uom_name_ref"
                           field_id="uom_id"
                           field_name="uom_name"
-                          value={dataUomCreate.uom_name_ref}
+                          value={dataUoMCreate.uom_name_ref}
                           data={uom}
                           onChange={(data, option) => {
                             data && data
@@ -258,20 +269,20 @@ function UomCreate(props) {
                         <Text strong>
                           <span className="require">
                             {" "}
-                            {dataUomCreate.uom_name_ref ? "*" : ""}
+                            {dataUoMCreate.uom_name_ref ? "*" : ""}
                           </span>{" "}
                           Ratio :
                         </Text>
                       </Col>
                       <Col span={15}>
                         <Input
-                          disabled={dataUomCreate.uom_name_ref ? false : true}
+                          disabled={dataUoMCreate.uom_name_ref ? false : true}
                           placeholder="e.g: 1*(reference unit)=ratio*(this unit)"
                           name="ratio"
                           onChange={(e) =>
                             upDateFormValue({ ratio: e.target.value })
                           }
-                          value={dataUomCreate.ratio}
+                          value={dataUoMCreate.ratio}
                         />
                       </Col>
                       <Col span={1}></Col>
@@ -281,7 +292,7 @@ function UomCreate(props) {
                       <Col span={6}>
                         <Text strong>
                           <span className="require">
-                            {dataUomCreate.uom_name_ref ? "*" : ""}
+                            {dataUoMCreate.uom_name_ref ? "*" : ""}
                           </span>{" "}
                           Type :
                         </Text>
@@ -290,14 +301,14 @@ function UomCreate(props) {
                         <CustomSelect
                           allowClear
                           showSearch
-                          disabled={dataUomCreate.uom_name_ref ? false : true}
+                          disabled={dataUoMCreate.uom_name_ref ? false : true}
                           placeholder={
                             "Bigger,Smaller,Equal than the reference Unit of Measure"
                           }
                           name="size_of_ref"
                           field_id="uom_id"
                           field_name="uom_name"
-                          value={dataUomCreate.size_of_ref}
+                          value={dataUoMCreate.size_of_ref}
                           options={dataOptions}
                           onChange={(dataOption, option) => {
                             dataOption && dataOption
@@ -323,4 +334,4 @@ function UomCreate(props) {
   );
 }
 
-export default UomCreate;
+export default UoMCreate;

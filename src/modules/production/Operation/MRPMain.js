@@ -137,13 +137,14 @@ const MRPMain = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     keepLog.keep_log_action(record.mrp_no);
-                    dispatch(
-                      getMRPByID(
-                        record.mrp_id,
-                        auth.user_name,
-                        redirect_to_view
-                      )
-                    );
+                    history.push("mrp/view/" + record.mrp_id);
+                    // dispatch(
+                    //   getMRPByID(
+                    //     record.mrp_id,
+                    //     auth.user_name,
+                    //     redirect_to_view
+                    //   )
+                    // );
                   },
                 };
               }}

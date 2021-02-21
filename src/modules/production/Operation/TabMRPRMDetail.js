@@ -138,6 +138,7 @@ const TabMRPRMDetail = () => {
   }, [so_detail_id]);
   console.log("so_detail_id", so_detail_id);
   console.log("state", itemDetail);
+  console.log("RMReducer.data", RMReducer.data);
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
