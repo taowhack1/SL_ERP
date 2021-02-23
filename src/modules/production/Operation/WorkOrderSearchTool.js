@@ -1,3 +1,5 @@
+/** @format */
+
 import { ClearOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Row, Col, DatePicker } from "antd";
 import Text from "antd/lib/typography/Text";
@@ -45,25 +47,25 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
   }, [state]);
   return (
     <>
-      <div className="search-table">
-        <Row className="search-header">
-          <Text className="search-title" strong>
+      <div className='search-table'>
+        <Row className='search-header'>
+          <Text className='search-title' strong>
             <SearchOutlined style={{ marginRight: 10, size: "20px" }} />
             Search Tool.
           </Text>
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className='col-2 row-margin-vertical'>
           <Col span={2}></Col>
           <Col span={2}>
-            <Text strong>WO Code :</Text>
+            <Text strong>MRP Code :</Text>
           </Col>
           <Col span={8}>
             <CustomSelect
               allowClear
               showSearch
-              placeholder={"WO Code"}
-              field_id="wo_id"
-              field_name="wo_no_description"
+              placeholder={"MRP Code"}
+              field_id='wo_id'
+              field_name='wo_no_description'
               value={state.wo_no_description}
               data={workOrderList}
               onChange={(data, option) => {
@@ -86,8 +88,8 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
           <Col span={8}>
             <RangePicker
               format={"DD/MM/YYYY"}
-              name="wo_plan_start_date"
-              className="full-width"
+              name='wo_plan_start_date'
+              className='full-width'
               value={[
                 state.wo_plan_start_date
                   ? moment(state.wo_plan_start_date, "DD/MM/YYYY")
@@ -110,7 +112,7 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
             />
           </Col>
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className='col-2 row-margin-vertical'>
           <Col span={2}></Col>
           <Col span={2}>
             <Text strong>Item Name :</Text>
@@ -122,8 +124,8 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
               showSearch
               // disabled={disable_category}
               placeholder={"Item name"}
-              field_id="item_id"
-              field_name="item_no_name"
+              field_id='item_id'
+              field_name='item_no_name'
               value={state.item_no_name}
               data={item_list.filter(
                 (item) => item.type_id === 4 || item.type_id === 5
@@ -149,8 +151,8 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
           <Col span={8}>
             <RangePicker
               format={"DD/MM/YYYY"}
-              name="wo_due_date"
-              className="full-width"
+              name='wo_due_date'
+              className='full-width'
               value={[
                 state.wo_due_date_start
                   ? moment(state.wo_due_date_start, "DD/MM/YYYY")
@@ -173,7 +175,7 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
             />
           </Col>
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className='col-2 row-margin-vertical'>
           <Col span={4}></Col>
           <Col span={8}>
             {/* <Search
@@ -185,12 +187,11 @@ const WorkOrderSearchTool = ({ onChangeSeach }) => {
           <Col span={1}></Col>
           <Col span={10}>
             <Button
-              className="search-button"
+              className='search-button'
               danger
               icon={<ClearOutlined />}
               style={{ width: 150 }}
-              onClick={reset_state}
-            >
+              onClick={reset_state}>
               Clear Search
             </Button>
           </Col>

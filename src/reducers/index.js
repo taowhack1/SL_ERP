@@ -1,3 +1,5 @@
+/** @format */
+
 import { combineReducers } from "redux";
 import authReducer from "./authReducer";
 import systemConfigReducer from "./systemConfigReducer";
@@ -11,8 +13,9 @@ import QAReducer from "./QA_Reducer";
 import AccountingReducer from "./Accounting_Reducer";
 import { USER_LOGOUT } from "../actions/types";
 import ProductionReducer from "./ProductionReducer";
-
+import { reducer as formReducer } from "redux-form";
 export const appReducer = combineReducers({
+  form: formReducer,
   auth: authReducer,
   systemConfig: systemConfigReducer,
   salary: salaryReducer,

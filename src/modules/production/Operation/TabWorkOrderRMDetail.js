@@ -1,3 +1,5 @@
+/** @format */
+
 import { Row, Col, Typography, Tabs, Table } from "antd";
 import { ProfileOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
@@ -140,17 +142,17 @@ const TabWorkOrderRMDetail = () => {
   console.log("state", itemDetail);
   return (
     <>
-      <Row className="col-2 row-margin-vertical  detail-tab-row">
-        <Col span={13} className="text-left">
+      <Row className='col-2 row-margin-vertical  detail-tab-row'>
+        <Col span={13} className='text-left'>
           <Text strong style={{ fontSize: 16 }}>
             <ProfileOutlined style={{ marginRight: 10 }} /> Raw Material List
           </Text>
         </Col>
-        <Col span={11} className="text-right"></Col>
+        <Col span={11} className='text-right'></Col>
       </Row>
       {/* Column Header */}
       <CustomTable
-        rowKey="id"
+        rowKey='id'
         rowClassName={(record) => {
           return record.auto_genarate_item
             ? "row-table-detail "
@@ -206,16 +208,14 @@ const TabWorkOrderRMDetail = () => {
           <Draggable
             disabled={itemDetail.disabled}
             bounds={itemDetail.bounds}
-            onStart={(event, uiData) => onStart(event, uiData)}
-          >
+            onStart={(event, uiData) => onStart(event, uiData)}>
             <div ref={draggleRef}>{modal}</div>
           </Draggable>
-        )}
-      >
-        <Tabs onChange={() => console.log("tab change")} type="card">
-          <Tabs.TabPane tab="On Reserved" key="1">
+        )}>
+        <Tabs onChange={() => console.log("tab change")} type='card'>
+          <Tabs.TabPane tab='On Reserved' key='1'>
             <CustomTable
-              rowKey="id"
+              rowKey='id'
               rowClassName={"row-table-detail"}
               pageSize={10}
               columns={[
@@ -264,15 +264,15 @@ const TabWorkOrderRMDetail = () => {
                 );
                 return (
                   <>
-                    <Table.Summary.Row className="row-table-detail row-summary">
+                    <Table.Summary.Row className='row-table-detail row-summary'>
                       <Table.Summary.Cell colSpan={2}></Table.Summary.Cell>
                       <Table.Summary.Cell>
                         <Text strong>Total</Text>{" "}
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell className="text-right">
+                      <Table.Summary.Cell className='text-right'>
                         <Text strong>{convertDigit(total, 4)}</Text>
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell className="text-left">
+                      <Table.Summary.Cell className='text-left'>
                         <Text strong>
                           {pageData.length && pageData[0].uom_no_name}
                         </Text>
@@ -283,9 +283,9 @@ const TabWorkOrderRMDetail = () => {
               }}
             />
           </Tabs.TabPane>
-          <Tabs.TabPane tab="Purchase Order" key="2">
+          <Tabs.TabPane tab='Purchase Order' key='2'>
             <CustomTable
-              rowKey="id"
+              rowKey='id'
               rowClassName={"row-table-detail"}
               pageSize={10}
               columns={[
@@ -334,15 +334,15 @@ const TabWorkOrderRMDetail = () => {
                 );
                 return (
                   <>
-                    <Table.Summary.Row className="row-table-detail row-summary">
+                    <Table.Summary.Row className='row-table-detail row-summary'>
                       <Table.Summary.Cell colSpan={2}></Table.Summary.Cell>
                       <Table.Summary.Cell>
                         <Text strong>Total</Text>{" "}
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell className="text-right">
+                      <Table.Summary.Cell className='text-right'>
                         <Text strong>{convertDigit(total, 4)}</Text>
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell className="text-left">
+                      <Table.Summary.Cell className='text-left'>
                         <Text strong>
                           {pageData.length && pageData[0].uom_no_name}
                         </Text>
@@ -353,9 +353,9 @@ const TabWorkOrderRMDetail = () => {
               }}
             />
           </Tabs.TabPane>
-          <Tabs.TabPane tab="History" key="3">
+          <Tabs.TabPane tab='History' key='3'>
             <CustomTable
-              rowKey="id"
+              rowKey='id'
               rowClassName={"row-table-detail"}
               pageSize={10}
               columns={[

@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Typography, message } from "antd";
@@ -210,7 +212,7 @@ const WorkOrderCreate = (props) => {
   };
 
   const redirect_to_view = (id) => {
-    history.push("/production/operations/wo/view/" + (id ? id : "new"));
+    history.push("/production/operations/mrp/view/" + (id ? id : "new"));
   };
 
   const headContextValue = useMemo(() => {
@@ -226,8 +228,8 @@ const WorkOrderCreate = (props) => {
   return (
     <WOContext.Provider value={headContextValue}>
       <MainLayout {...config}>
-        <div id="form">
-          <Row className="col-2">
+        <div id='form'>
+          <Row className='col-2'>
             <Col span={8}>
               <h2>
                 <strong>
@@ -241,7 +243,7 @@ const WorkOrderCreate = (props) => {
               <Text strong>Create Date :</Text>
             </Col>
             <Col span={2} style={{ textAlign: "right" }}>
-              <Text className="text-view">
+              <Text className='text-view'>
                 {headReducer.data.wo_created ?? moment().format("DD/MM/YYYY")}
               </Text>
             </Col>

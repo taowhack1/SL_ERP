@@ -1,4 +1,7 @@
+/** @format */
+
 import React, { useEffect, useReducer } from "react";
+import { Field, reduxForm } from "redux-form";
 import MainLayout from "../../../../components/MainLayout";
 import { Row, Col, Input, Tabs, Typography, message } from "antd";
 import TransferDetail from "./TransferDetail";
@@ -138,11 +141,12 @@ const TransferCreate = (props) => {
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
+  const { fields, handleSubmit } = props;
   return (
     <MainLayout {...config}>
-      <div id="form">
+      <div id='form'>
         {/* Head */}
-        <Row className="col-2">
+        <Row className='col-2'>
           <Col span={8}>
             <h2>
               <strong>Create Transfer </strong>
@@ -153,51 +157,51 @@ const TransferCreate = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{dataHead.trans_created}</Text>
+            <Text className='text-view'>{dataHead.trans_created}</Text>
           </Col>
         </Row>
         {/* tab detail */}
-        <Row className="col-2 row-margin-vertical">
+        <Row className='col-2 row-margin-vertical'>
           <Col span={3}>
             <Text strong>
-              <span className="require">*</span> Transfer No :
+              <span className='require'>*</span> Transfer No :
             </Text>
           </Col>
           <Col span={8}>
-            <Text className="text-view">{dataHead.transfer_no}</Text>
+            <Text className='text-view'>{dataHead.transfer_no}</Text>
           </Col>
           <Col span={2}></Col>
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className='col-2 row-margin-vertical'>
           <Col span={3}>
             <Text strong>
-              <span className="require">*</span> Create By :
+              <span className='require'>*</span> Create By :
             </Text>
           </Col>
           <Col span={8}>
-            <Text className="text-view">
+            <Text className='text-view'>
               {dataHead.trans_created_by_no_name}
             </Text>
           </Col>
           <Col span={2}></Col>
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className='col-2 row-margin-vertical'>
           <Col span={3}>
             <Text strong>Description :</Text>
           </Col>
           <Col span={8}>
             <Input
-              name="description"
-              placeholder="Description"
+              name='description'
+              placeholder='Description'
               value={dataHead.description}
               onChange={(e) => upDateFormValue({ description: e.target.value })}
             />
           </Col>
         </Row>
         {/* tab */}
-        <Row className="col-2 row-tab-margin-l">
+        <Row className='col-2 row-tab-margin-l'>
           <Col span={24}>
-            <div className="mt-3">
+            <div className='mt-3'>
               <TransferDetail
                 dataDetail={dataDetail}
                 detailDispatch={detailDispatch}

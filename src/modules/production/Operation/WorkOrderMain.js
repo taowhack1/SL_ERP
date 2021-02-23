@@ -1,21 +1,45 @@
+/** @format */
+
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
-import { Row, Col, Table } from "antd";
+import { Row, Col, Table, Button, Tabs } from "antd";
 import MainLayout from "../../../components/MainLayout";
 
 import $ from "jquery";
 import Authorize from "../../system/Authorize";
 import useKeepLogs from "../../logs/useKeepLogs";
 
-import { work_order_columns } from "../config/workOrder";
+import {
+  mockupWorkOrderMonitorRM,
+  workOrderMonitorRM,
+  work_order_columns,
+} from "../config/workOrder";
 import WorkOrderSearchTool from "./WorkOrderSearchTool";
 import {
   getAllWorkOrder,
   getWorkOrderByID,
 } from "../../../actions/production/workOrderActions";
 import { reset_comments } from "../../../actions/comment&log";
+import Modal from "antd/lib/modal/Modal";
+import Search from "../../../components/Search";
+
 const WorkOrderMain = (props) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = (record) => {
+    console.log(record);
+    setIsModalVisible(true);
+    setTitleModal(record.wo_no_description);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
   const dispatch = useDispatch();
 
   const history = useHistory();
@@ -23,9 +47,9 @@ const WorkOrderMain = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const auth = useSelector((state) => state.auth.authData);
-
   const [rowClick, setRowClick] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [titleModal, setTitleModal] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -43,7 +67,7 @@ const WorkOrderMain = (props) => {
     show: true,
     breadcrumb: ["Home", "Operations", "MRP"],
     search: true,
-    create: "/production/operations/wo/create",
+    create: "/production/operations/mrp/create",
     buttonAction: ["Create"],
     edit: {},
     disabledEditBtn: !rowClick,
@@ -114,46 +138,72 @@ const WorkOrderMain = (props) => {
   const redirect_to_view = (id) => {
     history.push("wo/view/" + (id ? id : "new"));
   };
-
+  const onSearch = (value, search) => {};
   return (
     <div>
       <MainLayout {...config}>
-        <Row className="row-tab-margin-lg">
+        <Row className='row-tab-margin-lg'>
           <Col span={24}>
             <Table
               title={() => (
                 <WorkOrderSearchTool onChangeSeach={onChangeSeach} />
               )}
               loading={loading}
-              columns={work_order_columns}
+              columns={work_order_columns(showModal)}
               dataSource={stateWO}
               onChange={onChange}
               bordered
-              size="small"
-              rowKey="wo_id"
+              size='small'
+              rowKey='mrp_id'
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
-                    setRowClick(true);
-                    $(e.target)
-                      .closest("tbody")
-                      .find("tr")
-                      .removeClass("selected-row");
-                    $(e.target).closest("tr").addClass("selected-row");
-                    keepLog.keep_log_action(record.wo_no);
-                    dispatch(
-                      getWorkOrderByID(
-                        record.wo_id,
-                        auth.user_name,
-                        redirect_to_view
-                      )
-                    );
+                    if (e.target.localName == "td") {
+                      setRowClick(true);
+                      $(e.target)
+                        .closest("tbody")
+                        .find("tr")
+                        .removeClass("selected-row");
+                      $(e.target).closest("tr").addClass("selected-row");
+                      keepLog.keep_log_action(record.mrp_no);
+                      dispatch(
+                        getWorkOrderByID(
+                          record.mrp_id,
+                          auth.user_name,
+                          redirect_to_view
+                        )
+                      );
+                    } else {
+                    }
                   },
                 };
               }}
             />
           </Col>
         </Row>
+        <Modal
+          width={1500}
+          title={titleModal}
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}>
+          <Tabs onChange={() => console.log("tab change")} type='card'>
+            <Tabs.TabPane tab='Raw Material' key='1'>
+              <Search style={{ width: "20%", float: "right" }} />
+              <Table
+                size='small'
+                bordered
+                pagination={{ pageSize: 15 }}
+                columns={workOrderMonitorRM}
+                dataSource={mockupWorkOrderMonitorRM}
+                rowKey='id'
+              />
+            </Tabs.TabPane>
+            <Tabs.TabPane tab='Packaging' key='2'>
+              <Table size='small' bordered pagination={{ pageSize: 15 }} />
+            </Tabs.TabPane>
+          </Tabs>
+        </Modal>
       </MainLayout>
     </div>
   );

@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   getRefStatus,
   warningTextValue,
@@ -6,13 +8,19 @@ import { convertDigit, numberFormat } from "../../../include/js/main_config";
 import React from "react";
 
 import Text from "antd/lib/typography/Text";
-import { InputNumber } from "antd";
-import { FileSearchOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, InputNumber, Tag } from "antd";
+import {
+  CheckCircleOutlined,
+  CheckCircleTwoTone,
+  FileSearchOutlined,
+  SyncOutlined,
+  ZoomInOutlined,
+} from "@ant-design/icons";
 
-export const work_order_columns = [
+export const work_order_columns = (showModal) => [
   {
-    title: "WO Code",
-    dataIndex: "wo_no",
+    title: "MRP Code",
+    dataIndex: "mrp_no",
     width: "8%",
     align: "left",
     ellipsis: true,
@@ -32,34 +40,34 @@ export const work_order_columns = [
   },
   {
     title: "Job Name",
-    dataIndex: "wo_description",
+    dataIndex: "mrp_description",
     ellipsis: true,
   },
 
   {
     title: "Plan Start",
-    dataIndex: "wo_plan_start_date",
+    dataIndex: "mrp_plan_start_date",
     width: "8%",
     align: "center",
     ellipsis: true,
   },
   {
     title: "Plan End",
-    dataIndex: "wo_plan_end_date",
+    dataIndex: "mrp_plan_end_date",
     width: "8%",
     align: "center",
     ellipsis: true,
   },
   {
     title: "Due Date",
-    dataIndex: "wo_due_date",
+    dataIndex: "mrp_due_date",
     width: "8%",
     align: "center",
     ellipsis: true,
   },
   {
     title: "Qty.",
-    dataIndex: "wo_qty_produce",
+    dataIndex: "mrp_qty_produce",
     width: "8%",
     align: "right",
     ellipsis: true,
@@ -68,14 +76,14 @@ export const work_order_columns = [
     },
   },
   {
-    title: "UOM",
+    title: "UoM",
     dataIndex: "uom_name",
     width: "8%",
     align: "center",
     ellipsis: true,
   },
   {
-    title: "WO Status",
+    title: "MRP Status",
     dataIndex: "trans_close_name",
     key: "trans_close_name",
     width: "8%",
@@ -85,6 +93,57 @@ export const work_order_columns = [
       return getRefStatus(record);
     },
   },
+  {
+    title: "RM/PK Tracking",
+    dataIndex: "",
+    key: "tracking",
+    width: "6%",
+    align: "center",
+    colSpan: 2,
+    ellipsis: true,
+    render: (value, record, index) => {
+      if (record.process_complete) {
+        return (
+          <div>
+            <Tag type='primary' color='processing'>
+              <SyncOutlined spin className='button-icon' /> In Process
+            </Tag>
+          </div>
+        );
+      } else {
+        return <div>-</div>;
+      }
+    },
+  },
+  {
+    title: "Tracking",
+    dataIndex: "tracking1",
+    colSpan: 0,
+    width: "2%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record, index) => {
+      if (record.process_complete) {
+        return (
+          <ZoomInOutlined
+            onClick={(e) => showModal(record)}
+            className='button-icon'
+            style={{ fontSize: 18 }}
+          />
+        );
+      } else {
+      }
+    },
+  },
+  // {
+  //   title: "WorkOrder",
+  //   dataIndex: "d",
+  //   key: "d",
+  //   width: "5%",
+  //   align: "center",
+  //   ellipsis: true,
+  //   render: (value, record, index) => {},
+  // },
 ];
 export const workOrderFields = {
   wo_id: null,
@@ -146,8 +205,8 @@ export const workOrderRMColumns = (
   {
     id: 2,
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">* </span>} RM Items
+      <div className='text-center'>
+        {!readOnly && <span className='require'>* </span>} RM Items
       </div>
     ),
     dataIndex: "item_no_name",
@@ -155,12 +214,12 @@ export const workOrderRMColumns = (
     align: "left",
     ellipsis: true,
     render: (value, record, index) => {
-      return <Text className="text-value text-left">{value ?? "-"}</Text>;
+      return <Text className='text-value text-left'>{value ?? "-"}</Text>;
     },
   },
   {
     id: 3,
-    title: <div className="text-center">On Hand Qty.</div>,
+    title: <div className='text-center'>On Hand Qty.</div>,
     dataIndex: "wo_detail_qty_available",
     key: "wo_detail_qty_available",
     align: "right",
@@ -178,8 +237,8 @@ export const workOrderRMColumns = (
           )}
           {record.item_id && (
             <FileSearchOutlined
-              className="button-icon"
-              title="View Detail"
+              className='button-icon'
+              title='View Detail'
               onClick={() => viewOnHandDetail(record)}
             />
           )}
@@ -189,7 +248,7 @@ export const workOrderRMColumns = (
   },
   {
     id: 4,
-    title: <div className="text-center">Qty. To Issue</div>,
+    title: <div className='text-center'>Qty. To Issue</div>,
     dataIndex: "wo_detail_qty_issue",
     key: "wo_detail_qty_issue",
     align: "right",
@@ -197,7 +256,7 @@ export const workOrderRMColumns = (
     width: "10%",
     render: (value, record, index) => {
       return (
-        <Text className="text-value text-right">
+        <Text className='text-value text-right'>
           {convertDigit(value, 4) ?? "-"}
         </Text>
       );
@@ -206,19 +265,19 @@ export const workOrderRMColumns = (
 
   {
     id: 5,
-    title: <div className="text-center">UoM (Stock)</div>,
+    title: <div className='text-center'>UoM (Stock)</div>,
     dataIndex: "uom_name",
     key: "uom_name",
     align: "center",
     require: true,
     width: "10%",
     render: (value, record, index) => {
-      return <Text className="text-value ">{value ?? "-"}</Text>;
+      return <Text className='text-value '>{value ?? "-"}</Text>;
     },
   },
   {
     id: 6,
-    title: <div className="text-center">Qty. To PR</div>,
+    title: <div className='text-center'>Qty. To PR</div>,
     dataIndex: "wo_detail_qty_pr",
     key: "wo_detail_qty_pr",
     require: true,
@@ -227,7 +286,7 @@ export const workOrderRMColumns = (
     render: (value, record, index) => {
       if (readOnly) {
         return (
-          <Text className="text-value text-right">
+          <Text className='text-value text-right'>
             {convertDigit(value, 4) ?? "-"}
           </Text>
         );
@@ -239,11 +298,11 @@ export const workOrderRMColumns = (
             placeholder={"Qty. to PR"}
             min={0}
             step={record.item_vendor_min_qty}
-            className="full-width"
-            name="wo_detail_qty_pr"
+            className='full-width'
+            name='wo_detail_qty_pr'
             value={value}
             onChange={(data) => onChange(record.id, { wo_detail_qty_pr: data })}
-            size="small"
+            size='small'
           />
         );
       }
@@ -251,18 +310,18 @@ export const workOrderRMColumns = (
   },
   {
     id: 7,
-    title: <div className="text-center">UoM (Vendor)</div>,
+    title: <div className='text-center'>UoM (Vendor)</div>,
     dataIndex: "item_vendor_uom_name",
     key: "item_vendor_uom_name",
     align: "center",
     require: true,
     width: "10%",
     render: (value, record, index) => {
-      return <Text className="text-value ">{value ?? "-"}</Text>;
+      return <Text className='text-value '>{value ?? "-"}</Text>;
     },
   },
   {
-    title: <div className="text-center">Lead-Time(days)</div>,
+    title: <div className='text-center'>Lead-Time(days)</div>,
     align: "center",
     width: "12%",
     render: (value, record, index) => {
@@ -287,8 +346,8 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
   {
     id: 2,
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">* </span>} PK Items
+      <div className='text-center'>
+        {!readOnly && <span className='require'>* </span>} PK Items
       </div>
     ),
     dataIndex: "item_no_name",
@@ -296,12 +355,12 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
     align: "left",
     ellipsis: true,
     render: (value, record, index) => {
-      return <Text className="text-value text-left">{value ?? "-"}</Text>;
+      return <Text className='text-value text-left'>{value ?? "-"}</Text>;
     },
   },
   {
     id: 3,
-    title: <div className="text-center">On Hand Qty.</div>,
+    title: <div className='text-center'>On Hand Qty.</div>,
     dataIndex: "wo_detail_qty_available",
     key: "wo_detail_qty_available",
     align: "right",
@@ -319,7 +378,7 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
   },
   {
     id: 4,
-    title: <div className="text-center">Qty. To Issue</div>,
+    title: <div className='text-center'>Qty. To Issue</div>,
     dataIndex: "wo_detail_qty_issue",
     key: "wo_detail_qty_issue",
     align: "right",
@@ -327,7 +386,7 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
     width: "10%",
     render: (value, record, index) => {
       return (
-        <Text className="text-value text-right">
+        <Text className='text-value text-right'>
           {convertDigit(value, 4) ?? "-"}
         </Text>
       );
@@ -336,19 +395,19 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
 
   {
     id: 5,
-    title: <div className="text-center">UoM (Stock)</div>,
+    title: <div className='text-center'>UoM (Stock)</div>,
     dataIndex: "uom_name",
     key: "uom_name",
     align: "center",
     require: true,
     width: "10%",
     render: (value, record, index) => {
-      return <Text className="text-value ">{value ?? "-"}</Text>;
+      return <Text className='text-value '>{value ?? "-"}</Text>;
     },
   },
   {
     id: 6,
-    title: <div className="text-center">Qty. To PR</div>,
+    title: <div className='text-center'>Qty. To PR</div>,
     dataIndex: "wo_detail_qty_pr",
     key: "wo_detail_qty_pr",
     require: true,
@@ -357,7 +416,7 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
     render: (value, record, index) => {
       if (readOnly) {
         return (
-          <Text className="text-value text-right">
+          <Text className='text-value text-right'>
             {convertDigit(value, 4) ?? "-"}
           </Text>
         );
@@ -369,11 +428,11 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
             placeholder={"Qty. to PR"}
             min={0}
             step={record.item_vendor_min_qty}
-            className="full-width"
-            name="wo_detail_qty_pr"
+            className='full-width'
+            name='wo_detail_qty_pr'
             value={value}
             onChange={(data) => onChange(record.id, { wo_detail_qty_pr: data })}
-            size="small"
+            size='small'
           />
         );
       }
@@ -381,18 +440,18 @@ export const workOrderPKColumns = (readOnly, onChange, onDelete, onToggle) => [
   },
   {
     id: 7,
-    title: <div className="text-center">UoM (Vendor)</div>,
+    title: <div className='text-center'>UoM (Vendor)</div>,
     dataIndex: "item_vendor_uom_name",
     key: "item_vendor_uom_name",
     align: "center",
     require: true,
     width: "10%",
     render: (value, record, index) => {
-      return <Text className="text-value ">{value ?? "-"}</Text>;
+      return <Text className='text-value '>{value ?? "-"}</Text>;
     },
   },
   {
-    title: <div className="text-center">Lead-Time(days)</div>,
+    title: <div className='text-center'>Lead-Time(days)</div>,
     align: "center",
     width: "12%",
     render: (value, record, index) => {
@@ -428,3 +487,148 @@ export const workOrderPKDetailFields = {
   wo_detail_lead_time_day_qa: 0,
   wo_detail_lead_time_day_pr: 0,
 };
+
+export const workOrderMonitorRM = [
+  {
+    id: 1,
+    title: "No.",
+    dataIndex: "id",
+    width: "5%",
+    align: "left",
+    render: (value, record, index) => {
+      return value;
+    },
+  },
+  {
+    title: "Item",
+    dataIndex: "item_no_name",
+
+    align: "left",
+    ellipsis: true,
+  },
+  {
+    title: "Qty To Issue",
+    dataIndex: "qty_to_use",
+    width: "12%",
+    align: "right",
+    ellipsis: true,
+  },
+
+  {
+    title: "Qty To PR",
+    dataIndex: "qty_to_pr",
+    width: "12%",
+    align: "right",
+    ellipsis: true,
+  },
+  {
+    title: "Qty To Recevie",
+    dataIndex: "qty_to_recevie",
+    width: "12%",
+    align: "right",
+    ellipsis: true,
+  },
+  {
+    title: "Lead-Time",
+    dataIndex: "leadtime",
+    width: "7%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record, index) => {
+      return (
+        <span>
+          <span className='require'>{value}</span> day
+        </span>
+      );
+    },
+  },
+  {
+    title: "PR Status",
+    dataIndex: "pr_status",
+    width: "7%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record, index) => {
+      return value ? (
+        <CheckCircleTwoTone twoToneColor='#52c41a' />
+      ) : (
+        <SyncOutlined spin className='button-icon' />
+      );
+    },
+  },
+  {
+    title: "PO Status",
+    dataIndex: "po_status",
+    width: "7%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record, index) => {
+      return value ? (
+        <CheckCircleTwoTone twoToneColor='#52c41a' />
+      ) : (
+        <SyncOutlined spin className='button-icon' />
+      );
+    },
+  },
+  {
+    title: "Receive Status",
+    dataIndex: "receive_status",
+    width: "7%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record, index) => {
+      return value ? (
+        <CheckCircleTwoTone twoToneColor='#52c41a' />
+      ) : (
+        <SyncOutlined spin className='button-icon' />
+      );
+    },
+  },
+  {
+    title: "Qc Status",
+    dataIndex: "qc_status",
+    width: "7%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record, index) => {
+      return value ? (
+        <CheckCircleTwoTone twoToneColor='#52c41a' />
+      ) : (
+        <SyncOutlined spin className='button-icon' />
+      );
+    },
+  },
+];
+
+export const mockupWorkOrderMonitorRM = [
+  {
+    id: "1",
+    item_no_name: "[ 101SRLA00100 ] KELTROL CG SFT",
+    qty_to_use: "1.0300	[ Kg ]",
+    qty_to_pr: "100.0000 [ Kg ]",
+    qty_to_use_uom: "[ Kg ]",
+    qty_to_use_pr: "[ g ]",
+    qty_to_use_receive: "[ Kg ]",
+    qty_to_recevie: "100.0000 [ Kg ]",
+    leadtime: 5,
+    pr_status: true,
+    po_status: true,
+    receive_status: true,
+    qc_status: false,
+  },
+  {
+    id: "2",
+    item_no_name: "[ 102SRLA00100 ] DI-WATER",
+    qty_to_use: "400.9275 [ Kg ]",
+    qty_to_pr: "241,119.0000 [ g ]",
+    qty_to_recevie: "241,119.0000 [ g ]",
+    qty_to_use_uom: "[ Kg ]",
+    qty_to_use_pr: "[ g ]",
+    qty_to_use_receive: "[ Kg ]",
+    leadtime: 8,
+    pr_status: true,
+    po_status: false,
+    receive_status: false,
+    qc_status: false,
+  },
+];

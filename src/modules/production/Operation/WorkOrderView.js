@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Typography, message } from "antd";
@@ -69,8 +71,14 @@ const WorkOrderView = (props) => {
     },
     create: "",
     save: "function",
-    back: "/production/operations/wo",
-    discard: "/production/operations/wo",
+    back: "/production/operations/mrp",
+    discard: "/production/operations/mrp",
+    action: [
+      {
+        name: "Create WorkOrder",
+        link: `/production/operations/workorder`,
+      },
+    ],
     edit: {
       data: {
         data_head: data_head,
@@ -86,7 +94,7 @@ const WorkOrderView = (props) => {
         process_id: data_head.process_id,
         process_member_remark: remark,
       };
-      dispatch(wo_actions(app_detail, data_head.wo_id));
+      dispatch(wo_actions(app_detail, data_head.mrp_id));
     },
     onConfirm: () => {
       const app_detail = {
@@ -94,7 +102,7 @@ const WorkOrderView = (props) => {
         user_name: auth.user_name,
         process_id: data_head.process_id,
       };
-      dispatch(wo_actions(app_detail, data_head.wo_id));
+      dispatch(wo_actions(app_detail, data_head.mrp_id));
       console.log("Confirm");
     },
     onReject: () => {
@@ -111,7 +119,7 @@ const WorkOrderView = (props) => {
         user_name: auth.user_name,
         process_id: data_head.process_id,
       };
-      dispatch(wo_actions(app_detail, data_head.wo_id));
+      dispatch(wo_actions(app_detail, data_head.mrp_id));
     },
   };
   const changeProcessStatus = (process_status_id) => {
@@ -127,7 +135,7 @@ const WorkOrderView = (props) => {
       process_member_remark: remark,
     };
     message.success({ content: "Reject", key: "validate", duration: 1 });
-    dispatch(wo_actions(app_detail, data_head.wo_id));
+    dispatch(wo_actions(app_detail, data_head.mrp_id));
     setRemark("");
   };
 
@@ -148,13 +156,13 @@ const WorkOrderView = (props) => {
   return (
     <WOContext.Provider value={headContextValue}>
       <MainLayout {...config}>
-        <div id="form">
-          <Row className="col-2">
+        <div id='form'>
+          <Row className='col-2'>
             <Col span={8}>
               <h2>
                 <strong>
                   {"View"} MRP
-                  {data_head.wo_no && " #" + data_head.wo_no}
+                  {data_head.mrp_no && " #" + data_head.mrp_no}
                 </strong>
               </h2>
             </Col>
@@ -163,7 +171,7 @@ const WorkOrderView = (props) => {
               <Text strong>Create Date :</Text>
             </Col>
             <Col span={2} style={{ textAlign: "right" }}>
-              <Text className="text-view">{data_head.wo_created}</Text>
+              <Text className='text-view'>{data_head.mrp_created}</Text>
             </Col>
           </Row>
 
