@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState } from "react";
 import { withRouter, Link } from "react-router-dom";
 import {
@@ -118,15 +120,14 @@ function TopContent(props) {
               ) : (
                 <Menu.Item key={index}>
                   <a
-                    rel="noopener noreferrer"
-                    target="_blank"
+                    rel='noopener noreferrer'
+                    target='_blank'
                     href={item.link}
                     onClick={() => {
                       keepLog.keep_log_action(
                         `Click ${item.name + " Link : " + item.link} `
                       );
-                    }}
-                  >
+                    }}>
                     {item.name}
                   </a>
                 </Menu.Item>
@@ -140,8 +141,8 @@ function TopContent(props) {
   };
   return (
     <>
-      <div id="top-content">
-        <Row className="mt-1 mb-1">
+      <div id='top-content'>
+        <Row className='mt-1 mb-1'>
           <Col span={12}>
             <div>
               <Breadcrumb>
@@ -162,27 +163,25 @@ function TopContent(props) {
           <Col span={8}>
             <Space size={8}>
               {props.buttonAction.includes("Create") && (
-                <Button className="primary" onClick={onCreate}>
+                <Button className='primary' onClick={onCreate}>
                   Create
                 </Button>
               )}
               {props.buttonAction.includes("Save") &&
                 (props.save === "function" || props.save === "table_loading" ? (
                   <Button
-                    className="primary"
+                    className='primary'
                     onClick={onSave}
                     loading={btnLoading}
-                    disabled={btnLoading}
-                  >
+                    disabled={btnLoading}>
                     Save
                   </Button>
                 ) : (
                   <Button
-                    className="primary"
+                    className='primary'
                     onClick={props.onSave && props.onSave}
                     loading={btnLoading}
-                    disabled={btnLoading}
-                  >
+                    disabled={btnLoading}>
                     <Link
                       to={{
                         pathname: props.save.path,
@@ -190,8 +189,7 @@ function TopContent(props) {
                           // data: props.save.data,
                           ...props.save.data,
                         },
-                      }}
-                    >
+                      }}>
                       Save
                     </Link>
                   </Button>
@@ -201,25 +199,24 @@ function TopContent(props) {
                   <Button
                     // className="primary"
                     onClick={onEdit}
-                    disabled={props.disabledEditBtn}
-                  >
+                    disabled={props.disabledEditBtn}>
                     Edit
                   </Button>
                 ) : (
                   <Button
-                    className="primary"
+                    className='primary'
                     disabled={props.disabledEditBtn}
                     disabled={btnLoading}
-                    onClick={() => keepLog.keep_log_action("Click Edit Button")}
-                  >
+                    onClick={() =>
+                      keepLog.keep_log_action("Click Edit Button")
+                    }>
                     <Link
                       to={{
                         pathname: props.edit.path,
                         state: {
                           ...props.edit.data,
                         },
-                      }}
-                    >
+                      }}>
                       Edit
                     </Link>
                   </Button>
@@ -231,18 +228,16 @@ function TopContent(props) {
                 <Button
                   onClick={onConfirm}
                   loading={btnLoading}
-                  disabled={btnLoading}
-                >
+                  disabled={btnLoading}>
                   Confirm
                 </Button>
               )}
               {props.buttonAction.includes("Approve") && (
                 <Button
                   onClick={() => showPopconfirm("Approve", onApprove)}
-                  className="primary"
+                  className='primary'
                   loading={btnLoading}
-                  disabled={btnLoading}
-                >
+                  disabled={btnLoading}>
                   Approve
                 </Button>
               )}
@@ -251,14 +246,13 @@ function TopContent(props) {
                   onClick={onReject}
                   danger
                   // loading={btnLoading}
-                  disabled={btnLoading}
-                >
+                  disabled={btnLoading}>
                   Reject
                 </Button>
               )}
 
               {props.buttonAction.includes("Cancel") && (
-                <Button type="primary" danger onClick={props.onCancel}>
+                <Button type='primary' danger onClick={props.onCancel}>
                   Cancel
                 </Button>
               )}
@@ -266,8 +260,7 @@ function TopContent(props) {
                 <Button
                   onClick={onDiscard}
                   // loading={btnLoading}
-                  disabled={btnLoading}
-                >
+                  disabled={btnLoading}>
                   Discard
                 </Button>
               )}
@@ -275,8 +268,7 @@ function TopContent(props) {
                 <Button
                   onClick={onBack}
                   // loading={btnLoading}
-                  disabled={btnLoading}
-                >
+                  disabled={btnLoading}>
                   <RollbackOutlined />
                   Back
                 </Button>
@@ -286,14 +278,14 @@ function TopContent(props) {
           <Col span={4}>
             {props.action && (
               <Dropdown overlay={menuAction()} trigger={["click"]}>
-                <Button type="text">
+                <Button type='text'>
                   Actions <CaretDownOutlined />
                 </Button>
               </Dropdown>
             )}
           </Col>
           <Col span={12}>
-            <div className="steps">
+            <div className='steps'>
               {props.step &&
                 props.step.step &&
                 props.step.step.map((item, index) => {
@@ -308,8 +300,7 @@ function TopContent(props) {
                   return (
                     <span
                       className={`step-item ${pass} ${current}`}
-                      key={index}
-                    >
+                      key={index}>
                       {item}
                     </span>
                   );
@@ -321,8 +312,7 @@ function TopContent(props) {
           title={"Confirm " + visible.title}
           visible={visible.visible}
           onOk={handleOk}
-          onCancel={handleCancel}
-        >
+          onCancel={handleCancel}>
           <p>Are you sure ?</p>
         </Modal>
       </div>

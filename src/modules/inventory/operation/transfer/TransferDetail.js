@@ -1,5 +1,5 @@
 /** @format */
-
+import { reduxForm, Field } from "redux-form";
 import {
   DeleteTwoTone,
   EllipsisOutlined,
@@ -16,7 +16,9 @@ import {
 } from "../../../../actions/inventory";
 import CustomSelect from "../../../../components/CustomSelect";
 import { TransferDetailColumns, TransferDetailFileds } from "./TransferConfig";
-
+const onSubmit = (values) => {
+  alert(JSON.stringify(values));
+};
 const numberFormat = {
   precision: 3,
   formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
@@ -285,7 +287,7 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
                     />
                   </Col>
                   <Col span={2} className='text-left'>
-                    <Input
+                    <Field
                       name='unit'
                       size='small'
                       style={{
@@ -299,6 +301,7 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
                         })
                       }
                       value={line.unit}
+                      component={Input}
                     />
                   </Col>
                   <Col span={3} className='text-left'>
@@ -366,4 +369,8 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
     </>
   );
 };
-export default TransferDetail;
+export default reduxForm({
+  form: "transferDetail",
+  onSubmit,
+  enableReinitialize: true,
+})(TransferDetail);

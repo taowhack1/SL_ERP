@@ -23,6 +23,16 @@ import {
   validateFormDetail,
   validateFormHead,
 } from "../../../../include/js/function_main";
+const onSubmit = (values) => {
+  alert(JSON.stringify(values));
+};
+const Input1 = ({ errorMessage, ...props }) => (
+  <div className='input-text'>
+    <input {...props.input} />
+    {errorMessage && <span className='errorMessage'>{errorMessage}</span>}
+  </div>
+);
+
 const TransferCreate = (props) => {
   const { TextArea } = Input;
   const { Title, Text } = Typography;
@@ -141,78 +151,88 @@ const TransferCreate = (props) => {
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
-  const { fields, handleSubmit } = props;
+  const { handleSubmit } = props;
   return (
     <MainLayout {...config}>
-      <div id='form'>
-        {/* Head */}
-        <Row className='col-2'>
-          <Col span={8}>
-            <h2>
-              <strong>Create Transfer </strong>
-            </h2>
-          </Col>
-          <Col span={12}></Col>
-          <Col span={2}>
-            <Text strong>Create Date :</Text>
-          </Col>
-          <Col span={2} style={{ textAlign: "right" }}>
-            <Text className='text-view'>{dataHead.trans_created}</Text>
-          </Col>
-        </Row>
-        {/* tab detail */}
-        <Row className='col-2 row-margin-vertical'>
-          <Col span={3}>
-            <Text strong>
-              <span className='require'>*</span> Transfer No :
-            </Text>
-          </Col>
-          <Col span={8}>
-            <Text className='text-view'>{dataHead.transfer_no}</Text>
-          </Col>
-          <Col span={2}></Col>
-        </Row>
-        <Row className='col-2 row-margin-vertical'>
-          <Col span={3}>
-            <Text strong>
-              <span className='require'>*</span> Create By :
-            </Text>
-          </Col>
-          <Col span={8}>
-            <Text className='text-view'>
-              {dataHead.trans_created_by_no_name}
-            </Text>
-          </Col>
-          <Col span={2}></Col>
-        </Row>
-        <Row className='col-2 row-margin-vertical'>
-          <Col span={3}>
-            <Text strong>Description :</Text>
-          </Col>
-          <Col span={8}>
-            <Input
-              name='description'
-              placeholder='Description'
-              value={dataHead.description}
-              onChange={(e) => upDateFormValue({ description: e.target.value })}
-            />
-          </Col>
-        </Row>
-        {/* tab */}
-        <Row className='col-2 row-tab-margin-l'>
-          <Col span={24}>
-            <div className='mt-3'>
-              <TransferDetail
-                dataDetail={dataDetail}
-                detailDispatch={detailDispatch}
-                readOnly={false}
+      <form onSubmit={handleSubmit}>
+        <div id='form'>
+          {/* Head */}
+          <Row className='col-2'>
+            <Col span={8}>
+              <h2>
+                <strong>Create Transfer </strong>
+              </h2>
+            </Col>
+            <Col span={12}></Col>
+            <Col span={2}>
+              <Text strong>Create Date :</Text>
+            </Col>
+            <Col span={2} style={{ textAlign: "right" }}>
+              <Text className='text-view'>{dataHead.trans_created}</Text>
+            </Col>
+          </Row>
+          {/* tab detail */}
+          <Row className='col-2 row-margin-vertical'>
+            <Col span={3}>
+              <Text strong>
+                <span className='require'>*</span> Transfer No :
+              </Text>
+            </Col>
+            <Col span={8}>
+              <Text className='text-view'>{dataHead.transfer_no}</Text>
+            </Col>
+            <Col span={2}></Col>
+          </Row>
+          <Row className='col-2 row-margin-vertical'>
+            <Col span={3}>
+              <Text strong>
+                <span className='require'>*</span> Create By :
+              </Text>
+            </Col>
+            <Col span={8}>
+              <Text className='text-view'>
+                {dataHead.trans_created_by_no_name}
+              </Text>
+            </Col>
+            <Col span={2}></Col>
+          </Row>
+          <Row className='col-2 row-margin-vertical'>
+            <Col span={3}>
+              <Text strong>Description :</Text>
+            </Col>
+            <Col span={8}>
+              <Input
+                name='description'
+                placeholder='Description'
+                value={dataHead.description}
+                //component={Input1}
+                onChange={(e) =>
+                  upDateFormValue({ description: e.target.value })
+                }
               />
-            </div>
-          </Col>
-        </Row>
-      </div>
+            </Col>
+          </Row>
+          {/* tab */}
+          <Row className='col-2 row-tab-margin-l'>
+            <Col span={24}>
+              <div className='mt-3'>
+                <TransferDetail
+                  dataDetail={dataDetail}
+                  detailDispatch={detailDispatch}
+                  readOnly={false}
+                />
+              </div>
+            </Col>
+          </Row>
+        </div>
+        <button type='submit'>Submit</button>
+      </form>
     </MainLayout>
   );
 };
 
-export default TransferCreate;
+export default reduxForm({
+  form: "transfer",
+  onSubmit,
+  enableReinitialize: true,
+})(TransferCreate);
