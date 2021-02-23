@@ -1,4 +1,11 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Typography, message } from "antd";
 import MainLayout from "../../../components/MainLayout";
@@ -37,19 +44,11 @@ const initialState = {
   ...mrpFields,
   rm_detail: [],
   pk_detail: [],
+  calRPM: false,
 };
 const MRPCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  const [loading, setLoading] = useState(true);
-  const [state, stateDispatch] = useReducer(mainReducer, initialState);
-  const headReducer = new ReducerClass(data.data_head, null, mrpFields);
-  const RMReducer = new ReducerClass(data.data_rm, null, mrpPKDetailFields);
-  const PKReducer = new ReducerClass(data.data_pk, null, mrpRMDetailFields);
-  headReducer.setReducer("object");
-  RMReducer.setReducer("array");
-  PKReducer.setReducer("array");
-
   const readOnly = false;
   const authorize = Authorize();
   const history = useHistory();
@@ -58,21 +57,50 @@ const MRPCreate = (props) => {
   const auth = useSelector((state) => state.auth.authData);
   const current_project = useSelector((state) => state.auth.currentProject);
   const dataComments = useSelector((state) => state.log.comment_log);
+  const calBtn = useRef();
+
+  const [loading, setLoading] = useState({
+    fullPageLoading: false,
+    headLoading: false,
+    detailLoading: false,
+  });
+  const [state, stateDispatch] = useReducer(mainReducer, initialState);
+  // const headReducer = new ReducerClass(data.data_head, null, mrpFields);
+  // const RMReducer = new ReducerClass(data.data_rm, null, mrpPKDetailFields);
+  // const PKReducer = new ReducerClass(data.data_pk, null, mrpRMDetailFields);
+  // headReducer.setReducer("object");
+  // RMReducer.setReducer("array");
+  // PKReducer.setReducer("array");
 
   useEffect(() => {
+    // First Run App. Set and get data
+    setLoading({
+      ...loading,
+      fullPageLoading: true,
+    });
     dispatch(getAllItems());
     dispatch(getSOReference());
-
-    headReducer.setDataObject({
-      ...(data.data_head ?? mrpFields),
-      commit: 1,
-      user_name: auth.user_name,
+    stateDispatch({
+      type: "SET_DATA_OBJECT",
+      payload: data
+        ? {
+            ...data?.data_head,
+            rm_detail: data?.data_rm ?? [],
+            pk_detail: data?.data_pk ?? [],
+            commit: 1,
+            user_name: auth?.user_name,
+            branch_id: auth?.branch_id,
+          }
+        : initialState,
     });
-    RMReducer.setDataArray(data.data_rm ?? mrpPKDetailFields);
-    PKReducer.setDataArray(data.data_pk ?? mrpRMDetailFields);
+    setLoading({
+      ...loading,
+      fullPageLoading: false,
+    });
   }, []);
 
-  useEffect(() => {
+  const getRPMDetail = useCallback(() => {
+    // Calculate RM & PK Material
     const {
       so_id,
       item_id,
@@ -80,53 +108,176 @@ const MRPCreate = (props) => {
       mrp_qty_percent_spare_rm,
       mrp_qty_percent_spare_pk,
       so_detail_id,
-    } = headReducer.data;
-    console.log("useEffect change so_id", headReducer.data);
+      calRPM,
+    } = state;
+    console.log("useEffect change so_id", state);
     const getMaterial = async () => {
-      try {
-        const materialDetail =
-          so_id && so_detail_id
-            ? await getFGMaterialList(
-                so_id,
-                item_id,
-                mrp_qty_produce,
-                mrp_qty_percent_spare_rm,
-                mrp_qty_percent_spare_pk
-              )
-            : [];
-        console.log("materialDetail", materialDetail);
-        RMReducer.setDataArray((await materialDetail.item_formula) ?? []);
-        PKReducer.setDataArray((await materialDetail.item_packaging) ?? []);
-        headReducer.onChangeHeadValue({
-          mrp_lead_time_day_pk: materialDetail.mrp_lead_time_day_pk ?? 0,
-          mrp_lead_time_day_pk_qa: materialDetail.mrp_lead_time_day_pk_qa ?? 0,
-          mrp_lead_time_day_rm: materialDetail.mrp_lead_time_day_rm ?? 0,
-          mrp_lead_time_day_rm_qa: materialDetail.mrp_lead_time_day_rm_qa ?? 0,
-          mrp_qty_produce_ref: materialDetail.item_qty_produce_ref ?? 0,
-          branch_id: auth.branch_id,
-          item_id_ref: materialDetail.item_id_ref,
-          item_qty_produce_ref: materialDetail.item_qty_produce_ref ?? 0,
-          user_name: auth.user_name,
-          tg_trans_status_id: 1,
-          uom_no: materialDetail.uom_no,
+      setLoading({
+        ...loading,
+        detailLoading: true,
+      });
+
+      await getFGMaterialList(
+        so_id,
+        item_id,
+        mrp_qty_produce,
+        mrp_qty_percent_spare_rm,
+        mrp_qty_percent_spare_pk
+      )
+        .then((res) => {
+          const materialDetail = res.data[0];
+          console.log("materialDetail", materialDetail);
+          stateDispatch({
+            type: "SET_DATA_OBJECT",
+            payload: materialDetail
+              ? {
+                  ...state,
+                  mrp_lead_time_day_pk:
+                    materialDetail?.mrp_lead_time_day_pk ?? 0,
+                  mrp_lead_time_day_pk_qa:
+                    materialDetail?.mrp_lead_time_day_pk_qa ?? 0,
+                  mrp_lead_time_day_rm:
+                    materialDetail?.mrp_lead_time_day_rm ?? 0,
+                  mrp_lead_time_day_rm_qa:
+                    materialDetail?.mrp_lead_time_day_rm_qa ?? 0,
+                  mrp_qty_produce_ref:
+                    materialDetail?.item_qty_produce_ref ?? 0,
+                  branch_id: auth.branch_id,
+                  item_id_ref: materialDetail?.item_id_ref,
+                  item_qty_produce_ref:
+                    materialDetail?.item_qty_produce_ref ?? 0,
+                  user_name: auth.user_name,
+                  tg_trans_status_id: 1,
+                  uom_no: materialDetail?.uom_no,
+                  rm_detail: sortData(materialDetail?.item_formula ?? []) ?? [],
+                  pk_detail:
+                    sortData(materialDetail?.item_packaging ?? []) ?? [],
+                  calRPM: false,
+                }
+              : initialState,
+          });
+          setTimeout(() => {
+            setLoading({
+              ...loading,
+              detailLoading: false,
+            });
+            message.success({
+              key: "notify2",
+              content: "RPM has been updated",
+              duration: 3,
+            });
+          }, [500]);
+        })
+        .catch((error) => {
+          message.error(error);
+          setLoading({
+            ...loading,
+            detailLoading: false,
+          });
         });
-      } catch (error) {
-        console.log(error);
-      }
     };
-    // so_id && so_detail_id && getMaterial();
-    getMaterial();
-  }, [
-    headReducer.data.so_detail_id,
-    headReducer.data.mrp_qty_produce,
-    headReducer.data.mrp_qty_percent_spare_rm,
-    headReducer.data.mrp_qty_percent_spare_pk,
-  ]);
+
+    so_id && so_detail_id && calRPM
+      ? getMaterial()
+      : setLoading({
+          ...loading,
+          detailLoading: false,
+        });
+  }, [state.calRPM, state.mrp_qty_produce, state.so_detail_id]);
+  // useEffect(() => {
+  //   // GET DATA FROM SO ID ## CHANGE SO ID
+  //   setLoading({
+  //     ...loading,
+  //     detailLoading: true,
+  //   });
+  //   const {
+  //     so_id,
+  //     item_id,
+  //     mrp_qty_produce,
+  //     mrp_qty_percent_spare_rm,
+  //     mrp_qty_percent_spare_pk,
+  //     so_detail_id,
+  //     calRPM,
+  //   } = state;
+  //   console.log("useEffect change so_id", state);
+  //   const getMaterial = async () =>
+  //     await getFGMaterialList(
+  //       so_id,
+  //       item_id,
+  //       mrp_qty_produce,
+  //       mrp_qty_percent_spare_rm,
+  //       mrp_qty_percent_spare_pk
+  //     )
+  //       .then((res) => {
+  //         const materialDetail = res.data[0];
+  //         console.log("materialDetail", materialDetail);
+  //         stateDispatch({
+  //           type: "SET_DATA_OBJECT",
+  //           payload: materialDetail
+  //             ? {
+  //                 ...state,
+  //                 mrp_lead_time_day_pk:
+  //                   materialDetail?.mrp_lead_time_day_pk ?? 0,
+  //                 mrp_lead_time_day_pk_qa:
+  //                   materialDetail?.mrp_lead_time_day_pk_qa ?? 0,
+  //                 mrp_lead_time_day_rm:
+  //                   materialDetail?.mrp_lead_time_day_rm ?? 0,
+  //                 mrp_lead_time_day_rm_qa:
+  //                   materialDetail?.mrp_lead_time_day_rm_qa ?? 0,
+  //                 mrp_qty_produce_ref:
+  //                   materialDetail?.item_qty_produce_ref ?? 0,
+  //                 branch_id: auth.branch_id,
+  //                 item_id_ref: materialDetail?.item_id_ref,
+  //                 item_qty_produce_ref:
+  //                   materialDetail?.item_qty_produce_ref ?? 0,
+  //                 user_name: auth.user_name,
+  //                 tg_trans_status_id: 1,
+  //                 uom_no: materialDetail?.uom_no,
+  //                 rm_detail: sortData(materialDetail?.item_formula ?? []) ?? [],
+  //                 pk_detail:
+  //                   sortData(materialDetail?.item_packaging ?? []) ?? [],
+  //                 calRPM: false,
+  //               }
+  //             : initialState,
+  //         });
+  //         setLoading({
+  //           ...loading,
+  //           detailLoading: false,
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         message.error("Error!" + error);
+  //         setLoading({
+  //           ...loading,
+  //           detailLoading: false,
+  //         });
+  //       });
+
+  //   so_id && so_detail_id && calRPM
+  //     ? getMaterial()
+  //     : setLoading({
+  //         ...loading,
+  //         detailLoading: false,
+  //       });
+  //   // getMaterial();
+  // }, [
+  //   // headReducer.data.so_detail_id,
+  //   // headReducer.data.mrp_qty_produce,
+  //   // headReducer.data.mrp_qty_percent_spare_rm,
+  //   // headReducer.data.mrp_qty_percent_spare_pk,
+  //   state.calRPM,
+  // ]);
+
   useEffect(() => {
     // GET LOG
-    headReducer.data.process_id &&
-      dispatch(get_log_by_id(headReducer.data.process_id));
-  }, [headReducer.data]);
+    state.process_id && dispatch(get_log_by_id(state.process_id));
+  }, [state]);
+
+  const flow =
+    state.data_flow_process &&
+    state.data_flow_process.map((step) => {
+      return step.all_group_in_node;
+    });
 
   const config = {
     projectId: current_project && current_project.project_id,
@@ -137,15 +288,15 @@ const MRPCreate = (props) => {
       "Home",
       "Operations",
       "MRP",
-      headReducer.data.mrp_no ? "Edit" : "Create",
-      headReducer.data.mrp_no && headReducer.data.mrp_no,
+      state.mrp_no ? "Edit" : "Create",
+      state.mrp_no && state.mrp_no,
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
     step: {
-      current: headReducer.data && headReducer.data.node_stay - 1,
-      step: headReducer.getFlow(),
-      process_complete: headReducer.data.process_complete,
+      current: state && state.node_stay - 1,
+      step: flow,
+      process_complete: state.process_complete,
     },
     create: "",
     save: "function",
@@ -153,36 +304,38 @@ const MRPCreate = (props) => {
     onSave: (e) => {
       //e.preventDefault();
       console.log("Save");
-      console.log("HEAD DATA : ", headReducer.data);
-      console.log("RM DATA : ", RMReducer.data);
-      console.log("PK DATA : ", PKReducer.data);
-      if (RMReducer.data.some((obj) => obj.auto_genarate_item === 0)) {
+      console.log("HEAD DATA : ", state);
+      console.log("RM DATA : ", state.rm_detail);
+      console.log("PK DATA : ", state.pk_detail);
+      if (state.rm_detail.some((obj) => obj.auto_genarate_item === 0)) {
         message.error({
-          content: "Can't Save !!. Some vendor of RM item not available.",
+          content:
+            "Some vendor of RM item not available. Please contact Purchasing Department.",
           duration: 4,
           key: "validate",
         });
         return false;
       }
-      if (PKReducer.data.some((obj) => obj.auto_genarate_item === 0)) {
+      if (state.pk_detail.some((obj) => obj.auto_genarate_item === 0)) {
         message.error({
-          content: "Can't Save !!. Some vendor of RM item not available.",
+          content:
+            "Some vendor of RM item not available. Please contact Purchasing Department",
           duration: 4,
           key: "validate",
         });
         return false;
       }
-      const validate = validateFormHead(headReducer.data, mrpRequireFields);
+      const validate = validateFormHead(state, mrpRequireFields);
       console.log(validate);
       if (validate.validate) {
         const saveData = {
-          data_head: headReducer.data,
-          data_material: sortData(RMReducer.data.concat(PKReducer.data)),
+          data_head: state,
+          data_material: sortData(state.rm_detail.concat(state.pk_detail)),
         };
-        headReducer.data.mrp_id
+        state.mrp_id
           ? dispatch(
               updateMRP(
-                headReducer.data.mrp_id,
+                state.mrp_id,
                 saveData,
                 auth.user_name,
                 redirect_to_view
@@ -207,54 +360,60 @@ const MRPCreate = (props) => {
   const redirect_to_view = (id) => {
     history.push("/production/operations/mrp/view/" + (id ? id : "new"));
   };
+  const { fullPageLoading, headLoading, detailLoading } = loading;
 
   const headContextValue = useMemo(() => {
     return {
       readOnly,
-      headReducer,
-      RMReducer,
-      PKReducer,
-      so_id: headReducer.data.so_id,
-      so_detail_id: headReducer.data.so_detail_id,
+      // headReducer,
+      // RMReducer,
+      // PKReducer,
+      calBtn,
+      detailLoading,
+      getRPMDetail,
+      mainState: state,
+      mainStateDispatch: stateDispatch,
+      initialState,
+      so_id: state.so_id,
+      so_detail_id: state.so_detail_id,
     };
-  }, [readOnly, headReducer, RMReducer.data, PKReducer.data]);
-  console.log("MRPCreate", data);
-  console.log(RMReducer.data);
-  console.log(PKReducer.data);
+  }, [readOnly, state, detailLoading]);
+
+  console.log("MRPCreate", state);
   return (
     <MRPContext.Provider value={headContextValue}>
-      {/* {loading ? (
+      {fullPageLoading ? (
         <MainLayoutLoading>
           <DetailLoading />
         </MainLayoutLoading>
-      ) : ( */}
-      <MainLayout {...config}>
-        <div id="form">
-          <Row className="col-2">
-            <Col span={8}>
-              <h2>
-                <strong>
-                  {headReducer.data.mrp_id ? "Edit" : "Create"} MRP
-                  {headReducer.data.mrp_no && " #" + headReducer.data.mrp_no}
-                </strong>
-              </h2>
-            </Col>
-            <Col span={12}></Col>
-            <Col span={2}>
-              <Text strong>Create Date :</Text>
-            </Col>
-            <Col span={2} style={{ textAlign: "right" }}>
-              <Text className="text-view">
-                {headReducer.data.mrp_created ?? moment().format("DD/MM/YYYY")}
-              </Text>
-            </Col>
-          </Row>
-          <MRPHead />
-          <MRPTabPanel />
-        </div>
-        <Comments data={dataComments} />
-      </MainLayout>
-      {/* )} */}
+      ) : (
+        <MainLayout {...config}>
+          <div id="form">
+            <Row className="col-2">
+              <Col span={8}>
+                <h2>
+                  <strong>
+                    {state.mrp_id ? "Edit" : "Create"} MRP
+                    {state.mrp_no && " #" + state.mrp_no}
+                  </strong>
+                </h2>
+              </Col>
+              <Col span={12}></Col>
+              <Col span={2}>
+                <Text strong>Create Date :</Text>
+              </Col>
+              <Col span={2} style={{ textAlign: "right" }}>
+                <Text className="text-view">
+                  {state.mrp_created ?? moment().format("DD/MM/YYYY")}
+                </Text>
+              </Col>
+            </Row>
+            <MRPHead />
+            {detailLoading ? <DetailLoading /> : <MRPTabPanel />}
+          </div>
+          <Comments data={dataComments} />
+        </MainLayout>
+      )}
     </MRPContext.Provider>
   );
 };

@@ -1,32 +1,9 @@
-import { UploadOutlined } from "@ant-design/icons";
-import {
-  Checkbox,
-  Col,
-  Input,
-  InputNumber,
-  Row,
-  Tabs,
-  Upload,
-  Button,
-  Space,
-  Radio,
-  DatePicker,
-} from "antd";
-import Text from "antd/lib/typography/Text";
+import { Col, Input, Row } from "antd";
 import React from "react";
-import { useSelector } from "react-redux";
-import CustomSelect from "../../../components/CustomSelect";
-import Line from "../../../components/VendorLine";
-import { numberFormat } from "../../../include/js/main_config";
-import BulkFormula from "./BulkFormula";
-import moment from "moment";
 import ProductionProcess from "./ProductionProcess";
-const { TextArea } = Input;
 
 const TabProductionProcess = ({
-  data_head,
   readOnly,
-  upDateFormValue,
   data_production_process_detail,
   productionProcessDetailDispatch,
 }) => {

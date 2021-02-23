@@ -8,9 +8,20 @@ import { MRPContext } from "../../../include/js/context";
 const { Text } = Typography;
 
 const TabMRPPKDetail = () => {
-  const { PKReducer, readOnly } = useContext(MRPContext);
+  const { mainState, mainStateDispatch, readOnly } = useContext(MRPContext);
+  // console.log("TabMRPPKDetail mainState", mainState);
 
-  console.log("TabMRPPKDetail", PKReducer.data);
+  const onChange = (rowId, data) => {
+    mainStateDispatch({
+      type: "CHANGE_OBJ_DETAIL_VALUE",
+      payload: {
+        key: "pk_detail",
+        rowId,
+        data,
+      },
+    });
+  };
+
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
@@ -31,13 +42,8 @@ const TabMRPPKDetail = () => {
         }}
         pageSize={10}
         focusLastPage={true}
-        columns={mrpPKColumns(
-          readOnly,
-          PKReducer.onChangeDetailValue,
-          PKReducer.deleteRow,
-          null
-        )}
-        dataSource={PKReducer.data}
+        columns={mrpPKColumns({ readOnly, onChange })}
+        dataSource={mainState.pk_detail}
         readOnly={readOnly}
         // onAdd={RMReducer.addNewRow}
       />

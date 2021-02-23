@@ -147,15 +147,12 @@ const TabItemDetail = ({
                   title="Config UoM Conversion"
                   onClick={() => setModalVisible(true)}
                 >
-                  <SwapOutlined
-                    style={{ fontSize: 20 }}
-                    className="button-icon"
-                  />
+                  <SwapOutlined className="button-icon font-20" />
                 </Tooltip>
               )}
             </Col>
           </Row>
-          {data_head.uom_id && (
+          {!readOnly && data_head.uom_id && (
             <Row className="col-2 row-margin-vertical">
               <Col span={6}></Col>
               <Col span={16}>

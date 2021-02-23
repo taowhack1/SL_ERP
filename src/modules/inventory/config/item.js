@@ -9,50 +9,7 @@ import {
   pad2number,
 } from "../../../include/js/function_main";
 import moment from "moment";
-export const item_vendor_columns = [
-  {
-    id: 0,
-    name: "No.",
-    size: 1,
-    require: false,
-  },
-  {
-    id: 1,
-    name: "Vendor Name",
-    size: 6,
-    require: true,
-  },
-  {
-    id: 2,
-    name: "Lead Time(Day)",
-    size: 3,
-    require: true,
-  },
-  {
-    id: 3,
-    name: "Min. Quantity",
-    size: 3,
-    require: true,
-  },
-  {
-    id: 4,
-    name: "Unit",
-    size: 2,
-    require: true,
-  },
-  {
-    id: 5,
-    name: "Price / Unit",
-    size: 3,
-    require: true,
-  },
-  {
-    id: 6,
-    name: "Remark",
-    size: 5,
-  },
-];
-
+import CustomLabel from "../../../components/CustomLabel";
 export const item_fields = {
   item_id: 0,
   item_id_ref: null,
@@ -119,11 +76,12 @@ export const item_fields = {
   commit: 1,
 };
 
-export const item_detail_fields = {
+export const item_vendor_fields = {
   id: null,
   item_vendor_lead_time_day: 0,
   item_vendor_min_qty: 0,
   item_vendor_price: 0,
+  item_vendor_default: 0,
   vendor_id: null,
   vendor_no_name: null,
   item_id: null,
@@ -1026,12 +984,28 @@ export const fillingProcessFields = {
 };
 export const UoMConversionFields = {
   id: 0,
-  item_id: null,
-  uom_conversion_actived: 1,
-  uom_conversion_id: null,
-  uom_conversion_type_no: null,
-  uom_conversion_value: 1,
+  uom_convert_id: null,
+  uom_id: null,
+  uom_no: null,
+  uom_name: null,
+  uom_no_name: null,
+  uom_id_from: null,
+  uom_no_from: null,
+  uom_name_from: null,
+  uom_no_name_from: null,
+  uom_id_to: null,
+  uom_no_to: null,
+  uom_name_to: null,
+  uom_no_name_to: null,
+  uom_convert_main_action: null,
+  uom_convert_value: 1,
+  uom_convert_actived: 1,
+  uom_convert_created: null,
+  uom_convert_created_by: null,
+  uom_convert_updated: null,
+  uom_convert_updated_by: null,
   commit: 1,
+  user_name: null,
 };
 
 export const itemUoMConversionColumns = ({
@@ -1039,7 +1013,7 @@ export const itemUoMConversionColumns = ({
   onChange,
   onDelete,
   onSwitch,
-  UoMList,
+  filterUoM,
 }) => [
   {
     title: "No.",
@@ -1052,18 +1026,30 @@ export const itemUoMConversionColumns = ({
     },
   },
   {
-    title: "Main UoM",
-    dataIndex: "uom_no_name",
+    title: (
+      <div className="text-center">
+        <CustomLabel title="Main UoM" require readOnly={readOnly} />
+      </div>
+    ),
+    dataIndex: "uom_no_name_from",
     width: "20%",
     align: "center",
-    render: (value) => <Text className="text-value">{value}</Text>,
+    render: (value) => (
+      <Text name="uom_id_from" className="text-value">
+        {value}
+      </Text>
+    ),
   },
   {
-    title: "Type",
-    dataIndex: "uom_conversion_type_no",
+    title: (
+      <div className="text-center">
+        <CustomLabel title="Type" require readOnly={readOnly} />
+      </div>
+    ),
+    dataIndex: "uom_convert_main_action",
     width: "10%",
     align: "center",
-    render: (value, record) => {
+    render: (value, record, key) => {
       return readOnly ? (
         <Text className="text-value">{value}</Text>
       ) : (
@@ -1072,34 +1058,36 @@ export const itemUoMConversionColumns = ({
           showSearch
           size={"small"}
           placeholder={"> , < , ="}
-          name="uom_conversion_type_no"
-          field_id="uom_conversion_type_id"
-          field_name="uom_conversion_type_no"
+          className={"full-width check-field"}
+          name={`uom_convert_main_action-${key}`}
+          field_id="uom_convert_main_action_id"
+          field_name="uom_convert_main_action"
           value={value}
           data={[
             {
-              uom_conversion_type_id: 0,
-              uom_conversion_type_no: ">",
+              uom_convert_main_action_id: 0,
+              uom_convert_main_action: ">",
             },
             {
-              uom_conversion_type_id: 1,
-              uom_conversion_type_no: "<",
+              uom_convert_main_action_id: 1,
+              uom_convert_main_action: "<",
             },
             {
-              uom_conversion_type_id: 2,
-              uom_conversion_type_no: "=",
+              uom_convert_main_action_id: 2,
+              uom_convert_main_action: "=",
             },
           ]}
           onChange={(data, option) => {
             console.log(data, option);
-            data !== null || data !== undefined
+            data !== undefined
               ? onChange(record.id, {
-                  uom_conversion_type_id: option.data.uom_conversion_type_id,
-                  uom_conversion_type_no: option.data.uom_conversion_type_no,
+                  uom_convert_main_action_id:
+                    option.data.uom_convert_main_action_id,
+                  uom_convert_main_action: option.data.uom_convert_main_action,
                 })
               : onChange(record.id, {
-                  uom_conversion_type_id: null,
-                  uom_conversion_type_no: null,
+                  uom_convert_main_action_id: null,
+                  uom_convert_main_action: null,
                 });
           }}
         />
@@ -1107,11 +1095,15 @@ export const itemUoMConversionColumns = ({
     },
   },
   {
-    title: "To UoM",
-    dataIndex: "uom_no_name_2",
+    title: (
+      <div className="text-center">
+        <CustomLabel title="To UoM" require readOnly={readOnly} />
+      </div>
+    ),
+    dataIndex: "uom_no_name_to",
     width: "20%",
     align: "center",
-    render: (value, record) => {
+    render: (value, record, key) => {
       return readOnly ? (
         <Text className="text-value text-left">{value}</Text>
       ) : (
@@ -1120,24 +1112,21 @@ export const itemUoMConversionColumns = ({
           showSearch
           size={"small"}
           placeholder={"Unit of measure"}
-          name="uom_id"
+          className={"full-width check-field"}
+          name={`uom_id_to-${key}`}
           field_id="uom_id"
           field_name="uom_no_name"
           value={value}
-          data={UoMList}
+          data={filterUoM}
           onChange={(data, option) => {
             data && data
               ? onChange(record.id, {
-                  uom_id_2: option.data.uom_id,
-                  uom_no_2: option.data.uom_no,
-                  uom_no_name_2: option.data.uom_no_name,
-                  uom_name_2: option.data.uom_name,
+                  uom_id_to: option.data.uom_id,
+                  uom_no_name_to: option.data.uom_no_name,
                 })
               : onChange(record.id, {
-                  uom_id_2: null,
-                  uom_no_2: null,
-                  uom_no_name_2: null,
-                  uom_name_2: null,
+                  uom_id_to: null,
+                  uom_no_name_to: null,
                 });
           }}
         />
@@ -1145,26 +1134,32 @@ export const itemUoMConversionColumns = ({
     },
   },
   {
-    title: "Ratio",
-    dataIndex: "uom_conversion_value",
+    title: (
+      <div className="text-center">
+        <CustomLabel title="Ratio" require readOnly={readOnly} />
+      </div>
+    ),
+    dataIndex: "uom_convert_value",
     width: "20%",
     align: "center",
-    render: (value, record) => {
+    render: (value, record, key) => {
       return readOnly ? (
-        convertDigit(value, 4)
+        <div className="text-right">
+          <Text className="text-value ">{convertDigit(value, 4)}</Text>
+        </div>
       ) : (
         <InputNumber
           {...getNumberFormat(4)}
-          name="uom_conversion_value"
+          className={"full-width check-field"}
+          name={`uom_convert_value-${key}`}
           placeholder={"Ratio"}
           min={0}
           step={1}
           size={"small"}
-          className={"full-width"}
           value={value}
           onChange={(data) =>
             onChange(record.id, {
-              uom_conversion_value: data,
+              uom_convert_value: data,
             })
           }
         />
@@ -1178,7 +1173,7 @@ export const itemUoMConversionColumns = ({
         <EllipsisOutlined />
       </Text>
     ),
-    dataIndex: "uom_conversion_actived",
+    dataIndex: "uom_convert_actived",
     // dataIndex: "actions",
     // key: "actions",
     align: "center",
@@ -1187,7 +1182,7 @@ export const itemUoMConversionColumns = ({
       if (readOnly) {
         return null;
       } else {
-        return record.uom_conversion_id !== null ? (
+        return record.uom_convert_id !== null ? (
           <Switch
             size="small"
             title="Active / In-Active"

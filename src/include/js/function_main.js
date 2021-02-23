@@ -138,6 +138,13 @@ export const validateFormDetail = (ArrayObj, require_field) => {
     let fieldKey = [];
     ArrayObj.map((obj_data, key) => {
       require_field.map((req_field) => {
+        console.log(
+          !obj_data[req_field],
+          obj_data[req_field] === null,
+          typeof obj_data[req_field] === "string" &&
+            obj_data[req_field].trim() === "",
+          obj_data[req_field] <= 0
+        );
         if (
           !obj_data[req_field] ||
           obj_data[req_field] === null ||

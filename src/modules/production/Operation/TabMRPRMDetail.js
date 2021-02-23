@@ -101,44 +101,57 @@ const initialState = {
   disabled: true,
 };
 const TabMRPRMDetail = () => {
-  const draggleRef = React.createRef();
-  const { RMReducer, readOnly, so_id, so_detail_id } = useContext(MRPContext);
-  const itemList = useSelector((state) =>
-    state.inventory.master_data.item_list.filter((item) => item.type_id === 1)
-  );
-  const inputData = {
-    itemList: itemList,
-  };
-  const [itemDetail, setItemDetail] = useState(initialState);
-  const viewOnHandDetail = (record) => {
-    console.log(record);
-    setItemDetail({
-      ...itemDetail,
-      ...record,
-      visible: true,
-    });
-    console.log("openModal");
-  };
-  const onStart = (event, uiData) => {
-    const { clientWidth, clientHeight } = window?.document?.documentElement;
-    const targetRect = this.draggleRef?.current?.getBoundingClientRect();
-    setItemDetail({
-      ...itemDetail,
-      bounds: {
-        left: -targetRect?.left + uiData?.x,
-        right: clientWidth - (targetRect?.right - uiData?.x),
-        top: -targetRect?.top + uiData?.y,
-        bottom: clientHeight - (targetRect?.bottom - uiData?.y),
+  const { mainState, mainStateDispatch, readOnly } = useContext(MRPContext);
+  // console.log("Tab RM Detail mainState", mainState);
+
+  const onChange = (rowId, data) => {
+    mainStateDispatch({
+      type: "CHANGE_OBJ_DETAIL_VALUE",
+      payload: {
+        key: "rm_detail",
+        rowId,
+        data,
       },
     });
   };
-  useEffect(() => {
-    // setItemDetail()
-    console.log("RMReducer data", RMReducer.data);
-  }, [so_detail_id]);
-  console.log("so_detail_id", so_detail_id);
-  console.log("state", itemDetail);
-  console.log("RMReducer.data", RMReducer.data);
+  // const draggleRef = React.createRef();
+  // const { RMReducer, readOnly, so_id, so_detail_id } = useContext(MRPContext);
+  // const itemList = useSelector((state) =>
+  //   state.inventory.master_data.item_list.filter((item) => item.type_id === 1)
+  // );
+  // const inputData = {
+  //   itemList: itemList,
+  // };
+  // const [itemDetail, setItemDetail] = useState(initialState);
+  // const viewOnHandDetail = (record) => {
+  //   console.log(record);
+  //   setItemDetail({
+  //     ...itemDetail,
+  //     ...record,
+  //     visible: true,
+  //   });
+  //   console.log("openModal");
+  // };
+  // const onStart = (event, uiData) => {
+  //   const { clientWidth, clientHeight } = window?.document?.documentElement;
+  //   const targetRect = this.draggleRef?.current?.getBoundingClientRect();
+  //   setItemDetail({
+  //     ...itemDetail,
+  //     bounds: {
+  //       left: -targetRect?.left + uiData?.x,
+  //       right: clientWidth - (targetRect?.right - uiData?.x),
+  //       top: -targetRect?.top + uiData?.y,
+  //       bottom: clientHeight - (targetRect?.bottom - uiData?.y),
+  //     },
+  //   });
+  // };
+  // useEffect(() => {
+  //   // setItemDetail()
+  //   console.log("RMReducer data", RMReducer.data);
+  // }, [so_detail_id]);
+  // console.log("so_detail_id", so_detail_id);
+  // console.log("state", itemDetail);
+  // console.log("RMReducer.data", RMReducer.data);
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
@@ -161,20 +174,20 @@ const TabMRPRMDetail = () => {
         pageSize={10}
         focusLastPage={true}
         columns={mrpRMColumns(
-          readOnly,
-          RMReducer.onChangeDetailValue,
-          RMReducer.deleteRow,
-          null,
-          viewOnHandDetail,
-          inputData
+          { readOnly, onChange }
+          // RMReducer.onChangeDetailValue,
+          // RMReducer.deleteRow,
+          // null,
+          // viewOnHandDetail,
+          // inputData
         )}
-        dataSource={RMReducer.data}
+        dataSource={mainState.rm_detail}
         readOnly={readOnly}
         // onAdd={RMReducer.addNewRow}
       />
       {/* Modal */}
 
-      <Modal
+      {/* <Modal
         visible={itemDetail.visible}
         title={
           <div
@@ -407,7 +420,7 @@ const TabMRPRMDetail = () => {
             />
           </Tabs.TabPane>
         </Tabs>
-      </Modal>
+      </Modal> */}
       {/* <DragableModal /> */}
     </>
   );

@@ -117,6 +117,9 @@ export const api_item_packaging = `/inventory/item_packaging`;
 export const api_item_process = `/inventory/item_process`;
 // item -> filling process
 export const api_filling_process = `/inventory/item_filling_process`;
+// item -> item uom conversion
+export const api_item_uom_conversion = `/inventory/uom_convert`;
+
 //Sale
 export const api_get_qn_by_id = `/sales/qn`;
 export const api_qn_detail = `/sales/qn_detail`;

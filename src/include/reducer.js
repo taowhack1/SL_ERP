@@ -67,11 +67,12 @@ export const mainReducer = (state, action) => {
       // console.log("SET_ARRAY_2D", action.payload);
       return action.payload.map((data) => sortData(data));
     case "SET_HEAD":
-      return action.payload;
+    case "SET_DATA_OBJECT":
     case "RESET_DATA":
       return action.payload;
     case "RESET_DETAIL":
       return action.payload ?? [];
+    case "CHANGE_OBJ_VALUE":
     case "CHANGE_HEAD_VALUE":
       return { ...state, ...action.payload };
     case "SEARCH_DETAIL":
@@ -103,6 +104,7 @@ export const mainReducer = (state, action) => {
       );
     case "CHANGE_OBJ_ARRAY_DETAIL_VALUE":
       console.log(action.payload);
+      // [{...,detail:[...,{...}]}]
       const newState = state.map((obj) =>
         obj.id === action.payload.headId
           ? {
@@ -117,6 +119,16 @@ export const mainReducer = (state, action) => {
       );
       console.log("newState", newState);
       return newState;
+    case "CHANGE_OBJ_DETAIL_VALUE":
+      // { ...,detail:[newDetail]}
+      return {
+        ...state,
+        [action.payload.key]: state[action.payload.key]?.map((obj) =>
+          obj.id === action.payload.rowId
+            ? { ...obj, ...action.payload.data }
+            : obj
+        ),
+      };
     default:
       return state;
   }

@@ -20,12 +20,16 @@ import {
   api_get_fg_material,
   api_get_all_item_list,
   api_filling_process,
+  api_item_uom_conversion,
 } from "../../include/js/api";
 import axios from "axios";
 import { message, notification } from "antd";
 import { item_save_file } from "../file&image/itemFileAction";
 import React from "react";
-import { sortData } from "../../include/js/function_main";
+import {
+  sortData,
+  sortDataWithoutCommit,
+} from "../../include/js/function_main";
 import { DeleteOutlined, PrinterOutlined } from "@ant-design/icons";
 
 const openNotificationWithIcon = (type, title, text) => {
@@ -74,6 +78,38 @@ const bind_vendor_fn = (item_id, data_detail) => {
         console.log("BIND VENDOR");
       })
   );
+};
+
+const save_uom_conversion = (item_id, uom_conversion) => {
+  const newData = uom_conversion.filter(
+    (obj) => obj.uom_convert_id === null && obj.commit === 1
+  );
+  const updateData = uom_conversion.filter(
+    (obj) => obj.uom_convert_id !== null && obj.commit === 1
+  );
+  console.log("Save UOM Conversion", newData, updateData);
+  return newData.length
+    ? axios
+        .post(`${api_item_uom_conversion}/${item_id}`, newData, header_config)
+        .then((res) => {
+          console.log("post ", res);
+          return updateData.length
+            ? axios
+                .put(
+                  `${api_item_uom_conversion}/${item_id}`,
+                  updateData,
+                  header_config
+                )
+                .then((res) => console.log("put ", res))
+            : console.log("post only");
+        })
+    : updateData.length
+    ? axios.put(
+        `${api_item_uom_conversion}/${item_id}`,
+        updateData,
+        header_config
+      )
+    : console.log("not have any data uom conversion");
 };
 
 const bind_part_and_formula = (item_id, data_part) => {
@@ -234,6 +270,7 @@ export const createNewItems = (data, user_name, redirect) => async (
           //   attach_file: true,
           // },
           Promise.allSettled([
+            save_uom_conversion(item_id, data_head.uom_conversion),
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
             access_right.formula && bind_part_and_formula(item_id, data_part),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
@@ -317,6 +354,7 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
       .then(async (res) => {
         if (res.status === 200 && res.data[0].length) {
           Promise.allSettled([
+            save_uom_conversion(item_id, data_head.uom_conversion),
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
             access_right.formula && bind_part_and_formula(item_id, data_part),
             access_right.qa && bind_qa_test(item_id, data_qa_detail),
@@ -393,6 +431,10 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         `${api_filling_process}/${item_id}`,
         header_config
       );
+      const res_uom_conversion = axios.get(
+        `${api_item_uom_conversion}/${item_id}`,
+        header_config
+      );
       Promise.allSettled([
         res_head,
         res_detail,
@@ -402,6 +444,7 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
         res_packaging,
         res_file,
         res_filling,
+        res_uom_conversion,
       ])
         .then((data) => {
           console.log("Promise.allSettled GET ITEM BY ID", data);
@@ -431,7 +474,10 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
             // });
             const data_file_temp = data[6].value.data[0];
             const item = {
-              data_head: data[0].value.data.main_master,
+              data_head: {
+                ...data[0].value.data.main_master,
+                uom_conversion: sortDataWithoutCommit(data[8].value.data[0]),
+              },
               data_detail: sortData(data[1].value.data[0]),
               data_part: data_part,
               // data_part_detail: data_part_detail,
@@ -613,12 +659,13 @@ export const getFGMaterialList = async (
   mrp_qty_percent_spare_rm,
   mrp_qty_percent_spare_pk
 ) => {
-  // so_id, item_id, item_qty_produce, mrp_qty_percent_spare_rm, mrp_qty_percent_spare_pk
-  return await axios
-    .get(
-      `${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}`
-    )
-    .then((res) => res.data[0]);
+  console.log(
+    "getFGMaterialList",
+    `${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}`
+  );
+  return await axios.get(
+    `${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}`
+  );
 };
 
 export const getItemAction = ({ type_id, button_cancel, item_no }) => {

@@ -21,10 +21,6 @@ import {
 import Text from "antd/lib/typography/Text";
 import React, { useReducer, useState } from "react";
 import { useSelector } from "react-redux";
-import CustomSelect from "../../../components/CustomSelect";
-import Line from "../../../components/VendorLine";
-import { numberFormat } from "../../../include/js/main_config";
-import BulkFormula from "./BulkFormula";
 import moment from "moment";
 import PartSpecification from "./PartSpecification";
 import {

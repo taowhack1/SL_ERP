@@ -125,14 +125,14 @@ export const mrpRequireFields = [
   "mrp_qty_produce",
   "mrp_plan_start_date",
 ];
-export const mrpRMColumns = (
+export const mrpRMColumns = ({
   readOnly,
   onChange,
-  onDelete,
-  onToggle,
-  viewOnHandDetail,
-  { itemList }
-) => [
+  // onDelete,
+  // onToggle,
+  // viewOnHandDetail,
+  // { itemList }
+}) => [
   {
     id: 1,
     title: "No.",
@@ -275,7 +275,7 @@ export const mrpRMColumns = (
   },
 ];
 
-export const mrpPKColumns = (readOnly, onChange, onDelete, onToggle) => [
+export const mrpPKColumns = ({ readOnly, onChange }) => [
   {
     id: 1,
     title: "No.",

@@ -3,7 +3,7 @@ export const header_config = {
   headers: {
     "Content-Type": "application/json",
   },
-  // timeout: 3 * 1000, //2*1000ms
+  timeout: 10 * 1000, //2*1000ms
 };
 export const header_config_form = {
   headers: {

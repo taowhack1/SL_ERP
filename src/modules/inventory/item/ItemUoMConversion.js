@@ -1,13 +1,22 @@
 import { SwapOutlined } from "@ant-design/icons";
-import { Button, Col, InputNumber, Popconfirm, Row } from "antd";
+import { Button, message, Popconfirm } from "antd";
 import Modal from "antd/lib/modal/Modal";
-import Text from "antd/lib/typography/Text";
-import React, { useState } from "react";
-import CustomLabel from "../../../components/CustomLabel";
-import CustomSelect from "../../../components/CustomSelect";
+import React, { useContext, useState } from "react";
 import CustomTable from "../../../components/CustomTable";
-import { sortData } from "../../../include/js/function_main";
+import { AppContext } from "../../../include/js/context";
+import {
+  sortDataWithoutCommit,
+  validateFormDetail,
+} from "../../../include/js/function_main";
 import { itemUoMConversionColumns, UoMConversionFields } from "../config/item";
+
+const uomConversionRequireFields = [
+  "uom_convert_main_action",
+  "uom_convert_value",
+  "uom_id_from",
+  "uom_id_to",
+  "uom_convert_actived",
+];
 
 const ItemUoMConversion = ({
   data_head,
@@ -17,27 +26,45 @@ const ItemUoMConversion = ({
   upDateFormValue,
   UoMList,
 }) => {
+  const { auth } = useContext(AppContext);
   const [state, setState] = useState(data_head.uom_conversion ?? []);
+  const filterUoMFunction = () => {
+    const selectedList = state.map((obj2) => obj2.uom_id_to);
+    const filterList = UoMList.filter(
+      (obj) =>
+        !selectedList.includes(obj.uom_id) && obj.uom_id !== data_head.uom_id
+    );
+    console.log(filterList);
+    return filterList;
+  };
+  const filterUoM = filterUoMFunction();
   const addRow = () => {
     setState(
-      sortData([
+      sortDataWithoutCommit([
         ...state,
         {
           ...UoMConversionFields,
-          uom_id: data_head.uom_id,
-          uom_no_name: data_head.uom_no_name,
+          uom_id_from: data_head.uom_id,
+          uom_no_name_from: data_head.uom_no_name,
+          user_name: auth.user_name,
+          commit: 1,
         },
       ])
     );
   };
   const onDelete = (id) => {
-    setState(sortData(state.filter((obj) => obj.id !== id)));
+    setState(sortDataWithoutCommit(state.filter((obj) => obj.id !== id)));
   };
   const onSwitch = (id) => {
     setState(
       state.map((obj) =>
         obj.id === id
-          ? { ...obj, uom_conversion_actived: !obj.uom_conversion_actived }
+          ? {
+              ...obj,
+              uom_convert_actived: !obj.uom_convert_actived,
+              user_name: auth.user_name,
+              commit: 1,
+            }
           : obj
       )
     );
@@ -46,20 +73,28 @@ const ItemUoMConversion = ({
     console.log(id, data);
     setState(
       state.map((obj) => {
-        return obj.id === id ? { ...obj, ...data } : obj;
+        return obj.id === id
+          ? { ...obj, ...data, user_name: auth.user_name, commit: 1 }
+          : obj;
       })
     );
   };
   const onModalOk = () => {
-    upDateFormValue({ uom_conversion: state });
-    setState([]);
-    setModalVisible(false);
+    const { validate } = validateFormDetail(state, uomConversionRequireFields);
+    console.log(validate);
+    if (validate || state.length === 0) {
+      upDateFormValue({ uom_conversion: state });
+      setState([]);
+      setModalVisible(false);
+    } else {
+      message.error("Error!. Please fill your form completely.");
+    }
   };
   const onModalCancel = () => {
     setState([]);
     setModalVisible(false);
   };
-  console.log(state);
+  console.log(state, filterUoM);
   return (
     <>
       <Modal
@@ -75,42 +110,42 @@ const ItemUoMConversion = ({
         onOk={onModalOk}
         onCancel={onModalCancel}
         footer={
-          <>
-            <Popconfirm
-              onConfirm={onModalCancel}
-              title={"Are you sure Discard ?"}
-            >
-              <Button>Discard</Button>
-            </Popconfirm>
-            <Popconfirm onConfirm={onModalOk} title={"Are you sure Confirm ?"}>
-              <Button className="primary">Confirm</Button>
-            </Popconfirm>
-          </>
+          readOnly ? (
+            <Button className="primary" onClick={onModalCancel}>
+              Back
+            </Button>
+          ) : (
+            <>
+              <Popconfirm
+                onConfirm={onModalCancel}
+                title={"Are you sure Discard ?"}
+              >
+                <Button>Discard</Button>
+              </Popconfirm>
+              <Popconfirm
+                onConfirm={onModalOk}
+                title={"Are you sure Confirm ?"}
+              >
+                <Button className="primary">Confirm</Button>
+              </Popconfirm>
+            </>
+          )
         }
       >
-        {/* <Row className="col-2 mb-1">
-          <Col span={6}>
-            <CustomLabel title={"Main UoM :"} require readOnly={readOnly} />
-          </Col>
-          <Col span={16}>
-            <Text className="text-value text-left">
-              {data_head.uom_no_name ?? "-"}
-            </Text>
-          </Col>
-        </Row> */}
         <CustomTable
           columns={itemUoMConversionColumns({
             readOnly,
             onDelete,
             onChange,
             onSwitch,
-            UoMList,
+            filterUoM,
           })}
+          focusLastPage={true}
           rowClassName="row-table-detail"
           rowKey={"id"}
           pageSize={10}
           dataSource={state}
-          onAdd={addRow}
+          onAdd={!readOnly && addRow}
         />
       </Modal>
     </>

@@ -2,7 +2,7 @@ import { ProfileOutlined } from "@ant-design/icons";
 import { Col, Row, Space } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
-import Line from "../../../components/VendorLine";
+import ItemVendor from "./ItemVendor";
 
 const TabItemPurchase = ({
   data_head,
@@ -22,7 +22,7 @@ const TabItemPurchase = ({
           </Space>
         </Col>
       </Row>
-      <Line
+      <ItemVendor
         readOnly={readOnly}
         detailDispatch={detailDispatch}
         data_head={data_head}

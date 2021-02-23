@@ -24,7 +24,7 @@ import {
   upDateItem,
 } from "../../actions/inventory/itemActions";
 import {
-  item_detail_fields,
+  item_vendor_fields,
   item_fields,
   item_file,
   item_packaging_detail_fields,
@@ -63,7 +63,7 @@ const { Text } = Typography;
 
 const ItemCreate = (props) => {
   const initialStateHead = item_fields;
-  const initialStateDetail = [item_detail_fields];
+  const initialStateDetail = [item_vendor_fields];
   const initialStateQA = [item_qa_detail_fields];
   const initialStatePackaging = [item_packaging_detail_fields];
   const initialStateWeight = item_weight_detail;
@@ -158,7 +158,7 @@ const ItemCreate = (props) => {
       payload:
         data && data.data_detail.length
           ? data.data_detail
-          : [item_detail_fields],
+          : [item_vendor_fields],
     });
 
     qaDetailDispatch({
