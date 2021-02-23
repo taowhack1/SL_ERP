@@ -1,8 +1,7 @@
 import React from "react";
 import TabMRPRMDetail from "./TabMRPRMDetail";
 
-const TabMRPRM = ({ itemList }) => {
-  console.log("TabMRPRM");
+const TabMRPRM = () => {
   return (
     <>
       <TabMRPRMDetail />

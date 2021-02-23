@@ -5,9 +5,8 @@ import { MRPContext } from "../../../include/js/context";
 
 const TabMRPRemark = () => {
   const { mainState, mainStateDispatch, readOnly } = useContext(MRPContext);
-  const [state, setState] = useState({
-    mrp_remark: mainState.mrp_remark,
-  });
+
+  const [state, setState] = useState(mainState?.mrp_remark ?? "");
 
   return (
     <>
@@ -17,9 +16,12 @@ const TabMRPRemark = () => {
         <TextArea
           name="mrp_remark"
           placeholder="Remark"
-          onChange={(e) => setState({ ...state, mrp_remark: e.target.value })}
+          onChange={(e) => setState(e.target.value)}
           onBlur={() => {
-            mainStateDispatch({ type: "CHANGE_OBJ_VALUE", payload: state });
+            mainStateDispatch({
+              type: "CHANGE_OBJ_VALUE",
+              payload: { mrp_remark: state },
+            });
           }}
           value={state.mrp_remark}
         />
@@ -28,4 +30,4 @@ const TabMRPRemark = () => {
   );
 };
 
-export default TabMRPRemark;
+export default React.memo(TabMRPRemark);

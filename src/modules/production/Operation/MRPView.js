@@ -47,8 +47,8 @@ const MRPView = (props) => {
     loading: false,
   });
   const flow =
-    // state?.data_head?.data_flow_process &&
-    state?.data_head?.data_flow_process?.map((step) => {
+    // state?.data_flow_process &&
+    state?.data_flow_process?.map((step) => {
       return step.all_group_in_node;
     });
 
@@ -62,45 +62,35 @@ const MRPView = (props) => {
       "Operations",
       "Work Order",
       "View",
-      state?.data_head?.mrp_no && state?.data_head?.mrp_no,
+      state?.mrp_no && state?.mrp_no,
     ],
     search: false,
     buttonAction: [
-      state?.data_head?.button_edit && "Edit",
-      state?.data_head?.button_confirm && "Confirm",
-      state?.data_head?.button_approve && "Approve",
-      state?.data_head?.button_reject && "Reject",
+      state?.button_edit && "Edit",
+      state?.button_confirm && "Confirm",
+      state?.button_approve && "Approve",
+      state?.button_reject && "Reject",
       "Back",
     ],
     step: {
-      current: state?.data_head?.node_stay - 1,
+      current: state?.node_stay - 1,
       step: flow,
-      process_complete: state?.data_head?.process_complete,
+      process_complete: state?.process_complete,
     },
     create: "",
     save: "function",
     back: "/production/operations/mrp",
     discard: "/production/operations/mrp",
     action: [
-      state?.data_head?.button_cancel && {
+      state?.button_cancel && {
         name: "Cancel",
         cancel: true,
         link: ``,
       },
     ],
     edit: {
-      data: {
-        data_head: state.data_head,
-        data_rm: sortData(
-          state?.data_material?.filter((item) => item.type_id === 1) ?? []
-        ),
-        data_pk: sortData(
-          state?.data_material?.filter((item) => item.type_id === 2) ?? []
-        ),
-      },
-      path:
-        state.data_head &&
-        "/production/operations/mrp/edit/" + state?.data_head?.mrp_id,
+      data: state,
+      path: state && "/production/operations/mrp/edit/" + state?.mrp_id,
     },
     onApprove: (e) => {
       console.log("Approve");
@@ -136,55 +126,40 @@ const MRPView = (props) => {
       //6 = reject
       process_status_id: process_status_id,
       user_name: auth.user_name,
-      process_id: state?.data_head?.process_id,
+      process_id: state?.process_id,
       process_member_remark: remark,
     };
-    console.log(statusDetail);
     updateProcessStatus(statusDetail).then((res) => setLoading(true));
     // setLoading(true);
   };
 
   useEffect(() => {
-    // dispatch(getMRPByID(id, auth.user_name));
-    console.log(1);
     const getData = async (id, user_name) =>
-      // console.log(getMRPByID(id, user_name));
       await getMRPByID(id, user_name).then((res) => {
-        console.log(2);
         const data = {
-          data_head: res[0].value.data[0],
-          data_material: res[1].value.data[0],
+          ...res[0]?.value?.data[0],
+          rm_detail:
+            res[1]?.value?.data[0].filter((obj) => obj.type_id === 1) ?? [],
+          pk_detail:
+            res[1]?.value?.data[0].filter((obj) => obj.type_id === 2) ?? [],
         };
+
+        // console.log(data);
         setState(data);
-        dispatch(get_log_by_id(data?.data_head?.process_id));
+        dispatch(get_log_by_id(data?.process_id));
         setLoading(false);
-        console.log(3);
       });
 
-    id ? getData(id, auth.user_name) : setLoading(false);
-    console.log(4);
-    // data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
-    // setLoading(false);
+    id && loading ? getData(id, auth.user_name) : setLoading(false);
   }, [id, loading]);
   const headContextValue = useMemo(() => {
     return {
       readOnly,
-      headReducer: {
-        data: state?.data_head ?? {},
-      },
-      RMReducer: {
-        data: sortData(
-          state?.data_material?.filter((item) => item.type_id === 1) ?? []
-        ),
-      },
-      PKReducer: {
-        data: sortData(
-          state?.data_material?.filter((item) => item.type_id === 2) ?? []
-        ),
-      },
+      mainState: state,
     };
   }, [loading, id]);
 
+  console.log(state);
   return (
     <MRPContext.Provider value={headContextValue}>
       {loading ? (
@@ -200,11 +175,10 @@ const MRPView = (props) => {
                 <h2>
                   <strong>
                     {"View"} MRP
-                    {state?.data_head?.mrp_no &&
-                      " #" + state?.data_head?.mrp_no}
-                    {state?.data_head?.tg_trans_status_id === 3 && (
+                    {state?.mrp_no && " #" + state?.mrp_no}
+                    {state?.tg_trans_status_id === 3 && (
                       <Text strong type="danger">
-                        #{state?.data_head?.trans_status_name}
+                        #{state?.trans_status_name}
                       </Text>
                     )}
                   </strong>
@@ -215,9 +189,7 @@ const MRPView = (props) => {
                 <Text strong>Create Date :</Text>
               </Col>
               <Col span={2} style={{ textAlign: "right" }}>
-                <Text className="text-view">
-                  {state?.data_head?.mrp_created}
-                </Text>
+                <Text className="text-view">{state?.mrp_created}</Text>
               </Col>
             </Row>
 

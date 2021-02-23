@@ -65,12 +65,6 @@ const MRPCreate = (props) => {
     detailLoading: false,
   });
   const [state, stateDispatch] = useReducer(mainReducer, initialState);
-  // const headReducer = new ReducerClass(data.data_head, null, mrpFields);
-  // const RMReducer = new ReducerClass(data.data_rm, null, mrpPKDetailFields);
-  // const PKReducer = new ReducerClass(data.data_pk, null, mrpRMDetailFields);
-  // headReducer.setReducer("object");
-  // RMReducer.setReducer("array");
-  // PKReducer.setReducer("array");
 
   useEffect(() => {
     // First Run App. Set and get data
@@ -84,9 +78,7 @@ const MRPCreate = (props) => {
       type: "SET_DATA_OBJECT",
       payload: data
         ? {
-            ...data?.data_head,
-            rm_detail: data?.data_rm ?? [],
-            pk_detail: data?.data_pk ?? [],
+            ...data,
             commit: 1,
             user_name: auth?.user_name,
             branch_id: auth?.branch_id,
@@ -184,89 +176,6 @@ const MRPCreate = (props) => {
           detailLoading: false,
         });
   }, [state.calRPM, state.mrp_qty_produce, state.so_detail_id]);
-  // useEffect(() => {
-  //   // GET DATA FROM SO ID ## CHANGE SO ID
-  //   setLoading({
-  //     ...loading,
-  //     detailLoading: true,
-  //   });
-  //   const {
-  //     so_id,
-  //     item_id,
-  //     mrp_qty_produce,
-  //     mrp_qty_percent_spare_rm,
-  //     mrp_qty_percent_spare_pk,
-  //     so_detail_id,
-  //     calRPM,
-  //   } = state;
-  //   console.log("useEffect change so_id", state);
-  //   const getMaterial = async () =>
-  //     await getFGMaterialList(
-  //       so_id,
-  //       item_id,
-  //       mrp_qty_produce,
-  //       mrp_qty_percent_spare_rm,
-  //       mrp_qty_percent_spare_pk
-  //     )
-  //       .then((res) => {
-  //         const materialDetail = res.data[0];
-  //         console.log("materialDetail", materialDetail);
-  //         stateDispatch({
-  //           type: "SET_DATA_OBJECT",
-  //           payload: materialDetail
-  //             ? {
-  //                 ...state,
-  //                 mrp_lead_time_day_pk:
-  //                   materialDetail?.mrp_lead_time_day_pk ?? 0,
-  //                 mrp_lead_time_day_pk_qa:
-  //                   materialDetail?.mrp_lead_time_day_pk_qa ?? 0,
-  //                 mrp_lead_time_day_rm:
-  //                   materialDetail?.mrp_lead_time_day_rm ?? 0,
-  //                 mrp_lead_time_day_rm_qa:
-  //                   materialDetail?.mrp_lead_time_day_rm_qa ?? 0,
-  //                 mrp_qty_produce_ref:
-  //                   materialDetail?.item_qty_produce_ref ?? 0,
-  //                 branch_id: auth.branch_id,
-  //                 item_id_ref: materialDetail?.item_id_ref,
-  //                 item_qty_produce_ref:
-  //                   materialDetail?.item_qty_produce_ref ?? 0,
-  //                 user_name: auth.user_name,
-  //                 tg_trans_status_id: 1,
-  //                 uom_no: materialDetail?.uom_no,
-  //                 rm_detail: sortData(materialDetail?.item_formula ?? []) ?? [],
-  //                 pk_detail:
-  //                   sortData(materialDetail?.item_packaging ?? []) ?? [],
-  //                 calRPM: false,
-  //               }
-  //             : initialState,
-  //         });
-  //         setLoading({
-  //           ...loading,
-  //           detailLoading: false,
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         message.error("Error!" + error);
-  //         setLoading({
-  //           ...loading,
-  //           detailLoading: false,
-  //         });
-  //       });
-
-  //   so_id && so_detail_id && calRPM
-  //     ? getMaterial()
-  //     : setLoading({
-  //         ...loading,
-  //         detailLoading: false,
-  //       });
-  //   // getMaterial();
-  // }, [
-  //   // headReducer.data.so_detail_id,
-  //   // headReducer.data.mrp_qty_produce,
-  //   // headReducer.data.mrp_qty_percent_spare_rm,
-  //   // headReducer.data.mrp_qty_percent_spare_pk,
-  //   state.calRPM,
-  // ]);
 
   useEffect(() => {
     // GET LOG
@@ -367,7 +276,6 @@ const MRPCreate = (props) => {
       readOnly,
       // headReducer,
       // RMReducer,
-      // PKReducer,
       calBtn,
       detailLoading,
       getRPMDetail,

@@ -8,22 +8,10 @@ import { MRPContext } from "../../../include/js/context";
 
 const MRPTabPanel = () => {
   const { readOnly } = useContext(MRPContext);
-  console.log("MRPTabPanel");
   return (
     <Row className="col-2">
       <Col span={24}>
         <Tabs defaultActiveKey={"2"} className="row-tab-margin-lg">
-          {/* <Tabs.TabPane
-            tab={
-              <span className="tab_pane">
-                {!readOnly && <span className="require">* </span>}
-                {"Detail"}
-              </span>
-            }
-            key={"1"}
-          >
-            <TabMRPDetail />
-          </Tabs.TabPane> */}
           <Tabs.TabPane
             tab={
               <span className="tab_pane">

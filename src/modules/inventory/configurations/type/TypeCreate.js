@@ -101,9 +101,9 @@ const TypeCreate = (props) => {
   };
   return (
     <MainLayout {...config}>
-      <div id='form'>
+      <div id="form">
         {/* Head */}
-        <Row className='col-2'>
+        <Row className="col-2">
           <Col span={8}>
             <h2>
               <strong>
@@ -117,18 +117,18 @@ const TypeCreate = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className='text-view'>{data_typeCreate.type_created}</Text>
+            <Text className="text-view">{data_typeCreate.type_created}</Text>
           </Col>
         </Row>
-        <Row className='col-2 row-tab-margin'>
+        <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
             <Title level={5}>
-              <span className='require'>*</span> Name :{" "}
+              <span className="require">*</span> Name :{" "}
             </Title>
             <Col span={24}>
               <Input
-                name='type_name'
-                placeholder='Name'
+                name="type_name"
+                placeholder="Name"
                 onChange={(e) => upDateFormValue({ type_name: e.target.value })}
                 value={data_typeCreate.type_name}
               />
@@ -136,29 +136,30 @@ const TypeCreate = (props) => {
           </Col>
         </Row>
 
-        <Row className='col-2 row-tab-margin-l'>
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
-            <Tabs defaultActiveKey='1'>
+            <Tabs defaultActiveKey="1">
               <Tabs.TabPane
                 tab={
                   <span>
-                    <span className='require'>* </span>
+                    <span className="require">* </span>
                     Detail
                   </span>
                 }
-                key='1'>
+                key="1"
+              >
                 {/*Information */}
-                <Row className='col-2 row-margin-vertical'>
+                <Row className="col-2 row-margin-vertical">
                   <Col span={12}>
-                    <Row className='row-margin'>
+                    <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>
-                          <span className='require'>*</span> Short Name :
+                          <span className="require">*</span> Short Name :
                         </Text>
                       </Col>
                       <Col span={18}>
                         <Input
-                          name='type_no'
+                          name="type_no"
                           placeholder={"Short Name"}
                           onChange={(e) =>
                             upDateFormValue({ type_no: e.target.value })
@@ -168,13 +169,13 @@ const TypeCreate = (props) => {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className='row-margin'>
+                    <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>Thai Name :</Text>
                       </Col>
                       <Col span={18}>
                         <Input
-                          name='type_name_th'
+                          name="type_name_th"
                           placeholder={"Thai Name"}
                           onChange={(e) =>
                             upDateFormValue({ type_name_th: e.target.value })
@@ -184,13 +185,13 @@ const TypeCreate = (props) => {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className='row-margin'>
+                    <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>Description :</Text>
                       </Col>
                       <Col span={18}>
                         <Input
-                          name='type_remark'
+                          name="type_remark"
                           placeholder={"Description"}
                           onChange={(e) =>
                             upDateFormValue({ type_remark: e.target.value })
@@ -202,49 +203,51 @@ const TypeCreate = (props) => {
                     </Row>
                   </Col>
                   <Col span={12}>
-                    <Row className='row-margin'>
+                    <Row className="row-margin">
                       <Col span={1}></Col>
                       <Col span={5}>
                         <Text strong>
-                          <span className='require'>*</span>Verify QC :
+                          <span className="require">*</span>Verify QC :
                         </Text>
                       </Col>
                       <Col span={18}>
                         <Radio.Group
-                          name='type_verify_qc'
+                          name="type_verify_qc"
                           onChange={(e) =>
                             upDateFormValue({ type_verify_qc: e.target.value })
                           }
-                          value={data_typeCreate.type_verify_qc ? 1 : 0}>
-                          <Radio className='radio-vertical' value={1}>
+                          value={data_typeCreate.type_verify_qc ? 1 : 0}
+                        >
+                          <Radio className="radio-vertical" value={1}>
                             Yes
                           </Radio>
-                          <Radio className='radio-vertical' value={0}>
+                          <Radio className="radio-vertical" value={0}>
                             No
                           </Radio>
                         </Radio.Group>
                       </Col>
                     </Row>
-                    <Row className='row-margin'>
+                    <Row className="row-margin">
                       <Col span={1}></Col>
                       <Col span={5}>
                         <Text strong>
-                          <span className='require'>*</span>Verify Stock :
+                          <span className="require">*</span>Verify Stock :
                         </Text>
                       </Col>
                       <Col span={18}>
                         <Radio.Group
-                          name='type_verify_stock'
+                          name="type_verify_stock"
                           value={data_typeCreate.type_verify_stock ? 1 : 0}
                           onChange={(e) =>
                             upDateFormValue({
                               type_verify_stock: e.target.value,
                             })
-                          }>
-                          <Radio className='radio-vertical' value={1}>
+                          }
+                        >
+                          <Radio className="radio-vertical" value={1}>
                             Yes
                           </Radio>
-                          <Radio className='radio-vertical' value={0}>
+                          <Radio className="radio-vertical" value={0}>
                             No
                           </Radio>
                         </Radio.Group>

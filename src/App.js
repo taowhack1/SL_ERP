@@ -93,9 +93,9 @@ import UoM from "./modules/inventory/configurations/uom/UoM";
 import UoMCreate from "./modules/inventory/configurations/uom/UoMCreate";
 import UoMView from "./modules/inventory/configurations/uom/UoMView";
 
-import Transfer from "./modules/inventory/operation/transfer/Transfer";
-import TransferCreate from "./modules/inventory/operation/transfer/TransferCreate";
-import TransferView from "./modules/inventory/operation/transfer/TransferView";
+import Transfer from "./modules/inventory/operations/transfer/Transfer";
+import TransferCreate from "./modules/inventory/operations/transfer/TransferCreate";
+import TransferView from "./modules/inventory/operations/transfer/TransferView";
 import WorkOrderCreate1 from "./modules/production/Operation/workorder/WorkOrderCreate";
 
 import ReturnRoutes from "./modules/inventory/operations/return/ReturnRoutes";

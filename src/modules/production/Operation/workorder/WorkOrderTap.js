@@ -1,18 +1,15 @@
-/** @format */
-
 import { Row, Col, Tabs } from "antd";
-import React, { useContext } from "react";
-import { WOContext } from "../../../../include/js/context";
-import TabWorkOrderDetail from "../TabWorkOrderDetail";
+import React from "react";
 
 const WorkOrderTab = () => {
   return (
-    <Row className='col-2'>
+    <Row className="col-2">
       <Col span={24}>
-        <Tabs defaultActiveKey={"1"} className='row-tab-margin-lg'>
+        <Tabs defaultActiveKey={"1"} className="row-tab-margin-lg">
           <Tabs.TabPane
-            tab={<span className='tab_pane'>Detail</span>}
-            key={"1"}>
+            tab={<span className="tab_pane">Detail</span>}
+            key={"1"}
+          >
             {/* <TabWorkOrderDetail /> */}
           </Tabs.TabPane>
           {/* <Tabs.TabPane
