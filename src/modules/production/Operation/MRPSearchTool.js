@@ -1,3 +1,5 @@
+/** @format */
+
 import { ClearOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Row, Col, DatePicker } from "antd";
 import Text from "antd/lib/typography/Text";
