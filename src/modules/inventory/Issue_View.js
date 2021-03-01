@@ -11,9 +11,11 @@ import { issue_actions } from "../../actions/inventory/issueActions";
 import ModalRemark from "../../components/Modal_Remark";
 import { report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
+import CustomLabel from "../../components/CustomLabel";
 const { Text } = Typography;
 
 const Issue_View = (props) => {
+  const readOnly = true;
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -197,42 +199,61 @@ const Issue_View = (props) => {
             </Text>
           </Col>
         </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Request By :</Text>
-          </Col>
 
-          <Col span={8}>
-            <Text>{data_head && data_head.issue_created_by_no_name}</Text>
+        <Row className="col-2">
+          <Col span={12} className="col-border-right">
+            <Row className="col-2 row-margin-vertical">
+              <Col span={6}>
+                <Text strong>Description :</Text>
+              </Col>
+              <Col span={16}>
+                <Text className="text-view">
+                  {data_head && data_head.issue_description}
+                </Text>
+              </Col>
+              <Col span={2}></Col>
+            </Row>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={6}>
+                <Text strong>Cost Center :</Text>
+              </Col>
+              <Col span={16}>
+                <Text className="text-view">
+                  {data_head && data_head.cost_center_no_name}
+                </Text>
+              </Col>
+            </Row>
           </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Cost Center :</Text>
+          <Col span={12}>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={2}></Col>
+              <Col span={6}>
+                <Text strong>Request By :</Text>
+              </Col>
+
+              <Col span={16}>
+                <Text>{data_head && data_head.issue_created_by_no_name}</Text>
+              </Col>
+            </Row>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={2}></Col>
+              <Col span={6}>
+                <CustomLabel readOnly={readOnly} title={"Job Ref. :"} />
+              </Col>
+              <Col span={16}>
+                <Text>{"-"}</Text>
+              </Col>
+            </Row>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={2}></Col>
+              <Col span={6}>
+                <CustomLabel readOnly={readOnly} title={"Job Detail :"} />
+              </Col>
+              <Col span={16}>
+                <Text>{"-"}</Text>
+              </Col>
+            </Row>
           </Col>
-          <Col span={8}>
-            <Text className="text-view">
-              {data_head && data_head.cost_center_no_name}
-            </Text>
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Description :</Text>
-          </Col>
-          <Col span={8}>
-            <Text className="text-view">
-              {data_head && data_head.issue_description}
-            </Text>
-          </Col>
-          <Col span={2}></Col>
-          {/* <Col span={3}>
-            <Text strong>Agreement :</Text>
-          </Col>
-          <Col span={8}>
-            <Text className="text-view">
-              {data_head && data_head.issue_agreement}
-            </Text>
-          </Col> */}
         </Row>
 
         <Row className="col-2 row-tab-margin-l">
@@ -241,7 +262,7 @@ const Issue_View = (props) => {
               <Tabs.TabPane tab="Request Detail" key={"1"}>
                 <Detail
                   data_detail={data_detail && data_detail}
-                  readOnly={true}
+                  readOnly={readOnly}
                   category_id={data_head && data_head.category_id}
                 />
               </Tabs.TabPane>

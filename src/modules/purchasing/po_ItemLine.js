@@ -127,7 +127,7 @@ const ItemLine = ({
                       field_name="item_no_name"
                       value={line.item_no_name}
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
                               item_id: data,
                               uom_id: option.uom_id,

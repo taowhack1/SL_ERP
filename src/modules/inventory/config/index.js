@@ -107,6 +107,7 @@ export const issue_fields = {
   commit: 1,
 };
 export const issue_detail_fields = {
+  id: 0,
   issue_detail_id: null,
   issue_detail_qty: null,
   issue_detail_remark: null,
@@ -168,30 +169,36 @@ export const select_item_columns = [
 export const issue_detail_columns = [
   {
     id: 0,
-    name: "Item",
-    size: 9,
+    name: "Code",
+    size: 3,
     require: true,
   },
   {
     id: 1,
+    name: "Description",
+    size: 7,
+    require: true,
+  },
+  {
+    id: 2,
     name: "Destination Location",
     size: 5,
     require: true,
   },
   {
-    id: 2,
+    id: 3,
     name: "Quantity",
     size: 3,
     require: true,
   },
   {
-    id: 3,
+    id: 4,
     name: "Unit",
-    size: 3,
+    size: 2,
     require: true,
   },
   {
-    id: 4,
+    id: 5,
     name: "Due Date",
     size: 3,
     require: true,

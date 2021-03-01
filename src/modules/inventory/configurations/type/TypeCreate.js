@@ -31,7 +31,7 @@ const TypeCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
   const [data_typeCreate, setData_typeCreate] = useState(
-    data && data
+    data !== undefined
       ? { ...data, commit: 1, user_name: auth.user_name }
       : {
           ...type_fields,

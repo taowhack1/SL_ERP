@@ -12,7 +12,7 @@ import Search from "../../components/Search";
 import ConfirmDialog from "../../components/ConfirmDialog";
 
 const Modal_Select_Item = (props) => {
-  const { data_detail, filter, headDispatch } = props;
+  const { data_detail, filter, updateHead } = props;
   console.log("Render : Modal_Select_Item");
   const master_data = useSelector((state) => state.inventory.master_data);
 
@@ -80,7 +80,7 @@ const Modal_Select_Item = (props) => {
         // category_id: selected_item[0].category_id,
         // category_no_name: selected_item[0].category_no_name,
       });
-      headDispatch({
+      updateHead({
         type_id: selected_item[0].type_id,
         type_no_name: selected_item[0].type_no_name,
         // category_id: selected_item[0].category_id,
@@ -138,7 +138,7 @@ const Modal_Select_Item = (props) => {
   const reset_selected = () => {
     set_selected_key([]);
     set_selected_item([]);
-    headDispatch({
+    updateHead({
       ...props.data_head,
       type_id: null,
       type_no_name: null,
@@ -208,7 +208,7 @@ const Modal_Select_Item = (props) => {
             value={state.type_no_name}
             data={master_data.item_type}
             onChange={(data, option) => {
-              data && data
+              data !== undefined
                 ? changeState(
                     {
                       type_id: data,
@@ -248,7 +248,7 @@ const Modal_Select_Item = (props) => {
                 : master_data.item_category
             }
             onChange={(data, option) => {
-              data && data
+              data !== undefined
                 ? changeState(
                     {
                       category_id: data,

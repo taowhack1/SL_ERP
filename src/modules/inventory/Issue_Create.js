@@ -5,7 +5,6 @@ import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import Detail from "./Issue_Detail";
 import Comments from "../../components/Comments";
-import { reducer } from "./reducers";
 import { issue_detail_fields, issue_fields } from "./config";
 import CustomSelect from "../../components/CustomSelect";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
@@ -24,6 +23,8 @@ import {
   issue_require_fields,
 } from "./config/issue";
 import { useHistory } from "react-router-dom";
+import CustomLabel from "../../components/CustomLabel";
+import { mainReducer } from "../../include/reducer";
 const { Text } = Typography;
 const { TextArea } = Input;
 
@@ -31,6 +32,7 @@ const initialStateHead = issue_fields;
 const initialStateDetail = [issue_detail_fields];
 
 const IssueCreate = (props) => {
+  const readOnly = false;
   const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
@@ -40,8 +42,12 @@ const IssueCreate = (props) => {
   const current_project = useSelector((state) => state.auth.currentProject);
   const cost_centers = useSelector((state) => state.hrm.cost_center);
   const dataComments = useSelector((state) => state.log.comment_log);
-  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
-  const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
+  const { item_type } = useSelector((state) => state.inventory.master_data);
+  const [data_head, headDispatch] = useReducer(mainReducer, initialStateHead);
+  const [data_detail, detailDispatch] = useReducer(
+    mainReducer,
+    initialStateDetail
+  );
 
   const flow =
     data_head &&
@@ -162,6 +168,10 @@ const IssueCreate = (props) => {
 
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
+    if ((data.type_id && data_head.type_id) || data.type_id === null) {
+      data.type_id !== data_head.type_id &&
+        detailDispatch({ type: "RESET_DETAIL", payload: initialStateDetail });
+    }
   };
   const filter = {
     type_id: data_head && data_head.type_id,
@@ -172,6 +182,7 @@ const IssueCreate = (props) => {
   const redirect_to_view = (id) => {
     history.push("/inventory/issue/view/" + (id ? id : "new"));
   };
+
   console.log("head filter", filter);
   return (
     <MainLayout {...config}>
@@ -193,78 +204,121 @@ const IssueCreate = (props) => {
             <Text className="text-view">{data_head.issue_created}</Text>
           </Col>
         </Row>
+        <Row>
+          <Col span={12} className="col-border-right">
+            <Row className="col-2 row-margin-vertical">
+              <Col span={6}>
+                <Text strong>
+                  <span className="require">* </span>Description :
+                </Text>
+              </Col>
+              <Col span={16}>
+                <Input
+                  name="issue_description"
+                  value={data_head.issue_description}
+                  placeholder="Description"
+                  onChange={(e) =>
+                    upDateFormValue({ issue_description: e.target.value })
+                  }
+                />
+              </Col>
+              <Col span={2}></Col>
+            </Row>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={6}>
+                <Text strong>
+                  <span className="require">* </span>Cost Center :
+                </Text>
+              </Col>
+              <Col span={16}>
+                <CustomSelect
+                  allowClear
+                  showSearch
+                  placeholder={"Cost Center"}
+                  name="cost_center_id"
+                  field_id="cost_center_id"
+                  field_name="cost_center_no_name"
+                  value={data_head.cost_center_no_name}
+                  data={cost_centers}
+                  onChange={(data, option) => {
+                    data !== undefined
+                      ? upDateFormValue({
+                          cost_center_id: data,
+                          cost_center_no_name: option.title,
+                        })
+                      : upDateFormValue({
+                          cost_center_id: null,
+                          cost_center_no_name: null,
+                        });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={6}>
+                <Text strong>
+                  <span className="require">* </span>Item Type :
+                </Text>
+              </Col>
+              <Col span={16}>
+                <CustomSelect
+                  allowClear
+                  showSearch
+                  placeholder={"Item Type"}
+                  name="type_id"
+                  field_id="type_id"
+                  field_name="type_no_name"
+                  value={data_head.type_no_name}
+                  data={item_type}
+                  onChange={(data, option) => {
+                    data !== undefined
+                      ? upDateFormValue({
+                          type_id: data,
+                          type_no_name: option.title,
+                        })
+                      : upDateFormValue({
+                          type_id: null,
+                          type_no_name: null,
+                        });
+                  }}
+                />
+              </Col>
+            </Row>
+          </Col>
+          <Col span={12}>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={2}></Col>
+              <Col span={6}>
+                <Text strong>
+                  <span className="require">* </span>Request By :
+                </Text>
+              </Col>
 
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Request By :
-            </Text>
-          </Col>
-
-          <Col span={8}>
-            <Text>{data_head.issue_created_by_no_name}</Text>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Cost Center :
-            </Text>
-          </Col>
-          <Col span={8}>
-            <CustomSelect
-              allowClear
-              showSearch
-              placeholder={"Cost Center"}
-              name="cost_center_id"
-              field_id="cost_center_id"
-              field_name="cost_center_no_name"
-              value={data_head.cost_center_no_name}
-              data={cost_centers}
-              onChange={(data, option) => {
-                data && data
-                  ? upDateFormValue({
-                      cost_center_id: data,
-                      cost_center_no_name: option.title,
-                    })
-                  : upDateFormValue({
-                      cost_center_id: null,
-                      cost_center_no_name: null,
-                    });
-              }}
-            />
+              <Col span={16}>
+                <Text>{data_head.issue_created_by_no_name}</Text>
+              </Col>
+            </Row>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={2}></Col>
+              <Col span={6}>
+                <CustomLabel readOnly={readOnly} title={"Job Ref. :"} />
+              </Col>
+              <Col span={16}>
+                <Text>{"-"}</Text>
+              </Col>
+            </Row>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={2}></Col>
+              <Col span={6}>
+                <CustomLabel readOnly={readOnly} title={"Job Detail :"} />
+              </Col>
+              <Col span={16}>
+                <Text>{"-"}</Text>
+              </Col>
+            </Row>
           </Col>
         </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Description :
-            </Text>
-          </Col>
-          <Col span={8}>
-            <Input
-              name="issue_description"
-              value={data_head.issue_description}
-              placeholder="Description"
-              onChange={(e) =>
-                upDateFormValue({ issue_description: e.target.value })
-              }
-            />
-          </Col>
-          <Col span={2}></Col>
-          {/* <Col span={3}>
-            <Text strong>Agreement :</Text>
-          </Col>
-          <Col span={8}>
-            <Input
-              value={data_head.issue_agreement}
-              placeholder="Agreement"
-              onChange={(e) =>
-                upDateFormValue({ issue_agreement: e.target.value })
-              }
-            />
-          </Col> */}
-        </Row>
-        <Row className="col-2 row-margin-vertical" />
+
         <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
@@ -280,11 +334,11 @@ const IssueCreate = (props) => {
                 <Detail
                   detailDispatch={detailDispatch}
                   data_detail={data_detail}
-                  readOnly={false}
+                  readOnly={readOnly}
                   category_id={data_head.category_id}
                   type_id={data_head.type_id}
                   data_head={data_head}
-                  headDispatch={upDateFormValue}
+                  updateHead={upDateFormValue}
                   filter={filter && filter}
                 />
               </Tabs.TabPane>

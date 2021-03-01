@@ -15,7 +15,7 @@ import {
 import CustomSelect from "../../components/CustomSelect";
 import { calSubtotal, sumArrObj } from "../../include/js/function_main";
 
-import { convertDigit, numberFormat } from "../../include/js/main_config";
+import { convertDigit, getNumberFormat } from "../../include/js/main_config";
 import TextArea from "antd/lib/input/TextArea";
 const { Text } = Typography;
 const { Option } = Select;
@@ -73,7 +73,7 @@ const ItemLine = ({
       },
     });
   };
-
+  console.log(data_detail);
   return (
     <>
       {/* Column Header */}
@@ -81,7 +81,7 @@ const ItemLine = ({
         {quotation_detail_columns &&
           quotation_detail_columns.map((col, key) => {
             return (
-              <Col key={key} span={col.size} className="col-outline">
+              <Col key={col.id} span={col.size} className="col-outline">
                 {col.require && !readOnly && (
                   <span className="require">* </span>
                 )}
@@ -101,9 +101,9 @@ const ItemLine = ({
           {/* Edit Form */}
           {data_detail &&
             data_detail.map((line, key) => (
-              <>
+              <div key={"div" + line.id}>
                 <Row
-                  key={key}
+                  key={line.id}
                   style={{
                     marginBottom: 0,
                     border: "1px solid white",
@@ -113,23 +113,24 @@ const ItemLine = ({
                   name={`row-${key}`}
                   className="col-2"
                 >
-                  <Col span={9} className="text-string">
-                    <Select
+                  <Col span={12} className="text-string">
+                    <CustomSelect
                       allowClear
                       showSearch
-                      placeholder="Item"
+                      size="small"
+                      placeholder={"Item"}
+                      data={select_items}
                       name="item_id"
                       field_id="item_id"
-                      field_name="item_name"
+                      field_name="item_no_name"
                       value={line.item_no_name}
-                      size="small"
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
-                              item_id: data,
-                              uom_id: option.uom_id,
-                              item_no_name: option.title,
-                              uom_no: option.uom_no,
+                              item_id: option.data.item_id,
+                              uom_id: option.data.uom_id,
+                              item_no_name: option.data.title,
+                              uom_no: option.data.uom_no,
                             })
                           : onChangeValue(line.id, {
                               item_id: null,
@@ -138,33 +139,11 @@ const ItemLine = ({
                               uom_no: null,
                             });
                       }}
-                      className={"full-width"}
-                      filterOption={(inputValue, option) =>
-                        option.title &&
-                        option.title
-                          .toUpperCase()
-                          .indexOf(inputValue.toUpperCase()) !== -1
-                      }
-                    >
-                      {select_items &&
-                        select_items.map((item, key) => {
-                          return (
-                            <Option
-                              key={key}
-                              value={item.item_id}
-                              title={item.item_no_name}
-                              uom_id={item.uom_id}
-                              uom_no={item.uom_no}
-                            >
-                              {item.item_no_name}
-                            </Option>
-                          );
-                        })}
-                    </Select>
+                    />
                   </Col>
                   <Col span={3} className="text-number">
                     <InputNumber
-                      {...numberFormat}
+                      {...getNumberFormat(4)}
                       name="qn_detail_qty"
                       placeholder={"Qty"}
                       min={0.0}
@@ -208,12 +187,11 @@ const ItemLine = ({
                   </Col>
                   <Col span={3} className="text-number">
                     <InputNumber
-                      {...numberFormat}
+                      {...getNumberFormat(4)}
                       name="qn_detail_price"
                       placeholder="Unit Price"
                       value={line.qn_detail_price}
                       min={0.0}
-                      precision={3}
                       step={5}
                       onChange={(data) => {
                         onChangeValue(line.id, {
@@ -230,10 +208,10 @@ const ItemLine = ({
                       size="small"
                     />
                   </Col>
-                  <Col span={3} className="text-number">
+                  {/* <Col span={3} className="text-number">
                     {console.log(line.qn_detail_discount)}
                     <InputNumber
-                      {...numberFormat}
+                      {...getNumberFormat(4)}
                       name="item_discount"
                       placeholder="Discount"
                       value={line.qn_detail_discount}
@@ -253,10 +231,10 @@ const ItemLine = ({
                       className={"full-width"}
                       size="small"
                     />
-                  </Col>
+                  </Col> */}
                   <Col span={3} className="text-number">
                     <div className="total-number">
-                      {convertDigit(line.qn_detail_total_price)}
+                      {convertDigit(line.qn_detail_total_price, 4)}
                     </div>
                   </Col>
                   <Col span={1} style={{ textAlign: "center" }}>
@@ -264,14 +242,14 @@ const ItemLine = ({
                   </Col>
                 </Row>
                 <Row
-                  key={"sub-" + key}
+                  key={"remark-" + key}
                   style={{
                     marginBottom: 0,
                     border: "1px solid white",
                     backgroundColor: "#FCFCFC",
                   }}
                   gutter={2}
-                  name={`row-${key}`}
+                  name={`remark-row-${key}`}
                   className="col-2"
                 >
                   <Col span={23}>
@@ -290,7 +268,7 @@ const ItemLine = ({
                   </Col>
                   <Col span={1}></Col>
                 </Row>
-              </>
+              </div>
             ))}
           <div style={{ marginTop: 10 }}>
             <Button
@@ -309,24 +287,24 @@ const ItemLine = ({
           {/* View Form */}
           {data_detail &&
             data_detail.map((line, key) => (
-              <>
+              <div key={key}>
                 <Row
-                  key={key}
+                  key={line.id}
                   style={{
                     marginBottom: 0,
                     border: "1px solid white",
                     backgroundColor: "#FCFCFC",
                   }}
                   gutter={2}
-                  name={`row-${key}`}
+                  name={`row-${line.id}`}
                   className="col-2"
                 >
-                  <Col span={9} className="text-string">
+                  <Col span={12} className="text-string">
                     <Text className="text-view">{line.item_no_name}</Text>
                   </Col>
                   <Col span={3} className="text-number">
                     <Text className="text-view">
-                      {convertDigit(line.qn_detail_qty)}
+                      {convertDigit(line.qn_detail_qty, 4)}
                     </Text>
                   </Col>
                   <Col span={2} className="text-string">
@@ -334,29 +312,29 @@ const ItemLine = ({
                   </Col>
                   <Col span={3} className="text-number">
                     <Text className="text-view">
-                      {convertDigit(line.qn_detail_price)}
+                      {convertDigit(line.qn_detail_price, 4)}
                     </Text>
                   </Col>
-                  <Col span={3} className="text-number">
+                  {/* <Col span={3} className="text-number">
                     <Text className="text-view">
                       {convertDigit(line.qn_detail_discount)}
                     </Text>
-                  </Col>
+                  </Col> */}
                   <Col span={3} className="text-number">
                     <Text className="text-view">
-                      {convertDigit(line.qn_detail_total_price)}
+                      {convertDigit(line.qn_detail_total_price, 4)}
                     </Text>
                   </Col>
                 </Row>
                 <Row
-                  key={"sub-" + key}
+                  key={"remark-" + line.id}
                   style={{
                     marginBottom: 0,
                     border: "1px solid white",
                     backgroundColor: "#FCFCFC",
                   }}
                   gutter={2}
-                  name={`row-${key}`}
+                  name={`row-${line.id}`}
                   className="col-2"
                 >
                   <Col span={23}>
@@ -366,7 +344,7 @@ const ItemLine = ({
                   </Col>
                   <Col span={1}></Col>
                 </Row>
-              </>
+              </div>
             ))}
         </> //close tag
       )}

@@ -34,7 +34,7 @@ const RequisitionCreate = (props) => {
   const [editForm, setEdit] = useState(true);
 
   const [formData, setData] = useState(
-    data && data
+    data !== undefined
       ? data
       : {
           id: 0,

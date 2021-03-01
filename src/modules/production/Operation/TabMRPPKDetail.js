@@ -1,7 +1,7 @@
 import { Row, Col, Typography } from "antd";
 import { ProfileOutlined } from "@ant-design/icons";
 import React, { useContext } from "react";
-import { mrpPKColumns } from "../config/mrp";
+import { mrpDetailColumns } from "../config/mrp";
 import CustomTable from "../../../components/CustomTable";
 import { MRPContext } from "../../../include/js/context";
 
@@ -21,7 +21,7 @@ const TabMRPPKDetail = () => {
       },
     });
   };
-
+  console.log("readOnly", readOnly);
   return (
     <>
       <Row className="col-2 row-margin-vertical  detail-tab-row">
@@ -36,13 +36,15 @@ const TabMRPPKDetail = () => {
       <CustomTable
         rowKey="id"
         rowClassName={(record) => {
-          return record.auto_genarate_item
+          return readOnly
+            ? "row-table-detail "
+            : record.auto_genarate_item
             ? "row-table-detail "
             : "row-table-detail require";
         }}
         pageSize={10}
         focusLastPage={true}
-        columns={mrpPKColumns({ readOnly, onChange })}
+        columns={mrpDetailColumns({ readOnly, onChange })}
         dataSource={mainState.pk_detail}
         readOnly={readOnly}
         // onAdd={RMReducer.addNewRow}

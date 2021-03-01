@@ -124,85 +124,107 @@ const DisburseDetail = ({
           {/* Edit Form */}
           {data_detail &&
             data_detail.map((line, key) => (
-              <Row
-                key={key}
-                style={{
-                  marginBottom: 0,
-                  border: "1px solid white",
-                  backgroundColor: "#FCFCFC",
-                }}
-                gutter={2}
-                name={`row-${key}`}
-                className="col-2"
-              >
-                <Col span={6} className="text-string">
-                  <div
-                    className="input-string-disabled text-value"
-                    placeholder="Item"
-                  >
-                    {line.item_no_name}
-                  </div>
-                </Col>
-                <Col span={4} className="text-string">
-                  <div
-                    className="input-string-disabled text-value"
-                    placeholder="Location"
-                  >
-                    {line.shelf_no_name}
-                  </div>
-                </Col>
-                <Col span={3} className="text-number">
-                  <div className="total-number text-value">
-                    {convertDigit(line.issue_detail_qty)}
-                  </div>
-                </Col>
-                <Col span={3} className="text-number">
-                  <div className="total-number text-value">
-                    {convertDigit(line.tg_disburse_detail_qty_balance)}
-                  </div>
-                </Col>
-                <Col span={3} className="text-number">
-                  <div
-                    className={
-                      line.tg_disburse_detail_qty_balance > 0
-                        ? "total-number-modal text-value"
-                        : "total-number text-value"
-                    }
-                  >
-                    {convertDigit(line.tg_disburse_detail_qty)}
-                  </div>
-                </Col>
-                <Col span={2} className="text-string">
-                  <div
-                    className="input-string-disabled text-value"
-                    placeholder="Unit"
-                  >
-                    {line.uom_no}
-                  </div>
-                </Col>
-                <Col span={2} className="text-number text-value">
-                  <div
-                    className="input-string-disabled text-center"
-                    placeholder="Due Date"
-                  >
-                    {line.disburse_detail_due_date}
-                  </div>
-                </Col>
-                <Col span={1} style={{ textAlign: "center" }}>
-                  {line.tg_disburse_detail_qty_balance_temp > 0 && (
-                    <FormOutlined
-                      onClick={() => {
-                        openModalSubDetail(
-                          line,
-                          line.disburse_sub_detail,
-                          line.item_id
-                        );
-                      }}
-                      className="button-icon"
-                    />
-                  )}
-                </Col>
-              </Row>
+              <div key={line.id}>
+                <Row
+                  key={key}
+                  style={{
+                    marginBottom: 0,
+                    border: "1px solid white",
+                    backgroundColor: "#FCFCFC",
+                  }}
+                  gutter={2}
+                  name={`row-${key}`}
+                  className="col-2"
+                >
+                  <Col span={6} className="text-string">
+                    <div
+                      className="input-string-disabled text-value"
+                      placeholder="Item"
+                    >
+                      {line.item_no_name}
+                    </div>
+                  </Col>
+                  <Col span={4} className="text-string">
+                    <div
+                      className="input-string-disabled text-value"
+                      placeholder="Location"
+                    >
+                      {line.shelf_no_name}
+                    </div>
+                  </Col>
+                  <Col span={3} className="text-number">
+                    <div className="total-number text-value">
+                      {convertDigit(line.issue_detail_qty)}
+                    </div>
+                  </Col>
+                  <Col span={3} className="text-number">
+                    <div className="total-number text-value">
+                      {convertDigit(line.tg_disburse_detail_qty_balance)}
+                    </div>
+                  </Col>
+                  <Col span={3} className="text-number">
+                    <div
+                      className={
+                        line.tg_disburse_detail_qty_balance > 0
+                          ? "total-number-modal text-value"
+                          : "total-number text-value"
+                      }
+                    >
+                      {convertDigit(line.tg_disburse_detail_qty)}
+                    </div>
+                  </Col>
+                  <Col span={2} className="text-string">
+                    <div
+                      className="input-string-disabled text-value"
+                      placeholder="Unit"
+                    >
+                      {line.uom_no}
+                    </div>
+                  </Col>
+                  <Col span={2} className="text-number text-value">
+                    <div
+                      className="input-string-disabled text-center"
+                      placeholder="Due Date"
+                    >
+                      {line.disburse_detail_due_date}
+                    </div>
+                  </Col>
+                  <Col span={1} style={{ textAlign: "center" }}>
+                    {line.tg_disburse_detail_qty_balance_temp > 0 && (
+                      <FormOutlined
+                        onClick={() => {
+                          openModalSubDetail(
+                            line,
+                            line.disburse_sub_detail,
+                            line.item_id
+                          );
+                        }}
+                        className="button-icon"
+                      />
+                    )}
+                  </Col>
+                </Row>
+                <Row
+                  key={"sub-" + key}
+                  style={{
+                    marginBottom: 0,
+                    border: "1px solid white",
+                    backgroundColor: "#FCFCFC",
+                  }}
+                  gutter={2}
+                  className="col-2"
+                >
+                  <Col span={23}>
+                    <div
+                      className="input-string-disabled text-left"
+                      placeholder="Remark"
+                    >
+                      {line.issue_detail_remark}
+                    </div>
+                  </Col>
+                  <Col span={1}></Col>
+                </Row>
+              </div>
             ))}
           {/* <div style={{ marginTop: 10 }}>
             {!issue_id && (

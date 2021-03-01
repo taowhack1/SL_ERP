@@ -160,7 +160,7 @@ const TransferDetail = ({
                       value={line.item_id}
                       data={ItemList}
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
                               item_id: option.data.item_id,
                               item_name: option.data.item_name,
@@ -198,7 +198,7 @@ const TransferDetail = ({
                       value={line.sourceLocation}
                       data={lot_batch_list}
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
                               qty: option.data.tg_stock_qty_balance,
                               sourceLocation:
@@ -262,7 +262,7 @@ const TransferDetail = ({
                           : select_location
                       }
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
                               destinationLocation_id: option.data.location_id,
                               destinationLocation_name:
@@ -344,7 +344,7 @@ const TransferDetail = ({
                       value={line.uom_id}
                       data={uom}
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
                               unit_transfer: option.data.uom_id,
                             })

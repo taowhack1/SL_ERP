@@ -132,14 +132,14 @@ const MRPHead = () => {
                       value={mainState.so_no_description}
                       data={SOList}
                       onChange={async (data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChange({
                               so_id: option.data.so_id,
                               so_no_description: option.data.so_no_description,
                               so_detail: option.data.so_detail,
                               item_id: null,
                               item_no_name: null,
-                              mrp_due_date: null,
+                              mrp_delivery_date: null,
                               mrp_qty_produce: 0,
                               uom_id: null,
                               uom_no: null,
@@ -177,12 +177,13 @@ const MRPHead = () => {
                       value={mainState.item_no_name}
                       data={mainState.so_detail ?? []}
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChange({
                               so_detail_id: option.data.so_detail_id,
                               item_id: option.data.item_id,
                               item_no_name: option.data.item_no_name,
-                              mrp_due_date: option.data.so_detail_delivery_date,
+                              mrp_delivery_date:
+                                option.data.so_detail_delivery_date,
                               mrp_qty_produce:
                                 option.data.tg_so_detail_qty_balance,
                               uom_id: option.data.uom_id,
@@ -195,7 +196,7 @@ const MRPHead = () => {
                               so_detail_id: null,
                               item_id: null,
                               item_no_name: null,
-                              mrp_due_date: null,
+                              mrp_delivery_date: null,
                               mrp_qty_produce: 0,
                               uom_id: null,
                               uom_no: null,
@@ -207,31 +208,27 @@ const MRPHead = () => {
                     />
                   )}
                 </Col>
-                <Col span={2}>
-                  <Text className="text-view pd-left-2" strong>
-                    {mainState.uom_no ?? ""}
-                  </Text>
-                </Col>
               </Row>
               <Row className="col-2 row-margin-vertical">
                 <Col span={6}>
                   <CustomLabel
                     title={
                       mainState?.uom_no
-                        ? `Qty. ( ${mainState?.uom_no} ) :`
-                        : "Qty. :"
+                        ? `FG Qty. ( ${mainState?.uom_no} ) :`
+                        : "FG Qty. :"
                     }
                     require
                     readOnly={readOnly}
                   />
                 </Col>
                 <Col span={16} className={"text-value"}>
-                  <ToggleReadOnlyElement
-                    readOnly={readOnly}
-                    value={convertDigit(mainState.mrp_qty_produce, 3)}
-                  >
+                  {readOnly ? (
+                    <Text className="text-value">
+                      {convertDigit(mainState.mrp_qty_produce, 4)}
+                    </Text>
+                  ) : (
                     <InputNumber
-                      {...getNumberFormat(3)}
+                      {...getNumberFormat(4)}
                       min={0}
                       step={1}
                       disabled={detailLoading || !mainState.item_id}
@@ -249,11 +246,8 @@ const MRPHead = () => {
                           pk_detail: [],
                         });
                       }}
-                      // onBlur={(data) => {
-                      //   Save("mrp_qty_produce");
-                      // }}
                     />
-                  </ToggleReadOnlyElement>
+                  )}
                 </Col>
                 <Col span={2}>
                   <div className="pd-left-2">
@@ -276,6 +270,31 @@ const MRPHead = () => {
                       )
                     ) : null}
                   </div>
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={6}>
+                  <CustomLabel
+                    title={
+                      mainState?.uom_no_ref
+                        ? `Bulk Qty. ( ${mainState?.uom_no_ref} ) :`
+                        : "Bulk Qty. :"
+                    }
+                    require
+                    readOnly={readOnly}
+                  />
+                </Col>
+                <Col
+                  span={16}
+                  className={readOnly ? "text-left" : "text-right"}
+                >
+                  {detailLoading ? (
+                    <Spin spinning />
+                  ) : (
+                    <Text className="text-value pd-right-2">
+                      {convertDigit(mainState.mrp_qty_produce_ref, 4)}
+                    </Text>
+                  )}
                 </Col>
               </Row>
             </Col>
@@ -333,7 +352,7 @@ const MRPHead = () => {
                 </Col>
                 <Col span={16}>
                   <Text className="text-value">
-                    {mainState.mrp_due_date ?? "DD/MM/YYYY"}
+                    {mainState.mrp_delivery_date ?? "DD/MM/YYYY"}
                   </Text>
                 </Col>
               </Row>
@@ -358,8 +377,7 @@ const MRPHead = () => {
                             RM :
                           </Text>
                           <Text className="text-left">
-                            {mainState.mrp_lead_time_day_rm +
-                              mainState.mrp_lead_time_day_rm_qa}
+                            {mainState.mrp_pr_rm_lead_time_day}
                           </Text>
                           <Text className="text-left pd-left-2" strong>
                             days
@@ -370,8 +388,7 @@ const MRPHead = () => {
                             PK :
                           </Text>
                           <Text className="text-left pd-left-1">
-                            {mainState.mrp_lead_time_day_pk +
-                              mainState.mrp_lead_time_day_pk_qa}
+                            {mainState.mrp_pr_pk_lead_time_day}
                           </Text>
                           <Text className="text-left pd-left-2" strong>
                             days

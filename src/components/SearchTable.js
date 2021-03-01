@@ -68,7 +68,7 @@ const SearchTable = (props) => {
               value={state.type_no_name}
               data={master_data.item_type}
               onChange={(data, option) => {
-                data && data
+                data !== undefined
                   ? changeState({
                       type_id: data,
                       type_no_name: option.title,
@@ -112,7 +112,7 @@ const SearchTable = (props) => {
                   : master_data.item_category
               }
               onChange={(data, option) => {
-                data && data
+                data !== undefined
                   ? changeState({
                       type_id: option.data.type_id,
                       type_no_name: option.data.type_no_name,
@@ -182,7 +182,7 @@ const SearchTable = (props) => {
                 },
               ]}
               onChange={(data, option) => {
-                data && data
+                data !== undefined
                   ? changeState({
                       status_id: option.data.status_id,
                       status_name: option.data.status_name,

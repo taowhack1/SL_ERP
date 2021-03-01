@@ -97,7 +97,7 @@ const Packaging = ({
                   value={line.item_no_name}
                   data={PKList}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? onChangeValue(line.id, {
                           item_id_packaging: option.data.item_id,
                           item_no_name: option.data.item_no_name,
@@ -152,7 +152,7 @@ const Packaging = ({
                   value={line.qa_method_name}
                   data={conditions_method}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? onChangeValue(line.id, {
                           qa_method_id: option.data.qa_method_id,
                           qa_method_name: option.data.qa_method_name,

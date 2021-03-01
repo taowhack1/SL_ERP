@@ -207,7 +207,7 @@ const Modal_Select_Item = (props) => {
             value={state.type_no_name}
             data={master_data.item_type}
             onChange={(data, option) => {
-              data && data
+              data !== undefined
                 ? changeState(
                     {
                       type_id: data,
@@ -248,7 +248,7 @@ const Modal_Select_Item = (props) => {
                 : master_data.item_category
             }
             onChange={(data, option) => {
-              data && data
+              data !== undefined
                 ? changeState(
                     {
                       category_id: data,

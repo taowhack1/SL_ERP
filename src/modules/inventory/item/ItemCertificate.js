@@ -1,5 +1,9 @@
 import React from "react";
-import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import {
+  BorderOutlined,
+  CheckSquareOutlined,
+  ProfileOutlined,
+} from "@ant-design/icons";
 import { Checkbox, Row, Col, Space } from "antd";
 import Text from "antd/lib/typography/Text";
 import ItemFileUpload from "./ItemFileUpload";
@@ -12,11 +16,14 @@ const ItemCertificate = ({
 }) => {
   return (
     <>
-      <Row className="col-2 row-margin-vertical detail-tab-row">
+      <Row className="col-2 row-margin-vertical detail-tab-row ">
         <Col span={24}>
-          <Text strong className="detail-tab-header">
-            Documents
-          </Text>
+          <Space>
+            <Text strong style={{ fontSize: 16, marginRight: 10 }}>
+              <ProfileOutlined style={{ marginRight: 10 }} />
+              Documents
+            </Text>
+          </Space>
         </Col>
       </Row>
       <Row className="col-2 row-tab-margin">

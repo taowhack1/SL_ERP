@@ -319,7 +319,7 @@ const DisburseCreate = (props) => {
             />
           </Col>
           <Col span={2}></Col>
-          <Col span={3}>
+          {/* <Col span={3}>
             <Text strong>Agreement :</Text>
           </Col>
           <Col span={8}>
@@ -334,7 +334,7 @@ const DisburseCreate = (props) => {
               value={data_head.disburse_agreement}
               placeholder="Agreement"
             />
-          </Col>
+          </Col> */}
         </Row>
 
         <Row className="col-2 row-tab-margin-l">

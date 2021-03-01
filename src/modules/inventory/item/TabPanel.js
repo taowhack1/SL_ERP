@@ -1,12 +1,15 @@
 import { Tabs } from "antd";
 import React from "react";
 import { useSelector } from "react-redux";
+import CustomLabel from "../../../components/CustomLabel";
 import FillingProcess from "./FillingProcess";
+import ItemInventoryData from "./ItemInventoryData";
+import ItemProductionData from "./ItemProductionData";
 import TabItemDetail from "./TabItemDetail";
 import TabPackaging from "./TabItemFG_Packaging";
 import TabItemPurchase from "./TabItemPurchase";
 import TabItemQA from "./TabItemQA";
-import TabItemRD from "./TabItemRD";
+import TabItemRDDetail from "./TabItemRDDetail";
 import TabBulkFormula from "./TabItemRD_Bulk_Formula";
 
 const TabPanel = ({
@@ -27,11 +30,18 @@ const TabPanel = ({
   weightDetailDispatch,
 }) => {
   const { department_id } = useSelector((state) => state.auth.authData);
-  // 10 = MIS , 11 = RD , 13 = PU , 18 = SA
+  // 10 = MIS , 11 = RD , 13 = PU , 18 = SA , 20 = PD
   const { type_id } = data_head;
   const callback = (key) => {};
   const master_data = useSelector((state) => state.inventory.master_data);
   const customers = useSelector((state) => state.sales.master_data.customers);
+  console.log(
+    type_id !== undefined,
+    type_id,
+    [3, 4].includes(type_id),
+    [1, 10, 20].includes(department_id)
+  );
+  console.log(department_id);
   return (
     <>
       <Tabs
@@ -42,10 +52,7 @@ const TabPanel = ({
         <Tabs.TabPane
           className="tab-top"
           tab={
-            <span className="tab_pane">
-              {!readOnly && <span className="require">* </span>}
-              {"General Detail"}
-            </span>
+            <CustomLabel title={"General Detail"} require readOnly={readOnly} />
           }
           key={"1"}
         >
@@ -57,20 +64,38 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
+        {/* {type_id !== undefined &&
+          type_id &&
+          [1, 2, 3, 4, 5].includes(type_id) &&
+          [1, 10, 11].includes(department_id) && ( */}
+        <Tabs.TabPane
+          tab={
+            <CustomLabel title={"Inventory Data"} require readOnly={readOnly} />
+          }
+          key={"2"}
+        >
+          {/* <TabItemRDDetail
+                data_file={data_file}
+                updateFile={updateFile}
+                data_head={data_head}
+                master_data={master_data}
+                upDateFormValue={upDateFormValue}
+                readOnly={readOnly}
+              /> */}
+          <ItemInventoryData />
+        </Tabs.TabPane>
+        {/* )} */}
         {type_id !== undefined &&
           type_id &&
           [1, 2, 3, 4, 5].includes(type_id) &&
           [1, 10, 11].includes(department_id) && (
             <Tabs.TabPane
               tab={
-                <span className="tab_pane">
-                  {!readOnly && <span className="require">* </span>}
-                  {"R&D Detail"}
-                </span>
+                <CustomLabel title={"R&D Detail"} require readOnly={readOnly} />
               }
-              key={"2"}
+              key={"3"}
             >
-              <TabItemRD
+              <TabItemRDDetail
                 data_file={data_file}
                 updateFile={updateFile}
                 data_head={data_head}
@@ -86,12 +111,13 @@ const TabPanel = ({
           [1, 10, 11].includes(department_id) && (
             <Tabs.TabPane
               tab={
-                <span className="tab_pane">
-                  {!readOnly && <span className="require">* </span>}
-                  {"Bulk Formula"}
-                </span>
+                <CustomLabel
+                  title={"Bulk Formula"}
+                  require
+                  readOnly={readOnly}
+                />
               }
-              key={"3"}
+              key={"4"}
             >
               <TabBulkFormula />
             </Tabs.TabPane>
@@ -134,10 +160,11 @@ const TabPanel = ({
             // [1, 10, 11, 18].includes(department_id) && (
             <Tabs.TabPane
               tab={
-                <span className="tab_pane">
-                  {!readOnly && <span className="require">* </span>}
-                  {"Specification"}
-                </span>
+                <CustomLabel
+                  title={"Specification"}
+                  require
+                  readOnly={readOnly}
+                />
               }
               key={"5"}
             >
@@ -156,10 +183,11 @@ const TabPanel = ({
           [1, 10, 13].includes(department_id) && (
             <Tabs.TabPane
               tab={
-                <span className="tab_pane">
-                  {!readOnly && <span className="require">* </span>}
-                  {"Purchase Vendor"}
-                </span>
+                <CustomLabel
+                  title={"Purchase Vendor"}
+                  require
+                  readOnly={readOnly}
+                />
               }
               key={"6"}
             >
@@ -179,10 +207,7 @@ const TabPanel = ({
             // [1, 10, 11, 18].includes(department_id) && (
             <Tabs.TabPane
               tab={
-                <span className="tab_pane">
-                  {!readOnly && <span className="require">* </span>}
-                  {"Packaging"}
-                </span>
+                <CustomLabel title={"Packaging"} require readOnly={readOnly} />
               }
               key={"7"}
             >
@@ -206,10 +231,11 @@ const TabPanel = ({
             // [1, 10, 11, 18, 20].includes(department_id) && (
             <Tabs.TabPane
               tab={
-                <span className="tab_pane">
-                  {!readOnly && <span className="require">* </span>}
-                  {"Filling Process"}
-                </span>
+                <CustomLabel
+                  title={"Filling Process"}
+                  require
+                  readOnly={readOnly}
+                />
               }
               key={"8"}
             >
@@ -224,6 +250,23 @@ const TabPanel = ({
                 weightDetailDispatch={weightDetailDispatch}
                 readOnly={readOnly}
               />
+            </Tabs.TabPane>
+          )}
+        {type_id !== undefined &&
+          type_id &&
+          [3, 4].includes(type_id) &&
+          [1, 10, 20].includes(department_id) && (
+            <Tabs.TabPane
+              tab={
+                <CustomLabel
+                  title={"Production Data"}
+                  require
+                  readOnly={readOnly}
+                />
+              }
+              key={"9"}
+            >
+              <ItemProductionData />
             </Tabs.TabPane>
           )}
       </Tabs>

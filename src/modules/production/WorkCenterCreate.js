@@ -292,7 +292,7 @@ const WorkCenterCreate = (props) => {
                           value={data_head.type_name}
                           data={item_type}
                           onChange={(data, option) => {
-                            data && data
+                            data !== undefined
                               ? upDateFormValue({
                                   type_id: data,
                                   type_name: option.title,
@@ -353,7 +353,7 @@ const WorkCenterCreate = (props) => {
                           value={data_head.work_center_type_no_name}
                           data={workCenterType}
                           onChange={(data, option) => {
-                            data && data
+                            data !== undefined
                               ? upDateFormValue({
                                   work_center_type_id: data,
                                   work_center_type_no_name: option.title,

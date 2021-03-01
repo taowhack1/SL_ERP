@@ -33,7 +33,7 @@ const CustomerCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
   const [data_head, set_data_head] = useState(
-    data && data
+    data !== undefined
       ? { ...data, commit: 1, user_name: auth.user_name }
       : {
           ...customer_fields,

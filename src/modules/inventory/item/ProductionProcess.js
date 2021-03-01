@@ -170,7 +170,7 @@ const ProductionProcess = ({
                   value={line.work_center_no_description}
                   data={workCenterList}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? onChangeValue(line.id, {
                           work_center_id: option.data.work_center_id,
                           work_center_no_description:

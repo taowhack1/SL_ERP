@@ -4,7 +4,11 @@ import {
   getRefStatus,
   warningTextValue,
 } from "../../../include/js/function_main";
-import { convertDigit, numberFormat } from "../../../include/js/main_config";
+import {
+  convertDigit,
+  getNumberFormat,
+  numberFormat,
+} from "../../../include/js/main_config";
 import React from "react";
 
 import Text from "antd/lib/typography/Text";
@@ -60,7 +64,7 @@ export const mrp_columns = (showModal) => [
   },
   {
     title: "Due Date",
-    dataIndex: "mrp_due_date",
+    dataIndex: "mrp_delivery_date",
     width: "8%",
     align: "center",
     ellipsis: true,
@@ -77,7 +81,7 @@ export const mrp_columns = (showModal) => [
   },
   {
     title: "UoM",
-    dataIndex: "uom_name",
+    dataIndex: "uom_no",
     width: "8%",
     align: "center",
     ellipsis: true,
@@ -151,7 +155,7 @@ export const mrpFields = {
   mrp_order_date: null,
   mrp_plan_start_date: null,
   mrp_plan_end_date: null,
-  mrp_due_date: null,
+  mrp_delivery_date: null,
   mrp_description: null,
   mrp_agreement: null,
   mrp_qty_produce: 0,
@@ -171,10 +175,21 @@ export const mrpFields = {
   process_id: null,
   tg_trans_status_id: null,
   tg_trans_close_id: null,
-  mrp_lead_time_day_pk: 0,
-  mrp_lead_time_day_pk_qa: 0,
-  mrp_lead_time_day_rm: 0,
-  mrp_lead_time_day_rm_qa: 0,
+  mrp_mfd_bulk_lead_time_day: 5,
+  mrp_mfd_fg_lead_time_day: 0,
+  mrp_pr_date: null,
+  mrp_pr_pk_lead_time_day: 0,
+  mrp_pr_rm_lead_time_day: 0,
+  mrp_qa_bulk_lead_time_day: 0,
+  mrp_qa_fg_lead_time_day: 0,
+  mrp_qa_pk_lead_time_day: 0,
+  mrp_qa_rm_lead_time_day: 0,
+  item_vendor_lead_time_day: 0,
+  user_name: null,
+  branch_id: 1,
+  commit: 1,
+  uom_no: null,
+  uom_no_ref: null,
 };
 
 export const mrpRequireFields = [
@@ -184,33 +199,40 @@ export const mrpRequireFields = [
   "mrp_qty_produce",
   "mrp_plan_start_date",
 ];
-export const mrpRMColumns = ({
-  readOnly,
-  onChange,
-  // onDelete,
-  // onToggle,
-  // viewOnHandDetail,
-  // { itemList }
-}) => [
+
+export const mrpDetailColumns = ({ readOnly, onChange }) => [
   {
-    id: 1,
     title: "No.",
     dataIndex: "id",
-    width: "5%",
+    width: "4%",
     align: "center",
     render: (value, record, index) => {
       return value + 1;
     },
   },
   {
-    id: 2,
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">* </span>} RM Items
+      <div className="text-center" title="Item code">
+        {!readOnly && <span className="require">* </span>} Item Code
       </div>
     ),
-    dataIndex: "item_no_name",
-    key: "item_no_name",
+    dataIndex: "item_no",
+    key: "item_no",
+    align: "center",
+    width: "11%",
+    ellipsis: true,
+    render: (value, record, index) => {
+      return <Text className="text-value text-left">{value ?? "-"}</Text>;
+    },
+  },
+  {
+    title: (
+      <div className="text-center" title="Item description">
+        Description
+      </div>
+    ),
+    dataIndex: "item_name",
+    key: "item_name",
     align: "left",
     ellipsis: true,
     render: (value, record, index) => {
@@ -218,22 +240,24 @@ export const mrpRMColumns = ({
     },
   },
   {
-    id: 3,
-    title: <div className="text-center">On Hand Qty.</div>,
+    title: (
+      <div className="text-center" title="Stock available quantity">
+        Available Qty.
+      </div>
+    ),
     dataIndex: "mrp_detail_qty_available",
     key: "mrp_detail_qty_available",
     align: "right",
     require: true,
-    width: "10%",
+    width: "8%",
+    ellipsis: true,
     render: (value, record, index) => {
       return (
         <>
           {warningTextValue(
             value,
             4,
-            record.mrp_detail_qty_pr && value < record.mrp_detail_qty_issue
-              ? true
-              : false
+            value < record.mrp_detail_qty_issue ? true : false
           )}
           {/* {record.item_id && (
             <FileSearchOutlined
@@ -247,145 +271,17 @@ export const mrpRMColumns = ({
     },
   },
   {
-    id: 4,
-    title: <div className="text-center">Qty. To Issue</div>,
-    dataIndex: "mrp_detail_qty_issue",
-    key: "mrp_detail_qty_issue",
-    align: "right",
-    require: true,
-    width: "10%",
-    render: (value, record, index) => {
-      return (
-        <Text className="text-value text-right">
-          {convertDigit(value, 4) ?? "-"}
-        </Text>
-      );
-    },
-  },
-
-  {
-    id: 5,
-    title: <div className="text-center">UoM (Stock)</div>,
-    dataIndex: "uom_name",
-    key: "uom_name",
-    align: "center",
-    require: true,
-    width: "10%",
-    render: (value, record, index) => {
-      return <Text className="text-value ">{value ?? "-"}</Text>;
-    },
-  },
-  {
-    id: 6,
-    title: <div className="text-center">MOQ</div>,
-    dataIndex: "mrp_detail_qty_pr",
-    key: "mrp_detail_qty_pr",
-    require: true,
-    align: "right",
-    width: "15%",
-    render: (value, record, index) => {
-      if (readOnly) {
-        return (
-          <Text className="text-value text-right">
-            {convertDigit(value, 4) ?? "-"}
-          </Text>
-        );
-      } else {
-        return (
-          <InputNumber
-            disabled={record.item_id !== null ? 0 : 1}
-            {...numberFormat}
-            placeholder={"Qty. to PR"}
-            min={0}
-            step={record.item_vendor_min_qty}
-            className="full-width"
-            name="mrp_detail_qty_pr"
-            value={value}
-            onChange={(data) =>
-              onChange(record.id, { mrp_detail_qty_pr: data })
-            }
-            size="small"
-          />
-        );
-      }
-    },
-  },
-  {
-    id: 7,
-    title: <div className="text-center">UoM (Vendor)</div>,
-    dataIndex: "item_vendor_uom_name",
-    key: "item_vendor_uom_name",
-    align: "center",
-    require: true,
-    width: "10%",
-    render: (value, record, index) => {
-      return <Text className="text-value ">{value ?? "-"}</Text>;
-    },
-  },
-  {
-    title: <div className="text-center">Lead-Time(days)</div>,
-    align: "center",
-    width: "12%",
-    render: (value, record, index) => {
-      return (
-        record.mrp_detail_lead_time_day_pr + record.mrp_detail_lead_time_day_qa
-      );
-    },
-  },
-];
-
-export const mrpPKColumns = ({ readOnly, onChange }) => [
-  {
-    id: 1,
-    title: "No.",
-    dataIndex: "id",
-    width: "5%",
-    align: "center",
-    render: (value, record, index) => {
-      return value + 1;
-    },
-  },
-  {
-    id: 2,
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">* </span>} PK Items
+      <div className="text-center" title="Qty to create Issue.">
+        Issue Qty.
       </div>
     ),
-    dataIndex: "item_no_name",
-    key: "item_no_name",
-    align: "left",
-    ellipsis: true,
-    render: (value, record, index) => {
-      return <Text className="text-value text-left">{value ?? "-"}</Text>;
-    },
-  },
-  {
-    id: 3,
-    title: <div className="text-center">On Hand Qty.</div>,
-    dataIndex: "mrp_detail_qty_available",
-    key: "mrp_detail_qty_available",
-    align: "right",
-    require: true,
-    width: "10%",
-    render: (value, record, index) => {
-      return warningTextValue(
-        value,
-        4,
-        record.mrp_detail_qty_pr && value < record.mrp_detail_qty_issue
-          ? true
-          : false
-      );
-    },
-  },
-  {
-    id: 4,
-    title: <div className="text-center">Qty. To Issue</div>,
     dataIndex: "mrp_detail_qty_issue",
     key: "mrp_detail_qty_issue",
     align: "right",
     require: true,
-    width: "10%",
+    width: "8%",
+    ellipsis: true,
     render: (value, record, index) => {
       return (
         <Text className="text-value text-right">
@@ -396,25 +292,32 @@ export const mrpPKColumns = ({ readOnly, onChange }) => [
   },
 
   {
-    id: 5,
-    title: <div className="text-center">UoM (Stock)</div>,
-    dataIndex: "uom_name",
-    key: "uom_name",
+    title: (
+      <div className="text-center" title="Stock unit of measure">
+        Stock UoM.
+      </div>
+    ),
+    dataIndex: "uom_no",
+    key: "uom_no",
     align: "center",
     require: true,
-    width: "10%",
+    width: "8%",
+    ellipsis: true,
     render: (value, record, index) => {
       return <Text className="text-value ">{value ?? "-"}</Text>;
     },
   },
   {
-    id: 6,
-    title: <div className="text-center">MOQ</div>,
+    title: (
+      <div className="text-center" title="Purchase request qauntity.">
+        PR Qty.
+      </div>
+    ),
     dataIndex: "mrp_detail_qty_pr",
     key: "mrp_detail_qty_pr",
     require: true,
     align: "right",
-    width: "15%",
+    width: "10%",
     render: (value, record, index) => {
       if (readOnly) {
         return (
@@ -426,16 +329,40 @@ export const mrpPKColumns = ({ readOnly, onChange }) => [
         return (
           <InputNumber
             disabled={record.item_id !== null ? 0 : 1}
-            {...numberFormat}
+            {...getNumberFormat(4)}
             placeholder={"Qty. to PR"}
             min={0}
-            step={record.item_vendor_min_qty}
+            step={record.item_vendor_moq}
             className="full-width"
             name="mrp_detail_qty_pr"
             value={value}
-            onChange={(data) =>
-              onChange(record.id, { mrp_detail_qty_pr: data })
-            }
+            onChange={(data) => {
+              if (
+                record.mrp_detail_qty_available >=
+                  record.mrp_detail_qty_issue &&
+                record.item_vendor_lead_time_day &&
+                data > 0
+              ) {
+                onChange(record.id, {
+                  mrp_detail_qty_pr: data,
+                  mrp_detail_pr_lead_time_day: record.item_vendor_lead_time_day,
+                });
+              } else if (
+                record.mrp_detail_qty_available >=
+                  record.mrp_detail_qty_issue &&
+                record.item_vendor_lead_time_day &&
+                data === 0
+              ) {
+                onChange(record.id, {
+                  mrp_detail_qty_pr: data,
+                  mrp_detail_pr_lead_time_day: 0,
+                });
+              } else {
+                onChange(record.id, {
+                  mrp_detail_qty_pr: data,
+                });
+              }
+            }}
             size="small"
           />
         );
@@ -443,25 +370,59 @@ export const mrpPKColumns = ({ readOnly, onChange }) => [
     },
   },
   {
-    id: 7,
-    title: <div className="text-center">UoM (Vendor)</div>,
-    dataIndex: "item_vendor_uom_name",
-    key: "item_vendor_uom_name",
+    title: (
+      <div className="text-center" title="Minimum order quantity">
+        MOQ.
+      </div>
+    ),
+    dataIndex: "item_vendor_moq",
+    key: "item_vendor_moq",
+    align: "right",
+    require: true,
+    width: "8%",
+    render: (value, record, index) => {
+      return <Text className="text-value ">{convertDigit(value, 4)}</Text>;
+    },
+  },
+  {
+    title: (
+      <div className="text-center" title="Purchase unit of measure">
+        PUR. UoM.
+      </div>
+    ),
+    dataIndex: "item_vendor_uom_no",
+    key: "item_vendor_uom_no",
     align: "center",
     require: true,
-    width: "10%",
+    width: "8%",
     render: (value, record, index) => {
       return <Text className="text-value ">{value ?? "-"}</Text>;
     },
   },
   {
-    title: <div className="text-center">Lead-Time(days)</div>,
+    title: (
+      <div className="text-center" title="Lead time">
+        L/T (days)
+      </div>
+    ),
+    dataIndex: "mrp_detail_pr_lead_time_day",
     align: "center",
-    width: "12%",
+    width: "7%",
     render: (value, record, index) => {
-      return (
-        record.mrp_detail_lead_time_day_pr + record.mrp_detail_lead_time_day_qa
-      );
+      return value;
+    },
+  },
+  {
+    title: (
+      <div className="text-center" title="Suggestion incomming Date">
+        Sugg. Date
+      </div>
+    ),
+    dataIndex: "mrp_detail_suggestion_date",
+    align: "center",
+    width: "9%",
+    render: (value, record, index) => {
+      return <Text className="text-value">{value}</Text>;
     },
   },
 ];

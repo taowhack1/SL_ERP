@@ -20,11 +20,11 @@ import {
   validateFormDetail,
   validateFormHead,
 } from "../../include/js/function_main";
-import { reducer } from "./reducers";
 import Authorize from "../system/Authorize";
 
 import { useHistory } from "react-router-dom";
 import ItemLine from "./Sales_Detail";
+import { mainReducer } from "../../include/reducer";
 const { TextArea } = Input;
 const { Text } = Typography;
 
@@ -38,8 +38,11 @@ const CustomerCreate = (props) => {
   const dispatch = useDispatch();
   const [tab, setTab] = useState("1");
   const auth = useSelector((state) => state.auth.authData);
-  const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
-  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
+  const [data_detail, detailDispatch] = useReducer(
+    mainReducer,
+    initialStateDetail
+  );
+  const [data_head, headDispatch] = useReducer(mainReducer, initialStateHead);
   const dataComment = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
   const masterData = useSelector((state) => state.sales.master_data);
@@ -229,7 +232,7 @@ const CustomerCreate = (props) => {
               data={masterData.customers}
               onChange={(data, option) => {
                 console.log(option);
-                data && data
+                data !== undefined
                   ? upDateFormValue({
                       currency_id: option.data.currency_id,
                       currency_no: option.data.currency_no,
@@ -304,7 +307,7 @@ const CustomerCreate = (props) => {
               value={data_head.payment_term_no_name}
               data={customer_payment_terms}
               onChange={(data, option) => {
-                data && data
+                data !== undefined
                   ? upDateFormValue({
                       ...option.data,
                     })
@@ -319,7 +322,7 @@ const CustomerCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
+          {/* <Col span={3}>
             <Text strong className={"pd-left-1"}>
               Agreement :
             </Text>
@@ -334,9 +337,9 @@ const CustomerCreate = (props) => {
               value={data_head.qn_agreement}
               placeholder="Agreement"
             ></Input>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
+          </Col> */}
+          {/* <Col span={2}></Col> */}
+          <Col span={3} offset={13}>
             <Text strong className={"pd-left-1"}>
               Currency :
             </Text>

@@ -311,7 +311,7 @@ export const receiveDetailWithNoPOColumns = (
           field_name="item_no_name"
           value={value}
           onChange={(data, option) =>
-            data && data
+            data !== undefined
               ? onChange(record.id, {
                   item_id: data,
                   uom_id: option.data.uom_id,

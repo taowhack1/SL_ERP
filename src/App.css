@@ -457,6 +457,16 @@ div:empty:before {
 .full-width {
   width: 100%;
 }
+.width-90 {
+  width: 90%;
+}
+.width-80 {
+  width: 80%;
+}
+.width-10 {
+  width: 10%;
+}
+.width-50,
 .half-width {
   width: 50%;
 }

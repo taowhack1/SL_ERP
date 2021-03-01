@@ -231,13 +231,13 @@ const Sales_Quotations = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Agreement :</Text>
+          <Col span={3} offset={13}>
+            <Text strong>Currency :</Text>
           </Col>
 
           <Col span={8}>
-            <Text className="text-view">
-              {data_head && data_head.qn_agreement}
+            <Text className=" text-value pd-left-1">
+              {data_head.currency_no}
             </Text>
           </Col>
         </Row>

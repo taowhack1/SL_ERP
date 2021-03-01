@@ -26,8 +26,8 @@ export const item_fields = {
   item_barcode: null,
   item_weight: 0,
   item_mfd_lead_time_day: 0,
-  item_min: 0,
-  item_max: 0,
+  item_min_qty: 0,
+  item_max_qty: 0,
   item_customer_run_no: "SRL",
   item_price_approve: 1,
   uom_id: null,
@@ -73,15 +73,17 @@ export const item_fields = {
   item_packaging_lead_time: null,
   item_filling_worker: 0,
   item_filling_lead_time: "00:00:00",
+  item_loss_percent_qty: 0,
   commit: 1,
 };
 
 export const item_vendor_fields = {
   id: null,
   item_vendor_lead_time_day: 0,
-  item_vendor_min_qty: 0,
+  item_vendor_moq: 0,
   item_vendor_price: 0,
   item_vendor_default: 0,
+  item_vendor_pack_size: 0,
   vendor_id: null,
   vendor_no_name: null,
   item_id: null,
@@ -152,7 +154,7 @@ export const item_require_fields = [
 export const item_vendor_require_fields = [
   "vendor_id",
   "item_vendor_lead_time_day",
-  "item_vendor_min_qty",
+  "item_vendor_moq",
   "item_vendor_price",
   "uom_id",
   "type_id",
@@ -612,7 +614,7 @@ export const itemFormulaColumns = (
             value={record.item_no_name}
             data={itemList}
             onChange={(data, option) => {
-              data && data
+              data !== undefined
                 ? onChange(record.id, {
                     item_id_formula: option.data.item_id,
                     item_no_name: option.data.item_no_name,
@@ -741,7 +743,7 @@ export const itemPartMixColumns = (
             value={getPartName(record.item_part_sort_mix)}
             data={data_part}
             onChange={(data, option) => {
-              data && data
+              data !== undefined
                 ? onChange(record.id, {
                     item_part_sort_mix: option.data.item_part_sort,
                     // item_part_description: option.data.item_part_description,
@@ -1119,7 +1121,7 @@ export const itemUoMConversionColumns = ({
           value={value}
           data={filterUoM}
           onChange={(data, option) => {
-            data && data
+            data !== undefined
               ? onChange(record.id, {
                   uom_id_to: option.data.uom_id,
                   uom_no_name_to: option.data.uom_no_name,

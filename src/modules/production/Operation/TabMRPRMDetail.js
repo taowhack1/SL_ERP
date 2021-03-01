@@ -4,7 +4,7 @@ import { Row, Col, Typography, Tabs, Table } from "antd";
 import { ProfileOutlined } from "@ant-design/icons";
 import React, { useContext, useEffect, useState } from "react";
 
-import { mrpRMColumns } from "../config/mrp";
+import { mrpDetailColumns } from "../config/mrp";
 import CustomTable from "../../../components/CustomTable";
 
 import { useSelector } from "react-redux";
@@ -156,26 +156,28 @@ const TabMRPRMDetail = () => {
   // console.log("RMReducer.data", RMReducer.data);
   return (
     <>
-      <Row className='col-2 row-margin-vertical  detail-tab-row'>
-        <Col span={13} className='text-left'>
+      <Row className="col-2 row-margin-vertical  detail-tab-row">
+        <Col span={13} className="text-left">
           <Text strong style={{ fontSize: 16 }}>
             <ProfileOutlined style={{ marginRight: 10 }} /> Raw Material List
           </Text>
         </Col>
-        <Col span={11} className='text-right'></Col>
+        <Col span={11} className="text-right"></Col>
       </Row>
       {/* Column Header */}
       <CustomTable
-        rowKey='id'
+        rowKey="id"
         rowClassName={(record) => {
-          return record.auto_genarate_item
+          return readOnly
+            ? "row-table-detail "
+            : record.auto_genarate_item
             ? "row-table-detail "
             : "row-table-detail require";
         }}
         // rowClassName="row-error"
         pageSize={10}
         focusLastPage={true}
-        columns={mrpRMColumns(
+        columns={mrpDetailColumns(
           { readOnly, onChange }
           // RMReducer.onChangeDetailValue,
           // RMReducer.deleteRow,

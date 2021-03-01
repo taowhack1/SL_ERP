@@ -114,7 +114,7 @@ const PartSpecification = ({ id, part }) => {
                         value={state.work_center_no_description}
                         data={workCenterList}
                         onChange={async (data, option) => {
-                          data && data
+                          data !== undefined
                             ? onChangeValue({
                                 work_center_id: option.data.work_center_id,
                                 work_center_no_description:
@@ -210,7 +210,7 @@ const PartSpecification = ({ id, part }) => {
                         value={state.machine_no_name_main}
                         data={workCenterMachine}
                         onChange={(data, option) => {
-                          data && data
+                          data !== undefined
                             ? onChangeValue({
                                 machine_id_main: option.data.machine_id,
                                 machine_no_name_main:
@@ -253,7 +253,7 @@ const PartSpecification = ({ id, part }) => {
                         value={state.machine_no_name_sub}
                         data={workCenterMachine}
                         onChange={(data, option) => {
-                          data && data
+                          data !== undefined
                             ? onChangeValue({
                                 machine_id_sub: option.data.machine_id,
                                 machine_no_name_sub:

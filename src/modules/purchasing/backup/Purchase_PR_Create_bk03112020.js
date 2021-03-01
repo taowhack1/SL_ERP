@@ -170,7 +170,7 @@ const PurchaseRequisitionCreate = (props) => {
               value={data_head.cost_center_no_name}
               data={cost_centers}
               onChange={(data, option) => {
-                data && data
+                data !== undefined
                   ? upDateFormValue({
                       cost_center_id: data,
                       cost_center_no_name: option.title,
@@ -196,7 +196,7 @@ const PurchaseRequisitionCreate = (props) => {
               value={data_head.vendor_no_name}
               data={vendors}
               onChange={(data, option) => {
-                data && data
+                data !== undefined
                   ? upDateFormValue({
                       vendor_id: data,
                       vendor_no_name: option.title,

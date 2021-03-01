@@ -109,7 +109,7 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
 
   return (
     <>
-      <Row className='col-2 detail-tab-row'>
+      <Row className="col-2 detail-tab-row">
         <Col span={24}>
           <Text strong style={{ fontSize: 16 }}>
             <ProfileOutlined style={{ marginRight: 10 }} /> Item Transfer
@@ -117,20 +117,20 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
           </Text>
         </Col>
       </Row>
-      <div className='detail-form'>
-        <Row gutter={2} className='detail-table-head'>
+      <div className="detail-form">
+        <Row gutter={2} className="detail-table-head">
           {TransferDetailColumns &&
             TransferDetailColumns.map((col, key) => {
               return (
-                <Col key={col.id} span={col.size} className='col-outline'>
+                <Col key={col.id} span={col.size} className="col-outline">
                   {col.require && !readOnly && (
-                    <span className='require'>* </span>
+                    <span className="require">* </span>
                   )}
                   <Text strong>{col.name}</Text>
                 </Col>
               );
             })}
-          <Col span={1} className='col-outline'>
+          <Col span={1} className="col-outline">
             <Text strong>
               <EllipsisOutlined />
             </Text>
@@ -142,27 +142,28 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
             {dataDetail.length > 0 &&
               dataDetail.map((line, key) => (
                 <Row
-                  className='form-row'
+                  className="form-row"
                   key={key}
                   name={`row-${key}`}
-                  gutter={3}>
-                  <Col span={1} className='text-center'>
+                  gutter={3}
+                >
+                  <Col span={1} className="text-center">
                     {key + 1}
                   </Col>
-                  <Col span={4} className='text-left'>
+                  <Col span={4} className="text-left">
                     <CustomSelect
                       allowClear
                       showSearch
-                      size='small'
+                      size="small"
                       dropdownStyle={{ minWidth: "20%" }}
                       placeholder={"Select Item"}
-                      name='item_id'
-                      field_id='item_id'
-                      field_name='item_no_name'
+                      name="item_id"
+                      field_id="item_id"
+                      field_name="item_no_name"
                       value={line.item_no_name}
                       data={itemlistShow}
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
                               item_id: option.data.item_id,
                               item_name: option.data.item_name,
@@ -192,21 +193,21 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
                       }}
                     />
                   </Col>
-                  <Col span={4} className='text-left'>
+                  <Col span={4} className="text-left">
                     <CustomSelect
                       allowClear
                       showSearch
-                      size='small'
+                      size="small"
                       disabled={line.item_id ? false : true}
                       placeholder={"Select Source"}
                       dropdownStyle={{ minWidth: "20%" }}
-                      name='sourceLocation'
-                      field_id='stock_id'
-                      field_name='stock_lot_no_batch_qty_balance'
+                      name="sourceLocation"
+                      field_id="stock_id"
+                      field_name="stock_lot_no_batch_qty_balance"
                       value={line.sourceLocation}
                       data={lot_batch_list}
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
                               qty: option.data.tg_stock_qty_balance,
                               sourceLocation:
@@ -232,17 +233,17 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
                       }}
                     />
                   </Col>
-                  <Col span={4} className='text-left'>
+                  <Col span={4} className="text-left">
                     <CustomSelect
                       allowClear
                       showSearch
-                      size='small'
+                      size="small"
                       disabled={line.sourceLocation ? false : true}
                       placeholder={"Select Destination Location"}
                       dropdownStyle={{ minWidth: "20%" }}
-                      name='destinationLocation_id'
-                      field_id='location_id'
-                      field_name='location_shelf_no_name'
+                      name="destinationLocation_id"
+                      field_id="location_id"
+                      field_name="location_shelf_no_name"
                       value={line.destinationLocation_id}
                       data={
                         line.item_id
@@ -254,7 +255,7 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
                           : select_location
                       }
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
                               destinationLocation_id: option.data.location_id,
                               destinationLocation_name:
@@ -267,13 +268,13 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
                       }}
                     />
                   </Col>
-                  <Col span={2} className='text-left'>
+                  <Col span={2} className="text-left">
                     <Input
                       style={{
                         textAlign: "right",
                       }}
-                      name='qty'
-                      size='small'
+                      name="qty"
+                      size="small"
                       disabled
                       placeholder={"Qty"}
                       onChange={(data) => {
@@ -284,10 +285,10 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
                       value={line.qty}
                     />
                   </Col>
-                  <Col span={2} className='text-left'>
+                  <Col span={2} className="text-left">
                     <Input
-                      name='unit'
-                      size='small'
+                      name="unit"
+                      size="small"
                       style={{
                         textAlign: "right",
                       }}
@@ -301,12 +302,12 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
                       value={line.unit}
                     />
                   </Col>
-                  <Col span={3} className='text-left'>
+                  <Col span={3} className="text-left">
                     <InputNumber
                       {...numberFormat}
                       disabled={line.item_id ? false : true}
-                      name='qty_trafer'
-                      size='small'
+                      name="qty_trafer"
+                      size="small"
                       placeholder={"Qty Tramsfer"}
                       min={0.0}
                       max={line.qty}
@@ -318,20 +319,20 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
                       }}
                     />
                   </Col>
-                  <Col span={3} className='text-left'>
+                  <Col span={3} className="text-left">
                     <CustomSelect
                       allowClear
                       showSearch
-                      size='small'
+                      size="small"
                       disabled={line.item_id ? false : true}
                       placeholder={"Select Unit"}
-                      name='unit_transfer'
-                      field_id='uom_id'
-                      field_name='uom_no_name'
+                      name="unit_transfer"
+                      field_id="uom_id"
+                      field_name="uom_no_name"
                       value={line.uom_id}
                       data={uom}
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
                               unit_transfer: option.data.uom_id,
                             })
@@ -350,11 +351,12 @@ const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
               ))}
             <div style={{ marginTop: 10 }}>
               <Button
-                type='dashed'
+                type="dashed"
                 onClick={() => {
                   addLine();
                 }}
-                block>
+                block
+              >
                 <PlusOutlined /> Add a line
               </Button>
             </div>

@@ -96,7 +96,7 @@ const WorkCenterDetail = ({ data_detail, detailDispatch, readOnly }) => {
                       value={line.machine_no_name}
                       data={machineList}
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
                               machine_id: option.data.machine_id,
                               machine_no_name: option.data.machine_no_name,

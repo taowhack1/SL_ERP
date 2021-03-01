@@ -34,7 +34,7 @@ const SelectBulk = ({ data_head, upDateFormValue }) => {
                   value={data_head.item_ref_no_name}
                   data={BULKList}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? upDateFormValue({
                           item_id_ref: option.data.item_id,
                           item_ref_no_name: option.data.item_no_name,

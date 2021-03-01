@@ -22,9 +22,10 @@ const Disburse = (props) => {
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   const auth = useSelector((state) => state.auth.authData);
-  const { disburse_list, issue_ref } = useSelector(
-    (state) => state.inventory.disburse
+  const disburse_list = useSelector(
+    (state) => state.inventory.disburse.disburse_list
   );
+  const { issue_ref } = useSelector((state) => state.inventory.disburse);
   const [state, setState] = useState(disburse_list);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);

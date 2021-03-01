@@ -194,7 +194,7 @@ export const quotation_detail_columns = [
   {
     id: 0,
     name: "Item",
-    size: 9,
+    size: 12,
     require: true,
   },
   {
@@ -215,11 +215,11 @@ export const quotation_detail_columns = [
     size: 3,
     require: true,
   },
-  {
-    id: 4,
-    name: "Discount",
-    size: 3,
-  },
+  // {
+  //   id: 4,
+  //   name: "Discount",
+  //   size: 3,
+  // },
   {
     id: 5,
     name: "Total Price",
@@ -321,7 +321,7 @@ export const so_detail_columns = [
   {
     id: 0,
     name: "Item",
-    size: 6,
+    size: 9,
     require: true,
   },
   {
@@ -342,11 +342,11 @@ export const so_detail_columns = [
     size: 3,
     require: true,
   },
-  {
-    id: 4,
-    name: "Discount",
-    size: 3,
-  },
+  // {
+  //   id: 4,
+  //   name: "Discount",
+  //   size: 3,
+  // },
   {
     id: 5,
     name: "Total Price",
@@ -414,6 +414,7 @@ export const so_fields = {
   tg_flow_max_node_id: null,
 };
 export const so_detail_fields = {
+  id: 0,
   so_detail_id: null,
   so_detail_delivery_date: null,
   so_detail_qty: 0,

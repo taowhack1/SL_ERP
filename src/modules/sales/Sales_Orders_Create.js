@@ -154,10 +154,6 @@ const SaleOrderCreate = (props) => {
           duration: 2,
         });
       }
-
-      // !data_head.so_id
-      //   ? dispatch(create_so(data_head, data_detail))
-      //   : dispatch(update_so(data_head.so_id, data_head, data_detail));
     },
     onEdit: (e) => {
       //e.preventDefault();
@@ -347,7 +343,7 @@ const SaleOrderCreate = (props) => {
               value={data_head.customer_no_name}
               data={masterData.customers}
               onChange={(data, option) => {
-                data && data
+                data !== undefined
                   ? headDispatch({
                       type: "CHANGE_HEAD_VALUE",
                       payload: {
@@ -367,7 +363,7 @@ const SaleOrderCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
+          {/* <Col span={3}>
             <Text strong className={"pd-left-1"}>
               Agreement :
             </Text>
@@ -386,8 +382,8 @@ const SaleOrderCreate = (props) => {
               placeholder="Agreement"
             ></Input>
           </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
+          <Col span={2}></Col> */}
+          <Col span={3} offset={13}>
             <Text strong>
               <span className="require">* </span>
               Payment Terms
@@ -404,7 +400,7 @@ const SaleOrderCreate = (props) => {
               value={data_head.payment_term_no_name}
               data={customer_payment_terms}
               onChange={(data, option) => {
-                data && data
+                data !== undefined
                   ? headDispatch({
                       type: "CHANGE_HEAD_VALUE",
                       payload: {

@@ -155,6 +155,7 @@ export const disburse_fields = {
 };
 
 export const disburse_detail_fields = {
+  id: 0,
   disburse_detail_id: null,
   disburse_detail_due_date: null,
   issue_detail_qty: null,
@@ -209,7 +210,7 @@ export const disburse_require_fields = [
 ];
 export const disburse_sub_detail_require_fields = [
   "location_id",
-  "stock_batch",
+  "stock_id",
   "disburse_detail_sub_qty",
   "disburse_detail_sub_disburse_date",
 ];

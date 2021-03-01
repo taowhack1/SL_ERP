@@ -96,7 +96,7 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
                   value={line.qa_subject_name}
                   data={conditions_subject}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? onChangeValue(line.id, {
                           qa_subject_id: option.data.qa_subject_id,
                           qa_subject_name: option.data.qa_subject_name,
@@ -120,7 +120,7 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
                   value={line.qa_specification_name}
                   data={conditions_specification}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? onChangeValue(line.id, {
                           qa_specification_id: option.data.qa_specification_id,
                           qa_specification_name:
@@ -145,7 +145,7 @@ const ItemQADetail = ({ readOnly, data_qa_detail, qaDetailDispatch }) => {
                   value={line.qa_method_name}
                   data={conditions_method}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? onChangeValue(line.id, {
                           qa_method_id: option.data.qa_method_id,
                           qa_method_name: option.data.qa_method_name,

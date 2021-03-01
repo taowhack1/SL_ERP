@@ -136,12 +136,17 @@ const MRPView = (props) => {
   useEffect(() => {
     const getData = async (id, user_name) =>
       await getMRPByID(id, user_name).then((res) => {
+        console.log(res);
         const data = {
           ...res[0]?.value?.data[0],
           rm_detail:
-            res[1]?.value?.data[0].filter((obj) => obj.type_id === 1) ?? [],
+            sortData(
+              res[1]?.value?.data[0].filter((obj) => obj.type_id === 1)
+            ) ?? [],
           pk_detail:
-            res[1]?.value?.data[0].filter((obj) => obj.type_id === 2) ?? [],
+            sortData(
+              res[1]?.value?.data[0].filter((obj) => obj.type_id === 2)
+            ) ?? [],
         };
 
         // console.log(data);

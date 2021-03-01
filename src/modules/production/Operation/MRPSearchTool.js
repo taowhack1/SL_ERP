@@ -67,7 +67,7 @@ const MRPSearchTool = ({ onChangeSeach }) => {
               value={state.mrp_no_description}
               data={mrpList}
               onChange={(data, option) => {
-                data && data
+                data !== undefined
                   ? changeState({
                       mrp_id: data,
                       mrp_no_description: option.title,
@@ -129,7 +129,7 @@ const MRPSearchTool = ({ onChangeSeach }) => {
                 (item) => item.type_id === 4 || item.type_id === 5
               )}
               onChange={(data, option) => {
-                data && data
+                data !== undefined
                   ? changeState({
                       item_id: option.data.item_id,
                       item_no_name: option.data.item_no_name,
@@ -149,7 +149,7 @@ const MRPSearchTool = ({ onChangeSeach }) => {
           <Col span={8}>
             <RangePicker
               format={"DD/MM/YYYY"}
-              name="mrp_due_date"
+              name="mrp_delivery_date"
               className="full-width"
               value={[
                 state.mrp_due_date_start

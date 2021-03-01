@@ -32,7 +32,7 @@ function UoMCreate(props) {
     props.location && props.location.state ? props.location.state : 0;
 
   const [dataUoMCreate, setDataUoMCreate] = useState(
-    data && data
+    data !== undefined
       ? { ...data, commit: 1, user_name: auth.user_name }
       : {
           ...uomFields,
@@ -247,7 +247,7 @@ function UoMCreate(props) {
                           value={dataUoMCreate.uom_name_ref}
                           data={uom}
                           onChange={(data, option) => {
-                            data && data
+                            data !== undefined
                               ? upDateFormValue({
                                   uom_id_ref: data,
                                   uom_name_ref: option.title,

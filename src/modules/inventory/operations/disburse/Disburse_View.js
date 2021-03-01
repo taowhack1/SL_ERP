@@ -223,12 +223,12 @@ const DisburseView = (props) => {
             <Text className="text-view">{data_head.disburse_description}</Text>
           </Col>
           <Col span={2}></Col>
-          <Col span={3}>
+          {/* <Col span={3}>
             <Text strong>Agreement :</Text>
           </Col>
           <Col span={8}>
             <Text className="text-view">{data_head.disburse_agreement}</Text>
-          </Col>
+          </Col> */}
         </Row>
 
         <Row className="col-2 row-tab-margin-l">

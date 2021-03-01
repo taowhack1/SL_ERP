@@ -38,6 +38,7 @@ import moment from "moment";
 import MainLayoutLoading from "../../../components/MainLayoutLoading";
 import DetailLoading from "../../../components/DetailLoading";
 import { mainReducer } from "../../../include/reducer";
+import { CalculatorOutlined } from "@ant-design/icons";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
 const initialState = {
@@ -124,21 +125,9 @@ const MRPCreate = (props) => {
             payload: materialDetail
               ? {
                   ...state,
-                  mrp_lead_time_day_pk:
-                    materialDetail?.mrp_lead_time_day_pk ?? 0,
-                  mrp_lead_time_day_pk_qa:
-                    materialDetail?.mrp_lead_time_day_pk_qa ?? 0,
-                  mrp_lead_time_day_rm:
-                    materialDetail?.mrp_lead_time_day_rm ?? 0,
-                  mrp_lead_time_day_rm_qa:
-                    materialDetail?.mrp_lead_time_day_rm_qa ?? 0,
-                  mrp_qty_produce_ref:
-                    materialDetail?.item_qty_produce_ref ?? 0,
-                  branch_id: auth.branch_id,
-                  item_id_ref: materialDetail?.item_id_ref,
-                  item_qty_produce_ref:
-                    materialDetail?.item_qty_produce_ref ?? 0,
+                  ...materialDetail,
                   user_name: auth.user_name,
+                  branch_id: auth.branch_id,
                   tg_trans_status_id: 1,
                   uom_no: materialDetail?.uom_no,
                   rm_detail: sortData(materialDetail?.item_formula ?? []) ?? [],
@@ -175,7 +164,7 @@ const MRPCreate = (props) => {
           ...loading,
           detailLoading: false,
         });
-  }, [state.calRPM, state.mrp_qty_produce, state.so_detail_id]);
+  }, [state]);
 
   useEffect(() => {
     // GET LOG
@@ -219,38 +208,55 @@ const MRPCreate = (props) => {
       if (state.rm_detail.some((obj) => obj.auto_genarate_item === 0)) {
         message.error({
           content:
-            "Some vendor of RM item not available. Please contact Purchasing Department.",
+            "Some vendor of Raw Material item not available. Please contact Purchasing Department.",
           duration: 4,
-          key: "validate",
+          key: "alert_rm",
         });
         return false;
       }
       if (state.pk_detail.some((obj) => obj.auto_genarate_item === 0)) {
         message.error({
           content:
-            "Some vendor of RM item not available. Please contact Purchasing Department",
+            "Some vendor of Package Material item not available. Please contact Purchasing Department",
           duration: 4,
-          key: "validate",
+          key: "alert_pk",
         });
         return false;
       }
       const validate = validateFormHead(state, mrpRequireFields);
       console.log(validate);
+
       if (validate.validate) {
+        if (state.calRPM === true) {
+          message.error({
+            content: (
+              <span>
+                Please click
+                <CalculatorOutlined
+                  className="button-icon pd-left-1 pd-right-1"
+                  style={{ fontSize: 20 }}
+                />
+                icon to calculate RPM before save.
+              </span>
+            ),
+            duration: 4,
+            key: "alert_cal_rpm",
+          });
+          return false;
+        }
         const saveData = {
           data_head: state,
           data_material: sortData(state.rm_detail.concat(state.pk_detail)),
         };
         state.mrp_id
-          ? dispatch(
-              updateMRP(
-                state.mrp_id,
-                saveData,
-                auth.user_name,
-                redirect_to_view
-              )
-            )
-          : dispatch(createMRP(saveData, auth.user_name, redirect_to_view));
+          ? updateMRP(state.mrp_id, saveData, auth.user_name, redirect_to_view)
+          : createMRP(saveData, auth.user_name, redirect_to_view);
+      } else {
+        message.error({
+          content: <span>Please fill your form completely</span>,
+          duration: 4,
+          key: "alert_validate",
+        });
       }
     },
     onEdit: (e) => {

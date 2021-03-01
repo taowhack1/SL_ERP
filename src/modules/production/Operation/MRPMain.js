@@ -118,8 +118,8 @@ const MRPMain = (props) => {
     if (mrp_due_date_start) {
       search_data = search_data.filter(
         (data) =>
-          data.mrp_due_date >= mrp_due_date_start &&
-          data.mrp_due_date <= mrp_due_date_end
+          data.mrp_delivery_date >= mrp_due_date_start &&
+          data.mrp_delivery_date <= mrp_due_date_end
       );
     }
     setStateMRP(search_data);
@@ -132,9 +132,6 @@ const MRPMain = (props) => {
   useEffect(() => {
     setStateMRP(mrpList);
   }, [mrpList.length]);
-  const redirect_to_view = (id) => {
-    history.push("mrp/view/" + (id ? id : "new"));
-  };
   const onSearch = (value, search) => {};
   return (
     <div>
@@ -161,7 +158,9 @@ const MRPMain = (props) => {
                         .removeClass("selected-row");
                       $(e.target).closest("tr").addClass("selected-row");
                       keepLog.keep_log_action(record.mrp_no);
-                      history.push("mrp/view/" + record.mrp_id);
+                      history.push(
+                        "/production/operations/mrp/view/" + record.mrp_id
+                      );
                       // dispatch(
                       //   getMRPByID(
                       //     record.mrp_id,

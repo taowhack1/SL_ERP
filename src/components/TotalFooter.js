@@ -15,7 +15,7 @@ const TotalFooter = ({ excludeVat, vat, includeVat, currency = "THB" }) => {
         </Col>
         <Col span={3} className="text-number">
           <Text className="text-view">
-            {convertDigit(excludeVat ? excludeVat : 0)}
+            {convertDigit(excludeVat ? excludeVat : 0, 4)}
           </Text>
         </Col>
         <Col span={1} className="text-string">
@@ -29,7 +29,7 @@ const TotalFooter = ({ excludeVat, vat, includeVat, currency = "THB" }) => {
           <Text strong>Vat :</Text>
         </Col>
         <Col span={3} className="text-number">
-          <Text className="text-view">{convertDigit(vat ? vat : 0)}</Text>
+          <Text className="text-view">{convertDigit(vat ? vat : 0, 4)}</Text>
         </Col>
         <Col span={1} className="text-string">
           <Text strong> {currency}</Text>
@@ -51,7 +51,7 @@ const TotalFooter = ({ excludeVat, vat, includeVat, currency = "THB" }) => {
         </Col>
         <Col span={3} className="text-number">
           <Text className="text-view">
-            {convertDigit(includeVat ? includeVat : 0)}
+            {convertDigit(includeVat ? includeVat : 0, 4)}
           </Text>
         </Col>
         <Col span={1} className="text-string">

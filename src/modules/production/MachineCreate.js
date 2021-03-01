@@ -285,7 +285,7 @@ const MachineCreate = (props) => {
                       value={data_head.machine_type_no_name}
                       data={itemType}
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? upDateFormValue({
                               machine_type_id: data,
                               machine_type_no_name: option.title,
@@ -344,7 +344,7 @@ const MachineCreate = (props) => {
                       value={data_head.machine_category_no_name}
                       data={machineCategory}
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? upDateFormValue({
                               machine_category_id: data,
                               machine_category_no_name: option.title,

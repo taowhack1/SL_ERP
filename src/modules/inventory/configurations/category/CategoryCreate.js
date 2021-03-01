@@ -26,7 +26,7 @@ const CategoryCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
   const [dataCategoryCreate, setDataCategoryCreate] = useState(
-    data && data
+    data !== undefined
       ? { ...data, commit: 1, user_name: auth.user_name }
       : {
           ...categoryFields,
@@ -175,7 +175,7 @@ const CategoryCreate = (props) => {
                           value={dataCategoryCreate.type_id}
                           data={type}
                           onChange={(data, option) => {
-                            data && data
+                            data !== undefined
                               ? upDateFormValue({
                                   type_id: data,
                                 })

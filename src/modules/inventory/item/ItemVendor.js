@@ -99,7 +99,7 @@ const itemVendorColumns = ({
             value={value}
             data={vendors}
             onChange={(data, option) => {
-              data && data
+              data !== undefined
                 ? onChange(record.id, {
                     vendor_id: option.data.vendor_id,
                     vendor_no_name: option.data.vendor_no_name,
@@ -118,13 +118,13 @@ const itemVendorColumns = ({
     id: 4,
     title: (
       <div className="text-center">
-        <CustomLabel title="Lead Time(days)" require readOnly={readOnly} />
+        <CustomLabel title="L/T (days)" require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "item_vendor_lead_time_day",
     key: "item_vendor_lead_time_day",
     align: "center",
-    width: "15%",
+    width: "10%",
     render: (value, record, index) => {
       if (readOnly) {
         return value;
@@ -152,29 +152,27 @@ const itemVendorColumns = ({
     id: 5,
     title: (
       <div className="text-center">
-        <CustomLabel title="Min. Qty." require readOnly={readOnly} />
+        <CustomLabel title="MOQ." require readOnly={readOnly} />
       </div>
     ),
-    dataIndex: "item_vendor_min_qty",
-    key: "item_vendor_min_qty",
+    dataIndex: "item_vendor_moq",
+    key: "item_vendor_moq",
     align: "right",
-    width: "15%",
+    width: "12%",
     render: (value, record, index) => {
       if (readOnly) {
-        return convertDigit(value, 4);
+        return convertDigit(value, 3);
       } else {
         return (
           <InputNumber
-            {...getNumberFormat(4)}
+            {...getNumberFormat(3)}
             placeholder={"Min Qty."}
             min={0}
             step={1}
             className={"full-width"}
-            name="item_vendor_min_qty"
+            name="item_vendor_moq"
             value={value}
-            onChange={(data) =>
-              onChange(record.id, { item_vendor_min_qty: data })
-            }
+            onChange={(data) => onChange(record.id, { item_vendor_moq: data })}
             size="small"
           />
         );
@@ -183,6 +181,39 @@ const itemVendorColumns = ({
   },
   {
     id: 6,
+    title: (
+      <div className="text-center">
+        <CustomLabel title="Pack Size" require readOnly={readOnly} />
+      </div>
+    ),
+    dataIndex: "item_vendor_pack_size",
+    key: "item_vendor_pack_size",
+    align: "right",
+    width: "12%",
+    render: (value, record, index) => {
+      if (readOnly) {
+        return convertDigit(value, 3);
+      } else {
+        return (
+          <InputNumber
+            {...getNumberFormat(3)}
+            placeholder={"Pack Size"}
+            min={0}
+            step={1}
+            className={"full-width"}
+            name="item_vendor_pack_size"
+            value={value}
+            onChange={(data) =>
+              onChange(record.id, { item_vendor_pack_size: data })
+            }
+            size="small"
+          />
+        );
+      }
+    },
+  },
+  {
+    id: 7,
     title: (
       <div className="text-center">
         <CustomLabel title="UoM" require readOnly={readOnly} />
@@ -201,14 +232,14 @@ const itemVendorColumns = ({
             allowClear
             showSearch
             size={"small"}
-            placeholder={"Select UoM"}
+            placeholder={"UoM"}
             name="uom_id"
             field_id="uom_id"
             field_name="uom_name"
             value={value}
             data={units}
             onChange={(data, option) => {
-              data && data
+              data !== undefined
                 ? onChange(record.id, {
                     uom_id: option.data.uom_id,
                     uom_no: option.data.uom_no,
@@ -226,7 +257,7 @@ const itemVendorColumns = ({
     },
   },
   {
-    id: 7,
+    id: 8,
     title: (
       <div className="text-center">
         <CustomLabel title="Price / Unit" require readOnly={readOnly} />
@@ -235,14 +266,14 @@ const itemVendorColumns = ({
     dataIndex: "item_vendor_price",
     key: "item_vendor_price",
     align: "right",
-    width: "15%",
+    width: "10%",
     render: (value, record, index) => {
       if (readOnly) {
-        return convertDigit(value, 4);
+        return convertDigit(value, 3);
       } else {
         return (
           <InputNumber
-            {...getNumberFormat(4)}
+            {...getNumberFormat(3)}
             placeholder={"Min Qty."}
             min={0}
             step={1}
@@ -259,7 +290,7 @@ const itemVendorColumns = ({
     },
   },
   {
-    id: 8,
+    id: 9,
     title: (
       <Text strong>
         <EllipsisOutlined />

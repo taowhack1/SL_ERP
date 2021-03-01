@@ -61,7 +61,7 @@ const TabItemDetail = ({
                   value={data_head.type_name}
                   data={master_data.item_type}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? upDateFormValue({
                           type_id: data,
                           type_name: option.title,
@@ -114,7 +114,7 @@ const TabItemDetail = ({
                   value={data_head.uom_no_name}
                   data={master_data.item_uom}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? upDateFormValue({
                           uom_id: option.data.uom_id,
                           uom_no: option.data.uom_no,
@@ -238,7 +238,7 @@ const TabItemDetail = ({
                   value={data_head.customer_no_name}
                   data={customers}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? upDateFormValue({
                           customer_id: option.data.customer_id,
                           customer_no_name: option.data.customer_no_name,
@@ -292,7 +292,7 @@ const TabItemDetail = ({
                   value={data_head.identify_benefit_no_name}
                   data={master_data.item_benefit}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? upDateFormValue({
                           identify_benefit_id: option.data.identify_benefit_id,
                           identify_benefit_no_name:
@@ -396,7 +396,7 @@ const TabItemDetail = ({
                       : master_data.item_category
                   }
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? upDateFormValue({
                           category_id: option.data.category_id,
                           category_name: option.data.category_name,
@@ -448,7 +448,7 @@ const TabItemDetail = ({
                   value={data_head.item_control_name}
                   data={master_data.item_control}
                   onChange={(data, option) => {
-                    data && data
+                    data !== undefined
                       ? upDateFormValue({
                           item_control_id: option.data.item_control_id,
                           item_control_name: option.data.item_control_name,

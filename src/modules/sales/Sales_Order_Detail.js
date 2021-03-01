@@ -20,7 +20,11 @@ import { so_detail_fields, so_detail_columns } from "./configs";
 import CustomSelect from "../../components/CustomSelect";
 import { calSubtotal, sumArrObj } from "../../include/js/function_main";
 
-import { convertDigit, numberFormat } from "../../include/js/main_config";
+import {
+  convertDigit,
+  getNumberFormat,
+  numberFormat,
+} from "../../include/js/main_config";
 import TextArea from "antd/lib/input/TextArea";
 const { Text } = Typography;
 const { Option } = Select;
@@ -99,7 +103,7 @@ const SO_Detail = ({
           {/* Edit Form */}
           {data_detail &&
             data_detail.map((line, key) => (
-              <>
+              <div key={key}>
                 <Row
                   key={key}
                   style={{
@@ -111,7 +115,7 @@ const SO_Detail = ({
                   name={`row-${key}`}
                   className="col-2"
                 >
-                  <Col span={6} className="text-string">
+                  <Col span={9} className="text-string">
                     <Select
                       allowClear
                       showSearch
@@ -122,7 +126,7 @@ const SO_Detail = ({
                       value={line.item_no_name}
                       size="small"
                       onChange={(data, option) => {
-                        data && data
+                        data !== undefined
                           ? onChangeValue(line.id, {
                               item_id: data,
                               uom_id: option.uom_id,
@@ -162,11 +166,11 @@ const SO_Detail = ({
                   </Col>
                   <Col span={3} className="text-number">
                     <InputNumber
-                      {...numberFormat}
+                      {...getNumberFormat(4)}
                       name="so_detail_qty"
                       placeholder={"Qty"}
                       min={0.0}
-                      step={0.001}
+                      step={1}
                       size="small"
                       className={"full-width"}
                       disabled={0}
@@ -206,12 +210,11 @@ const SO_Detail = ({
                   </Col>
                   <Col span={3} className="text-number">
                     <InputNumber
-                      {...numberFormat}
+                      {...getNumberFormat(4)}
                       name="so_detail_price"
                       placeholder="Unit Price"
                       value={line.so_detail_price}
                       min={0.0}
-                      precision={3}
                       step={5}
                       onChange={(data) => {
                         onChangeValue(line.id, {
@@ -228,7 +231,7 @@ const SO_Detail = ({
                       size="small"
                     />
                   </Col>
-                  <Col span={3} className="text-number">
+                  {/* <Col span={3} className="text-number">
                     <InputNumber
                       {...numberFormat}
                       name="item_discount"
@@ -250,10 +253,10 @@ const SO_Detail = ({
                       className={"full-width"}
                       size="small"
                     />
-                  </Col>
+                  </Col> */}
                   <Col span={3} className="text-number">
                     <div className="total-number">
-                      {convertDigit(line.so_detail_total_price)}
+                      {convertDigit(line.so_detail_total_price, 4)}
                     </div>
                   </Col>
                   <Col span={3} className="text-number">
@@ -307,7 +310,7 @@ const SO_Detail = ({
                   </Col>
                   <Col span={1}></Col>
                 </Row>
-              </>
+              </div>
             ))}
           <div style={{ marginTop: 10 }}>
             <Button
@@ -326,7 +329,7 @@ const SO_Detail = ({
           {/* View Form */}
           {data_detail &&
             data_detail.map((line, key) => (
-              <>
+              <div key={key}>
                 <Row
                   key={key}
                   style={{
@@ -338,12 +341,12 @@ const SO_Detail = ({
                   name={`row-${key}`}
                   className="col-2"
                 >
-                  <Col span={6} className="text-string">
+                  <Col span={9} className="text-string">
                     <Text className="text-view">{line.item_no_name}</Text>
                   </Col>
                   <Col span={3} className="text-number">
                     <Text className="text-view">
-                      {convertDigit(line.so_detail_qty)}
+                      {convertDigit(line.so_detail_qty, 4)}
                     </Text>
                   </Col>
                   <Col span={2} className="text-string">
@@ -351,17 +354,17 @@ const SO_Detail = ({
                   </Col>
                   <Col span={3} className="text-number">
                     <Text className="text-view">
-                      {convertDigit(line.so_detail_price)}
+                      {convertDigit(line.so_detail_price, 4)}
                     </Text>
                   </Col>
-                  <Col span={3} className="text-number">
+                  {/* <Col span={3} className="text-number">
                     <Text className="text-view">
                       {convertDigit(line.so_detail_discount)}
                     </Text>
-                  </Col>
+                  </Col> */}
                   <Col span={3} className="text-number">
                     <Text className="text-view">
-                      {convertDigit(line.so_detail_total_price)}
+                      {convertDigit(line.so_detail_total_price, 4)}
                     </Text>
                   </Col>
                   <Col span={3} className="text-center">
@@ -388,7 +391,7 @@ const SO_Detail = ({
                   </Col>
                   <Col span={1}></Col>
                 </Row>
-              </>
+              </div>
             ))}
         </> //close tag
       )}

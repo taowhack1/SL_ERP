@@ -46,7 +46,7 @@ export const getMRPByID = (id, user_name, redirect) => {
   // });
 };
 
-export const createMRP = (data, user_name, redirect) => async (dispatch) => {
+export const createMRP = async (data, user_name, redirect) => {
   try {
     console.log("createMRP", data);
     const { data_head, data_material } = data;
@@ -59,7 +59,7 @@ export const createMRP = (data, user_name, redirect) => async (dispatch) => {
             duration: 2,
             key: "validate",
           });
-          redirect && redirect();
+          redirect && redirect(mrp_id);
           // dispatch(getMRPByID(mrp_id, user_name, redirect));
         })
         .catch((error) => {
@@ -75,19 +75,19 @@ export const createMRP = (data, user_name, redirect) => async (dispatch) => {
     console.log(error);
   }
 };
-export const updateMRP = (id, data, user_name, redirect) => (dispatch) => {
+export const updateMRP = async (mrp_id, data, user_name, redirect) => {
   try {
     console.log("createMRP", data);
     const { data_head, data_material } = data;
-    axios.put(`${api_mrp}/${id}`, data_head, header_config).then((res) => {
-      Promise.allSettled([updateMRPMaterial(id, data_material)])
+    axios.put(`${api_mrp}/${mrp_id}`, data_head, header_config).then((res) => {
+      Promise.allSettled([updateMRPMaterial(mrp_id, data_material)])
         .then((res) => {
           message.success({
             content: "Work Order Updated.",
             duration: 2,
             key: "validate",
           });
-          redirect && redirect();
+          redirect && redirect(mrp_id);
           // dispatch(getMRPByID(id, user_name, redirect));
         })
         .catch((error) => {
@@ -142,7 +142,7 @@ export const mrp_actions = (data, mrp_id) => (dispatch) => {
             duration: 2,
           });
           console.log(res);
-          dispatch(getMRPByID(mrp_id, data.user_name));
+          // dispatch(getMRPByID(mrp_id, data.user_name));
         })
     : message.error({
         content: "Somethings went wrong. please contact programmer.",

@@ -184,20 +184,15 @@ const SaleOrderView = (props) => {
         </Row>
 
         {/* Address & Information */}
+        {/* <Row className="col-2 row-margin-vertical">
+          
+        </Row> */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>Delivery Date :</Text>
           </Col>
           <Col span={8}>
             <Text className="text-view">{data_head.tg_so_delivery_date}</Text>
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Quotations Ref. :</Text>
-          </Col>
-          <Col span={8}>
-            <Text className="text-view">{data_head.qn_no_description}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -209,11 +204,10 @@ const SaleOrderView = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Description :</Text>
+            <Text strong>Quotations Ref. :</Text>
           </Col>
-
           <Col span={8}>
-            <Text className="text-view">{data_head.so_description}</Text>
+            <Text className="text-view">{data_head.qn_no_description}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -226,11 +220,11 @@ const SaleOrderView = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Agreement :</Text>
+            <Text strong>Description :</Text>
           </Col>
 
           <Col span={8}>
-            <Text className="text-view">{data_head.so_agreement}</Text>
+            <Text className="text-view">{data_head.so_description}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
