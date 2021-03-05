@@ -35,13 +35,7 @@ const TabPanel = ({
   const callback = (key) => {};
   const master_data = useSelector((state) => state.inventory.master_data);
   const customers = useSelector((state) => state.sales.master_data.customers);
-  console.log(
-    type_id !== undefined,
-    type_id,
-    [3, 4].includes(type_id),
-    [1, 10, 20].includes(department_id)
-  );
-  console.log(department_id);
+  console.log("tab panel");
   return (
     <>
       <Tabs
@@ -52,7 +46,7 @@ const TabPanel = ({
         <Tabs.TabPane
           className="tab-top"
           tab={
-            <CustomLabel title={"General Detail"} require readOnly={readOnly} />
+            <CustomLabel label={"General Detail"} require readOnly={readOnly} />
           }
           key={"1"}
         >
@@ -70,18 +64,10 @@ const TabPanel = ({
           [1, 10, 11].includes(department_id) && ( */}
         <Tabs.TabPane
           tab={
-            <CustomLabel title={"Inventory Data"} require readOnly={readOnly} />
+            <CustomLabel label={"Inventory Data"} require readOnly={readOnly} />
           }
           key={"2"}
         >
-          {/* <TabItemRDDetail
-                data_file={data_file}
-                updateFile={updateFile}
-                data_head={data_head}
-                master_data={master_data}
-                upDateFormValue={upDateFormValue}
-                readOnly={readOnly}
-              /> */}
           <ItemInventoryData />
         </Tabs.TabPane>
         {/* )} */}
@@ -91,7 +77,7 @@ const TabPanel = ({
           [1, 10, 11].includes(department_id) && (
             <Tabs.TabPane
               tab={
-                <CustomLabel title={"R&D Detail"} require readOnly={readOnly} />
+                <CustomLabel label={"R&D Detail"} require readOnly={readOnly} />
               }
               key={"3"}
             >
@@ -112,7 +98,7 @@ const TabPanel = ({
             <Tabs.TabPane
               tab={
                 <CustomLabel
-                  title={"Bulk Formula"}
+                  label={"Bulk Formula"}
                   require
                   readOnly={readOnly}
                 />
@@ -153,53 +139,42 @@ const TabPanel = ({
           ยังไม่ใช้งาน
           */}
 
-        {type_id !== undefined &&
+        {/* {type_id !== undefined &&
           type_id &&
           [1, 2, 3, 4, 5].includes(type_id) &&
-          [1, 10, 11].includes(department_id) && (
-            // [1, 10, 11, 18].includes(department_id) && (
-            <Tabs.TabPane
-              tab={
-                <CustomLabel
-                  title={"Specification"}
-                  require
-                  readOnly={readOnly}
-                />
-              }
-              key={"5"}
-            >
-              <TabItemQA
-                data_head={data_head}
-                upDateFormValue={upDateFormValue}
-                data_qa_detail={data_qa_detail}
-                qaDetailDispatch={qaDetailDispatch}
-                readOnly={readOnly}
-              />
-            </Tabs.TabPane>
-          )}
-        {type_id !== undefined &&
+          [1, 10, 11].includes(department_id) && ( */}
+        <Tabs.TabPane
+          tab={
+            <CustomLabel label={"Specification"} require readOnly={readOnly} />
+          }
+          key={"5"}
+        >
+          <TabItemQA />
+        </Tabs.TabPane>
+        {/* )} */}
+        {/* {type_id !== undefined &&
           type_id &&
           ![3, 4, 5].includes(type_id) &&
-          [1, 10, 13].includes(department_id) && (
-            <Tabs.TabPane
-              tab={
-                <CustomLabel
-                  title={"Purchase Vendor"}
-                  require
-                  readOnly={readOnly}
-                />
-              }
-              key={"6"}
-            >
-              <TabItemPurchase
-                data_head={data_head}
-                data_detail={data_detail}
-                detailDispatch={detailDispatch}
-                upDateFormValue={upDateFormValue}
-                readOnly={readOnly}
-              />
-            </Tabs.TabPane>
-          )}
+          [1, 10, 13].includes(department_id) && ( */}
+        <Tabs.TabPane
+          tab={
+            <CustomLabel
+              label={"Purchase Vendor"}
+              require
+              readOnly={readOnly}
+            />
+          }
+          key={"6"}
+        >
+          <TabItemPurchase
+            data_head={data_head}
+            data_detail={data_detail}
+            detailDispatch={detailDispatch}
+            upDateFormValue={upDateFormValue}
+            readOnly={readOnly}
+          />
+        </Tabs.TabPane>
+        {/* )} */}
         {type_id !== undefined &&
           type_id &&
           [4, 5].includes(type_id) &&
@@ -207,7 +182,7 @@ const TabPanel = ({
             // [1, 10, 11, 18].includes(department_id) && (
             <Tabs.TabPane
               tab={
-                <CustomLabel title={"Packaging"} require readOnly={readOnly} />
+                <CustomLabel label={"Packaging"} require readOnly={readOnly} />
               }
               key={"7"}
             >
@@ -232,7 +207,7 @@ const TabPanel = ({
             <Tabs.TabPane
               tab={
                 <CustomLabel
-                  title={"Filling Process"}
+                  label={"Filling Process"}
                   require
                   readOnly={readOnly}
                 />
@@ -259,7 +234,7 @@ const TabPanel = ({
             <Tabs.TabPane
               tab={
                 <CustomLabel
-                  title={"Production Data"}
+                  label={"Production Data"}
                   require
                   readOnly={readOnly}
                 />

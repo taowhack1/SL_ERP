@@ -211,6 +211,7 @@ const ItemView = (props) => {
     };
   }, [readOnly, data_file, formulaPercent]);
   console.log("data_part", formulaPercent, data_part);
+  console.log(data_head);
   return (
     <ItemContext.Provider value={ContextValue}>
       <FileContext.Provider value={{ data_file }}>

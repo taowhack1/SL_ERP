@@ -8,7 +8,7 @@ import {
   sortDataWithoutCommit,
   validateFormDetail,
 } from "../../../include/js/function_main";
-import { itemUoMConversionColumns, UoMConversionFields } from "../config/item";
+import { itemUOMConversionColumns, UOMConversionFields } from "../config/item";
 
 const uomConversionRequireFields = [
   "uom_convert_main_action",
@@ -18,32 +18,32 @@ const uomConversionRequireFields = [
   "uom_convert_actived",
 ];
 
-const ItemUoMConversion = ({
+const ItemUOMConversion = ({
   data_head,
   visible,
   readOnly,
   setModalVisible,
   upDateFormValue,
-  UoMList,
+  UOMList,
 }) => {
   const { auth } = useContext(AppContext);
   const [state, setState] = useState(data_head.uom_conversion ?? []);
-  const filterUoMFunction = () => {
+  const filterUOMFunction = () => {
     const selectedList = state.map((obj2) => obj2.uom_id_to);
-    const filterList = UoMList.filter(
+    const filterList = UOMList.filter(
       (obj) =>
         !selectedList.includes(obj.uom_id) && obj.uom_id !== data_head.uom_id
     );
     console.log(filterList);
     return filterList;
   };
-  const filterUoM = filterUoMFunction();
+  const filterUOM = filterUOMFunction();
   const addRow = () => {
     setState(
       sortDataWithoutCommit([
         ...state,
         {
-          ...UoMConversionFields,
+          ...UOMConversionFields,
           uom_id_from: data_head.uom_id,
           uom_no_name_from: data_head.uom_no_name,
           user_name: auth.user_name,
@@ -94,7 +94,7 @@ const ItemUoMConversion = ({
     setState([]);
     setModalVisible(false);
   };
-  console.log(state, filterUoM);
+  console.log(state, filterUOM);
   return (
     <>
       <Modal
@@ -133,12 +133,12 @@ const ItemUoMConversion = ({
         }
       >
         <CustomTable
-          columns={itemUoMConversionColumns({
+          columns={itemUOMConversionColumns({
             readOnly,
             onDelete,
             onChange,
             onSwitch,
-            filterUoM,
+            filterUOM,
           })}
           focusLastPage={true}
           rowClassName="row-table-detail"
@@ -152,4 +152,4 @@ const ItemUoMConversion = ({
   );
 };
 
-export default React.memo(ItemUoMConversion);
+export default React.memo(ItemUOMConversion);

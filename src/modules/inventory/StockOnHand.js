@@ -233,7 +233,7 @@ const StockMove = (props) => {
                 },
                 {
                   id: 4,
-                  title: "UoM",
+                  title: "UOM",
                   dataIndex: "uom_no_name",
                   width: "20%",
                   align: "left",
@@ -303,7 +303,7 @@ const StockMove = (props) => {
                 },
                 {
                   id: 4,
-                  title: "UoM",
+                  title: "UOM",
                   dataIndex: "uom_no_name",
                   width: "20%",
                   align: "left",
@@ -380,7 +380,7 @@ const StockMove = (props) => {
                 },
                 {
                   // id: 4,
-                  title: "UoM",
+                  title: "UOM",
                   dataIndex: "uom_no",
                   width: "10%",
                   align: "left",

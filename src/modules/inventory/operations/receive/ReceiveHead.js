@@ -35,7 +35,7 @@ const ReceiveHead = () => {
       <Row className="col-2 row-margin-vertical">
         {/* 1 */}
         <Col span={3}>
-          <CustomLabel title={"Description :"} require readOnly={readOnly} />
+          <CustomLabel label={"Description :"} require readOnly={readOnly} />
         </Col>
         <Col span={8}>
           {readOnly ? (
@@ -56,7 +56,7 @@ const ReceiveHead = () => {
         </Col>
         <Col span={2}></Col>
         <Col span={3}>
-          <CustomLabel title={"Vendor :"} readOnly={readOnly} />
+          <CustomLabel label={"Vendor :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
           {readOnly || state.po_id ? (
@@ -98,7 +98,7 @@ const ReceiveHead = () => {
       </Row>
       <Row className="col-2 row-margin-vertical ">
         <Col span={3}>
-          <CustomLabel title={"PO Ref. :"} readOnly={readOnly} />
+          <CustomLabel label={"PO Ref. :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
           {/* PO Ref */}
@@ -127,7 +127,7 @@ const ReceiveHead = () => {
 
         <Col span={2}></Col>
         <Col span={3}>
-          <CustomLabel title={"Order Date :"} readOnly={readOnly} />
+          <CustomLabel label={"Order Date :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
           {readOnly || state.po_id ? (
@@ -159,7 +159,7 @@ const ReceiveHead = () => {
       </Row>
       <Row className="col-2 row-margin-vertical">
         <Col span={3}>
-          <CustomLabel title={"Invoice No :"} readOnly={readOnly} />
+          <CustomLabel label={"Invoice No :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
           {readOnly ? (
@@ -182,7 +182,7 @@ const ReceiveHead = () => {
         <Col span={2}></Col>
 
         <Col span={3}>
-          <CustomLabel title={"Currency :"} readOnly={readOnly} />
+          <CustomLabel label={"Currency :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
           <Text className="text-view">{state.currency_no ?? "THB"}</Text>
@@ -190,7 +190,7 @@ const ReceiveHead = () => {
       </Row>
       <Row className="col-2 row-margin-vertical">
         <Col span={3}>
-          <CustomLabel title={"Invoice Date :"} readOnly={readOnly} />
+          <CustomLabel label={"Invoice Date :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
           {readOnly ? (

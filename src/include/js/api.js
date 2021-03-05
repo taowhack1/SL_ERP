@@ -146,3 +146,6 @@ export const api_mrp = `/production/mrp`;
 export const api_mrp_detail = `/production/mrp_detail`;
 export const api_mrp_so_ref = `/list/so`;
 export const api_get_fg_material = `/production/mrp/calculate`;
+
+// HRM
+export const api_country = `/list/country`;

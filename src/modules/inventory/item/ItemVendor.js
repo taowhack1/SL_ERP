@@ -4,16 +4,22 @@ import {
   EllipsisOutlined,
   CheckSquareOutlined,
   BorderOutlined,
+  SnippetsOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
-import React, { useEffect } from "react";
-import { item_vendor_fields } from "../config/item";
+import React, { useContext, useEffect, useReducer, useState } from "react";
+import { itemVendorFields, item_vendor_fields } from "../config/item";
 import { useSelector } from "react-redux";
 import CustomSelect from "../../../components/CustomSelect";
 import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 import CustomLabel from "../../../components/CustomLabel";
 import CustomTable from "../../../components/CustomTable";
+import ItemVendorDocumentList from "./ItemVendorDocumentList";
+import { ItemContext } from "../../../include/js/context";
+import { mainReducer } from "../../../include/reducer";
 
 const { Text } = Typography;
+const initialState = itemVendorFields;
 const itemVendorColumns = ({
   readOnly,
   onChange,
@@ -21,6 +27,7 @@ const itemVendorColumns = ({
   vendors,
   units,
   data_detail,
+  setModalState,
 }) => [
   {
     id: 1,
@@ -76,7 +83,7 @@ const itemVendorColumns = ({
     id: 3,
     title: (
       <div className="text-center">
-        <CustomLabel title="Vendor" require readOnly={readOnly} />
+        <CustomLabel label="Vendor" require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "vendor_no_name",
@@ -118,7 +125,7 @@ const itemVendorColumns = ({
     id: 4,
     title: (
       <div className="text-center">
-        <CustomLabel title="L/T (days)" require readOnly={readOnly} />
+        <CustomLabel label="L/T (days)" require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "item_vendor_lead_time_day",
@@ -152,7 +159,7 @@ const itemVendorColumns = ({
     id: 5,
     title: (
       <div className="text-center">
-        <CustomLabel title="MOQ." require readOnly={readOnly} />
+        <CustomLabel label="MOQ." require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "item_vendor_moq",
@@ -183,7 +190,7 @@ const itemVendorColumns = ({
     id: 6,
     title: (
       <div className="text-center">
-        <CustomLabel title="Pack Size" require readOnly={readOnly} />
+        <CustomLabel label="Pack Size" require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "item_vendor_pack_size",
@@ -216,7 +223,7 @@ const itemVendorColumns = ({
     id: 7,
     title: (
       <div className="text-center">
-        <CustomLabel title="UoM" require readOnly={readOnly} />
+        <CustomLabel label="UOM" require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "uom_no",
@@ -232,10 +239,10 @@ const itemVendorColumns = ({
             allowClear
             showSearch
             size={"small"}
-            placeholder={"UoM"}
+            placeholder={"UOM"}
             name="uom_id"
             field_id="uom_id"
-            field_name="uom_name"
+            field_name="uom_no"
             value={value}
             data={units}
             onChange={(data, option) => {
@@ -243,12 +250,12 @@ const itemVendorColumns = ({
                 ? onChange(record.id, {
                     uom_id: option.data.uom_id,
                     uom_no: option.data.uom_no,
-                    uom_name: option.data.uom_name,
+                    uom_no_name: option.data.uom_no_name,
                   })
                 : onChange(record.id, {
                     uom_id: null,
                     uom_no: null,
-                    uom_name: null,
+                    uom_no_name: null,
                   });
             }}
           />
@@ -260,7 +267,7 @@ const itemVendorColumns = ({
     id: 8,
     title: (
       <div className="text-center">
-        <CustomLabel title="Price / Unit" require readOnly={readOnly} />
+        <CustomLabel label="Price / Unit" require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "item_vendor_price",
@@ -291,6 +298,19 @@ const itemVendorColumns = ({
   },
   {
     id: 9,
+    title: <Text strong>Docs.</Text>,
+    align: "center",
+    width: "5%",
+    render: (_, record) => (
+      <SnippetsOutlined
+        className="button-icon"
+        title={"View / Attach File"}
+        onClick={() => setModalState({ visible: true, vendorData: record })}
+      />
+    ),
+  },
+  {
+    id: 10,
     title: (
       <Text strong>
         <EllipsisOutlined />
@@ -311,7 +331,7 @@ const itemVendorColumns = ({
             okText="Yes"
             cancelText="No"
           >
-            <DeleteTwoTone />
+            <DeleteOutlined className="warning" />
           </Popconfirm>
         );
       }
@@ -319,67 +339,91 @@ const itemVendorColumns = ({
   },
 ];
 
-const ItemVendor = ({ data_head, data_detail, readOnly, detailDispatch }) => {
-  const units = useSelector((state) => state.inventory.master_data.item_uom);
-  const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
-  const addLine = () => {
-    detailDispatch({
-      type: "ADD_ROW",
-      payload: {
-        ...item_vendor_fields,
-        uom_id: data_head?.uom_id,
-        uom_no: data_head?.uom_no,
-      },
+const ItemVendor = () =>
+  // { data_head, data_detail, readOnly, detailDispatch }
+  {
+    const { data_head, readOnly, vendorFormRef } = useContext(ItemContext);
+    const [state, stateDispatch] = useReducer(mainReducer, data_head.pu_vendor);
+    const units = useSelector((state) => state.inventory.master_data.item_uom);
+    const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
+
+    const [modal, setModal] = useState({
+      visible: false,
     });
-  };
 
-  const delLine = (id) => {
-    detailDispatch({ type: "DEL_ROW", payload: { id: id } });
-  };
-
-  const onChangeValue = (rowId, data) => {
-    console.log("onChangeValue", rowId, data);
-    detailDispatch({
-      type: "CHANGE_DETAIL_VALUE",
-      payload: {
-        id: rowId,
-        data: data,
-      },
-    });
-  };
-
-  useEffect(() => {
-    !readOnly &&
-      detailDispatch({
-        type: "SET_DETAIL",
-        payload: data_detail.map((detail) => {
-          return {
-            ...detail,
-            uom_id: data_head.uom_id,
-            uom_name: data_head.uom_name,
-          };
-        }),
+    const addLine = () => {
+      stateDispatch({
+        type: "ADD_ROW",
+        payload: {
+          ...initialState,
+          uom_id: data_head?.uom_id,
+          uom_no: data_head?.uom_no,
+        },
       });
-  }, [data_head.uom_id]);
-  return (
-    <>
-      <CustomTable
-        dataSource={data_detail}
-        rowClassName="row-table-detail"
-        pageSize={10}
-        rowKey="id"
-        columns={itemVendorColumns({
-          readOnly,
-          vendors,
-          units,
-          onDelete: delLine,
-          onChange: onChangeValue,
-          data_detail,
-        })}
-        onAdd={!readOnly && addLine}
-      />
-    </>
-  );
-};
+    };
+
+    const delLine = (id) => {
+      stateDispatch({ type: "DEL_ROW", payload: { id: id } });
+    };
+
+    const onChangeValue = (rowId, data) => {
+      console.log("onChangeValue", rowId, data);
+      stateDispatch({
+        type: "CHANGE_DETAIL_VALUE",
+        payload: {
+          id: rowId,
+          data: data,
+        },
+      });
+    };
+    const setModalState = (data) => setModal({ ...modal, ...data });
+
+    useEffect(() => {
+      !readOnly &&
+        stateDispatch({
+          type: "SET_DETAIL",
+          payload: state.map((detail) => {
+            return {
+              ...detail,
+              uom_id: data_head.uom_id,
+              uom_name: data_head.uom_name,
+            };
+          }),
+        });
+    }, [data_head.uom_id]);
+    console.log("Vendor : ", state);
+    return (
+      <>
+        <input
+          ref={vendorFormRef}
+          type="hidden"
+          name="store_value"
+          value={state}
+        />
+        <CustomTable
+          dataSource={state}
+          rowClassName="row-table-detail"
+          pageSize={10}
+          rowKey="id"
+          columns={itemVendorColumns({
+            readOnly,
+            vendors,
+            units,
+            onDelete: delLine,
+            onChange: onChangeValue,
+            data_detail: state,
+            setModalState,
+          })}
+          onAdd={!readOnly && addLine}
+        />
+        <ItemVendorDocumentList
+          visible={modal.visible}
+          readOnly={readOnly}
+          vendorData={modal.vendorData}
+          setModalState={setModalState}
+        />
+      </>
+    );
+  };
 
 export default React.memo(ItemVendor);

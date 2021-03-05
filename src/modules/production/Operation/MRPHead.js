@@ -74,6 +74,7 @@ const MRPHead = () => {
         duration: 6,
       });
   }, [mainState?.calRPM]);
+
   return (
     <>
       <Row className="col-2">
@@ -212,7 +213,7 @@ const MRPHead = () => {
               <Row className="col-2 row-margin-vertical">
                 <Col span={6}>
                   <CustomLabel
-                    title={
+                    label={
                       mainState?.uom_no
                         ? `FG Qty. ( ${mainState?.uom_no} ) :`
                         : "FG Qty. :"
@@ -275,7 +276,7 @@ const MRPHead = () => {
               <Row className="col-2 row-margin-vertical">
                 <Col span={6}>
                   <CustomLabel
-                    title={
+                    label={
                       mainState?.uom_no_ref
                         ? `Bulk Qty. ( ${mainState?.uom_no_ref} ) :`
                         : "Bulk Qty. :"
@@ -302,7 +303,7 @@ const MRPHead = () => {
               <Row className="col-2 row-margin-vertical">
                 <Col span={6}>
                   <CustomLabel
-                    title={"Plan Date :"}
+                    label={"Plan Date :"}
                     readOnly={readOnly}
                     require
                   />
@@ -348,7 +349,7 @@ const MRPHead = () => {
               </Row>
               <Row className="col-2 row-margin-vertical">
                 <Col span={6}>
-                  <CustomLabel title={"Delivery Date : "} readOnly={readOnly} />
+                  <CustomLabel label={"Delivery Date : "} readOnly={readOnly} />
                 </Col>
                 <Col span={16}>
                   <Text className="text-value">
@@ -360,7 +361,7 @@ const MRPHead = () => {
               <Row className="col-2 row-margin-vertical">
                 <Col span={6}>
                   <CustomLabel
-                    title={"Vendor Lead Time "}
+                    label={"Vendor Lead Time "}
                     readOnly={readOnly}
                   />
                 </Col>

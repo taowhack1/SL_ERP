@@ -30,7 +30,7 @@ const FillingProcessHead = () => {
           <Row className={"col-2 row-margin-vertical"}>
             <Col span={7}>
               <CustomLabel
-                title={"Worker :"}
+                label={"Worker :"}
                 require={true}
                 readOnly={readOnly}
               />
@@ -73,7 +73,7 @@ const FillingProcessHead = () => {
             <Col span={2}></Col>
             <Col span={7}>
               <CustomLabel
-                title={"Used Time / Unit :"}
+                label={"Used Time / Unit :"}
                 require={true}
                 readOnly={readOnly}
               />

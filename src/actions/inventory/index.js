@@ -127,7 +127,7 @@ export const getItemCategoryList = () => (dispatch) => {
     dispatch({ type: GET_ITEM_CATEGORY, payload: res.data[0] });
   });
 };
-export const getUoMList = () => (dispatch) => {
+export const getUOMList = () => (dispatch) => {
   axios.get(api_get_item_uom, header_config).then((res) => {
     dispatch({ type: GET_UOM, payload: res.data[0] });
   });

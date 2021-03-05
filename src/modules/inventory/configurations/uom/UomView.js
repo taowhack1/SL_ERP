@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MainLayout from "../../../../components/MainLayout";
 import Authorize from "../../../system/Authorize";
-function UoMView(props) {
+function UOMView(props) {
   const { Title, Text } = Typography;
   const authorize = Authorize();
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -20,7 +20,7 @@ function UoMView(props) {
     show: true,
     breadcrumb: [
       "Home",
-      "UoM",
+      "UOM",
       "View",
       dataInRow.uom_no && " [ " + dataInRow.uom_no + " ] " + dataInRow.uom_name,
     ],
@@ -151,4 +151,4 @@ function UoMView(props) {
   );
 }
 
-export default UoMView;
+export default UOMView;

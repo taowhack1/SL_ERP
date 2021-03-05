@@ -3,6 +3,7 @@ import Text from "antd/lib/typography/Text";
 import React, { useContext } from "react";
 import Packaging from "./Item_Packaging";
 import { ItemContext } from "../../../include/js/context";
+import ItemFGPacking from "./ItemFGPacking";
 const TabPackaging = ({
   uom_name,
   data_packaging_detail,
@@ -11,6 +12,8 @@ const TabPackaging = ({
   const { readOnly } = useContext(ItemContext);
   return (
     <>
+      <ItemFGPacking />
+
       <Row className="col-2 mt-2 detail-tab-row">
         <Col span={24}>
           <Text strong className="detail-tab-header">

@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import CustomLabel from "../../../components/CustomLabel";
 const { Panel } = Collapse;
 const ItemRevisionDetail = ({ data_head, readOnly, upDateFormValue }) => {
+  console.log("data_head.item_revision_no", data_head.item_revision_no);
   return (
     <>
       {/* <Collapse defaultActiveKey={["1"]}>
         <Panel header="Revision Detail" key="1"> */}
       <Row className="col-2 mt-2 detail-tab-row">
         <Col span={12}>
-          <CustomLabel title={"Revision Detail"} />
+          <CustomLabel label={"Revision Detail"} />
         </Col>
         <Col span={12}></Col>
       </Row>
@@ -18,7 +19,7 @@ const ItemRevisionDetail = ({ data_head, readOnly, upDateFormValue }) => {
         <Col span={12}>
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
-              <CustomLabel title={"Current Revision :"} />
+              <CustomLabel label={"Current Revision :"} />
             </Col>
             <Col span={16}>
               <Text className="text-value">
@@ -29,7 +30,7 @@ const ItemRevisionDetail = ({ data_head, readOnly, upDateFormValue }) => {
           {!readOnly && (
             <Row className="col-2 row-margin-vertical">
               <Col span={6}>
-                <CustomLabel title={"Change Revision :"} />
+                <CustomLabel label={"Change Revision :"} />
               </Col>
               <Col span={17}>
                 <Checkbox

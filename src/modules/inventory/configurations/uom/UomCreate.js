@@ -9,16 +9,16 @@ import {
   uomFields,
   uomFieldsReQuire,
   uomFieldsReQuire2,
-} from "./uomConfig";
+} from "./config";
 import moment from "moment";
 import { validateFormHead } from "../../../../include/js/function_main";
 import { useHistory } from "react-router-dom";
 import {
-  createConfigurationUoM,
-  upDateConfigurationUoM,
+  createConfigurationUOM,
+  upDateConfigurationUOM,
 } from "../../../../actions/inventory/configurations/uom/uomAction";
 import { getNumberFormat } from "../../../../include/js/main_config";
-function UoMCreate(props) {
+function UOMCreate(props) {
   const { Title, Text } = Typography;
   const history = useHistory();
   const authorize = Authorize();
@@ -31,7 +31,7 @@ function UoMCreate(props) {
   const data =
     props.location && props.location.state ? props.location.state : 0;
 
-  const [dataUoMCreate, setDataUoMCreate] = useState(
+  const [dataUOMCreate, setDataUOMCreate] = useState(
     data !== undefined
       ? { ...data, commit: 1, user_name: auth.user_name }
       : {
@@ -42,7 +42,7 @@ function UoMCreate(props) {
         }
   );
   const upDateFormValue = (data) => {
-    setDataUoMCreate({ ...dataUoMCreate, ...data });
+    setDataUOMCreate({ ...dataUOMCreate, ...data });
   };
   const config = {
     projectId: current_project && current_project.project_id,
@@ -51,10 +51,10 @@ function UoMCreate(props) {
     show: true,
     breadcrumb: [
       "Home",
-      "UoM",
-      dataUoMCreate.uom_id ? "Edit" : "Create",
-      dataUoMCreate.uom_id &&
-        " [ " + dataUoMCreate.uom_id + " ] " + dataUoMCreate.uom_name,
+      "UOM",
+      dataUOMCreate.uom_id ? "Edit" : "Create",
+      dataUOMCreate.uom_id &&
+        " [ " + dataUOMCreate.uom_id + " ] " + dataUOMCreate.uom_name,
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
@@ -63,17 +63,17 @@ function UoMCreate(props) {
     discard: "/inventory/configurations/uom",
     onSave: (e) => {
       const key = "validate";
-      const validate = validateFormHead(dataUoMCreate, Fields);
+      const validate = validateFormHead(dataUOMCreate, Fields);
       if (validate.validate) {
-        dataUoMCreate.uom_id
+        dataUOMCreate.uom_id
           ? dispatch(
-              upDateConfigurationUoM(
-                dataUoMCreate.uom_id,
-                dataUoMCreate,
+              upDateConfigurationUOM(
+                dataUOMCreate.uom_id,
+                dataUOMCreate,
                 redirectToView
               )
             )
-          : dispatch(createConfigurationUoM(dataUoMCreate, redirectToView));
+          : dispatch(createConfigurationUOM(dataUOMCreate, redirectToView));
       } else {
         message.warning({
           content: "Please fill your form completely.",
@@ -98,7 +98,7 @@ function UoMCreate(props) {
     history.push("/inventory/configurations/uom/view/" + (id ? id : "new"));
   };
 
-  const Fields = dataUoMCreate.uom_name_ref
+  const Fields = dataUOMCreate.uom_name_ref
     ? uomFieldsReQuire2
     : uomFieldsReQuire;
   return (
@@ -109,8 +109,8 @@ function UoMCreate(props) {
           <Col span={8}>
             <h2>
               <strong>
-                {dataUoMCreate.uom_id ? "Edit" : "Create"} UoM{" "}
-                {dataUoMCreate.uom_id && "#" + dataUoMCreate.uom_no}
+                {dataUOMCreate.uom_id ? "Edit" : "Create"} UOM{" "}
+                {dataUOMCreate.uom_id && "#" + dataUOMCreate.uom_no}
               </strong>
             </h2>
           </Col>
@@ -119,7 +119,7 @@ function UoMCreate(props) {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{dataUoMCreate.uom_created}</Text>
+            <Text className="text-view">{dataUOMCreate.uom_created}</Text>
           </Col>
         </Row>
 
@@ -133,7 +133,7 @@ function UoMCreate(props) {
                 placeholder="Name"
                 name="uom_name"
                 onChange={(e) => upDateFormValue({ uom_name: e.target.value })}
-                value={dataUoMCreate.uom_name}
+                value={dataUOMCreate.uom_name}
               />
             </Col>
           </Col>
@@ -166,7 +166,7 @@ function UoMCreate(props) {
                           onChange={(e) =>
                             upDateFormValue({ uom_no: e.target.value })
                           }
-                          value={dataUoMCreate.uom_no}
+                          value={dataUOMCreate.uom_no}
                         />
                       </Col>
                       <Col span={1}></Col>
@@ -184,7 +184,7 @@ function UoMCreate(props) {
                           min={0}
                           placeholder="Value"
                           name="unit_value"
-                          value={dataUoMCreate.unit_value}
+                          value={dataUOMCreate.unit_value}
                           onChange={(value) =>
                             upDateFormValue({ unit_value: value })
                           }
@@ -205,7 +205,7 @@ function UoMCreate(props) {
                               uom_name_th: e.target.value,
                             })
                           }
-                          value={dataUoMCreate.uom_name_th}
+                          value={dataUOMCreate.uom_name_th}
                         />
                       </Col>
                       <Col span={1}></Col>
@@ -221,7 +221,7 @@ function UoMCreate(props) {
                           onChange={(e) =>
                             upDateFormValue({ uom_remark: e.target.value })
                           }
-                          value={dataUoMCreate.uom_remark}
+                          value={dataUOMCreate.uom_remark}
                         />
                       </Col>
                       <Col span={1}></Col>
@@ -244,7 +244,7 @@ function UoMCreate(props) {
                           name="uom_name_ref"
                           field_id="uom_id"
                           field_name="uom_name"
-                          value={dataUoMCreate.uom_name_ref}
+                          value={dataUOMCreate.uom_name_ref}
                           data={uom}
                           onChange={(data, option) => {
                             data !== undefined
@@ -269,20 +269,20 @@ function UoMCreate(props) {
                         <Text strong>
                           <span className="require">
                             {" "}
-                            {dataUoMCreate.uom_name_ref ? "*" : ""}
+                            {dataUOMCreate.uom_name_ref ? "*" : ""}
                           </span>{" "}
                           Ratio :
                         </Text>
                       </Col>
                       <Col span={15}>
                         <Input
-                          disabled={dataUoMCreate.uom_name_ref ? false : true}
+                          disabled={dataUOMCreate.uom_name_ref ? false : true}
                           placeholder="e.g: 1*(reference unit)=ratio*(this unit)"
                           name="ratio"
                           onChange={(e) =>
                             upDateFormValue({ ratio: e.target.value })
                           }
-                          value={dataUoMCreate.ratio}
+                          value={dataUOMCreate.ratio}
                         />
                       </Col>
                       <Col span={1}></Col>
@@ -292,7 +292,7 @@ function UoMCreate(props) {
                       <Col span={6}>
                         <Text strong>
                           <span className="require">
-                            {dataUoMCreate.uom_name_ref ? "*" : ""}
+                            {dataUOMCreate.uom_name_ref ? "*" : ""}
                           </span>{" "}
                           Type :
                         </Text>
@@ -301,14 +301,14 @@ function UoMCreate(props) {
                         <CustomSelect
                           allowClear
                           showSearch
-                          disabled={dataUoMCreate.uom_name_ref ? false : true}
+                          disabled={dataUOMCreate.uom_name_ref ? false : true}
                           placeholder={
                             "Bigger,Smaller,Equal than the reference Unit of Measure"
                           }
                           name="size_of_ref"
                           field_id="uom_id"
                           field_name="uom_name"
-                          value={dataUoMCreate.size_of_ref}
+                          value={dataUOMCreate.size_of_ref}
                           options={dataOptions}
                           onChange={(dataOption, option) => {
                             dataOption && dataOption
@@ -334,4 +334,4 @@ function UoMCreate(props) {
   );
 }
 
-export default UoMCreate;
+export default UOMCreate;

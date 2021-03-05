@@ -301,7 +301,7 @@ const IssueCreate = (props) => {
             <Row className="col-2 row-margin-vertical">
               <Col span={2}></Col>
               <Col span={6}>
-                <CustomLabel readOnly={readOnly} title={"Job Ref. :"} />
+                <CustomLabel readOnly={readOnly} label={"Job Ref. :"} />
               </Col>
               <Col span={16}>
                 <Text>{"-"}</Text>
@@ -310,7 +310,7 @@ const IssueCreate = (props) => {
             <Row className="col-2 row-margin-vertical">
               <Col span={2}></Col>
               <Col span={6}>
-                <CustomLabel readOnly={readOnly} title={"Job Detail :"} />
+                <CustomLabel readOnly={readOnly} label={"Job Detail :"} />
               </Col>
               <Col span={16}>
                 <Text>{"-"}</Text>

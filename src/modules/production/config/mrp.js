@@ -80,7 +80,7 @@ export const mrp_columns = (showModal) => [
     },
   },
   {
-    title: "UoM",
+    title: "UOM",
     dataIndex: "uom_no",
     width: "8%",
     align: "center",
@@ -294,7 +294,7 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
   {
     title: (
       <div className="text-center" title="Stock unit of measure">
-        Stock UoM.
+        Stock UOM.
       </div>
     ),
     dataIndex: "uom_no",
@@ -387,7 +387,7 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
   {
     title: (
       <div className="text-center" title="Purchase unit of measure">
-        PUR. UoM.
+        PUR. UOM.
       </div>
     ),
     dataIndex: "item_vendor_uom_no",

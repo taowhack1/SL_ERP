@@ -27,7 +27,7 @@ export const uomShowColumns = [
     },
   },
   {
-    title: "UoM Name",
+    title: "UOM Name",
     dataIndex: "uom_name",
     ellipsis: true,
   },

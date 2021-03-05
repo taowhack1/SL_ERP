@@ -29,7 +29,7 @@ const ItemInventoryData = () => {
         <Col span={12} className="col-border-right">
           <Row className="col-2 row-margin-vertical">
             <Col offset={1} span={6}>
-              <CustomLabel title="Minimum :" require readOnly={readOnly} />
+              <CustomLabel label="Minimum :" require readOnly={readOnly} />
             </Col>
             <Col span={11}>
               {readOnly ? (
@@ -57,7 +57,7 @@ const ItemInventoryData = () => {
           </Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={6} offset={1}>
-              <CustomLabel title="Maximum :" require readOnly={readOnly} />
+              <CustomLabel label="Maximum :" require readOnly={readOnly} />
             </Col>
             <Col span={11}>
               {readOnly ? (
@@ -87,7 +87,7 @@ const ItemInventoryData = () => {
         <Col span={12}>
           {/* <Row className="col-2 row-margin-vertical">
             <Col span={6}>
-              <CustomLabel title="Maximum Qty. :" require readOnly={readOnly} />
+              <CustomLabel label="Maximum Qty. :" require readOnly={readOnly} />
             </Col>
             <Col span={16}>
               <InputNumber />

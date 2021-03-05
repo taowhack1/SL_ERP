@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,8 +37,11 @@ import {
   item_weight_detail,
   item_part_mix_fields,
   fillingProcessFields,
+  itemQAFields,
+  itemVendorFields,
 } from "./config/item";
 import {
+  sortData,
   sum2DArrOdjWithField,
   validateFormHead,
 } from "../../include/js/function_main";
@@ -57,19 +61,24 @@ import { ItemContext } from "../../include/js/context";
 import Barcode from "react-barcode";
 import { convertDigit } from "../../include/js/main_config";
 import { mainReducer } from "../../include/reducer";
-import CustomLabel from "../../components/CustomLabel";
 import ItemRevisionDetail from "./item/ItemRevisionDetail";
+import { getCountry } from "../../actions/hrm";
 const { Text } = Typography;
 
-const ItemCreate = (props) => {
-  const initialStateHead = item_fields;
-  const initialStateDetail = [item_vendor_fields];
-  const initialStateQA = [item_qa_detail_fields];
-  const initialStatePackaging = [item_packaging_detail_fields];
-  const initialStateWeight = item_weight_detail;
-  const initialStateFillingProcess = [fillingProcessFields];
-  const initialStatePart = [item_part_specification_fields];
+const initialStateHead = {
+  ...item_fields,
+  qa_spec: sortData([itemQAFields]),
+  pu_vendor: [itemVendorFields],
+};
+const initialStateDetail = [item_vendor_fields];
+const initialStatePackaging = [item_packaging_detail_fields];
+const initialStateWeight = item_weight_detail;
+const initialStateFillingProcess = [fillingProcessFields];
+const initialStatePart = [item_part_specification_fields];
 
+const ItemCreate = (props) => {
+  const qaFormRef = useRef();
+  const vendorFormRef = useRef();
   const readOnly = false;
   const history = useHistory();
   const authorize = Authorize();
@@ -94,10 +103,6 @@ const ItemCreate = (props) => {
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
 
-  const [data_qa_detail, qaDetailDispatch] = useReducer(
-    reducer,
-    initialStateQA
-  );
   const [data_weight_detail, weightDetailDispatch] = useReducer(
     reducer,
     initialStateWeight
@@ -110,47 +115,33 @@ const ItemCreate = (props) => {
     mainReducer,
     initialStatePart
   );
-  // const PartDetailReducer = new ReducerClass(data.data_part_detail, null, [
-  //   item_part_specification_detail_fields,
-  // ]);
-  // const PMReducer = new ReducerClass(data.data_part_mix, null, [
-  //   item_part_mix_fields,
-  // ]);
-  // const FormulaReducer = new ReducerClass(data.data_formula, null, [
-  //   item_formula_detail_fields,
-  // ]);
-  // PartReducer.setReducer(
-  //   data ? (data.data_head.item_id ? "object" : "array") : "array"
-  // );
   const [filling, setFilling] = useState(initialStateFillingProcess);
-  // PartDetailReducer.setReducer("array");
-  // PMReducer.setReducer("array");
-  // FormulaReducer.setReducer("array");
 
-  const [data_file, setFile] = useState({
-    item_image: null,
-    certificate: {
-      2: null,
-      3: null,
-      4: null,
-      5: null,
-      6: null,
-      7: null,
-      8: null,
-    },
-  });
+  const [data_file, setFile] = useState(item_file);
 
   const [formulaPercent, setPercent] = useState(0);
 
   useEffect(() => {
     dispatch(get_sale_master_data());
     dispatch(getAllMachine());
+    dispatch(getCountry());
+    console.log("data.data_head", data.data_head);
     headDispatch({
       type: "SET_HEAD",
       payload:
         data && data.data_head
-          ? { ...data.data_head, commit: 1, user_name: auth.user_name }
-          : { ...item_fields, commit: 1, user_name: auth.user_name },
+          ? {
+              ...data.data_head,
+              commit: 1,
+              user_name: auth.user_name,
+              qa_spec: data.data_head?.qa_spec?.length
+                ? sortData([itemQAFields])
+                : data.data_head.qa_spec,
+              pu_vendor: data.data_head?.pu_vendor?.length
+                ? sortData([itemVendorFields])
+                : data.data_head.pu_vendor,
+            }
+          : { ...initialStateHead, commit: 1, user_name: auth.user_name },
     });
 
     detailDispatch({
@@ -161,13 +152,6 @@ const ItemCreate = (props) => {
           : [item_vendor_fields],
     });
 
-    qaDetailDispatch({
-      type: "SET_DETAIL",
-      payload:
-        data && data.data_qa_detail.length
-          ? data.data_qa_detail
-          : [item_qa_detail_fields],
-    });
     weightDetailDispatch({
       type: "SET_DETAIL",
       payload:
@@ -182,16 +166,10 @@ const ItemCreate = (props) => {
           ? data.data_packaging_detail
           : [item_packaging_detail_fields],
     });
-    console.log("data part", data.data_part);
-    // PartReducer.setDataArray(data.data_part);
     statePartDispatch({
       type: "SET_ARRAY",
       payload: data.data_part ?? [item_part_specification_fields],
     });
-    // PartDetailReducer.setDataArray2D(data.data_part_detail);
-    // PMReducer.setDataArray2D(data.data_part_mix);
-    // FormulaReducer.setDataArray2D(data.data_formula);
-    sumPercent();
     setFile(data.data_file ?? item_file);
     setFilling(data.data_filling ?? []);
   }, []);
@@ -220,10 +198,7 @@ const ItemCreate = (props) => {
       console.log("SAVE HEAD", data_head);
       console.log("SAVE VENDOR DETAIL", data_detail);
       console.log("SAVE PART", statePart);
-      // console.log("SAVE PART DETAIL", PartDetailReducer.data);
-      // console.log("SAVE PART MIX", PMReducer.data);
-      // console.log("SAVE FORMULA", FormulaReducer.data);
-      console.log("SAVE QA", data_qa_detail);
+      // console.log("SAVE QA", data_qa_detail);
       console.log("SAVE WEIGHT", data_weight_detail);
       console.log("SAVE PACKAGING", data_packaging_detail);
       console.log("SAVE FILES", data_file);
@@ -269,12 +244,10 @@ const ItemCreate = (props) => {
             filling: true,
           },
           data_head: data_head,
+          // data_detail: [],
           data_detail: data_detail,
           data_part: statePart,
-          // data_part_detail: PartDetailReducer.data,
-          // data_part_mix: PMReducer.data,
-          // data_formula: FormulaReducer.data,
-          data_qa_detail: data_qa_detail,
+          data_qa_detail: JSON.parse(qaFormRef.current.value), //New
           data_weight_detail: data_weight_detail,
           data_packaging_detail: data_packaging_detail,
           data_file: data_file,
@@ -282,6 +255,10 @@ const ItemCreate = (props) => {
         };
         console.log("saveeeeeee", data);
         if (data_head.isChangeRevision || !data_head.item_id) {
+          if (data.data_head.uom_conversion.length)
+            data.data_head.uom_conversion.map((obj) => {
+              return { ...obj, commit: 1, user_name: auth.user_name };
+            });
           dispatch(createNewItems(data, auth.user_name, redirect_to_view));
         } else {
           dispatch(
@@ -293,16 +270,6 @@ const ItemCreate = (props) => {
             )
           );
         }
-        // data_head.item_id
-        //   ? dispatch(
-        //       upDateItem(
-        //         data_head.item_id,
-        //         data,
-        //         auth.user_name,
-        //         redirect_to_view
-        //       )
-        //     )
-        //   :
       } else {
         message.warning({
           content: "Please fill your form completely.",
@@ -362,9 +329,6 @@ const ItemCreate = (props) => {
     return {
       statePart,
       statePartDispatch,
-      // PartDetailReducer,
-      // PMReducer,
-      // FormulaReducer,
       filling,
       setFilling,
       readOnly,
@@ -379,13 +343,12 @@ const ItemCreate = (props) => {
       sumPercent,
       saveForm: upDateFormValue,
       data_head,
+      qaFormRef,
+      vendorFormRef,
     };
   }, [
     statePart,
     statePartDispatch,
-    // PartDetailReducer,
-    // PMReducer.data,
-    // FormulaReducer,
     filling,
     setFilling,
     readOnly,
@@ -393,9 +356,14 @@ const ItemCreate = (props) => {
     updateFile,
     upDateFormValue,
     data_head,
+    qaFormRef,
+    vendorFormRef,
   ]);
-  // console.log("initialStateHead ", initialStateHead);
-  // console.log("Item Create ", data_head);
+
+  useEffect(() => {
+    sumPercent();
+  }, [statePart.length]);
+  console.log("data_head", data_head);
   return (
     <ItemContext.Provider value={ContextValue}>
       <MainLayout {...config}>
@@ -541,8 +509,8 @@ const ItemCreate = (props) => {
                 headDispatch={headDispatch}
                 data_detail={data_detail}
                 detailDispatch={detailDispatch}
-                data_qa_detail={data_qa_detail}
-                qaDetailDispatch={qaDetailDispatch}
+                // data_qa_detail={data_qa_detail}
+                // qaDetailDispatch={qaDetailDispatch}
                 data_packaging_detail={data_packaging_detail}
                 packagingDetailDispatch={packagingDetailDispatch}
                 data_weight_detail={data_weight_detail}

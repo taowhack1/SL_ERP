@@ -124,24 +124,17 @@ const bind_part_and_formula = (item_id, data_part) => {
   );
 };
 
-const bind_qa_test = (item_id, data_qa_detail) => {
-  console.log("bind_qa_test");
-  const data_qa_detail_temp = data_qa_detail.filter(
-    (detail) =>
-      detail.qa_subject_id !== null &&
-      detail.qa_specification_id !== null &&
-      detail.qa_method_id !== null &&
-      detail.commit === 1
-  );
-  return (
-    data_qa_detail_temp.length &&
-    axios
-      .post(`${api_item_qa}/${item_id}`, data_qa_detail_temp, header_config)
-      .then((res) => {
-        console.log("BIND QA TEST");
-      })
-  );
-};
+const createNewQASpec = (item_id, data) =>
+  data.length &&
+  axios.post(`${api_item_qa}/${item_id}`, data, header_config).then((res) => {
+    console.log("CREATE QA TEST");
+  });
+
+const updateQASpec = (item_id, data) =>
+  data.length &&
+  axios.put(`${api_item_qa}/${item_id}`, data, header_config).then((res) => {
+    console.log(" QA TEST");
+  });
 
 const bind_weight = (item_id, data_weight_detail) => {
   console.log("bind_weight");
@@ -237,9 +230,6 @@ export const createNewItems = (data, user_name, redirect) => async (
     data_head,
     data_detail,
     data_part,
-    // data_part_detail,
-    // data_part_mix,
-    // data_formula,
     data_qa_detail,
     data_weight_detail,
     data_packaging_detail,
@@ -248,32 +238,29 @@ export const createNewItems = (data, user_name, redirect) => async (
   } = data;
   console.log("createNewItems RawData :", data);
   try {
-    // const groupPartData = data_part.map((part, index) => {
-    //   return {
-    //     ...part,
-    //     item_part_specification_detail: data_part_detail[index],
-    //     item_part_mix: data_part_mix[index],
-    //     item_formula: data_formula[index],
-    //   };
-    // });
     axios
       .post(api_url + "/inventory/item", data_head, header_config)
       .then(async (res, rej) => {
         if (res.status === 200 && res.data[0].length) {
           const item_id = res.data[0][0].item_id;
-          // access_right: {
-          //   vendor: true,
-          //   formula: true,
-          //   qa: true,
-          //   weight: true,
-          //   packaging: true,
-          //   attach_file: true,
-          // },
+          const qaData = {
+            new:
+              data_qa_detail.filter(
+                (obj) =>
+                  (obj.item_qa_id === null || obj.item_qa_id === undefined) &&
+                  obj.commit
+              ) ?? [],
+            update:
+              data_qa_detail.filter((obj) => obj.item_qa_id && obj.commit) ??
+              [],
+          };
+          console.log("qaData create", qaData);
           Promise.allSettled([
             save_uom_conversion(item_id, data_head.uom_conversion),
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
             access_right.formula && bind_part_and_formula(item_id, data_part),
-            access_right.qa && bind_qa_test(item_id, data_qa_detail),
+            access_right.qa && createNewQASpec(item_id, qaData.new),
+            access_right.qa && updateQASpec(item_id, qaData.update),
             access_right.weight && bind_weight(item_id, data_weight_detail),
             access_right.packaging &&
               bind_packaging(item_id, data_packaging_detail),
@@ -282,7 +269,7 @@ export const createNewItems = (data, user_name, redirect) => async (
             access_right.filling && bind_filling(item_id, data_filling),
           ])
             .then(async (data) => {
-              console.log("Promise.allSettled. THEN ", data);
+              console.log("Create Complete", data);
               await dispatch(get_item_by_id(item_id, user_name, redirect));
               message.success({
                 content: "Item Created.",
@@ -330,9 +317,6 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
     data_head,
     data_detail,
     data_part,
-    // data_part_detail,
-    // data_part_mix,
-    // data_formula,
     data_qa_detail,
     data_weight_detail,
     data_packaging_detail,
@@ -341,23 +325,53 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
   } = data;
   console.log("upDateItem RawData :", data);
   try {
-    // const groupPartData = data_part.map((part, index) => {
-    //   return {
-    //     ...part,
-    //     item_part_specification_detail: data_part_detail[index],
-    //     item_part_mix: data_part_mix[index],
-    //     item_formula: data_formula[index],
-    //   };
-    // });
     axios
       .put(api_url + "/inventory/item/" + item_id, data_head, header_config)
       .then(async (res) => {
         if (res.status === 200 && res.data[0].length) {
+          const qaData = {
+            new:
+              data_qa_detail
+                .map((obj) => {
+                  return {
+                    ...obj,
+                    item_qa_detail: obj.item_qa_detail.filter(
+                      (objD) =>
+                        objD.commit &&
+                        objD.qa_specification_id !== null &&
+                        objD.qa_method_id !== null &&
+                        objD.qa_specification_id !== null
+                    ),
+                  };
+                })
+                .filter(
+                  (obj) =>
+                    (obj.item_qa_id === null || obj.item_qa_id === undefined) &&
+                    obj.commit
+                ) ?? [],
+            update:
+              data_qa_detail
+                .map((obj) => {
+                  return {
+                    ...obj,
+                    item_qa_detail: obj.item_qa_detail.filter(
+                      (objD) =>
+                        objD.commit &&
+                        objD.qa_specification_id !== null &&
+                        objD.qa_method_id !== null &&
+                        objD.qa_specification_id !== null
+                    ),
+                  };
+                })
+                .filter((obj) => obj.item_qa_id && obj.commit) ?? [],
+          };
+          console.log("qaData", qaData);
           Promise.allSettled([
             save_uom_conversion(item_id, data_head.uom_conversion),
             access_right.vendor && bind_vendor_fn(item_id, data_detail),
             access_right.formula && bind_part_and_formula(item_id, data_part),
-            access_right.qa && bind_qa_test(item_id, data_qa_detail),
+            access_right.qa && createNewQASpec(item_id, qaData.new),
+            access_right.qa && updateQASpec(item_id, qaData.update),
             access_right.weight && bind_weight(item_id, data_weight_detail),
             access_right.packaging &&
               bind_packaging(item_id, data_packaging_detail),
@@ -366,6 +380,7 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
             access_right.filling && bind_filling(item_id, data_filling),
           ])
             .then((data) => {
+              console.log("Update Complete", data);
               console.log("Promise Then");
               dispatch(get_item_by_id(item_id, user_name, redirect));
               message.success({
@@ -462,28 +477,26 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
                   };
                 })
             );
-            // let data_part_detail = [];
-            // let data_part_mix = [];
-            // let data_formula = [];
-            // data_part.forEach((part, index) => {
-            //   data_part_detail.push(
-            //     sortData(part.item_part_specification_detail)
-            //   );
-            //   data_part_mix.push(sortData(part.item_part_mix));
-            //   data_formula.push(sortData(part.item_formula));
-            // });
             const data_file_temp = data[6].value.data[0];
             const item = {
               data_head: {
                 ...data[0].value.data.main_master,
+                // item_qa: sortData(data[3].value.data),
                 uom_conversion: sortDataWithoutCommit(data[8].value.data[0]),
+                qa_spec: sortData(
+                  data[3]?.value?.data?.map((obj) => {
+                    return {
+                      ...obj,
+                      item_qa_detail: sortData(obj.item_qa_detail),
+                    };
+                  })
+                ),
+                pu_vendor: sortData(data[1].value.data),
               },
-              data_detail: sortData(data[1].value.data[0]),
+              // data_detail: [],
+              data_detail: sortData(data[1].value.data),
               data_part: data_part,
-              // data_part_detail: data_part_detail,
-              // data_part_mix: data_part_mix,
-              // data_formula: data_formula,
-              data_qa_detail: sortData(data[3].value.data[0]),
+              data_qa_detail: sortData(data[3].value.data),
               data_weight_detail: sortData(data[4].value.data[0]),
               data_packaging_detail: sortData(data[5].value.data[0]),
               data_file: {
@@ -540,6 +553,13 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
                     convertFileField(
                       data_file_temp.filter(
                         (file) => file.file_type_id === 8
+                      )[0]
+                    ),
+                  9:
+                    data_file_temp.length &&
+                    convertFileField(
+                      data_file_temp.filter(
+                        (file) => file.file_type_id === 9
                       )[0]
                     ),
                 },

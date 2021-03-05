@@ -89,9 +89,9 @@ import TypeView from "./modules/inventory/configurations/type/TypeView";
 import Category from "./modules/inventory/configurations/category/Category";
 import CategoryCreate from "./modules/inventory/configurations/category/CategoryCreate";
 import CategoryView from "./modules/inventory/configurations/category/CategoryView";
-import UoM from "./modules/inventory/configurations/uom/UoM";
-import UoMCreate from "./modules/inventory/configurations/uom/UoMCreate";
-import UoMView from "./modules/inventory/configurations/uom/UoMView";
+import UOM from "./modules/inventory/configurations/uom/UOM";
+import UOMCreate from "./modules/inventory/configurations/uom/UOMCreate";
+import UOMView from "./modules/inventory/configurations/uom/UOMView";
 
 import Transfer from "./modules/inventory/operations/transfer/Transfer";
 import TransferCreate from "./modules/inventory/operations/transfer/TransferCreate";
@@ -260,23 +260,23 @@ const App = (props) => {
               component={CategoryCreate}
             />
             <Route exact path="/inventory/configurations/uom">
-              <UoM />
+              <UOM />
             </Route>
             {/* {uom} */}
             <Route
               exact
               path="/inventory/configurations/uom/create"
-              component={UoMCreate}
+              component={UOMCreate}
             />
             <Route
               exact
               path="/inventory/configurations/uom/view/:id"
-              component={UoMView}
+              component={UOMView}
             />
             <Route
               exact
               path="/inventory/configurations/uom/edit/:id"
-              component={UoMCreate}
+              component={UOMCreate}
             />
             <exact path="/inventory/warehouse">
               <Warehouse />

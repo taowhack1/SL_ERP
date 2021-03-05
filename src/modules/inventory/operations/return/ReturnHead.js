@@ -41,7 +41,7 @@ const ReturnHead = () => {
           {state.return_id && (
             <Row className="col-2 row-margin-vertical">
               <Col span={7}>
-                <CustomLabel title="Document Code : " />
+                <CustomLabel label="Document Code : " />
               </Col>
               <Col span={16}>
                 <Text className="text-value">{state.return_no}</Text>
@@ -53,7 +53,7 @@ const ReturnHead = () => {
             <Col span={7}>
               <CustomLabel
                 require={readOnly ? false : true}
-                title="Issue Ref. :"
+                label="Issue Ref. :"
               />
             </Col>
             <Col span={16}>
@@ -90,7 +90,7 @@ const ReturnHead = () => {
             <Col span={7}>
               <CustomLabel
                 require={readOnly ? false : true}
-                title="Description : "
+                label="Description : "
               />
             </Col>
             <Col span={16}>
@@ -118,7 +118,7 @@ const ReturnHead = () => {
         <Col span={11}>
           <Row className="col-2 row-margin-vertical">
             <Col span={7}>
-              <CustomLabel title={"Created By : "} />
+              <CustomLabel label={"Created By : "} />
             </Col>
             <Col span={16}>
               <Text className="text-value">

@@ -495,6 +495,7 @@ div:empty:before {
   border: 2px solid rgb(236, 79, 51, 0.5) !important;
   background-color: rgb(236, 79, 51, 0.3) !important;
 }
+.warning,
 span.require {
   color: red;
   font-weight: bold;
@@ -801,4 +802,9 @@ div.flex-space {
 
 .font-20 {
   font-size: 20px;
+}
+
+.align-bt {
+  display: flex;
+  align-items: flex-end;
 }

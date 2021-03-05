@@ -29,7 +29,7 @@ const ItemProductionData = () => {
           <Row className="col-2 row-margin-vertical">
             <Col span={1}></Col>
             <Col span={6}>
-              <CustomLabel title="Scrap in % :" require readOnly={readOnly} />
+              <CustomLabel label="Scrap in % :" require readOnly={readOnly} />
             </Col>
             <Col span={16}>
               {readOnly ? (

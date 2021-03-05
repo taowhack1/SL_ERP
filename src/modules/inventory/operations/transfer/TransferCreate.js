@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Authorize from "../../../system/Authorize";
 import { getMasterDataItem } from "../../../../actions/inventory";
-import { getConfigurationUoM } from "../../../../actions/inventory/configurations/uom/uomAction";
+import { getConfigurationUOM } from "../../../../actions/inventory/configurations/uom/uomAction";
 import {
   validateFormDetail,
   validateFormHead,
@@ -51,7 +51,7 @@ const TransferCreate = (props) => {
     });
   useEffect(() => {
     dispatch(getMasterDataItem(auth.user_name));
-    dispatch(getConfigurationUoM());
+    dispatch(getConfigurationUOM());
     //dispatch(get_lot_batch_by_item_id_shelf());
     headDispatch({
       type: "SET_HEAD",

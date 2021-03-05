@@ -67,7 +67,7 @@ export const receivePDColumns = [
     render: (value) => (value ? convertDigit(value, 4) : 0),
   },
   {
-    title: "UoM",
+    title: "UOM",
     dataIndex: "uom_no",
     key: "uom_no",
     width: "10%",

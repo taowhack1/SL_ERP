@@ -162,7 +162,7 @@ export const returnDetailColumns = (
       ),
   },
   {
-    title: "UoM",
+    title: "UOM",
     dataIndex: "uom_no",
     key: "uom_no",
     align: "center",

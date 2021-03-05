@@ -1,21 +1,18 @@
-import { Col, Row, TimePicker } from "antd";
+import { Col, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useContext } from "react";
 import ItemFileUpload from "./ItemFileUpload";
 import { ItemContext } from "../../../include/js/context";
-import moment from "moment";
 import FillingProcessDetail from "./FillingProcessDetail";
-import { fillingProcessFields } from "../config/item";
 import FillingWeight from "./FillingWeight";
 import SelectBulk from "./SelectBulk";
-import FillingProcessHead from "./FillingProcessHead";
-import CustomLabel from "../../../components/CustomLabel";
 
 const FillingProcess = (props) => {
   const { readOnly, data_file, updateFile } = useContext(ItemContext);
   return (
     <>
       <SelectBulk {...props} />
+
       <Row className="col-2 detail-tab-row mt-3 mb-1">
         <Col span={24}>
           <Text strong className="detail-tab-header">
@@ -27,15 +24,15 @@ const FillingProcess = (props) => {
         <Col span={12}>
           <Row className="col-2">
             <Col span={7}>
-              <Text strong className={!readOnly ? "pd-left-2" : ""}>
-                {"Ducument."}
+              <Text strong className={"pd-left-2"}>
+                {"Ducument"}
               </Text>
             </Col>
             <Col span={10}>
               <ItemFileUpload
                 data_file={data_file}
                 updateFile={updateFile}
-                chkbox_upload_fields={1}
+                chkbox_upload_fields={true}
                 maxFile={1}
                 file_type_id={8}
                 upload_type={"Button"}

@@ -5,14 +5,14 @@ import { withRouter } from "react-router-dom";
 import MainLayout from "../../../../components/MainLayout";
 import { sortData } from "../../../../include/js/function_main";
 import Authorize from "../../../system/Authorize";
-import { uomShowColumns } from "./uomConfig";
+import { uomShowColumns } from "./config";
 import $ from "jquery";
 import {
-  getConfigurationUoM,
-  getUoMInRow,
+  getConfigurationUOM,
+  getUOMInRow,
 } from "../../../../actions/inventory/configurations/uom/uomAction";
 
-function UoM(props) {
+function UOM(props) {
   const dispatch = useDispatch();
   const uom = useSelector((state) => state.inventory.configurations.uom);
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -20,7 +20,7 @@ function UoM(props) {
   const [data, setData] = useState(uom);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    dispatch(getConfigurationUoM());
+    dispatch(getConfigurationUOM());
   }, []);
   useEffect(() => {
     const setStateData = () => {
@@ -33,7 +33,7 @@ function UoM(props) {
     title: current_project && current_project.project_name,
     home: current_project && current_project.project_url,
     show: true,
-    breadcrumb: ["Home", "UoM"],
+    breadcrumb: ["Home", "UOM"],
     search: true,
     onSearch: (value) => {
       console.log(value);
@@ -75,7 +75,7 @@ function UoM(props) {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    dispatch(getUoMInRow(record));
+                    dispatch(getUOMInRow(record));
                     props.history.push({
                       pathname:
                         "/inventory/configurations/uom/view/" + record.uom_id,
@@ -92,4 +92,4 @@ function UoM(props) {
   );
 }
 
-export default withRouter(UoM);
+export default withRouter(UOM);

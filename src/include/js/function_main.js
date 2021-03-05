@@ -20,7 +20,7 @@ export const sortData = (arrObject) => {
         ...obj,
         id: key,
         commit: 1,
-        data_id: obj.data_id ?? key,
+        data_id: obj?.data_id ?? key,
       });
     });
     return arrObject.length ? temp : [];

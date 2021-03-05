@@ -196,7 +196,7 @@ const PurchaseRequisitionCreate = (props) => {
         <Row className="col-2 row-margin-vertical">
           {/* 1 */}
           <Col span={3}>
-            <CustomLabel title={"Description :"} require readOnly={readOnly} />
+            <CustomLabel label={"Description :"} require readOnly={readOnly} />
           </Col>
 
           <Col span={8}>
@@ -211,14 +211,14 @@ const PurchaseRequisitionCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <CustomLabel title={"Job Name :"} readOnly={readOnly} />
+            <CustomLabel label={"Job Name :"} readOnly={readOnly} />
           </Col>
           <Col span={8}>{data_head.mrp_no_description ?? "-"}</Col>
         </Row>
 
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <CustomLabel title={"Cost center :"} require readOnly={readOnly} />
+            <CustomLabel label={"Cost center :"} require readOnly={readOnly} />
           </Col>
           <Col span={8}>
             <CustomSelect
@@ -245,7 +245,7 @@ const PurchaseRequisitionCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <CustomLabel title={"Request by :"} readOnly={readOnly} />
+            <CustomLabel label={"Request by :"} readOnly={readOnly} />
           </Col>
 
           <Col span={8}>{data_head.pr_created_by_no_name}</Col>
@@ -254,7 +254,7 @@ const PurchaseRequisitionCreate = (props) => {
         <Row className="col-2 row-margin-vertical">
           {/* 3 */}
           <Col span={3}>
-            <CustomLabel title={"Item Type :"} require readOnly={readOnly} />
+            <CustomLabel label={"Item Type :"} require readOnly={readOnly} />
           </Col>
 
           <Col span={8}>
@@ -288,7 +288,7 @@ const PurchaseRequisitionCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <CustomLabel title={"Vendor :"} readOnly={readOnly} />
+            <CustomLabel label={"Vendor :"} readOnly={readOnly} />
           </Col>
           <Col span={8}>
             <CustomSelect
@@ -315,7 +315,7 @@ const PurchaseRequisitionCreate = (props) => {
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
-            <CustomLabel title={"Currency :"} readOnly={readOnly} />
+            <CustomLabel label={"Currency :"} readOnly={readOnly} />
           </Col>
           <Col span={8}>
             {data_head.currency_no ? data_head.currency_no : "THB"}

@@ -73,8 +73,8 @@ const initialState = {
     typeInRow: [],
     category: [],
     categoryInRow: [],
-    typeUoM: [],
-    typeUoMInRow: [],
+    typeUOM: [],
+    typeUOMInRow: [],
     uom: [],
     uomInRow: [],
   },
@@ -191,7 +191,7 @@ export default (state = initialState, action) => {
         ...state,
         configurations: {
           ...state.configurations,
-          typeUoM: action.payload,
+          typeUOM: action.payload,
         },
       };
     case GET_TYPE_UOM_IN_ROW:
@@ -199,7 +199,7 @@ export default (state = initialState, action) => {
         ...state,
         configurations: {
           ...state.configurations,
-          typeUoMInRow: action.payload,
+          typeUOMInRow: action.payload,
         },
       };
     case GET_UOM:

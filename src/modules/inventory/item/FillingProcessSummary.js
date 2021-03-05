@@ -11,7 +11,7 @@ const FillingProcessSummary = ({ worker, time }) => {
         <Col span={6}>
           <Row className="col-2 row-margin-vertical">
             <Col span={11}>
-              <CustomLabel title={"Total Worker : "} />
+              <CustomLabel label={"Total Worker : "} />
             </Col>
             <Col span={5} className="text-right">
               <Text strong className={!worker ? "require" : "text-value"}>
@@ -21,7 +21,7 @@ const FillingProcessSummary = ({ worker, time }) => {
           </Row>
           <Row className="col-2">
             <Col span={11}>
-              <CustomLabel title={"Total Time : "} />
+              <CustomLabel label={"Total Time : "} />
             </Col>
             <Col span={5} className="text-right">
               <Text strong className="text-value">

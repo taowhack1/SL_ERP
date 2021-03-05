@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Button, Col, Row, Table } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import CustomLabel from "./CustomLabel";
-import Text from "antd/lib/typography/Text";
 const CustomTable = (props) => {
   const {
     loading,

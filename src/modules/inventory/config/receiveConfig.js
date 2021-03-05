@@ -231,7 +231,7 @@ export const receiveDetailColumns = (
   {
     title: (
       <div className="text-center">
-        <Text strong>{"UoM"}</Text>
+        <Text strong>{"UOM"}</Text>
       </div>
     ),
     align: "center",
@@ -410,7 +410,7 @@ export const receiveDetailWithNoPOColumns = (
   {
     title: (
       <div className="text-center">
-        <Text strong>{"UoM"}</Text>
+        <Text strong>{"UOM"}</Text>
       </div>
     ),
     align: "center",
@@ -655,7 +655,7 @@ export const receiveSubDetailColumns = (
   {
     title: (
       <div className="text-center">
-        <Text strong>{"UoM"}</Text>
+        <Text strong>{"UOM"}</Text>
       </div>
     ),
     align: "center",

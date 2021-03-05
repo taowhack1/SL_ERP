@@ -8,6 +8,7 @@ export const CURRENT_MENU = "CURRENT_MENU";
 export const SET_LOADING = "SET_LOADING";
 //HRM
 export const GET_SELECT_DEP = "GET_SELECT_DEP";
+export const GET_COUNTRY = "GET_COUNTRY";
 
 // System Config.
 export const DECIMAL_UPDATE = "DECIMAL_UPDATE";

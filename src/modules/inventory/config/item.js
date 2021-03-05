@@ -74,6 +74,7 @@ export const item_fields = {
   item_filling_worker: 0,
   item_filling_lead_time: "00:00:00",
   item_loss_percent_qty: 0,
+  item_box_qty: 0,
   commit: 1,
 };
 
@@ -91,6 +92,47 @@ export const item_vendor_fields = {
   uom_id: null,
   uom_no: null,
   commit: 1,
+};
+export const itemVendorFields = {
+  id: 0,
+  item_vendor_id: null,
+  item_vendor_lead_time_day: null,
+  item_vendor_moq: null,
+  item_vendor_price: null,
+  item_vendor_default: null,
+  item_vendor_pack_size: null,
+  item_vendor_remark: null,
+  vendor_id: null,
+  vendor_no: null,
+  vendor_name: null,
+  vendor_no_name: null,
+  uom_id: null,
+  uom_no: null,
+  uom_name: null,
+  uom_no_name: null,
+  item_id: null,
+  item_no: null,
+  item_name: null,
+  item_no_name: null,
+  item_vendor_detail: [
+    {
+      item_vendor_id: null,
+      item_vendor_detail_id: null,
+      item_vendor_detail_manufacturer: null,
+      item_vendor_detail_specification: null,
+      item_vendor_detail_msds: null,
+      item_vendor_detail_quotation: null,
+      item_vendor_detail_halal_cert: null,
+      item_vendor_detail_non_haram: null,
+      item_vendor_detail_non_halal: null,
+      item_vendor_detail_remark: null,
+      country_id: null,
+      country_no: null,
+      country_name: null,
+      country_no_name: null,
+    },
+  ],
+  item_vendor_detail_document: [],
 };
 
 export const item_show_columns = [
@@ -161,49 +203,181 @@ export const item_vendor_require_fields = [
   "category_id",
 ];
 
-export const item_qa_columns = [
+export const qaDetailColumns = ({ readOnly, onChange, onDelete, data }) => [
   {
-    id: 0,
-    name: "No.",
-    size: 1,
-    require: false,
+    title: (
+      <div className="text-center">
+        <CustomLabel label={"No."} readOnly={readOnly} />
+      </div>
+    ),
+    dataIndex: "id",
+    align: "center",
+    width: "5%",
+    render: (value) => <Text className="text-value">{value + 1}</Text>,
   },
   {
-    id: 1,
-    name: "Subject",
-    size: 6,
-    require: true,
+    title: (
+      <div className="text-center">
+        <CustomLabel label={"Subject"} readOnly={readOnly} require />
+      </div>
+    ),
+    dataIndex: "qa_subject_name",
+    align: "left",
+    width: "30%",
+    render: (value, record) =>
+      readOnly ? (
+        <Text className="text-value">{value}</Text>
+      ) : (
+        <CustomSelect
+          allowClear
+          showSearch
+          size={"small"}
+          placeholder={"Subject"}
+          name="qa_subject_id"
+          field_id="qa_subject_id"
+          field_name="qa_subject_name"
+          value={value}
+          data={data.subject}
+          onChange={(data, option) => {
+            data !== undefined
+              ? onChange(record.id, {
+                  qa_subject_id: option.data.qa_subject_id,
+                  qa_subject_name: option.data.qa_subject_name,
+                })
+              : onChange(record.id, {
+                  qa_subject_id: null,
+                  qa_subject_name: null,
+                });
+          }}
+        />
+      ),
   },
   {
-    id: 2,
-    name: "Specification",
-    size: 6,
-    require: true,
+    title: (
+      <div className="text-center">
+        <CustomLabel label={"Specification"} readOnly={readOnly} require />
+      </div>
+    ),
+    dataIndex: "qa_specification_name",
+    align: "left",
+    width: "30%",
+    render: (value, record) =>
+      readOnly ? (
+        <Text className="text-value">{value}</Text>
+      ) : (
+        <CustomSelect
+          allowClear
+          showSearch
+          size={"small"}
+          placeholder={"Subject"}
+          name="qa_specification_id"
+          field_id="qa_specification_id"
+          field_name="qa_specification_name"
+          value={value}
+          data={data.spec}
+          onChange={(data, option) => {
+            data !== undefined
+              ? onChange(record.id, {
+                  qa_specification_id: option.data.qa_specification_id,
+                  qa_specification_name: option.data.qa_specification_name,
+                })
+              : onChange(record.id, {
+                  qa_specification_id: null,
+                  qa_specification_name: null,
+                });
+          }}
+        />
+      ),
   },
   {
-    id: 3,
-    name: "Method",
-    size: 5,
-    require: true,
+    title: (
+      <div className="text-center">
+        <CustomLabel label={"Method"} readOnly={readOnly} require />
+      </div>
+    ),
+    dataIndex: "qa_method_name",
+    align: "left",
+    width: "30%",
+    render: (value, record) =>
+      readOnly ? (
+        <Text className="text-value">{value}</Text>
+      ) : (
+        <CustomSelect
+          allowClear
+          showSearch
+          size={"small"}
+          placeholder={"Method"}
+          name="qa_method_id"
+          field_id="qa_method_id"
+          field_name="qa_method_name"
+          value={record.qa_method_name}
+          data={data.method}
+          onChange={(data, option) => {
+            data !== undefined
+              ? onChange(record.id, {
+                  qa_method_id: option.data.qa_method_id,
+                  qa_method_name: option.data.qa_method_name,
+                })
+              : onChange(record.id, {
+                  qa_method_id: null,
+                  qa_method_name: null,
+                });
+          }}
+        />
+      ),
   },
   {
-    id: 4,
-    name: "Remark",
-    size: 5,
-    require: true,
+    title: (
+      <Text strong>
+        <EllipsisOutlined />
+      </Text>
+    ),
+    align: "center",
+    width: "5%",
+    render: (_, record) => {
+      if (readOnly) {
+        return null;
+      } else {
+        return (
+          <Popconfirm
+            onConfirm={() => {
+              onDelete(record.id);
+            }}
+            title="Are you sure you want to delete this row？"
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteTwoTone />
+          </Popconfirm>
+        );
+      }
+    },
   },
 ];
 
 export const item_qa_detail_fields = {
-  id: null,
+  id: 0,
+  qa_head_id: null,
   qa_subject_id: null,
   qa_subject_name: null,
   qa_specification_id: null,
   qa_specification_name: null,
   qa_method_id: null,
   qa_method_name: null,
+  qa_revision_no: null,
   item_qa_remark: null,
   commit: 1,
+};
+
+export const itemQAFields = {
+  id: 0,
+  item_id: null,
+  item_no: null,
+  item_qa_id: null,
+  item_qa_revision_no: "00",
+  item_qa_default: 1,
+  item_qa_remark: null,
+  item_qa_detail: [item_qa_detail_fields],
 };
 
 // Packaging
@@ -340,7 +514,8 @@ export const item_file = {
     5: null,
     6: null,
     7: null,
-    8: null,
+    8: null, //filling process docs.
+    9: null, //bulk spec docs.
   },
 };
 
@@ -984,7 +1159,7 @@ export const fillingProcessFields = {
   item_filling_process_remark: null,
   commit: 1,
 };
-export const UoMConversionFields = {
+export const UOMConversionFields = {
   id: 0,
   uom_convert_id: null,
   uom_id: null,
@@ -1010,12 +1185,12 @@ export const UoMConversionFields = {
   user_name: null,
 };
 
-export const itemUoMConversionColumns = ({
+export const itemUOMConversionColumns = ({
   readOnly,
   onChange,
   onDelete,
   onSwitch,
-  filterUoM,
+  filterUOM,
 }) => [
   {
     title: "No.",
@@ -1030,7 +1205,7 @@ export const itemUoMConversionColumns = ({
   {
     title: (
       <div className="text-center">
-        <CustomLabel title="Main UoM" require readOnly={readOnly} />
+        <CustomLabel label="Main UOM" require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "uom_no_name_from",
@@ -1045,7 +1220,7 @@ export const itemUoMConversionColumns = ({
   {
     title: (
       <div className="text-center">
-        <CustomLabel title="Type" require readOnly={readOnly} />
+        <CustomLabel label="Type" require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "uom_convert_main_action",
@@ -1099,7 +1274,7 @@ export const itemUoMConversionColumns = ({
   {
     title: (
       <div className="text-center">
-        <CustomLabel title="To UoM" require readOnly={readOnly} />
+        <CustomLabel label="To UOM" require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "uom_no_name_to",
@@ -1119,7 +1294,7 @@ export const itemUoMConversionColumns = ({
           field_id="uom_id"
           field_name="uom_no_name"
           value={value}
-          data={filterUoM}
+          data={filterUOM}
           onChange={(data, option) => {
             data !== undefined
               ? onChange(record.id, {
@@ -1138,7 +1313,7 @@ export const itemUoMConversionColumns = ({
   {
     title: (
       <div className="text-center">
-        <CustomLabel title="Ratio" require readOnly={readOnly} />
+        <CustomLabel label="Ratio" require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "uom_convert_value",

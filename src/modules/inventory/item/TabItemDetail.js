@@ -23,7 +23,7 @@ import {
   SwapOutlined,
 } from "@ant-design/icons";
 import CustomLabel from "../../../components/CustomLabel";
-import ItemUoMConversion from "./ItemUoMConversion";
+import ItemUOMConversion from "./ItemUOMConversion";
 import Modal from "antd/lib/modal/Modal";
 const { TextArea } = Input;
 
@@ -42,7 +42,7 @@ const TabItemDetail = ({
         <Col span={12} className={"col-border-right"}>
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
-              <CustomLabel title={"Item type :"} require readOnly={readOnly} />
+              <CustomLabel label={"Item type :"} require readOnly={readOnly} />
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -93,7 +93,7 @@ const TabItemDetail = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <CustomLabel
-                title={"Unit of Measure :"}
+                label={"Unit of Measure :"}
                 require
                 readOnly={readOnly}
               />
@@ -144,7 +144,7 @@ const TabItemDetail = ({
             <Col span={2} className={"pd-left-1"}>
               {data_head.uom_id && (
                 <Tooltip
-                  title="Config UoM Conversion"
+                  title="Config UOM Conversion"
                   onClick={() => setModalVisible(true)}
                 >
                   <SwapOutlined className="button-icon font-20" />
@@ -169,19 +169,19 @@ const TabItemDetail = ({
             </Row>
           )}
           {modalVisible && (
-            <ItemUoMConversion
+            <ItemUOMConversion
               readOnly={readOnly}
               data_head={data_head}
               visible={modalVisible}
               setModalVisible={setModalVisible}
               upDateFormValue={upDateFormValue}
-              UoMList={master_data.item_uom}
+              UOMList={master_data.item_uom}
             />
           )}
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <CustomLabel
-                title={"Shelf life (day) :"}
+                label={"Shelf life (day) :"}
                 require
                 readOnly={readOnly}
               />
@@ -214,7 +214,7 @@ const TabItemDetail = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <CustomLabel
-                title={"Customer name :"}
+                label={"Customer name :"}
                 require
                 readOnly={readOnly}
               />
@@ -268,7 +268,7 @@ const TabItemDetail = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <CustomLabel
-                title={"Identify benefit :"}
+                label={"Identify benefit :"}
                 require
                 readOnly={readOnly}
               />
@@ -321,7 +321,7 @@ const TabItemDetail = ({
           {data_head.type_id === 3 && (
             <Row className="col-2 row-margin-vertical">
               <Col span={6}>
-                <CustomLabel title={"Effective Date :"} readOnly={readOnly} />
+                <CustomLabel label={"Effective Date :"} readOnly={readOnly} />
               </Col>
               <Col span={16}>
                 {readOnly ? (
@@ -371,7 +371,7 @@ const TabItemDetail = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
             <Col span={6}>
-              <CustomLabel title={"Category :"} require readOnly={readOnly} />
+              <CustomLabel label={"Category :"} require readOnly={readOnly} />
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -424,7 +424,7 @@ const TabItemDetail = ({
             <Col span={2}></Col>
             <Col span={6}>
               <CustomLabel
-                title={"Storage Condition :"}
+                label={"Storage Condition :"}
                 require
                 readOnly={readOnly}
               />
@@ -466,7 +466,7 @@ const TabItemDetail = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
             <Col span={6}>
-              <CustomLabel title={"Price approve by :"} readOnly={readOnly} />
+              <CustomLabel label={"Price approve by :"} readOnly={readOnly} />
             </Col>
             <Col span={16} className={readOnly ? "" : "pd-left-2"}>
               {readOnly ? (
@@ -496,7 +496,7 @@ const TabItemDetail = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
             <Col span={6}>
-              <CustomLabel title={"Sale to :"} readOnly={readOnly} />
+              <CustomLabel label={"Sale to :"} readOnly={readOnly} />
             </Col>
             <Col span={16} className="pd-left-2">
               {readOnly ? (

@@ -78,6 +78,7 @@ export const mainReducer = (state, action) => {
     case "SEARCH_DETAIL":
       return action.payload;
     case "ADD_ROW_ARRAY_OBJ_DETAIL":
+      // {...obj,[detail.key]:[...old,new]}
       return state.map((obj, index) =>
         obj.id === action.payload.headId
           ? {

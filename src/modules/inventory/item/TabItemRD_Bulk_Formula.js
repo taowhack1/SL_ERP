@@ -15,6 +15,7 @@ import { ItemContext, TabContext } from "../../../include/js/context";
 import TotalFormula from "./TotalFormula";
 import DndComponent from "../../../components/DndComponent";
 import DetailLoading from "../../../components/DetailLoading";
+import ProcessSpecification from "./ProcessSpecification";
 const { TabPane } = Tabs;
 const TabBulkFormula = () => {
   const {
@@ -128,13 +129,12 @@ const TabBulkFormula = () => {
     }, 500);
     // statePartDispatch(newOrder);
   }, [tabOrder.newTabOrder]);
-  useEffect(() => {
-    sumPercent();
-  }, [statePart.length]);
+
   console.log("tabOrder", tabOrder);
   console.log("statePart : ", statePart);
   return (
     <>
+      <ProcessSpecification />
       <div className="flex-space detail-tab-row mt-3">
         <Space>
           <Text strong style={{ fontSize: 16, marginRight: 10 }}>
