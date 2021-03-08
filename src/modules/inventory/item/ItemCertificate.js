@@ -222,9 +222,7 @@ const ItemCertificate = ({
             </Col>
           </Row>
           <Row className="col-2 row-margin-vertical">
-            <Col span={1}></Col>
-            <Col span={1}></Col>
-            <Col span={2}>
+            <Col span={2} offset={2}>
               {readOnly ? (
                 <Space align="baseline">
                   {data_head.item_non_halal ? (

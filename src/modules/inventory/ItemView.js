@@ -19,6 +19,7 @@ import { sum2DArrOdjWithField } from "../../include/js/function_main";
 import Barcode from "react-barcode";
 import { report_server } from "../../include/js/main_config";
 import ItemRevisionDetail from "./item/ItemRevisionDetail";
+import { itemVendorDocumentFields } from "./config/item";
 
 const { Text } = Typography;
 const ItemView = (props) => {
@@ -35,7 +36,6 @@ const ItemView = (props) => {
     data_part_detail,
     data_part_mix,
     data_formula,
-    data_qa_detail,
     data_weight_detail,
     data_packaging_detail,
     data_file,
@@ -118,13 +118,11 @@ const ItemView = (props) => {
     edit: {
       data: {
         data_head: data_head,
-        data_detail: data_detail,
         data_part: data_part,
         data_part_detail: data_part_detail,
         data_part_mix: data_part_mix,
         data_formula: data_formula,
         // data_process: data_process,
-        data_qa_detail: data_qa_detail,
         data_weight_detail: data_weight_detail,
         data_packaging_detail: data_packaging_detail,
         data_file: data_file,
@@ -208,6 +206,12 @@ const ItemView = (props) => {
       sumPercent,
       filling: data_filling,
       data_head,
+      vendorFile: data_head.pu_vendor.map((obj, key) => {
+        return {
+          id: key,
+          certificate: obj.item_vendor_detail_document.certificate,
+        };
+      }) ?? [itemVendorDocumentFields],
     };
   }, [readOnly, data_file, formulaPercent]);
   console.log("data_part", formulaPercent, data_part);
@@ -301,7 +305,6 @@ const ItemView = (props) => {
                   data_head={data_head}
                   data_detail={data_detail}
                   // QA
-                  data_qa_detail={data_qa_detail}
                   data_packaging_detail={data_packaging_detail}
                   data_weight_detail={data_weight_detail}
                   readOnly={readOnly}

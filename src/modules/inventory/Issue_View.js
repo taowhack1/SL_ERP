@@ -241,7 +241,7 @@ const Issue_View = (props) => {
                 <CustomLabel readOnly={readOnly} label={"Job Ref. :"} />
               </Col>
               <Col span={16}>
-                <Text>{"-"}</Text>
+                <Text>{data_head?.mrp_no ?? "-"}</Text>
               </Col>
             </Row>
             <Row className="col-2 row-margin-vertical">
@@ -250,7 +250,7 @@ const Issue_View = (props) => {
                 <CustomLabel readOnly={readOnly} label={"Job Detail :"} />
               </Col>
               <Col span={16}>
-                <Text>{"-"}</Text>
+                <Text>{data_head?.mrp_no_description ?? "-"}</Text>
               </Col>
             </Row>
           </Col>

@@ -414,11 +414,24 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
   },
   {
     title: (
-      <div className="text-center" title="Suggestion incomming Date">
+      <div className="text-center" title="Suggestion Date">
         Sugg. Date
       </div>
     ),
     dataIndex: "mrp_detail_suggestion_date",
+    align: "center",
+    width: "9%",
+    render: (value, record, index) => {
+      return <Text className="text-value">{value}</Text>;
+    },
+  },
+  {
+    title: (
+      <div className="text-center" title="Incomming Date">
+        Inc. Date
+      </div>
+    ),
+    dataIndex: "mrp_detail_incoming_date",
     align: "center",
     width: "9%",
     render: (value, record, index) => {

@@ -2,6 +2,7 @@ import { Checkbox, Col, Collapse, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useState } from "react";
 import CustomLabel from "../../../components/CustomLabel";
+import { pad2number } from "../../../include/js/function_main";
 const { Panel } = Collapse;
 const ItemRevisionDetail = ({ data_head, readOnly, upDateFormValue }) => {
   console.log("data_head.item_revision_no", data_head.item_revision_no);
@@ -23,7 +24,7 @@ const ItemRevisionDetail = ({ data_head, readOnly, upDateFormValue }) => {
             </Col>
             <Col span={16}>
               <Text className="text-value">
-                {data_head.item_revision_no ?? "00"}
+                {pad2number(+data_head.item_revision_no) ?? "00"}
               </Text>
             </Col>
           </Row>

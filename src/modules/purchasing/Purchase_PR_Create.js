@@ -213,7 +213,7 @@ const PurchaseRequisitionCreate = (props) => {
           <Col span={3}>
             <CustomLabel label={"Job Name :"} readOnly={readOnly} />
           </Col>
-          <Col span={8}>{data_head.mrp_no_description ?? "-"}</Col>
+          <Col span={8}>{data_head.so_no_description ?? "-"}</Col>
         </Row>
 
         <Row className="col-2 row-margin-vertical">

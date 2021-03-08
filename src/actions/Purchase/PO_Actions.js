@@ -13,6 +13,7 @@ import {
   api_get_pr_detail_ref,
   api_get_pr_open_po,
   api_purchase_get_all_po,
+  api_po_detail,
 } from "../../include/js/api";
 import { header_config } from "../../include/js/main_config";
 import axios from "axios";
@@ -39,7 +40,24 @@ export const get_po_list = (user_name) => (dispatch) => {
     });
 };
 
-export const get_po_by_id = (po_id, user_name) => async (dispatch) => {
+export const updatePODueDate = (po_id, poDetail, user_name, redirect) => (
+  dispatch
+) => {
+  axios
+    .put(api_po_detail, poDetail, header_config)
+    .then((res) => {
+      console.log("Update PO Detail Success...", res);
+      message.success("Update due date success...", 4);
+      dispatch(get_po_by_id(po_id, user_name, redirect));
+    })
+    .catch((err) => {
+      message.error(err, 4);
+    });
+};
+
+export const get_po_by_id = (po_id, user_name, redirect) => async (
+  dispatch
+) => {
   console.log("get_po_by_id");
 
   try {
@@ -68,6 +86,7 @@ export const get_po_by_id = (po_id, user_name) => async (dispatch) => {
       };
       console.log(`GET_PO_BY_ID ${po_id}`, po_data);
       await dispatch({ type: GET_PO_BY_ID, payload: po_data });
+      redirect && redirect(po_id);
     }
   } catch (error) {
     console.log(error);

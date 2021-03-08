@@ -39,9 +39,11 @@ import {
   fillingProcessFields,
   itemQAFields,
   itemVendorFields,
+  itemVendorDocumentFields,
 } from "./config/item";
 import {
   sortData,
+  sortDataWithoutCommit,
   sum2DArrOdjWithField,
   validateFormHead,
 } from "../../include/js/function_main";
@@ -84,6 +86,7 @@ const ItemCreate = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
+  const current_project = useSelector((state) => state.auth.currentProject);
   const auth = useSelector((state) => state.auth.authData);
   const { department_id } = useSelector((state) => state.auth.authData);
   const itemList = useSelector((state) =>
@@ -101,8 +104,8 @@ const ItemCreate = (props) => {
   const data = props.location.state ? props.location.state : 0;
 
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
-  const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
-
+  // const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
+  const [vendorFile, setVendorFile] = useState([itemVendorDocumentFields]);
   const [data_weight_detail, weightDetailDispatch] = useReducer(
     reducer,
     initialStateWeight
@@ -134,24 +137,25 @@ const ItemCreate = (props) => {
               ...data.data_head,
               commit: 1,
               user_name: auth.user_name,
-              qa_spec: data.data_head?.qa_spec?.length
-                ? sortData([itemQAFields])
-                : data.data_head.qa_spec,
-              pu_vendor: data.data_head?.pu_vendor?.length
-                ? sortData([itemVendorFields])
-                : data.data_head.pu_vendor,
+              qa_spec:
+                data.data_head.qa_spec.length <= 0
+                  ? sortData([itemQAFields])
+                  : data.data_head.qa_spec,
+              pu_vendor:
+                data.data_head?.pu_vendor?.length <= 0
+                  ? sortData([itemVendorFields])
+                  : sortDataWithoutCommit(data.data_head.pu_vendor),
             }
           : { ...initialStateHead, commit: 1, user_name: auth.user_name },
     });
-
-    detailDispatch({
-      type: "SET_DETAIL",
-      payload:
-        data && data.data_detail.length
-          ? data.data_detail
-          : [item_vendor_fields],
-    });
-
+    setVendorFile(
+      data?.data_head?.pu_vendor?.map((obj, key) => {
+        return {
+          id: key,
+          certificate: obj.item_vendor_detail_document.certificate,
+        };
+      }) ?? [itemVendorDocumentFields]
+    );
     weightDetailDispatch({
       type: "SET_DETAIL",
       payload:
@@ -174,7 +178,6 @@ const ItemCreate = (props) => {
     setFilling(data.data_filling ?? []);
   }, []);
 
-  const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
     title: current_project && current_project.project_name,
@@ -196,7 +199,10 @@ const ItemCreate = (props) => {
     onSave: (e) => {
       console.log("Save");
       console.log("SAVE HEAD", data_head);
-      console.log("SAVE VENDOR DETAIL", data_detail);
+      console.log(
+        "SAVE VENDOR DETAIL",
+        vendorFormRef.current && JSON.parse(vendorFormRef.current?.value)
+      );
       console.log("SAVE PART", statePart);
       // console.log("SAVE QA", data_qa_detail);
       console.log("SAVE WEIGHT", data_weight_detail);
@@ -218,19 +224,19 @@ const ItemCreate = (props) => {
         });
         return false;
       }
-      if (
-        department_id === 13 &&
-        [1, 2].includes(data_head.type_id) &&
-        !data_detail[0].vendor_id
-      ) {
-        console.log("Purchase Person");
-        message.warning({
-          content: 'Please fill "Purchase Vendor" form completely.',
-          key,
-          duration: 4,
-        });
-        return false;
-      }
+      // if (
+      //   department_id === 13 &&
+      //   [1, 2].includes(data_head.type_id) &&
+      //   !data_detail[0].vendor_id
+      // ) {
+      //   console.log("Purchase Person");
+      //   message.warning({
+      //     content: 'Please fill "Purchase Vendor" form completely.',
+      //     key,
+      //     duration: 4,
+      //   });
+      //   return false;
+      // }
       if (validate.validate) {
         const data = {
           access_right: {
@@ -244,10 +250,20 @@ const ItemCreate = (props) => {
             filling: true,
           },
           data_head: data_head,
-          // data_detail: [],
-          data_detail: data_detail,
+          data_detail:
+            vendorFormRef.current && vendorFormRef.current?.value
+              ? JSON.parse(vendorFormRef.current.value).map((obj, key) => {
+                  return {
+                    ...obj,
+                    item_vendor_detail_document: vendorFile[key],
+                  };
+                })
+              : [],
           data_part: statePart,
-          data_qa_detail: JSON.parse(qaFormRef.current.value), //New
+          data_qa_detail:
+            qaFormRef.current && qaFormRef.current?.value
+              ? JSON.parse(qaFormRef.current.value)
+              : [],
           data_weight_detail: data_weight_detail,
           data_packaging_detail: data_packaging_detail,
           data_file: data_file,
@@ -305,15 +321,23 @@ const ItemCreate = (props) => {
     },
     [data_file]
   );
-
-  const redirect_to_view = (id) => {
-    history.push("/inventory/items/view/" + (id ? id : "new"));
+  const updateFileVendor = (headId, fileList) => {
+    setVendorFile(
+      vendorFile.map((obj) =>
+        obj.id === headId ? { ...obj, certificate: fileList } : obj
+      )
+    );
   };
-
-  useEffect(() => {
-    data_head.type_id &&
-      dispatch(get_qa_conditions_master(data_head.type_id, 1, 1, 1));
-  }, [data_head.type_id]);
+  const addVendorFile = () => {
+    setVendorFile(sortData([...vendorFile, itemVendorDocumentFields]));
+  };
+  const delVendorFile = (vendorId) => {
+    setVendorFile(
+      vendorFile.map((obj) =>
+        obj.id === vendorId ? { ...obj, active: 0 } : obj
+      )
+    );
+  };
 
   const sumPercent = () => {
     console.log("sumPercent", statePart);
@@ -324,6 +348,14 @@ const ItemCreate = (props) => {
       )
     );
   };
+  const redirect_to_view = (id) => {
+    history.push("/inventory/items/view/" + (id ? id : "new"));
+  };
+
+  useEffect(() => {
+    data_head.type_id &&
+      dispatch(get_qa_conditions_master(data_head.type_id, 1, 1, 1));
+  }, [data_head.type_id]);
 
   const ContextValue = useMemo(() => {
     return {
@@ -345,6 +377,10 @@ const ItemCreate = (props) => {
       data_head,
       qaFormRef,
       vendorFormRef,
+      vendorFile,
+      updateFileVendor,
+      addVendorFile,
+      delVendorFile,
     };
   }, [
     statePart,
@@ -358,12 +394,16 @@ const ItemCreate = (props) => {
     data_head,
     qaFormRef,
     vendorFormRef,
+    vendorFile,
+    updateFileVendor,
+    addVendorFile,
+    delVendorFile,
   ]);
 
   useEffect(() => {
     sumPercent();
   }, [statePart.length]);
-  console.log("data_head", data_head);
+  console.log("vendorFile", vendorFile);
   return (
     <ItemContext.Provider value={ContextValue}>
       <MainLayout {...config}>
@@ -507,10 +547,6 @@ const ItemCreate = (props) => {
                 updateFile={updateFile}
                 data_head={data_head}
                 headDispatch={headDispatch}
-                data_detail={data_detail}
-                detailDispatch={detailDispatch}
-                // data_qa_detail={data_qa_detail}
-                // qaDetailDispatch={qaDetailDispatch}
                 data_packaging_detail={data_packaging_detail}
                 packagingDetailDispatch={packagingDetailDispatch}
                 data_weight_detail={data_weight_detail}

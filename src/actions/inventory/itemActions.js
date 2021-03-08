@@ -24,13 +24,17 @@ import {
 } from "../../include/js/api";
 import axios from "axios";
 import { message, notification } from "antd";
-import { item_save_file } from "../file&image/itemFileAction";
+import {
+  item_save_file,
+  itemSaveFileVendor,
+} from "../file&image/itemFileAction";
 import React from "react";
 import {
   sortData,
   sortDataWithoutCommit,
 } from "../../include/js/function_main";
 import { DeleteOutlined, PrinterOutlined } from "@ant-design/icons";
+import { itemVendorDocumentFields } from "../../modules/inventory/config/item";
 
 const openNotificationWithIcon = (type, title, text) => {
   notification[type]({
@@ -60,24 +64,101 @@ const convertFileField = (file) => {
   return file_temp;
 };
 
-const bind_vendor_fn = (item_id, data_detail) => {
-  console.log("bind_vendor_fn");
+// const createItemVendor = (item_id, data_detail) => {
+//   console.log("createItemVendor");
+//   //check authorize
+
+//   console.log(dataCreate);
+//   return (
+//     dataCreate.length &&
+//     axios
+//       .post(`${api_item_vendor}/${item_id}`, dataCreate, header_config)
+//       .then((res) => {
+//         console.log("CREATE VENDOR");
+//       })
+//   );
+// };
+const saveItemVendor = (item_id, data_detail, user_name) => {
+  console.log("updateItemVendor", data_detail);
   //check authorize
-  const data_detail_temp = data_detail.filter(
-    (detail) =>
-      detail.vendor_id !== null &&
-      detail.uom_id !== null &&
-      detail.type_id !== null &&
-      detail.category_id !== null
+  let vendorFile = {
+    create: [],
+    update: [],
+  };
+  const dataCreate = data_detail
+    .filter(
+      (obj) =>
+        obj.vendor_id !== null &&
+        obj.uom_id !== null &&
+        obj.commit &&
+        (obj.item_vendor_id === null || obj.item_vendor_id === undefined) &&
+        obj.active !== 0
+    )
+    .map((obj) => {
+      vendorFile.create.push({
+        id: null,
+        file: obj.item_vendor_detail_document,
+      });
+      return { ...obj, item_vendor_detail_document: null };
+    });
+  const dataUpdate = data_detail
+    .filter(
+      (obj) =>
+        obj.vendor_id !== null &&
+        obj.uom_id !== null &&
+        obj.commit &&
+        obj.item_vendor_id !== null &&
+        obj.item_vendor_id !== undefined &&
+        obj.active !== 0
+    )
+    .map((obj) => {
+      console.log("map file update", obj);
+      vendorFile.update.push({
+        id: obj.item_vendor_id,
+        file: obj.item_vendor_detail_document,
+      });
+      return { ...obj, item_vendor_detail_document: null };
+    });
+  const dataDelete = data_detail.filter(
+    (obj) => obj.item_vendor_id !== null && obj.commit && obj.active === 0
   );
-  return (
-    data_detail_temp.length &&
-    axios
-      .post(`${api_item_vendor}/${item_id}`, data_detail_temp, header_config)
-      .then((res) => {
-        console.log("BIND VENDOR");
-      })
-  );
+
+  console.log("dataCreate", dataCreate);
+  console.log("dataUpdate", dataUpdate);
+  console.log("dataDelete", dataDelete);
+  const delPromise = dataDelete.length
+    ? dataDelete.map((obj) =>
+        axios.delete(
+          `${api_item_vendor}/${item_id}&${obj.item_vendor_id}`,
+          dataDelete,
+          header_config
+        )
+      )
+    : [];
+  let promiseFile = [];
+  return [
+    dataCreate.length &&
+      axios
+        .post(`${api_item_vendor}/${item_id}`, dataCreate, header_config)
+        .then((res) => {
+          console.log("CREATE VENDOR", res);
+        }),
+    dataUpdate.length &&
+      axios
+        .put(`${api_item_vendor}/${item_id}`, dataUpdate, header_config)
+        .then((res) => {
+          console.log("UPDATE VENDOR", res);
+          console.log("vendorFile", vendorFile);
+
+          vendorFile.update.forEach((obj) =>
+            promiseFile.push(
+              ...itemSaveFileVendor(item_id, obj.id, obj.file, user_name)
+            )
+          );
+          return promiseFile;
+        }),
+    ...delPromise,
+  ];
 };
 
 const save_uom_conversion = (item_id, uom_conversion) => {
@@ -257,7 +338,8 @@ export const createNewItems = (data, user_name, redirect) => async (
           console.log("qaData create", qaData);
           Promise.allSettled([
             save_uom_conversion(item_id, data_head.uom_conversion),
-            access_right.vendor && bind_vendor_fn(item_id, data_detail),
+            // access_right.vendor && saveItemVendor(item_id, data_detail),
+            ...saveItemVendor(item_id, data_detail, user_name),
             access_right.formula && bind_part_and_formula(item_id, data_part),
             access_right.qa && createNewQASpec(item_id, qaData.new),
             access_right.qa && updateQASpec(item_id, qaData.update),
@@ -368,7 +450,7 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
           console.log("qaData", qaData);
           Promise.allSettled([
             save_uom_conversion(item_id, data_head.uom_conversion),
-            access_right.vendor && bind_vendor_fn(item_id, data_detail),
+            ...saveItemVendor(item_id, data_detail, user_name),
             access_right.formula && bind_part_and_formula(item_id, data_part),
             access_right.qa && createNewQASpec(item_id, qaData.new),
             access_right.qa && updateQASpec(item_id, qaData.update),
@@ -491,12 +573,56 @@ export const get_item_by_id = (item_id, user_name, redirect) => async (
                     };
                   })
                 ),
-                pu_vendor: sortData(data[1].value.data),
+                pu_vendor: sortDataWithoutCommit(
+                  data[1].value?.data?.map((obj, key) => {
+                    return {
+                      ...obj,
+                      item_vendor_detail: sortData(obj.item_vendor_detail),
+                      item_vendor_detail_document: {
+                        certificate: {
+                          2: obj.item_vendor_detail_document.length
+                            ? convertFileField(
+                                obj.item_vendor_detail_document.filter(
+                                  (file) => file.file_type_id === 2
+                                )[0]
+                              )
+                            : null,
+                          3: obj.item_vendor_detail_document.length
+                            ? convertFileField(
+                                obj.item_vendor_detail_document.filter(
+                                  (file) => file.file_type_id === 3
+                                )[0]
+                              )
+                            : null,
+                          4: obj.item_vendor_detail_document.length
+                            ? convertFileField(
+                                obj.item_vendor_detail_document.filter(
+                                  (file) => file.file_type_id === 4
+                                )[0]
+                              )
+                            : null,
+                          5: obj.item_vendor_detail_document.length
+                            ? convertFileField(
+                                obj.item_vendor_detail_document.filter(
+                                  (file) => file.file_type_id === 5
+                                )[0]
+                              )
+                            : null,
+                          6: obj.item_vendor_detail_document.length
+                            ? convertFileField(
+                                obj.item_vendor_detail_document.filter(
+                                  (file) => file.file_type_id === 6
+                                )[0]
+                              )
+                            : null,
+                        },
+                      },
+                    };
+                  })
+                ),
               },
               // data_detail: [],
-              data_detail: sortData(data[1].value.data),
               data_part: data_part,
-              data_qa_detail: sortData(data[3].value.data),
               data_weight_detail: sortData(data[4].value.data[0]),
               data_packaging_detail: sortData(data[5].value.data[0]),
               data_file: {

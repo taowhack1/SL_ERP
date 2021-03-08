@@ -22,15 +22,13 @@ const TabPanel = ({
 
   readOnly,
   // QA
-  data_qa_detail,
-  qaDetailDispatch,
   data_packaging_detail,
   packagingDetailDispatch,
   data_weight_detail,
   weightDetailDispatch,
 }) => {
   const { department_id } = useSelector((state) => state.auth.authData);
-  // 10 = MIS , 11 = RD , 13 = PU , 18 = SA , 20 = PD
+  // 10 = MIS , 11 = RD , 13 = PU , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE
   const { type_id } = data_head;
   const callback = (key) => {};
   const master_data = useSelector((state) => state.inventory.master_data);
@@ -58,23 +56,27 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
-        {/* {type_id !== undefined &&
-          type_id &&
-          [1, 2, 3, 4, 5].includes(type_id) &&
-          [1, 10, 11].includes(department_id) && ( */}
-        <Tabs.TabPane
-          tab={
-            <CustomLabel label={"Inventory Data"} require readOnly={readOnly} />
-          }
-          key={"2"}
-        >
-          <ItemInventoryData />
-        </Tabs.TabPane>
-        {/* )} */}
         {type_id !== undefined &&
           type_id &&
           [1, 2, 3, 4, 5].includes(type_id) &&
-          [1, 10, 11].includes(department_id) && (
+          [1, 10, 11, 24, 90].includes(department_id) && (
+            <Tabs.TabPane
+              tab={
+                <CustomLabel
+                  label={"Inventory Data"}
+                  require
+                  readOnly={readOnly}
+                />
+              }
+              key={"2"}
+            >
+              <ItemInventoryData />
+            </Tabs.TabPane>
+          )}
+        {type_id !== undefined &&
+          type_id &&
+          [1, 2, 3, 4, 5].includes(type_id) &&
+          [1, 10, 11, 90].includes(department_id) && (
             <Tabs.TabPane
               tab={
                 <CustomLabel label={"R&D Detail"} require readOnly={readOnly} />
@@ -94,7 +96,7 @@ const TabPanel = ({
         {type_id !== undefined &&
           type_id &&
           type_id === 3 &&
-          [1, 10, 11].includes(department_id) && (
+          [1, 10, 11, 90].includes(department_id) && (
             <Tabs.TabPane
               tab={
                 <CustomLabel
@@ -139,46 +141,50 @@ const TabPanel = ({
           ยังไม่ใช้งาน
           */}
 
-        {/* {type_id !== undefined &&
+        {type_id !== undefined &&
           type_id &&
           [1, 2, 3, 4, 5].includes(type_id) &&
-          [1, 10, 11].includes(department_id) && ( */}
-        <Tabs.TabPane
-          tab={
-            <CustomLabel label={"Specification"} require readOnly={readOnly} />
-          }
-          key={"5"}
-        >
-          <TabItemQA />
-        </Tabs.TabPane>
-        {/* )} */}
-        {/* {type_id !== undefined &&
+          [1, 10, 11, 90].includes(department_id) && (
+            <Tabs.TabPane
+              tab={
+                <CustomLabel
+                  label={"Specification"}
+                  require
+                  readOnly={readOnly}
+                />
+              }
+              key={"5"}
+            >
+              <TabItemQA />
+            </Tabs.TabPane>
+          )}
+        {type_id !== undefined &&
           type_id &&
           ![3, 4, 5].includes(type_id) &&
-          [1, 10, 13].includes(department_id) && ( */}
-        <Tabs.TabPane
-          tab={
-            <CustomLabel
-              label={"Purchase Vendor"}
-              require
-              readOnly={readOnly}
-            />
-          }
-          key={"6"}
-        >
-          <TabItemPurchase
-            data_head={data_head}
-            data_detail={data_detail}
-            detailDispatch={detailDispatch}
-            upDateFormValue={upDateFormValue}
-            readOnly={readOnly}
-          />
-        </Tabs.TabPane>
-        {/* )} */}
+          [1, 10, 13, 90].includes(department_id) && (
+            <Tabs.TabPane
+              tab={
+                <CustomLabel
+                  label={"Purchase Vendor"}
+                  require
+                  readOnly={readOnly}
+                />
+              }
+              key={"6"}
+            >
+              <TabItemPurchase
+                data_head={data_head}
+                data_detail={data_detail}
+                detailDispatch={detailDispatch}
+                upDateFormValue={upDateFormValue}
+                readOnly={readOnly}
+              />
+            </Tabs.TabPane>
+          )}
         {type_id !== undefined &&
           type_id &&
           [4, 5].includes(type_id) &&
-          [1, 10, 11].includes(department_id) && (
+          [1, 10, 11, 90].includes(department_id) && (
             // [1, 10, 11, 18].includes(department_id) && (
             <Tabs.TabPane
               tab={
@@ -202,8 +208,7 @@ const TabPanel = ({
         {type_id !== undefined &&
           type_id &&
           [4, 5].includes(type_id) &&
-          [1, 10, 11, 20].includes(department_id) && (
-            // [1, 10, 11, 18, 20].includes(department_id) && (
+          [1, 10, 11, 20, 90].includes(department_id) && (
             <Tabs.TabPane
               tab={
                 <CustomLabel
@@ -229,7 +234,7 @@ const TabPanel = ({
           )}
         {type_id !== undefined &&
           type_id &&
-          [3, 4].includes(type_id) &&
+          [2, 3].includes(type_id) &&
           [1, 10, 20].includes(department_id) && (
             <Tabs.TabPane
               tab={

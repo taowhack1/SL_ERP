@@ -21,11 +21,16 @@ import {
   update_po,
   create_po,
   reset_po_data,
+  updatePODueDate,
 } from "../../actions/purchase/PO_Actions";
 import { reducer } from "./reducers";
 import axios from "axios";
 import { api_get_pr_detail_ref } from "../../include/js/api";
-import { header_config, numberFormat } from "../../include/js/main_config";
+import {
+  convertDigit,
+  header_config,
+  numberFormat,
+} from "../../include/js/main_config";
 import {
   sumArrObj,
   validateFormDetail,
@@ -33,13 +38,20 @@ import {
 } from "../../include/js/function_main";
 
 import Authorize from "../system/Authorize";
+import CustomLabel from "../../components/CustomLabel";
 
 const { TextArea } = Input;
 const { Text } = Typography;
 const initialStateHead = po_fields;
 const initialStateDetail = [po_detail_fields];
-const readOnly = false;
+
 const PurchaseOrderCreate = (props) => {
+  const data =
+    props.location && props.location.state ? props.location.state : 0;
+  const readOnly =
+    data?.data_head?.tg_trans_status_id === 4 && data?.data_head?.button_create
+      ? true
+      : false;
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -54,8 +66,6 @@ const PurchaseOrderCreate = (props) => {
   );
   const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
   const [data_detail, detailDispatch] = useReducer(reducer, initialStateDetail);
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
 
   const callback = (key) => {
     setTab(key);
@@ -161,32 +171,53 @@ const PurchaseOrderCreate = (props) => {
         po_require_fields_detail
       );
       console.log(data_head);
-      if (validate.validate && validate_detail.validate) {
-        console.log("pass");
-        data_head.po_id
-          ? dispatch(
-              update_po(
-                data_head.po_id,
-                auth.user_name,
-                data_head,
-                data_detail,
-                redirect_to_view
-              )
-            )
-          : dispatch(
-              create_po(
-                auth.user_name,
-                data_head,
-                data_detail,
-                redirect_to_view
-              )
-            );
-      } else {
-        message.warning({
-          content: "Please fill your form completely.",
-          key,
-          duration: 2,
+      if (readOnly) {
+        //Update Due Date
+        const poDetail = data_detail.map((obj) => {
+          const { po_detail_id, po_detail_due_date } = obj;
+          return {
+            po_detail_id,
+            po_detail_due_date,
+            commit: 1,
+          };
         });
+        dispatch(
+          updatePODueDate(
+            data_head.po_id,
+            poDetail,
+            auth.user_name,
+            redirect_to_view
+          )
+        );
+      } else {
+        // Normal Case Create / Edit PO.
+        if (validate.validate && validate_detail.validate) {
+          console.log("pass");
+          data_head.po_id
+            ? dispatch(
+                update_po(
+                  data_head.po_id,
+                  auth.user_name,
+                  data_head,
+                  data_detail,
+                  redirect_to_view
+                )
+              )
+            : dispatch(
+                create_po(
+                  auth.user_name,
+                  data_head,
+                  data_detail,
+                  redirect_to_view
+                )
+              );
+        } else {
+          message.warning({
+            content: "Please fill your form completely.",
+            key,
+            duration: 2,
+          });
+        }
       }
     },
     onEdit: (e) => {
@@ -271,64 +302,65 @@ const PurchaseOrderCreate = (props) => {
         {/* Address & Information */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>PR Ref. :
-            </Text>
+            <CustomLabel label={"PR Ref."} require readOnly={readOnly} />
           </Col>
           <Col span={8}>
-            <CustomSelect
-              placeholder={"Select PR. ex.PR2009-00xx"}
-              allowClear
-              showSearch
-              name="pr_id"
-              field_id="pr_id"
-              field_name="pr_no_description"
-              value={data_head.pr_no_description}
-              data={select_box_pr}
-              onChange={(data, option) => {
-                console.log("onchange");
-                if (data) {
-                  console.log("if");
-                  getDataRef(option.key, data_head, select_box_pr);
-                } else {
-                  console.log("else");
-                  resetDataRef();
-                }
-                // option && option.title
-                //     ? getDataRef(option.key, data_head, select_box_pr)
-                //     : resetDataRef()
-              }}
-            />
+            {readOnly ? (
+              <Text className="text-value">{data_head.pr_no_description}</Text>
+            ) : (
+              <CustomSelect
+                placeholder={"Select PR. ex.PR2009-00xx"}
+                allowClear
+                showSearch
+                name="pr_id"
+                field_id="pr_id"
+                field_name="pr_no_description"
+                value={data_head.pr_no_description}
+                data={select_box_pr}
+                onChange={(data, option) => {
+                  console.log("onchange");
+                  if (data) {
+                    console.log("if");
+                    getDataRef(option.key, data_head, select_box_pr);
+                  } else {
+                    console.log("else");
+                    resetDataRef();
+                  }
+                }}
+              />
+            )}
           </Col>
           <Col span={2}></Col>
           <Col span={3} className={readOnly ? "" : "pd-left-1"}>
-            <Text strong>Job Name :</Text>
+            <CustomLabel label={"Job Name "} readOnly={readOnly} />
           </Col>
           <Col span={8} className="text-view">
-            {data_head.mrp_no_description ?? "-"}
+            {data_head.so_no_description ?? "-"}
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Description :
-            </Text>
+            <CustomLabel label={"Description "} require readOnly={readOnly} />
           </Col>
 
           <Col span={8}>
-            <Input
-              name="po_description"
-              onChange={(e) =>
-                upDateFormValue({ po_description: e.target.value })
-              }
-              value={data_head.po_description}
-              placeholder="Description"
-            />
+            {readOnly ? (
+              <Text className="text-value">{data_head.po_description}</Text>
+            ) : (
+              <Input
+                name="po_description"
+                onChange={(e) =>
+                  upDateFormValue({ po_description: e.target.value })
+                }
+                value={data_head.po_description}
+                placeholder="Description"
+              />
+            )}
           </Col>
           <Col span={2}></Col>
           {/* vendor */}
-          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
-            <Text strong>Request By :</Text>
+          <Col span={3}>
+            <CustomLabel label={"Request By "} readOnly={readOnly} />
           </Col>
 
           <Col span={8} className="text-left">
@@ -339,68 +371,57 @@ const PurchaseOrderCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Vendor :
-            </Text>
+            <CustomLabel label={"Vendor "} require readOnly={readOnly} />
           </Col>
 
           <Col span={8}>
-            <CustomSelect
-              placeholder={"Vendor"}
-              allowClear
-              showSearch
-              name="vendor_id"
-              field_id="vendor_id"
-              field_name="vendor_no_name"
-              value={data_head.vendor_no_name}
-              data={vendors}
-              onSelect={(data, option) =>
-                upDateFormValue({
-                  vendor_id: data,
-                  vendor_no_name: option.title,
-                })
-              }
-              onChange={(data, option) =>
-                data
-                  ? upDateFormValue({
-                      vendor_id: option.data.vendor_id,
-                      vendor_no_name: option.data.vendor_no_name,
-                      payment_term_id: option.data.payment_term_id,
-                      payment_term_no_name: option.data.payment_term_no_name,
-                      currency_id: option.data.currency_id,
-                      currency_no: option.data.currency_no,
-                      vat_rate: option.data.vat_rate,
-                    })
-                  : upDateFormValue({
-                      vendor_id: null,
-                      vendor_no_name: null,
-                      payment_term_id: null,
-                      payment_term_no_name: null,
-                      currency_id: 1,
-                      currency_no: "THB",
-                      vat_rate: 0,
-                    })
-              }
-            />
+            {readOnly ? (
+              <Text className="text-value">{data_head.vendor_no_name}</Text>
+            ) : (
+              <CustomSelect
+                placeholder={"Vendor"}
+                allowClear
+                showSearch
+                name="vendor_id"
+                field_id="vendor_id"
+                field_name="vendor_no_name"
+                value={data_head.vendor_no_name}
+                data={vendors}
+                onSelect={(data, option) =>
+                  upDateFormValue({
+                    vendor_id: data,
+                    vendor_no_name: option.title,
+                  })
+                }
+                onChange={(data, option) =>
+                  data
+                    ? upDateFormValue({
+                        vendor_id: option.data.vendor_id,
+                        vendor_no_name: option.data.vendor_no_name,
+                        payment_term_id: option.data.payment_term_id,
+                        payment_term_no_name: option.data.payment_term_no_name,
+                        currency_id: option.data.currency_id,
+                        currency_no: option.data.currency_no,
+                        vat_rate: option.data.vat_rate,
+                      })
+                    : upDateFormValue({
+                        vendor_id: null,
+                        vendor_no_name: null,
+                        payment_term_id: null,
+                        payment_term_no_name: null,
+                        currency_id: 1,
+                        currency_no: "THB",
+                        vat_rate: 0,
+                      })
+                }
+              />
+            )}
           </Col>
-          {/* <Col span={3} className={readOnly ? "" : "pd-left-1"}>
-            <Text strong>Agreement :</Text>
-          </Col>
-
-          <Col span={8}>
-            <Input
-              onChange={(e) =>
-                upDateFormValue({ po_agreement: e.target.value })
-              }
-              value={data_head.po_agreement}
-              placeholder="Agreement"
-            ></Input>
-          </Col> */}
 
           <Col span={2}></Col>
           {/* 6 */}
-          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
-            <Text strong>Cost Center :</Text>
+          <Col span={3}>
+            <CustomLabel label={"Cost Center "} require readOnly={readOnly} />
           </Col>
           <Col span={8} className="text-left">
             <Text className={"text-value"}>
@@ -410,45 +431,49 @@ const PurchaseOrderCreate = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Payment Terms :
-            </Text>
+            <CustomLabel label={"Payment Terms "} require readOnly={readOnly} />
           </Col>
           <Col span={8}>
-            <CustomSelect
-              placeholder={"Payment Term"}
-              allowClear
-              showSearch
-              name="payment_term_id"
-              field_id="payment_term_id"
-              field_name="payment_term_no_name"
-              value={data_head.payment_term_no_name}
-              data={vendor_payment_terms}
-              onChange={(data, option) =>
-                data
-                  ? upDateFormValue({
-                      payment_term_id: data,
-                      payment_term_no_name: option.title,
-                    })
-                  : upDateFormValue({
-                      payment_term_id: null,
-                      payment_term_no_name: null,
-                    })
-              }
-            />
+            {readOnly ? (
+              <Text className="text-value">
+                {data_head.payment_term_no_name}
+              </Text>
+            ) : (
+              <CustomSelect
+                placeholder={"Payment Term"}
+                allowClear
+                showSearch
+                name="payment_term_id"
+                field_id="payment_term_id"
+                field_name="payment_term_no_name"
+                value={data_head.payment_term_no_name}
+                data={vendor_payment_terms}
+                onChange={(data, option) =>
+                  data
+                    ? upDateFormValue({
+                        payment_term_id: data,
+                        payment_term_no_name: option.title,
+                      })
+                    : upDateFormValue({
+                        payment_term_id: null,
+                        payment_term_no_name: null,
+                      })
+                }
+              />
+            )}
           </Col>
           <Col span={2}></Col>
           {/* 8 */}
-          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
-            <Text strong>Item Type :</Text>
+          <Col span={3}>
+            <CustomLabel label={"Item Type "} readOnly={readOnly} />
           </Col>
           <Col span={8} className="text-left">
             <Text className={"text-value"}>{data_head.type_no_name}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
-            <Text strong>Currency :</Text>
+          <Col span={3}>
+            <CustomLabel label={"Currency "} readOnly={readOnly} />
           </Col>
           <Col span={8}>
             {data_head.currency_no ? data_head.currency_no : "THB"}
@@ -470,6 +495,7 @@ const PurchaseOrderCreate = (props) => {
                   headDispatch={headDispatch}
                   vat_rate={data_head.vat_rate}
                   updateAmount={updateAmount}
+                  enableEditDueDate={readOnly}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key={"2"}>
@@ -497,28 +523,34 @@ const PurchaseOrderCreate = (props) => {
                 <Text strong>Extended Discount :</Text>
               </Col>
               <Col span={3} className="text-number">
-                <InputNumber
-                  name="item_discount"
-                  placeholder="Discount"
-                  value={data_head.po_discount}
-                  min={0.0}
-                  step={5}
-                  precision={3}
-                  defaultValue={0}
-                  {...numberFormat}
-                  onChange={(data) => {
-                    upDateFormValue({ po_discount: data });
-                  }}
-                  onBlur={(data) => {
-                    updateAmount(
-                      data_detail,
-                      "po_detail_total_price",
-                      data_head.vat_rate
-                    );
-                  }}
-                  className="full-width"
-                  size="small"
-                />
+                {readOnly ? (
+                  <Text className="text-value">
+                    {convertDigit(data_head.po_discount ?? 0, 4)}
+                  </Text>
+                ) : (
+                  <InputNumber
+                    name="item_discount"
+                    placeholder="Discount"
+                    value={data_head.po_discount}
+                    min={0.0}
+                    step={5}
+                    precision={3}
+                    defaultValue={0}
+                    {...numberFormat}
+                    onChange={(data) => {
+                      upDateFormValue({ po_discount: data });
+                    }}
+                    onBlur={(data) => {
+                      updateAmount(
+                        data_detail,
+                        "po_detail_total_price",
+                        data_head.vat_rate
+                      );
+                    }}
+                    className="full-width"
+                    size="small"
+                  />
+                )}
               </Col>
               <Col span={1} className="text-string">
                 <Text strong> {data_head.currency_no ?? "THB"}</Text>

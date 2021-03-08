@@ -82,7 +82,7 @@ const getUploadFile = (type, uploadConfig, readOnly, enable) => {
       return false;
   }
 };
-const CustomUpload = ({ readOnly, fileDetail, type = "Button" }) => {
+const CustomUpload = ({ readOnly, fileDetail, type = "Button", checkbox }) => {
   const [state, setState] = useState({
     preview: false,
     fileName: null,
@@ -122,7 +122,7 @@ const CustomUpload = ({ readOnly, fileDetail, type = "Button" }) => {
   };
   return (
     <>
-      {getUploadFile(state.uploadType, uploadConfig, readOnly, true)}
+      {getUploadFile(state.uploadType, uploadConfig, readOnly, checkbox)}
       <Modal
         visible={state?.preview}
         title={state?.fileName}

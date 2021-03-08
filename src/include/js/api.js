@@ -33,16 +33,19 @@ export const api_keep_log = `/log/keeplog`;
 
 export const api_url = ``;
 export const api_query = `/query/sql`;
-export const api_purchase = `/purchase`;
-export const api_purchase_po_list = `/purchase/po`;
-export const api_purchase_get_all_po = `/purchase/po/all`;
-export const api_purchase_get_all_pr = `/purchase/pr/all`;
-export const api_get_po_detail = `/purchase/po_detail`;
-export const api_get_pr_detail = `/purchase/pr_detail`;
 export const api_approve = `/approve/process`;
 export const api_authen = `/authorize/login`;
 export const api_cost_center = `/list/cost_center`;
 export const api_comments_log = `/approve/process`;
+
+// Purchase
+export const api_purchase = `/purchase`;
+export const api_purchase_po_list = `/purchase/po`;
+export const api_purchase_get_all_po = `/purchase/po/all`;
+export const api_purchase_get_all_pr = `/purchase/pr/all`;
+export const api_po_detail = `/purchase/po_detail`;
+export const api_get_po_detail = `/purchase/po_detail`;
+export const api_get_pr_detail = `/purchase/pr_detail`;
 
 export const api_quo_list = `/sales/qn`;
 
@@ -103,6 +106,7 @@ export const api_get_master_part = `/list/item_part`;
 export const api_item_status = `/inventory/item/actived`;
 // item -> vendor
 export const api_item_vendor = `/inventory/item_vendor`;
+export const api_upload_vendor_document = `/upload/item/item_vendor/file`;
 // item -> part & formula
 export const api_part_and_formula = `/inventory/item_part_specification`;
 export const api_get_part_and_formula_all = `/inventory/item_part_specification_all`;

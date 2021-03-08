@@ -76,6 +76,8 @@ export const item_fields = {
   item_loss_percent_qty: 0,
   item_box_qty: 0,
   commit: 1,
+  qa_spec: [],
+  pu_vendor: [],
 };
 
 export const item_vendor_fields = {
@@ -93,14 +95,43 @@ export const item_vendor_fields = {
   uom_no: null,
   commit: 1,
 };
+export const itemVendorDetailFields = {
+  id: 0,
+  item_vendor_id: null,
+  item_vendor_detail_id: null,
+  item_vendor_detail_specification: 0,
+  item_vendor_detail_msds: 0,
+  item_vendor_detail_quotation: 0,
+  item_vendor_detail_halal_cert: 0,
+  item_vendor_detail_non_haram: 0,
+  item_vendor_detail_non_halal: 0,
+  item_vendor_detail_remark: null,
+  item_vendor_detail_manufacturer: null,
+  country_id: null,
+  country_no: null,
+  country_name: null,
+  country_no_name: null,
+  commit: 1,
+};
+export const itemVendorDocumentFields = {
+  id: 0,
+  certificate: {
+    2: null,
+    3: null,
+    4: null,
+    5: null,
+    6: null,
+  },
+};
 export const itemVendorFields = {
   id: 0,
   item_vendor_id: null,
-  item_vendor_lead_time_day: null,
-  item_vendor_moq: null,
-  item_vendor_price: null,
-  item_vendor_default: null,
-  item_vendor_pack_size: null,
+  item_vendor_trade_name: null,
+  item_vendor_lead_time_day: 0,
+  item_vendor_moq: 0,
+  item_vendor_price: 0,
+  item_vendor_default: 0,
+  item_vendor_pack_size: 0,
   item_vendor_remark: null,
   vendor_id: null,
   vendor_no: null,
@@ -114,25 +145,8 @@ export const itemVendorFields = {
   item_no: null,
   item_name: null,
   item_no_name: null,
-  item_vendor_detail: [
-    {
-      item_vendor_id: null,
-      item_vendor_detail_id: null,
-      item_vendor_detail_manufacturer: null,
-      item_vendor_detail_specification: null,
-      item_vendor_detail_msds: null,
-      item_vendor_detail_quotation: null,
-      item_vendor_detail_halal_cert: null,
-      item_vendor_detail_non_haram: null,
-      item_vendor_detail_non_halal: null,
-      item_vendor_detail_remark: null,
-      country_id: null,
-      country_no: null,
-      country_name: null,
-      country_no_name: null,
-    },
-  ],
-  item_vendor_detail_document: [],
+  item_vendor_detail: [itemVendorDetailFields],
+  item_vendor_detail_document: itemVendorDocumentFields,
 };
 
 export const item_show_columns = [

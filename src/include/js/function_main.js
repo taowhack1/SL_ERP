@@ -30,6 +30,7 @@ export const sortData = (arrObject) => {
 };
 
 export const sortDataWithoutCommit = (arrObject) => {
+  console.log("sortDataWithoutCommit", arrObject);
   let copyData = arrObject;
   let temp = [];
   copyData.map((obj, key) => {

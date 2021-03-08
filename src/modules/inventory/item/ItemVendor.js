@@ -14,7 +14,7 @@ import CustomSelect from "../../../components/CustomSelect";
 import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 import CustomLabel from "../../../components/CustomLabel";
 import CustomTable from "../../../components/CustomTable";
-import ItemVendorDocumentList from "./ItemVendorDocumentList";
+import ItemVendorModal from "./ItemVendorModal";
 import { ItemContext } from "../../../include/js/context";
 import { mainReducer } from "../../../include/reducer";
 
@@ -29,16 +29,16 @@ const itemVendorColumns = ({
   data_detail,
   setModalState,
 }) => [
-  {
-    id: 1,
-    title: "No.",
-    dataIndex: "id",
-    width: "5%",
-    align: "center",
-    render: (value, record, index) => {
-      return value + 1;
-    },
-  },
+  // {
+  //   id: 1,
+  //   title: "No.",
+  //   dataIndex: "id",
+  //   width: "5%",
+  //   align: "center",
+  //   render: (value, record, index) => {
+  //     return value + 1;
+  //   },
+  // },
   {
     id: 2,
     title: (
@@ -298,7 +298,7 @@ const itemVendorColumns = ({
   },
   {
     id: 9,
-    title: <Text strong>Docs.</Text>,
+    title: <CustomLabel label={"Docs."} require readOnly={readOnly} />,
     align: "center",
     width: "5%",
     render: (_, record) => (
@@ -342,28 +342,45 @@ const itemVendorColumns = ({
 const ItemVendor = () =>
   // { data_head, data_detail, readOnly, detailDispatch }
   {
-    const { data_head, readOnly, vendorFormRef } = useContext(ItemContext);
+    const {
+      data_head,
+      readOnly,
+      vendorFormRef,
+      addVendorFile,
+      delVendorFile,
+    } = useContext(ItemContext);
     const [state, stateDispatch] = useReducer(mainReducer, data_head.pu_vendor);
     const units = useSelector((state) => state.inventory.master_data.item_uom);
     const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
 
     const [modal, setModal] = useState({
+      vendorData: null,
       visible: false,
     });
 
     const addLine = () => {
       stateDispatch({
-        type: "ADD_ROW",
+        type: "ADD_ROW_WOC",
         payload: {
           ...initialState,
           uom_id: data_head?.uom_id,
           uom_no: data_head?.uom_no,
+          commit: 1,
         },
       });
+      addVendorFile();
     };
 
     const delLine = (id) => {
-      stateDispatch({ type: "DEL_ROW", payload: { id: id } });
+      // stateDispatch({ type: "DEL_ROW", payload: { id: id } });
+      stateDispatch({
+        type: "CHANGE_DETAIL_VALUE",
+        payload: {
+          id: id,
+          data: { active: 0, commit: 1 },
+        },
+      });
+      delVendorFile(id);
     };
 
     const onChangeValue = (rowId, data) => {
@@ -372,7 +389,7 @@ const ItemVendor = () =>
         type: "CHANGE_DETAIL_VALUE",
         payload: {
           id: rowId,
-          data: data,
+          data: { ...data, commit: 1 },
         },
       });
     };
@@ -387,21 +404,22 @@ const ItemVendor = () =>
               ...detail,
               uom_id: data_head.uom_id,
               uom_name: data_head.uom_name,
+              commit: 1,
             };
           }),
         });
     }, [data_head.uom_id]);
+
     console.log("Vendor : ", state);
     return (
       <>
         <input
           ref={vendorFormRef}
           type="hidden"
-          name="store_value"
-          value={state}
+          value={JSON.stringify(state)}
         />
         <CustomTable
-          dataSource={state}
+          dataSource={state.filter((obj) => obj.active !== 0)}
           rowClassName="row-table-detail"
           pageSize={10}
           rowKey="id"
@@ -416,14 +434,17 @@ const ItemVendor = () =>
           })}
           onAdd={!readOnly && addLine}
         />
-        <ItemVendorDocumentList
-          visible={modal.visible}
-          readOnly={readOnly}
-          vendorData={modal.vendorData}
-          setModalState={setModalState}
-        />
+        {modal.visible && (
+          <ItemVendorModal
+            visible={modal.visible}
+            readOnly={readOnly}
+            vendorData={modal?.vendorData}
+            setModalState={setModalState}
+            onChangeVendorState={onChangeValue}
+          />
+        )}
       </>
     );
   };
 
-export default React.memo(ItemVendor);
+export default ItemVendor;

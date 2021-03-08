@@ -35,6 +35,7 @@ const ItemLine = ({
   detailDispatch,
 
   updateAmount,
+  enableEditDueDate,
 }) => {
   // master data
 
@@ -386,12 +387,37 @@ const ItemLine = ({
                     </Text>
                   </Col>
                   <Col span={3} className="text-number">
-                    <Text className="text-view">
-                      {line.po_detail_due_date &&
-                        moment(line.po_detail_due_date, "DD/MM/YYYY").format(
-                          "DD/MM/YYYY"
-                        )}
-                    </Text>
+                    {enableEditDueDate ? (
+                      <DatePicker
+                        disabled={type_id ? 0 : 1}
+                        name={`po_detail_due_date${key}`}
+                        format={"DD/MM/YYYY"}
+                        size="small"
+                        className={"full-width"}
+                        placeholder="Due date..."
+                        value={
+                          line.po_detail_due_date && line.po_detail_due_date
+                            ? moment(line.po_detail_due_date, "DD/MM/YYYY")
+                            : ""
+                        }
+                        onChange={(data) => {
+                          data
+                            ? onChangeValue(line.id, {
+                                po_detail_due_date: data.format("DD/MM/YYYY"),
+                              })
+                            : onChangeValue(line.id, {
+                                po_detail_due_date: null,
+                              });
+                        }}
+                      />
+                    ) : (
+                      <Text className="text-view">
+                        {line.po_detail_due_date &&
+                          moment(line.po_detail_due_date, "DD/MM/YYYY").format(
+                            "DD/MM/YYYY"
+                          )}
+                      </Text>
+                    )}
                   </Col>
                 </Row>
                 <Row

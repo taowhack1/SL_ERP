@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { Upload, Modal, Space, Button } from "antd";
-import { EyeOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  EyeOutlined,
+  LoadingOutlined,
+  PlusOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
 
 function getBase64(file) {
@@ -26,6 +31,7 @@ const ItemFileUpload = ({
   upload_type,
   chkbox_upload_fields,
 }) => {
+  const [loading, setLoading] = useState(false);
   const saveFile = (file_type_id, file_tmp) => {
     if (file_type_id === 1) {
       updateFile({ item_image: file_tmp }, file_type_id);
@@ -41,13 +47,16 @@ const ItemFileUpload = ({
   const { previewVisible, previewImage, previewTitle } = state;
   const handleCancel = () => setState({ ...state, previewVisible: false });
   const handleChange = async ({ file, fileList }) => {
+    setLoading(true);
     const reader = new FileReader();
     let file_tmp = null;
     if (fileList.length) {
+      console.log("file", file);
       file_tmp = file;
       // file_tmp = fileList[0];
       reader.readAsDataURL(file);
       reader.onload = (e) => {
+        console.log("reader.onload", file, e.target);
         file_tmp.uid = file.uid;
         file_tmp.thumbUrl = e.target.result;
         file_tmp.url = e.target.result;
@@ -55,10 +64,15 @@ const ItemFileUpload = ({
         file_tmp.file = e.target.result;
         file_tmp.commit = 1;
         file_tmp.file_type_id = file_type_id;
+        file_tmp.file_name = file.name;
+        file_tmp.file_type = file.type;
+        console.log(file_tmp);
         saveFile(file_type_id, file_tmp);
+        setLoading(false);
       };
     } else {
       saveFile(file_type_id, file_tmp);
+      setLoading(false);
     }
   };
 
@@ -127,6 +141,7 @@ const ItemFileUpload = ({
           : [];
         break;
     }
+    console.log("file_temp", file_temp);
     switch (upload_type) {
       case "Card":
         return (
@@ -161,22 +176,23 @@ const ItemFileUpload = ({
           <>
             {readOnly ? (
               chkbox_upload_fields &&
-              (file_temp[0].item_file_path ? (
+              (file_temp[0]?.item_file_path ? (
                 <Upload
                   {...uploadConfig}
                   fileList={file_temp}
                   disabled={readOnly}
                   onPreview={handlePreview}
                 >
-                  {readOnly ||
-                  (file_temp.length && file_temp[0].item_file_path) ? null : (
-                    <Button
-                      icon={<UploadOutlined />}
-                      disabled={chkbox_upload_fields ? 0 : 1}
-                    >
-                      Click to upload
-                    </Button>
-                  )}
+                  {readOnly || file_temp.length ? (
+                    file_temp[0].item_file_path ? null : (
+                      <Button
+                        icon={<UploadOutlined />}
+                        disabled={chkbox_upload_fields ? 0 : 1}
+                      >
+                        Click to upload
+                      </Button>
+                    )
+                  ) : null}
                 </Upload>
               ) : (
                 <Text className="text-view">No file.</Text>
@@ -189,16 +205,16 @@ const ItemFileUpload = ({
                 onPreview={handlePreview}
               >
                 {readOnly ||
-                (file_temp.length &&
-                  file_temp[0] &&
-                  file_temp[0].name) ? null : (
-                  <Button
-                    icon={<UploadOutlined />}
-                    disabled={chkbox_upload_fields ? 0 : 1}
-                  >
-                    Click to upload
-                  </Button>
-                )}
+                (file_temp.length && file_temp[0] && file_temp[0].name)
+                  ? null
+                  : (
+                      <Button
+                        icon={<UploadOutlined />}
+                        disabled={chkbox_upload_fields ? 0 : 1}
+                      >
+                        Click to upload
+                      </Button>
+                    ) ?? null}
               </Upload>
             )}
           </>
@@ -209,7 +225,11 @@ const ItemFileUpload = ({
   };
   return (
     <>
-      {get_file_render_by_type(upload_type, data_file ?? [])}
+      {loading ? (
+        <LoadingOutlined />
+      ) : (
+        get_file_render_by_type(upload_type, data_file ?? []) ?? null
+      )}
       <Modal
         visible={previewVisible}
         title={previewTitle}

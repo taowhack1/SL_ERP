@@ -28,22 +28,32 @@ const ItemFGPacking = () => {
               />
             </Col>
             <Col span={10}>
-              <InputNumber
-                className="full-width"
-                name={"item_box_qty"}
-                placeholder="Pcs."
-                min={0}
-                step={1}
-                defaultValue={0}
-                precision={0}
-                value={state}
-                onChange={(val) => {
-                  setState(val);
-                }}
-                onBlur={(e) => {
-                  saveForm({ item_box_qty: state });
-                }}
-              />
+              {readOnly ? (
+                <Text className="text-value">{state}</Text>
+              ) : (
+                <InputNumber
+                  className="full-width"
+                  name={"item_box_qty"}
+                  placeholder="Pcs."
+                  min={0}
+                  step={1}
+                  defaultValue={0}
+                  precision={0}
+                  value={state}
+                  onChange={(val) => {
+                    setState(val);
+                  }}
+                  onBlur={(e) => {
+                    saveForm({ item_box_qty: state });
+                  }}
+                />
+              )}
+            </Col>
+            <Col span={2} className="text-center">
+              <Text className="text-value" strong>
+                {" "}
+                {data_head.uom_no}
+              </Text>
             </Col>
           </Row>
         </Col>
