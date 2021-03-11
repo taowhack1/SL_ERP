@@ -34,12 +34,24 @@ const MRPTabPanel = () => {
           >
             <TabMRPPKDetail />
           </Tabs.TabPane>
+
           <Tabs.TabPane
             tab={<span className="tab_pane">{"Notes"}</span>}
             key={"4"}
           >
             <TabMRPRemark />
           </Tabs.TabPane>
+          {/* <Tabs.TabPane
+            tab={
+              <span className="tab_pane">
+                {!readOnly && <span className="require">* </span>}
+                {"Purchase Item List"}
+              </span>
+            }
+            key={"5"}
+          >
+            <TabMRPPKDetail />
+          </Tabs.TabPane> */}
         </Tabs>
       </Col>
     </Row>

@@ -74,13 +74,13 @@ const TabItemRD = ({
           </Row>
         </Col>
       </Row>
-      <ItemCertificate
+      {/* <ItemCertificate
         data_file={data_file}
         updateFile={updateFile}
         data_head={data_head}
         upDateFormValue={upDateFormValue}
         readOnly={readOnly}
-      />
+      /> */}
     </>
   );
 };

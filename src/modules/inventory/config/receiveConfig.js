@@ -146,7 +146,9 @@ export const receiveDetailColumns = (
     ellipsis: true,
     dataIndex: "item_no_name",
     render: (value, record) => (
-      <Text className="text-value">{value ?? "-"}</Text>
+      <div className="text-value" title={value}>
+        <Text>{value ?? "-"}</Text>
+      </div>
     ),
   },
   {
@@ -333,7 +335,9 @@ export const receiveDetailWithNoPOColumns = (
           }
         />
       ) : (
-        <Text className="text-value">{value}</Text>
+        <div className="text-value" title={value}>
+          <Text>{value ?? "-"}</Text>
+        </div>
       ),
   },
   {

@@ -84,7 +84,7 @@ const PurchaseOrderCreate = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/Report_purch/report_po.aspx?po_no=${data_head.po_no}`,
+        link: `${report_server}/report_po.aspx?po_no=${data_head.po_no}`,
       },
       data_head.button_cancel && {
         name: "Cancel",

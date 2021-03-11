@@ -803,14 +803,15 @@ export const getFGMaterialList = async (
   item_id,
   qty_to_produce,
   mrp_qty_percent_spare_rm,
-  mrp_qty_percent_spare_pk
+  mrp_qty_percent_spare_pk,
+  so_detail_id
 ) => {
   console.log(
     "getFGMaterialList",
-    `${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}`
+    `${api_get_fg_material}/${so_id}&${so_detail_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}`
   );
   return await axios.get(
-    `${api_get_fg_material}/${so_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}`
+    `${api_get_fg_material}/${so_id}&${so_detail_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}`
   );
 };
 
@@ -840,7 +841,7 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
               Master Formula
             </span>
           ),
-          link: `${report_server}/report_purch/report_bulk_formula.aspx?item_code=${item_no}`,
+          link: `${report_server}report_bulk_formula.aspx?item_code=${item_no}`,
         },
         {
           name: (
@@ -849,7 +850,7 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
               Bulk Specification
             </span>
           ),
-          link: `${report_server}/report_purch/report_bulk_specification.aspx?item_code=${item_no}`,
+          link: `${report_server}report_bulk_specification.aspx?item_code=${item_no}`,
         },
         {
           name: (
@@ -858,7 +859,7 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
               Process Specification
             </span>
           ),
-          link: `${report_server}/report_purch/report_process_specification.aspx?item_no=${item_no}`,
+          link: `${report_server}report_process_specification.aspx?item_no=${item_no}`,
         },
       ]);
     case 4:
@@ -870,7 +871,7 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
               Finished Product Specification
             </span>
           ),
-          link: `${report_server}/report_purch/report_fg_package.aspx?item_code=${item_no}`,
+          link: `${report_server}report_fg_package.aspx?item_code=${item_no}`,
         },
       ]);
 
@@ -881,7 +882,7 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
   // return [
   // {
   //   name: "Export Master Formula",
-  //   link: `${report_server}/report_purch/report_bulk_formula.aspx?item_code=${data_head.item_no}`,
+  //   link: `${report_server}report_bulk_formula.aspx?item_code=${data_head.item_no}`,
   // },
   // data_head.button_cancel && {
   //   name: "Cancel",

@@ -11,7 +11,7 @@ import { getMasterDataItem } from "../../actions/inventory";
 import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
 import Authorize from "../system/Authorize";
 import ItemPreview from "./item/ItemFileUpload";
-import TabPanel from "./item/TabPanel";
+import ItemTabList from "./item/ItemTabList";
 import { get_log_by_id } from "../../actions/comment&log";
 import ModalRemark from "../../components/Modal_Remark";
 import { FileContext, ItemContext } from "../../include/js/context";
@@ -107,7 +107,7 @@ const ItemView = (props) => {
     ],
     search: false,
     buttonAction: [
-      "Edit",
+      data_head.tg_trans_status_id !== 3 && "Edit",
       // data_head.button_edit && "Edit",
       data_head.button_confirm && "Confirm",
       data_head.button_approve && "Approve",
@@ -300,7 +300,7 @@ const ItemView = (props) => {
             ) : null}
             <Row className="col-2 row-tab-margin">
               <Col span={24}>
-                <TabPanel
+                <ItemTabList
                   data_file={data_file}
                   data_head={data_head}
                   data_detail={data_detail}

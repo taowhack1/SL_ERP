@@ -789,7 +789,11 @@ export const itemFormulaColumns = (
     // width: "40%",
     render: (value, record, index) => {
       if (readOnly) {
-        return value;
+        return (
+          <div className="text-value" title={value}>
+            <Text>{value ?? "-"}</Text>
+          </div>
+        );
       } else {
         return (
           <CustomSelect

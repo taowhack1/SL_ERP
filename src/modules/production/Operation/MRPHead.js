@@ -360,13 +360,10 @@ const MRPHead = () => {
 
               <Row className="col-2 row-margin-vertical">
                 <Col span={6}>
-                  <CustomLabel
-                    label={"Vendor Lead Time "}
-                    readOnly={readOnly}
-                  />
+                  <CustomLabel label={"Vendor L/T "} readOnly={readOnly} />
                 </Col>
                 <Col span={16}>
-                  <Row className="col-2 pd-left-2">
+                  <Row className="col-2">
                     {detailLoading ? (
                       <Col span={24}>
                         <Spin spinning />

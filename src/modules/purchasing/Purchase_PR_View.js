@@ -83,7 +83,7 @@ const PRView = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/Report_purch/report_pr.aspx?pr_no=${data_head.pr_no}`,
+        link: `${report_server}/report_pr.aspx?pr_no=${data_head.pr_no}`,
       },
       data_head.button_cancel && {
         name: "Cancel",

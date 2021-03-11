@@ -99,7 +99,7 @@ const Receive_View = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/Report_purch/report_receive2.aspx?receive_no=${
+        link: `${report_server}/report_receive2.aspx?receive_no=${
           state && state.receive_no
         }`,
       },

@@ -331,11 +331,11 @@ const PurchaseOrderCreate = (props) => {
             )}
           </Col>
           <Col span={2}></Col>
-          <Col span={3} className={readOnly ? "" : "pd-left-1"}>
+          <Col span={3}>
             <CustomLabel label={"Job Name "} readOnly={readOnly} />
           </Col>
           <Col span={8} className="text-view">
-            {data_head.so_no_description ?? "-"}
+            {data_head.mrp_no_description ?? "-"}
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
@@ -345,7 +345,9 @@ const PurchaseOrderCreate = (props) => {
 
           <Col span={8}>
             {readOnly ? (
-              <Text className="text-value">{data_head.po_description}</Text>
+              <Text className="text-value">
+                {data_head.po_description ?? "-"}
+              </Text>
             ) : (
               <Input
                 name="po_description"
@@ -365,7 +367,7 @@ const PurchaseOrderCreate = (props) => {
 
           <Col span={8} className="text-left">
             <Text className={"text-value"}>
-              {data_head.po_created_by_no_name}
+              {data_head.po_created_by_no_name ?? "-"}
             </Text>
           </Col>
         </Row>
@@ -376,7 +378,9 @@ const PurchaseOrderCreate = (props) => {
 
           <Col span={8}>
             {readOnly ? (
-              <Text className="text-value">{data_head.vendor_no_name}</Text>
+              <Text className="text-value">
+                {data_head.vendor_no_name ?? "-"}
+              </Text>
             ) : (
               <CustomSelect
                 placeholder={"Vendor"}
@@ -419,13 +423,12 @@ const PurchaseOrderCreate = (props) => {
           </Col>
 
           <Col span={2}></Col>
-          {/* 6 */}
           <Col span={3}>
-            <CustomLabel label={"Cost Center "} require readOnly={readOnly} />
+            <CustomLabel label={"Cost Center "} readOnly={readOnly} />
           </Col>
           <Col span={8} className="text-left">
             <Text className={"text-value"}>
-              {data_head.cost_center_no_name}
+              {data_head.cost_center_no_name ?? "-"}
             </Text>
           </Col>
         </Row>
@@ -468,7 +471,9 @@ const PurchaseOrderCreate = (props) => {
             <CustomLabel label={"Item Type "} readOnly={readOnly} />
           </Col>
           <Col span={8} className="text-left">
-            <Text className={"text-value"}>{data_head.type_no_name}</Text>
+            <Text className={"text-value"}>
+              {data_head.type_no_name ?? "-"}
+            </Text>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">

@@ -3,6 +3,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import CustomLabel from "../../../components/CustomLabel";
 import FillingProcess from "./FillingProcess";
+import ItemDocuments from "./ItemDocuments";
 import ItemInventoryData from "./ItemInventoryData";
 import ItemProductionData from "./ItemProductionData";
 import TabItemDetail from "./TabItemDetail";
@@ -56,6 +57,7 @@ const TabPanel = ({
             readOnly={readOnly}
           />
         </Tabs.TabPane>
+
         {type_id !== undefined &&
           type_id &&
           [1, 2, 3, 4, 5].includes(type_id) &&
@@ -249,6 +251,13 @@ const TabPanel = ({
               <ItemProductionData />
             </Tabs.TabPane>
           )}
+        <Tabs.TabPane
+          className="tab-top"
+          tab={<CustomLabel label={"Documents"} readOnly={readOnly} />}
+          key={"10"}
+        >
+          <ItemDocuments />
+        </Tabs.TabPane>
       </Tabs>
     </>
   );

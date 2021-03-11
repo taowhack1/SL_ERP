@@ -48,7 +48,6 @@ const ItemRevisionDetail = ({ data_head, readOnly, upDateFormValue }) => {
             </Row>
           )}
         </Col>
-
         <Col span={12}></Col>
       </Row>
       {!readOnly && (

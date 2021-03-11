@@ -1,6 +1,7 @@
 import { getSelfStepStatus } from "../../../../include/js/function_main";
 import { convertDigit } from "../../../../include/js/main_config";
-
+import React from "react";
+import Text from "antd/lib/typography/Text";
 export const receivePDColumns = [
   {
     title: "Receive No.",
@@ -51,7 +52,11 @@ export const receivePDColumns = [
       compare: (a, b) => a.item_id - b.item_id,
       multiple: 3,
     },
-    render: (value, record) => value ?? "-",
+    render: (value, record) => (
+      <div className="text-value" title={value}>
+        <Text>{value ?? "-"}</Text>
+      </div>
+    ),
   },
   {
     title: "Quantity",

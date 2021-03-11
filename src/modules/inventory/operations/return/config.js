@@ -102,7 +102,11 @@ export const returnDetailColumns = (
     dataIndex: "item_no_name",
     key: "item_no_name",
     align: "left",
-    render: (value) => <Text className="text-value">{value ?? "-"}</Text>,
+    render: (value) => (
+      <div className="text-value" title={value}>
+        <Text>{value ?? "-"}</Text>
+      </div>
+    ),
   },
   {
     title: <CustomColumnTitle title="Lot No." readOnly={readOnly} />,

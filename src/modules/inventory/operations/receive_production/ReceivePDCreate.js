@@ -121,7 +121,7 @@ const ReceivePDCreate = (props) => {
       ? [
           readOnly && {
             name: "Print",
-            link: `${report_server}/Report_purch/report_receive2.aspx?receive_pd_no=${
+            link: `${report_server}/report_receive2.aspx?receive_pd_no=${
               state && state.receive_pd_no
             }`,
           },

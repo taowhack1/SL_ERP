@@ -85,7 +85,7 @@ const Sales_Quotations = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/Report_purch/report_quotation.aspx?qn_no=${
+        link: `${report_server}/report_quotation.aspx?qn_no=${
           data_head && data_head.qn_no
         }`,
       },

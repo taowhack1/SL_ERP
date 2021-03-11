@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Typography, message } from "antd";
+import { Row, Col, Input, Tabs, Typography, message, Collapse } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import Detail from "./Issue_Detail";
@@ -25,9 +25,10 @@ import {
 import { useHistory } from "react-router-dom";
 import CustomLabel from "../../components/CustomLabel";
 import { mainReducer } from "../../include/reducer";
+import { SearchOutlined } from "@ant-design/icons";
 const { Text } = Typography;
 const { TextArea } = Input;
-
+const { Panel } = Collapse;
 const initialStateHead = issue_fields;
 const initialStateDetail = [issue_detail_fields];
 
@@ -305,17 +306,12 @@ const IssueCreate = (props) => {
               </Col>
               <Col span={16}>
                 <Text>{data_head?.mrp_no ?? "-"}</Text>
-              </Col>
-            </Row>
-            <Row className="col-2 row-margin-vertical">
-              <Col span={2}></Col>
-              <Col span={6}>
-                <CustomLabel readOnly={readOnly} label={"Job Detail :"} />
-              </Col>
-              <Col span={16}>
-                <Text>
-                  {data_head.mrp_no ? data_head.mrp_no_description : "-"}
-                </Text>
+                {data_head?.mrp_no && (
+                  <SearchOutlined
+                    className="button-icon"
+                    onClick={console.log("View Job Detail")}
+                  />
+                )}
               </Col>
             </Row>
           </Col>

@@ -51,7 +51,7 @@ import { getMasterDataItem } from "../../actions/inventory";
 import { reducer } from "./reducers";
 import Authorize from "../system/Authorize";
 import { useHistory } from "react-router-dom";
-import TabPanel from "./item/TabPanel";
+import ItemTabList from "./item/ItemTabList";
 import { get_all_vendor } from "../../actions/purchase/vendorActions";
 import ItemFileUpload from "./item/ItemFileUpload";
 import { get_qa_conditions_master } from "../../actions/qa/qaTestAction";
@@ -542,7 +542,7 @@ const ItemCreate = (props) => {
           ) : null}
           <Row>
             <Col span={24}>
-              <TabPanel
+              <ItemTabList
                 data_file={data_file}
                 updateFile={updateFile}
                 data_head={data_head}

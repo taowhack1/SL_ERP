@@ -115,11 +115,12 @@ const MRPCreate = (props) => {
         item_id,
         mrp_qty_produce,
         mrp_qty_percent_spare_rm,
-        mrp_qty_percent_spare_pk
+        mrp_qty_percent_spare_pk,
+        so_detail_id
       )
         .then((res) => {
+          console.log("materialDetail", res);
           const materialDetail = res.data[0];
-          console.log("materialDetail", materialDetail);
           stateDispatch({
             type: "SET_DATA_OBJECT",
             payload: materialDetail

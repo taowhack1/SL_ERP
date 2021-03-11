@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Tabs, Typography } from "antd";
+import { Row, Col, Tabs, Typography, Collapse } from "antd";
 import MainLayout from "../../components/MainLayout";
 
 import Comments from "../../components/Comments";
@@ -12,7 +12,10 @@ import ModalRemark from "../../components/Modal_Remark";
 import { report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 import CustomLabel from "../../components/CustomLabel";
+import { FileSearchOutlined, SearchOutlined } from "@ant-design/icons";
+import IssueViewJobDetail from "./operations/issue/IssueViewJobDetail";
 const { Text } = Typography;
+const { Panel } = Collapse;
 
 const Issue_View = (props) => {
   const readOnly = true;
@@ -27,6 +30,10 @@ const Issue_View = (props) => {
   const [openRemarkModal, setOpenRemarkModal] = useState({
     visible: false,
     loading: false,
+  });
+  const [modalJobDetail, setModalJobDetail] = useState({
+    visible: false,
+    jobDetail: null,
   });
 
   const data_head = useSelector((state) => state.inventory.issue.issue_head);
@@ -77,7 +84,7 @@ const Issue_View = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/Report_purch/report_ream1.aspx?issue_no=${
+        link: `${report_server}/report_ream1.aspx?issue_no=${
           data_head && data_head.issue_no
         }`,
       },
@@ -242,15 +249,14 @@ const Issue_View = (props) => {
               </Col>
               <Col span={16}>
                 <Text>{data_head?.mrp_no ?? "-"}</Text>
-              </Col>
-            </Row>
-            <Row className="col-2 row-margin-vertical">
-              <Col span={2}></Col>
-              <Col span={6}>
-                <CustomLabel readOnly={readOnly} label={"Job Detail :"} />
-              </Col>
-              <Col span={16}>
-                <Text>{data_head?.mrp_no_description ?? "-"}</Text>
+                {data_head?.mrp_no && (
+                  <FileSearchOutlined
+                    className="button-icon ml-2"
+                    onClick={() =>
+                      setModalJobDetail({ ...modalJobDetail, visible: true })
+                    }
+                  />
+                )}
               </Col>
             </Row>
           </Col>
@@ -288,6 +294,11 @@ const Issue_View = (props) => {
         }}
       />
       <Comments data={dataComments} />
+      <IssueViewJobDetail
+        visible={modalJobDetail.visible}
+        jobDetail={modalJobDetail.jobDetail}
+        setModalJobDetail={setModalJobDetail}
+      />
     </MainLayout>
   );
 };

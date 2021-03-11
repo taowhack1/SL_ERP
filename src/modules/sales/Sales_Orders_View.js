@@ -82,7 +82,7 @@ const SaleOrderView = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/Report_purch/report_so.aspx?so_no=${
+        link: `${report_server}/report_so.aspx?so_no=${
           data_head && data_head.so_no
         }`,
       },
