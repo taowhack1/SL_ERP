@@ -28,7 +28,7 @@ const ItemVendorTradeName = ({ vendorData, onBlur }) => {
         <Col span={15}>
           {readOnly ? (
             <Text className="text-value">
-              {stateHead.item_vendor_trade_name}
+              {stateHead.item_vendor_trade_name ?? "-"}
             </Text>
           ) : (
             <Input

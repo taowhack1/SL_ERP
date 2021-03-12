@@ -296,6 +296,7 @@ const Issue_View = (props) => {
       <Comments data={dataComments} />
       <IssueViewJobDetail
         visible={modalJobDetail.visible}
+        data_head={data_head}
         jobDetail={modalJobDetail.jobDetail}
         setModalJobDetail={setModalJobDetail}
       />

@@ -803,8 +803,17 @@ div.flex-space {
 .font-20 {
   font-size: 20px;
 }
+.font-18 {
+  font-size: 18px;
+}
 
 .align-bt {
   display: flex;
   align-items: flex-end;
+}
+
+div.blur-bg {
+  text-align: center;
+  background-color: #f7f7f7;
+  border-radius: 5;
 }

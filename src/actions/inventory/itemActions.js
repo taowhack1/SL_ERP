@@ -137,26 +137,28 @@ const saveItemVendor = (item_id, data_detail, user_name) => {
     : [];
   let promiseFile = [];
   return [
-    dataCreate.length &&
-      axios
-        .post(`${api_item_vendor}/${item_id}`, dataCreate, header_config)
-        .then((res) => {
-          console.log("CREATE VENDOR", res);
-        }),
-    dataUpdate.length &&
-      axios
-        .put(`${api_item_vendor}/${item_id}`, dataUpdate, header_config)
-        .then((res) => {
-          console.log("UPDATE VENDOR", res);
-          console.log("vendorFile", vendorFile);
+    dataCreate.length
+      ? axios
+          .post(`${api_item_vendor}/${item_id}`, dataCreate, header_config)
+          .then((res) => {
+            console.log("CREATE VENDOR", res);
+          })
+      : false,
+    dataUpdate.length
+      ? axios
+          .put(`${api_item_vendor}/${item_id}`, dataUpdate, header_config)
+          .then((res) => {
+            console.log("UPDATE VENDOR", res);
+            console.log("vendorFile", vendorFile);
 
-          vendorFile.update.forEach((obj) =>
-            promiseFile.push(
-              ...itemSaveFileVendor(item_id, obj.id, obj.file, user_name)
-            )
-          );
-          return promiseFile;
-        }),
+            vendorFile.update.forEach((obj) =>
+              promiseFile.push(
+                ...itemSaveFileVendor(item_id, obj.id, obj.file, user_name)
+              )
+            );
+            return promiseFile;
+          })
+      : false,
     ...delPromise,
   ];
 };
@@ -457,18 +459,20 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
             access_right.weight && bind_weight(item_id, data_weight_detail),
             access_right.packaging &&
               bind_packaging(item_id, data_packaging_detail),
-            access_right.attach_file &&
-              item_save_file(item_id, data_file, user_name),
+            // access_right.attach_file &&
+            //   item_save_file(item_id, data_file, user_name),
             access_right.filling && bind_filling(item_id, data_filling),
           ])
             .then((data) => {
               console.log("Update Complete", data);
-              console.log("Promise Then");
-              dispatch(get_item_by_id(item_id, user_name, redirect));
-              message.success({
-                content: "Item Update.",
-                key: "validate",
-                duration: 2,
+              Promise.allSettled(data[2].value).then((res) => {
+                console.log("Then Update File");
+                dispatch(get_item_by_id(item_id, user_name, redirect));
+                message.success({
+                  content: "Item Update.",
+                  key: "validate",
+                  duration: 2,
+                });
               });
             })
             .catch((error) => {

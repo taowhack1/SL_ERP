@@ -319,7 +319,7 @@ const itemVendorColumns = ({
     align: "center",
     width: "5%",
     render: (value, record, index) => {
-      if (readOnly) {
+      if (readOnly || record.item_vendor_default) {
         return null;
       } else {
         return (
