@@ -53,8 +53,8 @@ const ItemDocuments = () => {
                 <Col span={12}>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj?.item_vendor_detail[0] &&
-                      obj.item_vendor_detail_document[0]
+                      {obj?.item_vendor_detail.length &&
+                      obj.item_vendor_detail[0]
                         .item_vendor_detail_specification ? (
                         <CheckSquareOutlined />
                       ) : (
@@ -78,8 +78,8 @@ const ItemDocuments = () => {
                             data_file={obj?.item_vendor_detail_document}
                             updateFile={null}
                             chkbox_upload_fields={
-                              obj?.item_vendor_detail[0] &&
-                              obj.item_vendor_detail_document[0]
+                              obj?.item_vendor_detail.length &&
+                              obj.item_vendor_detail[0]
                                 .item_vendor_detail_specification
                             }
                             maxFile={1}
@@ -98,9 +98,8 @@ const ItemDocuments = () => {
                   </Row>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj?.item_vendor_detail[0] &&
-                      obj.item_vendor_detail_document[0]
-                        .item_vendor_detail_msds ? (
+                      {obj?.item_vendor_detail.length &&
+                      obj.item_vendor_detail[0].item_vendor_detail_msds ? (
                         <CheckSquareOutlined />
                       ) : (
                         <BorderOutlined />
@@ -122,9 +121,8 @@ const ItemDocuments = () => {
                             data_file={obj?.item_vendor_detail_document}
                             updateFile={null}
                             chkbox_upload_fields={
-                              obj?.item_vendor_detail[0] &&
-                              obj.item_vendor_detail_document[0]
-                                .item_vendor_detail_msds
+                              obj?.item_vendor_detail.length &&
+                              obj.item_vendor_detail[0].item_vendor_detail_msds
                             }
                             maxFile={1}
                             file_type_id={3}
@@ -142,9 +140,8 @@ const ItemDocuments = () => {
                   </Row>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj?.item_vendor_detail[0] &&
-                      obj.item_vendor_detail_document[0]
-                        .item_vendor_detail_quotation ? (
+                      {obj?.item_vendor_detail.length &&
+                      obj.item_vendor_detail[0].item_vendor_detail_quotation ? (
                         <CheckSquareOutlined />
                       ) : (
                         <BorderOutlined />
@@ -166,8 +163,8 @@ const ItemDocuments = () => {
                             data_file={obj?.item_vendor_detail_document}
                             updateFile={null}
                             chkbox_upload_fields={
-                              obj?.item_vendor_detail[0] &&
-                              obj.item_vendor_detail_document[0]
+                              obj?.item_vendor_detail.length &&
+                              obj.item_vendor_detail[0]
                                 .item_vendor_detail_quotation
                             }
                             maxFile={1}
@@ -189,8 +186,8 @@ const ItemDocuments = () => {
                 <Col span={12}>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj?.item_vendor_detail[0] &&
-                      obj.item_vendor_detail_document[0]
+                      {obj?.item_vendor_detail.length &&
+                      obj.item_vendor_detail[0]
                         .item_vendor_detail_halal_cert ? (
                         <CheckSquareOutlined />
                       ) : (
@@ -210,8 +207,8 @@ const ItemDocuments = () => {
                         data_file={obj?.item_vendor_detail_document}
                         updateFile={null}
                         chkbox_upload_fields={
-                          obj?.item_vendor_detail[0] &&
-                          obj.item_vendor_detail_document[0]
+                          obj?.item_vendor_detail.length &&
+                          obj.item_vendor_detail[0]
                             .item_vendor_detail_halal_cert
                         }
                         maxFile={1}
@@ -223,9 +220,8 @@ const ItemDocuments = () => {
                   </Row>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj?.item_vendor_detail[0] &&
-                      obj.item_vendor_detail_document[0]
-                        .item_vendor_detail_non_haram ? (
+                      {obj?.item_vendor_detail.length &&
+                      obj.item_vendor_detail[0].item_vendor_detail_non_haram ? (
                         <CheckSquareOutlined />
                       ) : (
                         <BorderOutlined />
@@ -244,9 +240,8 @@ const ItemDocuments = () => {
                         data_file={obj?.item_vendor_detail_document}
                         updateFile={null}
                         chkbox_upload_fields={
-                          obj?.item_vendor_detail[0] &&
-                          obj.item_vendor_detail_document[0]
-                            .item_vendor_detail_non_haram
+                          obj?.item_vendor_detail.length &&
+                          obj.item_vendor_detail[0].item_vendor_detail_non_haram
                         }
                         maxFile={1}
                         file_type_id={6}
@@ -257,9 +252,8 @@ const ItemDocuments = () => {
                   </Row>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj?.item_vendor_detail[0] &&
-                      obj.item_vendor_detail_document[0]
-                        .item_vendor_detail_non_halal ? (
+                      {obj?.item_vendor_detail.length &&
+                      obj.item_vendor_detail[0].item_vendor_detail_non_halal ? (
                         <CheckSquareOutlined />
                       ) : (
                         <BorderOutlined />
