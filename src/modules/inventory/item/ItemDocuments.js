@@ -20,10 +20,10 @@ const ItemDocuments = () => {
   const { pu_vendor } = data_head;
   console.log("pu_vendor", pu_vendor);
   let getDefaultDocs = data_head?.pu_vendor.filter(
-    (obj) => obj.item_vendor_default
+    (obj) => obj?.item_vendor_default
   );
   let getOtherDocs = data_head?.pu_vendor.filter(
-    (obj) => !obj.item_vendor_default
+    (obj) => !obj?.item_vendor_default
   );
   getDefaultDocs.push(...getOtherDocs);
   const vendorDocs = sortData(getDefaultDocs);
@@ -37,8 +37,8 @@ const ItemDocuments = () => {
               header={
                 <Space>
                   <Text strong style={{ fontSize: 16 }} className="mr-1">
-                    {obj.vendor_no_name}
-                    {obj.item_vendor_default ? (
+                    {obj?.vendor_no_name}
+                    {obj?.item_vendor_default ? (
                       <CheckSquareOutlined
                         className="ml-2"
                         style={{ color: "#11C800", fontSize: 18 }}
@@ -47,13 +47,14 @@ const ItemDocuments = () => {
                   </Text>
                 </Space>
               }
-              key={obj.id}
+              key={obj?.id}
             >
               <Row className="col-2">
                 <Col span={12}>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj.item_vendor_detail[0]
+                      {obj?.item_vendor_detail[0] &&
+                      obj.item_vendor_detail_document[0]
                         .item_vendor_detail_specification ? (
                         <CheckSquareOutlined />
                       ) : (
@@ -63,7 +64,7 @@ const ItemDocuments = () => {
                     <Col span={8}>
                       <CustomLabel
                         label={
-                          obj.item_vendor_detail_document.certificate["2"]
+                          obj?.item_vendor_detail_document.certificate["2"]
                             .file_type_name
                         }
                       />
@@ -74,10 +75,11 @@ const ItemDocuments = () => {
                         // [1, 10, 11, 17, 20].includes(department_id) ? (
                         [11, 17, 20].includes(department_id) ? (
                           <ItemFileUpload
-                            data_file={obj.item_vendor_detail_document}
+                            data_file={obj?.item_vendor_detail_document}
                             updateFile={null}
                             chkbox_upload_fields={
-                              obj.item_vendor_detail[0]
+                              obj?.item_vendor_detail[0] &&
+                              obj.item_vendor_detail_document[0]
                                 .item_vendor_detail_specification
                             }
                             maxFile={1}
@@ -96,7 +98,9 @@ const ItemDocuments = () => {
                   </Row>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj.item_vendor_detail[0].item_vendor_detail_msds ? (
+                      {obj?.item_vendor_detail[0] &&
+                      obj.item_vendor_detail_document[0]
+                        .item_vendor_detail_msds ? (
                         <CheckSquareOutlined />
                       ) : (
                         <BorderOutlined />
@@ -105,7 +109,7 @@ const ItemDocuments = () => {
                     <Col span={8}>
                       <CustomLabel
                         label={
-                          obj.item_vendor_detail_document.certificate["3"]
+                          obj?.item_vendor_detail_document.certificate["3"]
                             .file_type_name
                         }
                       />
@@ -115,10 +119,12 @@ const ItemDocuments = () => {
                         // 1 = ADMIN , 10 = MIS , 11 = RD , 13 = PU ,17 = QC , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE
                         [1, 10, 11, 17, 24, 20].includes(department_id) ? (
                           <ItemFileUpload
-                            data_file={obj.item_vendor_detail_document}
+                            data_file={obj?.item_vendor_detail_document}
                             updateFile={null}
                             chkbox_upload_fields={
-                              obj.item_vendor_detail[0].item_vendor_detail_msds
+                              obj?.item_vendor_detail[0] &&
+                              obj.item_vendor_detail_document[0]
+                                .item_vendor_detail_msds
                             }
                             maxFile={1}
                             file_type_id={3}
@@ -136,7 +142,8 @@ const ItemDocuments = () => {
                   </Row>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj.item_vendor_detail[0]
+                      {obj?.item_vendor_detail[0] &&
+                      obj.item_vendor_detail_document[0]
                         .item_vendor_detail_quotation ? (
                         <CheckSquareOutlined />
                       ) : (
@@ -146,7 +153,7 @@ const ItemDocuments = () => {
                     <Col span={8}>
                       <CustomLabel
                         label={
-                          obj.item_vendor_detail_document.certificate["4"]
+                          obj?.item_vendor_detail_document.certificate["4"]
                             .file_type_name
                         }
                       />
@@ -156,10 +163,11 @@ const ItemDocuments = () => {
                         // 1 = ADMIN , 10 = MIS , 11 = RD , 13 = PU ,17 = QC , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE
                         [1, 10, 11, 13, 20].includes(department_id) ? (
                           <ItemFileUpload
-                            data_file={obj.item_vendor_detail_document}
+                            data_file={obj?.item_vendor_detail_document}
                             updateFile={null}
                             chkbox_upload_fields={
-                              obj.item_vendor_detail[0]
+                              obj?.item_vendor_detail[0] &&
+                              obj.item_vendor_detail_document[0]
                                 .item_vendor_detail_quotation
                             }
                             maxFile={1}
@@ -181,7 +189,8 @@ const ItemDocuments = () => {
                 <Col span={12}>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj.item_vendor_detail[0]
+                      {obj?.item_vendor_detail[0] &&
+                      obj.item_vendor_detail_document[0]
                         .item_vendor_detail_halal_cert ? (
                         <CheckSquareOutlined />
                       ) : (
@@ -191,17 +200,18 @@ const ItemDocuments = () => {
                     <Col span={8}>
                       <CustomLabel
                         label={
-                          obj.item_vendor_detail_document.certificate["5"]
+                          obj?.item_vendor_detail_document.certificate["5"]
                             .file_type_name
                         }
                       />
                     </Col>
                     <Col span={13}>
                       <ItemFileUpload
-                        data_file={obj.item_vendor_detail_document}
+                        data_file={obj?.item_vendor_detail_document}
                         updateFile={null}
                         chkbox_upload_fields={
-                          obj.item_vendor_detail[0]
+                          obj?.item_vendor_detail[0] &&
+                          obj.item_vendor_detail_document[0]
                             .item_vendor_detail_halal_cert
                         }
                         maxFile={1}
@@ -213,7 +223,8 @@ const ItemDocuments = () => {
                   </Row>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj.item_vendor_detail[0]
+                      {obj?.item_vendor_detail[0] &&
+                      obj.item_vendor_detail_document[0]
                         .item_vendor_detail_non_haram ? (
                         <CheckSquareOutlined />
                       ) : (
@@ -223,17 +234,19 @@ const ItemDocuments = () => {
                     <Col span={8}>
                       <CustomLabel
                         label={
-                          obj.item_vendor_detail_document.certificate["6"]
+                          obj?.item_vendor_detail_document.certificate["6"]
                             .file_type_name
                         }
                       />
                     </Col>
                     <Col span={13}>
                       <ItemFileUpload
-                        data_file={obj.item_vendor_detail_document}
+                        data_file={obj?.item_vendor_detail_document}
                         updateFile={null}
                         chkbox_upload_fields={
-                          obj.item_vendor_detail[0].item_vendor_detail_non_haram
+                          obj?.item_vendor_detail[0] &&
+                          obj.item_vendor_detail_document[0]
+                            .item_vendor_detail_non_haram
                         }
                         maxFile={1}
                         file_type_id={6}
@@ -244,7 +257,8 @@ const ItemDocuments = () => {
                   </Row>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj.item_vendor_detail[0]
+                      {obj?.item_vendor_detail[0] &&
+                      obj.item_vendor_detail_document[0]
                         .item_vendor_detail_non_halal ? (
                         <CheckSquareOutlined />
                       ) : (

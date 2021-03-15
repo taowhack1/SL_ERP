@@ -212,14 +212,14 @@ const DisburseDetail = ({
                     backgroundColor: "#FCFCFC",
                   }}
                   gutter={2}
-                  className="col-2"
+                  className="col-2 text-value"
                 >
                   <Col span={23}>
                     <div
                       className="input-string-disabled text-left"
                       placeholder="Remark"
                     >
-                      {line.issue_detail_remark}
+                      Remark : {line.disburse_detail_remark}
                     </div>
                   </Col>
                   <Col span={1}></Col>
@@ -245,63 +245,82 @@ const DisburseDetail = ({
           {/* View Form */}
           {data_detail &&
             data_detail.map((line, key) => (
-              <Row
-                key={key}
-                style={{
-                  marginBottom: 0,
-                  border: "1px solid white",
-                  backgroundColor: "#FCFCFC",
-                }}
-                gutter={2}
-                name={`row-${key}`}
-                className="col-2"
-              >
-                <Col span={6} className="text-string">
-                  <Text className="text-view text-string">
-                    {line.item_no_name}
-                  </Text>
-                </Col>
-                <Col span={4} className="text-string">
-                  <Text className="text-view text-string">
-                    {line.shelf_no_name}
-                  </Text>
-                </Col>
-                <Col span={3} className="text-number">
-                  <Text className="text-view text-number">
-                    {convertDigit(line.issue_detail_qty)}
-                  </Text>
-                </Col>
-                <Col span={3} className="text-number">
-                  <Text className="text-view text-number">
-                    {convertDigit(line.tg_disburse_detail_qty_balance)}
-                  </Text>
-                </Col>
-                <Col span={3} className="text-number">
-                  <Text className="text-view text-number">
-                    {convertDigit(line.tg_disburse_detail_qty)}
-                  </Text>
-                </Col>
-                <Col span={2} className="text-string">
-                  <Text className="text-view text-string">{line.uom_no}</Text>
-                </Col>
-                <Col span={2} className="text-center">
-                  <Text className="text-view text-string">
-                    {line.disburse_detail_due_date}
-                  </Text>
-                </Col>
-                <Col span={1} className="text-center">
-                  <InfoCircleTwoTone
-                    className="button-icon"
-                    onClick={() => {
-                      openModalSubDetail(
-                        line,
-                        line.disburse_sub_detail,
-                        line.item_id
-                      );
-                    }}
-                  />
-                </Col>
-              </Row>
+              <div key={key}>
+                <Row
+                  key={key}
+                  style={{
+                    marginBottom: 0,
+                    border: "1px solid white",
+                    backgroundColor: "#FCFCFC",
+                  }}
+                  gutter={2}
+                  name={`row-${key}`}
+                  className="col-2"
+                >
+                  <Col span={6} className="text-string">
+                    <Text className="text-view text-string">
+                      {line.item_no_name}
+                    </Text>
+                  </Col>
+                  <Col span={4} className="text-string">
+                    <Text className="text-view text-string">
+                      {line.shelf_no_name}
+                    </Text>
+                  </Col>
+                  <Col span={3} className="text-number">
+                    <Text className="text-view text-number">
+                      {convertDigit(line.issue_detail_qty)}
+                    </Text>
+                  </Col>
+                  <Col span={3} className="text-number">
+                    <Text className="text-view text-number">
+                      {convertDigit(line.tg_disburse_detail_qty_balance)}
+                    </Text>
+                  </Col>
+                  <Col span={3} className="text-number">
+                    <Text className="text-view text-number">
+                      {convertDigit(line.tg_disburse_detail_qty)}
+                    </Text>
+                  </Col>
+                  <Col span={2} className="text-string">
+                    <Text className="text-view text-string">{line.uom_no}</Text>
+                  </Col>
+                  <Col span={2} className="text-center">
+                    <Text className="text-view text-string">
+                      {line.disburse_detail_due_date}
+                    </Text>
+                  </Col>
+                  <Col span={1} className="text-center">
+                    <InfoCircleTwoTone
+                      className="button-icon"
+                      onClick={() => {
+                        openModalSubDetail(
+                          line,
+                          line.disburse_sub_detail,
+                          line.item_id
+                        );
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row
+                  key={"sub-" + key}
+                  style={{
+                    marginBottom: 0,
+                    border: "1px solid white",
+                    backgroundColor: "#FCFCFC",
+                  }}
+                  gutter={2}
+                  className="col-2"
+                >
+                  <Col span={23} className="text-left">
+                    <Text className="text-value pd-left-2">
+                      Remark : {line.disburse_detail_remark}
+                    </Text>
+                  </Col>
+                  <Col span={1}></Col>
+                </Row>
+              </div>
             ))}
         </> //close tag
       )}

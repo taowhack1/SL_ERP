@@ -52,8 +52,8 @@ const IssueCreate = (props) => {
 
   const flow =
     data_head &&
-    data_head.data_flow_process &&
-    data_head.data_flow_process.map((step) => {
+    data_head?.data_flow_process &&
+    data_head?.data_flow_process.map((step) => {
       return step.all_group_in_node;
     });
 
@@ -67,16 +67,16 @@ const IssueCreate = (props) => {
     breadcrumb: [
       "Home",
       "Issue",
-      data_head.issue_no ? "Edit" : "Create",
-      data_head.issue_no && data_head.issue_no,
+      data_head?.issue_no ? "Edit" : "Create",
+      data_head?.issue_no && data_head?.issue_no,
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
 
     step: {
-      current: data_head && data_head.node_stay - 1,
+      current: data_head && data_head?.node_stay - 1,
       step: flow,
-      process_complete: data_head.process_complete,
+      process_complete: data_head?.process_complete,
     },
     create: "",
     save: "function",
@@ -92,10 +92,10 @@ const IssueCreate = (props) => {
       );
       if (validate.validate && validate_detail.validate) {
         console.log("pass");
-        data_head.issue_id
+        data_head?.issue_id
           ? dispatch(
               update_issue(
-                data_head.issue_id,
+                data_head?.issue_id,
                 auth.user_name,
                 data_head,
                 data_detail,
@@ -161,7 +161,7 @@ const IssueCreate = (props) => {
 
   useEffect(() => {
     // GET LOG
-    data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
+    data_head?.process_id && dispatch(get_log_by_id(data_head?.process_id));
     return () => {
       dispatch(reset_comments());
     };
@@ -169,16 +169,16 @@ const IssueCreate = (props) => {
 
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
-    if ((data.type_id && data_head.type_id) || data.type_id === null) {
-      data.type_id !== data_head.type_id &&
+    if ((data.type_id && data_head?.type_id) || data.type_id === null) {
+      data.type_id !== data_head?.type_id &&
         detailDispatch({ type: "RESET_DETAIL", payload: initialStateDetail });
     }
   };
   const filter = {
-    type_id: data_head && data_head.type_id,
-    type_no_name: data_head && data_head.type_no_name,
-    category_id: data_head && data_head.category_id,
-    category_no_name: data_head && data_head.category_no_name,
+    type_id: data_head && data_head?.type_id,
+    type_no_name: data_head && data_head?.type_no_name,
+    category_id: data_head && data_head?.category_id,
+    category_no_name: data_head && data_head?.category_no_name,
   };
   const redirect_to_view = (id) => {
     history.push("/inventory/issue/view/" + (id ? id : "new"));
@@ -192,8 +192,8 @@ const IssueCreate = (props) => {
           <Col span={8}>
             <h2>
               <strong>
-                {data_head.issue_id ? "Edit" : "Create"} Issue{" "}
-                {data_head.issue_no && "#" + data_head.issue_no}
+                {data_head?.issue_id ? "Edit" : "Create"} Issue{" "}
+                {data_head?.issue_no && "#" + data_head?.issue_no}
               </strong>
             </h2>
           </Col>
@@ -202,7 +202,7 @@ const IssueCreate = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{data_head.issue_created}</Text>
+            <Text className="text-view">{data_head?.issue_created}</Text>
           </Col>
         </Row>
         <Row>
@@ -216,7 +216,7 @@ const IssueCreate = (props) => {
               <Col span={16}>
                 <Input
                   name="issue_description"
-                  value={data_head.issue_description}
+                  value={data_head?.issue_description}
                   placeholder="Description"
                   onChange={(e) =>
                     upDateFormValue({ issue_description: e.target.value })
@@ -239,7 +239,7 @@ const IssueCreate = (props) => {
                   name="cost_center_id"
                   field_id="cost_center_id"
                   field_name="cost_center_no_name"
-                  value={data_head.cost_center_no_name}
+                  value={data_head?.cost_center_no_name}
                   data={cost_centers}
                   onChange={(data, option) => {
                     data !== undefined
@@ -269,7 +269,7 @@ const IssueCreate = (props) => {
                   name="type_id"
                   field_id="type_id"
                   field_name="type_no_name"
-                  value={data_head.type_no_name}
+                  value={data_head?.type_no_name}
                   data={item_type}
                   onChange={(data, option) => {
                     data !== undefined
@@ -296,7 +296,7 @@ const IssueCreate = (props) => {
               </Col>
 
               <Col span={16}>
-                <Text>{data_head.issue_created_by_no_name}</Text>
+                <Text>{data_head?.issue_created_by_no_name}</Text>
               </Col>
             </Row>
             <Row className="col-2 row-margin-vertical">
@@ -333,8 +333,8 @@ const IssueCreate = (props) => {
                   detailDispatch={detailDispatch}
                   data_detail={data_detail}
                   readOnly={readOnly}
-                  category_id={data_head.category_id}
-                  type_id={data_head.type_id}
+                  category_id={data_head?.category_id}
+                  type_id={data_head?.type_id}
                   data_head={data_head}
                   updateHead={upDateFormValue}
                   filter={filter && filter}
