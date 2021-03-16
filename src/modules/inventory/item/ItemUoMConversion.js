@@ -15,7 +15,6 @@ const uomConversionRequireFields = [
   "uom_convert_value",
   "uom_id_from",
   "uom_id_to",
-  "uom_convert_actived",
 ];
 
 const ItemUOMConversion = ({
@@ -80,6 +79,7 @@ const ItemUOMConversion = ({
     );
   };
   const onModalOk = () => {
+    console.log("modalUOMSave", state);
     const { validate } = validateFormDetail(state, uomConversionRequireFields);
     console.log(validate);
     if (validate || state.length === 0) {

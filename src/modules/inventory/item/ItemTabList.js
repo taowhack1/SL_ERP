@@ -251,13 +251,15 @@ const TabPanel = ({
               <ItemProductionData />
             </Tabs.TabPane>
           )}
-        <Tabs.TabPane
-          className="tab-top"
-          tab={<CustomLabel label={"Documents"} readOnly={readOnly} />}
-          key={"10"}
-        >
-          <ItemDocuments />
-        </Tabs.TabPane>
+        {readOnly && [1, 2].includes(type_id) && (
+          <Tabs.TabPane
+            className="tab-top"
+            tab={<CustomLabel label={"Documents"} readOnly={readOnly} />}
+            key={"10"}
+          >
+            <ItemDocuments />
+          </Tabs.TabPane>
+        )}
       </Tabs>
     </>
   );

@@ -51,9 +51,9 @@ export const convertDigit = (value, decimalPoint = 6) => {
   return typeof value === "number" && numeral(value).format(format);
 };
 // Sv.Test
-// export const api_server = `http://192.168.5.222:3009`;
-// export const report_server = `http://192.168.1.211:8080/report_dev`;
+export const api_server = `http://192.168.5.222:3009`;
+export const report_server = `http://192.168.1.211:8080/report_dev`;
 // Sv.Production
-export const report_server = `http://192.168.1.211:8080/report_purch`;
-export const api_server = `http://192.168.1.210:3009`;
+// export const report_server = `http://192.168.1.211:8080/report_purch`;
+// export const api_server = `http://192.168.1.210:3009`;
 // export const report_server = `http://192.168.5.207`;

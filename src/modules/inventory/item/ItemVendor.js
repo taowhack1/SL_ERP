@@ -302,12 +302,14 @@ const itemVendorColumns = ({
     align: "center",
     width: "5%",
     render: (_, record) => (
+      // record.item_vendor_id && (
       <SnippetsOutlined
         className="button-icon"
         title={"View / Attach File"}
         onClick={() => setModalState({ visible: true, vendorData: record })}
       />
     ),
+    // ),
   },
   {
     id: 10,

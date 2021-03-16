@@ -122,7 +122,6 @@ const saveItemVendor = (item_id, data_detail, user_name) => {
   const dataDelete = data_detail.filter(
     (obj) => obj.item_vendor_id !== null && obj.commit && obj.active === 0
   );
-
   console.log("dataCreate", dataCreate);
   console.log("dataUpdate", dataUpdate);
   console.log("dataDelete", dataDelete);
@@ -142,6 +141,13 @@ const saveItemVendor = (item_id, data_detail, user_name) => {
           .post(`${api_item_vendor}/${item_id}`, dataCreate, header_config)
           .then((res) => {
             console.log("CREATE VENDOR", res);
+            const vendorId = res?.data[0].item_vendor_id;
+            vendorFile.create.forEach((obj) =>
+              promiseFile.push(
+                ...itemSaveFileVendor(item_id, vendorId, obj.file, user_name)
+              )
+            );
+            return promiseFile;
           })
       : false,
     dataUpdate.length
@@ -164,10 +170,12 @@ const saveItemVendor = (item_id, data_detail, user_name) => {
 };
 
 const save_uom_conversion = (item_id, uom_conversion) => {
-  const newData = uom_conversion.filter(
+  console.log("uom_conversion", uom_conversion);
+  if (!uom_conversion) return false;
+  const newData = uom_conversion?.filter(
     (obj) => obj.uom_convert_id === null && obj.commit === 1
   );
-  const updateData = uom_conversion.filter(
+  const updateData = uom_conversion?.filter(
     (obj) => obj.uom_convert_id !== null && obj.commit === 1
   );
   console.log("Save UOM Conversion", newData, updateData);
@@ -465,15 +473,24 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
           ])
             .then((data) => {
               console.log("Update Complete", data);
-              Promise.allSettled(data[2].value).then((res) => {
-                console.log("Then Update File");
+              if (data[2].value) {
+                Promise.allSettled(data[2].value).then((res) => {
+                  console.log("Then Update File");
+                  dispatch(get_item_by_id(item_id, user_name, redirect));
+                  message.success({
+                    content: "Item Update.",
+                    key: "validate",
+                    duration: 2,
+                  });
+                });
+              } else {
                 dispatch(get_item_by_id(item_id, user_name, redirect));
                 message.success({
                   content: "Item Update.",
                   key: "validate",
                   duration: 2,
                 });
-              });
+              }
             })
             .catch((error) => {
               console.log("Promise Catch");
@@ -845,7 +862,7 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
               Master Formula
             </span>
           ),
-          link: `${report_server}report_bulk_formula.aspx?item_code=${item_no}`,
+          link: `${report_server}/report_bulk_formula.aspx?item_code=${item_no}`,
         },
         {
           name: (
@@ -854,7 +871,7 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
               Bulk Specification
             </span>
           ),
-          link: `${report_server}report_bulk_specification.aspx?item_code=${item_no}`,
+          link: `${report_server}/report_bulk_specification.aspx?item_code=${item_no}`,
         },
         {
           name: (
@@ -863,7 +880,7 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
               Process Specification
             </span>
           ),
-          link: `${report_server}report_process_specification.aspx?item_no=${item_no}`,
+          link: `${report_server}/report_process_specification.aspx?item_no=${item_no}`,
         },
       ]);
     case 4:
@@ -875,7 +892,7 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
               Finished Product Specification
             </span>
           ),
-          link: `${report_server}report_fg_package.aspx?item_code=${item_no}`,
+          link: `${report_server}/report_fg_package.aspx?item_code=${item_no}`,
         },
       ]);
 

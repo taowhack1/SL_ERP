@@ -143,18 +143,27 @@ const ItemCreate = (props) => {
                   : data.data_head.qa_spec,
               pu_vendor:
                 data.data_head?.pu_vendor?.length <= 0
-                  ? sortData([itemVendorFields])
+                  ? []
                   : sortDataWithoutCommit(data.data_head.pu_vendor),
             }
           : { ...initialStateHead, commit: 1, user_name: auth.user_name },
     });
+    console.log(
+      " ISUS ",
+      data?.data_head?.pu_vendor?.map((obj, key) => {
+        return {
+          id: key,
+          certificate: obj.item_vendor_detail_document.certificate,
+        };
+      })
+    );
     setVendorFile(
       data?.data_head?.pu_vendor?.map((obj, key) => {
         return {
           id: key,
           certificate: obj.item_vendor_detail_document.certificate,
         };
-      }) ?? [itemVendorDocumentFields]
+      }) || [itemVendorDocumentFields]
     );
     weightDetailDispatch({
       type: "SET_DETAIL",
@@ -271,7 +280,7 @@ const ItemCreate = (props) => {
         };
         console.log("saveeeeeee", data);
         if (data_head.isChangeRevision || !data_head.item_id) {
-          if (data.data_head.uom_conversion.length)
+          if (data?.data_head?.uom_conversion?.length)
             data.data_head.uom_conversion.map((obj) => {
               return { ...obj, commit: 1, user_name: auth.user_name };
             });
@@ -533,7 +542,7 @@ const ItemCreate = (props) => {
               </Row>
             </Col>
           </Row>
-          {data_head.item_id ? (
+          {data_head.item_id && data_head.type_id <= 4 ? (
             <ItemRevisionDetail
               data_head={data_head}
               readOnly={readOnly}

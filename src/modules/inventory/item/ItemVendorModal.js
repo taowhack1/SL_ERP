@@ -46,7 +46,7 @@ const ItemVendorModal = ({
   });
 
   const [stateFile, setStateFile] = useState({
-    certificate: vendorFile[headId].certificate,
+    certificate: vendorFile[headId].certificate || itemVendorDocumentFields,
   });
   const onChangeFile = useCallback(
     (data, type) => {
