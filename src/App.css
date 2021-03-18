@@ -817,3 +817,19 @@ div.blur-bg {
   background-color: #f7f7f7;
   border-radius: 5;
 }
+
+div.fc-timeline-event-harness {
+  border-radius: 5px;
+  background: none;
+}
+a.fc-timeline-event {
+  /* background: none !important; */
+  padding: 0;
+  margin: 0;
+  margin-top: 5px;
+  border-radius: 2px;
+  border: 2px solid red;
+}
+/* a.fc-timeline-event:hover {
+  background-color: #ffc459 !important;
+} */

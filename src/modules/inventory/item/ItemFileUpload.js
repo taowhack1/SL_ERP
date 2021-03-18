@@ -175,28 +175,29 @@ const ItemFileUpload = ({
         return (
           <>
             {readOnly ? (
-              chkbox_upload_fields &&
-              (file_temp[0]?.item_file_path ? (
-                <Upload
-                  {...uploadConfig}
-                  fileList={file_temp}
-                  disabled={readOnly}
-                  onPreview={handlePreview}
-                >
-                  {readOnly || file_temp.length ? (
-                    file_temp[0].item_file_path ? null : (
-                      <Button
-                        icon={<UploadOutlined />}
-                        disabled={chkbox_upload_fields ? 0 : 1}
-                      >
-                        Click to upload
-                      </Button>
-                    )
-                  ) : null}
-                </Upload>
-              ) : (
-                <Text className="text-view">No file.</Text>
-              ))
+              chkbox_upload_fields ? (
+                file_temp[0]?.item_file_path ? (
+                  <Upload
+                    {...uploadConfig}
+                    fileList={file_temp}
+                    disabled={readOnly}
+                    onPreview={handlePreview}
+                  >
+                    {readOnly || file_temp.length ? (
+                      file_temp[0].item_file_path ? null : (
+                        <Button
+                          icon={<UploadOutlined />}
+                          disabled={chkbox_upload_fields ? 0 : 1}
+                        >
+                          Click to upload
+                        </Button>
+                      )
+                    ) : null}
+                  </Upload>
+                ) : (
+                  <Text className="text-view">No file.</Text>
+                )
+              ) : null
             ) : (
               <Upload
                 {...uploadConfig}

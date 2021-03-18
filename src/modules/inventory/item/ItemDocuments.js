@@ -72,8 +72,8 @@ const ItemDocuments = () => {
                     <Col span={13}>
                       {
                         // 1 = ADMIN , 10 = MIS , 11 = RD , 13 = PU ,17 = QC , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE
-                        [1, 10, 11, 17, 20].includes(department_id) ? (
-                          // [11, 17, 20].includes(department_id) ? (
+                        // [1, 10, 11, 17, 20].includes(department_id) ? (
+                        [11, 17, 20].includes(department_id) ? (
                           <ItemFileUpload
                             data_file={obj?.item_vendor_detail_document}
                             updateFile={null}
@@ -87,12 +87,13 @@ const ItemDocuments = () => {
                             upload_type={"Button"}
                             readOnly={true}
                           />
-                        ) : (
+                        ) : obj.item_vendor_detail[0]
+                            .item_vendor_detail_specification ? (
                           <div className="blur-bg">
                             <LockOutlined className="button-icon mr-1 font-18" />
                             This file need permission to access.
                           </div>
-                        )
+                        ) : null
                       }
                     </Col>
                   </Row>

@@ -57,6 +57,7 @@ import Production from "./modules/production/Production";
 import MRPMain from "./modules/production/Operation/MRPMain";
 import MRPCreate from "./modules/production/Operation/MRPCreate";
 import MRPView from "./modules/production/Operation/MRPView";
+import Planning from "./modules/production/Operation/planning";
 // Master Data
 import WorkCenter from "./modules/production/WorkCenter";
 import WorkCenterCreate from "./modules/production/WorkCenterCreate";
@@ -66,8 +67,7 @@ import MachineCreate from "./modules/production/MachineCreate";
 import MachineView from "./modules/production/MachineView";
 
 import NotFound from "./modules/dashboard/NotFound";
-import { Provider, useSelector } from "react-redux";
-import store from "./store";
+import { useSelector } from "react-redux";
 import Location from "./modules/inventory/Location";
 
 import Warehouse from "./modules/inventory/warehouse";
@@ -429,6 +429,9 @@ const App = (props) => {
             {/* PRODUCTION */}
             <Route exact path="/production">
               <Production />
+            </Route>
+            <Route exact path="/production/operations/planning">
+              <Planning />
             </Route>
             {/* PRODUCTION OPERATION */}
             <Route exact path="/production/operations/mrp">
