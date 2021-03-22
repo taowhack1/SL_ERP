@@ -16,8 +16,18 @@ export const api_qa_method = `/qa/qa_method`;
 
 //vendor
 export const api_vendor = `/purchase/vendor`;
+export const api_vendor_group = `/list/vendor/group`;
+export const api_vendor_category = `/list/vendor/category`;
+export const api_vat_id = `/list/vat`;
 //customer
 export const api_customer = `/sales/customer`;
+//address
+export const api_language = `/list/language`;
+export const api_country = `/list/country`;
+export const api_province = `/list/province`;
+export const api_district = `/list/district`;
+export const api_tambon = `/list/tambon`;
+export const api_zip = `/list/zip`;
 
 //accounting
 export const api_payment_term_vendor = `/list/payment_term/vendor`;
@@ -151,5 +161,6 @@ export const api_mrp_detail = `/production/mrp_detail`;
 export const api_mrp_so_ref = `/list/so`;
 export const api_get_fg_material = `/production/mrp/calculate`;
 
-// HRM
-export const api_country = `/list/country`;
+//routing
+export const api_routing = `/production/routing`;
+export const api_list_fg = `/list/item/fg`;

@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   SET_QN_LIST,
   RESET_QN,
@@ -27,6 +29,10 @@ const inititalState = {
   customer: {
     customer_list: [],
     customer: {},
+    customer: {
+      data_head: {},
+      dataDetail: [],
+    },
   },
   master_data: {
     customers: [],

@@ -1,3 +1,5 @@
+/** @format */
+
 import React, {
   useContext,
   useEffect,
@@ -178,7 +180,7 @@ const QCReceive = () => {
           min={0.0}
           max={record.stock_detail_qty_hold}
           step={0.001}
-          size="small"
+          size='small'
           style={{ width: "100%", backgroundColor: "#e6feff" }}
           disabled={0}
           value={record.stock_qty_pass}
@@ -208,7 +210,7 @@ const QCReceive = () => {
           min={0.0}
           max={record.stock_detail_qty_hold}
           step={0.001}
-          size="small"
+          size='small'
           style={{ width: "100%", backgroundColor: "#FFE6E6" }}
           disabled={0}
           value={record.stock_qty_reject}
@@ -272,7 +274,7 @@ const QCReceive = () => {
                 dataSource={itemList}
                 expandable={{ expandedRowRender }}
                 onChange={onChange}
-                size="small"
+                size='small'
               />
             )}
           </Col>

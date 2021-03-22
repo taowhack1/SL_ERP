@@ -1,3 +1,5 @@
+/** @format */
+
 export const customer_fields = {
   customer_id: null,
   customer_no: null,
@@ -109,3 +111,90 @@ export const customer_require_fields = [
   "payment_term_id",
   "customer_limit_credit",
 ];
+
+export const addressColumns1 = [
+  {
+    id: 1,
+    title: "No.",
+    dataIndex: "id",
+    width: "1%",
+    align: "center",
+    render: (value, record, index) => {
+      return value + 1;
+    },
+  },
+  {
+    id: 2,
+    title: "Address. Category",
+    dataIndex: "category",
+    width: "5%",
+    align: "center",
+    render: (value, record, index) => {
+      return value + 1;
+    },
+  },
+  {
+    id: 2,
+    title: "Address. Detail",
+    dataIndex: "detail",
+    width: "5%",
+    align: "center",
+    render: (value, record, index) => {
+      return value + 1;
+    },
+  },
+  {
+    id: 2,
+    title: "Address. Status",
+    dataIndex: "status",
+    width: "5%",
+    align: "center",
+    render: (value, record, index) => {
+      return value + 1;
+    },
+  },
+];
+
+export const addressData = [
+  { id: 1, address_type_name: "Contact", address_type_id: 1 },
+  { id: 2, address_type_name: "Invoice Address", address_type_id: 2 },
+  { id: 3, address_type_name: "Delivery Address", address_type_id: 3 },
+  { id: 4, address_type_name: "Private Address", address_type_id: 4 },
+];
+export const addressColumns = [
+  {
+    id: 0,
+    name: "No",
+    size: 1,
+    require: false,
+  },
+  {
+    id: 1,
+    name: "Address Category",
+    size: 6,
+    require: true,
+  },
+  {
+    id: 2,
+    name: "Address detail",
+    size: 12,
+    require: true,
+  },
+  {
+    id: 3,
+    name: "status",
+    size: 4,
+    require: true,
+  },
+];
+export const CustomerDetailFileds = {
+  customer_detail_address: null,
+  customer_detail_name: null,
+  customer_detail_position: null,
+  customer_detail_remark: null,
+  customer_detail_actived: true,
+  address_type_id: null,
+
+  // customer_detail_created_by: null,
+  // customer_detail_updated_by: null,
+};

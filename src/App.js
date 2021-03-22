@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Router } from "react-router-dom";
 import { AppContext, Context, TypeContext } from "./include/js/context";
 
 import Dashboard from "./modules/dashboard/Dashboard";
@@ -89,7 +89,7 @@ import TypeView from "./modules/inventory/configurations/type/TypeView";
 import Category from "./modules/inventory/configurations/category/Category";
 import CategoryCreate from "./modules/inventory/configurations/category/CategoryCreate";
 import CategoryView from "./modules/inventory/configurations/category/CategoryView";
-import UOM from "./modules/inventory/configurations/uom/UOM";
+import UOMMain from "./modules/inventory/configurations/uom/UOMMain";
 import UOMCreate from "./modules/inventory/configurations/uom/UOMCreate";
 import UOMView from "./modules/inventory/configurations/uom/UOMView";
 
@@ -99,6 +99,10 @@ import TransferView from "./modules/inventory/operations/transfer/TransferView";
 import WorkOrderCreate1 from "./modules/production/Operation/workorder/WorkOrderCreate";
 
 import ReturnRoutes from "./modules/inventory/operations/return/ReturnRoutes";
+import Routing from "./modules/production/Operation/routing/Routing";
+import RoutingCreate from "./modules/production/Operation/routing/RoutingCreate";
+import RoutingView from "./modules/production/Operation/routing/RoutingView";
+import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -260,7 +264,7 @@ const App = (props) => {
               component={CategoryCreate}
             />
             <Route exact path="/inventory/configurations/uom">
-              <UOM />
+              <UOMMain />
             </Route>
             {/* {uom} */}
             <Route
@@ -295,7 +299,7 @@ const App = (props) => {
               exact
               path="/inventory/transfer/create"
               component={TransferCreate}
-            />{" "}
+            />
             <Route
               exact
               path="/inventory/transfer/view/"
@@ -426,6 +430,9 @@ const App = (props) => {
               path="/qa/master_data/conditions/:action/:id"
               component={ConditionsForm}
             />
+            <Route exact path="/qa/report_qc">
+              <ReportQC />
+            </Route>
             {/* PRODUCTION */}
             <Route exact path="/production">
               <Production />
@@ -486,6 +493,24 @@ const App = (props) => {
               exact
               path="/production/machine/edit/:id"
               component={MachineCreate}
+            />
+            <Route exact path="/production/routing/">
+              <Routing />
+            </Route>
+            <Route
+              exact
+              path="/production/routing/create"
+              component={RoutingCreate}
+            />
+            <Route
+              exact
+              path="/production/routing/view/:id"
+              component={RoutingView}
+            />
+            <Route
+              exact
+              path="/production/routing/edit/:id"
+              component={RoutingCreate}
             />
             <Route>
               <NotFound />

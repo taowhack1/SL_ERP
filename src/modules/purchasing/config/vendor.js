@@ -1,3 +1,5 @@
+/** @format */
+
 export const vendor_columns = [
   {
     title: "Vendor No.",
@@ -117,4 +119,58 @@ export const vendor_require_fields = [
   "vendor_address",
   "currency_id",
   "payment_term_id",
+];
+
+export const addressColumns_vendor = [
+  {
+    id: 0,
+    name: "No",
+    size: 1,
+    require: false,
+  },
+  {
+    id: 1,
+    name: "Address Category",
+    size: 6,
+    require: true,
+  },
+  {
+    id: 2,
+    name: "Address detail",
+    size: 12,
+    require: true,
+  },
+  {
+    id: 3,
+    name: "status",
+    size: 4,
+    require: true,
+  },
+];
+export const VendorDetailFileds = {
+  vendor_detail_address: null,
+  vendor_detail_name: null,
+  vendor_detail_position: null,
+  vendor_detail_remark: null,
+  vendor_detail_actived: true,
+  address_type_id: null,
+};
+
+export const options1 = [
+  {
+    value: "จังหวัด",
+    label: "จังหวัด",
+    children: [
+      {
+        value: "อำเภอ",
+        label: "อำเภอ",
+        children: [
+          {
+            value: "ตำบล",
+            label: "ตำบล",
+          },
+        ],
+      },
+    ],
+  },
 ];
