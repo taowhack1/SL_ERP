@@ -396,7 +396,8 @@ const CustomerCreate = (props) => {
                                   province_id: null,
                                   province_no_name: null,
                                   district_id: null,
-                                  district_no_name: null,
+                                  tambon_id: null,
+                                  zip_id: null,
                                 });
                           }}
                         />
@@ -406,6 +407,7 @@ const CustomerCreate = (props) => {
                           placeholder={"District"}
                           allowClear
                           showSearch
+                          disabled={data_head.province_id ? false : true}
                           name='district_id'
                           field_id='district_id'
                           field_name='district_name'
@@ -423,6 +425,7 @@ const CustomerCreate = (props) => {
                               : upDateFormValue({
                                   district_id: null,
                                   district_name: null,
+                                  tambon_id: null,
                                 });
                           }}
                         />
@@ -432,6 +435,7 @@ const CustomerCreate = (props) => {
                           placeholder={"Tambon"}
                           allowClear
                           showSearch
+                          disabled={data_head.district_id ? false : true}
                           name='tambon_id'
                           field_id='tambon_id'
                           field_name='tambon_name'
@@ -449,6 +453,7 @@ const CustomerCreate = (props) => {
                               : upDateFormValue({
                                   tambon_id: null,
                                   tambon_name: null,
+                                  zip_id: null,
                                 })
                           }
                         />
@@ -464,6 +469,7 @@ const CustomerCreate = (props) => {
                           placeholder={"Zip"}
                           allowClear
                           showSearch
+                          disabled={data_head.tambon_id ? false : true}
                           name='zip_id'
                           field_id='zip_id'
                           field_name='zip_name'
