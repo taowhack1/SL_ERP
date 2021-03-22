@@ -2,7 +2,16 @@
 
 import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Typography, message, Cascader } from "antd";
+import {
+  Row,
+  Col,
+  Input,
+  Tabs,
+  Typography,
+  message,
+  Cascader,
+  InputNumber,
+} from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import {
@@ -31,6 +40,7 @@ import { useHistory } from "react-router-dom";
 import Vendor_OrtherAddress from "./Vendor_OrtherAddress";
 import { reducer } from "../qualityAssurance/reducers";
 import { LineChartOutlined } from "@ant-design/icons";
+import { numberFormat } from "../../include/js/main_config";
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
@@ -309,7 +319,7 @@ const VendorCreate = (props) => {
                     <Row className='row-margin'>
                       <Col span={5}>
                         <Text strong>
-                          <span className='require'>* </span>group
+                          <span className='require'>* </span>Group
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -371,7 +381,7 @@ const VendorCreate = (props) => {
                           field_id='province_id'
                           field_name='province_name'
                           value={data_head.province_id}
-                          data={vendor_province}
+                          data={vendor_province ?? []}
                           onChange={(data, option) => {
                             data
                               ? upDateFormValue(
@@ -401,7 +411,7 @@ const VendorCreate = (props) => {
                           field_id='district_id'
                           field_name='district_name'
                           value={data_head.district_id}
-                          data={vendor_district}
+                          data={vendor_district ?? []}
                           onChange={(data, option) => {
                             data
                               ? upDateFormValue(
@@ -429,7 +439,7 @@ const VendorCreate = (props) => {
                           field_id='tambon_id'
                           field_name='tambon_name'
                           value={data_head.tambon_id}
-                          data={vendor_tambon}
+                          data={vendor_tambon ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue(
@@ -463,7 +473,7 @@ const VendorCreate = (props) => {
                           field_id='zip_id'
                           field_name='zip_name'
                           value={data_head.zip_id}
-                          data={vendor_zip}
+                          data={vendor_zip ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue({
@@ -486,7 +496,7 @@ const VendorCreate = (props) => {
                           field_id='language_id'
                           field_name='language_name'
                           value={data_head.language_id}
-                          data={vendor_language}
+                          data={vendor_language ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue({
@@ -509,7 +519,7 @@ const VendorCreate = (props) => {
                           field_id='country_id'
                           field_name='country_name'
                           value={data_head.country_id}
-                          data={vendor_country}
+                          data={vendor_country ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue({
@@ -628,6 +638,28 @@ const VendorCreate = (props) => {
                     <Row className='row-margin'>
                       <Col span={5}>
                         <Text strong>
+                          <span className='require'>* </span>Condition Billing
+                        </Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name='vendor_condition_billing'
+                          placeholder='e.g. Affter Delivery'
+                          value={data_head.vendor_condition_billing}
+                          onChange={(data) => {
+                            upDateFormValue({
+                              vendor_condition_billing: data.target.value,
+                            });
+                          }}
+                          className={"full-width"}
+                          // size="small"
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className='row-margin'>
+                      <Col span={5}>
+                        <Text strong>
                           <span className='require'>* </span>Payment Terms
                         </Text>
                       </Col>
@@ -653,6 +685,45 @@ const VendorCreate = (props) => {
                                 })
                           }
                         />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className='row-margin'>
+                      <Col span={5}>
+                        <Text strong>
+                          <span className='require'>* </span>Credit Limit
+                        </Text>
+                      </Col>
+                      <Col span={18}>
+                        <Row>
+                          <Col span={12}>
+                            <InputNumber
+                              name='vendor_limit_credit'
+                              placeholder='Credit Limit'
+                              value={data_head.vendor_limit_credit}
+                              precision={3}
+                              {...numberFormat}
+                              step={5}
+                              onChange={(data) => {
+                                upDateFormValue({
+                                  vendor_limit_credit: data,
+                                });
+                              }}
+                              className={"full-width"}
+                              // size="small"
+                            />
+                          </Col>
+                          <Col span={12}>
+                            <Text
+                              strong
+                              style={{
+                                verticalAlign: "middle",
+                                paddingLeft: 10,
+                              }}>
+                              {data_head.currency_no}
+                            </Text>
+                          </Col>
+                        </Row>
                       </Col>
                       <Col span={1}></Col>
                     </Row>

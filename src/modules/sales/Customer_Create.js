@@ -382,7 +382,7 @@ const CustomerCreate = (props) => {
                           field_id='province_id'
                           field_name='province_name'
                           value={data_head.province_id}
-                          data={customer_province}
+                          data={customer_province ?? []}
                           onChange={(data, option) => {
                             data
                               ? upDateFormValue(
@@ -412,7 +412,7 @@ const CustomerCreate = (props) => {
                           field_id='district_id'
                           field_name='district_name'
                           value={data_head.district_id}
-                          data={customer_district}
+                          data={customer_district ?? []}
                           onChange={(data, option) => {
                             data
                               ? upDateFormValue(
@@ -440,7 +440,7 @@ const CustomerCreate = (props) => {
                           field_id='tambon_id'
                           field_name='tambon_name'
                           value={data_head.tambon_id}
-                          data={customer_tambon}
+                          data={customer_tambon ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue(
@@ -474,7 +474,7 @@ const CustomerCreate = (props) => {
                           field_id='zip_id'
                           field_name='zip_name'
                           value={data_head.zip_id}
-                          data={customer_zip}
+                          data={customer_zip ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue({
@@ -497,7 +497,7 @@ const CustomerCreate = (props) => {
                           field_id='language_id'
                           field_name='language_name'
                           value={data_head.language_id}
-                          data={customer_language}
+                          data={customer_language ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue({
@@ -520,7 +520,7 @@ const CustomerCreate = (props) => {
                           field_id='country_id'
                           field_name='country_name'
                           value={data_head.country_id}
-                          data={customer_country}
+                          data={customer_country ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue({
@@ -646,7 +646,7 @@ const CustomerCreate = (props) => {
                       <Col span={18}>
                         <Input
                           name='customer_condition_billing'
-                          placeholder='e.g. affter delivery'
+                          placeholder='e.g. Affter Delivery'
                           value={data_head.customer_condition_billing}
                           onChange={(data) => {
                             upDateFormValue({

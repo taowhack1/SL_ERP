@@ -1,9 +1,10 @@
 /** @format */
 
 import { Col, Row, Table } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router";
+import { get_report_item } from "../../../actions/qa";
 import MainLayout from "../../../components/MainLayout";
 import { columns, datamackup } from "./reportQcConfig";
 
@@ -11,7 +12,11 @@ const ReportQC = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
+  const { data_head, dataDetail } = useSelector((state) => state.qa.qc_report);
   const current_project = useSelector((state) => state.auth.currentProject);
+  useEffect(() => {
+    dispatch(get_report_item());
+  });
   const config = {
     projectId: current_project && current_project.project_id,
     title: current_project && current_project.project_name,

@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   GET_QC_RECEIVE_DETAIL_LIST,
   GET_QC_RECEIVE_LIST,
@@ -6,6 +8,7 @@ import {
   GET_ALL_CONDITIONS,
   SET_DEFUALT_CONDITIONS,
   SET_LOADING,
+  GET_QC_REPORT_ITEM,
 } from "../actions/types";
 
 const initialState = {
@@ -15,6 +18,9 @@ const initialState = {
     conditions_subject: [],
     conditions_specification: [],
     conditions_method: [],
+  },
+  qc_report: {
+    qc_report: {},
   },
   conditions: {
     list: [],
@@ -35,6 +41,8 @@ export default (state = initialState, action) => {
         qc_receive_detail_list: action.payload,
         loading: false,
       };
+    case GET_QC_REPORT_ITEM:
+      return { ...state, qc_report: action.payload, loading: false };
     case GET_QA_MASTER_DATA:
       return { ...state, qa_master_data: action.payload, loading: false };
     case GET_QA_TEST_BY_ID:

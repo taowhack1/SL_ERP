@@ -80,7 +80,7 @@ const Customer_OrtherAddress = ({
                       field_id='address_type_id'
                       field_name='address_type_name'
                       name='address_type_id'
-                      placeholder='Select category'
+                      placeholder='Select Category'
                       value={line.address_type_id}
                       onChange={(data, option) => {
                         data && data
@@ -96,7 +96,7 @@ const Customer_OrtherAddress = ({
                     <TextArea
                       name='customer_detail_address'
                       autoSize={{ minRows: 1, maxRows: 2 }}
-                      placeholder='enter Address'
+                      placeholder='Enter Address'
                       value={line.customer_detail_address}
                       onChange={(e) => {
                         onChangeValue(line.id, {
