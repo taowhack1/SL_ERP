@@ -183,7 +183,6 @@ export const GET_FGITEM = "GET_FGITEM";
 
 // Address
 export const GET_LANGUAGE = "GET_LANGUAGE";
-export const GET_COUNTRY = "GET_COUNTRY";
 export const GET_PROVINCE = "GET_PROVINCE";
 export const GET_DISTRICT = "GET_DISTRICT";
 export const GET_TAMBON = "GET_TAMBON";

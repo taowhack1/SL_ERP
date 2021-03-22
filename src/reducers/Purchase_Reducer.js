@@ -22,10 +22,10 @@ import {
   GET_VAT,
   GET_ZIP,
   GET_TAMBON,
-  GET_DISTRICT,
   GET_PROVINCE,
   GET_COUNTRY,
   GET_VENDOR_VAT,
+  GET_DISTRICT,
 } from "../actions/types";
 import { sortData } from "../include/js/function_main";
 const initialState = {

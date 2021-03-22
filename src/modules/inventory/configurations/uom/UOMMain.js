@@ -14,7 +14,7 @@ import {
   getUOMInRow,
 } from "../../../../actions/inventory/configurations/uom/uomAction";
 
-function UOM(props) {
+function UOMMain(props) {
   const dispatch = useDispatch();
   const uom = useSelector((state) => state.inventory.configurations.uom);
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -85,7 +85,8 @@ function UOM(props) {
                     });
                   },
                 };
-              }}></Table>
+              }}
+            ></Table>
           </Col>
         </Row>
       </MainLayout>
@@ -93,4 +94,4 @@ function UOM(props) {
   );
 }
 
-export default withRouter(UOM);
+export default withRouter(UOMMain);
