@@ -619,7 +619,7 @@ const CustomerCreate = (props) => {
                   </Col>
                 </Row>
               </Tabs.TabPane>
-              <Tabs.TabPane tab={<span>Orther Address</span>} key='2'>
+              <Tabs.TabPane tab={<span>Other Address</span>} key='2'>
                 <Customer_OrtherAddress
                   dataDetail={dataDetail}
                   readOnly={false}
