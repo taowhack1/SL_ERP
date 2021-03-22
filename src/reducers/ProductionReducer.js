@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   RESET_PRODUCTION,
   GET_ALL_MACHINE,
@@ -8,6 +10,9 @@ import {
   GET_ALL_MRP,
   GET_MRP_BY_ID,
   GET_MRP_SO_REF,
+  GET_ROUTING_ALL,
+  GET_FGITEM,
+  GET_ROUTING_ONE,
 } from "../actions/types";
 
 export const initialState = {
@@ -46,6 +51,16 @@ export const initialState = {
       },
       mrpList: [],
     },
+  },
+  routing: {
+    routing: {
+      data_head: {},
+      dataDetail: [],
+    },
+    routingList: [],
+  },
+  fg: {
+    fgList: [],
   },
 };
 
@@ -120,6 +135,30 @@ export default (state = initialState, action) => {
       return {
         ...state,
         machine: { ...state.machine, machine: action.payload },
+      };
+    case GET_ROUTING_ALL:
+      return {
+        ...state,
+        routing: {
+          ...state.routing,
+          routingList: action.payload,
+        },
+      };
+    case GET_ROUTING_ONE:
+      return {
+        ...state,
+        routing: {
+          ...state.routing,
+          routing: action.payload,
+        },
+      };
+    case GET_FGITEM:
+      return {
+        ...state,
+        fg: {
+          ...state.fg,
+          fgList: action.payload,
+        },
       };
     case RESET_PRODUCTION:
       return initialState;

@@ -1,11 +1,11 @@
 /** @format */
 
-import React, { useEffect, useReducer } from "react";
-import { Field, reduxForm } from "redux-form";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import MainLayout from "../../../../components/MainLayout";
-import { Row, Col, Input, Tabs, Typography, message } from "antd";
+import { Row, Col, Input, Tabs, Typography, message, Form, Select } from "antd";
 import TransferDetail from "./TransferDetail";
 import { reducer } from "../../../production/reducers";
+import { useForm, Controller } from "react-hook-form";
 import moment from "moment";
 import {
   TransferDetailFileds,
@@ -23,9 +23,24 @@ import {
   validateFormDetail,
   validateFormHead,
 } from "../../../../include/js/function_main";
+import CustomSelect from "../../../../components/CustomSelect";
+import { options } from "numeral";
+const defaultValues = {
+  description: "",
+  ReactSelect: { value: "vanilla", title: "Vanilla" },
+};
 const TransferCreate = (props) => {
+  const data2 = [
+    { value1: "chocolate_value", title: "Chocolate" },
+    { value1: "strawberry_value", title: "Strawberry" },
+    { value1: "vanilla_value", title: "Vanilla" },
+  ];
+  const { register, handleSubmit, watch, errors, control, setValue } = useForm(
+    defaultValues
+  );
   const { TextArea } = Input;
   const { Title, Text } = Typography;
+  const submitForm = useRef(null);
   const dispatch = useDispatch();
   const history = useHistory();
   const authorize = Authorize();
@@ -33,15 +48,18 @@ const TransferCreate = (props) => {
     props.location && props.location.state ? props.location.state : 0;
   const current_project = useSelector((state) => state.auth.currentProject);
   const auth = useSelector((state) => state.auth.authData);
+  const formState = useSelector((state) => state.form.transfercreate);
   const initialStateDetail = [TransferDetailFileds];
   const initialStateHead = [TransferHeadfileds];
   const initialStateLotBatch = [TransferLotBatchfileds];
+  const [formValue, setFormValue] = useState(null);
   const [dataHead, headDispatch] = useReducer(reducer, initialStateHead);
   const [dataDetail, detailDispatch] = useReducer(reducer, initialStateDetail);
   const [tepmStockInline, settepmStockInline] = useReducer(
     reducer,
     initialStateLotBatch
   );
+
   const item = null;
   const flow =
     dataHead &&
@@ -98,6 +116,7 @@ const TransferCreate = (props) => {
     save: "function",
     discard: "/inventory/transfer/",
     onSave: (e) => {
+      submitForm.current.click();
       const key = "validate";
       const validate = validateFormHead(dataHead, TransferRequireFileds);
       const validate_detail = validateFormDetail(
@@ -107,6 +126,7 @@ const TransferCreate = (props) => {
       if (validate_detail.validate && validate.validate) {
         console.log("pass", dataDetail);
         console.log("passdataHead", dataHead);
+
         // dataCategoryCreate.category_id
         //   ? dispatch(
         //       upDateConfigurationCategory(
@@ -141,76 +161,102 @@ const TransferCreate = (props) => {
   const upDateFormValue = (data) => {
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
-  const { fields, handleSubmit } = props;
+
+  console.log("formValue", formValue);
   return (
     <MainLayout {...config}>
-      <div id="form">
-        {/* Head */}
-        <Row className="col-2">
-          <Col span={8}>
-            <h2>
-              <strong>Create Transfer </strong>
-            </h2>
-          </Col>
-          <Col span={12}></Col>
-          <Col span={2}>
-            <Text strong>Create Date :</Text>
-          </Col>
-          <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{dataHead.trans_created}</Text>
-          </Col>
-        </Row>
-        {/* tab detail */}
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>
-              <span className="require">*</span> Transfer No :
-            </Text>
-          </Col>
-          <Col span={8}>
-            <Text className="text-view">{dataHead.transfer_no}</Text>
-          </Col>
-          <Col span={2}></Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>
-              <span className="require">*</span> Create By :
-            </Text>
-          </Col>
-          <Col span={8}>
-            <Text className="text-view">
-              {dataHead.trans_created_by_no_name}
-            </Text>
-          </Col>
-          <Col span={2}></Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Description :</Text>
-          </Col>
-          <Col span={8}>
-            <Input
-              name="description"
-              placeholder="Description"
-              value={dataHead.description}
-              onChange={(e) => upDateFormValue({ description: e.target.value })}
-            />
-          </Col>
-        </Row>
-        {/* tab */}
-        <Row className="col-2 row-tab-margin-l">
-          <Col span={24}>
-            <div className="mt-3">
-              <TransferDetail
-                dataDetail={dataDetail}
-                detailDispatch={detailDispatch}
-                readOnly={false}
+      <form onSubmit={handleSubmit((formValue) => setFormValue(formValue))}>
+        <div id='form'>
+          {/* Head */}
+          <Row className='col-2'>
+            <Col span={8}>
+              <h2>
+                <strong>Create Transfer </strong>
+              </h2>
+            </Col>
+            <Col span={12}></Col>
+            <Col span={2}>
+              <Text strong>Create Date :</Text>
+            </Col>
+            <Col span={2} style={{ textAlign: "right" }}>
+              <Text className='text-view'>{dataHead.trans_created}</Text>
+            </Col>
+          </Row>
+          {/* tab detail */}
+          <Row className='col-2 row-margin-vertical'>
+            <Col span={3}>
+              <Text strong>
+                <span className='require'>*</span> Transfer No :
+              </Text>
+            </Col>
+            <Col span={8}>
+              <Text className='text-view'>{dataHead.transfer_no}</Text>
+            </Col>
+            <Col span={2}></Col>
+          </Row>
+          <Row className='col-2 row-margin-vertical'>
+            <Col span={3}>
+              <Text strong>
+                <span className='require'>*</span> Create By :
+              </Text>
+            </Col>
+            <Col span={8}>
+              <Text className='text-view'>
+                {dataHead.trans_created_by_no_name}
+              </Text>
+            </Col>
+            <Col span={2}></Col>
+          </Row>
+          <Row className='col-2 row-margin-vertical'>
+            <Col span={3}>
+              <Text strong>Description :</Text>
+            </Col>
+            <Col span={8}>
+              <Controller
+                as={Input}
+                control={control}
+                name='description'
+                placeholder='Description'
+                value={dataHead.description}
+                ref={register}
+                onChange={(e) =>
+                  upDateFormValue({ description: e.target.value })
+                }
               />
-            </div>
-          </Col>
-        </Row>
-      </div>
+              <section>
+                <label>React Select</label>
+                <Controller
+                  as={<CustomSelect ref={register()} />}
+                  field_id='value1'
+                  field_name='title'
+                  title='title'
+                  name='ReactSelect'
+                  data={data2}
+                  placeholder='select'
+                  isClearable
+                  control={control}
+                />
+              </section>
+            </Col>
+          </Row>
+          {/* tab */}
+          <Row className='col-2 row-tab-margin-l'>
+            <Col span={24}>
+              <div className='mt-3'>
+                <TransferDetail
+                  dataDetail={dataDetail}
+                  detailDispatch={detailDispatch}
+                  readOnly={false}
+                />
+              </div>
+            </Col>
+          </Row>
+        </div>
+        <button
+          type='submit'
+          ref={submitForm}
+          style={{ display: "none" }}></button>
+      </form>
     </MainLayout>
   );
 };

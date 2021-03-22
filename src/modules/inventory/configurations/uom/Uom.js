@@ -1,3 +1,5 @@
+/** @format */
+
 import { Col, Row, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -83,8 +85,7 @@ function UoM(props) {
                     });
                   },
                 };
-              }}
-            ></Table>
+              }}></Table>
           </Col>
         </Row>
       </MainLayout>

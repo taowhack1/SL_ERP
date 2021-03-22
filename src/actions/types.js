@@ -1,3 +1,5 @@
+/** @format */
+
 export const AUTH_USER = "AUTH_USER";
 export const UNAUTH_USER = "UNAUTH_USER";
 export const AUTH_ERROR = "AUTH_ERROR";
@@ -88,6 +90,9 @@ export const RESET_COMMENTS = "RESET_COMMENTS";
 //Purchase -> Vendor
 export const GET_ALL_VENDOR = "GET_ALL_VENDOR";
 export const GET_VENDOR_BY_ID = "GET_VENDOR_BY_ID";
+export const GET_VENDOR_GROUP = "GET_VENDOR_GROUP";
+export const GET_VENDOR_CATEGORY = "GET_VENDOR_CATEGORY";
+export const GET_VENDOR_VAT = "GET_VENDOR_VAT";
 //Purchase -> PR
 export const GET_PR_BY_ID = "GET_PR_BY_ID";
 export const GET_ALL_PR = "GET_ALL_PR";
@@ -168,3 +173,17 @@ export const GET_MACHINE_BY_ID = "GET_MACHINE_BY_ID";
 export const GET_MRP_SO_REF = "GET_MRP_SO_REF";
 export const GET_ALL_MRP = "GET_ALL_MRP";
 export const GET_MRP_BY_ID = "GET_MRP_BY_ID";
+
+export const GET_ROUTING_ALL = "GET_ROUTING_ALL";
+export const GET_ROUTING_ONE = "GET_ROUTING_ONE";
+export const POST_ROUTING = "POST_ROUTING";
+export const PUT_ROUTING = "PUT_ROUTING";
+export const GET_FGITEM = "GET_FGITEM";
+
+// Address
+export const GET_LANGUAGE = "GET_LANGUAGE";
+export const GET_COUNTRY = "GET_COUNTRY";
+export const GET_PROVINCE = "GET_PROVINCE";
+export const GET_DISTRICT = "GET_DISTRICT";
+export const GET_TAMBON = "GET_TAMBON";
+export const GET_ZIP = "GET_ZIP";

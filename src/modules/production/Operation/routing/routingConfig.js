@@ -1,0 +1,196 @@
+/** @format */
+export const mainColumns = [
+  {
+    id: 1,
+    title: "No.",
+    dataIndex: "id",
+    width: "3%",
+    align: "center",
+    render: (value, record, index) => {
+      return index + 1;
+    },
+  },
+  {
+    id: 2,
+    title: "Routing Code.",
+    dataIndex: "routing_no",
+    width: "7%",
+    align: "left",
+  },
+  {
+    id: 3,
+    title: "FG Item.",
+    dataIndex: "item_no_name",
+    width: "20%",
+    align: "left",
+  },
+  {
+    id: 4,
+    title: "Description.",
+    dataIndex: "routing_remark",
+    width: "10%",
+    align: "left",
+  },
+  {
+    id: 6,
+    title: "Batch Size",
+    dataIndex: "routing_batch_size",
+    width: "10%",
+    align: "center",
+    render: (value, record, index) => {
+      return `${value} kg`;
+    },
+  },
+  {
+    id: 6,
+    title: "Fill wt",
+    dataIndex: "routing_fill_weight",
+    width: "10%",
+    align: "center",
+    render: (value, record, index) => {
+      return `${value} kg/pcs`;
+    },
+  },
+  {
+    id: 6,
+    title: "Capacity",
+    dataIndex: "routing_capacity_min",
+    width: "10%",
+    align: "center",
+    render: (value, record, index) => {
+      return `${value} pcs/min`;
+    },
+  },
+  {
+    id: 5,
+    title: "Working Time",
+    dataIndex: "routing_working_time_hour",
+    width: "10%",
+    align: "center",
+    render: (value, record, index) => {
+      return `${value} hour`;
+    },
+  },
+];
+export const Columns = [
+  {
+    id: 1,
+    title: "No.",
+    dataIndex: "id2",
+    width: "5%",
+    align: "center",
+    render: (value, record, index) => {
+      return value + 1;
+    },
+  },
+  {
+    id: 1,
+    title: "Cost Center No.",
+    dataIndex: "coster_no_name",
+    width: "65%",
+    align: "center",
+    render: (value, record, index) => {
+      return value + 1;
+    },
+  },
+  {
+    id: 1,
+    title: "Man.",
+    dataIndex: "Man",
+    width: "15%",
+    align: "center",
+  },
+  {
+    id: 1,
+    title: "Period.",
+    dataIndex: "Period",
+    width: "15%",
+    align: "center",
+  },
+];
+
+export const DetailColumns = [
+  {
+    id: 0,
+    name: "No",
+    size: 1,
+    require: false,
+  },
+  {
+    id: 1,
+    name: "Cost Center",
+    size: 14,
+    require: true,
+  },
+  {
+    id: 2,
+    name: "Man",
+    size: 4,
+    require: true,
+  },
+  {
+    id: 3,
+    name: "Period ",
+    size: 4,
+    require: true,
+  },
+];
+export const routingHeadFileds = {
+  item_id: null,
+  item_id_ref: null,
+  branch_id: null,
+  routing_detail: null,
+  routing_working_time_min: null,
+  routing_working_time_hour: null,
+  routing_working_time_day: null,
+  routing_batch_size: null,
+  routing_pack_size: null,
+  routing_fill_weight: null,
+  routing_worker_hour: null,
+  routing_capacity_min: null,
+  routing_description: null,
+  routing_remark: null,
+};
+export const routingDetailFileds = {
+  id: null,
+  rowId: null,
+  routing_detail_remark: null,
+  machine_id: null,
+  routing_detail_worker: null,
+  routing_detail_lead_time: null,
+};
+export const routingHeadRequireFileds = [
+  "item_id",
+  "item_id_ref",
+  "routing_working_time_min",
+  "routing_working_time_hour",
+  "routing_working_time_day",
+  "routing_batch_size",
+  "routing_pack_size",
+  "routing_fill_weight",
+  "routing_capacity_min",
+  "routing_worker_hour",
+  "routing_remark",
+];
+export const routingDetailRequireFileds = [
+  "machine_id",
+  "routing_detail_worker",
+  "routing_detail_lead_time",
+];
+export const mockupData = [
+  {
+    id: 1,
+    description: "test",
+    routing_no: "routing001",
+    fg_item: "[ 406SRLA02400 ] Sirilab Damage Care Hair Treatment Mask 100ml",
+    bulk_item: "[ 306SRLA00200 ] Bulk-Sirilab Damage Care Hair Treatment Mask",
+    working_time_min: "300",
+    working_time_hour: "05:00",
+    working_time_day: "0.208",
+    batch_size: 300,
+    fill_wt: "0.100",
+    manperhour: "90.0",
+    capacity: 10,
+    pcsbatch: 3000,
+  },
+];

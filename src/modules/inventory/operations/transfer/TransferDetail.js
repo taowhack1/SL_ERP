@@ -6,10 +6,11 @@ import {
   PlusOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Input, InputNumber, Row } from "antd";
+import { Button, Col, Input, InputNumber, Row, Form, Select } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Field } from "redux-form";
 import {
   get_location_shelf_by_item_id,
   get_lot_batch_by_item_id_shelf,
@@ -22,8 +23,8 @@ const numberFormat = {
   formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
   parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
 };
-
 const TransferDetail = ({ dataDetail, detailDispatch, readOnly }) => {
+  console.log("dataDetail", dataDetail);
   const dispatch = useDispatch();
   const ItemList = useSelector(
     (state) => state.inventory.master_data.item_list

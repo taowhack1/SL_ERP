@@ -1,3 +1,5 @@
+/** @format */
+
 import axios from "axios";
 import { header_config } from "../../include/js/main_config";
 import { api_customer } from "../../include/js/api";
@@ -13,9 +15,14 @@ export const get_customer_list = () => (dispatch) => {
 
 export const get_customer_by_id = (customer_id, redirect) => (dispatch) => {
   try {
-    axios.get(`${api_customer}/${customer_id}`, header_config).then((res) => {
-      console.log("get_customer", res);
-      dispatch({ type: GET_CUSTOMER_BY_ID, payload: res.data[0][0] });
+    const get_head = axios.get(`${api_customer}/${customer_id}`, header_config);
+    Promise.allSettled([get_head]).then(async (data) => {
+      const customerData = {
+        data_head: data[0].value.data[0],
+        dataDetail: data[0].value.data[0].customer_detail,
+      };
+
+      await dispatch({ type: GET_CUSTOMER_BY_ID, payload: customerData });
       redirect(customer_id);
     });
   } catch (error) {
@@ -28,14 +35,14 @@ export const get_customer_by_id = (customer_id, redirect) => (dispatch) => {
   }
 };
 
-export const create_customer = (data_head, redirect) => (dispatch) => {
+export const create_customer = (data, redirect) => (dispatch) => {
   console.log("customer_create");
   try {
     axios
-      .post(`${api_customer}`, data_head, header_config)
+      .post(`${api_customer}`, data, header_config)
       .then((res) => {
         console.log(res);
-        const customer_id = res.data[0][0].customer_id;
+        const customer_id = res.data[0].customer_id;
         dispatch(get_customer_by_id(customer_id, redirect));
       })
       .catch((error) => {
@@ -56,16 +63,15 @@ export const create_customer = (data_head, redirect) => (dispatch) => {
   }
 };
 
-export const update_customer = (customer_id, data_head, redirect) => (
-  dispatch
-) => {
-  console.log("customer_update", data_head);
+export const update_customer = (customer_id, data, redirect) => (dispatch) => {
+  console.log("customer_update_customer_id", customer_id);
   try {
     axios
-      .put(`${api_customer}/${customer_id}`, data_head, header_config)
+      .put(`${api_customer}/${customer_id}`, data, header_config)
       .then((res) => {
         console.log(res);
-        const customer_id = res.data[0][0].customer_id;
+        console.log("customer_update", res);
+        const customer_id = res.data[0].customer_id;
         dispatch(get_customer_by_id(customer_id, redirect));
         message.success({
           content: "Customer Updated.",

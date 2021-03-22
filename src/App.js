@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Router } from "react-router-dom";
 import { AppContext, Context, TypeContext } from "./include/js/context";
 
 import Dashboard from "./modules/dashboard/Dashboard";
@@ -99,6 +99,10 @@ import TransferView from "./modules/inventory/operations/transfer/TransferView";
 import WorkOrderCreate1 from "./modules/production/Operation/workorder/WorkOrderCreate";
 
 import ReturnRoutes from "./modules/inventory/operations/return/ReturnRoutes";
+import Routing from "./modules/production/Operation/routing/Routing";
+import RoutingCreate from "./modules/production/Operation/routing/RoutingCreate";
+import RoutingView from "./modules/production/Operation/routing/RoutingView";
+import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -133,356 +137,377 @@ const App = (props) => {
       <BrowserRouter>
         <AppContext.Provider value={AppContextValue}>
           <Switch>
-            <Route exact path="/login">
+            <Route exact path='/login'>
               <Login />
             </Route>
-            <Route exact path="/change_password">
+            <Route exact path='/change_password'>
               <ChangePassword />
             </Route>
-            <Route exact path="/">
+            <Route exact path='/'>
               <Dashboard />
             </Route>
-            <Route exact path="/settings">
+            <Route exact path='/settings'>
               <Settings />
             </Route>
             {/* INVENTORY */}
-            <Route exact path="/inventory">
+            <Route exact path='/inventory'>
               <Inventory />
             </Route>
             {/* ISSUE */}
-            <Route exact path="/inventory/issue">
+            <Route exact path='/inventory/issue'>
               <Issue />
             </Route>
             <Route
               exact
-              path="/inventory/issue/create"
+              path='/inventory/issue/create'
               component={IssueCreate}
             />
             <Route
               exact
-              path="/inventory/issue/edit/:id"
+              path='/inventory/issue/edit/:id'
               component={IssueCreate}
             />
             <Route
               exact
-              path="/inventory/issue/view/:id"
+              path='/inventory/issue/view/:id'
               component={IssueView}
             />
             {/* DISBURSE */}
-            <Route exact path="/inventory/disburse">
+            <Route exact path='/inventory/disburse'>
               <Disburse />
             </Route>
             <Route
               exact
-              path="/inventory/disburse/create"
+              path='/inventory/disburse/create'
               component={DisburseCreate}
             />
             <Route
               exact
-              path="/inventory/disburse/edit/:id"
+              path='/inventory/disburse/edit/:id'
               component={DisburseCreate}
             />
             <Route
               exact
-              path="/inventory/disburse/view/:id"
+              path='/inventory/disburse/view/:id'
               component={DisburseView}
             />
             {/* RECEIVE */}
-            <Route exact path="/inventory/receive">
+            <Route exact path='/inventory/receive'>
               <Receive />
             </Route>
-            <Route exact path="/inventory/receive/:action">
+            <Route exact path='/inventory/receive/:action'>
               <ReceiveCreate />
             </Route>
             <Route
               exact
-              path="/inventory/receive/:action/:id"
+              path='/inventory/receive/:action/:id'
               component={ReceiveRoute}
             />
             {/*RECEIVE PRODUCTION */}
-            <Route exact path="/inventory/receive_pd">
+            <Route exact path='/inventory/receive_pd'>
               <ReceivePDList />
             </Route>
-            <Route exact path="/inventory/receive_pd/create">
+            <Route exact path='/inventory/receive_pd/create'>
               <ReceivePDCreate />
             </Route>
             {/* INVENTORY MASTER DATA */}
-            <Route exact path="/inventory/items">
+            <Route exact path='/inventory/items'>
               <Items />
             </Route>
             <Route
               exact
-              path="/inventory/items/view/:id"
+              path='/inventory/items/view/:id'
               component={ItemView}
             />
             <Route
               exact
-              path="/inventory/items/create"
+              path='/inventory/items/create'
               component={ItemCreate}
             />
             <Route
               exact
-              path="/inventory/items/edit/:id"
+              path='/inventory/items/edit/:id'
               component={ItemCreate}
             />
             {/* INVENTORY CONFIGURATION */}
-            <Route exact path="/inventory/configurations/type">
+            <Route exact path='/inventory/configurations/type'>
               <Type />
             </Route>
-            <Route exact path="/inventory/configurations/type/create">
+            <Route exact path='/inventory/configurations/type/create'>
               <TypeCreate />
             </Route>
             <Route
               exact
-              path="/inventory/configurations/type/view/:id"
+              path='/inventory/configurations/type/view/:id'
               component={TypeView}
             />
             <Route
               exact
-              path="/inventory/configurations/type/edit/:id"
+              path='/inventory/configurations/type/edit/:id'
               component={TypeCreate}
             />
             {/* {category} */}
-            <Route exact path="/inventory/configurations/category">
+            <Route exact path='/inventory/configurations/category'>
               <Category />
             </Route>
-            <Route exact path="/inventory/configurations/category/create">
+            <Route exact path='/inventory/configurations/category/create'>
               <CategoryCreate />
             </Route>
             <Route
               exact
-              path="/inventory/configurations/category/view/:id"
+              path='/inventory/configurations/category/view/:id'
               component={CategoryView}
             />
             <Route
               exact
-              path="/inventory/configurations/category/edit/:id"
+              path='/inventory/configurations/category/edit/:id'
               component={CategoryCreate}
             />
-            <Route exact path="/inventory/configurations/uom">
+            <Route exact path='/inventory/configurations/uom'>
               <UoM />
             </Route>
             {/* {uom} */}
             <Route
               exact
-              path="/inventory/configurations/uom/create"
+              path='/inventory/configurations/uom/create'
               component={UoMCreate}
             />
             <Route
               exact
-              path="/inventory/configurations/uom/view/:id"
+              path='/inventory/configurations/uom/view/:id'
               component={UoMView}
             />
             <Route
               exact
-              path="/inventory/configurations/uom/edit/:id"
+              path='/inventory/configurations/uom/edit/:id'
               component={UoMCreate}
             />
-            <exact path="/inventory/warehouse">
+            <exact path='/inventory/warehouse'>
               <Warehouse />
             </exact>
-            <Route exact path="/inventory/location">
+            <Route exact path='/inventory/location'>
               <Location />
             </Route>
-            <Route exact path="/inventory/items/type">
+            <Route exact path='/inventory/items/type'>
               <ItemType />
             </Route>
             {/* {INVENTORY/operation/transfer} */}
-            <Route exact path="/inventory/transfer">
+            <Route exact path='/inventory/transfer'>
               <Transfer />
             </Route>
             <Route
               exact
-              path="/inventory/transfer/create"
+              path='/inventory/transfer/create'
               component={TransferCreate}
-            />{" "}
+            />
             <Route
               exact
-              path="/inventory/transfer/view/"
+              path='/inventory/transfer/view/'
               component={TransferView}
             />
             {/* INVENTORY -> OPERATIONS -> RETURN */}
-            <Route path="/inventory/return">
+            <Route path='/inventory/return'>
               <ReturnRoutes />
             </Route>
             {/* INVENTORY REPORT */}
-            <Route exact path="/inventory/stock_move">
+            <Route exact path='/inventory/stock_move'>
               <StockMove />
             </Route>
-            <Route exact path="/inventory/stock_on_hand">
+            <Route exact path='/inventory/stock_on_hand'>
               <StockOnHand />
             </Route>
             {/* PURCHASE */}
-            <Route exact path="/purchase">
+            <Route exact path='/purchase'>
               <Purchase />
             </Route>
-            <Route exact path="/purchase/pr">
+            <Route exact path='/purchase/pr'>
               <PurchPR />
             </Route>
-            <Route exact path="/purchase/pr/create">
+            <Route exact path='/purchase/pr/create'>
               <PurchPRCreate />
             </Route>
-            <Route exact path="/purchase/pr/view/:id" component={PurchPRView} />
+            <Route exact path='/purchase/pr/view/:id' component={PurchPRView} />
             <Route
               exact
-              path="/purchase/pr/edit/:id"
+              path='/purchase/pr/edit/:id'
               component={PurchPRCreate}
             />
-            <Route exact path="/purchase/po">
+            <Route exact path='/purchase/po'>
               <PurchPO />
             </Route>
-            <Route exact path="/purchase/po/create">
+            <Route exact path='/purchase/po/create'>
               <PurchPOCreate />
             </Route>
             <Route
               exact
-              path="/purchase/po/edit/:id"
+              path='/purchase/po/edit/:id'
               component={PurchPOCreate}
             />
-            <Route exact path="/purchase/po/view/:id" component={PurchPOView} />
-            <Route exact path="/purchase/vendor">
+            <Route exact path='/purchase/po/view/:id' component={PurchPOView} />
+            <Route exact path='/purchase/vendor'>
               <Vendor />
             </Route>
-            <Route exact path="/purchase/vendor/create">
+            <Route exact path='/purchase/vendor/create'>
               <VendorCreate />
             </Route>
             <Route
               exact
-              path="/purchase/vendor/view/:id"
+              path='/purchase/vendor/view/:id'
               component={VendorView}
             />
             <Route
               exact
-              path="/purchase/vendor/edit/:id"
+              path='/purchase/vendor/edit/:id'
               component={VendorCreate}
             />
             {/* SALES */}
-            <Route exact path="/sales">
+            <Route exact path='/sales'>
               <Sales />
             </Route>
             {/* SALES  Quotations */}
-            <Route exact path="/sales/quotations">
+            <Route exact path='/sales/quotations'>
               <Quotations />
             </Route>
-            <Route exact path="/sales/quotations/create">
+            <Route exact path='/sales/quotations/create'>
               <QuotationsCreate />
             </Route>
             <Route
               exact
-              path="/sales/quotations/view/:id"
+              path='/sales/quotations/view/:id'
               component={QuotationsView}
             />
             <Route
               exact
-              path="/sales/quotations/edit/:id"
+              path='/sales/quotations/edit/:id'
               component={QuotationsCreate}
             />
             {/* SALES ORDERS */}
-            <Route exact path="/sales/orders">
+            <Route exact path='/sales/orders'>
               <SaleOrder />
             </Route>
-            <Route exact path="/sales/orders/create">
+            <Route exact path='/sales/orders/create'>
               <SaleOrderCreate />
             </Route>
             <Route
               exact
-              path="/sales/orders/view/:id"
+              path='/sales/orders/view/:id'
               component={SaleOrderView}
             />
             <Route
               exact
-              path="/sales/orders/edit/:id"
+              path='/sales/orders/edit/:id'
               component={SaleOrderCreate}
             />
             {/* SALES CONFIGURATION */}
-            <Route exact path="/sales/config/customers">
+            <Route exact path='/sales/config/customers'>
               <Customer />
             </Route>
-            <Route exact path="/sales/config/customers/create">
+            <Route exact path='/sales/config/customers/create'>
               <CustomerCreate />
             </Route>
             <Route
               exact
-              path="/sales/config/customers/view/:id"
+              path='/sales/config/customers/view/:id'
               component={CustomerView}
             />
             <Route
               exact
-              path="/sales/config/customers/edit/:id"
+              path='/sales/config/customers/edit/:id'
               component={CustomerCreate}
             />
             {/* QA QC */}
-            <Route exact path="/qa">
+            <Route exact path='/qa'>
               <QualityAssurance />
             </Route>
-            <Route exact path="/qa/qc/receive">
+            <Route exact path='/qa/qc/receive'>
               <QCReceive />
             </Route>
-            <Route exact path="/qa/master_data/conditions">
+            <Route exact path='/qa/master_data/conditions'>
               <ConditionsMain />
             </Route>
             <Route
               exact
-              path="/qa/master_data/conditions/:action/:id"
+              path='/qa/master_data/conditions/:action/:id'
               component={ConditionsForm}
             />
+            <Route exact path='/qa/report_qc'>
+              <ReportQC />
+            </Route>
             {/* PRODUCTION */}
-            <Route exact path="/production">
+            <Route exact path='/production'>
               <Production />
             </Route>
             {/* PRODUCTION OPERATION */}
-            <Route exact path="/production/operations/mrp">
+            <Route exact path='/production/operations/mrp'>
               <MRPMain />
             </Route>
-            <Route exact path="/production/operations/mrp/create">
+            <Route exact path='/production/operations/mrp/create'>
               <MRPCreate />
             </Route>
             {/* PETCH ADD */}
-            <Route exact path="/production/operations/workorder/">
+            <Route exact path='/production/operations/workorder/'>
               <WorkOrderCreate1 />
             </Route>
             <Route
               exact
-              path="/production/operations/mrp/view/:id"
+              path='/production/operations/mrp/view/:id'
               component={MRPView}
             />
             <Route
               exact
-              path="/production/operations/mrp/edit/:id"
+              path='/production/operations/mrp/edit/:id'
               component={MRPCreate}
             />
             {/* PRODUCTION MASTER DATA */}
-            <Route exact path="/production/work_center">
+            <Route exact path='/production/work_center'>
               <WorkCenter />
             </Route>
-            <Route exact path="/production/work_center/create">
+            <Route exact path='/production/work_center/create'>
               <WorkCenterCreate />
             </Route>
             <Route
               exact
-              path="/production/work_center/view/:id"
+              path='/production/work_center/view/:id'
               component={WorkCenterView}
             />
             <Route
               exact
-              path="/production/work_center/edit/:id"
+              path='/production/work_center/edit/:id'
               component={WorkCenterCreate}
             />
-            <Route exact path="/production/machine">
+            <Route exact path='/production/machine'>
               <Machine />
             </Route>
-            <Route exact path="/production/machine/create">
+            <Route exact path='/production/machine/create'>
               <MachineCreate />
             </Route>
             <Route
               exact
-              path="/production/machine/view/:id"
+              path='/production/machine/view/:id'
               component={MachineView}
             />
             <Route
               exact
-              path="/production/machine/edit/:id"
+              path='/production/machine/edit/:id'
               component={MachineCreate}
+            />
+            <Route exact path='/production/routing/'>
+              <Routing />
+            </Route>
+            <Route
+              exact
+              path='/production/routing/create'
+              component={RoutingCreate}
+            />
+            <Route
+              exact
+              path='/production/routing/view/:id'
+              component={RoutingView}
+            />
+            <Route
+              exact
+              path='/production/routing/edit/:id'
+              component={RoutingCreate}
             />
             <Route>
               <NotFound />

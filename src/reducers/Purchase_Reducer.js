@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   GET_ALL_PR,
   GET_ALL_PO,
@@ -14,6 +16,16 @@ import {
   GET_CURRENCY,
   GET_PR_BY_ID,
   GET_PO_BY_ID,
+  GET_VENDOR_CATEGORY,
+  GET_VENDOR_GROUP,
+  GET_LANGUAGE,
+  GET_VAT,
+  GET_ZIP,
+  GET_TAMBON,
+  GET_DISTRICT,
+  GET_PROVINCE,
+  GET_COUNTRY,
+  GET_VENDOR_VAT,
 } from "../actions/types";
 import { sortData } from "../include/js/function_main";
 const initialState = {
@@ -30,7 +42,19 @@ const initialState = {
   },
   vendor: {
     vendor_list: [],
-    vendor: {},
+    vendor: {
+      data_head: {},
+      dataDetail: [],
+    },
+    vendor_group: {},
+    vendor_category: {},
+    vendor_language: {},
+    vendor_country: {},
+    vendor_province: {},
+    vendor_district: {},
+    vendor_tambon: {},
+    vendor_zip: {},
+    vendor_vat: {},
   },
   currency: [],
 };
@@ -41,10 +65,55 @@ export default (state = initialState, action) => {
         ...state,
         vendor: { ...state.vendor, vendor_list: action.payload },
       };
+    case GET_VENDOR_GROUP:
+      return {
+        ...state,
+        vendor: { ...state.vendor, vendor_group: action.payload },
+      };
+    case GET_VENDOR_CATEGORY:
+      return {
+        ...state,
+        vendor: { ...state.vendor, vendor_category: action.payload },
+      };
     case GET_VENDOR_BY_ID:
       return {
         ...state,
         vendor: { ...state.vendor, vendor: action.payload },
+      };
+    case GET_LANGUAGE:
+      return {
+        ...state,
+        vendor: { ...state.vendor, vendor_language: action.payload },
+      };
+    case GET_COUNTRY:
+      return {
+        ...state,
+        vendor: { ...state.vendor, vendor_country: action.payload },
+      };
+    case GET_PROVINCE:
+      return {
+        ...state,
+        vendor: { ...state.vendor, vendor_province: action.payload },
+      };
+    case GET_DISTRICT:
+      return {
+        ...state,
+        vendor: { ...state.vendor, vendor_district: action.payload },
+      };
+    case GET_TAMBON:
+      return {
+        ...state,
+        vendor: { ...state.vendor, vendor_tambon: action.payload },
+      };
+    case GET_ZIP:
+      return {
+        ...state,
+        vendor: { ...state.vendor, vendor_zip: action.payload },
+      };
+    case GET_VENDOR_VAT:
+      return {
+        ...state,
+        vendor: { ...state.vendor, vendor_vat: action.payload },
       };
     case GET_CURRENCY:
       return {
