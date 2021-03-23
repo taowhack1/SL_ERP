@@ -9,8 +9,8 @@ import {
 } from "../actions/types";
 
 const initialState = {
-  qc_receive_list: [],
-  qc_receive_detail_list: [],
+  // qc_receive_list: [],
+  // qc_receive_detail_list: [],
   qa_master_data: {
     conditions_subject: [],
     conditions_specification: [],
@@ -27,14 +27,14 @@ const initialState = {
 };
 export default (state = initialState, action) => {
   switch (action.type) {
-    case GET_QC_RECEIVE_LIST:
-      return { ...state, qc_receive_list: action.payload, loading: false };
-    case GET_QC_RECEIVE_DETAIL_LIST:
-      return {
-        ...state,
-        qc_receive_detail_list: action.payload,
-        loading: false,
-      };
+    // case GET_QC_RECEIVE_LIST:
+    //   return { ...state, qc_receive_list: action.payload, loading: false };
+    // case GET_QC_RECEIVE_DETAIL_LIST:
+    //   return {
+    //     ...state,
+    //     qc_receive_detail_list: action.payload,
+    //     loading: false,
+    //   };
     case GET_QA_MASTER_DATA:
       return { ...state, qa_master_data: action.payload, loading: false };
     case GET_QA_TEST_BY_ID:

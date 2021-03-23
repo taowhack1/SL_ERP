@@ -24,16 +24,11 @@ const QCReceive = () => {
   const tempItemList = useRef();
   const authorize = Authorize();
   authorize.check_authorize();
-  const dispatch = useDispatch();
   const { currentProject, auth } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
   const [qc_list, qcListDispatch] = useReducer(reducer, []);
   const [update, setUpdate] = useState(0);
   const [itemList, setItemList] = useState([]);
-
-  const qc_receive_detail_list = useSelector(
-    (state) => state.qa.qc_receive_detail_list
-  );
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -65,8 +60,6 @@ const QCReceive = () => {
       setUpdate(!update);
       const data_update = qc_list.filter((row) => row.commit === 1);
       update_qc_receive_list(data_update).then((res) => {
-        console.log(res.data);
-        // dispatch(get_qc_receive_list());
         setTimeout(() => {
           message.success({
             content: "QC Receive Updated.",
@@ -180,7 +173,7 @@ const QCReceive = () => {
           min={0.0}
           max={record.stock_detail_qty_hold}
           step={0.001}
-          size='small'
+          size="small"
           style={{ width: "100%", backgroundColor: "#e6feff" }}
           disabled={0}
           value={record.stock_qty_pass}
@@ -210,7 +203,7 @@ const QCReceive = () => {
           min={0.0}
           max={record.stock_detail_qty_hold}
           step={0.001}
-          size='small'
+          size="small"
           style={{ width: "100%", backgroundColor: "#FFE6E6" }}
           disabled={0}
           value={record.stock_qty_reject}
@@ -228,14 +221,12 @@ const QCReceive = () => {
   ];
 
   const expandedRowRender = (record) => {
-    console.log("expandedRowRender qc_list", qc_list);
-    console.log("expandedRowRender record", record);
     return (
       <Table
         bordered
         columns={mockup_receive_sub_detail_columns}
         rowKey={"stock_id"}
-        dataSource={qc_list.filter((batch) => batch.item_id === record.item_id)}
+        dataSource={qc_list.filter((obj) => obj.item_id === record.item_id)}
         pagination={false}
       />
     );
@@ -249,7 +240,7 @@ const QCReceive = () => {
         tempItemList.current = res[0].value;
         qcListDispatch({
           type: "SET_DETAIL_WOC",
-          payload: res[1].value,
+          payload: [].concat(...res[0].value.map((obj) => obj.stock_detail)),
         });
         setTimeout(() => setLoading(false), 800);
       });
@@ -274,7 +265,7 @@ const QCReceive = () => {
                 dataSource={itemList}
                 expandable={{ expandedRowRender }}
                 onChange={onChange}
-                size='small'
+                size="small"
               />
             )}
           </Col>

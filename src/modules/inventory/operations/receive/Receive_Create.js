@@ -211,8 +211,6 @@ const Receive_Create = (props) => {
             type: "CHANGE_HEAD_VALUE",
             payload: { ...data, receive_detail: sortData(details) },
           });
-
-          // setLoading(false);
         });
     }
     setTimeout(() => setLoading(false), 800);

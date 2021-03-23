@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Typography, message } from "antd";
+import { Row, Col, Typography, message, Button } from "antd";
 import MainLayout from "../../../components/MainLayout";
 import Comments from "../../../components/Comments";
 import { get_log_by_id } from "../../../actions/comment&log";
@@ -18,12 +18,13 @@ import ModalRemark from "../../../components/Modal_Remark";
 import { updateProcessStatus } from "../../../actions/inventory";
 import MainLayoutLoading from "../../../components/MainLayoutLoading";
 import DetailLoading from "../../../components/DetailLoading";
-import { useParams } from "react-router-dom";
+import { BrowserRouter, Link, useHistory, useParams } from "react-router-dom";
 import { SecurityScanTwoTone } from "@ant-design/icons";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
 
 const MRPView = (props) => {
+  const history = useHistory();
   const readOnly = true;
   const { id } = useParams();
   const authorize = Authorize();
@@ -82,10 +83,15 @@ const MRPView = (props) => {
     back: "/production/operations/mrp",
     discard: "/production/operations/mrp",
     action: [
-      state?.button_cancel && {
-        name: "Cancel",
-        cancel: true,
-        link: ``,
+      // state?.button_cancel && {
+      //   name: "Cancel",
+      //   cancel: true,
+      //   link: ``,
+      // },
+      {
+        name: "Production",
+        callBack: () =>
+          history.push("/production/operations/production", state),
       },
     ],
     edit: {

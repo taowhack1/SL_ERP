@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MainLayout from "../../components/MainLayout";
 import Authorize from "../system/Authorize";
+import { PageContext } from "../../include/js/context";
 
 const Production = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
+
   console.log(props.location.state);
   // const onChange = (pagination, filters, sorter, extra) => {
   //   console.log("params", pagination, filters, sorter, extra);

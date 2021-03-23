@@ -103,6 +103,8 @@ import Routing from "./modules/production/Operation/routing/Routing";
 import RoutingCreate from "./modules/production/Operation/routing/RoutingCreate";
 import RoutingView from "./modules/production/Operation/routing/RoutingView";
 import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
+import ProductionMain from "./modules/production/Operation/production/ProductionMain";
+import PageLayout from "./components/PageLayout";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -512,6 +514,13 @@ const App = (props) => {
               path="/production/routing/edit/:id"
               component={RoutingCreate}
             />
+            <PageLayout>
+              <Route
+                exact
+                path="/production/operations/production"
+                component={ProductionMain}
+              />
+            </PageLayout>
             <Route>
               <NotFound />
             </Route>

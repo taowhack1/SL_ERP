@@ -1,8 +1,6 @@
-/** @format */
-
 import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Typography, message, Cascader } from "antd";
+import { Row, Col, Input, Tabs, Typography, message } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import {
@@ -19,7 +17,6 @@ import {
   VatID,
 } from "../../actions/purchase/vendorActions";
 import {
-  options,
   VendorDetailFileds,
   vendor_fields,
   vendor_require_fields,
@@ -30,7 +27,6 @@ import { validateFormHead } from "../../include/js/function_main";
 import { useHistory } from "react-router-dom";
 import Vendor_OrtherAddress from "./Vendor_OrtherAddress";
 import { reducer } from "../qualityAssurance/reducers";
-import { LineChartOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
@@ -44,30 +40,18 @@ const VendorCreate = (props) => {
   const vendor_payment_terms = useSelector(
     (state) => state.accounting.master_data.vendor_payment_terms
   );
-  const currency_list = useSelector(
-    (state) => state.accounting.master_data.currency
+  const { currency: currency_list } = useSelector(
+    (state) => state.accounting.master_data
   );
-  const vendor_group = useSelector(
-    (state) => state.purchase.vendor.vendor_group
-  );
-  const vendor_category = useSelector(
-    (state) => state.purchase.vendor.vendor_category
-  );
-  const vendor_language = useSelector(
-    (state) => state.purchase.vendor.vendor_language
-  );
-  const vendor_country = useSelector(
-    (state) => state.purchase.vendor.vendor_country
-  );
-  const vendor_province = useSelector(
-    (state) => state.purchase.vendor.vendor_province
-  );
-  const vendor_district = useSelector(
-    (state) => state.purchase.vendor.vendor_district
-  );
-  const vendor_tambon = useSelector(
-    (state) => state.purchase.vendor.vendor_tambon
-  );
+  const {
+    vendor_group,
+    vendor_category,
+    vendor_language,
+    vendor_country,
+    vendor_province,
+    vendor_district,
+    vendor_tambon,
+  } = useSelector((state) => state.purchase.vendor);
   const vendor_vat = useSelector((state) => state.purchase.vendor.vendor_vat);
   const vendor_zip = useSelector((state) => state.purchase.vendor.vendor_zip);
   const data =
@@ -152,6 +136,7 @@ const VendorCreate = (props) => {
       console.log("Confirm");
     },
   };
+
   const redirect_to_view = (id) => {
     history.push("/purchase/vendor/view/" + (id ? id : "new"));
   };
@@ -458,7 +443,7 @@ const VendorCreate = (props) => {
                           field_id="zip_id"
                           field_name="zip_name"
                           value={data_head.zip_id}
-                          data={vendor_zip}
+                          data={vendor_zip ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue({

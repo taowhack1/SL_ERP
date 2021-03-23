@@ -132,7 +132,6 @@ const MRPMain = (props) => {
   useEffect(() => {
     setStateMRP(mrpList);
   }, [mrpList.length]);
-  const onSearch = (value, search) => {};
   return (
     <div>
       <MainLayout {...config}>
@@ -161,13 +160,6 @@ const MRPMain = (props) => {
                       history.push(
                         "/production/operations/mrp/view/" + record.mrp_id
                       );
-                      // dispatch(
-                      //   getMRPByID(
-                      //     record.mrp_id,
-                      //     auth.user_name,
-                      //     redirect_to_view
-                      //   )
-                      // );
                     }
                   },
                 };

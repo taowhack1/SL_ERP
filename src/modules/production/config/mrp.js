@@ -97,57 +97,48 @@ export const mrp_columns = (showModal) => [
       return getRefStatus(record);
     },
   },
-  // {
-  //   title: "RM/PK Tracking",
-  //   dataIndex: "",
-  //   key: "tracking",
-  //   width: "6%",
-  //   align: "center",
-  //   colSpan: 2,
-  //   ellipsis: true,
-  //   render: (value, record, index) => {
-  //     if (record.process_complete) {
-  //       return (
-  //         <div>
-  //           <Tag type="primary" color="processing">
-  //             <SyncOutlined spin className="button-icon" /> In Process
-  //           </Tag>
-  //         </div>
-  //       );
-  //     } else {
-  //       return <div>-</div>;
-  //     }
-  //   },
-  // },
-  // {
-  //   title: "Tracking",
-  //   dataIndex: "tracking1",
-  //   colSpan: 0,
-  //   width: "2%",
-  //   align: "center",
-  //   ellipsis: true,
-  //   render: (value, record, index) => {
-  //     if (record.process_complete) {
-  //       return (
-  //         <ZoomInOutlined
-  //           onClick={(e) => showModal(record)}
-  //           className="button-icon"
-  //           style={{ fontSize: 18 }}
-  //         />
-  //       );
-  //     } else {
-  //     }
-  //   },
-  // },
-  // {
-  //   title: "WorkOrder",
-  //   dataIndex: "d",
-  //   key: "d",
-  //   width: "5%",
-  //   align: "center",
-  //   ellipsis: true,
-  //   render: (value, record, index) => {},
-  // },
+  {
+    title: "RM/PK Tracking",
+    dataIndex: "",
+    key: "tracking",
+    width: "6%",
+    align: "center",
+    colSpan: 2,
+    ellipsis: true,
+    render: (value, record, index) => {
+      if (record.process_complete) {
+        return (
+          <div>
+            <Tag type="primary" color="processing">
+              <SyncOutlined spin className="button-icon" /> In Process
+            </Tag>
+          </div>
+        );
+      } else {
+        return <div>-</div>;
+      }
+    },
+  },
+  {
+    title: "Tracking",
+    dataIndex: "tracking1",
+    colSpan: 0,
+    width: "2%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record, index) => {
+      if (record.process_complete) {
+        return (
+          <ZoomInOutlined
+            onClick={(e) => showModal(record)}
+            className="button-icon"
+            style={{ fontSize: 18 }}
+          />
+        );
+      } else {
+      }
+    },
+  },
 ];
 export const mrpFields = {
   mrp_id: null,

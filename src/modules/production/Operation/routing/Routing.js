@@ -52,6 +52,8 @@ const Routing = (props) => {
             dataSource={RoutingList}
             columns={mainColumns}
             rowKey={"routing_id"}
+            size={"small"}
+            pagination={{ pageSize: 20 }}
             onRow={(record, rowIndex) => {
               return {
                 onClick: (e) => {
@@ -64,7 +66,8 @@ const Routing = (props) => {
                   dispatch(getRoutingByID(record.routing_id, redirect_to_view));
                 },
               };
-            }}></Table>
+            }}
+          ></Table>
         </Col>
       </Row>
     </MainLayout>
