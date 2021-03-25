@@ -16,6 +16,7 @@ const CustomTable = (props) => {
     onAdd,
     disabledAddRow,
     footer,
+    scroll,
   } = props;
   const [state, setState] = useState({
     pagination: {
@@ -53,6 +54,7 @@ const CustomTable = (props) => {
         rowKey={rowKey}
         pagination={state.pagination}
         summary={props.summary ?? null}
+        scroll={scroll ?? null}
         footer={
           onAdd
             ? () => (

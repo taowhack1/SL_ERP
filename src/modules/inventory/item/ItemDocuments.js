@@ -27,7 +27,7 @@ const ItemDocuments = () => {
   );
   getDefaultDocs.push(...getOtherDocs);
   const vendorDocs = sortData(getDefaultDocs);
-  console.log(vendorDocs);
+  console.log("vendorDocs", vendorDocs);
   return (
     <>
       <Collapse defaultActiveKey={[0]}>
@@ -53,7 +53,7 @@ const ItemDocuments = () => {
                 <Col span={12}>
                   <Row className="col-2 row-margin-vertical">
                     <Col span={2} offset={1}>
-                      {obj?.item_vendor_detail.length &&
+                      {obj.item_vendor_detail.length &&
                       obj.item_vendor_detail[0]
                         .item_vendor_detail_specification ? (
                         <CheckSquareOutlined />
@@ -78,7 +78,7 @@ const ItemDocuments = () => {
                             data_file={obj?.item_vendor_detail_document}
                             updateFile={null}
                             chkbox_upload_fields={
-                              obj?.item_vendor_detail.length &&
+                              obj.item_vendor_detail.length &&
                               obj.item_vendor_detail[0]
                                 .item_vendor_detail_specification
                             }
@@ -87,7 +87,8 @@ const ItemDocuments = () => {
                             upload_type={"Button"}
                             readOnly={true}
                           />
-                        ) : obj.item_vendor_detail[0]
+                        ) : obj.item_vendor_detail.length &&
+                          obj.item_vendor_detail[0]
                             .item_vendor_detail_specification ? (
                           <div className="blur-bg">
                             <LockOutlined className="button-icon mr-1 font-18" />

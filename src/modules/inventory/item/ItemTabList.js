@@ -34,7 +34,6 @@ const TabPanel = ({
   const callback = (key) => {};
   const master_data = useSelector((state) => state.inventory.master_data);
   const customers = useSelector((state) => state.sales.master_data.customers);
-  console.log("tab panel");
   return (
     <>
       <Tabs
