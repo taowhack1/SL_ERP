@@ -381,7 +381,7 @@ const VendorCreate = (props) => {
                           field_id='province_id'
                           field_name='province_name'
                           value={data_head.province_id}
-                          data={vendor_province ?? []}
+                          data={vendor_province}
                           onChange={(data, option) => {
                             data
                               ? upDateFormValue(

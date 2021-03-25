@@ -20,7 +20,7 @@ const initialState = {
     conditions_method: [],
   },
   qc_report: {
-    qc_report: {},
+    qc_report: [],
   },
   conditions: {
     list: [],

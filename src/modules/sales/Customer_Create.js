@@ -382,7 +382,7 @@ const CustomerCreate = (props) => {
                           field_id='province_id'
                           field_name='province_name'
                           value={data_head.province_id}
-                          data={customer_province ?? []}
+                          data={customer_province ?? [""]}
                           onChange={(data, option) => {
                             data
                               ? upDateFormValue(

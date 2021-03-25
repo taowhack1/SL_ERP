@@ -5,6 +5,7 @@ import { api_server } from "./main_config";
 //qc
 export const api_qc_receive_list = `/qa/qc/item`;
 export const api_qc_receive_detail_list = `/qa/qc/item/detail`;
+export const api_qc_report_item = `/qa/qc/reports/item/`;
 //qa Condition
 export const api_qa_conditions = `/qa/qa_conditions`;
 export const api_qa_subject_list = `/list/qa_subject`;

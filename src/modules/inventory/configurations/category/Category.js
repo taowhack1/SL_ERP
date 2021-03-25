@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -87,7 +89,7 @@ const Category = (props) => {
         dataSource={sortData(result)}
         rowKey={"category_id"}
         pagination={{ pageSize: 10 }}
-        size="small"
+        size='small'
         onRow={(record, rowIndex) => {
           return {
             onClick: (e) => {
@@ -120,7 +122,7 @@ const Category = (props) => {
           columns={itemShowColumns}
           dataSource={sortData(dataType)}
           bordered
-          size="small"
+          size='small'
           pagination={{ pageSize: 20 }}
           rowKey={"type_id"}
           expandable={{ expandedRowRender }}
