@@ -1,5 +1,6 @@
 /** @format */
 
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 import { Col, Row, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,13 +11,14 @@ import { columns, datamackup } from "./reportQcConfig";
 
 const ReportQC = (props) => {
   const history = useHistory();
-  const dispatch = useDispatch();
+const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
-  const { data_head, dataDetail } = useSelector((state) => state.qa.qc_report);
+  const qc_report = useSelector((state) => state.qa.qc_report);
   const current_project = useSelector((state) => state.auth.currentProject);
   useEffect(() => {
     dispatch(get_report_item());
-  });
+  },[]);
+  console.log("qc_report", qc_report);
   const config = {
     projectId: current_project && current_project.project_id,
     title: current_project && current_project.project_name,
@@ -38,7 +40,10 @@ const ReportQC = (props) => {
     <MainLayout {...config}>
       <Row>
         <Col span={24}>
-          <Table columns={columns} dataSource={datamackup}></Table>
+          <Table
+            columns={columns}
+            dataSource={qc_report}
+            rowKey={"stock_detail_id"}></Table>
         </Col>
       </Row>
     </MainLayout>
