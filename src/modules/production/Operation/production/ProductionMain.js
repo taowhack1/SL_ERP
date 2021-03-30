@@ -4,10 +4,11 @@ import {
   CheckOutlined,
   ProfileOutlined,
   ReloadOutlined,
+  SearchOutlined,
   TeamOutlined,
   ToolOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Row } from "antd";
+import { Button, Col, Progress, Row } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { PageContext } from "../../../../include/js/context";
@@ -34,21 +35,25 @@ const ProductionMain = (props) => {
     step: {
       current: 0,
       stepName: [
+        "Job Detail",
         "Raw Material Check",
-        "Select Machine",
         "Select Worker",
+        "Select Machine",
         "Start Process",
         "Result",
       ],
       step: [
         <>
+          <SearchOutlined /> Job Detail
+        </>,
+        <>
           <ProfileOutlined /> RM Check
         </>,
         <>
-          <ToolOutlined /> Machine
+          <TeamOutlined /> Worker
         </>,
         <>
-          <TeamOutlined /> Worker
+          <ToolOutlined /> Machine
         </>,
         <>
           <ReloadOutlined spin={true} /> Start
@@ -59,6 +64,7 @@ const ProductionMain = (props) => {
       ],
     },
     rmForm: {
+      progress: 100,
       validate: true,
       loading: false,
       data: [],
@@ -84,7 +90,7 @@ const ProductionMain = (props) => {
   };
   useEffect(() => {
     setConfig(config);
-  }, []);
+  }, [state.step.current]);
   let mockupData = [];
   for (let i = 0; i < 30; i++) {
     mockupData.push({
@@ -103,7 +109,56 @@ const ProductionMain = (props) => {
       ...state,
       step: { ...state.step, current: state.step.current - 1 },
     });
+
+  const getNextStepBtn = ({ current, progress, step }) => {
+    const btnNext = null;
+
+    if (current === 1) {
+      return (
+        <Button
+          type="text"
+          className="flex-container item-center"
+          onClick={nextStep}
+          style={{ float: "right" }}
+          disabled={state.rmForm.progress === 100 ? false : true}
+        >
+          <h4
+            className={
+              state.rmForm.progress === 100
+                ? "pd-right-1 button-icon"
+                : "pd-right-1 text-disabled"
+            }
+          >
+            NEXT
+          </h4>
+
+          <ArrowRightOutlined
+            className={
+              state.rmForm.progress === 100
+                ? "font-25 button-icon"
+                : "font-25 text-disabled"
+            }
+          />
+        </Button>
+      );
+    } else {
+      if (current >= step.length - 1) return null;
+      return (
+        <Button
+          type="text"
+          className="flex-container item-center"
+          onClick={nextStep}
+          style={{ float: "right" }}
+        >
+          <h4 className={"pd-right-1 button-icon"}>NEXT</h4>
+
+          <ArrowRightOutlined className={"font-25 button-icon"} />
+        </Button>
+      );
+    }
+  };
   console.log("locationState", mockupData);
+  console.log("Current Step : ", state.step.current);
   return (
     <>
       <Row style={{ marginTop: 10 }}>
@@ -135,7 +190,7 @@ const ProductionMain = (props) => {
                           : "pd-left-1 text-disabled"
                       }
                     >
-                      Back
+                      PREV.
                     </h4>
                   </Button>
                 )}
@@ -144,96 +199,15 @@ const ProductionMain = (props) => {
                 <h2>{state.step.stepName[state.step.current]}</h2>
               </Col>
               <Col span={4} className="text-right">
-                {state.step.current >= state.step.stepName.length - 1 ? null : (
-                  <Button
-                    type="text"
-                    className="flex-container item-center"
-                    disabled={!state.rmForm.validate}
-                    onClick={nextStep}
-                    style={{ float: "right" }}
-                  >
-                    <h4
-                      className={
-                        state.rmForm.validate
-                          ? "pd-right-1 button-icon"
-                          : "pd-right-1 text-disabled"
-                      }
-                    >
-                      NEXT
-                    </h4>
-
-                    <ArrowRightOutlined
-                      className={
-                        state.rmForm.validate
-                          ? "font-25 button-icon"
-                          : "font-25 text-disabled"
-                      }
-                    />
-                  </Button>
-                )}
+                {getNextStepBtn(state.step)}
               </Col>
+              {state.step.current === 1 && (
+                <Progress
+                  percent={state.rmForm.progress}
+                  {...(state.rmForm.progress < 100 && { status: "active" })}
+                />
+              )}
             </Row>
-            {/* <div className="flex-container flex-row space-between under-line mt-1 mb-1">
-              <div>
-                {state.step.current > 0 && (
-                  <Button
-                    type="text"
-                    className="flex-container item-center "
-                    disabled={!state.rmForm.validate}
-                    onClick={prevStep}
-                  >
-                    <ArrowLeftOutlined
-                      className={
-                        state.rmForm.validate
-                          ? "font-25 button-icon"
-                          : "font-25 text-disabled"
-                      }
-                    />
-                    <h4
-                      className={
-                        state.rmForm.validate
-                          ? "pd-left-1 button-icon"
-                          : "pd-left-1 text-disabled"
-                      }
-                    >
-                      Back
-                    </h4>
-                  </Button>
-                )}
-              </div>
-              <div>
-                <h2>{state.step.stepName[state.step.current]}</h2>
-              </div>
-              <div>
-                {state.step.current >= state.step.stepName.length - 1 ? null : (
-                  <Button
-                    type="text"
-                    className="flex-container item-center "
-                    disabled={!state.rmForm.validate}
-                    onClick={nextStep}
-                  >
-                    <h4
-                      className={
-                        state.rmForm.validate
-                          ? "pd-right-1 button-icon"
-                          : "pd-right-1 text-disabled"
-                      }
-                    >
-                      NEXT
-                    </h4>
-
-                    <ArrowRightOutlined
-                      className={
-                        state.rmForm.validate
-                          ? "font-25 button-icon"
-                          : "font-25 text-disabled"
-                      }
-                    />
-                  </Button>
-                )}
-              </div>
-            </div> */}
-
             <ProductionStepSwitch step={state.step} state={state} />
           </div>
         </Col>

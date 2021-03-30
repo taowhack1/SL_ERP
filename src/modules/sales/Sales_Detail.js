@@ -74,6 +74,7 @@ const ItemLine = ({
     });
   };
   console.log(data_detail);
+  console.log("select master", select_items, select_uoms);
   return (
     <>
       {/* Column Header */}
@@ -119,7 +120,7 @@ const ItemLine = ({
                       showSearch
                       size="small"
                       placeholder={"Item"}
-                      data={select_items}
+                      data={select_items ?? []}
                       name="item_id"
                       field_id="item_id"
                       field_name="item_no_name"
@@ -172,7 +173,7 @@ const ItemLine = ({
                       name="uom_id"
                       size="small"
                       placeholder={"Unit"}
-                      data={select_uoms}
+                      data={select_uoms ?? []}
                       field_id="uom_id"
                       field_name="uom_no"
                       value={line.uom_no}

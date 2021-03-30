@@ -276,7 +276,7 @@ const CustomerCreate = (props) => {
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
-              <span className="require">* </span>Description :
+              <span className="require">* </span>Description
             </Text>
           </Col>
 
@@ -322,26 +322,9 @@ const CustomerCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          {/* <Col span={3}>
-            <Text strong className={"pd-left-1"}>
-              Agreement :
-            </Text>
-          </Col>
-
-          <Col span={8}>
-            <Input
-              name="qn_agreement"
-              onChange={(e) =>
-                upDateFormValue({ qn_agreement: e.target.value })
-              }
-              value={data_head.qn_agreement}
-              placeholder="Agreement"
-            ></Input>
-          </Col> */}
-          {/* <Col span={2}></Col> */}
           <Col span={3} offset={13}>
             <Text strong className={"pd-left-1"}>
-              Currency :
+              Currency
             </Text>
           </Col>
 

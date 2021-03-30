@@ -10,7 +10,7 @@ import RMBarcodeScanner from "./RMBarcodeScanner";
 const ProductionRMCheck = ({ state }) => {
   return (
     <>
-      <div className="flex-container flex-wrap">
+      {/* <div className="flex-container flex-wrap">
         <div className="col-border-right half-width">
           <Row className="col-2">
             <Col span={6}>
@@ -22,7 +22,7 @@ const ProductionRMCheck = ({ state }) => {
           </Row>
         </div>
         <div className="half-width"></div>
-      </div>
+      </div> */}
 
       <RMBarcodeScanner />
       <Tabs>
@@ -31,6 +31,7 @@ const ProductionRMCheck = ({ state }) => {
             columns={RPMCheckColumns()}
             dataSource={getRMMockupData(20)}
             rowKey="id"
+            pageSize={1000}
           />
         </Tabs.TabPane>
       </Tabs>

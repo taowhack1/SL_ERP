@@ -122,7 +122,6 @@ const ItemView = (props) => {
         data_part_detail: data_part_detail,
         data_part_mix: data_part_mix,
         data_formula: data_formula,
-        // data_process: data_process,
         data_weight_detail: data_weight_detail,
         data_packaging_detail: data_packaging_detail,
         data_file: data_file,
@@ -151,7 +150,7 @@ const ItemView = (props) => {
       if (
         department_id === 13 &&
         [1, 2].includes(data_head.type_id) &&
-        !data_detail.length
+        !data_head.pu_vendor.length
       ) {
         console.log("Purchase Person");
         message.warning({

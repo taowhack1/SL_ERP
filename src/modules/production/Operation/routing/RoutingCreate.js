@@ -1,5 +1,14 @@
 /** @format */
-import { Col, Input, InputNumber, message, Row, Tabs, Typography } from "antd";
+import {
+  Col,
+  Input,
+  InputNumber,
+  message,
+  Row,
+  Space,
+  Tabs,
+  Typography,
+} from "antd";
 import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -155,9 +164,9 @@ const RoutingCreate = (props) => {
         const min = total_data;
         const hour = total_data / 60;
         const day = total_data / 60 / 24;
-        upDateFormValue({ routing_working_time_min: min });
-        upDateFormValue({ routing_working_time_hour: hour });
         upDateFormValue({
+          routing_working_time_min: min,
+          routing_working_time_hour: hour,
           routing_working_time_day: parseFloat(day.toFixed(3)),
         });
       }
@@ -183,19 +192,16 @@ const RoutingCreate = (props) => {
         </Row>
         <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
-            <Title level={5}>
-              <span className="require">* </span>Description :
-            </Title>
-            <Col span={24}>
-              <Input
-                name="routing_remark"
-                placeholder="Description"
-                onChange={(e) => {
-                  upDateFormValue({ routing_remark: e.target.value });
-                }}
-                value={dataHead.routing_remark}
-              />
-            </Col>
+            <CustomLabel label="Description :" require readOnly={readOnly} />
+            <Input
+              name="routing_remark"
+              placeholder="Description"
+              className="full-width mt-1"
+              onChange={(e) => {
+                upDateFormValue({ routing_remark: e.target.value });
+              }}
+              value={dataHead.routing_remark}
+            />
           </Col>
         </Row>
         <Row className="col-2 mt-2" gutter={[32, 0]}>
@@ -203,10 +209,7 @@ const RoutingCreate = (props) => {
           <Col span={12} className="col-border-right">
             <Row className="col-2 row-margin-vertical">
               <Col span={8}>
-                <Text strong>
-                  <span className="require">* </span>
-                  FG Item :
-                </Text>
+                <CustomLabel label="FG Item :" require readOnly={readOnly} />
               </Col>
               <Col span={15}>
                 <CustomSelect
@@ -219,12 +222,13 @@ const RoutingCreate = (props) => {
                   name="item_id"
                   placeholder={"FG Item"}
                   onChange={(data, option) => {
-                    data && data
+                    console.log(option);
+                    data !== null && data !== undefined
                       ? upDateFormValue({
                           item_id: data,
                           item_no_name_ref:
-                            option.data.item_bulk[0].item_no_name_ref,
-                          item_id_ref: option.data.item_bulk[0].item_id_ref,
+                            option.data.item_bulk[0]?.item_no_name_ref,
+                          item_id_ref: option.data.item_bulk[0]?.item_id_ref,
                         })
                       : upDateFormValue({
                           item_id: null,
@@ -237,7 +241,7 @@ const RoutingCreate = (props) => {
             </Row>
             <Row className="col-2 row-margin-vertical">
               <Col span={8}>
-                <CustomLabel readOnly={readOnly} label={"Bulk Item :"} />
+                <CustomLabel label="Bulk Item :" require readOnly={readOnly} />
               </Col>
               <Col span={15}>
                 <Text className="text-value">
@@ -247,10 +251,11 @@ const RoutingCreate = (props) => {
             </Row>
             <Row className="col-2 row-margin-vertical">
               <Col span={8}>
-                <Text strong>
-                  <span className="require">* </span>
-                  Working time (Min) :
-                </Text>
+                <CustomLabel
+                  label="Working time (Min) :"
+                  require
+                  readOnly={readOnly}
+                />
               </Col>
               <Col span={8}>
                 <Input
@@ -264,10 +269,11 @@ const RoutingCreate = (props) => {
             </Row>
             <Row className="col-2 row-margin-vertical">
               <Col span={8}>
-                <Text strong>
-                  <span className="require">* </span>
-                  Working time (Hour) :
-                </Text>
+                <CustomLabel
+                  label="Working time (Hour) :"
+                  require
+                  readOnly={readOnly}
+                />
               </Col>
               <Col span={8}>
                 <Input
@@ -281,10 +287,11 @@ const RoutingCreate = (props) => {
             </Row>
             <Row className="col-2 row-margin-vertical">
               <Col span={8}>
-                <Text strong>
-                  <span className="require">* </span>
-                  Working time (Day) :
-                </Text>
+                <CustomLabel
+                  label="Working time (Day) :"
+                  require
+                  readOnly={readOnly}
+                />
               </Col>
               <Col span={8}>
                 <Input
@@ -301,10 +308,11 @@ const RoutingCreate = (props) => {
           <Col span={12}>
             <Row className="col-2 row-margin-vertical">
               <Col span={8}>
-                <Text strong>
-                  <span className="require">* </span>
-                  Batch size (kg) :
-                </Text>
+                <CustomLabel
+                  label="Batch size (kg) :"
+                  require
+                  readOnly={readOnly}
+                />
               </Col>
               <Col span={8}>
                 <InputNumber
@@ -319,10 +327,11 @@ const RoutingCreate = (props) => {
             </Row>
             <Row className="col-2 row-margin-vertical">
               <Col span={8}>
-                <Text strong>
-                  <span className="require">* </span>
-                  Fill wt (kg/pcs) :
-                </Text>
+                <CustomLabel
+                  label="Fill wt (kg/pcs) :"
+                  require
+                  readOnly={readOnly}
+                />
               </Col>
               <Col span={8}>
                 <InputNumber
@@ -337,9 +346,7 @@ const RoutingCreate = (props) => {
             </Row>
             <Row className="col-2 row-margin-vertical">
               <Col span={8}>
-                <Text strong>
-                  <span className="require">*</span>Pack Size
-                </Text>
+                <CustomLabel label="Pack Size :" require readOnly={readOnly} />
               </Col>
               <Col span={8}>
                 <InputNumber
@@ -354,10 +361,11 @@ const RoutingCreate = (props) => {
             </Row>
             <Row className="col-2 row-margin-vertical">
               <Col span={8}>
-                <Text strong>
-                  <span className="require">* </span>
-                  Capacity (pcs/min) :
-                </Text>
+                <CustomLabel
+                  label="Capacity (pcs/min) :"
+                  require
+                  readOnly={readOnly}
+                />
               </Col>
               <Col span={8}>
                 <InputNumber
@@ -372,10 +380,7 @@ const RoutingCreate = (props) => {
             </Row>
             <Row className="col-2 row-margin-vertical">
               <Col span={8}>
-                <Text strong>
-                  <span className="require">* </span>
-                  Man / hr :
-                </Text>
+                <CustomLabel label="Man / hr :" require readOnly={readOnly} />
               </Col>
               <Col span={8}>
                 <InputNumber

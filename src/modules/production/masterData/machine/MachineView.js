@@ -1,24 +1,17 @@
-import React, { useEffect  } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  Tabs,
-  Typography,
-} from "antd";
-import MainLayout from "../../components/MainLayout";
+import { Row, Col, Tabs, Typography } from "antd";
+import MainLayout from "../../../../components/MainLayout";
 // import Detail from "./Issue_Detail";
-import Comments from "../../components/Comments";
-import { get_log_by_id } from "../../actions/comment&log";
-import Authorize from "../system/Authorize";
+import Comments from "../../../../components/Comments";
+import { get_log_by_id } from "../../../../actions/comment&log";
+import Authorize from "../../../system/Authorize";
 
 const { Text } = Typography;
-
 
 // const initialStateDetail = [issue_detail_fields];
 
 const MachineView = (props) => {
-
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();

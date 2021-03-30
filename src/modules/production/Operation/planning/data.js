@@ -17,10 +17,185 @@ export const rawData = {
       title: "ห้อง Pack",
     },
   ],
+  machine2: [
+    { id: "115-09-001", machineStatus: "ready", sortNo: 1, title: "ชั่ง RM" },
+    {
+      id: "115-02-101",
+      machineStatus: "ready",
+      sortNo: 2,
+      title: "mixer 300kg set",
+    },
+    {
+      id: "115-02-205",
+      machineStatus: "ready",
+      sortNo: 3,
+      title: "Line เป่าขวด Cream",
+    },
+    {
+      id: "115-02-206",
+      machineStatus: "ready",
+      sortNo: 4,
+      title: "Line ink jet unit carton",
+    },
+    {
+      id: "115-02-201",
+      machineStatus: "ready",
+      sortNo: 5,
+      title: "Line Fill Cream #1",
+    },
+    {
+      id: "115-02-202",
+      machineStatus: "ready",
+      sortNo: 6,
+      title: "Line Fill Cream #2",
+    },
+    {
+      id: "115-02-207",
+      machineStatus: "ready",
+      sortNo: 7,
+      title: "ขันปิดฝา semi-auto",
+    },
+    {
+      id: "115-02-208",
+      machineStatus: "ready",
+      sortNo: 8,
+      title: "ขันปิดฝา semi-auto",
+    },
+    {
+      id: "115-02-209",
+      machineStatus: "ready",
+      sortNo: 9,
+      title: "ขันปิดฝา manual",
+    },
+    {
+      id: "115-02-210",
+      machineStatus: "ready",
+      sortNo: 10,
+      title: "ขันปิดฝา manual",
+    },
+    { id: "115-02-211", machineStatus: "ready", sortNo: 11, title: "กดปิดฝา" },
+    {
+      id: "115-02-212",
+      machineStatus: "ready",
+      sortNo: 12,
+      title: "ซีลปากถุงแนวตั้ง",
+    },
+    {
+      id: "115-02-204",
+      machineStatus: "ready",
+      sortNo: 13,
+      title: "Line Automatic Bottle Filling",
+    },
+    {
+      id: "115-02-203",
+      machineStatus: "ready",
+      sortNo: 14,
+      title: "Line Semi-auto Tube Filling",
+    },
+    { id: "115-02-301", machineStatus: "m/t", sortNo: 15, title: "Inkjet ขวด" },
+    { id: "115-02-302", machineStatus: "m/t", sortNo: 16, title: "Inkjet ขวด" },
+    {
+      id: "115-09-003",
+      machineStatus: "m/t",
+      sortNo: 17,
+      title: "Compressed Air",
+    },
+    {
+      id: "115-09-004",
+      machineStatus: "m/t",
+      sortNo: 18,
+      title: "Steam-Heat up",
+    },
+    {
+      id: "115-09-005",
+      machineStatus: "ready",
+      sortNo: 19,
+      title: "Hot water (clean)",
+    },
+    {
+      id: "115-09-006",
+      machineStatus: "ready",
+      sortNo: 20,
+      title: "Cool down",
+    },
+    {
+      id: "115-02-303",
+      machineStatus: "ready",
+      sortNo: 21,
+      title: "ติด Label พันรอบ #1",
+    },
+    {
+      id: "115-02-304",
+      machineStatus: "ready",
+      sortNo: 22,
+      title: "ติด Label พันรอบ #2",
+    },
+    {
+      id: "115-02-305",
+      machineStatus: "ready",
+      sortNo: 23,
+      title: "ติด label Semi-auto ด้านเดียว",
+    },
+    {
+      id: "115-02-306",
+      machineStatus: "ready",
+      sortNo: 24,
+      title: "ติด label Semi-auto หน้า-หลัง",
+    },
+    {
+      id: "115-02-307",
+      machineStatus: "ready",
+      title: "ติด Label แบบ manual ด้านเดียว",
+    },
+    {
+      id: "115-02-308",
+      machineStatus: "ready",
+      title: "ติด Label แบบ manual หน้า-หลัง",
+    },
+    {
+      id: "115-02-309",
+      machineStatus: "ready",
+      title: "ติด Label พันรอบ Auto",
+    },
+    {
+      id: "115-02-310",
+      machineStatus: "ready",
+      title: "พับ Unit carton+บรรจุขวด",
+    },
+    {
+      id: "115-02-311",
+      machineStatus: "ready",
+      title: "ขึ้นรูป Tray+หยิบลง Tray",
+    },
+    { id: "115-02-312", machineStatus: "ready", title: "Shk individual+ไดร์" },
+    {
+      id: "115-02-313",
+      machineStatus: "ready",
+      title: "Shk Family Pack /Tray",
+    },
+    {
+      id: "115-02-314",
+      machineStatus: "ready",
+      title: "Coding shipper+ขึ้นรูป +ลงกล่อง",
+    },
+    {
+      id: "115-02-315",
+      machineStatus: "ready",
+      title: "ปิด OPP tape+ขึ้นพาเลท",
+    },
+  ],
+  getDate: () => {
+    let month = [];
+    for (let i in 30) {
+      month.push({
+        id: "D" + i,
+      });
+    }
+  },
   jobs: [
     {
       id: 0,
-      resourceIds: ["MC001", "MC002"],
+      resourceIds: ["115-09-001", "115-02-206", "MC002"],
       title: "รวมกะเช้า",
       so_no: "SO21030001",
       wo_no: "WO21030001",
@@ -99,7 +274,7 @@ export const rawData = {
     },
     {
       id: 1,
-      resourceIds: ["MC001", "MC002"],
+      resourceIds: ["115-09-001", "115-02-206"],
       title: "รวมกะกลางคืน",
       so_no: "SO21030001",
       wo_no: "WO21030001",

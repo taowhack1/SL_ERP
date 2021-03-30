@@ -70,6 +70,7 @@ const CustomFullCalendar = () => {
                 justifyContent: "center",
                 flexDirection: "column",
                 width: "100%",
+                zIndex: 1,
               }}
             >
               {props?.jobs.length ? (
@@ -86,7 +87,10 @@ const CustomFullCalendar = () => {
                       width: "100%",
                       marginTop: 5,
                       padding: 2,
+                      zIndex: 10,
+                      boxShadow: "0px 0px 3px #ccc",
                     }}
+                    className="job-head"
                     onClick={() =>
                       openModal({ data: obj, visible: !modal.visible })
                     }
@@ -120,6 +124,8 @@ const CustomFullCalendar = () => {
                 // borderRadius: "0px 0px 5px 5px",
                 marginTop: 5,
                 backgroundColor: "#ffc459",
+                boxShadow: "0px 0px 3px #ccc",
+                fontSize: 14,
               }}
               key={key}
             >
@@ -140,17 +146,39 @@ const CustomFullCalendar = () => {
       </>
     );
   };
+  const renderResourceContent = (resourceInfo) => {
+    console.log("resourceInfo", resourceInfo);
+    return [];
+  };
 
   const configs = {
-    resourceAreaWidth: 210,
+    resourceAreaWidth: 230,
     plugins: [resourceTimelinePlugin],
     eventContent: { renderEventContent },
-    resources: rawData.machine,
     initialView: "resourceTimelineMonth",
     aspectRatio: 2.5,
     timeZone: "UTC",
     initialDate: moment().format("YYYY-MM-DD HH:mm:ss"),
-
+    // filterResourcesWithEvents: true,
+    resourceLabelContent: (e) => {
+      console.log(e);
+      return (
+        <div className="pd-left-1">
+          <Text>{"[ " + e.resource._resource.id + " ]"}</Text>
+          <br />
+          <p
+            style={{
+              maxWidth: 100,
+              overflowWrap: "break-word",
+              wordWrap: "break-word",
+            }}
+          >
+            {e.fieldValue}
+          </p>
+        </div>
+      );
+    },
+    resourceOrder: "sortNo",
     views: {
       resourceTimelineMonth: {
         slotMinWidth: 160,
@@ -192,9 +220,9 @@ const CustomFullCalendar = () => {
       right: "resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth",
     },
     editable: true,
-    resourceAreaHeaderContent: "Cost Center",
+    resourceAreaHeaderContent: <div className="require">Cost Center</div>,
     eventOrder: ["id"],
-    resources: rawData.machine,
+    resources: rawData.machine2,
     eventTimeFormat: {
       hour12: false,
       hour: "2-digit",
@@ -240,30 +268,6 @@ const CustomFullCalendar = () => {
                 className={"ml-2"}
               ></div>
               <CustomLabel label={"Not Ready"} readOnly={true} />
-              {/* <div
-                style={{
-                  backgroundColor: "#50F3FF",
-                  borderRadius: "50%",
-                  width: "14px",
-                  height: "14px",
-                  border: "1px solid gray",
-                  marginRight: 10,
-                }}
-                className={"ml-2"}
-              ></div>
-              <CustomLabel label={"In-Process"} readOnly={true} />
-              <div
-                style={{
-                  backgroundColor: "#59FF34",
-                  borderRadius: "50%",
-                  width: "14px",
-                  height: "14px",
-                  border: "1px solid gray",
-                  marginRight: 10,
-                }}
-                className={"ml-2"}
-              ></div>
-              <CustomLabel label={"Complete"} readOnly={true} /> */}
             </div>
           </Col>
         </Row>

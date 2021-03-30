@@ -332,6 +332,7 @@ export const createNewItems = (data, user_name, redirect) => async (
     axios
       .post(api_url + "/inventory/item", data_head, header_config)
       .then(async (res, rej) => {
+        console.log("THen Save ", res);
         if (res.status === 200 && res.data[0].length) {
           const item_id = res.data[0][0].item_id;
           const qaData = {

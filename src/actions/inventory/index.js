@@ -73,7 +73,7 @@ export const getMasterDataItem = (user, setLoading, auth) => async (
           item_uom: res[2].value.data[0] ?? [],
           item_benefit: res[3].value.data[0] ?? [],
           item_control: res[4].value.data[0] ?? [],
-          item_list: res[5].value.data[0] ?? [],
+          item_list: res[5].value.data ?? [],
           shelf: res[6].value.data[0] ?? [],
         };
         dispatch({ type: GET_MASTER_DATA_ITEM, payload: master_data });

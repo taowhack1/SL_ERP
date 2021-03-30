@@ -1,3 +1,12 @@
+import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
+import { InputNumber, Popconfirm, TimePicker } from "antd";
+import Text from "antd/lib/typography/Text";
+import CustomLabel from "../../../../components/CustomLabel";
+import React from "react";
+import CustomSelect from "../../../../components/CustomSelect";
+import { getNumberFormat } from "../../../../include/js/main_config";
+import moment from "moment";
+
 /** @format */
 export const mainColumns = [
   {
@@ -108,30 +117,137 @@ export const Columns = [
   },
 ];
 
-export const DetailColumns = [
+export const routingDetailColumns = ({
+  readOnly,
+  onDelete,
+  onChangeValue,
+  machineList,
+}) => [
   {
-    id: 0,
-    name: "No",
-    size: 1,
-    require: false,
+    title: "No.",
+    width: "5%",
+    dataIndex: "id",
+    render: (val) => val + 1,
+    align: "center",
   },
   {
-    id: 1,
-    name: "Cost Center",
-    size: 14,
-    require: true,
+    title: (
+      <div className="text-center">
+        <CustomLabel label="Cost Center" require />
+      </div>
+    ),
+    dataIndex: "machine_no_name",
+    align: "left",
+    render: (val, record) =>
+      readOnly ? (
+        <Text className="text-value">{val}</Text>
+      ) : (
+        <CustomSelect
+          data={machineList}
+          field_id="machine_id"
+          field_name="machine_cost_center_description"
+          name="machine_id"
+          placeholder="Select Cost Center"
+          size="small"
+          value={val}
+          onChange={(data, option) => {
+            data && data
+              ? onChangeValue(record.id, {
+                  machine_id: data,
+                })
+              : onChangeValue(record.id, {
+                  machine_id: null,
+                });
+          }}
+        />
+      ),
   },
   {
-    id: 2,
-    name: "Man",
-    size: 4,
-    require: true,
+    title: (
+      <div className="text-center">
+        <CustomLabel label="Man" require />
+      </div>
+    ),
+    width: "15%",
+    dataIndex: "routing_detail_worker",
+    align: "right",
+    render: (val, record) =>
+      readOnly ? (
+        <Text className="text-value">{val}</Text>
+      ) : (
+        <InputNumber
+          name="routing_detail_worker"
+          style={{ width: "100%" }}
+          placeholder="Man"
+          min={0}
+          size="small"
+          onChange={(data) => {
+            onChangeValue(record.id, {
+              routing_detail_worker: Math.round(data),
+            });
+          }}
+          value={val}
+        />
+      ),
   },
   {
-    id: 3,
-    name: "Period ",
-    size: 4,
-    require: true,
+    title: (
+      <div className="text-center">
+        <CustomLabel label="Period" require />
+      </div>
+    ),
+    width: "15%",
+    dataIndex: "routing_detail_lead_time",
+    align: "right",
+    render: (val, record) =>
+      readOnly ? (
+        <Text className="text-value">{val}</Text>
+      ) : (
+        <TimePicker
+          size="small"
+          format={"HH:mm"}
+          showNow={false}
+          name={"routing_detail_lead_time"}
+          className={"full-width"}
+          placeholder="Hour : Minute"
+          required
+          value={val ? moment(val, "HH:mm:ss") : ""}
+          onChange={(data) => {
+            const time = moment(data, "HH:mm").format("HH:mm:ss");
+            console.log(time);
+            onChangeValue(record.id, {
+              routing_detail_lead_time: data ? time : null,
+            });
+          }}
+        />
+      ),
+  },
+  {
+    title: (
+      <Text strong>
+        <EllipsisOutlined />
+      </Text>
+    ),
+    align: "center",
+    width: "5%",
+    render: (_, record) => {
+      if (readOnly) {
+        return null;
+      } else {
+        return (
+          <Popconfirm
+            onConfirm={() => {
+              onDelete(record.id);
+            }}
+            title="Are you sure you want to delete this row？"
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteTwoTone />
+          </Popconfirm>
+        );
+      }
+    },
   },
 ];
 export const routingHeadFileds = {

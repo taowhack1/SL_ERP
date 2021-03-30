@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../../../components/MainLayout";
 import $ from "jquery";
-import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
+import Authorize from "../../../system/Authorize";
+import useKeepLogs from "../../../logs/useKeepLogs";
 
-import { machine_columns } from "./config/master_data";
+import { machine_columns } from "./master_data";
 import {
   getAllMachine,
   getMachineByID,
-} from "../../actions/production/machineActions";
+} from "../../../../actions/production/machineActions";
 
 const Machine = (props) => {
   const history = useHistory();

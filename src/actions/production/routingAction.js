@@ -21,8 +21,8 @@ export const getRoutingByID = (routing_id, redirect) => (dispatch) => {
     const get_head = axios.get(`${api_routing}/${routing_id}`, header_config);
     Promise.allSettled([get_head]).then(async (data) => {
       const routingData = {
-        data_head: data[0].value.data[0],
-        dataDetail: data[0].value.data[0].routing_detail,
+        data_head: data[0].value.data[0] ?? {},
+        dataDetail: data[0].value.data[0].routing_detail ?? [],
       };
       await dispatch({
         type: GET_ROUTING_ONE,

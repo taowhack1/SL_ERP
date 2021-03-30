@@ -10,24 +10,24 @@ import {
   DatePicker,
   Radio,
 } from "antd";
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../../../components/MainLayout";
 import moment from "moment";
 // import Detail from "./Issue_Detail";
-import Comments from "../../components/Comments";
-import { reducer } from "./reducers";
-import CustomSelect from "../../components/CustomSelect";
-import { get_log_by_id, reset_comments } from "../../actions/comment&log";
+import Comments from "../../../../components/Comments";
+import CustomSelect from "../../../../components/CustomSelect";
+import { get_log_by_id, reset_comments } from "../../../../actions/comment&log";
 
-import { machine_fields, machine_require_fields } from "./config/master_data";
+import { machine_fields, machine_require_fields } from "./master_data";
 
-import Authorize from "../system/Authorize";
-import { validateFormHead } from "../../include/js/function_main";
+import Authorize from "../../../system/Authorize";
+import { validateFormHead } from "../../../../include/js/function_main";
 import { useHistory } from "react-router-dom";
-import { getProductionMasterData } from "../../actions/production";
+import { getProductionMasterData } from "../../../../actions/production";
 import {
   createMachine,
   updateMachine,
-} from "../../actions/production/machineActions";
+} from "../../../../actions/production/machineActions";
+import { mainReducer } from "../../../../include/reducer";
 const { Text } = Typography;
 const { TextArea } = Input;
 
@@ -47,7 +47,7 @@ const MachineCreate = (props) => {
   );
   const current_project = useSelector((state) => state.auth.currentProject);
   const dataComments = useSelector((state) => state.log.comment_log);
-  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
+  const [data_head, headDispatch] = useReducer(mainReducer, initialStateHead);
 
   const flow =
     data_head &&

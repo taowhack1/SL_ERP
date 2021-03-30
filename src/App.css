@@ -873,3 +873,12 @@ div.paper {
 .text-disabled {
   color: #ccc;
 }
+div.job-head:hover {
+  background-color: #d0fffe !important;
+}
+div.ow {
+  max-width: 100;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  hyphens: auto !important;
+}

@@ -8,7 +8,7 @@ import $ from "jquery";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 
-import { work_center_columns } from "./config/master_data";
+import { work_center_columns } from "./masterData/machine/master_data";
 import {
   getAllWorkCenter,
   getWorkCenterByID,

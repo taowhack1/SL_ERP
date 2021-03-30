@@ -13,7 +13,7 @@ import CustomSelect from "../../components/CustomSelect";
 import {
   work_center_detail_columns,
   work_center_detail_fields,
-} from "./config/master_data";
+} from "./masterData/machine/master_data";
 
 const WorkCenterDetail = ({ data_detail, detailDispatch, readOnly }) => {
   const { machineList } = useSelector((state) => state.production.machine);
