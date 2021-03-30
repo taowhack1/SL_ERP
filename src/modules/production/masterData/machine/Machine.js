@@ -7,7 +7,7 @@ import $ from "jquery";
 import Authorize from "../../../system/Authorize";
 import useKeepLogs from "../../../logs/useKeepLogs";
 
-import { machine_columns } from "./master_data";
+import { machine_columns } from "./config";
 import {
   getAllMachine,
   getMachineByID,
@@ -95,7 +95,7 @@ const Machine = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    keepLog.keep_log_action(record.machine_no);
+                    keepLog.keep_log_action(record.machine_cost_center);
                     dispatch(
                       getMachineByID(record.machine_id, redirect_to_view)
                     );

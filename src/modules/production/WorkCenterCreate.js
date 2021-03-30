@@ -24,7 +24,7 @@ import {
   work_center_detail_require_fields,
   work_center_fields,
   work_center_require_fields,
-} from "./masterData/machine/master_data";
+} from "./masterData/machine/config";
 
 import Authorize from "../system/Authorize";
 import {

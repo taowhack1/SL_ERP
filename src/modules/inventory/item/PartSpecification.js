@@ -29,9 +29,11 @@ const PartSpecification = ({ id, part }) => {
     item_part_specification_remark: part.item_part_specification_remark,
     item_part_specification_worker: part.item_part_specification_worker,
     machine_id_main: part.machine_id_main,
-    machine_no_name_main: part.machine_no_name_main,
+    machine_cost_center_description_main:
+      part.machine_cost_center_description_main,
     machine_id_sub: part.machine_id_sub,
-    machine_no_name_sub: part.machine_no_name_sub,
+    machine_cost_center_description_sub:
+      part.machine_cost_center_description_sub,
     work_center_id: part.work_center_id,
     work_center_no_description: part.work_center_no_description,
   });
@@ -58,9 +60,11 @@ const PartSpecification = ({ id, part }) => {
       item_part_specification_remark: part.item_part_specification_remark,
       item_part_specification_worker: part.item_part_specification_worker,
       machine_id_main: part.machine_id_main,
-      machine_no_name_main: part.machine_no_name_main,
+      machine_cost_center_description_main:
+        part.machine_cost_center_description_main,
       machine_id_sub: part.machine_id_sub,
-      machine_no_name_sub: part.machine_no_name_sub,
+      machine_cost_center_description_sub:
+        part.machine_cost_center_description_sub,
       work_center_id: part.work_center_id,
       work_center_no_description: part.work_center_no_description,
     });
@@ -120,15 +124,15 @@ const PartSpecification = ({ id, part }) => {
                                 work_center_no_description:
                                   option.data.work_center_no_description,
                                 machine_id_main: null,
-                                machine_no_name_main: null,
+                                machine_cost_center_description_main: null,
                                 machine_id_sub: null,
-                                machine_no_name_sub: null,
+                                machine_cost_center_description_sub: null,
                               })
                             : onChangeValue({
                                 machine_id_main: null,
-                                machine_no_name_main: null,
+                                machine_cost_center_description_main: null,
                                 machine_id_sub: null,
-                                machine_no_name_sub: null,
+                                machine_cost_center_description_sub: null,
                                 work_center_id: null,
                                 work_center_no_description: null,
                               });
@@ -192,8 +196,8 @@ const PartSpecification = ({ id, part }) => {
                     {readOnly ? (
                       <div className="text-left">
                         <Text className="text-view">
-                          {state.machine_no_name_main
-                            ? state.machine_no_name_main
+                          {state.machine_cost_center_description_main
+                            ? state.machine_cost_center_description_main
                             : "-"}
                         </Text>
                       </div>
@@ -204,21 +208,21 @@ const PartSpecification = ({ id, part }) => {
                         disabled={state.work_center_id ? 0 : 1}
                         size="small"
                         placeholder={"Select Machine"}
-                        name="machine_no_name_main"
+                        name="machine_cost_center_description_main"
                         field_id="machine_id"
-                        field_name="machine_no_name"
-                        value={state.machine_no_name_main}
+                        field_name="machine_cost_center_description"
+                        value={state.machine_cost_center_description_main}
                         data={workCenterMachine}
                         onChange={(data, option) => {
                           data !== undefined
                             ? onChangeValue({
                                 machine_id_main: option.data.machine_id,
-                                machine_no_name_main:
-                                  option.data.machine_no_name,
+                                machine_cost_center_description_main:
+                                  option.data.machine_cost_center_description,
                               })
                             : onChangeValue({
                                 machine_id_main: null,
-                                machine_no_name_main: null,
+                                machine_cost_center_description_main: null,
                               });
                         }}
                         onBlur={Save}
@@ -235,8 +239,8 @@ const PartSpecification = ({ id, part }) => {
                     {readOnly ? (
                       <div className="text-left">
                         <Text className="text-view">
-                          {state.machine_no_name_sub
-                            ? state.machine_no_name_sub
+                          {state.machine_cost_center_description_sub
+                            ? state.machine_cost_center_description_sub
                             : "-"}
                         </Text>
                       </div>
@@ -247,21 +251,21 @@ const PartSpecification = ({ id, part }) => {
                         disabled={state.work_center_id ? 0 : 1}
                         size="small"
                         placeholder={"Select Machine"}
-                        name="machine_no_name_sub"
+                        name="machine_cost_center_description_sub"
                         field_id="machine_id"
-                        field_name="machine_no_name"
-                        value={state.machine_no_name_sub}
+                        field_name="machine_cost_center_description"
+                        value={state.machine_cost_center_description_sub}
                         data={workCenterMachine}
                         onChange={(data, option) => {
                           data !== undefined
                             ? onChangeValue({
                                 machine_id_sub: option.data.machine_id,
-                                machine_no_name_sub:
-                                  option.data.machine_no_name,
+                                machine_cost_center_description_sub:
+                                  option.data.machine_cost_center_description,
                               })
                             : onChangeValue({
                                 machine_id_sub: null,
-                                machine_no_name_sub: null,
+                                machine_cost_center_description_sub: null,
                               });
                         }}
                         onBlur={Save}

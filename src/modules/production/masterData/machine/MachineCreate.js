@@ -9,6 +9,8 @@ import {
   message,
   DatePicker,
   Radio,
+  Checkbox,
+  Space,
 } from "antd";
 import MainLayout from "../../../../components/MainLayout";
 import moment from "moment";
@@ -17,7 +19,7 @@ import Comments from "../../../../components/Comments";
 import CustomSelect from "../../../../components/CustomSelect";
 import { get_log_by_id, reset_comments } from "../../../../actions/comment&log";
 
-import { machine_fields, machine_require_fields } from "./master_data";
+import { machine_fields, machine_require_fields } from "./config";
 
 import Authorize from "../../../system/Authorize";
 import { validateFormHead } from "../../../../include/js/function_main";
@@ -28,6 +30,8 @@ import {
   updateMachine,
 } from "../../../../actions/production/machineActions";
 import { mainReducer } from "../../../../include/reducer";
+import MachineTabDetail from "./MachineTabDetail";
+import MachineTabCost from "./MachineTabCost";
 const { Text } = Typography;
 const { TextArea } = Input;
 
@@ -35,6 +39,7 @@ const initialStateHead = machine_fields;
 // const initialStateDetail = [issue_detail_fields];
 
 const MachineCreate = (props) => {
+  const readOnly = false;
   const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
@@ -42,9 +47,7 @@ const MachineCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
   const auth = useSelector((state) => state.auth.authData);
-  const { itemType, machineCategory } = useSelector(
-    (state) => state.production.masterData.machine
-  );
+
   const current_project = useSelector((state) => state.auth.currentProject);
   const dataComments = useSelector((state) => state.log.comment_log);
   const [data_head, headDispatch] = useReducer(mainReducer, initialStateHead);
@@ -66,8 +69,8 @@ const MachineCreate = (props) => {
     breadcrumb: [
       "Home",
       "Machine",
-      data_head.machine_no ? "Edit" : "Create",
-      data_head.machine_no && data_head.machine_no,
+      data_head.machine_cost_center ? "Edit" : "Create",
+      data_head.machine_cost_center && data_head.machine_cost_center,
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
@@ -82,16 +85,18 @@ const MachineCreate = (props) => {
     onSave: (e) => {
       //e.preventDefault();
       console.log("Save");
+      console.log(data_head);
       const key = "validate";
       const validate = validateFormHead(data_head, machine_require_fields);
       if (validate.validate) {
         console.log("pass");
         data_head.machine_id
           ? dispatch(
-              updateMachine(data_head.machine_id, data_head, redirect_to_view)
+              updateMachine(data_head.machine_id, [data_head], redirect_to_view)
             )
-          : dispatch(createMachine(data_head, redirect_to_view));
+          : dispatch(createMachine([data_head], redirect_to_view));
       } else {
+        console.log(data_head);
         message.warning({
           content: "Please fill your form completely.",
           key,
@@ -164,7 +169,8 @@ const MachineCreate = (props) => {
             <h2>
               <strong>
                 {data_head.machine_id ? "Edit" : "Create"} Machine{" "}
-                {data_head.machine_no && "#" + data_head.machine_no}
+                {data_head.machine_cost_center &&
+                  "#" + data_head.machine_cost_center}
               </strong>
             </h2>
           </Col>
@@ -185,42 +191,55 @@ const MachineCreate = (props) => {
             </h3>
             <Col span={24}>
               <Input
-                name="machine_name"
+                name="machine_description"
                 placeholder={"Machine Name"}
                 onChange={(e) =>
-                  upDateFormValue({ machine_name: e.target.value })
+                  upDateFormValue({ machine_description: e.target.value })
                 }
-                value={data_head.machine_name}
+                value={data_head.machine_description}
               />
             </Col>
           </Col>
         </Row>
-        <Row>
-          <Col span={12}>
-            <Row className="col-2 mt-1">
-              <Col span={3}>
-                <Text strong>
-                  <span className="require">* </span>Type
-                </Text>
-              </Col>
-              <Col span={21}>
-                <Radio.Group
-                  onChange={(e) =>
-                    upDateFormValue({
-                      machine_type_tool_id: e.target.value,
-                    })
-                  }
-                  value={data_head.machine_type_tool_id}
-                >
-                  <Radio className="radio-vertical" value={1}>
-                    Machine
-                  </Radio>
-                  <Radio className="radio-vertical" value={2}>
-                    Tooling
-                  </Radio>
-                </Radio.Group>
-              </Col>
-            </Row>
+        <Row className="col-2 mb-1 pd-left-1">
+          <Col span={1}>
+            <Checkbox
+              checked={data_head.machine_process_time ? true : false}
+              onChange={(e) =>
+                upDateFormValue({
+                  machine_process_time: e.target.checked ? 1 : 0,
+                })
+              }
+            />
+          </Col>
+          <Col span={23}> This process have time start - stop</Col>
+        </Row>
+        <Row className="col-2 mb-1 pd-left-1">
+          <Col span={1}>
+            <Checkbox
+              checked={data_head.machine_process_scan ? true : false}
+              onChange={(e) =>
+                upDateFormValue({
+                  machine_process_scan: e.target.checked ? 1 : 0,
+                })
+              }
+            />
+          </Col>
+          <Col span={23}> This process have RM Scan</Col>
+        </Row>
+        <Row className="col-2 mb-1 pd-left-1">
+          <Col span={1}>
+            <Checkbox
+              checked={data_head.machine_process_qty ? true : false}
+              onChange={(e) =>
+                upDateFormValue({
+                  machine_process_qty: e.target.checked ? 1 : 0,
+                })
+              }
+            />
+          </Col>
+          <Col span={23}>
+            This process have input quantity after stop process
           </Col>
         </Row>
 
@@ -240,123 +259,26 @@ const MachineCreate = (props) => {
                 }
                 key={"1"}
               >
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>
-                      <span className="require">* </span>MFG Date :
-                    </Text>
-                  </Col>
-                  <Col span={8}>
-                    <DatePicker
-                      format={"DD/MM/YYYY"}
-                      className={"full-width"}
-                      name="machine_mfg_date"
-                      placeholder="MFG Date"
-                      value={
-                        data_head.machine_mfg_date
-                          ? moment(data_head.machine_mfg_date, "DD/MM/YYYY")
-                          : ""
-                      }
-                      onChange={(data) => {
-                        data
-                          ? upDateFormValue({
-                              machine_mfg_date: data.format("DD/MM/YYYY"),
-                            })
-                          : upDateFormValue({
-                              machine_mfg_date: null,
-                            });
-                      }}
-                    />
-                  </Col>
-                  <Col span={2}></Col>
-                  <Col span={3}>
-                    <Text strong>
-                      <span className="require">* </span>Machine Item Type :
-                    </Text>
-                  </Col>
-                  <Col span={8}>
-                    <CustomSelect
-                      allowClear
-                      showSearch
-                      placeholder={"Machine Type"}
-                      name="machine_type_id"
-                      field_id="machine_type_id"
-                      field_name="machine_type_no_name"
-                      value={data_head.machine_type_no_name}
-                      data={itemType}
-                      onChange={(data, option) => {
-                        data !== undefined
-                          ? upDateFormValue({
-                              machine_type_id: data,
-                              machine_type_no_name: option.title,
-                            })
-                          : upDateFormValue({
-                              cost_center_id: null,
-                              machine_type_no_name: null,
-                            });
-                      }}
-                    />
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong className="pd-left-1">
-                      EXP Date :
-                    </Text>
-                  </Col>
-                  <Col span={8}>
-                    <DatePicker
-                      format={"DD/MM/YYYY"}
-                      className={"full-width"}
-                      name="machine_exp_date"
-                      placeholder="EXP Date"
-                      value={
-                        data_head.machine_exp_date
-                          ? moment(data_head.machine_exp_date, "DD/MM/YYYY")
-                          : ""
-                      }
-                      onChange={(data) => {
-                        data
-                          ? upDateFormValue({
-                              machine_exp_date: data.format("DD/MM/YYYY"),
-                            })
-                          : upDateFormValue({
-                              machine_exp_date: null,
-                            });
-                      }}
-                    />
-                  </Col>
-                  <Col span={2}></Col>
-
-                  <Col span={3}>
-                    <Text strong>
-                      <span className="require">* </span>Machine Category :
-                    </Text>
-                  </Col>
-                  <Col span={8}>
-                    <CustomSelect
-                      allowClear
-                      showSearch
-                      placeholder={"Machine Category"}
-                      name="machine_category_id"
-                      field_id="machine_category_id"
-                      field_name="machine_category_no_name"
-                      value={data_head.machine_category_no_name}
-                      data={machineCategory}
-                      onChange={(data, option) => {
-                        data !== undefined
-                          ? upDateFormValue({
-                              machine_category_id: data,
-                              machine_category_no_name: option.title,
-                            })
-                          : upDateFormValue({
-                              cost_center_id: null,
-                              machine_category_no_name: null,
-                            });
-                      }}
-                    />
-                  </Col>
-                </Row>
+                <MachineTabDetail
+                  upDateFormValue={upDateFormValue}
+                  readOnly={readOnly}
+                  data_head={data_head}
+                />
+              </Tabs.TabPane>
+              <Tabs.TabPane
+                tab={
+                  <span className="tab_pane">
+                    <span className="require">* </span>
+                    {"Cost"}
+                  </span>
+                }
+                key={"2"}
+              >
+                <MachineTabCost
+                  upDateFormValue={upDateFormValue}
+                  readOnly={readOnly}
+                  data_head={data_head}
+                />
               </Tabs.TabPane>
               <Tabs.TabPane
                 tab={
@@ -365,7 +287,7 @@ const MachineCreate = (props) => {
                     {"Notes"}
                   </span>
                 }
-                key={"2"}
+                key={"3"}
               >
                 <TextArea
                   name="machine_remark"

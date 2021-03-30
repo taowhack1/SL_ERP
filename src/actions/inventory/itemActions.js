@@ -308,7 +308,7 @@ export const getAllItems = (user_name) => async (dispatch) => {
       //console.log(res.data);
       dispatch({
         type: GET_ALL_ITEMS,
-        payload: res.data[0],
+        payload: res.data,
       });
     });
 };

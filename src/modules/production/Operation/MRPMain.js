@@ -19,6 +19,7 @@ import MRPSearchTool from "./MRPSearchTool";
 import { getAllMRP, getMRPByID } from "../../../actions/production/mrpActions";
 import { reset_comments } from "../../../actions/comment&log";
 import Search from "../../../components/Search";
+import { getAllItems } from "../../../actions/inventory/itemActions";
 const MRPMain = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -127,6 +128,7 @@ const MRPMain = (props) => {
 
   useEffect(() => {
     dispatch(getAllMRP(auth.user_name));
+    dispatch(getAllItems());
     dispatch(reset_comments());
   }, []);
   useEffect(() => {

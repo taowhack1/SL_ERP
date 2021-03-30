@@ -6,6 +6,9 @@ import MainLayout from "../../../../components/MainLayout";
 import Comments from "../../../../components/Comments";
 import { get_log_by_id } from "../../../../actions/comment&log";
 import Authorize from "../../../system/Authorize";
+import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import MachineTabDetail from "./MachineTabDetail";
+import MachineTabCost from "./MachineTabCost";
 
 const { Text } = Typography;
 
@@ -39,7 +42,7 @@ const MachineView = (props) => {
       "Home",
       "Machine",
       "View",
-      data_head.machine_no && data_head.machine_no,
+      data_head.machine_cost_center && data_head.machine_cost_center,
     ],
     search: false,
     buttonAction: ["Edit", "Back"],
@@ -86,7 +89,8 @@ const MachineView = (props) => {
             <h2>
               <strong>
                 {"View"} Machine{" "}
-                {data_head.machine_no && "#" + data_head.machine_no}
+                {data_head.machine_cost_center &&
+                  "#" + data_head.machine_cost_center}
               </strong>
             </h2>
           </Col>
@@ -104,22 +108,40 @@ const MachineView = (props) => {
               <strong>Machine Name</strong>
             </h3>
             <Col span={24}>
-              <Text className="text-view">{data_head.machine_name}</Text>
+              <Text className="text-view">{data_head.machine_description}</Text>
             </Col>
           </Col>
         </Row>
-        <Row>
-          <Col span={12}>
-            <Row className="col-2 mt-1">
-              <Col span={3}>
-                <Text strong>Type : </Text>
-              </Col>
-              <Col span={21}>
-                <Text className="text-view">
-                  {data_head.machine_type_tool_name}
-                </Text>
-              </Col>
-            </Row>
+        <Row className="col-2 mt-1 mb-1 pd-left-1">
+          <Col span={1}>
+            {data_head.machine_process_time ? (
+              <CheckSquareOutlined />
+            ) : (
+              <BorderOutlined />
+            )}
+          </Col>
+          <Col span={23}> This process have time start - stop</Col>
+        </Row>
+        <Row className="col-2 mb-1 pd-left-1">
+          <Col span={1}>
+            {data_head.machine_process_scan ? (
+              <CheckSquareOutlined />
+            ) : (
+              <BorderOutlined />
+            )}
+          </Col>
+          <Col span={23}> This process have RM Scan</Col>
+        </Row>
+        <Row className="col-2 mb-1 pd-left-1">
+          <Col span={1}>
+            {data_head.machine_process_qty ? (
+              <CheckSquareOutlined />
+            ) : (
+              <BorderOutlined />
+            )}
+          </Col>
+          <Col span={23}>
+            This process have input quantity after stop process
           </Col>
         </Row>
 
@@ -134,45 +156,13 @@ const MachineView = (props) => {
                 tab={<span className="tab_pane">{"Detail"}</span>}
                 key={"1"}
               >
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>MFG Date :</Text>
-                  </Col>
-                  <Col span={8}>
-                    <Text className="text-view">
-                      {data_head.machine_mfg_date}
-                    </Text>
-                  </Col>
-                  <Col span={2}></Col>
-                  <Col span={3}>
-                    <Text strong>Machine Item Type :</Text>
-                  </Col>
-                  <Col span={8}>
-                    <Text className="text-view">
-                      {data_head.machine_type_no_name}
-                    </Text>
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <Text strong>EXP Date :</Text>
-                  </Col>
-                  <Col span={8}>
-                    <Text className="text-view">
-                      {data_head.machine_exp_date}
-                    </Text>
-                  </Col>
-                  <Col span={2}></Col>
-
-                  <Col span={3}>
-                    <Text strong>Machine Category :</Text>
-                  </Col>
-                  <Col span={8}>
-                    <Text className="text-view">
-                      {data_head.machine_category_no_name}
-                    </Text>
-                  </Col>
-                </Row>
+                <MachineTabDetail readOnly={true} data_head={data_head} />
+              </Tabs.TabPane>
+              <Tabs.TabPane
+                tab={<span className="tab_pane">{"Cost"}</span>}
+                key={"2"}
+              >
+                <MachineTabCost readOnly={true} data_head={data_head} />
               </Tabs.TabPane>
               <Tabs.TabPane
                 tab={
@@ -181,7 +171,7 @@ const MachineView = (props) => {
                     {"Notes"}
                   </span>
                 }
-                key={"2"}
+                key={"3"}
               >
                 <Text className="text-view">{data_head.machine_remark}</Text>
               </Tabs.TabPane>

@@ -13,7 +13,7 @@ import CustomSelect from "../../components/CustomSelect";
 import {
   work_center_detail_columns,
   work_center_detail_fields,
-} from "./masterData/machine/master_data";
+} from "./masterData/machine/config";
 
 const WorkCenterDetail = ({ data_detail, detailDispatch, readOnly }) => {
   const { machineList } = useSelector((state) => state.production.machine);
@@ -90,20 +90,21 @@ const WorkCenterDetail = ({ data_detail, detailDispatch, readOnly }) => {
                       showSearch
                       size="small"
                       placeholder={"Select Machine"}
-                      name="machine_no_name"
+                      name="machine_cost_center_description"
                       field_id="machine_id"
-                      field_name="machine_no_name"
-                      value={line.machine_no_name}
+                      field_name="machine_cost_center_description"
+                      value={line.machine_cost_center_description}
                       data={machineList}
                       onChange={(data, option) => {
                         data !== undefined
                           ? onChangeValue(line.id, {
                               machine_id: option.data.machine_id,
-                              machine_no_name: option.data.machine_no_name,
+                              machine_cost_center_description:
+                                option.data.machine_cost_center_description,
                             })
                           : onChangeValue(line.id, {
                               machine_id: null,
-                              machine_no_name: null,
+                              machine_cost_center_description: null,
                             });
                       }}
                     />
@@ -158,7 +159,7 @@ const WorkCenterDetail = ({ data_detail, detailDispatch, readOnly }) => {
                   </Col>
                   <Col span={12}>
                     <Text className="text-left">
-                      {line.machine_no_name ?? "-"}
+                      {line.machine_cost_center_description ?? "-"}
                     </Text>
                   </Col>
                   <Col span={10}>
