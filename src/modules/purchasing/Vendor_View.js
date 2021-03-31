@@ -7,6 +7,7 @@ import MainLayout from "../../components/MainLayout";
 
 import Authorize from "../system/Authorize";
 import Vendor_OrtherAddress from "./Vendor_OrtherAddress";
+import { convertDigit } from "../../include/js/main_config";
 const { Title, Text } = Typography;
 
 const VendorView = (props) => {
@@ -204,11 +205,36 @@ const VendorView = (props) => {
                   <Col span={12}>
                     <Row className='row-margin'>
                       <Col span={5}>
+                        <Text strong>Condition Billing</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className='text-view'>
+                          {data_head.vendor_condition_billing}
+                        </Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className='row-margin'>
+                      <Col span={5}>
                         <Text strong>Payment Terms</Text>
                       </Col>
                       <Col span={18}>
                         <Text className='text-view'>
                           {data_head.payment_term_no_name}
+                        </Text>
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className='row-margin'>
+                      <Col span={5}>
+                        <Text strong>Credit Limit</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Text className='text-view'>
+                          {convertDigit(data_head.vendor_limit_credit)}
+                        </Text>
+                        <Text strong style={{ paddingLeft: 10 }}>
+                          {data_head.currency_no}
                         </Text>
                       </Col>
                       <Col span={1}></Col>

@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   DeleteOutlined,
   DeleteTwoTone,
@@ -24,7 +26,6 @@ import {
 } from "../../../include/js/main_config";
 import $ from "jquery";
 import moment from "moment";
-
 export const receive_columns = [
   {
     title: "Receive No.",
@@ -322,6 +323,7 @@ export const receiveDetailWithNoPOColumns = (
                   shelf_id: option.data.shelf_id,
                   location_id: option.data.location_id,
                   location_no_name: option.data.location_no_name,
+                  item_shelf_life: option.data.item_shelf_life,
                 })
               : onChange(record.id, {
                   item_id: null,
@@ -331,6 +333,7 @@ export const receiveDetailWithNoPOColumns = (
                   shelf_id: null,
                   location_id: null,
                   location_no_name: null,
+                  item_shelf_life: null,
                 })
           }
         />
@@ -472,11 +475,13 @@ export const receiveDetailWithNoPOColumns = (
     },
   },
 ];
+
 export const receiveSubDetailColumns = (
   readOnly,
   onChange,
   locationList,
-  onDelete
+  onDelete,
+  AlertShelfLift
 ) => [
   {
     title: "No.",
@@ -577,14 +582,40 @@ export const receiveSubDetailColumns = (
           className={"full-width"}
           placeholder="MFG Date"
           value={value ? moment(value, "DD/MM/YYYY") : null}
-          onChange={(data) => {
-            data
-              ? onChange(record.id, {
-                  receive_detail_sub_mfg_date: data.format("DD/MM/YYYY"),
-                })
-              : onChange(record.id, {
-                  receive_detail_sub_mfg_date: null,
-                });
+          onChange={(data, mfg_date) => {
+            if (
+              record.item_shelf_life == 0 ||
+              record.item_shelf_life == "null"
+            ) {
+              message.warning({
+                content: "Shelf life undefined please check and try again",
+                key: "warning",
+                duration: 5,
+              });
+              data
+                ? onChange(record.id, {
+                    receive_detail_sub_mfg_date: data.format("DD/MM/YYYY"),
+                  })
+                : onChange(record.id, {
+                    receive_detail_sub_mfg_date: null,
+                  });
+            } else {
+              data
+                ? onChange(
+                    record.id,
+                    {
+                      receive_detail_sub_mfg_date: data.format("DD/MM/YYYY"),
+                      receive_detail_sub_exp_date: data
+                        .add(record.item_shelf_life, "days")
+                        .format("DD/MM/YYYY"),
+                    },
+                    AlertShelfLift(record, mfg_date)
+                  )
+                : onChange(record.id, {
+                    receive_detail_sub_mfg_date: null,
+                    receive_detail_sub_exp_date: null,
+                  });
+            }
           }}
         />
       ),
@@ -599,28 +630,35 @@ export const receiveSubDetailColumns = (
     dataIndex: "receive_detail_sub_exp_date",
     width: "12%",
     ellipsis: true,
-    render: (value, record) =>
-      readOnly ? (
-        <Text className="text-value">{value ?? "-"}</Text>
-      ) : (
-        <DatePicker
-          name={"receive_detail_sub_exp_date"}
-          format={"DD/MM/YYYY"}
-          size="small"
-          className={"full-width"}
-          placeholder="EXP Date"
-          value={value ? moment(value, "DD/MM/YYYY") : null}
-          onChange={(data) => {
-            data
-              ? onChange(record.id, {
-                  receive_detail_sub_exp_date: data.format("DD/MM/YYYY"),
-                })
-              : onChange(record.id, {
-                  receive_detail_sub_exp_date: null,
-                });
-          }}
-        />
-      ),
+    render: (value, record, index) => {
+      console.log("new record", record);
+      if (readOnly) {
+        return <Text className="text-value">{value ?? "-"}</Text>;
+      } else {
+        if (record.receive_detail_sub_mfg_date != null) {
+          const dateMFGinFN = moment(
+            record.receive_detail_sub_mfg_date,
+            "DD/MM/YYYY"
+          );
+          const dateRecevie = moment(
+            record.receive_detail_sub_receive_date,
+            "DD/MM/YYYY"
+          );
+          const dateDif = dateRecevie.diff(dateMFGinFN, "days");
+          const HalfLife = record.item_shelf_life / 2;
+          const calcula = record.item_shelf_life - dateDif;
+          if (calcula >= HalfLife) {
+            return <Text className="text-value">{value ?? "-"}</Text>;
+          } else {
+            return (
+              <Text className="text-value" style={{ color: "red" }}>
+                {value}
+              </Text>
+            );
+          }
+        }
+      }
+    },
   },
   {
     title: (

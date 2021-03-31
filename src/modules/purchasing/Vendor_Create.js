@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Input, Tabs, Typography, message } from "antd";
+import { Row, Col, Input, Tabs, Typography, message, InputNumber } from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 import {
@@ -27,6 +27,8 @@ import { validateFormHead } from "../../include/js/function_main";
 import { useHistory } from "react-router-dom";
 import Vendor_OrtherAddress from "./Vendor_OrtherAddress";
 import { reducer } from "../qualityAssurance/reducers";
+import { LineChartOutlined } from "@ant-design/icons";
+import { numberFormat } from "../../include/js/main_config";
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
@@ -295,7 +297,7 @@ const VendorCreate = (props) => {
                     <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">* </span>group
+                          <span className="require">* </span>Group
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -371,7 +373,8 @@ const VendorCreate = (props) => {
                                   province_id: null,
                                   province_no_name: null,
                                   district_id: null,
-                                  district_no_name: null,
+                                  tambon_id: null,
+                                  zip_id: null,
                                 });
                           }}
                         />
@@ -381,11 +384,12 @@ const VendorCreate = (props) => {
                           placeholder={"District"}
                           allowClear
                           showSearch
+                          disabled={data_head.province_id ? false : true}
                           name="district_id"
                           field_id="district_id"
                           field_name="district_name"
                           value={data_head.district_id}
-                          data={vendor_district}
+                          data={vendor_district ?? []}
                           onChange={(data, option) => {
                             data
                               ? upDateFormValue(
@@ -398,6 +402,7 @@ const VendorCreate = (props) => {
                               : upDateFormValue({
                                   district_id: null,
                                   district_name: null,
+                                  tambon_id: null,
                                 });
                           }}
                         />
@@ -407,11 +412,12 @@ const VendorCreate = (props) => {
                           placeholder={"Tambon"}
                           allowClear
                           showSearch
+                          disabled={data_head.district_id ? false : true}
                           name="tambon_id"
                           field_id="tambon_id"
                           field_name="tambon_name"
                           value={data_head.tambon_id}
-                          data={vendor_tambon}
+                          data={vendor_tambon ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue(
@@ -424,6 +430,7 @@ const VendorCreate = (props) => {
                               : upDateFormValue({
                                   tambon_id: null,
                                   tambon_name: null,
+                                  zip_id: null,
                                 })
                           }
                         />
@@ -439,6 +446,7 @@ const VendorCreate = (props) => {
                           placeholder={"Zip"}
                           allowClear
                           showSearch
+                          disabled={data_head.tambon_id ? false : true}
                           name="zip_id"
                           field_id="zip_id"
                           field_name="zip_name"
@@ -466,7 +474,7 @@ const VendorCreate = (props) => {
                           field_id="language_id"
                           field_name="language_name"
                           value={data_head.language_id}
-                          data={vendor_language}
+                          data={vendor_language ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue({
@@ -489,7 +497,7 @@ const VendorCreate = (props) => {
                           field_id="country_id"
                           field_name="country_name"
                           value={data_head.country_id}
-                          data={vendor_country}
+                          data={vendor_country ?? []}
                           onChange={(data, option) =>
                             data
                               ? upDateFormValue({
@@ -609,6 +617,28 @@ const VendorCreate = (props) => {
                     <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>
+                          <span className="require">* </span>Condition Billing
+                        </Text>
+                      </Col>
+                      <Col span={18}>
+                        <Input
+                          name="vendor_condition_billing"
+                          placeholder="e.g. Affter Delivery"
+                          value={data_head.vendor_condition_billing}
+                          onChange={(data) => {
+                            upDateFormValue({
+                              vendor_condition_billing: data.target.value,
+                            });
+                          }}
+                          className={"full-width"}
+                          // size="small"
+                        />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>
                           <span className="require">* </span>Payment Terms
                         </Text>
                       </Col>
@@ -634,6 +664,46 @@ const VendorCreate = (props) => {
                                 })
                           }
                         />
+                      </Col>
+                      <Col span={1}></Col>
+                    </Row>
+                    <Row className="row-margin">
+                      <Col span={5}>
+                        <Text strong>
+                          <span className="require">* </span>Credit Limit
+                        </Text>
+                      </Col>
+                      <Col span={18}>
+                        <Row>
+                          <Col span={12}>
+                            <InputNumber
+                              name="vendor_limit_credit"
+                              placeholder="Credit Limit"
+                              value={data_head.vendor_limit_credit}
+                              precision={3}
+                              {...numberFormat}
+                              step={5}
+                              onChange={(data) => {
+                                upDateFormValue({
+                                  vendor_limit_credit: data,
+                                });
+                              }}
+                              className={"full-width"}
+                              // size="small"
+                            />
+                          </Col>
+                          <Col span={12}>
+                            <Text
+                              strong
+                              style={{
+                                verticalAlign: "middle",
+                                paddingLeft: 10,
+                              }}
+                            >
+                              {data_head.currency_no}
+                            </Text>
+                          </Col>
+                        </Row>
                       </Col>
                       <Col span={1}></Col>
                     </Row>

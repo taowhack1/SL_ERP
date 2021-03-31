@@ -15,6 +15,16 @@ const ReceiveSubDetailHead = ({ selectData, qtyRef = false }) => {
           </Text>
         </Col>
       </Row>
+      <Row className="row-margin-vertical">
+        <Col span={3}>
+          <Text strong>Shelf life (day) :</Text>
+        </Col>
+        <Col span={21}>
+          <Text className="text-value">
+            {selectData && selectData.item_shelf_life}
+          </Text>
+        </Col>
+      </Row>
       {qtyRef && (
         <>
           <Row className="row-margin-vertical">

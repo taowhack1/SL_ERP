@@ -1,3 +1,5 @@
+/** @format */
+
 import { Row, Col, Typography, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -43,23 +45,25 @@ const ReceiveSubDetailTable = ({
           shelf_no: selectData.shelf_no,
           shelf_name: selectData.shelf_name,
           shelf_no_name: selectData.shelf_no_name,
+          item_shelf_life: selectData.item_shelf_life,
           location_id: selectData.location_id,
           location_no_name: selectData.location_no_name,
           location_no: selectData.location_no,
           uom_id: selectData.uom_id,
           uom_no: selectData.uom_no,
+          color:false,
           receive_detail_sub_receive_date: moment().format("DD/MM/YYYY"),
         },
       ])
     );
   };
-
   const delLine = (id) => {
     setState(sortData(state.filter((obj) => obj.id !== id)));
   };
 
   const onChangeValue = (id, data) => {
-    setState(state.map((obj) => (obj.id === id ? { ...obj, ...data } : obj)));
+    setState(state.map((obj) => (obj.id === id ? { ...obj, ...data } : obj )));
+    console.log("data",data)
   };
 
   const validateForm = (arrObjData) => {
@@ -94,16 +98,32 @@ const ReceiveSubDetailTable = ({
     selectData.receive_sub_detail
   );
   console.log("locationList", locationList);
+  const AlertShelfLift = (record, dateMFG) => {
+      const dateMFGinFN = moment(dateMFG,"DD/MM/YYYY");
+      const dateRecevie = moment(
+        record.receive_detail_sub_receive_date,
+        "DD/MM/YYYY"
+      );
+      const dateDif = dateRecevie.diff(dateMFGinFN,'days');
+      const HalfLife = record.item_shelf_life / 2;
+      const calcula = record.item_shelf_life - dateDif;
+      if(calcula >= HalfLife){
+      }else{
+        message.warning({content: "The remaining shelf life is less than half",key: "warning",duration: 5,})
+      }
+      //calcula >= HalfLife ? console.log("The remaining shelf life is normal") :message.warning({content: "The remaining shelf life is less than half",key: "warning",duration: 2,});
+  };
   return (
     <>
-      <Row className="row-tab-margin-lg">
+      <Row className='row-tab-margin-lg'>
         <Col span={24}>
           <CustomTable
             columns={receiveSubDetailColumns(
               readOnly,
               onChangeValue,
               locationList,
-              delLine
+              delLine,
+              AlertShelfLift
             )}
             dataSource={state}
             rowKey={"id"}
@@ -118,7 +138,7 @@ const ReceiveSubDetailTable = ({
         </Col>
         <button
           style={{ display: "none" }}
-          type="button"
+          type='button'
           ref={btnSave}
           onClick={() => validateForm(state)}
         />

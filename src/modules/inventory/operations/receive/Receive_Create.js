@@ -1,3 +1,5 @@
+/** @format */
+
 import React, {
   useContext,
   useEffect,
@@ -233,11 +235,12 @@ const Receive_Create = (props) => {
     };
   }, [readOnly, state, initialStateHead, saveForm, loading]);
   console.log("Receive State", state);
+
   return (
     <MainLayout {...config}>
       <ReceiveContext.Provider value={contextValue}>
-        <div id="form">
-          <Row className="col-2">
+        <div id='form'>
+          <Row className='col-2'>
             <Col span={8}>
               <h2>
                 <strong>
@@ -251,8 +254,8 @@ const Receive_Create = (props) => {
             <Col span={2}>
               <Text strong>Create Date :</Text>
             </Col>
-            <Col span={2} className="text-right">
-              <Text className="text-view">{state.receive_created}</Text>
+            <Col span={2} className='text-right'>
+              <Text className='text-view'>{state.receive_created}</Text>
             </Col>
           </Row>
 

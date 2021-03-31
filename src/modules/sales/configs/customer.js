@@ -176,13 +176,13 @@ export const addressColumns = [
   },
   {
     id: 2,
-    name: "Address detail",
+    name: "Address Detail",
     size: 12,
     require: true,
   },
   {
     id: 3,
-    name: "status",
+    name: "Status",
     size: 4,
     require: true,
   },

@@ -69,7 +69,7 @@ const Vendor_OrtherAddress = ({ dataDetail, detailDispatch, readOnly }) => {
                       field_id='address_type_id'
                       field_name='address_type_name'
                       name='address_type_id'
-                      placeholder='Select category'
+                      placeholder='Select Category'
                       value={line.address_type_id}
                       onChange={(data, option) => {
                         data && data
@@ -85,7 +85,7 @@ const Vendor_OrtherAddress = ({ dataDetail, detailDispatch, readOnly }) => {
                     <TextArea
                       name='vendor_detail_address'
                       autoSize={{ minRows: 1, maxRows: 2 }}
-                      placeholder='enter Address'
+                      placeholder='Enter Address'
                       value={line.vendor_detail_address}
                       onChange={(e) => {
                         onChangeValue(line.id, {
