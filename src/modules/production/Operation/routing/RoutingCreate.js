@@ -153,9 +153,9 @@ const RoutingCreate = (props) => {
         const min = total_data;
         const hour = total_data / 60;
         const day = total_data / 60 / 24;
-        upDateFormValue({ routing_working_time_min: min });
-        upDateFormValue({ routing_working_time_hour: hour });
         upDateFormValue({
+          routing_working_time_min: min,
+          routing_working_time_hour: hour,
           routing_working_time_day: parseFloat(day.toFixed(3)),
         });
       }

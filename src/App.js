@@ -103,6 +103,7 @@ import Routing from "./modules/production/Operation/routing/Routing";
 import RoutingCreate from "./modules/production/Operation/routing/RoutingCreate";
 import RoutingView from "./modules/production/Operation/routing/RoutingView";
 import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
+import StockCard from "./modules/inventory/reporting/stockCard/StockCard";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -315,6 +316,9 @@ const App = (props) => {
             </Route>
             <Route exact path='/inventory/stock_on_hand'>
               <StockOnHand />
+            </Route>
+            <Route exact path='/inventory/stock_card'>
+              <StockCard />
             </Route>
             {/* PURCHASE */}
             <Route exact path='/purchase'>
