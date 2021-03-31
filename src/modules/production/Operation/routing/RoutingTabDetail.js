@@ -1,36 +1,21 @@
-/** @format */
-
-import {
-  DeleteTwoTone,
-  EllipsisOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
-import { Button, Col, InputNumber, Row, TimePicker } from "antd";
 import React from "react";
-import {
-  DetailColumns,
-  routingDetailColumns,
-  routingDetailFileds,
-} from "./routingConfig";
-import Text from "antd/lib/typography/Text";
-import CustomSelect from "../../../../components/CustomSelect";
+import { routingDetailColumns, routingDetailFileds } from "./routingConfig";
 import { useSelector } from "react-redux";
-import moment from "moment";
 import CustomTable from "../../../../components/CustomTable";
-const numberFormat = {
-  precision: 0,
-  formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-  parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
-};
 
-const RoutingTabDetail = ({ dataDetail, detailDispatch, readOnly }) => {
+const RoutingTabDetail = ({
+  dataDetail,
+  detailDispatch,
+  readOnly,
+  type_id,
+}) => {
   const machineList = useSelector(
     (state) => state.production.machine.machineList
   );
   const addLine = () => {
     detailDispatch({
       type: "ADD_ROW",
-      payload: routingDetailFileds,
+      payload: { ...routingDetailFileds, type_id },
     });
   };
   const delLine = (id) => {

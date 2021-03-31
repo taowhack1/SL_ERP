@@ -402,13 +402,31 @@ const RoutingCreate = (props) => {
                 tab={
                   <span>
                     <span className="require">* </span>
-                    Detail
+                    Bulk
                   </span>
                 }
                 key="1"
               >
                 <RoutingTabDetail
-                  dataDetail={dataDetail}
+                  dataDetail={dataDetail.filter((obj) => obj.type_id === 1)}
+                  type_id={1}
+                  readOnly={readOnly}
+                  detailDispatch={detailDispatch}
+                  sum={sumPeriodFN()}
+                />
+              </Tabs.TabPane>
+              <Tabs.TabPane
+                tab={
+                  <span>
+                    <span className="require">* </span>
+                    FG
+                  </span>
+                }
+                key="2"
+              >
+                <RoutingTabDetail
+                  dataDetail={dataDetail.filter((obj) => obj.type_id === 2)}
+                  type_id={2}
                   readOnly={readOnly}
                   detailDispatch={detailDispatch}
                   sum={sumPeriodFN()}

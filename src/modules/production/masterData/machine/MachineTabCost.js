@@ -2,7 +2,6 @@ import { Col, InputNumber, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import CustomLabel from "../../../../components/CustomLabel";
-import CustomSelect from "../../../../components/CustomSelect";
 import {
   convertDigit,
   getNumberFormat,

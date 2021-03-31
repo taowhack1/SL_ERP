@@ -23,6 +23,7 @@ export const getRoutingByID = (routing_id, redirect) => (dispatch) => {
       const routingData = {
         data_head: data[0].value.data[0] ?? {},
         dataDetail: data[0].value.data[0].routing_detail ?? [],
+        ...data[0].value.data[0],
       };
       await dispatch({
         type: GET_ROUTING_ONE,
