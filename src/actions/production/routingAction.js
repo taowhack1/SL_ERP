@@ -5,6 +5,7 @@ import { header_config } from "../../include/js/main_config";
 import { api_list_fg, api_routing } from "../../include/js/api";
 import { GET_FGITEM, GET_ROUTING_ALL, GET_ROUTING_ONE } from "../types";
 import { message } from "antd";
+import { sortData } from "../../include/js/function_main";
 
 export const getRoutingAll = () => (dispatch) => {
   axios.get(api_routing, header_config).then((res) => {
@@ -20,18 +21,30 @@ export const getRoutingByID = (routing_id, redirect) => (dispatch) => {
   try {
     const get_head = axios.get(`${api_routing}/${routing_id}`, header_config);
     Promise.allSettled([get_head]).then(async (data) => {
-      const routingData = {
-        data_head: data[0].value.data[0] ?? {},
-        dataDetail: data[0].value.data[0].routing_detail ?? [],
-        ...data[0].value.data[0],
-      };
+      console.log("GET", data);
       await dispatch({
         type: GET_ROUTING_ONE,
-        payload: routingData,
+        payload: {
+          ...data[0].value.data[0],
+          routing_detail: {
+            bulk: sortData(
+              data[0].value.data[0].routing_detail.filter(
+                (obj) => obj.routing_detail_type_id === 1
+              )
+            ),
+            fg: sortData(
+              data[0].value.data[0].routing_detail.filter(
+                (obj) => obj.routing_detail_type_id === 2
+              )
+            ),
+          },
+        },
       });
       redirect(routing_id);
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const createRouting = (data, redirect) => (dispatch) => {

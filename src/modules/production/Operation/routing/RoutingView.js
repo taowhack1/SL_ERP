@@ -8,10 +8,9 @@ import RoutingTabDetail from "./RoutingTabDetail";
 import RoutingViewDetail from "./RoutingViewDetail";
 
 const RoutingView = () => {
+  const readOnly = true;
   const { Title, Text } = Typography;
-  const { data_head, dataDetail } = useSelector(
-    (state) => state.production.routing.routing
-  );
+  const { routing } = useSelector((state) => state.production.routing);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -24,17 +23,13 @@ const RoutingView = () => {
     // buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     buttonAction: ["Edit", "Discard"],
     edit: {
-      data: {
-        data_head: data_head,
-        dataDetail: dataDetail,
-      },
-      path: data_head && "/production/routing/edit/" + data_head.routing_id,
+      data: routing,
+      path: routing && "/production/routing/edit/" + routing.routing_id,
     },
     //disabledEditBtn: !rowClick,
     discard: "/production/routing",
   };
-  console.log("data_head", data_head);
-  console.log("data_detail", dataDetail);
+  console.log("routing", routing);
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -43,7 +38,7 @@ const RoutingView = () => {
             <h2>
               <strong>
                 View Routing
-                {data_head.routing_no && "#" + data_head.routing_no}
+                {routing.routing_no && "#" + routing.routing_no}
               </strong>
             </h2>
           </Col>
@@ -52,16 +47,14 @@ const RoutingView = () => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} className="text-right">
-            <Text className="text-view">
-              {data_head.routing_created ?? "-"}
-            </Text>
+            <Text className="text-view">{routing.routing_created ?? "-"}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
             <Title level={5}>Description :</Title>
             <Col span={12}>
-              <Text className="pd-left-2">{data_head.routing_remark}</Text>
+              <Text className="pd-left-2">{routing.routing_remark}</Text>
             </Col>
           </Col>
         </Row>
@@ -73,7 +66,7 @@ const RoutingView = () => {
                 <Text strong>FG Item :</Text>
               </Col>
               <Col span={15}>
-                <Text>{data_head.item_no_name ?? "-"}</Text>
+                <Text>{routing.item_no_name ?? "-"}</Text>
               </Col>
             </Row>
             <Row className="col-2 row-margin-vertical">
@@ -81,7 +74,7 @@ const RoutingView = () => {
                 <Text strong>Bulk Item :</Text>
               </Col>
               <Col span={15}>
-                <Text>{data_head.item_no_name_ref ?? "-"}</Text>
+                <Text>{routing.item_no_name_ref ?? "-"}</Text>
               </Col>
             </Row>
             <Row className="col-2 row-margin-vertical">
@@ -90,7 +83,7 @@ const RoutingView = () => {
               </Col>
               <Col span={8}>
                 <Text className="text-value">
-                  {data_head.routing_working_time_min ?? "-"}
+                  {routing.routing_working_time_min ?? "-"}
                 </Text>
               </Col>
             </Row>
@@ -100,7 +93,7 @@ const RoutingView = () => {
               </Col>
               <Col span={8}>
                 <Text className="text-value">
-                  {data_head.routing_working_time_hour ?? "-"}
+                  {routing.routing_working_time_hour ?? "-"}
                 </Text>
               </Col>
             </Row>
@@ -110,7 +103,7 @@ const RoutingView = () => {
               </Col>
               <Col span={8}>
                 <Text className="text-value">
-                  {data_head.routing_working_time_day ?? "-"}{" "}
+                  {routing.routing_working_time_day ?? "-"}
                 </Text>
               </Col>
             </Row>
@@ -123,7 +116,7 @@ const RoutingView = () => {
               </Col>
               <Col span={8}>
                 <Text className="text-value">
-                  {data_head.routing_batch_size ?? "-"}
+                  {routing.routing_batch_size ?? "-"}
                 </Text>
               </Col>
             </Row>
@@ -133,7 +126,7 @@ const RoutingView = () => {
               </Col>
               <Col span={8}>
                 <Text className="text-value">
-                  {data_head.routing_fill_weight ?? "-"}
+                  {routing.routing_fill_weight ?? "-"}
                 </Text>
               </Col>
             </Row>
@@ -143,7 +136,7 @@ const RoutingView = () => {
               </Col>
               <Col span={8}>
                 <Text className="text-value">
-                  {data_head.routing_pack_size ?? "-"}
+                  {routing.routing_pack_size ?? "-"}
                 </Text>
               </Col>
             </Row>
@@ -161,7 +154,7 @@ const RoutingView = () => {
               </Col>
               <Col span={8}>
                 <Text className="text-value">
-                  {data_head.routing_capacity_min ?? "-"}
+                  {routing.routing_capacity_min ?? "-"}
                 </Text>
               </Col>
             </Row>
@@ -171,7 +164,7 @@ const RoutingView = () => {
               </Col>
               <Col span={8}>
                 <Text className="text-value">
-                  {data_head.routing_worker_hour ?? "-"}
+                  {routing.routing_worker_hour ?? "-"}
                 </Text>
               </Col>
             </Row>
@@ -180,8 +173,19 @@ const RoutingView = () => {
         <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1">
-              <Tabs.TabPane tab={<span>Detail</span>} key="1">
-                <RoutingTabDetail dataDetail={dataDetail} readOnly={true} />
+              <Tabs.TabPane tab={<span>Bulk</span>} key="1">
+                <RoutingTabDetail
+                  dataDetail={routing.routing_detail.bulk}
+                  routing_type_id={1}
+                  readOnly={readOnly}
+                />
+              </Tabs.TabPane>
+              <Tabs.TabPane tab={<span>FG</span>} key="2">
+                <RoutingTabDetail
+                  dataDetail={routing.routing_detail.fg}
+                  routing_type_id={2}
+                  readOnly={readOnly}
+                />
               </Tabs.TabPane>
             </Tabs>
           </Col>

@@ -53,10 +53,7 @@ export const initialState = {
     },
   },
   routing: {
-    routing: {
-      data_head: {},
-      dataDetail: [],
-    },
+    routing: {},
     routingList: [],
   },
   fg: {

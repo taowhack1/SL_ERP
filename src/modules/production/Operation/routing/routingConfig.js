@@ -133,7 +133,7 @@ export const routingDetailColumns = ({
   {
     title: (
       <div className="text-center">
-        <CustomLabel label="Cost Center" require />
+        <CustomLabel label="Cost Center" require readOnly />
       </div>
     ),
     dataIndex: "machine_cost_center_description",
@@ -143,6 +143,8 @@ export const routingDetailColumns = ({
         <Text className="text-value">{val}</Text>
       ) : (
         <CustomSelect
+          allowClear
+          showSearch
           data={machineList}
           field_id="machine_id"
           field_name="machine_cost_center_description"
@@ -165,7 +167,7 @@ export const routingDetailColumns = ({
   {
     title: (
       <div className="text-center">
-        <CustomLabel label="Man" require />
+        <CustomLabel label="Man" require readOnly />
       </div>
     ),
     width: "15%",
@@ -193,7 +195,7 @@ export const routingDetailColumns = ({
   {
     title: (
       <div className="text-center">
-        <CustomLabel label="Period" require />
+        <CustomLabel label="Period" require readOnly />
       </div>
     ),
     width: "15%",
@@ -254,7 +256,6 @@ export const routingHeadFileds = {
   item_id: null,
   item_id_ref: null,
   branch_id: null,
-  routing_detail: null,
   routing_working_time_min: null,
   routing_working_time_hour: null,
   routing_working_time_day: null,
@@ -265,6 +266,10 @@ export const routingHeadFileds = {
   routing_capacity_min: null,
   routing_description: null,
   routing_remark: null,
+  routing_detail: {
+    bulk: [],
+    fg: [],
+  },
 };
 export const routingDetailFileds = {
   id: null,

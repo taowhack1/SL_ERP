@@ -3,6 +3,7 @@ import { api_create_quotation } from "./js/api";
 import { sortData, sortDataWithoutCommit } from "./js/function_main";
 
 export const mainReducer = (state, action) => {
+  const { key, detailKey, rowId, data, id } = action.payload;
   switch (action.type) {
     case "ADD_ROW":
       return sortData([...state, action.payload]);
@@ -120,6 +121,41 @@ export const mainReducer = (state, action) => {
       );
       console.log("newState", newState);
       return newState;
+
+    case "ADD_ROW_OBJ_OBJ_DETAIL_ARRAY_VALUE":
+      // ex. {...,key:{ ...otherKey, yourKey : [...old,new] }}
+      // require key , detailKey , data : newRow
+      return {
+        ...state,
+        [key]: {
+          ...state[key],
+          [detailKey]: sortData([...state[key][detailKey], data]),
+        },
+      };
+    case "DEL_ROW_OBJ_OBJ_DETAIL_ARRAY_VALUE":
+      // ex. {...,key:{ ...otherKey, yourKey : [new] }}
+      // require key , detailKey , data : newRow
+      return {
+        ...state,
+        [key]: {
+          ...state[key],
+          [detailKey]: sortData(
+            state[key][detailKey].filter((obj) => obj.id !== id)
+          ),
+        },
+      };
+    case "CHANGE_OBJ_OBJ_DETAIL_ARRAY_VALUE":
+      // ex. {...,key:{ ...otherKey, yourKey : [{...},{...},{...yourRow,...data}] }}
+      // require key, detailKey, rowId, data
+      return {
+        ...state,
+        [key]: {
+          ...state[key],
+          [detailKey]: state[key][detailKey].map((obj) =>
+            obj.id === rowId ? { ...obj, ...data } : obj
+          ),
+        },
+      };
     case "CHANGE_OBJ_DETAIL_VALUE":
       // { ...,detail:[newDetail]}
       return {
