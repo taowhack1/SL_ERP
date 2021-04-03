@@ -18,11 +18,12 @@ import MainLayout from "../../../../components/MainLayout";
 import { reducer } from "../../../qualityAssurance/reducers";
 import Authorize from "../../../system/Authorize";
 import {
+  routingDetailColumns,
   routingDetailFileds,
   routingDetailRequireFileds,
   routingHeadFileds,
   routingHeadRequireFileds,
-} from "./routingConfig";
+} from "./config";
 import RoutingTabDetail from "./RoutingTabDetail";
 import moment from "moment";
 import RoutingTabpane from "./RoutingTabDetail";
@@ -48,6 +49,7 @@ import CustomLabel from "../../../../components/CustomLabel";
 import MainLayoutLoading from "../../../../components/MainLayoutLoading";
 import DetailLoading from "../../../../components/DetailLoading";
 import { mainReducer } from "../../../../include/reducer";
+import RoutingDetail from "./RoutingDetail";
 const { Title, Text } = Typography;
 const numberFormat = {
   precision: 0,
@@ -316,10 +318,8 @@ const RoutingCreate = (props) => {
                       readOnly={readOnly}
                     />
                   </Col>
-                  <Col span={15}>
-                    <Text className="text-value">
-                      {state.item_no_name_ref ?? "-"}
-                    </Text>
+                  <Col span={15} className="text-value">
+                    <Text>{state.item_no_name_ref ?? "-"}</Text>
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">
@@ -519,7 +519,15 @@ const RoutingCreate = (props) => {
                 </Row>
               </Col>
             </Row>
-            <Row className="col-2 row-tab-margin-l">
+            <RoutingDetail
+              state={state}
+              readOnly={readOnly}
+              upDateFormValue={upDateFormValue}
+              stateDispatch={stateDispatch}
+              detailField={"routing_detail"}
+              columns={routingDetailColumns}
+            />
+            {/* <Row className="col-2 row-tab-margin-l">
               <Col span={24}>
                 <Tabs defaultActiveKey="1">
                   <Tabs.TabPane
@@ -556,7 +564,7 @@ const RoutingCreate = (props) => {
                   </Tabs.TabPane>
                 </Tabs>
               </Col>
-            </Row>
+            </Row> */}
           </div>
         </MainLayout>
       )}

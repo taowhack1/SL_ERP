@@ -181,6 +181,10 @@ export const mrpFields = {
   commit: 1,
   uom_no: null,
   uom_no_ref: null,
+  mrp_routing: {
+    bulk: [],
+    fg: [],
+  },
 };
 
 export const mrpRequireFields = [
@@ -189,6 +193,11 @@ export const mrpRequireFields = [
   "item_id",
   "mrp_qty_produce",
   "mrp_plan_start_date",
+];
+export const mrpRoutingRequireFields = [
+  "machine_id",
+  "mrp_routing_plan_date",
+  "mrp_routing_plan_time",
 ];
 
 export const mrpDetailColumns = ({ readOnly, onChange }) => [

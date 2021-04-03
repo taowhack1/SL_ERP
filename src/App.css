@@ -882,3 +882,7 @@ div.ow {
   word-wrap: break-word !important;
   hyphens: auto !important;
 }
+
+span.ant-typography {
+  color: #717171;
+}

@@ -20,6 +20,7 @@ import {
   mrpPKDetailFields,
   mrpRequireFields,
   mrpRMDetailFields,
+  mrpRoutingRequireFields,
 } from "../config/mrp";
 import {
   getAllItems,
@@ -32,7 +33,11 @@ import {
 } from "../../../actions/production/mrpActions";
 import ReducerClass from "../../../include/js/ReducerClass";
 import MRPHead from "./MRPHead";
-import { sortData, validateFormHead } from "../../../include/js/function_main";
+import {
+  sortData,
+  validateFormDetail,
+  validateFormHead,
+} from "../../../include/js/function_main";
 import { MRPContext } from "../../../include/js/context";
 import moment from "moment";
 import MainLayoutLoading from "../../../components/MainLayoutLoading";
@@ -134,7 +139,21 @@ const MRPCreate = (props) => {
                   rm_detail: sortData(materialDetail?.item_formula ?? []) ?? [],
                   pk_detail:
                     sortData(materialDetail?.item_packaging ?? []) ?? [],
+                  item_formula: null,
+                  pk_detail: null,
                   calRPM: false,
+                  mrp_routing: {
+                    bulk: sortData(
+                      materialDetail.mrp_routing.filter(
+                        (obj) => obj.routing_detail_type_id === 1
+                      )
+                    ),
+                    fg: sortData(
+                      materialDetail.mrp_routing.filter(
+                        (obj) => obj.routing_detail_type_id === 2
+                      )
+                    ),
+                  },
                 }
               : initialState,
           });
@@ -206,7 +225,13 @@ const MRPCreate = (props) => {
       console.log("HEAD DATA : ", state);
       console.log("RM DATA : ", state.rm_detail);
       console.log("PK DATA : ", state.pk_detail);
-      if (state.rm_detail.some((obj) => obj.auto_genarate_item === 0)) {
+
+      if (
+        state.rm_detail.some(
+          (obj) =>
+            obj.auto_genarate_item === 0 || obj.auto_genarate_item === undefined
+        )
+      ) {
         message.error({
           content:
             "Some vendor of Raw Material item not available. Please contact Purchasing Department.",
@@ -215,7 +240,13 @@ const MRPCreate = (props) => {
         });
         return false;
       }
-      if (state.pk_detail.some((obj) => obj.auto_genarate_item === 0)) {
+
+      if (
+        state.pk_detail.some(
+          (obj) =>
+            obj.auto_genarate_item === 0 || obj.auto_genarate_item === undefined
+        )
+      ) {
         message.error({
           content:
             "Some vendor of Package Material item not available. Please contact Purchasing Department",
@@ -224,10 +255,25 @@ const MRPCreate = (props) => {
         });
         return false;
       }
+      const mrpRoutingDetail = state.mrp_routing.bulk.concat(
+        state.mrp_routing.fg
+      );
       const validate = validateFormHead(state, mrpRequireFields);
+      const validateRouting = validateFormDetail(
+        mrpRoutingDetail,
+        mrpRoutingRequireFields
+      );
       console.log(validate);
 
       if (validate.validate) {
+        if (!validateRouting.validate) {
+          message.error({
+            content: <span>Please check your routing form.</span>,
+            duration: 4,
+            key: "alert_validate",
+          });
+          return false;
+        }
         if (state.calRPM === true) {
           message.error({
             content: (
@@ -246,9 +292,22 @@ const MRPCreate = (props) => {
           return false;
         }
         const saveData = {
-          data_head: state,
-          data_material: sortData(state.rm_detail.concat(state.pk_detail)),
+          data_head: [
+            {
+              ...state,
+              mrp_routing: sortData(
+                state.mrp_routing.bulk.concat(state.mrp_routing.fg)
+              ),
+              mrp_detail: sortData(state.pk_detail.concat(state.rm_detail)),
+              pk_detail: null,
+              rm_detail: null,
+              item_formula: null,
+              item_packaging: null,
+            },
+          ],
+          // data_material: sortData(state.rm_detail.concat(state.pk_detail)),
         };
+        console.log(saveData);
         state.mrp_id
           ? updateMRP(state.mrp_id, saveData, auth.user_name, redirect_to_view)
           : createMRP(saveData, auth.user_name, redirect_to_view);

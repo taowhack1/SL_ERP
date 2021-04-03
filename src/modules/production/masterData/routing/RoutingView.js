@@ -5,7 +5,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import MainLayout from "../../../../components/MainLayout";
 import RoutingTabDetail from "./RoutingTabDetail";
-import RoutingViewDetail from "./RoutingViewDetail";
+import RoutingDetail from "./RoutingDetail";
+import { routingDetailColumns } from "./config";
 
 const RoutingView = () => {
   const readOnly = true;
@@ -170,26 +171,12 @@ const RoutingView = () => {
             </Row>
           </Col>
         </Row>
-        <Row className="col-2 row-tab-margin-l">
-          <Col span={24}>
-            <Tabs defaultActiveKey="1">
-              <Tabs.TabPane tab={<span>Bulk</span>} key="1">
-                <RoutingTabDetail
-                  dataDetail={routing.routing_detail.bulk}
-                  routing_type_id={1}
-                  readOnly={readOnly}
-                />
-              </Tabs.TabPane>
-              <Tabs.TabPane tab={<span>FG</span>} key="2">
-                <RoutingTabDetail
-                  dataDetail={routing.routing_detail.fg}
-                  routing_type_id={2}
-                  readOnly={readOnly}
-                />
-              </Tabs.TabPane>
-            </Tabs>
-          </Col>
-        </Row>
+        <RoutingDetail
+          state={routing}
+          readOnly={readOnly}
+          detailField={"routing_detail"}
+          columns={routingDetailColumns}
+        />
       </div>
     </MainLayout>
   );

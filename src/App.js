@@ -99,9 +99,9 @@ import TransferView from "./modules/inventory/operations/transfer/TransferView";
 import WorkOrderCreate1 from "./modules/production/Operation/workorder/WorkOrderCreate";
 
 import ReturnRoutes from "./modules/inventory/operations/return/ReturnRoutes";
-import Routing from "./modules/production/Operation/routing/Routing";
-import RoutingCreate from "./modules/production/Operation/routing/RoutingCreate";
-import RoutingView from "./modules/production/Operation/routing/RoutingView";
+import Routing from "./modules/production/masterData/routing/Routing";
+import RoutingCreate from "./modules/production/masterData/routing/RoutingCreate";
+import RoutingView from "./modules/production/masterData/routing/RoutingView";
 import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
 import ProductionMain from "./modules/production/Operation/production/ProductionMain";
 import PageLayout from "./components/PageLayout";

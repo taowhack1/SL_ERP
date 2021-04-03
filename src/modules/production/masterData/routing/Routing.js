@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
 import MainLayout from "../../../../components/MainLayout";
-import { mainColumns, mockupData } from "./routingConfig";
+import { mainColumns, mockupData } from "./config";
 import $ from "jquery";
 import {
   getRoutingAll,
@@ -67,7 +67,7 @@ const Routing = (props) => {
                 },
               };
             }}
-          ></Table>
+          />
         </Col>
       </Row>
     </MainLayout>

@@ -1,5 +1,5 @@
 import React from "react";
-import { routingDetailColumns, routingDetailFileds } from "./routingConfig";
+import { routingDetailColumns, routingDetailFileds } from "./config";
 import { useSelector } from "react-redux";
 import CustomTable from "../../../../components/CustomTable";
 
@@ -8,6 +8,8 @@ const RoutingTabDetail = ({
   stateDispatch,
   readOnly,
   routing_type_id,
+  detailField,
+  columns,
 }) => {
   const machineList = useSelector(
     (state) => state.production.machine.machineList
@@ -16,7 +18,7 @@ const RoutingTabDetail = ({
     stateDispatch({
       type: "ADD_ROW_OBJ_OBJ_DETAIL_ARRAY_VALUE",
       payload: {
-        key: "routing_detail",
+        key: detailField,
         detailKey: routing_type_id === 1 ? "bulk" : "fg",
         data: {
           ...routingDetailFileds,
@@ -30,7 +32,7 @@ const RoutingTabDetail = ({
     stateDispatch({
       type: "DEL_ROW_OBJ_OBJ_DETAIL_ARRAY_VALUE",
       payload: {
-        key: "routing_detail",
+        key: detailField,
         detailKey: routing_type_id === 1 ? "bulk" : "fg",
         id: id,
       },
@@ -52,7 +54,7 @@ const RoutingTabDetail = ({
       stateDispatch({
         type: "CHANGE_OBJ_OBJ_DETAIL_ARRAY_VALUE",
         payload: {
-          key: "routing_detail",
+          key: detailField,
           detailKey: routing_type_id === 1 ? "bulk" : "fg",
           rowId,
           data,
@@ -65,7 +67,7 @@ const RoutingTabDetail = ({
       <CustomTable
         rowClassName="row-table-detail"
         rowKey={"id"}
-        columns={routingDetailColumns({
+        columns={columns({
           readOnly,
           onDelete: delLine,
           onChangeValue,

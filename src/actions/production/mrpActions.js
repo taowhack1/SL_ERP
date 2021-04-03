@@ -33,7 +33,7 @@ export const getMRPByID = (id, user_name, redirect) => {
   console.log("getMRPByID");
   return Promise.allSettled([
     getMRPHead(id, user_name),
-    getMRPMaterial(id),
+    // getMRPMaterial(id),
   ]).catch((err) => {
     console.log(err);
   });
@@ -49,28 +49,28 @@ export const getMRPByID = (id, user_name, redirect) => {
 export const createMRP = async (data, user_name, redirect) => {
   try {
     console.log("createMRP", data);
-    const { data_head, data_material } = data;
-    await axios.post(`${api_mrp}`, data_head, header_config).then((res) => {
-      const mrp_id = res.data[0][0].mrp_id;
-      Promise.allSettled([updateMRPMaterial(mrp_id, data_material)])
-        .then((res) => {
-          message.success({
-            content: "Work Order Created.",
-            duration: 2,
-            key: "validate",
-          });
-          redirect && redirect(mrp_id);
-          // dispatch(getMRPByID(mrp_id, user_name, redirect));
-        })
-        .catch((error) => {
-          console.log(error);
-          message.error({
-            content: "Somethings went wrong. Please contact programmer.",
-            duration: 4,
-            key: "validate",
-          });
+    // const { data_head, data_material } = data;
+    const { data_head } = data;
+    await axios
+      .post(`${api_mrp}`, data_head, header_config)
+      .then((res) => {
+        console.log("created..", res);
+        const mrp_id = res.data[0].mrp_id;
+        message.success({
+          content: "Work Order Created.",
+          duration: 2,
+          key: "validate",
         });
-    });
+        redirect && redirect(mrp_id);
+      })
+      .catch((error) => {
+        console.log(error);
+        message.error({
+          content: "Somethings went wrong. Please contact programmer.",
+          duration: 4,
+          key: "validate",
+        });
+      });
   } catch (error) {
     console.log(error);
   }
@@ -78,27 +78,25 @@ export const createMRP = async (data, user_name, redirect) => {
 export const updateMRP = async (mrp_id, data, user_name, redirect) => {
   try {
     console.log("createMRP", data);
-    const { data_head, data_material } = data;
-    axios.put(`${api_mrp}/${mrp_id}`, data_head, header_config).then((res) => {
-      Promise.allSettled([updateMRPMaterial(mrp_id, data_material)])
-        .then((res) => {
-          message.success({
-            content: "Work Order Updated.",
-            duration: 2,
-            key: "validate",
-          });
-          redirect && redirect(mrp_id);
-          // dispatch(getMRPByID(id, user_name, redirect));
-        })
-        .catch((error) => {
-          console.log(error);
-          message.error({
-            content: "Somethings went wrong. Please contact programmer.",
-            duration: 4,
-            key: "validate",
-          });
+    const { data_head } = data;
+    axios
+      .put(`${api_mrp}/${mrp_id}`, data_head, header_config)
+      .then((res) => {
+        message.success({
+          content: "Work Order Created.",
+          duration: 2,
+          key: "validate",
         });
-    });
+        redirect && redirect(mrp_id);
+      })
+      .catch((error) => {
+        console.log(error);
+        message.error({
+          content: "Somethings went wrong. Please contact programmer.",
+          duration: 4,
+          key: "validate",
+        });
+      });
   } catch (error) {
     console.log(error);
   }

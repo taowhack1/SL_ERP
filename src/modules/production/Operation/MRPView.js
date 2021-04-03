@@ -143,16 +143,27 @@ const MRPView = (props) => {
     const getData = async (id, user_name) =>
       await getMRPByID(id, user_name).then((res) => {
         console.log(res);
+        const resData = res[0]?.value?.data[0];
         const data = {
-          ...res[0]?.value?.data[0],
+          ...resData,
           rm_detail:
-            sortData(
-              res[1]?.value?.data[0].filter((obj) => obj.type_id === 1)
-            ) ?? [],
+            sortData(resData.mrp_detail.filter((obj) => obj.type_id === 1)) ??
+            [],
           pk_detail:
-            sortData(
-              res[1]?.value?.data[0].filter((obj) => obj.type_id === 2)
-            ) ?? [],
+            sortData(resData.mrp_detail.filter((obj) => obj.type_id === 2)) ??
+            [],
+          mrp_routing: {
+            bulk: sortData(
+              resData.mrp_routing.filter(
+                (obj) => obj.routing_detail_type_id === 1
+              )
+            ),
+            fg: sortData(
+              resData.mrp_routing.filter(
+                (obj) => obj.routing_detail_type_id === 2
+              )
+            ),
+          },
         };
 
         // console.log(data);

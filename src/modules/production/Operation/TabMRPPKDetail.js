@@ -9,7 +9,6 @@ const { Text } = Typography;
 
 const TabMRPPKDetail = () => {
   const { mainState, mainStateDispatch, readOnly } = useContext(MRPContext);
-  // console.log("TabMRPPKDetail mainState", mainState);
 
   const onChange = (rowId, data) => {
     mainStateDispatch({
@@ -32,7 +31,6 @@ const TabMRPPKDetail = () => {
         </Col>
         <Col span={11} className="text-right"></Col>
       </Row>
-      {/* Column Header */}
       <CustomTable
         rowKey="id"
         rowClassName={(record) => {
@@ -47,7 +45,6 @@ const TabMRPPKDetail = () => {
         columns={mrpDetailColumns({ readOnly, onChange })}
         dataSource={mainState.pk_detail}
         readOnly={readOnly}
-        // onAdd={RMReducer.addNewRow}
       />
     </>
   );
