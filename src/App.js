@@ -106,6 +106,8 @@ import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
 import ProductionMain from "./modules/production/Operation/production/ProductionMain";
 import PageLayout from "./components/PageLayout";
 import StockCard from "./modules/inventory/reporting/stockCard/StockCard";
+import ProductionSelectMachine from "./modules/production/Operation/production/production/costCenter/ProductionSelectMachine";
+import ProductionSelectWorker from "./modules/production/Operation/production/production/worker/ProductionSelectWorker";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -440,6 +442,12 @@ const App = (props) => {
               <ReportQC />
             </Route>
             {/* PRODUCTION */}
+            <Route exact path="/production/operations/machine">
+              <ProductionSelectMachine />
+            </Route>
+            <Route exact path="/production/operations/machine/:id">
+              <ProductionSelectWorker />
+            </Route>
             <Route exact path="/production">
               <Production />
             </Route>
@@ -520,13 +528,14 @@ const App = (props) => {
               path="/production/routing/edit/:id"
               component={RoutingCreate}
             />
-            <PageLayout>
-              <Route
-                exact
-                path="/production/operations/production"
-                component={ProductionMain}
-              />
-            </PageLayout>
+            {/* <PageLayout> */}
+            <Route
+              exact
+              path="/production/operations/production"
+              component={ProductionMain}
+            />
+            {/* </PageLayout> */}
+
             <Route>
               <NotFound />
             </Route>

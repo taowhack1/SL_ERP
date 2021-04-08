@@ -14,6 +14,7 @@ const RoutingDetail = ({
   stateDispatch,
   detailField,
   columns,
+  triggerHead,
 }) => {
   return (
     <>
@@ -31,6 +32,7 @@ const RoutingDetail = ({
                 stateDispatch={stateDispatch}
                 detailField={detailField}
                 columns={columns}
+                triggerHead={triggerHead}
               />
             </Tabs.TabPane>
             <Tabs.TabPane
@@ -44,6 +46,7 @@ const RoutingDetail = ({
                 stateDispatch={stateDispatch}
                 detailField={detailField}
                 columns={columns}
+                triggerHead={triggerHead}
               />
             </Tabs.TabPane>
             {children}

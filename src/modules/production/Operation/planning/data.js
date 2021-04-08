@@ -184,18 +184,10 @@ export const rawData = {
       title: "ปิด OPP tape+ขึ้นพาเลท",
     },
   ],
-  getDate: () => {
-    let month = [];
-    for (let i in 30) {
-      month.push({
-        id: "D" + i,
-      });
-    }
-  },
   jobs: [
     {
       id: 0,
-      resourceIds: ["115-09-001", "115-02-206", "MC002"],
+      resourceIds: ["115-09-001", "115-02-206", "11502101"],
       title: "รวมกะเช้า",
       so_no: "SO21030001",
       wo_no: "WO21030001",
@@ -322,4 +314,149 @@ export const rawData = {
       ],
     },
   ],
+  date: [
+    {
+      id: "j0",
+      start: "2021-04-01",
+      title: "2021-04-01",
+      resourceIds: [["11502101", "11502102"]],
+      allDay: true,
+      shift: [
+        {
+          id: 0,
+          shift_id: 1,
+          shift_title: "กะเช้า",
+          title: "กะเช้า",
+          mrp_routing_total_plan_time: 8,
+          jobs: [
+            {
+              id: 0,
+              title: "SO21030001",
+              so_no: "SO21030001",
+              wo_no: "WO21030001",
+              plan_no: "P2021040001",
+              mrp_routing_plan_time: 1,
+              // rpm_status_id: 1,
+              // rpm_status_description: "วัตถุดิบพร้อมผลิต",
+              time: [{}],
+            },
+            {
+              id: 1,
+              title: "SO21030002",
+              so_no: "SO21030002",
+              plan_no: "P2021040002",
+              mrp_routing_plan_time: 1,
+              // rpm_status_id: 2,
+              // rpm_status_description: "วัตถุดิบไม่พร้อมผลิต",
+            },
+          ],
+        },
+        {
+          id: 1,
+          shift_id: 2,
+          shift_title: "กะกลางคืน",
+          title: "กะกลางคืน",
+          mrp_routing_total_plan_time: 8,
+          jobs: [
+            {
+              id: 0,
+              title: "SO21030001",
+              so_no: "SO21030001",
+              plan_no: "P2021040001",
+              mrp_routing_plan_time: 4,
+              // rpm_status_id: 1,
+              // rpm_status_description: "วัตถุดิบพร้อมผลิต",
+            },
+            {
+              id: 1,
+              title: "SO21030002",
+              so_no: "SO21030002",
+              plan_no: "P2021040002",
+              mrp_routing_plan_time: 4,
+              // rpm_status_id: 2,
+              // rpm_status_description: "วัตถุดิบไม่พร้อมผลิต",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  mockupApiData: {
+    plan: [
+      {
+        id: "11502101-2021-04-01",
+        title: "2021-04-01",
+        resourceId: "11502101", //เครื่อง
+        start: "2021-04-01", // วัน
+        color: "white",
+        shift: [
+          {
+            id: "shiftA",
+            title: "กะเช้า",
+            shift_job_id: 1,
+            shift_job_name: "กะเช้า",
+            sum_plan_job_plan_time: "05:00:00",
+            job_detail: [
+              {
+                id: 0,
+                title: "PLN202104001",
+                plan_job_no: "PLN2021040001",
+                plan_job_plan_time: "01:00:00",
+
+                mrp_no: "MRP202103001",
+                so_no: "SO202103004",
+                plan_job_worker: 1,
+                plan_job_actual_time: null,
+              },
+            ],
+          },
+          {
+            id: "shiftB",
+            title: "กะดึก",
+            shift_job_id: 2,
+            shift_job_name: "กะดึก",
+            sum_plan_job_plan_time: "00:00:00",
+            job_detail: [],
+          },
+        ],
+      },
+      {
+        id: "11502212-2021-04-04",
+        title: "2021-04-04",
+        resourceId: "11502212", //เครื่อง
+        start: "2021-04-04", // วัน
+        color: "white",
+        shift: [
+          {
+            id: "shiftA",
+            title: "กะเช้า",
+            shift_job_id: 1,
+            shift_job_name: "กะเช้า",
+            sum_plan_job_plan_time: "05:00:00",
+            job_detail: [
+              {
+                id: 0,
+                title: "PLN202104002",
+                plan_job_no: "PLN2021040002",
+                plan_job_plan_time: "01:00:00",
+
+                mrp_no: "MRP202103001",
+                so_no: "SO202103004",
+                plan_job_worker: 1,
+                plan_job_actual_time: null,
+              },
+            ],
+          },
+          {
+            id: "shiftB",
+            title: "กะดึก",
+            shift_job_id: 2,
+            shift_job_name: "กะดึก",
+            sum_plan_job_plan_time: "00:00:00",
+            job_detail: [],
+          },
+        ],
+      },
+    ],
+  },
 };

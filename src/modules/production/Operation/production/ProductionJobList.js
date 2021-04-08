@@ -9,8 +9,8 @@ const ProductionJobList = ({ dataSource }) => {
     <>
       <Table
         size={"small"}
-        scroll={{ y: 500 }}
-        pagination={{ pageSize: 20 }}
+        // scroll={{ y: 500 }}
+        pagination={{ pageSize: 15 }}
         bordered
         columns={[
           {

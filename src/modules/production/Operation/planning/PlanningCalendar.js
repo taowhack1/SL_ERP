@@ -1,19 +1,35 @@
 import FullCalendar from "@fullcalendar/react";
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
-import { rawData } from "./data";
 import Text from "antd/lib/typography/Text";
 import moment from "moment";
-import { BorderOutlined } from "@ant-design/icons";
-import { Button, Col, Row, Space } from "antd";
+import { Button, Col, Divider, Input, Row, Space } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import CustomLabel from "../../../../components/CustomLabel";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getPlanningCalendarData } from "../../../../actions/production/planningActions";
+import DetailLoading from "../../../../components/DetailLoading";
+import { convertTimeToHr } from "../../../../include/js/function_main";
+import { convertDigit } from "../../../../include/js/main_config";
+import Search from "../../../../components/Search";
+import Title from "antd/lib/typography/Title";
+import ModalCostCenterPlanning from "./ModalCostCenterPlanning";
+import { SET_LOADING_PLANNING_CALENDAR } from "../../../../actions/types";
+let countRender = 1;
 const CustomFullCalendar = () => {
-  // const renderEventContent = (info) => (
-  //   <span style={{ color: "red" }}>{info.event.text}</span>
-  // );
-  const [state, setState] = useState(rawData.jobs);
+  const dispatch = useDispatch();
+  const { loading, costCenter, plan } = useSelector(
+    (state) => state.production.planning
+  );
+  const [state, setState] = useState({
+    costCenter,
+    plan,
+  });
+  const [search, setSearch] = useState({
+    costCenter: null,
+    plan: null,
+    date: null,
+  });
   const [modal, setModal] = useState({
     visible: false,
     data: {},
@@ -25,165 +41,223 @@ const CustomFullCalendar = () => {
       visible: false,
       data: {},
     });
+  const saveModal = (data) => {
+    setModal({
+      visible: false,
+      data: {},
+    });
+    dispatch({ type: SET_LOADING_PLANNING_CALENDAR, payload: true });
+    dispatch({ type: SET_LOADING_PLANNING_CALENDAR, payload: false });
+  };
+  const onSearch = (type, text) => {
+    switch (type) {
+      case "costCenter":
+        setState({
+          ...state,
+          costCenter: costCenter.filter(
+            (obj) =>
+              obj.id.indexOf(text) >= 0 ||
+              obj.title.toUpperCase().indexOf(text.toUpperCase()) >= 0
+          ),
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
   const getStatusColor = (status) => {
     switch (status) {
       case 1:
         return "#59FF34";
       case 2:
         return "red";
-      // case 3:
-      //   return "#50F3FF";
-      // case 4:
-      //   return "#59FF34";
       default:
         return "red";
     }
   };
+  const materialStatusBar = () => (
+    <Row className="col-2 mt-1">
+      <Col span={20} offset={4}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CustomLabel label={"Material Status : "} />
+          <div
+            style={{
+              backgroundColor: "#59FF34",
+              borderRadius: "50%",
+              width: "14px",
+              height: "14px",
+              border: "1px solid gray",
+              marginRight: 10,
+            }}
+            className={"ml-2"}
+          ></div>
+          <CustomLabel label={"Ready"} readOnly={true} />
+          <div
+            style={{
+              backgroundColor: "red",
+              borderRadius: "50%",
+              width: "14px",
+              height: "14px",
+              border: "1px solid gray",
+              marginRight: 10,
+            }}
+            className={"ml-2"}
+          ></div>
+          <CustomLabel label={"Not Ready"} readOnly={true} />
+        </div>
+      </Col>
+    </Row>
+  );
+
   const renderEventContent = (eventInfo) => {
+    console.log(eventInfo);
     const props = eventInfo.event._def.extendedProps;
-    // console.log("props", props);
+    console.log("props", props);
     return (
       <>
-        <div>
-          <div
-            className={"text-center"}
-            style={{
-              // backgroundColor: "white",
-              // border: "1px solid #FFC357",
-              borderRadius: 2,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-            }}
-            onClick={() => {
-              console.log(eventInfo);
-              console.log("data", eventInfo.event._def.extendedProps);
-            }}
-          >
-            {/* Render Job */}
-            <div
-              style={{
-                borderRadius: 2,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                width: "100%",
-                zIndex: 1,
-              }}
-            >
-              {props?.jobs.length ? (
-                props?.jobs.map((obj, key) => (
-                  <div
-                    key={key}
-                    style={{
-                      borderRadius: 2,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: "#78FFFD",
-                      border: "1px solid #00D8D4 ",
-                      width: "100%",
-                      marginTop: 5,
-                      padding: 2,
-                      zIndex: 10,
-                      boxShadow: "0px 0px 3px #ccc",
-                    }}
-                    className="job-head"
-                    onClick={() =>
-                      openModal({ data: obj, visible: !modal.visible })
-                    }
-                  >
-                    <Text strong className="ml-1 mr-1">
-                      {obj.title}
+        <div className="arrow">
+          {props.shift.map((objShift, key) => (
+            <div key={objShift.id}>
+              <div
+                key={objShift.id}
+                className={"text-center arrow"}
+                style={{
+                  // backgroundColor: "white",
+                  // border: "1px solid #FFC357",
+                  borderRadius: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  backgroundColor: "white",
+                }}
+                onClick={() => {
+                  console.log(eventInfo);
+                  console.log("data", eventInfo.event._def.extendedProps);
+                }}
+              >
+                {/* Render Job */}
+                <div
+                  style={{
+                    borderRadius: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    width: "100%",
+                    zIndex: 1,
+                  }}
+                  className="arrow"
+                >
+                  {objShift?.job_detail?.length ? (
+                    objShift.job_detail.map((obj, key) => (
+                      <div
+                        key={obj.id}
+                        style={{
+                          borderRadius: 2,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          backgroundColor: "#78FFFD",
+                          border: "1px solid #00D8D4 ",
+                          width: "100%",
+                          marginTop: 5,
+                          padding: 2,
+                          zIndex: 10,
+                          boxShadow: "0px 0px 3px #ccc",
+                        }}
+                        className="job-head pointer"
+                        onClick={() =>
+                          openModal({ data: obj, visible: !modal.visible })
+                        }
+                      >
+                        <Text strong className="ml-1 mr-1">
+                          {obj.title}
+                        </Text>
+                        <Text strong>
+                          {convertTimeToHr(obj.plan_job_plan_time)} Hr.
+                        </Text>
+                      </div>
+                    ))
+                  ) : (
+                    <Text className="text-value">{"< - - - ว่าง - - - >"}</Text>
+                  )}
+                </div>
+              </div>
+              {/* Shift Tab */}
+              <div
+                style={{
+                  border: "1px solid #FFE3B0",
+                  marginTop: 5,
+                  backgroundColor: "#ffc459",
+                  boxShadow: "0px 0px 3px #ccc",
+                  fontSize: 14,
+                }}
+                className="arrow"
+              >
+                <Row className="col-2 pd-left-1">
+                  <Col span={15}>
+                    <Space size={8}>
+                      <Text strong>{objShift.title}</Text>
+                    </Space>
+                  </Col>
+                  <Col span={9}>
+                    <Text strong>
+                      {convertDigit(
+                        convertTimeToHr(objShift.sum_plan_job_plan_time),
+                        2
+                      ) ?? "-"}
                     </Text>
-                    <Text strong>{obj.totalHours} hr.</Text>
-                    <div
-                      style={{
-                        backgroundColor: getStatusColor(obj.status),
-                        borderRadius: "50%",
-                        width: "14px",
-                        height: "14px",
-                        border: "1px solid gray",
-                      }}
-                      className={"ml-2"}
-                    ></div>
-                  </div>
-                ))
-              ) : (
-                <Text className="text-value">{"< - - - ว่าง - - - >"}</Text>
-              )}
-            </div>
-          </div>
-
-          {props.tasks.map((obj, key) => (
-            <div
-              style={{
-                border: "1px solid #FFE3B0",
-                // borderRadius: "0px 0px 5px 5px",
-                marginTop: 5,
-                backgroundColor: "#ffc459",
-                boxShadow: "0px 0px 3px #ccc",
-                fontSize: 14,
-              }}
-              key={key}
-            >
-              <Row className="col-2 pd-left-1" key={key}>
-                <Col span={18}>
-                  <Space size={8}>
-                    <Text strong>{obj.title}</Text>
-                  </Space>
-                </Col>
-                <Col span={6}>
-                  <Text strong>{obj.totalHours ?? "-"}</Text>
-                  <Text strong>{" hr."}</Text>
-                </Col>
-              </Row>
+                    <Text strong>{" Hr."}</Text>
+                  </Col>
+                </Row>
+              </div>
             </div>
           ))}
         </div>
       </>
     );
   };
-  const renderResourceContent = (resourceInfo) => {
-    console.log("resourceInfo", resourceInfo);
-    return [];
-  };
 
+  const renderLabelContent = (e) => {
+    const eventTitle = `[ ${e.resource._resource.id} ] ${e.fieldValue}`;
+    return (
+      <div className="pd-left-1" title={eventTitle}>
+        <Text>{"[ " + e.resource._resource.id + " ]"}</Text>
+        <br />
+        <p
+          style={{
+            maxWidth: 100,
+            overflowWrap: "break-word",
+            wordWrap: "break-word",
+          }}
+        >
+          {e.fieldValue}
+        </p>
+      </div>
+    );
+  };
   const configs = {
     resourceAreaWidth: 230,
     plugins: [resourceTimelinePlugin],
-    eventContent: { renderEventContent },
+    // eventContent: renderEventContent,
     initialView: "resourceTimelineMonth",
     aspectRatio: 2.5,
     timeZone: "UTC",
     initialDate: moment().format("YYYY-MM-DD HH:mm:ss"),
-    // filterResourcesWithEvents: true,
-    resourceLabelContent: (e) => {
-      console.log(e);
-      return (
-        <div className="pd-left-1">
-          <Text>{"[ " + e.resource._resource.id + " ]"}</Text>
-          <br />
-          <p
-            style={{
-              maxWidth: 100,
-              overflowWrap: "break-word",
-              wordWrap: "break-word",
-            }}
-          >
-            {e.fieldValue}
-          </p>
-        </div>
-      );
-    },
+    resourceLabelContent: renderLabelContent,
     resourceOrder: "sortNo",
     views: {
       resourceTimelineMonth: {
         slotMinWidth: 160,
         slotLabelFormat: (value) => {
-          // console.log(value);
           return (
             moment(value.date.marker).format("ddd") +
             " | " +
@@ -211,113 +285,64 @@ const CustomFullCalendar = () => {
       // console.log(info);
     },
     nowIndicator: true,
-    events: state,
+    events: state.plan,
     schedulerLicenseKey: "CC-Attribution-NonCommercial-NoDerivatives",
     timeZone: "UTC",
     headerToolbar: {
-      left: "prev,next",
+      left: "",
       center: "title",
-      right: "resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth",
+      right: "prev,next",
     },
     editable: true,
-    resourceAreaHeaderContent: <div className="require">Cost Center</div>,
+    resourceAreaHeaderContent: (
+      <div className="require full-width">
+        {/* Cost Center <br /> */}
+        <Search
+          onSearch={(text) => onSearch("costCenter", text)}
+          placeholder={"Cost Center"}
+        />
+      </div>
+    ),
     eventOrder: ["id"],
-    resources: rawData.machine2,
+    resources: state.costCenter,
     eventTimeFormat: {
       hour12: false,
       hour: "2-digit",
       minute: "2-digit",
     },
   };
+  useEffect(() => {
+    dispatch(getPlanningCalendarData());
+  }, [dispatch]);
 
+  console.log("render", countRender++);
+  console.log("state", state);
   return (
     <>
-      <div style={{ margin: "50px auto", width: "90%", height: 800 }}>
-        <FullCalendar {...configs} eventContent={renderEventContent} />
-        <Row className="col-2" style={{ height: 50 }}>
-          <Col span={20} offset={4}>
-            <div
+      <div style={{ margin: "50px auto", width: "95%", height: 800 }}>
+        {loading ? (
+          <DetailLoading />
+        ) : (
+          <>
+            {/* <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                padding: 10,
+                border: "1px solid gray",
+                borderRadius: 10,
               }}
-            >
-              <CustomLabel label={"Material Status : "} />
-              <div
-                style={{
-                  backgroundColor: "#59FF34",
-                  borderRadius: "50%",
-                  width: "14px",
-                  height: "14px",
-                  border: "1px solid gray",
-                  marginRight: 10,
-                }}
-                className={"ml-2"}
-              ></div>
-              <CustomLabel label={"Ready"} readOnly={true} />
-              <div
-                style={{
-                  backgroundColor: "red",
-                  borderRadius: "50%",
-                  width: "14px",
-                  height: "14px",
-                  border: "1px solid gray",
-                  marginRight: 10,
-                }}
-                className={"ml-2"}
-              ></div>
-              <CustomLabel label={"Not Ready"} readOnly={true} />
-            </div>
-          </Col>
-        </Row>
-        <Modal
-          width={800}
-          visible={modal.visible}
-          footer={
-            <Button className="primary" onClick={closeModal}>
-              Close
-            </Button>
-          }
-          destroyOnClose
-          onCancel={closeModal}
-          title={"Detail"}
-        >
-          <Row className="col-2">
-            <Col span={12}>
-              <Row className="col-2 row-margin-vertical">
-                <Col span={6} offset={1}>
-                  <CustomLabel label={"Job : "} readOnly={true} />
-                </Col>
-                <Col span={16}>
-                  <Text className="text-value">{modal.data.so_no}</Text>
-                </Col>
-              </Row>
-              <Row className="col-2 row-margin-vertical">
-                <Col span={6} offset={1}>
-                  <CustomLabel label={"Plan : "} readOnly={true} />
-                </Col>
-                <Col span={16}>
-                  <Text className="text-value">{modal.data.wo_no}</Text>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Row className="col-2 row-margin-vertical">
-                <Col span={6} offset={1}>
-                  <CustomLabel label={"Delivery Date : "} readOnly={true} />
-                </Col>
-                <Col span={16}>
-                  <Text className="text-value pd-left-2">
-                    {moment(modal.data.delivery_date, "YYYY-MM-DD").format(
-                      "DD/MM/YYYY"
-                    )}
-                  </Text>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Modal>
+              className="mb-1"
+            > */}
+            <FullCalendar {...configs} eventContent={renderEventContent} />
+            {materialStatusBar()}
+            {/* </div> */}
+            <ModalCostCenterPlanning
+              visible={modal.visible}
+              closeModal={closeModal}
+              data={modal.data}
+              saveModal={saveModal}
+            />
+          </>
+        )}
       </div>
     </>
   );

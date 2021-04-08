@@ -12,7 +12,7 @@ export default function Search(props) {
         style={props.style}
         size={props.size ?? "middle"}
         className={props.className ?? ""}
-        placeholder="Search"
+        placeholder={props.placeholder || "Search"}
         value={props.search}
         allowClear
         onChange={(e) => {

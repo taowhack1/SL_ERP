@@ -10,6 +10,7 @@ const RoutingTabDetail = ({
   routing_type_id,
   detailField,
   columns,
+  triggerHead,
 }) => {
   const machineList = useSelector(
     (state) => state.production.machine.machineList
@@ -49,6 +50,15 @@ const RoutingTabDetail = ({
   // };
   const onChangeValue = (rowId, data) => {
     console.log("onChange", routing_type_id, rowId, data);
+    if (triggerHead) {
+      console.log("has fn trgg", "mrp_routing_plan_date" in data, rowId);
+      if ("mrp_routing_plan_date" in data)
+        if (rowId === 0) {
+          console.log("match conditions");
+          triggerHead(routing_type_id, data.mrp_routing_plan_date || null);
+          return false;
+        }
+    }
     routing_type_id !== undefined &&
       routing_type_id !== null &&
       stateDispatch({
@@ -61,7 +71,6 @@ const RoutingTabDetail = ({
         },
       });
   };
-  console.log(machineList);
   return (
     <>
       <CustomTable

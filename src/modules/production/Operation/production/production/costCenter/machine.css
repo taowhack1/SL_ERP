@@ -1,0 +1,26 @@
+.machine-card {
+  width: 20%;
+  height: 150px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.machine-card.not-ready {
+  border: 2px solid red;
+  color: white;
+  cursor: context-menu;
+}
+.machine-card:not(.not-ready):hover {
+  background-color: turquoise;
+}
+
+.worker-card {
+  width: 20%;
+  text-align: center;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.worker-card.selected {
+  background-color: #90aeff;
+}

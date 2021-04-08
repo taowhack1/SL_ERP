@@ -319,7 +319,9 @@ const RoutingCreate = (props) => {
                     />
                   </Col>
                   <Col span={15} className="text-value">
-                    <Text>{state.item_no_name_ref ?? "-"}</Text>
+                    <Text title={state.item_no_name_ref}>
+                      {state.item_no_name_ref ?? "-"}
+                    </Text>
                   </Col>
                 </Row>
                 <Row className="col-2 row-margin-vertical">

@@ -140,7 +140,6 @@ const MRPCreate = (props) => {
                   pk_detail:
                     sortData(materialDetail?.item_packaging ?? []) ?? [],
                   item_formula: null,
-                  pk_detail: null,
                   calRPM: false,
                   mrp_routing: {
                     bulk: sortData(

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Row,
   Col,
@@ -6,8 +6,6 @@ import {
   Typography,
   InputNumber,
   DatePicker,
-  Button,
-  notification,
   message,
   Spin,
 } from "antd";
@@ -16,20 +14,14 @@ import { useSelector } from "react-redux";
 import { MRPContext } from "../../../include/js/context";
 import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 import CustomLabel from "../../../components/CustomLabel";
-import ToggleReadOnlyElement from "../../../components/ToggleReadOnlyElement";
 import moment from "moment";
 import {
   CalculatorOutlined,
-  CheckCircleOutlined,
   CheckOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
 const { Text } = Typography;
-const { RangePicker } = DatePicker;
-const disabledDate = (current) => {
-  // Can not select days before today and today
-  return current && current - 1 < moment().subtract(1, "days").endOf("day");
-};
+
 const MRPHead = () => {
   const SOList = useSelector(
     (mainState) => mainState.production.operations.mrp.mrp.data_so_ref
@@ -303,7 +295,7 @@ const MRPHead = () => {
               <Row className="col-2 row-margin-vertical">
                 <Col span={6}>
                   <CustomLabel
-                    label={"Plan Date :"}
+                    label={"Bulk Plan Date :"}
                     readOnly={readOnly}
                     require
                   />
@@ -311,38 +303,78 @@ const MRPHead = () => {
                 <Col span={16}>
                   {readOnly ? (
                     <Text className="text-value">
-                      {mainState.mrp_plan_start_date +
-                        " - " +
-                        mainState.mrp_plan_end_date}
+                      {mainState.mrp_bulk_produce_date}
                     </Text>
                   ) : (
-                    <RangePicker
+                    <DatePicker
+                      name={"mrp_bulk_produce_date"}
                       format={"DD/MM/YYYY"}
-                      name="mrp_plan_start_date"
-                      className="full-width"
-                      disabled={detailLoading || !mainState.so_id}
-                      disabledDate={disabledDate}
+                      className={"full-width"}
+                      placeholder="Plan date"
+                      required
+                      value={
+                        mainState.mrp_bulk_produce_date
+                          ? moment(
+                              mainState.mrp_bulk_produce_date,
+                              "DD/MM/YYYY"
+                            )
+                          : ""
+                      }
                       onChange={(data) => {
-                        data
-                          ? onChange({
-                              ...mainState,
-                              mrp_plan_start_date: data[0].format("DD/MM/YYYY"),
-                              mrp_plan_end_date: data[1].format("DD/MM/YYYY"),
-                            })
-                          : onChange({
-                              ...mainState,
-                              mrp_plan_start_date: null,
-                              mrp_plan_end_date: null,
-                            });
+                        const date = data ? data.format("DD/MM/YYYY") : "";
+                        onChange({
+                          mrp_bulk_produce_date: date,
+                          mrp_routing: {
+                            ...mainState.mrp_routing,
+                            bulk: mainState.mrp_routing.bulk.map((obj) => ({
+                              ...obj,
+                              mrp_routing_plan_date: date,
+                            })),
+                          },
+                        });
                       }}
-                      value={[
-                        mainState.mrp_plan_start_date
-                          ? moment(mainState.mrp_plan_start_date, "DD/MM/YYYY")
-                          : "",
-                        mainState.mrp_plan_end_date
-                          ? moment(mainState.mrp_plan_end_date, "DD/MM/YYYY")
-                          : "",
-                      ]}
+                    />
+                  )}
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={6}>
+                  <CustomLabel
+                    label={"FG Plan Date :"}
+                    readOnly={readOnly}
+                    require
+                  />
+                </Col>
+                <Col span={16}>
+                  {readOnly ? (
+                    <Text className="text-value">
+                      {mainState.mrp_fg_produce_date}
+                    </Text>
+                  ) : (
+                    <DatePicker
+                      name={"mrp_fg_produce_date"}
+                      format={"DD/MM/YYYY"}
+                      className={"full-width"}
+                      placeholder="Plan date"
+                      required
+                      value={
+                        mainState.mrp_fg_produce_date
+                          ? moment(mainState.mrp_fg_produce_date, "DD/MM/YYYY")
+                          : ""
+                      }
+                      onChange={(data) => {
+                        const date = data ? data.format("DD/MM/YYYY") : "";
+                        onChange({
+                          mrp_fg_produce_date: date,
+                          mrp_routing: {
+                            ...mainState.mrp_routing,
+                            fg: mainState.mrp_routing.fg.map((obj) => ({
+                              ...obj,
+                              mrp_routing_plan_date: date,
+                            })),
+                          },
+                        });
+                      }}
                     />
                   )}
                 </Col>

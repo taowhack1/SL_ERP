@@ -883,6 +883,17 @@ div.ow {
   hyphens: auto !important;
 }
 
-span.ant-typography {
+span.ant-typography.text-value {
   color: #717171;
+}
+
+div.fc-datagrid-cell-cushion.fc-scrollgrid-sync-inner {
+  width: 100% !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+.arrow {
+  cursor: context-menu;
 }

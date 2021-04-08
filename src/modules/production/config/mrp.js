@@ -12,14 +12,26 @@ import {
 import React from "react";
 
 import Text from "antd/lib/typography/Text";
-import { Button, InputNumber, Tag } from "antd";
+import {
+  Button,
+  DatePicker,
+  InputNumber,
+  Popconfirm,
+  Tag,
+  TimePicker,
+} from "antd";
 import {
   CheckCircleOutlined,
   CheckCircleTwoTone,
+  DeleteTwoTone,
+  EllipsisOutlined,
   FileSearchOutlined,
   SyncOutlined,
   ZoomInOutlined,
 } from "@ant-design/icons";
+import CustomLabel from "../../../components/CustomLabel";
+import moment from "moment";
+import CustomSelect from "../../../components/CustomSelect";
 
 export const mrp_columns = (showModal) => [
   {
@@ -97,48 +109,48 @@ export const mrp_columns = (showModal) => [
       return getRefStatus(record);
     },
   },
-  {
-    title: "RM/PK Tracking",
-    dataIndex: "",
-    key: "tracking",
-    width: "6%",
-    align: "center",
-    colSpan: 2,
-    ellipsis: true,
-    render: (value, record, index) => {
-      if (record.process_complete) {
-        return (
-          <div>
-            <Tag type="primary" color="processing">
-              <SyncOutlined spin className="button-icon" /> In Process
-            </Tag>
-          </div>
-        );
-      } else {
-        return <div>-</div>;
-      }
-    },
-  },
-  {
-    title: "Tracking",
-    dataIndex: "tracking1",
-    colSpan: 0,
-    width: "2%",
-    align: "center",
-    ellipsis: true,
-    render: (value, record, index) => {
-      if (record.process_complete) {
-        return (
-          <ZoomInOutlined
-            onClick={(e) => showModal(record)}
-            className="button-icon"
-            style={{ fontSize: 18 }}
-          />
-        );
-      } else {
-      }
-    },
-  },
+  // {
+  //   title: "RM/PK Tracking",
+  //   dataIndex: "",
+  //   key: "tracking",
+  //   width: "6%",
+  //   align: "center",
+  //   colSpan: 2,
+  //   ellipsis: true,
+  //   render: (value, record, index) => {
+  //     if (record.process_complete) {
+  //       return (
+  //         <div>
+  //           <Tag type="primary" color="processing">
+  //             <SyncOutlined spin className="button-icon" /> In Process
+  //           </Tag>
+  //         </div>
+  //       );
+  //     } else {
+  //       return <div>-</div>;
+  //     }
+  //   },
+  // },
+  // {
+  //   title: "Tracking",
+  //   dataIndex: "tracking1",
+  //   colSpan: 0,
+  //   width: "2%",
+  //   align: "center",
+  //   ellipsis: true,
+  //   render: (value, record, index) => {
+  //     if (record.process_complete) {
+  //       return (
+  //         <ZoomInOutlined
+  //           onClick={(e) => showModal(record)}
+  //           className="button-icon"
+  //           style={{ fontSize: 18 }}
+  //         />
+  //       );
+  //     } else {
+  //     }
+  //   },
+  // },
 ];
 export const mrpFields = {
   mrp_id: null,
@@ -192,7 +204,8 @@ export const mrpRequireFields = [
   "so_id",
   "item_id",
   "mrp_qty_produce",
-  "mrp_plan_start_date",
+  "mrp_bulk_produce_date",
+  "mrp_fg_produce_date",
 ];
 export const mrpRoutingRequireFields = [
   "machine_id",
@@ -608,5 +621,172 @@ export const mockupWorkOrderMonitorRM = [
     po_status: false,
     receive_status: false,
     qc_status: false,
+  },
+];
+
+export const mrpRoutingColumns = ({
+  readOnly,
+  onDelete,
+  onChangeValue,
+  machineList,
+}) => [
+  {
+    title: "No.",
+    width: "5%",
+    dataIndex: "id",
+    render: (val) => val + 1,
+    align: "center",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <CustomLabel label="Cost Center" require readOnly={readOnly} />
+      </div>
+    ),
+    dataIndex: "machine_cost_center_description",
+
+    align: "left",
+    render: (val, record) =>
+      readOnly ? (
+        <Text className="text-value">{val}</Text>
+      ) : (
+        <CustomSelect
+          allowClear
+          showSearch
+          data={machineList}
+          field_id="machine_id"
+          field_name="machine_cost_center_description"
+          name="machine_id"
+          placeholder="Select Cost Center"
+          size="small"
+          value={val}
+          onChange={(data, option) => {
+            data && data
+              ? onChangeValue(record.id, {
+                  machine_id: data,
+                })
+              : onChangeValue(record.id, {
+                  machine_id: null,
+                });
+          }}
+        />
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <CustomLabel label="Man" require readOnly={readOnly} />
+      </div>
+    ),
+    width: "15%",
+    dataIndex: "mrp_routing_worker",
+    align: "right",
+    render: (val, record) =>
+      readOnly ? (
+        <Text className="text-value">{val}</Text>
+      ) : (
+        <InputNumber
+          name="mrp_routing_worker"
+          style={{ width: "100%" }}
+          placeholder="Man"
+          min={0}
+          size="small"
+          onChange={(data) => {
+            onChangeValue(record.id, {
+              mrp_routing_worker: Math.round(data),
+            });
+          }}
+          value={val}
+        />
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <CustomLabel label="Period" require readOnly={readOnly} />
+      </div>
+    ),
+    width: "15%",
+    dataIndex: "mrp_routing_plan_time",
+    align: "right",
+    render: (val, record) =>
+      readOnly ? (
+        <Text className="text-value">{val}</Text>
+      ) : (
+        <TimePicker
+          size="small"
+          format={"HH:mm"}
+          showNow={false}
+          name={"mrp_routing_plan_time"}
+          className={"full-width"}
+          placeholder="Hour : Minute"
+          required
+          value={val ? moment(val, "HH:mm:ss") : ""}
+          onChange={(data) => {
+            const time = moment(data, "HH:mm").format("HH:mm:ss");
+            console.log(time);
+            onChangeValue(record.id, {
+              mrp_routing_plan_time: data ? time : null,
+            });
+          }}
+        />
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <CustomLabel label="Plan Date" require readOnly={readOnly} />
+      </div>
+    ),
+    width: "15%",
+    dataIndex: "mrp_routing_plan_date",
+    align: "right",
+    render: (val, record) =>
+      readOnly ? (
+        <Text className="text-value">{val}</Text>
+      ) : (
+        <DatePicker
+          name={"mrp_routing_plan_date"}
+          format={"DD/MM/YYYY"}
+          className={"full-width"}
+          placeholder="Plan date"
+          size={"small"}
+          required
+          value={val ? moment(val, "DD/MM/YYYY") : ""}
+          defaultValue={val ? moment(val, "DD/MM/YYYY") : ""}
+          onChange={(data) => {
+            onChangeValue(record.id, {
+              mrp_routing_plan_date: data ? data.format("DD/MM/YYYY") : "",
+            });
+          }}
+        />
+      ),
+  },
+  {
+    title: (
+      <Text strong>
+        <EllipsisOutlined />
+      </Text>
+    ),
+    align: "center",
+    width: "5%",
+    render: (_, record) => {
+      if (readOnly) {
+        return null;
+      } else {
+        return (
+          <Popconfirm
+            onConfirm={() => {
+              onDelete(record.id);
+            }}
+            title="Are you sure you want to delete this row？"
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteTwoTone />
+          </Popconfirm>
+        );
+      }
+    },
   },
 ];

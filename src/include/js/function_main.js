@@ -302,6 +302,14 @@ export const convertTimeToNumber = (time = "00:00:00") => {
   // console.log("convertTimeToNumber Before : ", time, " After : ", minutes);
   return minutes;
 };
+export const convertTimeToHr = (time = "00:00:00") => {
+  const timeTemp = time ? time : "00:00:00";
+  const timeArray = timeTemp.split(":");
+  let minutes = parseInt(timeArray[0] * 60) + parseInt(timeArray[1]);
+  // timeTemp[2] && minutes+""
+  // console.log("convertTimeToNumber Before : ", time, " After : ", minutes);
+  return minutes / 60;
+};
 
 export const replaceDataInArrObjById = (
   masterArr = [],

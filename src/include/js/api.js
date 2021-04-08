@@ -165,3 +165,6 @@ export const api_get_fg_material = `/production/mrp/calculate`;
 //routing
 export const api_routing = `/production/routing`;
 export const api_list_fg = `/list/item/fg`;
+
+//planning
+export const api_routing_calendar = `/production/plan_job/calendar/machine`;

@@ -13,6 +13,8 @@ import {
   GET_ROUTING_ALL,
   GET_FGITEM,
   GET_ROUTING_ONE,
+  GET_PLANNING_CALENDAR_DATA,
+  SET_LOADING_PLANNING_CALENDAR,
 } from "../actions/types";
 
 export const initialState = {
@@ -50,6 +52,11 @@ export const initialState = {
         data_so_ref: [],
       },
       mrpList: [],
+    },
+    planning: {
+      loading: false,
+      costCenter: [],
+      jobs: [],
     },
   },
   routing: {
@@ -159,6 +166,30 @@ export default (state = initialState, action) => {
       };
     case RESET_PRODUCTION:
       return initialState;
+
+    // planning: {
+    //   loading: false,
+    //   costCenter: [],
+    //   jobs: [],
+    // },
+
+    case SET_LOADING_PLANNING_CALENDAR:
+      return {
+        ...state,
+        planning: {
+          ...state.planning,
+          loading: action.payload,
+        },
+      };
+    case GET_PLANNING_CALENDAR_DATA:
+      return {
+        ...state,
+        planning: {
+          ...state.planning,
+          loading: false,
+          ...action.payload,
+        },
+      };
     default:
       return state;
   }

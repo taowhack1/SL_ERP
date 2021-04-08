@@ -17,7 +17,7 @@ import ProductionRMCheck from "./ProductionRMCheck";
 import ProductionStepSwitch from "./ProductionStepSwitch";
 
 const ProductionMain = (props) => {
-  const { setPage, setConfig } = useContext(PageContext);
+  // const { setPage, setConfig } = useContext(PageContext);
   const locationState = props?.location?.state;
   const current_project = useSelector((state) =>
     state.auth.projects?.find((project) =>
@@ -38,7 +38,7 @@ const ProductionMain = (props) => {
         "Job Detail",
         "Raw Material Check",
         "Select Worker",
-        "Select Machine",
+        // "Select Machine",
         "Start Process",
         "Result",
       ],
@@ -52,9 +52,9 @@ const ProductionMain = (props) => {
         <>
           <TeamOutlined /> Worker
         </>,
-        <>
-          <ToolOutlined /> Machine
-        </>,
+        // <>
+        //   <ToolOutlined /> Machine
+        // </>,
         <>
           <ReloadOutlined spin={true} /> Start
         </>,
@@ -88,9 +88,9 @@ const ProductionMain = (props) => {
       console.log("Cancel");
     },
   };
-  useEffect(() => {
-    setConfig(config);
-  }, [state.step.current]);
+  // useEffect(() => {
+  //   setConfig(config);
+  // }, [state.step.current]);
   let mockupData = [];
   for (let i = 0; i < 30; i++) {
     mockupData.push({
