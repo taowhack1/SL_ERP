@@ -92,7 +92,6 @@ import CategoryView from "./modules/inventory/configurations/category/CategoryVi
 import UOMMain from "./modules/inventory/configurations/uom/UOMMain";
 import UOMCreate from "./modules/inventory/configurations/uom/UOMCreate";
 import UOMView from "./modules/inventory/configurations/uom/UOMView";
-
 import Transfer from "./modules/inventory/operations/transfer/Transfer";
 import TransferCreate from "./modules/inventory/operations/transfer/TransferCreate";
 import TransferView from "./modules/inventory/operations/transfer/TransferView";
@@ -108,6 +107,7 @@ import PageLayout from "./components/PageLayout";
 import StockCard from "./modules/inventory/reporting/stockCard/StockCard";
 import ProductionSelectMachine from "./modules/production/Operation/production/production/costCenter/ProductionSelectMachine";
 import ProductionSelectWorker from "./modules/production/Operation/production/production/worker/ProductionSelectWorker";
+import TimeSheet from "./modules/production/timesheet/TimeSheet";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -442,14 +442,12 @@ const App = (props) => {
               <ReportQC />
             </Route>
             {/* PRODUCTION */}
-            <Route exact path="/production/operations/machine">
-              <ProductionSelectMachine />
-            </Route>
-            <Route exact path="/production/operations/machine/:id">
-              <ProductionSelectWorker />
-            </Route>
             <Route exact path="/production">
               <Production />
+            </Route>
+            {/* <PageLayout> */}
+            <Route exact path="/production/operations/timesheet">
+              <TimeSheet />
             </Route>
             {/* <PageLayout> */}
             <Route exact path="/production/operations/planning">

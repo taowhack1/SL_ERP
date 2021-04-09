@@ -1,3 +1,5 @@
+/** @format */
+
 import { Col, Row, Tabs, Typography } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,9 +37,9 @@ function UOMView(props) {
   };
   return (
     <MainLayout {...config}>
-      <div id="form">
+      <div id='form'>
         {/* {Head} */}
-        <Row className="col-2">
+        <Row className='col-2'>
           <Col span={8}>
             <h2>
               <strong>{dataInRow.uom_no_name}</strong>
@@ -48,60 +50,60 @@ function UOMView(props) {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{dataInRow.uom_created}</Text>
+            <Text className='text-view'>{dataInRow.uom_created}</Text>
           </Col>
         </Row>
 
-        <Row className="col-2 row-tab-margin">
+        <Row className='col-2 row-tab-margin'>
           <Col span={24} style={{ marginBottom: 8 }}>
             <Title level={5}>Name :</Title>
             <Col span={24}>
-              <Text className="text-view">{dataInRow.uom_name}</Text>
+              <Text className='text-view'>{dataInRow.uom_name}</Text>
             </Col>
           </Col>
         </Row>
-        <Row className="col-2 row-tab-margin-l">
+        <Row className='col-2 row-tab-margin-l'>
           <Col span={24}>
-            <Tabs defaultActiveKey="1">
-              <Tabs.TabPane tab={<span>Detail</span>} key="1">
+            <Tabs defaultActiveKey='1'>
+              <Tabs.TabPane tab={<span>Detail</span>} key='1'>
                 {/*Information */}
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={12} className="col-border-right">
-                    <Row className="row-margin">
+                <Row className='col-2 row-margin-vertical'>
+                  <Col span={12} className='col-border-right'>
+                    <Row className='row-margin'>
                       <Col span={5}>
                         <Text strong> Short Name : </Text>
                       </Col>
                       <Col span={18}>
-                        <Text className="text-view">{dataInRow.uom_no}</Text>
+                        <Text className='text-view'>{dataInRow.uom_no}</Text>
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={5}>
                         <Text strong> Unit Value : </Text>
                       </Col>
                       <Col span={18}>
-                        <Text className="text-view">{""}</Text>
+                        <Text className='text-view'>{""}</Text>
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={5}>
                         <Text strong>Thai Name :</Text>
                       </Col>
                       <Col span={18}>
-                        <Text className="text-view">
+                        <Text className='text-view'>
                           {dataInRow.uom_name_th}
                         </Text>
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={5}>
                         <Text strong>Description :</Text>
                       </Col>
                       <Col span={18}>
-                        <Text className="text-view">
+                        <Text className='text-view'>
                           {dataInRow.uom_remark}
                         </Text>
                       </Col>
@@ -110,33 +112,33 @@ function UOMView(props) {
                   </Col>
                   {/* { col right} */}
                   <Col span={12}>
-                    <Row className="col-2 row-margin-vertical">
+                    <Row className='col-2 row-margin-vertical'>
                       <Col span={1}></Col>
                       <Col span={6}>
                         <Text strong> Reference Unit : </Text>
                       </Col>
                       <Col span={15}>
-                        <Text className="text-view">{""}</Text>
+                        <Text className='text-view'>{""}</Text>
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="col-2 row-margin-vertical">
+                    <Row className='col-2 row-margin-vertical'>
                       <Col span={1}></Col>
                       <Col span={6}>
                         <Text strong>Ratio : </Text>
                       </Col>
                       <Col span={15}>
-                        <Text className="text-view">{""}</Text>
+                        <Text className='text-view'>{""}</Text>
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="col-2 row-margin-vertical">
+                    <Row className='col-2 row-margin-vertical'>
                       <Col span={1}></Col>
                       <Col span={6}>
                         <Text strong>Type : </Text>
                       </Col>
                       <Col span={15}>
-                        <Text className="text-view">{""}</Text>
+                        <Text className='text-view'>{""}</Text>
                       </Col>
                       <Col span={1}></Col>
                     </Row>

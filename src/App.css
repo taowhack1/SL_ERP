@@ -1,3 +1,5 @@
+/** @format */
+
 @import "~antd/dist/antd.css";
 
 /** ant design **/
@@ -229,6 +231,7 @@ button.primary:hover {
   color: #777;
   margin-top: 20px;
 }
+
 #form {
   width: 80%;
   min-height: 350px;

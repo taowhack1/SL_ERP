@@ -19,9 +19,7 @@ const initialState = {
     conditions_specification: [],
     conditions_method: [],
   },
-  qc_report: {
-    qc_report: [],
-  },
+  qc: {},
   conditions: {
     list: [],
     type: {},
@@ -42,7 +40,7 @@ export default (state = initialState, action) => {
     //     loading: false,
     //   };
     case GET_QC_REPORT_ITEM:
-      return { ...state, qc_report: action.payload, loading: false };
+      return { ...state, qc: action.payload, loading: false };
     case GET_QA_MASTER_DATA:
       return { ...state, qa_master_data: action.payload, loading: false };
     case GET_QA_TEST_BY_ID:

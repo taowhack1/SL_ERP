@@ -11,13 +11,13 @@ import { columns, datamackup } from "./reportQcConfig";
 
 const ReportQC = (props) => {
   const history = useHistory();
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
-  const qc_report = useSelector((state) => state.qa.qc_report);
+  const qc_report = useSelector((state) => state.qa.qc);
   const current_project = useSelector((state) => state.auth.currentProject);
   useEffect(() => {
     dispatch(get_report_item());
-  },[]);
+  }, []);
   console.log("qc_report", qc_report);
   const config = {
     projectId: current_project && current_project.project_id,
