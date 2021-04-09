@@ -105,6 +105,7 @@ import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
 import ProductionMain from "./modules/production/Operation/production/ProductionMain";
 import PageLayout from "./components/PageLayout";
 import StockCard from "./modules/inventory/reporting/stockCard/StockCard";
+import TimeSheet from "./modules/production/timesheet/TimeSheet";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -441,6 +442,10 @@ const App = (props) => {
             {/* PRODUCTION */}
             <Route exact path='/production'>
               <Production />
+            </Route>
+            {/* <PageLayout> */}
+            <Route exact path='/production/operations/timesheet'>
+              <TimeSheet />
             </Route>
             {/* <PageLayout> */}
             <Route exact path='/production/operations/planning'>

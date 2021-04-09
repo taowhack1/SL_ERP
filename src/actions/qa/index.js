@@ -45,6 +45,7 @@ export const update_qc_receive_list = (data) => {
 // };
 export const get_report_item = () => (dispatch) => {
   axios.get(api_qc_report_item, header_config).then((res) => {
+    console.log(res);
     dispatch({ type: GET_QC_REPORT_ITEM, payload: res.data[0] });
   });
 };
