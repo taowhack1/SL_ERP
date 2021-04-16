@@ -82,6 +82,7 @@ const StockCard = () => {
       stock_card_date_start: null,
       stock_card_date_end: null,
       all: false,
+      eachLotBatch: false,
     });
   };
   const FieldsRequire = [
@@ -104,35 +105,87 @@ const StockCard = () => {
 
   const showReport = (formButton) => {
     console.log("formButton", formButton);
+    console.log("state", state);
     let validate = null;
+    const server_report_eachLotBatch =
+      "http://192.168.1.211:8080/report_petch/report_stock_card_lotbatch.aspx";
+    const server_report =
+      "http://192.168.1.211:8080/report_petch/report_stock_card.aspx";
+    const report_eachLotBatch_all = `${server_report_eachLotBatch}?item_all=1&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
+    const report_eachLotBatch = `${server_report_eachLotBatch}?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
+    const report_all = `${server_report}?item_all=1&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
+    const report = `${server_report}?item_all=0&item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
     if (state.all == true) {
       validate = validateFormHead(state, FieldsRequire_all_check);
     } else {
       validate = validateFormHead(state, FieldsRequire);
     }
     if (validate.validate) {
-      if (formButton == "Exel Download") {
-        if (state.item_id != null) {
-          const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
-          window.open(link);
-        }
-        if (state.all == true) {
-          const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?&all=all&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
-          window.open(link);
+      if (state.eachLotBatch) {
+        if (state.all) {
+          window.open(report_eachLotBatch_all);
+        } else {
+          window.open(report_eachLotBatch);
         }
       } else {
-        if (state.item_id != null) {
-          const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
-          window.open(link);
-        }
-        if (state.all == true) {
-          const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?&all=all&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
-          window.open(link);
+        if (state.all) {
+          window.open(report_all);
+        } else {
+          window.open(report);
         }
       }
+      //   if (formButton == "Exel Download") {
+      //     if (state.eachLotBatch == true) {
+      //       if (state.item_id != null) {
+      //         const link_eachLotBatch = `http://192.168.1.211:8080/report_purch/report_stock_card_lotbatch.aspx?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
+      //         window.open(link_eachLotBatch);
+      //       }
+      //     } else {
+      //       if (state.item_id != null) {
+      //         const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
+      //         window.open(link);
+      //       }
+      //     }
+      //     if (state.eachLotBatch == true) {
+      //       if (state.all == true) {
+      //         const link_eachLotBatch = `http://192.168.1.211:8080/report_purch/report_stock_card_lotbatch.aspx?&all=all&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
+      //         window.open(link_eachLotBatch);
+      //       }
+      //     } else {
+      //       if (state.all == true) {
+      //         const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?&all=all&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
+      //         window.open(link);
+      //       }
+      //     }
+      //   } else {
+      //     if (state.item_id != null) {
+      //       const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
+      //       window.open(link);
+      //     }
+      //     if (state.all == true) {
+      //       const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?&all=all&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
+      //       window.open(link);
+      //     }
+      //   }
     }
   };
-  console.log("state", state);
+  const exportExcel = (formButton) => {
+    console.log("formButton", formButton);
+    let validate = null;
+    const server_report_eachLotBatch =
+      "http://192.168.1.211:8080/report_purch/report_stock_card_lotbatch.aspx";
+    const server_report =
+      "http://192.168.1.211:8080/report_purch/report_stock_card.aspx";
+    if (state.all == true) {
+      validate = validateFormHead(state, FieldsRequire_all_check);
+    } else {
+      validate = validateFormHead(state, FieldsRequire);
+    }
+    // if (validate.validate) {
+
+    // }
+  };
+
   return (
     <MainLayout {...config}>
       <div id='form'>
@@ -168,6 +221,27 @@ const StockCard = () => {
                   });
                 }}>
                 All
+              </Checkbox>
+              <Col span={12}></Col>
+            </Row>
+          </Col>
+          <Col span={1}></Col>
+        </Row>
+        <Row className='row-margin'>
+          <Col span={3}>
+            <Text strong>Lot / batch :</Text>
+          </Col>
+          <Col span={18}>
+            <Row>
+              <Checkbox
+                name='item_type_all'
+                checked={state.eachLotBatch}
+                onChange={(e) => {
+                  changeState({
+                    eachLotBatch: e.target.checked,
+                  });
+                }}>
+                Each Lot / batch
               </Checkbox>
               <Col span={12}></Col>
             </Row>
@@ -386,8 +460,8 @@ const StockCard = () => {
                   className='full-width'
                   icon={<FileOutlined />}
                   value='excel'
-                  onClick={(e) => showReport(e.target.textContent)}>
-                  Exel Download
+                  onClick={(e) => exportExcel(e.target.textContent)}>
+                  Export Excel
                 </Button>
               </Col>
               <Col span={4}></Col>
