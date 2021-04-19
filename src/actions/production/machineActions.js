@@ -2,19 +2,27 @@ import { message } from "antd";
 import axios from "axios";
 import { api_machine } from "../../include/js/api";
 import { header_config } from "../../include/js/main_config";
-import { GET_ALL_MACHINE, GET_MACHINE_BY_ID } from "../types";
+import { GET_ALL_MACHINE, GET_MACHINE_BY_ID, SET_LOADING } from "../types";
 
 export const getAllMachine = (user_name) => (dispatch) => {
-  axios.get(api_machine, header_config).then((res) =>
-    dispatch({
-      type: GET_ALL_MACHINE,
-      payload: res.data[0],
-    })
-  );
+  dispatch({ type: SET_LOADING, payload: true });
+  axios
+    .get(api_machine, header_config)
+    .then((res) =>
+      dispatch({
+        type: GET_ALL_MACHINE,
+        payload: res.data[0],
+      })
+    )
+    .catch((error) => {
+      console.log(error.response);
+      dispatch({ type: SET_LOADING, payload: false });
+    });
 };
 
 export const createMachine = (data, redirect) => (dispatch) => {
   console.log("createMachine", data);
+
   axios
     .post(api_machine, data, header_config)
     .then((res) => {
@@ -32,6 +40,7 @@ export const createMachine = (data, redirect) => (dispatch) => {
         key: "error",
         duration: 2,
       });
+      dispatch({ type: SET_LOADING, payload: false });
     });
 };
 

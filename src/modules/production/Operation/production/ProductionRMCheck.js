@@ -10,20 +10,6 @@ import RMBarcodeScanner from "./RMBarcodeScanner";
 const ProductionRMCheck = ({ state }) => {
   return (
     <>
-      {/* <div className="flex-container flex-wrap">
-        <div className="col-border-right half-width">
-          <Row className="col-2">
-            <Col span={6}>
-              <CustomLabel label="Plan" />
-            </Col>
-            <Col span={16}>
-              <CustomSelect placeholder={"Plan"} />
-            </Col>
-          </Row>
-        </div>
-        <div className="half-width"></div>
-      </div> */}
-
       <RMBarcodeScanner />
       <Tabs>
         <Tabs.TabPane tab={"Raw Material"} key={"1"}>

@@ -1,5 +1,5 @@
 import FullCalendar from "@fullcalendar/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import Text from "antd/lib/typography/Text";
 import moment from "moment";
@@ -15,6 +15,8 @@ import Search from "../../../../components/Search";
 import Title from "antd/lib/typography/Title";
 import ModalCostCenterPlanning from "./ModalCostCenterPlanning";
 import { SET_LOADING_PLANNING_CALENDAR } from "../../../../actions/types";
+import interactionPlugin from "@fullcalendar/interaction";
+import TestCalendar from "./TestCalendar";
 let countRender = 1;
 const CustomFullCalendar = () => {
   const dispatch = useDispatch();
@@ -246,7 +248,7 @@ const CustomFullCalendar = () => {
   };
   const configs = {
     resourceAreaWidth: 230,
-    plugins: [resourceTimelinePlugin],
+    editable: true,
     // eventContent: renderEventContent,
     initialView: "resourceTimelineMonth",
     aspectRatio: 2.5,
@@ -254,6 +256,7 @@ const CustomFullCalendar = () => {
     initialDate: moment().format("YYYY-MM-DD HH:mm:ss"),
     resourceLabelContent: renderLabelContent,
     resourceOrder: "sortNo",
+    eventOrder: "sort",
     views: {
       resourceTimelineMonth: {
         slotMinWidth: 160,
@@ -286,14 +289,12 @@ const CustomFullCalendar = () => {
     },
     nowIndicator: true,
     events: state.plan,
-    schedulerLicenseKey: "CC-Attribution-NonCommercial-NoDerivatives",
     timeZone: "UTC",
     headerToolbar: {
-      left: "",
+      left: "resourceTimelineMonth",
       center: "title",
       right: "prev,next",
     },
-    editable: true,
     resourceAreaHeaderContent: (
       <div className="require full-width">
         {/* Cost Center <br /> */}
@@ -303,7 +304,7 @@ const CustomFullCalendar = () => {
         />
       </div>
     ),
-    eventOrder: ["id"],
+    // eventOrder: ["id"],
     resources: state.costCenter,
     eventTimeFormat: {
       hour12: false,
@@ -317,6 +318,46 @@ const CustomFullCalendar = () => {
 
   console.log("render", countRender++);
   console.log("state", state);
+  const renderEventContent2 = useCallback(
+    (eventInfo) => {
+      console.log(eventInfo);
+      const eventProps = eventInfo.event._def;
+      return (
+        <>
+          {eventProps.extendedProps.extends.isPlan ? (
+            <b>{eventProps.title}</b>
+          ) : (
+            <div className="text-center" style={{ color: "black" }}>
+              {eventProps.extendedProps.extends.job_detail.length === 0 && (
+                <div className="mb-1">
+                  <Text className="text-value">{"< - - - ว่าง - - - >"}</Text>
+                  <br />
+                </div>
+              )}
+              <div
+                style={{
+                  border: "1px solid #c0c0c0",
+                  padding: 3,
+                  borderRadius: 2,
+                  backgroundColor: "orange",
+                }}
+              >
+                <b>
+                  {eventProps.title +
+                    " " +
+                    eventProps.extendedProps.sum_plan_job_plan_time +
+                    " " +
+                    " hr."}
+                </b>
+              </div>
+            </div>
+          )}
+        </>
+      );
+    },
+    [state]
+  );
+
   return (
     <>
       <div style={{ margin: "50px auto", width: "95%", height: 800 }}>
@@ -332,7 +373,14 @@ const CustomFullCalendar = () => {
               }}
               className="mb-1"
             > */}
-            <FullCalendar {...configs} eventContent={renderEventContent} />
+            <FullCalendar
+              {...configs}
+              // eventContent={renderEventContent}
+              eventContent={renderEventContent2}
+              schedulerLicenseKey={"CC-Attribution-NonCommercial-NoDerivatives"}
+              plugins={[resourceTimelinePlugin, interactionPlugin]}
+              eventDrop={(e) => console.log("eventDrop", e)}
+            />
             {materialStatusBar()}
             {/* </div> */}
             <ModalCostCenterPlanning

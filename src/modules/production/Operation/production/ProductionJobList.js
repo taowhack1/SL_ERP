@@ -10,6 +10,7 @@ const ProductionJobList = ({ dataSource }) => {
       <Table
         size={"small"}
         // scroll={{ y: 500 }}
+        // style={{ height: "100vh" }}
         pagination={{ pageSize: 15 }}
         bordered
         columns={[
@@ -20,7 +21,7 @@ const ProductionJobList = ({ dataSource }) => {
                   prefix={<SearchOutlined className="button-icon" />}
                   // size={"small"}
                   placeholder={"Job List"}
-                  bordered={false}
+                  // bordered={false}
                   className={"pd-left-1"}
                 />
               </div>

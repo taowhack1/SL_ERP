@@ -4,8 +4,8 @@ import { Button, Col, Input, Table, Modal, Radio, InputNumber } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useState } from "react";
 import { Row } from "react-flexbox-grid";
-import CustomTable from "../../../components/CustomTable";
-import MainLayout from "../../../components/MainLayout";
+import CustomTable from "../../../../../../components/CustomTable";
+import MainLayout from "../../../../../../components/MainLayout";
 import Btn from "./Btn";
 import Display from "./Display";
 import {
@@ -19,8 +19,8 @@ import "./watch.css";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Form } from "redux-form";
 import { render } from "@testing-library/react";
-import { getNumberFormat } from "../../../include/js/main_config";
-import { validateFormHead } from "../../../include/js/function_main";
+import { getNumberFormat } from "../../../../../../include/js/main_config";
+import { validateFormHead } from "../../../../../../include/js/function_main";
 import moment from "moment";
 const { confirm } = Modal;
 
@@ -94,7 +94,7 @@ const TimeSheet = (props) => {
           min={1}
           step={1}
           precision={0}
-          name='count'
+          name="count"
           onChange={(e) =>
             upDateFormValue({
               count: e,
@@ -103,7 +103,8 @@ const TimeSheet = (props) => {
               }:${time.s >= 10 ? time.s : "0" + time.s}`,
               time_stop: time_stemp_stop,
             })
-          }></InputNumber>
+          }
+        ></InputNumber>
       ),
       onOk() {
         //validateFormHead(dataHead, detailFields);
@@ -145,73 +146,76 @@ const TimeSheet = (props) => {
   return (
     <div style={{ marginLeft: "1%" }}>
       <Row>
-        <Col span={12} className='col-border-right'>
-          <Row className='col-2 row-margin-vertical'>
+        <Col span={12} className="col-border-right">
+          <Row className="col-2 row-margin-vertical">
             <Col span={8}>
               <h2>Time Sheet</h2>
             </Col>
             <Col span={16}></Col>
             <Col span={2}></Col>
           </Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <Text strong>รายละเอียด :</Text>
             </Col>
             <Col span={16}>รายละเอียดของ Job</Col>
             <Col span={2}></Col>
           </Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <Text strong>จำนวนคน :</Text>
             </Col>
             <Col span={16}>2 คน</Col>
             <Col span={2}></Col>
           </Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <Text strong>ยอดที่ต้องผลิต :</Text>
             </Col>
             <Col span={16}>1200 </Col>
             <Col span={2}></Col>
           </Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <Text strong>ยอดที่ผลิตได้(รวม) :</Text>
             </Col>
             <Col span={16}>163 </Col>
             <Col span={2}></Col>
           </Row>
-          <Row className='col-2 row-margin-vertical'></Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical"></Row>
+          <Row className="col-2 row-margin-vertical">
             <Col span={23}>
               <Table
                 columns={detailColumns}
                 dataSource={mockupdata}
-                rowKey='id'
+                rowKey="id"
                 style={{ height: "100%" }}
                 pagination={false}
                 scroll={{ y: 500 }}
-                size={"small"}></Table>
+                size={"small"}
+              ></Table>
             </Col>
           </Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}></Col>
             <Col span={4}>
               <Button
-                type='block'
+                type="block"
                 success
-                className='full-width'
-                style={{ marginTop: "40%" }}>
+                className="full-width"
+                style={{ marginTop: "40%" }}
+              >
                 แก้ไขยอด
               </Button>
             </Col>
             <Col span={2}></Col>
             <Col span={4}>
               <Button
-                type='block'
+                type="block"
                 success
-                className='full-width'
-                style={{ marginTop: "40%" }}>
+                className="full-width"
+                style={{ marginTop: "40%" }}
+              >
                 จบงาน
               </Button>
             </Col>
@@ -219,11 +223,11 @@ const TimeSheet = (props) => {
           </Row>
         </Col>
         <Col span={12}>
-          <Row className='col-2 row-margin-vertical'></Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical"></Row>
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}></Col>
             <Col span={24} style={{ marginTop: "20%" }}>
-              <div className='stopwatch'>
+              <div className="stopwatch">
                 <Display time={time} />
                 <Btn
                   status={status}
@@ -235,7 +239,7 @@ const TimeSheet = (props) => {
               </div>
             </Col>
           </Row>
-          <Row className='col-1 row-margin-vertical'></Row>
+          <Row className="col-1 row-margin-vertical"></Row>
         </Col>
       </Row>
     </div>

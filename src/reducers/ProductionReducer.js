@@ -18,6 +18,7 @@ import {
 } from "../actions/types";
 
 export const initialState = {
+  loading: false,
   workCenter: {
     workCenter: {
       data_head: {},
@@ -133,6 +134,7 @@ export default (state = initialState, action) => {
     case GET_ALL_MACHINE:
       return {
         ...state,
+        loading: false,
         machine: { ...state.machine, machineList: action.payload },
       };
     case GET_MACHINE_BY_ID:

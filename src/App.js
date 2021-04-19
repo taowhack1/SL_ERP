@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { BrowserRouter, Switch, Route, Router } from "react-router-dom";
-import { AppContext, Context, TypeContext } from "./include/js/context";
+import { AppContext, Context } from "./include/js/context";
 
 import Dashboard from "./modules/dashboard/Dashboard";
 import Login from "./modules/system/Login";
@@ -17,7 +17,6 @@ import Inventory from "./modules/inventory/Inventory";
 
 import Receive from "./modules/inventory/operations/receive/Receive";
 import ReceiveCreate from "./modules/inventory/operations/receive/Receive_Create";
-import ReceiveView from "./modules/inventory/operations/receive/Receive_View";
 import ReceiveRoute from "./modules/inventory/operations/receive/ReceiveRoute";
 import ReceivePDCreate from "./modules/inventory/operations/receive_production/ReceivePDCreate";
 import ReceivePDList from "./modules/inventory/operations/receive_production/ReceivePDList";
@@ -82,7 +81,6 @@ import { keep_log } from "./actions/comment&log";
 import ConditionsMain from "./modules/qualityAssurance/MasterData/conditions/ConditionsMain";
 import ConditionsForm from "./modules/qualityAssurance/MasterData/conditions/ConditionsForm";
 import ItemType from "./modules/inventory/item/masterData/type/ItemType";
-import MainLayout from "./components/MainLayout";
 import Type from "./modules/inventory/configurations/type/Type";
 import TypeCreate from "./modules/inventory/configurations/type/TypeCreate";
 import TypeView from "./modules/inventory/configurations/type/TypeView";
@@ -102,12 +100,10 @@ import Routing from "./modules/production/masterData/routing/Routing";
 import RoutingCreate from "./modules/production/masterData/routing/RoutingCreate";
 import RoutingView from "./modules/production/masterData/routing/RoutingView";
 import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
-import ProductionMain from "./modules/production/Operation/production/ProductionMain";
-import PageLayout from "./components/PageLayout";
 import StockCard from "./modules/inventory/reporting/stockCard/StockCard";
+import TimeSheet from "./modules/production/Operation/production/production/timesheet/TimeSheet";
 import ProductionSelectMachine from "./modules/production/Operation/production/production/costCenter/ProductionSelectMachine";
-import ProductionSelectWorker from "./modules/production/Operation/production/production/worker/ProductionSelectWorker";
-import TimeSheet from "./modules/production/timesheet/TimeSheet";
+import ProductionMain from "./modules/production/Operation/production/ProductionMain";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -445,16 +441,12 @@ const App = (props) => {
             <Route exact path="/production">
               <Production />
             </Route>
-            {/* <PageLayout> */}
-            <Route exact path="/production/operations/timesheet">
-              <TimeSheet />
-            </Route>
-            {/* <PageLayout> */}
+
+            {/* PRODUCTION OPERATION */}
             <Route exact path="/production/operations/planning">
               <Planning />
+              {/* <TestCalendar /> */}
             </Route>
-            {/* </PageLayout> */}
-            {/* PRODUCTION OPERATION */}
             <Route exact path="/production/operations/mrp">
               <MRPMain />
             </Route>
@@ -475,6 +467,19 @@ const App = (props) => {
               path="/production/operations/mrp/edit/:id"
               component={MRPCreate}
             />
+            {/* <PageLayout> */}
+            <Route
+              exact
+              path="/production/operations/production"
+              component={ProductionSelectMachine}
+            />
+            <Route
+              exact
+              path="/production/operations/timesheet"
+              component={ProductionMain}
+            />
+            {/* </PageLayout> */}
+
             {/* PRODUCTION MASTER DATA */}
             <Route exact path="/production/work_center">
               <WorkCenter />
@@ -526,13 +531,6 @@ const App = (props) => {
               path="/production/routing/edit/:id"
               component={RoutingCreate}
             />
-            {/* <PageLayout> */}
-            <Route
-              exact
-              path="/production/operations/production"
-              component={ProductionMain}
-            />
-            {/* </PageLayout> */}
 
             <Route>
               <NotFound />

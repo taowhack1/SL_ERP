@@ -11,23 +11,32 @@ const CostCenter = ({ machineList }) => {
       {machineList?.map((machine) => (
         <Card.Grid
           className={
-            machine.machineStatus === "ready"
-              ? "machine-card"
-              : "machine-card not-ready"
+            // machine.machineStatus === "ready"
+            //   ?
+            "machine-card"
+            // : "machine-card not-ready"
           }
-          key={machine.id}
-          hoverable={machine.machineStatus === "ready" ? true : false}
-          onClick={() =>
-            machine.machineStatus === "ready" &&
-            history.push(`/production/operations/production`)
-          }
+          key={machine.machine_id}
+          // hoverable={machine.machineStatus === "ready" ? true : false}
+          hoverable={true}
+          onClick={() => {
+            // machine.machineStatus === "ready" &&
+            localStorage.setItem(
+              "cost_center",
+              JSON.stringify({
+                id: machine.machine_cost_center,
+                title: machine.machine_description,
+              })
+            );
+            history.push("/production/operations/timesheet");
+          }}
         >
           <Text strong>
-            [ {machine.id} ]
+            [ {machine.machine_cost_center} ]
             <br />
-            {machine.title}
-            <br />
-            {machine.machineStatus}
+            {machine.machine_description}
+            {/* <br />
+            {machine.machineStatus} */}
           </Text>
         </Card.Grid>
       ))}

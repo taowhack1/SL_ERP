@@ -18,64 +18,64 @@ export const rawData = {
     },
   ],
   machine2: [
-    { id: "115-09-001", machineStatus: "ready", sortNo: 1, title: "ชั่ง RM" },
+    { id: "11509001", machineStatus: "ready", sortNo: 1, title: "ชั่ง RM" },
     {
-      id: "115-02-101",
+      id: "11502101",
       machineStatus: "ready",
       sortNo: 2,
       title: "mixer 300kg set",
     },
     {
-      id: "115-02-205",
+      id: "11502205",
       machineStatus: "ready",
       sortNo: 3,
       title: "Line เป่าขวด Cream",
     },
     {
-      id: "115-02-206",
+      id: "11502206",
       machineStatus: "ready",
       sortNo: 4,
       title: "Line ink jet unit carton",
     },
     {
-      id: "115-02-201",
+      id: "11502201",
       machineStatus: "ready",
       sortNo: 5,
       title: "Line Fill Cream #1",
     },
     {
-      id: "115-02-202",
+      id: "11502202",
       machineStatus: "ready",
       sortNo: 6,
       title: "Line Fill Cream #2",
     },
     {
-      id: "115-02-207",
+      id: "11502207",
       machineStatus: "ready",
       sortNo: 7,
-      title: "ขันปิดฝา semi-auto",
+      title: "ขันปิดฝา semiauto",
     },
     {
-      id: "115-02-208",
+      id: "11502208",
       machineStatus: "ready",
       sortNo: 8,
-      title: "ขันปิดฝา semi-auto",
+      title: "ขันปิดฝา semiauto",
     },
     {
-      id: "115-02-209",
+      id: "11502209",
       machineStatus: "ready",
       sortNo: 9,
       title: "ขันปิดฝา manual",
     },
     {
-      id: "115-02-210",
+      id: "11502210",
       machineStatus: "ready",
       sortNo: 10,
       title: "ขันปิดฝา manual",
     },
-    { id: "115-02-211", machineStatus: "ready", sortNo: 11, title: "กดปิดฝา" },
+    { id: "11502211", machineStatus: "ready", sortNo: 11, title: "กดปิดฝา" },
     {
-      id: "115-02-212",
+      id: "11502212",
       machineStatus: "ready",
       sortNo: 12,
       title: "ซีลปากถุงแนวตั้ง",
@@ -317,10 +317,11 @@ export const rawData = {
   date: [
     {
       id: "j0",
-      start: "2021-04-01",
-      title: "2021-04-01",
+      start: "2021-04-01T08:00:00",
+      end: "2021-04-01T10:30:00",
+      title: "2021-04-01 TEST",
       resourceIds: [["11502101", "11502102"]],
-      allDay: true,
+      // allDay: true,
       shift: [
         {
           id: 0,
@@ -385,77 +386,102 @@ export const rawData = {
     plan: [
       {
         id: "11502101-2021-04-01",
-        title: "2021-04-01",
+        title: "A 2021-04-01",
         resourceId: "11502101", //เครื่อง
+        shift_job_id: 1,
+        sort: 0,
         start: "2021-04-01", // วัน
-        color: "white",
-        shift: [
-          {
-            id: "shiftA",
-            title: "กะเช้า",
-            shift_job_id: 1,
-            shift_job_name: "กะเช้า",
-            sum_plan_job_plan_time: "05:00:00",
-            job_detail: [
-              {
-                id: 0,
-                title: "PLN202104001",
-                plan_job_no: "PLN2021040001",
-                plan_job_plan_time: "01:00:00",
-
-                mrp_no: "MRP202103001",
-                so_no: "SO202103004",
-                plan_job_worker: 1,
-                plan_job_actual_time: null,
-              },
-            ],
-          },
-          {
-            id: "shiftB",
-            title: "กะดึก",
-            shift_job_id: 2,
-            shift_job_name: "กะดึก",
-            sum_plan_job_plan_time: "00:00:00",
-            job_detail: [],
-          },
-        ],
+        groupId: "J1",
+        extends: {
+          isShift: false,
+          isPlan: true,
+        },
       },
       {
-        id: "11502212-2021-04-04",
-        title: "2021-04-04",
-        resourceId: "11502212", //เครื่อง
-        start: "2021-04-04", // วัน
+        id: "11502101-2021-04-01",
+        title: "B 2021-04-01",
+        sort: 3,
+        resourceId: "11502101", //เครื่อง
+        shift_job_id: 2,
+        start: "2021-04-01", // วัน
+        extends: {
+          isShift: false,
+          isPlan: true,
+        },
+      },
+      {
+        id: "11502101-2021-04-01",
+        title: "A 2021-04-01",
+        sort: 1,
+        resourceId: "11502101", //เครื่อง
+        shift_job_id: 1,
+        start: "2021-04-01", // วัน
+        // allDay: true,
+        extends: {
+          isShift: false,
+          isPlan: true,
+        },
+      },
+      {
+        id: "A-11502212-20210404",
+        resourceId: "11502101", //เครื่อง
+        start: "2021-04-01",
+        title: "กะเช้า",
+        shift_job_id: 1,
+        sort: 2,
+        shift_job_name: "กะเช้า",
+        sum_plan_job_plan_time: "05:00:00",
+        resourceEditable: false,
+        editable: false,
         color: "white",
-        shift: [
-          {
-            id: "shiftA",
-            title: "กะเช้า",
-            shift_job_id: 1,
-            shift_job_name: "กะเช้า",
-            sum_plan_job_plan_time: "05:00:00",
-            job_detail: [
-              {
-                id: 0,
-                title: "PLN202104002",
-                plan_job_no: "PLN2021040002",
-                plan_job_plan_time: "01:00:00",
+        extends: {
+          isShift: true,
+          isPlan: false,
+          job_detail: [
+            {
+              id: 0,
+              title: "PLN202104002",
+              plan_job_no: "PLN2021040002",
+              plan_job_plan_time: "01:00:00",
 
-                mrp_no: "MRP202103001",
-                so_no: "SO202103004",
-                plan_job_worker: 1,
-                plan_job_actual_time: null,
-              },
-            ],
-          },
-          {
-            id: "shiftB",
-            title: "กะดึก",
-            shift_job_id: 2,
-            shift_job_name: "กะดึก",
-            sum_plan_job_plan_time: "00:00:00",
-            job_detail: [],
-          },
-        ],
+              mrp_no: "MRP202103001",
+              so_no: "SO202103004",
+              plan_job_worker: 1,
+              plan_job_actual_time: null,
+            },
+          ],
+        },
+      },
+      {
+        id: "B-11502212-20210404",
+        resourceId: "11502101", //เครื่อง
+        start: "2021-04-01",
+        allDay: true,
+        title: "กะกลางคืน",
+        shift_job_id: 2,
+        sort: 4,
+        shift_job_name: "กะกลางคืน",
+        sum_plan_job_plan_time: "00:00:00",
+        resourceEditable: false,
+        editable: false,
+        color: "white",
+        extends: {
+          isShift: true,
+          isPlan: false,
+          job_detail: [
+            {
+              id: 0,
+              title: "PLN202104002",
+              plan_job_no: "PLN2021040002",
+              plan_job_plan_time: "01:00:00",
+
+              mrp_no: "MRP202103001",
+              so_no: "SO202103004",
+              plan_job_worker: 1,
+              plan_job_actual_time: null,
+            },
+          ],
+        },
       },
     ],
   },

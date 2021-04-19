@@ -157,7 +157,7 @@ const Receive_Create = (props) => {
               update_receive(
                 state.receive_id,
                 auth.user_name,
-                state,
+                { ...state, commit: 1, user_name: auth.user_name },
                 redirectToView
               )
             )
@@ -239,8 +239,8 @@ const Receive_Create = (props) => {
   return (
     <MainLayout {...config}>
       <ReceiveContext.Provider value={contextValue}>
-        <div id='form'>
-          <Row className='col-2'>
+        <div id="form">
+          <Row className="col-2">
             <Col span={8}>
               <h2>
                 <strong>
@@ -254,8 +254,8 @@ const Receive_Create = (props) => {
             <Col span={2}>
               <Text strong>Create Date :</Text>
             </Col>
-            <Col span={2} className='text-right'>
-              <Text className='text-view'>{state.receive_created}</Text>
+            <Col span={2} className="text-right">
+              <Text className="text-view">{state.receive_created}</Text>
             </Col>
           </Row>
 

@@ -1,4 +1,4 @@
-import { Col, Input, Row } from "antd";
+import { Button, Col, Input, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import CustomLabel from "../../../../components/CustomLabel";
@@ -25,7 +25,10 @@ const RMBarcodeScanner = () => {
               <CustomLabel label={"Barcode"} />
             </Col>
             <Col span={16}>
-              <Input placeholder={"Barcode"} />
+              <Input placeholder={"Barcode"} autoFocus={true} />
+            </Col>
+            <Col span={1}>
+              <Button>Click</Button>
             </Col>
           </Row>
           <Row className="col-2 row-margin-vertical">
