@@ -1,7 +1,7 @@
 /** @format */
 
-import { api_server } from "./main_config";
-
+//HRM
+export const api_get_production_emp = `/hrm/employees/production`;
 //qc
 export const api_qc_receive_list = `/qa/qc/item`;
 export const api_qc_receive_detail_list = `/qa/qc/item/detail`;

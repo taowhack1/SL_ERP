@@ -26,6 +26,7 @@ const CostCenter = ({ machineList }) => {
               JSON.stringify({
                 id: machine.machine_cost_center,
                 title: machine.machine_description,
+                machine_id: machine.machine_id,
               })
             );
             history.push("/production/operations/timesheet");

@@ -1,5 +1,8 @@
-import { Col, Row } from "antd";
-import React, { useMemo, useState } from "react";
+import { Col, Row, Spin } from "antd";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllMachine } from "../../../../actions/production/machineActions";
+import DetailLoading from "../../../../components/DetailLoading";
 import { ProductionContext } from "../../../../include/js/context";
 import ProductionHeader from "./production/ProductionHeader";
 import ProductionJobList from "./ProductionJobList";
@@ -13,6 +16,7 @@ for (let i = 0; i < 30; i++) {
   });
 }
 const ProductionMain = ({ props, children }) => {
+  const dispatch = useDispatch();
   const cost_center = JSON.parse(localStorage.getItem("cost_center"));
   const [step, setStep] = useState({
     current: 0,
@@ -70,29 +74,52 @@ const ProductionMain = ({ props, children }) => {
     }),
     [form, setForm, step, setStep]
   );
+  const { loading, machine } = useSelector((state) => state.production);
+  useEffect(() => {
+    dispatch(getAllMachine());
+  }, []);
+
+  const onChangeCostCenter = (cost_center_detail) => {
+    setForm({ ...form, machine: cost_center_detail });
+  };
+
+  // useEffect(() => {
+  //   !loading &&
+  //     cost_center &&
+  //     onChangeCostCenter(
+  //       machine.machineList.find(
+  //         (obj) => obj.machine_cost_center === cost_center.id
+  //       )
+  //     );
+  // }, [cost_center]);
+  console.log(form);
   return (
     <>
       <ProductionContext.Provider value={contextValue}>
         <div className="production-main primary">
-          {/* Content */}
-
           <div className="production-container">
-            <Row className="col-2">
-              <Col span={step.current === 0 ? 6 : 0}>
-                <div className="mr-2 mt-1">
-                  <ProductionJobList dataSource={mockupData} />
-                </div>
-              </Col>
-              <Col span={step.current === 0 ? 18 : 24}>
-                <div className="production-step-content">
-                  <ProductionHeader
-                    current={step.current}
-                    title={step.stepList[step.current].title}
-                  />
-                  <ProductionStepSwitch current={step.current} />
-                </div>
-              </Col>
-            </Row>
+            {loading ? (
+              <Spin>
+                <DetailLoading />
+              </Spin>
+            ) : (
+              <Row className="col-2">
+                <Col span={step.current === 0 ? 6 : 0}>
+                  <div className="mr-2 mt-1">
+                    <ProductionJobList dataSource={mockupData} />
+                  </div>
+                </Col>
+                <Col span={step.current === 0 ? 18 : 24}>
+                  <div className="production-step-content">
+                    <ProductionHeader
+                      current={step.current}
+                      title={step.stepList[step.current].title}
+                    />
+                    <ProductionStepSwitch current={step.current} />
+                  </div>
+                </Col>
+              </Row>
+            )}
           </div>
         </div>
       </ProductionContext.Provider>

@@ -4,7 +4,7 @@ import { api_machine } from "../../include/js/api";
 import { header_config } from "../../include/js/main_config";
 import { GET_ALL_MACHINE, GET_MACHINE_BY_ID, SET_LOADING } from "../types";
 
-export const getAllMachine = (user_name) => (dispatch) => {
+export const getAllMachine = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   axios
     .get(api_machine, header_config)
