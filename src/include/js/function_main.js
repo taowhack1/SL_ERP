@@ -11,14 +11,14 @@ import numeral from "numeral";
 import Text from "antd/lib/typography/Text";
 import { convertDigit } from "./main_config";
 
-export const sortData = (arrObject) => {
+export const sortData = (arrObject, fieldId) => {
   let copyData = arrObject;
   let temp = [];
   if (copyData.length) {
     copyData.map((obj, key) => {
       return temp.push({
         ...obj,
-        id: key,
+        [fieldId || "id"]: key,
         commit: 1,
         data_id: obj?.data_id ?? key,
       });

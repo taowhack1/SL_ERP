@@ -1,10 +1,9 @@
 import FullCalendar from "@fullcalendar/react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
 import Text from "antd/lib/typography/Text";
 import moment from "moment";
-import { Button, Col, Divider, Input, Row, Space } from "antd";
-import Modal from "antd/lib/modal/Modal";
+import { Col, Row, Space } from "antd";
 import CustomLabel from "../../../../components/CustomLabel";
 import { useDispatch, useSelector } from "react-redux";
 import { getPlanningCalendarData } from "../../../../actions/production/planningActions";
@@ -12,17 +11,17 @@ import DetailLoading from "../../../../components/DetailLoading";
 import { convertTimeToHr } from "../../../../include/js/function_main";
 import { convertDigit } from "../../../../include/js/main_config";
 import Search from "../../../../components/Search";
-import Title from "antd/lib/typography/Title";
-import ModalCostCenterPlanning from "./ModalCostCenterPlanning";
 import { SET_LOADING_PLANNING_CALENDAR } from "../../../../actions/types";
 import interactionPlugin from "@fullcalendar/interaction";
-import TestCalendar from "./TestCalendar";
+import PlanningModal from "./PlanningModal";
+import $ from "jquery";
 let countRender = 1;
 const CustomFullCalendar = () => {
   const dispatch = useDispatch();
-  const { loading, costCenter, plan } = useSelector(
+  const { costCenter, plan } = useSelector(
     (state) => state.production.planning
   );
+  const { loading } = useSelector((state) => state.production);
   const [state, setState] = useState({
     costCenter,
     plan,
@@ -283,10 +282,10 @@ const CustomFullCalendar = () => {
         },
       },
     },
-    eventClick: (info) => {
-      info.el.style.backgroundColor = "white";
-      // console.log(info);
-    },
+    // eventClick: (info) => {
+    //   info.el.style.backgroundColor = "white";
+    //   // console.log(info);
+    // },
     nowIndicator: true,
     events: state.plan,
     timeZone: "UTC",
@@ -322,8 +321,13 @@ const CustomFullCalendar = () => {
     (eventInfo) => {
       console.log(eventInfo);
       const eventProps = eventInfo.event._def;
+      const data = eventProps.extendedProps.extends;
       return (
-        <>
+        <div
+          onClick={() =>
+            eventProps.extendedProps.extends.isPlan && openModal(data)
+          }
+        >
           {eventProps.extendedProps.extends.isPlan ? (
             <b>{eventProps.title}</b>
           ) : (
@@ -337,9 +341,10 @@ const CustomFullCalendar = () => {
               <div
                 style={{
                   border: "1px solid #c0c0c0",
-                  padding: 3,
+                  padding: 2,
                   borderRadius: 2,
                   backgroundColor: "orange",
+                  marginBottom: 5,
                 }}
               >
                 <b>
@@ -352,11 +357,12 @@ const CustomFullCalendar = () => {
               </div>
             </div>
           )}
-        </>
+        </div>
       );
     },
     [state]
   );
+  console.log(loading, state.costCenter);
 
   return (
     <>
@@ -365,29 +371,24 @@ const CustomFullCalendar = () => {
           <DetailLoading />
         ) : (
           <>
-            {/* <div
-              style={{
-                padding: 10,
-                border: "1px solid gray",
-                borderRadius: 10,
-              }}
-              className="mb-1"
-            > */}
             <FullCalendar
               {...configs}
               // eventContent={renderEventContent}
               eventContent={renderEventContent2}
               schedulerLicenseKey={"CC-Attribution-NonCommercial-NoDerivatives"}
               plugins={[resourceTimelinePlugin, interactionPlugin]}
-              eventDrop={(e) => console.log("eventDrop", e)}
             />
             {materialStatusBar()}
-            {/* </div> */}
-            <ModalCostCenterPlanning
-              visible={modal.visible}
-              closeModal={closeModal}
+            <PlanningModal
+              config={{
+                title: "Plan Detail",
+                visible: modal.visible,
+                closeModal: closeModal,
+                saveModal: saveModal,
+                width: "80%",
+              }}
               data={modal.data}
-              saveModal={saveModal}
+              readOnly={false}
             />
           </>
         )}

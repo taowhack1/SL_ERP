@@ -134,6 +134,7 @@ export const getUOMList = () => (dispatch) => {
 };
 
 export const updateProcessStatus = (data, callback) => {
+  console.log("updateStatus");
   data.commit = 1;
   // data = {process_status_id : '3', user_name : '2563003', process_id : '30', commit : 1}
   return axios.put(`${api_approve}/${data.process_id}`, data, header_config);

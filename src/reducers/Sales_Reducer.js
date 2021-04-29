@@ -1,5 +1,6 @@
 /** @format */
 
+import { GET_NPR_LIST } from "../actions/sales/nprActions";
 import {
   SET_QN_LIST,
   RESET_QN,
@@ -12,9 +13,11 @@ import {
   GET_QN_OPEN_SO,
   GET_QN_BY_ID,
   GET_SO_BY_ID,
+  SET_LOADING,
 } from "../actions/types";
 
 const inititalState = {
+  loading: false,
   qn: {
     qn_list: [],
     qn_head: {},
@@ -25,6 +28,11 @@ const inititalState = {
     so_list: [],
     so_head: {},
     so_detail: [],
+  },
+  operations: {
+    npr: {
+      list: [],
+    },
   },
   customer: {
     customer_list: [],
@@ -41,6 +49,8 @@ const inititalState = {
 
 export default (state = inititalState, action) => {
   switch (action.type) {
+    case SET_LOADING:
+      return { ...state, loading: action.payload };
     case SET_QN_LIST:
       return { ...state, qn: { ...state.qn, qn_list: action.payload } };
     case GET_QN_BY_ID:
@@ -68,7 +78,18 @@ export default (state = inititalState, action) => {
       return { ...state, so: { ...state.so, ...action.payload } };
     case GET_MASTER_DATA:
       return { ...state, master_data: { ...action.payload } };
-
+    case GET_NPR_LIST:
+      return {
+        ...state,
+        loading: false,
+        operations: {
+          ...state.operations,
+          npr: {
+            ...state.npr,
+            list: action.payload,
+          },
+        },
+      };
     case RESET_ALL_SALES:
       return inititalState;
     default:

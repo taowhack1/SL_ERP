@@ -1,5 +1,11 @@
 import { query_select_dep } from "../query_sql";
-import { GET_SELECT_DEP, GET_COST_CENTER_LIST, GET_COUNTRY } from "../types";
+import {
+  GET_SELECT_DEP,
+  GET_COST_CENTER_LIST,
+  GET_COUNTRY,
+  GET_PRODUCTION_EMP,
+  SET_LOADING,
+} from "../types";
 import axios from "axios";
 import {
   api_query,
@@ -10,7 +16,7 @@ import {
 import { header_config } from "../../include/js/main_config";
 import { message } from "antd";
 
-export const get_select_dep = () => (dispatch) => {
+const get_select_dep = () => (dispatch) => {
   try {
     axios.post(api_query, query_select_dep, header_config).then((res) =>
       dispatch({
@@ -22,7 +28,7 @@ export const get_select_dep = () => (dispatch) => {
     console.log(error);
   }
 };
-export const get_select_cost_center = (department_id) => (dispatch) => {
+const get_select_cost_center = (department_id) => (dispatch) => {
   try {
     axios
       .get(`${api_cost_center}/${department_id}`, header_config)
@@ -38,7 +44,7 @@ export const get_select_cost_center = (department_id) => (dispatch) => {
   }
 };
 
-export const getCountry = () => async (dispatch) => {
+const getCountry = () => async (dispatch) => {
   try {
     await axios
       .get(api_country, header_config)
@@ -49,22 +55,36 @@ export const getCountry = () => async (dispatch) => {
 };
 
 const getProductionEmp = () => (dispatch) => {
+  dispatch({ type: SET_LOADING, payload: true });
   try {
     axios
       .get(api_get_production_emp, header_config)
       .then((res) => {
         // do with res.data
+        if (res.status === 200) {
+          dispatch({ type: GET_PRODUCTION_EMP, payload: res.data });
+        } else {
+          dispatch({ type: GET_PRODUCTION_EMP, payload: [] });
+        }
       })
       .catch((error) => {
         // do with error.response
+        dispatch({ type: GET_PRODUCTION_EMP, payload: [] });
+        dispatch({ type: SET_LOADING, payload: false });
+        if (!error.response)
+          return message.error("Network Error. Try gain later.");
         console.log(error.response);
         message.error(
           `Error ${error.response.status}. Can't get any data from the server. Please try again later.`
         );
       });
   } catch (error) {
+    dispatch({ type: GET_PRODUCTION_EMP, payload: [] });
     message.error(
       `Error! Can't get any data from the server. Please try again later.`
     );
+    dispatch({ type: SET_LOADING, payload: false });
   }
 };
+
+export { get_select_dep, get_select_cost_center, getCountry, getProductionEmp };

@@ -13,7 +13,12 @@ export const RPMCheckColumns = () => [
     title: "No.",
     width: "7%",
     align: "center",
-    dataIndex: "id",
+    render: (value, record, index) => index + 1,
+  },
+  {
+    title: "Part No.",
+    align: "center",
+    dataIndex: "item_part_no",
   },
   {
     title: "RM Code",
@@ -23,23 +28,22 @@ export const RPMCheckColumns = () => [
   {
     title: (
       <div className="text-center">
-        <CustomLabel label="%(W/W)" />
+        <CustomLabel label="Batch No." />
       </div>
     ),
     width: "15%",
-    align: "right",
-    dataIndex: "item_formula_qty",
-    render: (val) => convertDigit(val, 4),
+    align: "center",
+    dataIndex: "stock_batch",
   },
   {
     title: (
       <div className="text-center">
-        <CustomLabel label="Spec. Qty." />
+        <CustomLabel label="Require. Weight." />
       </div>
     ),
     width: "15%",
     align: "right",
-    dataIndex: "item_issue_qty",
+    dataIndex: "weight_machine_net",
     render: (val) => convertDigit(val, 6),
   },
   {
@@ -50,8 +54,8 @@ export const RPMCheckColumns = () => [
     ),
     width: "15%",
     align: "right",
-    dataIndex: "item_net_weight",
-    render: (val) => convertDigit(val, 6),
+    dataIndex: "weight_machine_net_scan",
+    render: (val) => convertDigit(val || 0, 6),
   },
   {
     title: "UoM",
@@ -64,11 +68,13 @@ export const RPMCheckColumns = () => [
     width: "15%",
     align: "center",
     render: (_, record) =>
-      record.item_net_weight >= record.item_issue_qty ? (
+      record.weight_machine_net_scan === record.weight_machine_net ? (
         <CheckOutlined style={{ color: "#2CDB00" }} />
-      ) : record.item_net_weight !== 0 ? (
+      ) : record.weight_machine_net_scan < record.weight_machine_net ? (
         <Text className="require">Qty is not enough</Text>
-      ) : null,
+      ) : (
+        <Text className="require">Over Quantity.</Text>
+      ),
   },
 ];
 

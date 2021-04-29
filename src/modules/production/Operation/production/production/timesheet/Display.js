@@ -1,17 +1,22 @@
-/** @format */
-
 import React from "react";
 
 const Display = (props) => {
+  console.log("display render");
   return (
-    <div>
-      <span>{props.time.h >= 10 ? props.time.h : "0" + props.time.h}</span>
-      &nbsp;:&nbsp;
-      <span>{props.time.m >= 10 ? props.time.m : "0" + props.time.m}</span>
-      &nbsp;:&nbsp;
-      <span>{props.time.s >= 10 ? props.time.s : "0" + props.time.s}</span>
+    <div className={"timer-display"}>
+      <span className="timer">
+        {props.time.h >= 10 ? props.time.h : "0" + props.time.h}
+      </span>
+      <span className="timer-colon">:</span>
+      <span className="timer">
+        {props.time.m >= 10 ? props.time.m : "0" + props.time.m}
+      </span>
+      <span className="timer-colon">:</span>
+      <span className="timer">
+        {props.time.s >= 10 ? props.time.s : "0" + props.time.s}
+      </span>
     </div>
   );
 };
 
-export default Display;
+export default React.memo(Display);

@@ -1,11 +1,18 @@
 import numeral from "numeral";
-export const header_config = {
+const errorText = {
+  getData:
+    "ERROR ! Can't get any data from the server. Please Try again later.",
+  tokenExpired: "ERROR ! Session has been expired. Please Sign-in again.",
+  notFound: "ERROR ! Data not found.",
+  network: "Network Error. Please Check your internet conection.",
+};
+const header_config = {
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10 * 1000, //2*1000ms
+  timeout: 4 * 1000, //2*1000ms
 };
-export const header_config_form = {
+const header_config_form = {
   headers: {
     "Content-Type": "multipart/form-data",
   },
@@ -15,7 +22,7 @@ export const header_config_form = {
 //   formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
 //   parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
 // };
-export const numberFormat = {
+const numberFormat = {
   precision: 6,
   formatter: (value) => {
     const checkDecimal = value.toString().includes(".");
@@ -27,7 +34,7 @@ export const numberFormat = {
   },
   parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
 };
-export const getNumberFormat = (decimalPoint = 6, symbol) => {
+const getNumberFormat = (decimalPoint = 6, symbol) => {
   return {
     precision: decimalPoint,
     formatter: (value) => {
@@ -46,14 +53,25 @@ export const getNumberFormat = (decimalPoint = 6, symbol) => {
     parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
   };
 };
-export const convertDigit = (value, decimalPoint = 6) => {
+const convertDigit = (value, decimalPoint = 6) => {
   const format = "0,0." + "0".repeat(decimalPoint);
   return typeof value === "number" && numeral(value).format(format);
 };
 // Sv.Test
-export const api_server = `http://192.168.5.222:3009`;
-export const report_server = `http://192.168.1.211:8080/report_dev`;
+const api_server = `http://192.168.5.222:3009`;
+const report_server = `http://192.168.9.211:8080/report_dev`;
 // Sv.Production
 // export const report_server = `http://192.168.1.211:8080/report_purch`;
 // export const api_server = `http://192.168.1.210:3009`;
 // export const report_server = `http://192.168.5.207`;
+
+export {
+  api_server,
+  report_server,
+  getNumberFormat,
+  convertDigit,
+  numberFormat,
+  header_config,
+  header_config_form,
+  errorText,
+};

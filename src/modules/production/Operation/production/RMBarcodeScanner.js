@@ -1,84 +1,147 @@
-import { Button, Col, Input, Row } from "antd";
+import { Button, Col, Input, message, Row, Spin } from "antd";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CustomLabel from "../../../../components/CustomLabel";
-
+import barcodeScannerImg from "../../../../image/barcode-scanner.png";
+import { ProductionContext } from "../../../../include/js/context";
+import { getBarcodeDetail } from "../../../../actions/production/timesheetActions";
+import axios from "axios";
+const initialState = {
+  item_part_no: null,
+  weight_machine_net: null,
+  item_no: null,
+};
 const RMBarcodeScanner = () => {
+  const { form, tsFunction } = useContext(ProductionContext);
+  const { plan } = form;
+  const [barcode, setBarcode] = useState(initialState);
+  const [loading, setLoading] = useState(false);
+  const getBarcodeRMDetail = async (barcode) => {
+    const el = document.getElementById("input_barcode");
+    setLoading(true);
+    const resp = await getBarcodeDetail(barcode);
+    console.log("GET RM BARCODE ", resp);
+    if (resp.success) {
+      console.log(resp.data);
+      if (resp.data.length) {
+        const data = resp.data[0];
+        if (data.mrp_id === plan.mrp_id) {
+          if (
+            form.rmChecking.RMList.find(
+              (obj) => obj.weight_machine_no === data.weight_machine_no
+            ).isScanned
+          ) {
+            message.warning("This Barcode is used.");
+          } else {
+            message.success("Material has been filled.");
+            console.log("GET_BARCODE", data);
+            setBarcode({
+              item_no: data.item_no,
+              item_part_no: data.item_part_no,
+              weight_machine_net_scan: data.weight_machine_net_scan,
+            });
+            tsFunction("SCAN_BARCODE", data);
+          }
+        } else {
+          message.error("Error !! Job not match.");
+        }
+      } else {
+        message.warning("Barcode not found.");
+      }
+    }
+    setTimeout(() => {
+      setLoading(false);
+      el.select();
+    }, 500);
+  };
   return (
     <>
       <div
         style={{
           display: "flex",
           flexWrap: "wrap",
-          // minHeight: 300,
+          justifyContent: "center",
         }}
-        className="mb-2"
       >
         <div
           style={{
-            width: "50%",
-          }}
-          className="col-border-right"
-        >
-          <Row className="col-2 row-margin-vertical">
-            <Col span={6}>
-              <CustomLabel label={"Barcode"} />
-            </Col>
-            <Col span={16}>
-              <Input placeholder={"Barcode"} autoFocus={true} />
-            </Col>
-            <Col span={1}>
-              <Button>Click</Button>
-            </Col>
-          </Row>
-          <Row className="col-2 row-margin-vertical">
-            <Col span={6}>
-              <CustomLabel label={"RM Code"} />
-            </Col>
-            <Col span={16}>
-              <Text className="text-value">{"eg. 10xSRLA000xxx"}</Text>
-            </Col>
-          </Row>
-          <Row className="col-2 row-margin-vertical">
-            <Col span={6}>
-              <CustomLabel label={"Spec. Weight"} />
-            </Col>
-            <Col span={16} className="text-right">
-              <Text className="text-value mr-2">{"2.362500"}</Text>
-              <Text strong>{"kg"}</Text>
-            </Col>
-          </Row>
-          <Row className="col-2 row-margin-vertical">
-            <Col span={6}>
-              <CustomLabel label={"Net Weight"} />
-            </Col>
-            <Col span={16} className="text-right">
-              <Text className="text-value mr-2">{"2.362830"}</Text>
-              <Text strong>{"kg"}</Text>
-            </Col>
-          </Row>
-        </div>
-        <div
-          style={{
-            width: "50%",
+            width: "70%",
+            border: "2px solid #c0c0c0",
+            borderRadius: 10,
+            padding: 20,
+            boxShadow: "0px 0px 5px #c0c0c0",
           }}
         >
           <Row className="col-2 row-margin-vertical">
-            <Col span={6} offset={1}>
-              <CustomLabel label={"Product"} />
-            </Col>
-            <Col span={16}>
-              <Text className="text-value">{"eg. 30xSRLA000xxx"}</Text>
-              {/* <Input bordered={false} placeholder={"Bulk Code"} /> */}
-            </Col>
-          </Row>
+            <Col span={20}>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={6}>
+                  <CustomLabel label={"Barcode"} />
+                </Col>
+                <Col span={16}>
+                  <Input
+                    placeholder={"Barcode"}
+                    autoFocus={true}
+                    id={"input_barcode"}
+                    // value={weight_machine_no || null}
+                    style={{ backgroundColor: "#ECFFF8" }}
+                    onChange={(e) =>
+                      e.target.value?.length === 13 &&
+                      getBarcodeRMDetail(e.target.value)
+                    }
+                    maxLength={13}
+                  />
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={6}>
+                  <CustomLabel label={"RM Code"} />
+                </Col>
+                <Col span={16} className="text-right">
+                  <Spin spinning={loading}>
+                    <Text className="text-value mr-2">
+                      {barcode.item_no || "eg. 10xSRLA000xxx"}
+                    </Text>
+                  </Spin>
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={6}>
+                  <CustomLabel label={"Formula Part No."} />
+                </Col>
+                <Col span={16} className="text-right">
+                  <Spin spinning={loading}>
+                    <Text className="text-value mr-2">
+                      {barcode.item_part_no || "-"}
+                    </Text>
+                  </Spin>
+                </Col>
+              </Row>
 
-          <Row className="col-2 row-margin-vertical">
-            <Col span={6} offset={1}>
-              <CustomLabel label={"Lot No."} />
+              <Row className="col-2 row-margin-vertical">
+                <Col span={6}>
+                  <CustomLabel label={"Net Weight"} />
+                </Col>
+                <Col span={16} className="text-right">
+                  <Spin spinning={loading}>
+                    <Text className="text-value mr-2">
+                      {barcode.weight_machine_net_scan || "-"}
+                    </Text>
+                  </Spin>
+                </Col>
+                <Col span={2}>
+                  <Text strong>{"kg"}</Text>
+                </Col>
+              </Row>
             </Col>
-            <Col span={16}>
-              <Text className="text-value">{"eg. 2103240001"}</Text>
+            <Col span={4}>
+              <img
+                src={require("../../../../image/barcode-scanner.png")}
+                alt="scanner"
+                title="scanner"
+                width={150}
+                height={150}
+              />
             </Col>
           </Row>
         </div>

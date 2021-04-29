@@ -104,6 +104,8 @@ import StockCard from "./modules/inventory/reporting/stockCard/StockCard";
 import TimeSheet from "./modules/production/Operation/production/production/timesheet/TimeSheet";
 import ProductionSelectMachine from "./modules/production/Operation/production/production/costCenter/ProductionSelectMachine";
 import ProductionMain from "./modules/production/Operation/production/ProductionMain";
+import NPRList from "./modules/sales/operations/npr";
+import RDForm from "./modules/sales/operations/npr/RDForm";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -368,6 +370,12 @@ const App = (props) => {
             <Route exact path="/sales">
               <Sales />
             </Route>
+            {/* SALES OPERATIONS */}
+            <Route exact path="/sales/npr">
+              <NPRList />
+            </Route>
+            <Route exact path="/sales/npr/:id" component={RDForm} />
+
             {/* SALES  Quotations */}
             <Route exact path="/sales/quotations">
               <Quotations />
@@ -385,6 +393,7 @@ const App = (props) => {
               path="/sales/quotations/edit/:id"
               component={QuotationsCreate}
             />
+
             {/* SALES ORDERS */}
             <Route exact path="/sales/orders">
               <SaleOrder />

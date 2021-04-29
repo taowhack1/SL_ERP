@@ -2,15 +2,19 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Col, Input, Row, Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import Title from "antd/lib/typography/Title";
-import React from "react";
-
+import React, { useContext } from "react";
+import { ProductionContext } from "../../../../include/js/context";
+import $ from "jquery";
 const ProductionJobList = ({ dataSource }) => {
+  const { form, tsFunction } = useContext(ProductionContext);
+  const { plan_job_detail } = form.machine;
   return (
     <>
       <Table
         size={"small"}
         // scroll={{ y: 500 }}
         // style={{ height: "100vh" }}
+        rowClassName={"clickable"}
         pagination={{ pageSize: 15 }}
         bordered
         columns={[
@@ -26,7 +30,7 @@ const ProductionJobList = ({ dataSource }) => {
                 />
               </div>
             ),
-            dataIndex: "so_no",
+            dataIndex: "plan_job_no",
             align: "left",
             render: (value, record) => {
               return (
@@ -49,14 +53,23 @@ const ProductionJobList = ({ dataSource }) => {
                       borderRadius: "50%",
                     }}
                   ></div>
-                  <Text className="text-value">{record.so_no}</Text>
+                  <Text className="text-value">
+                    {record.plan_job_no + " - " + record.plan_job_date}
+                  </Text>
                 </div>
               );
             },
           },
         ]}
-        dataSource={dataSource}
-        rowKey={"id"}
+        dataSource={plan_job_detail}
+        rowKey={"plan_job_id"}
+        onRow={(record, index) => ({
+          onClick: (e) => {
+            tsFunction("SELECT_PLAN", record);
+            $(e.target).closest("tbody").find("tr").removeClass("selected-row");
+            $(e.target).closest("tr").addClass("selected-row");
+          },
+        })}
       />
     </>
   );

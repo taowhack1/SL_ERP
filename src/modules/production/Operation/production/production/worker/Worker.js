@@ -1,36 +1,72 @@
 import { UserOutlined } from "@ant-design/icons";
-import { Card } from "antd";
+import { Card, message } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
 import Meta from "antd/lib/card/Meta";
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { ProductionContext } from "../../../../../../include/js/context";
 import "../costCenter/machine.css";
 
 const Worker = ({ employeeList }) => {
-  const [select, setSelect] = useState([]);
-  const onSelect = (id) => {
+  const { form, tsFunction } = useContext(ProductionContext);
+  const [select, setSelect] = useState(form.worker || []);
+  const onSelect = (id, name) => {
+    console.log(id, name);
     if (select.includes(id)) {
       setSelect(select.filter((fid) => fid !== id));
+      message.warning({
+        content: (
+          <span>
+            You deselect <b>{name}</b>
+          </span>
+        ),
+      });
     } else {
+      if (form.plan.plan_job_plan_worker === select.length)
+        return message.warning({
+          content: `Number of worker has limit by plan ( ${form.worker.length} / ${form.plan.plan_job_plan_worker} )`,
+          key: "limit",
+          duration: 4,
+        });
+      message.success({
+        content: (
+          <span>
+            You select <b>{name}</b>
+          </span>
+        ),
+      });
       setSelect([...select, id]);
     }
   };
+  useEffect(() => {
+    tsFunction("SELECT_WORKER", select);
+  }, [select]);
   console.log("select list", select, select.length);
   return (
     <>
       {employeeList?.map((emp) => (
         <Card.Grid
           className={
-            select.includes(emp.id) ? "worker-card selected" : "worker-card"
+            select.includes(emp.employee_no)
+              ? "worker-card selected"
+              : "worker-card"
           }
-          key={emp.id}
-          onClick={() => onSelect(emp.id)}
+          key={emp.employee_no}
+          onClick={() => onSelect(emp.employee_no, emp.employee_no_name)}
         >
           <Card
             cover={
-              <img alt="example" width="120px" height="160px" src={emp.photo} />
+              <img
+                alt="example"
+                height={120}
+                src={
+                  emp.employee_image ||
+                  require("../../../../../../image/unnamed.png")
+                }
+              />
             }
           >
-            <Meta title={emp.name}></Meta>
+            <Meta title={`[ ${emp.employee_no} ]`}></Meta>
+            <Meta title={emp.employee_name_eng}></Meta>
           </Card>
         </Card.Grid>
       ))}
@@ -38,4 +74,4 @@ const Worker = ({ employeeList }) => {
   );
 };
 
-export default Worker;
+export default React.memo(Worker);

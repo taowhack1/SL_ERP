@@ -135,7 +135,10 @@ const MRPView = (props) => {
       process_id: state?.process_id,
       process_member_remark: remark,
     };
-    updateProcessStatus(statusDetail).then((res) => setLoading(true));
+    updateProcessStatus(statusDetail).then((res) => {
+      console.log(res);
+      setLoading(true);
+    });
     // setLoading(true);
   };
 

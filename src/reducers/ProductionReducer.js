@@ -1,6 +1,14 @@
 /** @format */
 
 import {
+  GET_MACHINE_PLAN,
+  GET_TIMESHEET_SCAN_RM_LIST,
+  RESET_TIMESHEET,
+  START_TIMESHEET,
+  UPDATE_TIMESHEET,
+  // GET_TIMESHEET_MACHINE,
+} from "../actions/production/timesheetActions";
+import {
   RESET_PRODUCTION,
   GET_ALL_MACHINE,
   GET_ALL_WORK_CENTER,
@@ -58,6 +66,7 @@ export const initialState = {
       loading: false,
       costCenter: [],
       jobs: [],
+      plan: [],
     },
   },
   routing: {
@@ -66,6 +75,13 @@ export const initialState = {
   },
   fg: {
     fgList: [],
+  },
+  timesheet: {
+    machine: {
+      plan_job_detail: [],
+    },
+    RMList: [],
+    start: {},
   },
 };
 
@@ -191,6 +207,54 @@ export default (state = initialState, action) => {
           loading: false,
           ...action.payload,
         },
+      };
+
+    // Timesheet
+    // case GET_TIMESHEET_MACHINE:
+    //   return {
+    //     ...state,
+    //     timesheet: {
+    //       ...state.timesheet,
+    //       machine: action.payload,
+    //     },
+    //   };
+    case RESET_TIMESHEET:
+      return {
+        ...state,
+        loading: false,
+        timesheet: {
+          ...initialState.timesheet,
+          machine: state.timesheet.machine,
+        },
+      };
+    case GET_MACHINE_PLAN:
+      return {
+        ...state,
+        timesheet: {
+          ...state.timesheet,
+          machine: action.payload,
+        },
+      };
+    case GET_TIMESHEET_SCAN_RM_LIST:
+      return {
+        ...state,
+
+        timesheet: {
+          ...state.timesheet,
+          RMList: action.payload,
+        },
+        loading: false,
+      };
+    case START_TIMESHEET:
+    case UPDATE_TIMESHEET:
+      return {
+        ...state,
+
+        timesheet: {
+          ...state.timesheet,
+          start: action.payload,
+        },
+        loading: false,
       };
     default:
       return state;

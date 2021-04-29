@@ -162,7 +162,7 @@ function TopContent(props) {
               </Breadcrumb>
             </div>
           </Col>
-          <Col span={12}>
+          <Col span={12} className="top-search">
             <div>{props.search && <Search onSearch={props.onSearch} />}</div>
           </Col>
         </Row>

@@ -852,7 +852,30 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
     });
   switch (type_id) {
     case 1:
+      action.concat([
+        {
+          name: (
+            <span>
+              <PrinterOutlined className="pd-right-1 button-icon" />
+              Raw Material Specification
+            </span>
+          ),
+          link: `${report_server}/report_rawmaterial_specification.aspx?item_code=${item_no}`,
+        },
+      ]);
+      break;
     case 2:
+      action.concat([
+        {
+          name: (
+            <span>
+              <PrinterOutlined className="pd-right-1 button-icon" />
+              Package Specification
+            </span>
+          ),
+          link: `${report_server}/report_package_specification.aspx?item_code=${item_no}`,
+        },
+      ]);
       break;
     case 3:
       return action.concat([

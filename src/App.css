@@ -1,8 +1,4 @@
-/** @format */
-
 @import "~antd/dist/antd.css";
-
-/** ant design **/
 
 .ant-layout-header {
   background: #7b7bad;
@@ -74,7 +70,9 @@
 .ant-select {
   width: 100%;
 }
-
+.ant-card-cover {
+  padding: 5px 10px 5px 10px;
+}
 .ant-upload.ant-upload-select-picture-card {
   border: 2px dashed #1890ff;
 }
@@ -118,89 +116,122 @@ h6 {
   margin: 0px;
 }
 .mt-1 {
-  margin-top: 10px;
+  margin-top: 10px !important;
 }
 .mb-1 {
-  margin-bottom: 10px;
+  margin-bottom: 10px !important;
 }
 .mt-2 {
-  margin-top: 20px;
+  margin-top: 20px !important;
 }
 .mb-2 {
-  margin-bottom: 20px;
+  margin-bottom: 20px !important;
 }
 .mt-3 {
-  margin-top: 30px;
+  margin-top: 30px !important;
 }
 .mb-3 {
-  margin-bottom: 30px;
+  margin-bottom: 30px !important;
 }
 .mt-4 {
-  margin-top: 40px;
+  margin-top: 40px !important;
+}
+.mb-5 {
+  margin-bottom: 50px !important;
+}
+.mt-5 {
+  margin-top: 50px !important;
 }
 .mb-4 {
-  margin-bottom: 40px;
+  margin-bottom: 40px !important;
 }
 .ml-1 {
-  margin-left: 10px;
+  margin-left: 10px !important;
 }
 .mr-1 {
-  margin-right: 10px;
+  margin-right: 10px !important;
 }
 .ml-2 {
-  margin-left: 10px;
+  margin-left: 20px !important;
 }
 .mr-2 {
-  margin-right: 20px;
+  margin-right: 20px !important;
 }
 .ml-3 {
-  margin-left: 10px;
+  margin-left: 30px !important;
 }
 .mr-3 {
-  margin-right: 30px;
+  margin-right: 30px !important;
 }
 .ml-4 {
-  margin-left: 10px;
+  margin-left: 40px !important;
 }
 .mr-4 {
-  margin-right: 40px;
+  margin-right: 40px !important;
 }
 .pt-1 {
-  padding-top: 10px;
+  padding-top: 10px !important;
 }
 .pt-2 {
-  padding-top: 20px;
+  padding-top: 20px !important;
 }
 .pt-3 {
-  padding-top: 30px;
+  padding-top: 30px !important;
 }
 .pt-4 {
-  padding-top: 40px;
+  padding-top: 40px !important;
 }
 .pb-1 {
-  padding-bottom: 10px;
+  padding-bottom: 10px !important;
 }
 .pb-2 {
-  padding-bottom: 20px;
+  padding-bottom: 20px !important;
 }
 .pb-3 {
-  padding-bottom: 30px;
+  padding-bottom: 30px !important;
 }
 .pb-4 {
-  padding-bottom: 40px;
+  padding-bottom: 40px !important;
+}
+.pe-1 {
+  padding-left: 10px !important;
+}
+.pe-2 {
+  padding-left: 20px !important;
+}
+.pe-3 {
+  padding-left: 30px !important;
+}
+.pe-4 {
+  padding-left: 40px !important;
+}
+.px-1 {
+  padding-right: 10px !important;
+}
+.px-2 {
+  padding-right: 20px !important;
+}
+.px-3 {
+  padding-right: 30px !important;
+}
+.px-4 {
+  padding-right: 40px !important;
 }
 
 #top-content {
   padding: 0px 20px;
   padding-bottom: 10px;
-  min-height: 82px;
+  min-height: 92.64px;
   border-bottom: 1px solid #ddd;
+}
+.top-search {
+  min-height: 31.82px !important;
 }
 button.ant-btn-primary,
 button.primary,
 div.primary {
-  background: #7b7bad;
-  color: #fff;
+  background: #7b7bad !important;
+  color: #fff !important;
   border: 1px solid #6a7198;
 }
 button.ant-btn-primary:hover,
@@ -289,17 +320,17 @@ button.primary:hover {
 .ant-table-tbody > .row-click:hover > td {
   background-color: #e6e5e5;
 }
+.ant-table-tbody > tr.ant-table-row-level-0:hover > td {
+  background: unset;
+  background-color: #e3e3ed;
+}
+tr.clickable {
+  cursor: pointer;
+}
 tr.ant-table-row .selected-row,
 tr.ant-table-row-level-0 .selected-row,
 tr.selected-row {
-  /* background-color: #f0f2f5; */
   background-color: #e3e3ed;
-  border: 1px solid red !important;
-}
-tr.ant-table-row .selected-row:hover,
-tr.ant-table-row-level-0 .selected-row:hover,
-tr.selected-row:hover {
-  background-color: #8e8eb8;
   border: 1px solid red !important;
 }
 .row-margin-vertical {
@@ -328,7 +359,6 @@ tr.selected-row:hover {
 
 .step-item.pass {
   color: rgba(0, 0, 0, 0.45);
-  /* color: red; */
 }
 
 .step-item.current-step {
@@ -536,6 +566,21 @@ span.status-production {
   /* background-color: #00ed10 !important; */
   background-color: #2ecc71 !important;
 }
+span.status {
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  display: inline-block;
+  position: absolute;
+  top: 7px;
+  margin-right: 10px;
+}
+span.status.status-ready {
+  background-color: #2ecc71;
+}
+span.status.status-not-ready {
+  background-color: red;
+}
 span.ant-typography .server-status .status-dev,
 span.status-dev {
   background-color: #ffa31a !important;
@@ -690,6 +735,7 @@ div.ant-tabs-tab > div {
 .col-right-2 {
   padding-right: 20px;
 }
+
 .row-radio {
   line-height: 61px;
   height: 61px;
@@ -833,15 +879,16 @@ div.fc-timeline-event-harness {
 }
 a.fc-timeline-event {
   /* background: none !important; */
-  padding: 0;
+  padding: 1px;
   margin: 0;
   margin-top: 5px;
   border-radius: 2px;
-  border: 2px solid red;
+  /* border: 2px solid red; */
 }
 /* a.fc-timeline-event:hover {
   background-color: #ffc459 !important;
 } */
+
 .flex-container {
   display: flex;
 }
@@ -931,6 +978,166 @@ div.production-container {
 }
 div.production-step-content {
   border-left: 1px solid #ccc;
-  min-height: 98vh;
+  min-height: 95vh;
   padding: 0px 5px;
+}
+
+tr.selected {
+  background-color: #e3e3ed;
+}
+div.select-emp-label {
+  position: absolute;
+  right: 120px;
+  top: 10px;
+  color: black;
+  padding: 8px;
+  background-color: #f6f6f6;
+  border: 1px solid #c0c0c0;
+  border-radius: 7px;
+}
+div.timer-display > span {
+  font-size: 50px;
+}
+
+.main-section {
+  background: transparent;
+  max-width: 600px;
+  width: 90%;
+  height: 500px;
+  margin: 30px auto;
+}
+
+.clock-holder {
+  width: 100%;
+  background: #fff;
+  margin: 30px auto;
+  position: relative;
+}
+div.timer-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+div.timesheet-title {
+  border-bottom: 1px solid #c0c0c0;
+  margin-bottom: 20px;
+  padding-left: 10px;
+}
+.row-hl {
+  background-color: #fcfcfc;
+}
+.stopwatch {
+  text-align: center;
+}
+.stopwatch span:not(span.timer-colon) {
+  background: #7b7bab;
+  color: #fff;
+  display: inline-block;
+  font-family: monospace;
+  padding: 30px 10px 30px 10px;
+  border-radius: 5px;
+  width: 100px;
+}
+span.timer-colon {
+  color: #7b7bab;
+  padding: 0px 5px;
+}
+
+.stopwatch .stopwatch-btn {
+  background: #fff;
+  margin-top: 30px;
+  margin-left: 5px;
+  border: none;
+  padding: 12px 20px;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  width: 200px;
+  transition: background 1s;
+  cursor: pointer;
+}
+.stopwatch .stopwatch-btn-red {
+  border: 2px solid #c85454;
+  color: #c85454;
+}
+.stopwatch .stopwatch-btn-yel {
+  border: 2px solid #ffc900;
+  color: #ffc900;
+}
+
+.stopwatch .stopwatch-btn-gre {
+  border: 2px solid #7b7bab;
+  color: #7b7bab;
+}
+.stopwatch .stopwatch-btn-red:hover {
+  background: #c85454;
+  border: 2px solid #c85454;
+  color: #fff;
+}
+.stopwatch .stopwatch-btn-yel:hover {
+  background: #ffc900;
+  border: 2px solid #ffc900;
+  color: #fff;
+}
+.stopwatch .stopwatch-btn-gre:hover {
+  background: #7b7bab;
+  border: 2px solid #7b7bab;
+  color: #fff;
+}
+.stopwatch .stopwatch-btn-gray {
+  border: 2px solid #979696;
+  color: #979696;
+}
+.stopwatch .stopwatch-btn-gray:hover {
+  background: #6c6c6e;
+  border: 2px solid #808081;
+  color: #fff;
+}
+.stopwatch .stopwatch-btn-disabled {
+  background: #f5f5f5;
+  border: 2px solid #d9d9d9;
+  color: rgba(0, 0, 0, 0.25);
+  cursor: not-allowed;
+}
+
+button.timesheet-btn > span {
+  font-size: 16px;
+  /* font-weight: bold; */
+  font-family: monospace;
+}
+
+div.clock-container {
+  padding: 0px 15px 5px 0px;
+  /* position: absolute; */
+  /* top: 0px; */
+  /* right: 10px; */
+  /* background-color: white;
+  border: 1px solid gray;
+  border-radius: 5px; */
+}
+span#clock {
+  color: black;
+  font-size: 20px;
+  font-family: monospace;
+}
+
+.full-wh {
+  width: 100%;
+  height: 100%;
+}
+
+.title-bar {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #c0c0c0;
+}
+div.form-section {
+  margin: 10px 0px;
+  padding: 0px 10px;
+}
+div.form-section-head {
+  border-bottom: 1px solid #e4e4e4;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
 }
