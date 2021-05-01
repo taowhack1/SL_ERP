@@ -1141,3 +1141,7 @@ div.form-section-head {
   padding-bottom: 5px;
   margin-bottom: 5px;
 }
+
+div.ant-row.table > div > div {
+  border: 1px solid gray;
+}

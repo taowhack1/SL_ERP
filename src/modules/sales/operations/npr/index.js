@@ -29,20 +29,20 @@ const NPRList = () => {
     },
     onSearch: (w) => {
       const text = w.toUpperCase();
-      setState(
-        list.filter(
-          (obj) =>
-            obj.npr_no.toUpperCase().indexOf(text) > 0 ||
-            (obj.npr_product_name &&
-              obj.npr_product_name.toUpperCase().indexOf(text) > 0) ||
-            (obj.npr_customer_name &&
-              obj.npr_customer_name.toUpperCase().indexOf(text) > 0) ||
-            (obj.npr_created_by_name &&
-              obj.npr_created_by_name.toUpperCase().indexOf(text) > 0) ||
-            (obj.npr_responsed_by &&
-              obj.npr_responsed_by.toUpperCase().indexOf(text) > 0)
-        )
-      );
+      // setState(
+      //   list.filter(
+      //     (obj) =>
+      //       obj.npr_no.toUpperCase().indexOf(text) > 0 ||
+      //       (obj.npr_product_name &&
+      //         obj.npr_product_name.toUpperCase().indexOf(text) > 0) ||
+      //       (obj.npr_customer_name &&
+      //         obj.npr_customer_name.toUpperCase().indexOf(text) > 0) ||
+      //       (obj.npr_created_by_name &&
+      //         obj.npr_created_by_name.toUpperCase().indexOf(text) > 0) ||
+      //       (obj.npr_responsed_by &&
+      //         obj.npr_responsed_by.toUpperCase().indexOf(text) > 0)
+      //   )
+      // );
     },
   };
   return (

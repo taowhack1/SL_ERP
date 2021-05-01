@@ -1,11 +1,13 @@
 import { Checkbox, Col, Input, Row } from "antd";
 import Text from "antd/lib/typography/Text";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router";
 import CustomLabel from "../../../../components/CustomLabel";
 import MainLayout from "../../../../components/MainLayout";
-import RDFormDetail from "./RDFormDetail";
+import NPRTabs from "./NPRTabs";
+import { getNPRByID } from "../../../../actions/sales/nprActions";
+import NPRHead from "./NPRHead";
 const initialState = {
   npr_responsed_required_by: null,
   npr_responsed_delivery_date: null,
@@ -16,11 +18,15 @@ const initialState = {
 const RDForm = () => {
   const { id } = useParams();
   console.log(id);
+
+  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState({});
   const {
     register,
     formState: { error },
     control,
     handleSubmit,
+    setValue,
   } = useForm({
     defaultValues: initialState,
   });
@@ -36,11 +42,25 @@ const RDForm = () => {
       buttonAction: ["Save", "Discard"],
       edit: {},
       discard: "/sales/npr",
-      save: "/sales/npr/" + id,
+      save: "function",
+      onSave: () => {
+        handleSubmit(onSubmit);
+      },
     }),
     []
   );
-  const onSubmit = (data) => console.log(data);
+  useEffect(() => {
+    setLoading(true);
+    const getData = async () => {
+      // data = await getNPRByID(id);
+      const resp = await getNPRByID(id);
+      if (resp.success) setState(resp.data);
+      setLoading(false);
+    };
+    getData();
+  }, [id]);
+  const onSubmit = (data) => console.log("submit", data);
+  console.log("data", state);
   return (
     <>
       <MainLayout {...layoutConfig}>
@@ -52,257 +72,8 @@ const RDForm = () => {
             >
               <h1>NEW PRODUCT REQUISITION FORM</h1>
             </div>
-            <Row className="col-2">
-              <Col
-                span={10}
-                // className="col-border-right"
-                style={{ padding: 10 }}
-              >
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={10}>
-                    <CustomLabel label={"Product Code :"} />
-                  </Col>
-                  <Col span={14}>
-                    <Text>{"Test Information" || "-"}</Text>
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={10}>
-                    <CustomLabel label={"Customer Code :"} />
-                  </Col>
-                  <Col span={14}>
-                    <Text>{"Test Information" || "-"}</Text>
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={10}>
-                    <CustomLabel label={"Customer Name :"} />
-                  </Col>
-                  <Col span={14}>
-                    <Text>{"Test Information" || "-"}</Text>
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={10}>
-                    <CustomLabel label={"Product Name :"} />
-                  </Col>
-                  <Col span={14}>
-                    <Text>{"Test Information" || "-"}</Text>
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={10}>
-                    <CustomLabel label="Declare weight" />
-                  </Col>
-                  <Col span={14}>
-                    <Text>{"Test Information" || "-"}</Text>
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={10}>
-                    <CustomLabel label="Contact No./Email" />
-                  </Col>
-                  <Col span={14}>
-                    <Text>{"Test Information" || "-"}</Text>
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={10}>
-                    <CustomLabel label="Production Line" />
-                  </Col>
-                  <Col span={14}>
-                    <Text>{"Test Information" || "-"}</Text>
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={10}>
-                    <CustomLabel label="Sell to" />
-                  </Col>
-                  <Col span={14}>
-                    <Checkbox id="cbk-sample" />
-                    <CustomLabel label={"Export"} />
-                    <Checkbox id="cbk-sample" className="ml-4" />
-                    <CustomLabel label={"Local"} />
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={10}>
-                    <CustomLabel label="Ref. Formulation :" />
-                  </Col>
-                  <Col span={14}>
-                    <Text>{"Test Information" || "-"}</Text>
-                  </Col>
-                </Row>
-              </Col>
-              <Col span={14} style={{ padding: 10 }}>
-                <Row className="col-2">
-                  <Col span={12}>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={24}>
-                        <Checkbox id="cbk-sample" />
-                        <CustomLabel label={"Sample Request"} />
-                        <Checkbox id="cbk-sample" className="ml-2" />
-                        <CustomLabel label={"Revision"} />
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={24}>
-                        <Checkbox id="cbk-sample" />
-                        <CustomLabel label={"Cost Request"} />
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={24}>
-                        <Checkbox id="cbk-sample" />
-                        <CustomLabel label={"Other :"} />
-                        <Text>{"Test Information" || "-"}</Text>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col span={12}>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={10}>
-                        <CustomLabel label="Running No." />
-                      </Col>
-                      <Col span={14}>
-                        <Text>{"Test Information" || "-"}</Text>
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={10}>
-                        <CustomLabel label="Issued Date :" />
-                      </Col>
-                      <Col span={14}>
-                        <Text>{"Test Information" || "-"}</Text>
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={10}>
-                        <CustomLabel label="Request Date :" />
-                      </Col>
-                      <Col span={14}>
-                        <Text>{"Test Information" || "-"}</Text>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-                <Row className="col-2 mt-3">
-                  <Col span={24}>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={10}>
-                        <CustomLabel label="Sample Request Q'ty :" />
-                      </Col>
-                      <Col span={12} className="text-right">
-                        <Text>{"Test Information" || "-"}</Text>
-                      </Col>
-                      <Col span={2}>
-                        <CustomLabel label="pcs." />
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={10}>
-                        <CustomLabel label="Launch Timing :" />
-                      </Col>
-                      <Col span={12}>
-                        <Text>{"Test Information" || "-"}</Text>
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={10}>
-                        <CustomLabel label="Volume / Order :" />
-                      </Col>
-                      <Col span={12} className="text-right">
-                        <Text>{"Test Information" || "-"}</Text>
-                      </Col>
-                      <Col span={2}>
-                        <CustomLabel label="pcs." />
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={10}>
-                        <CustomLabel label="Export to (specify country) :" />
-                      </Col>
-                      <Col span={12}>
-                        <Text>{"Test Information" || "-"}</Text>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-
-            <Row className="col-2">
-              <Col span={24} style={{ padding: 10 }}>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={3}>
-                    <CustomLabel label={"Customer Group"} />
-                  </Col>
-                  <Col span={3} offset={9}>
-                    <CustomLabel label={"Product Group"} />
-                  </Col>
-                </Row>
-                <Row className="col-2 row-margin-vertical">
-                  <Col span={11} offset={1}>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={24}>
-                        <Checkbox id="cbk-sample" />
-                        <Text className="pd-left-2">
-                          <b className="pd-right-1">A</b> High potential
-                          customer
-                        </Text>
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={24}>
-                        <Checkbox id="cbk-sample" />
-                        <Text className="pd-left-2">
-                          <b className="pd-right-1">B</b> Meduim potential
-                          customer (Bauty Clinic , New Brand)
-                        </Text>
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={24}>
-                        <Checkbox id="cbk-sample" />
-                        <Text className="pd-left-2">
-                          <b className="pd-right-1">C</b> Others customer
-                        </Text>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col span={11} offset={1}>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={24}>
-                        <Checkbox id="cbk-sample" />
-                        <Text className="pd-left-2">
-                          <b className="pd-right-1">A</b> New Product
-                          development ( 14 days )
-                        </Text>
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={24}>
-                        <Checkbox id="cbk-sample" />
-                        <Text className="pd-left-2">
-                          <b className="pd-right-1">B</b> Library formula
-                          modification ( 10 days )
-                        </Text>
-                      </Col>
-                    </Row>
-                    <Row className="col-2 row-margin-vertical">
-                      <Col span={24}>
-                        <Checkbox id="cbk-sample" />
-                        <Text className="pd-left-2">
-                          <b className="pd-right-1">C</b> Library formula ( 7
-                          days )
-                        </Text>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <RDFormDetail />
+            <NPRHead state={state} />
+            <NPRTabs state={state} />
           </div>
         </form>
       </MainLayout>

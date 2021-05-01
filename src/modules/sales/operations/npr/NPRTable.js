@@ -1,6 +1,7 @@
 import { Table } from "antd";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router";
 const columns = [
   {
     title: "No.",
@@ -85,7 +86,9 @@ const columns = [
 
 // }, []);
 const NPRTable = ({ dataSource }) => {
-  //   const { loading } = useSelector((state) => state.auth.sales);
+  const history = useHistory();
+  const viewRecord = (record) =>
+    history.push("/sales/npr/" + record.npr_id, record);
   return (
     <>
       <h1>NPR List</h1>
@@ -99,6 +102,9 @@ const NPRTable = ({ dataSource }) => {
           pageSize: 15,
           pageSizeOptions: ["10", "15", "20", "25", "30", "50"],
         }}
+        onRow={(record) => ({
+          onClick: () => viewRecord(record),
+        })}
       />
     </>
   );
