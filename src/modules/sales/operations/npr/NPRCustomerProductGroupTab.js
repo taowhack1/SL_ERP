@@ -1,9 +1,10 @@
 import { Checkbox, Col, Row, Tabs } from "antd";
 import Text from "antd/lib/typography/Text";
-import React from "react";
-
+import React, { useContext } from "react";
+import { NPRFormContext } from "./RDForm";
 import CustomLabel from "../../../../components/CustomLabel";
-const NPRCustomerProductGroupTab = ({ state }) => {
+const NPRCustomerProductGroupTab = () => {
+  const { state } = useContext(NPRFormContext);
   return (
     <>
       <Row className="col-2">

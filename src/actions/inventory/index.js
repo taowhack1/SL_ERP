@@ -6,6 +6,7 @@ import {
   GET_ITEM_TYPE,
   GET_ITEM_CATEGORY,
   GET_UOM,
+  SET_LOADING,
 } from "../types";
 
 import {
@@ -15,7 +16,7 @@ import {
   api_get_item_list,
 } from "../../include/js/api";
 
-import { header_config } from "../../include/js/main_config";
+import { errorText, header_config } from "../../include/js/main_config";
 import axios from "axios";
 import {
   api_get_item_category,
@@ -28,16 +29,23 @@ import {
   get_stock_on_hand,
   api_get_item_control,
 } from "../../include/js/api";
-
-export const getItemType = () => {
+import { message } from "antd";
+import { sortData } from "../../include/js/function_main";
+const GET_SAMPLE_ITEMS = "GET_SAMPLE_ITEMS";
+const apiSampleItem = `/sales/item_sample`;
+const getItemType = () => {
   console.log("getItemType");
   return axios
     .get(api_get_item_type, header_config)
     .catch((error) => console.error(error));
 };
-export const getMasterDataItem = (user, setLoading, auth) => async (
-  dispatch
-) => {
+const getUOM = () => {
+  console.log("getUOM");
+  return axios
+    .get(`${api_get_item_uom}`, header_config)
+    .catch((error) => console.error(error));
+};
+const getMasterDataItem = (user, setLoading, auth) => async (dispatch) => {
   try {
     const user_name = user ?? "";
     const get_type = axios.get(
@@ -88,7 +96,7 @@ export const getMasterDataItem = (user, setLoading, auth) => async (
   }
 };
 
-export const get_location_shelf_by_item_id = (item_id) => async (dispatch) => {
+const get_location_shelf_by_item_id = (item_id) => async (dispatch) => {
   try {
     await axios
       .get(`${api_get_location_shelf_by_item_id}/${item_id}`, header_config)
@@ -100,7 +108,7 @@ export const get_location_shelf_by_item_id = (item_id) => async (dispatch) => {
   }
 };
 
-export const get_lot_batch_by_item_id_shelf = (item_id) => async (dispatch) => {
+const get_lot_batch_by_item_id_shelf = (item_id) => async (dispatch) => {
   try {
     await axios
       .get(`${api_get_lot_batch_by_item_id_shelf}/${item_id}`, header_config)
@@ -115,27 +123,96 @@ export const get_lot_batch_by_item_id_shelf = (item_id) => async (dispatch) => {
   }
 };
 
-export const get_report_stock = () => (dispatch) => {
+const get_report_stock = () => (dispatch) => {
   axios.get(get_stock_on_hand, header_config).then((res) => {
     dispatch({ type: GET_REPORT_STOCK, payload: res.data[0] });
   });
 };
 
-export const getItemCategoryList = () => (dispatch) => {
+const getItemCategoryList = () => (dispatch) => {
   axios.get(api_get_item_category, header_config).then((res) => {
     console.log(res);
     dispatch({ type: GET_ITEM_CATEGORY, payload: res.data[0] });
   });
 };
-export const getUOMList = () => (dispatch) => {
+const getUOMList = () => (dispatch) => {
   axios.get(api_get_item_uom, header_config).then((res) => {
     dispatch({ type: GET_UOM, payload: res.data[0] });
   });
 };
 
-export const updateProcessStatus = (data, callback) => {
+const updateProcessStatus = (data, callback) => {
   console.log("updateStatus");
   data.commit = 1;
   // data = {process_status_id : '3', user_name : '2563003', process_id : '30', commit : 1}
   return axios.put(`${api_approve}/${data.process_id}`, data, header_config);
+};
+
+const getSampleItems = () => (dispatch) => {
+  dispatch({ type: SET_LOADING, payload: true });
+  try {
+    axios
+      .get(`${apiSampleItem}`)
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch({ type: GET_SAMPLE_ITEMS, payload: sortData(res.data[0]) });
+        }
+      })
+      .catch((error) => {
+        if (!error.response) return message.error(errorText.network);
+        if (error.response) return message.error(errorText.getData);
+        console.log(error.response);
+      });
+  } catch (error) {
+    console.log(error);
+    message.error(errorText.getData);
+    dispatch({ type: SET_LOADING, payload: false });
+  }
+};
+
+const getSampleItemById = (id = null) => {
+  console.log("getSampleItem", id);
+  if (id === null || id === undefined)
+    return message.error("Error ! Missing Sameple ID.");
+  try {
+    return axios
+      .get(`${apiSampleItem}/${id}`, header_config)
+      .then((res) => {
+        console.log("then");
+        console.log("res ", res);
+        if (res.data) {
+          return { success: true, data: res.data };
+        } else {
+          message.error(errorText.getData);
+          return { success: false, data: null };
+        }
+      })
+      .catch((error) => {
+        console.log("catch");
+        if (!error.response) message.error(errorText.network);
+        if (error.response) message.error(errorText.getData);
+        return { success: false, data: null, error: error.response };
+      });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
+
+export {
+  getItemType,
+  getUOM,
+  getMasterDataItem,
+  get_location_shelf_by_item_id,
+  get_lot_batch_by_item_id_shelf,
+  get_report_stock,
+  getItemCategoryList,
+  getUOMList,
+  updateProcessStatus,
+  getSampleItems,
+  getSampleItemById,
+  apiSampleItem,
+  GET_SAMPLE_ITEMS,
 };

@@ -1,8 +1,10 @@
 import { Checkbox, Col, Row } from "antd";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useContext } from "react";
 import CustomLabel from "../../../../components/CustomLabel";
-const NPRGeneralDetailTab = ({ state }) => {
+import { NPRFormContext } from "./RDForm";
+const NPRGeneralDetailTab = () => {
+  const { state } = useContext(NPRFormContext);
   return (
     <>
       <div style={{ padding: "0px 10px" }}>
@@ -13,7 +15,7 @@ const NPRGeneralDetailTab = ({ state }) => {
                 <CustomLabel label="Declare weight :" />
               </Col>
               <Col span={16}>
-                <Text>{state.npr_declear_weight || "-"}</Text>
+                <Text>{state.npr_declare_weight || "-"}</Text>
               </Col>
             </Row>
 

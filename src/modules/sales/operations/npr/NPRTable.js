@@ -1,4 +1,5 @@
 import { Table } from "antd";
+import Text from "antd/lib/typography/Text";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
@@ -23,7 +24,11 @@ const columns = [
     width: "10%",
   },
   {
-    title: "Product",
+    title: (
+      <div className="text-center">
+        <Text>Product</Text>
+      </div>
+    ),
     align: "left",
     dataIndex: "npr_product_name",
     width: "20%",
@@ -31,7 +36,11 @@ const columns = [
     render: (val) => val || "-",
   },
   {
-    title: "Customer",
+    title: (
+      <div className="text-center">
+        <Text>Customer</Text>
+      </div>
+    ),
     align: "left",
     dataIndex: "npr_customer_name",
     width: "20%",
@@ -39,7 +48,11 @@ const columns = [
     render: (val) => val || "-",
   },
   {
-    title: "Sales Person",
+    title: (
+      <div className="text-center">
+        <Text>Sales Person</Text>
+      </div>
+    ),
     align: "left",
     dataIndex: "npr_created_by_name",
     width: "15%",
@@ -50,9 +63,13 @@ const columns = [
     title: "R&D",
     children: [
       {
-        title: "PIC",
+        title: (
+          <div className="text-center">
+            <Text>PIC</Text>
+          </div>
+        ),
         align: "left",
-        dataIndex: "npr_responsed_by",
+        dataIndex: "npr_responsed_required_by_name",
         width: "15%",
         ellipsis: true,
         render: (val) => val || "-",
@@ -77,21 +94,18 @@ const columns = [
         dataIndex: "tg_trans_status_id",
         width: "10%",
         ellipsis: true,
-        render: (val) => val || "-",
       },
     ],
   },
 ];
-// useEffect(() => {
 
-// }, []);
 const NPRTable = ({ dataSource }) => {
   const history = useHistory();
   const viewRecord = (record) =>
     history.push("/sales/npr/" + record.npr_id, record);
+  console.log("NPRTable ", dataSource);
   return (
     <>
-      <h1>NPR List</h1>
       <Table
         size={"small"}
         rowKey={"id"}

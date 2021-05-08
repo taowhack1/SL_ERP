@@ -34,6 +34,7 @@ import {
   GET_PD_RECEIVE_LIST,
   RESET_PD_RECEIVE,
   GET_PD_RECEIVE_JOB_LIST,
+  SET_LOADING,
 } from "../actions/types";
 
 import {
@@ -44,7 +45,9 @@ import {
   GET_RETURN_LIST_REQUEST,
   GET_RETURN_LIST_SUCCESS,
 } from "../actions/inventory/operation/return/returnActions";
+import { GET_SAMPLE_ITEMS } from "../actions/inventory";
 const initialState = {
+  loading: false,
   item: {
     data_head: {},
     data_detail: [],
@@ -63,6 +66,7 @@ const initialState = {
     item_list: [],
     shelf: [],
     item_part: [],
+    sampleItems: [],
   },
   configurations: {
     type: [],
@@ -114,6 +118,8 @@ const initialState = {
 };
 export default (state = initialState, action) => {
   switch (action.type) {
+    case SET_LOADING:
+      return { ...state, loading: action.payload };
     case GET_MASTER_DATA_ITEM:
       return {
         ...state,
@@ -123,6 +129,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         master_data: { ...state.master_data, item_list: action.payload },
+      };
+    case GET_SAMPLE_ITEMS:
+      return {
+        ...state,
+        loading: false,
+        master_data: { ...state.master_data, sampleItems: action.payload },
       };
     case GET_ITEM_BY_ID:
       return {

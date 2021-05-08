@@ -106,6 +106,9 @@ import ProductionSelectMachine from "./modules/production/Operation/production/p
 import ProductionMain from "./modules/production/Operation/production/ProductionMain";
 import NPRList from "./modules/sales/operations/npr";
 import RDForm from "./modules/sales/operations/npr/RDForm";
+import TemporaryItems from "./modules/inventory/item/temporaryItem";
+import TempItemCreate from "./modules/inventory/item/temporaryItem/TempItemCreate";
+import TempItemForm from "./modules/inventory/item/temporaryItem/TempItemForm";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -232,6 +235,18 @@ const App = (props) => {
               path="/inventory/items/edit/:id"
               component={ItemCreate}
             />
+            <Route exact path="/inventory/master_data/temp_item">
+              <TemporaryItems />
+            </Route>
+            <Route exact path="/inventory/master_data/temp_item/create">
+              <TempItemCreate />
+            </Route>
+            {/* <Route exact path="/inventory/master_data/temp_item/view/:id">
+              <TempItemCreate />
+            </Route> */}
+            <Route exact path="/inventory/master_data/temp_item/:action/:id?">
+              <TempItemForm />
+            </Route>
             {/* INVENTORY CONFIGURATION */}
             <Route exact path="/inventory/configurations/type">
               <Type />

@@ -1,6 +1,7 @@
 import { GET_ALL_ITEMS, GET_ITEM_BY_ID } from "../types";
 import {
   api_server,
+  errorText,
   header_config,
   report_server,
 } from "../../include/js/main_config";
@@ -34,7 +35,7 @@ import {
   sortDataWithoutCommit,
 } from "../../include/js/function_main";
 import { DeleteOutlined, PrinterOutlined } from "@ant-design/icons";
-import { itemVendorDocumentFields } from "../../modules/inventory/config/item";
+import { apiSampleItem } from ".";
 
 const openNotificationWithIcon = (type, title, text) => {
   notification[type]({
@@ -469,7 +470,7 @@ export const upDateItem = (item_id, data, user_name, redirect) => async (
             access_right.packaging &&
               bind_packaging(item_id, data_packaging_detail),
             // access_right.attach_file &&
-            //   item_save_file(item_id, data_file, user_name),
+            item_save_file(item_id, data_file, user_name),
             access_right.filling && bind_filling(item_id, data_filling),
           ])
             .then((data) => {
@@ -837,7 +838,12 @@ export const getFGMaterialList = async (
   );
 };
 
-export const getItemAction = ({ type_id, button_cancel, item_no }) => {
+export const getItemAction = (
+  { type_id, button_cancel, item_no },
+  data_file
+) => {
+  const { certificate } = data_file;
+  console.log(certificate);
   let action = [];
   if (button_cancel)
     action.push({
@@ -878,7 +884,8 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
       ]);
       break;
     case 3:
-      return action.concat([
+      action = [
+        ...action,
         {
           name: (
             <span>
@@ -897,28 +904,31 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
           ),
           link: `${report_server}/report_bulk_specification.aspx?item_code=${item_no}`,
         },
-        {
+        certificate["9"].url && {
           name: (
             <span>
               <PrinterOutlined className="pd-right-1 button-icon" />
               Process Specification
             </span>
           ),
-          link: `${report_server}/report_process_specification.aspx?item_no=${item_no}`,
+          link: `${certificate["9"].url}`,
         },
-      ]);
+      ];
+
+      break;
     case 4:
-      return action.concat([
-        {
+      action = [
+        ...action,
+        certificate["8"].url && {
           name: (
             <span>
               <PrinterOutlined className="pd-right-1 button-icon" />
               Finished Product Specification
             </span>
           ),
-          link: `${report_server}/report_fg_package.aspx?item_code=${item_no}`,
+          link: `${certificate["8"].url}`,
         },
-      ]);
+      ];
 
     default:
       break;
@@ -936,3 +946,53 @@ export const getItemAction = ({ type_id, button_cancel, item_no }) => {
   // },
   // ]
 };
+
+const saveSampleItem = (id = null, data) => {
+  console.log("saveSampleItem", id, data);
+  try {
+    return !id
+      ? axios
+          .post(`${apiSampleItem}`, [data], header_config)
+          .then((res) => {
+            console.log("then");
+            console.log("res ", res);
+            if (res.data) {
+              return { success: true, data: res.data };
+            } else {
+              message.error(errorText.getData);
+              return { success: false, data: null };
+            }
+          })
+          .catch((error) => {
+            console.log("catch");
+            if (!error.response) message.error(errorText.network);
+            if (error.response) message.error(errorText.getData);
+            return { success: false, data: null, error: error.response };
+          })
+      : axios
+          .put(`${apiSampleItem}/${id}`, [data], header_config)
+          .then((res) => {
+            console.log("then");
+            console.log("res ", res);
+            if (res.data) {
+              return { success: true, data: res.data };
+            } else {
+              message.error(errorText.getData);
+              return { success: false, data: null };
+            }
+          })
+          .catch((error) => {
+            console.log("catch");
+            if (!error.response) message.error(errorText.network);
+            if (error.response) message.error(errorText.getData);
+            return { success: false, data: null, error: error.response };
+          });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
+
+export { saveSampleItem };

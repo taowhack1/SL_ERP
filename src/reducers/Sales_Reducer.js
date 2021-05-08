@@ -1,6 +1,6 @@
 /** @format */
 
-import { GET_NPR_LIST } from "../actions/sales/nprActions";
+import { GET_NPR_ITEM_LIST, GET_NPR_LIST } from "../actions/sales/nprActions";
 import {
   SET_QN_LIST,
   RESET_QN,
@@ -31,6 +31,7 @@ const inititalState = {
   },
   operations: {
     npr: {
+      itemList: [],
       list: [],
     },
   },
@@ -87,6 +88,18 @@ export default (state = inititalState, action) => {
           npr: {
             ...state.npr,
             list: action.payload,
+          },
+        },
+      };
+    case GET_NPR_ITEM_LIST:
+      return {
+        ...state,
+        loading: false,
+        operations: {
+          ...state.operations,
+          npr: {
+            ...state.npr,
+            itemList: action.payload,
           },
         },
       };

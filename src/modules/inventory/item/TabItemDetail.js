@@ -42,13 +42,13 @@ const TabItemDetail = ({
     <>
       <Row>
         <Col span={12} className={"col-border-right"}>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <CustomLabel label={"Item type :"} require readOnly={readOnly} />
             </Col>
             <Col span={16}>
               {readOnly ? (
-                <Text className='text-view'>
+                <Text className="text-view">
                   {data_head.type_name ? data_head.type_name : "-"}
                 </Text>
               ) : (
@@ -57,9 +57,9 @@ const TabItemDetail = ({
                   disabled={disabled_field}
                   showSearch
                   placeholder={"Item type"}
-                  name='type_id'
-                  field_id='type_id'
-                  field_name='type_name'
+                  name="type_id"
+                  field_id="type_id"
+                  field_name="type_name"
                   value={data_head.type_name}
                   data={master_data.item_type}
                   onChange={(data, option) => {
@@ -92,7 +92,7 @@ const TabItemDetail = ({
             </Col>
             <Col span={2}></Col>
           </Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <CustomLabel
                 label={"Unit of Measure :"}
@@ -102,7 +102,7 @@ const TabItemDetail = ({
             </Col>
             <Col span={16}>
               {readOnly ? (
-                <Text className='text-view'>
+                <Text className="text-view">
                   {data_head.uom_no_name ? data_head.uom_no_name : "-"}
                 </Text>
               ) : (
@@ -110,9 +110,9 @@ const TabItemDetail = ({
                   allowClear
                   showSearch
                   placeholder={"Unit of measure"}
-                  name='uom_id'
-                  field_id='uom_id'
-                  field_name='uom_no_name'
+                  name="uom_id"
+                  field_id="uom_id"
+                  field_name="uom_no_name"
                   value={data_head.uom_no_name}
                   data={master_data.item_uom}
                   onChange={(data, option) => {
@@ -146,24 +146,25 @@ const TabItemDetail = ({
             <Col span={2} className={"pd-left-1"}>
               {data_head.uom_id && (
                 <Tooltip
-                  title='Config UOM Conversion'
-                  onClick={() => setModalVisible(true)}>
-                  <SwapOutlined className='button-icon font-20' />
+                  title="Config UOM Conversion"
+                  onClick={() => setModalVisible(true)}
+                >
+                  <SwapOutlined className="button-icon font-20" />
                 </Tooltip>
               )}
             </Col>
           </Row>
           {!readOnly && data_head.uom_id && (
-            <Row className='col-2 row-margin-vertical'>
+            <Row className="col-2 row-margin-vertical">
               <Col span={6}></Col>
               <Col span={16}>
-                <span className='require'>* Click icon</span>
+                <span className="require">* Click icon</span>
                 <SwapOutlined
                   // style={{ fontSize: 20 }}
                   onClick={() => setModalVisible(true)}
-                  className='button-icon pd-left-2 pd-right-2'
+                  className="button-icon pd-left-2 pd-right-2"
                 />
-                <span className='require'>
+                <span className="require">
                   to 'Edit' or 'View' UOM conversion
                 </span>
               </Col>
@@ -179,7 +180,7 @@ const TabItemDetail = ({
               UOMList={master_data.item_uom}
             />
           )}
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <CustomLabel
                 label={"Shelf life (day) :"}
@@ -189,12 +190,12 @@ const TabItemDetail = ({
             </Col>
             <Col span={16}>
               {readOnly ? (
-                <Text className='text-view'>
+                <Text className="text-view">
                   {data_head.item_shelf_life ? data_head.item_shelf_life : "-"}
                 </Text>
               ) : (
                 <InputNumber
-                  name='item_shelf_life'
+                  name="item_shelf_life"
                   placeholder={"Shelf life (day)"}
                   min={0}
                   step={1}
@@ -212,7 +213,7 @@ const TabItemDetail = ({
             </Col>
             <Col span={2}></Col>
           </Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <CustomLabel
                 label={"Customer name :"}
@@ -222,7 +223,7 @@ const TabItemDetail = ({
             </Col>
             <Col span={16}>
               {readOnly ? (
-                <Text className='text-view'>
+                <Text className="text-view">
                   {data_head.customer_no_name
                     ? data_head.customer_no_name
                     : "-"}
@@ -233,9 +234,9 @@ const TabItemDetail = ({
                   disabled={data_head.item_id ? 1 : 0}
                   showSearch
                   placeholder={"Customer name"}
-                  name='customer_id'
-                  field_id='customer_id'
-                  field_name='customer_no_name'
+                  name="customer_id"
+                  field_id="customer_id"
+                  field_name="customer_no_name"
                   value={data_head.customer_no_name}
                   data={customers}
                   onChange={(data, option) => {
@@ -266,7 +267,7 @@ const TabItemDetail = ({
             </Col>
             <Col span={2}></Col>
           </Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <CustomLabel
                 label={"Identify benefit :"}
@@ -276,7 +277,7 @@ const TabItemDetail = ({
             </Col>
             <Col span={16}>
               {readOnly ? (
-                <Text className='text-view'>
+                <Text className="text-view">
                   {data_head.identify_benefit_no_name
                     ? data_head.identify_benefit_no_name
                     : "-"}
@@ -287,9 +288,9 @@ const TabItemDetail = ({
                   disabled={data_head.item_id ? 1 : 0}
                   showSearch
                   placeholder={"Identify benefit"}
-                  name='identify_benefit_id'
-                  field_id='identify_benefit_id'
-                  field_name='identify_benefit_no_name'
+                  name="identify_benefit_id"
+                  field_id="identify_benefit_id"
+                  field_name="identify_benefit_no_name"
                   value={data_head.identify_benefit_no_name}
                   data={master_data.item_benefit}
                   onChange={(data, option) => {
@@ -320,13 +321,13 @@ const TabItemDetail = ({
             <Col span={2}></Col>
           </Row>
           {data_head.type_id === 3 && (
-            <Row className='col-2 row-margin-vertical'>
+            <Row className="col-2 row-margin-vertical">
               <Col span={6}>
                 <CustomLabel label={"Effective Date :"} readOnly={readOnly} />
               </Col>
               <Col span={16}>
                 {readOnly ? (
-                  <Text className='text-view text-center'>
+                  <Text className="text-view text-center">
                     {data_head.item_formula_effective_date
                       ? data_head.item_formula_effective_date
                       : "-"}
@@ -336,7 +337,7 @@ const TabItemDetail = ({
                     name={"item_formula_effective_date"}
                     format={"DD/MM/YYYY"}
                     className={"full-width"}
-                    placeholder='Effective Date'
+                    placeholder="Effective Date"
                     required
                     value={
                       data_head.item_formula_effective_date
@@ -368,15 +369,15 @@ const TabItemDetail = ({
             </Row>
           )}
         </Col>
-        <Col span={12} className='row-col-right'>
-          <Row className='col-2 row-margin-vertical'>
+        <Col span={12} className="row-col-right">
+          <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
             <Col span={6}>
               <CustomLabel label={"Category :"} require readOnly={readOnly} />
             </Col>
             <Col span={16}>
               {readOnly ? (
-                <Text className='text-view'>
+                <Text className="text-view">
                   {data_head.category_name ? data_head.category_name : "-"}
                 </Text>
               ) : (
@@ -385,9 +386,9 @@ const TabItemDetail = ({
                   showSearch
                   disabled={!disabled_field && data_head.type_id ? 0 : 1}
                   placeholder={"Category"}
-                  name='category_id'
-                  field_id='category_id'
-                  field_name='category_name'
+                  name="category_id"
+                  field_id="category_id"
+                  field_name="category_name"
                   value={data_head.category_name}
                   data={
                     data_head.type_id
@@ -421,7 +422,7 @@ const TabItemDetail = ({
               )}
             </Col>
           </Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
             <Col span={6}>
               <CustomLabel
@@ -432,7 +433,7 @@ const TabItemDetail = ({
             </Col>
             <Col span={16}>
               {readOnly ? (
-                <Text className='text-view'>
+                <Text className="text-view">
                   {data_head.item_control_name
                     ? data_head.item_control_name
                     : "-"}
@@ -443,9 +444,9 @@ const TabItemDetail = ({
                   // disabled={data_head.item_id ? 1 : 0}
                   showSearch
                   placeholder={"Storage Condition"}
-                  name='item_control_id'
-                  field_id='item_control_id'
-                  field_name='item_control_name'
+                  name="item_control_id"
+                  field_id="item_control_id"
+                  field_name="item_control_name"
                   value={data_head.item_control_name}
                   data={master_data.item_control}
                   onChange={(data, option) => {
@@ -464,14 +465,14 @@ const TabItemDetail = ({
             </Col>
           </Row>
 
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
             <Col span={6}>
               <CustomLabel label={"Price approve by :"} readOnly={readOnly} />
             </Col>
             <Col span={16} className={readOnly ? "" : "pd-left-2"}>
               {readOnly ? (
-                <Text className='text-view'>
+                <Text className="text-view">
                   {data_head.item_price_approve === 1 ? "SL" : "Customer"}
                 </Text>
               ) : (
@@ -481,27 +482,28 @@ const TabItemDetail = ({
                       item_price_approve: e.target.value,
                     })
                   }
-                  value={data_head.item_price_approve}>
-                  <Radio className='radio-vertical' value={1}>
+                  value={data_head.item_price_approve}
+                >
+                  <Radio className="radio-vertical" value={1}>
                     SL
                   </Radio>
-                  <Radio className='radio-vertical' value={2}>
+                  <Radio className="radio-vertical" value={2}>
                     Customer
                   </Radio>
                 </Radio.Group>
               )}
             </Col>
           </Row>
-          <Row className='col-2 row-tab-margin'></Row>
-          <Row className='col-2 row-margin-vertical'>
+          <Row className="col-2 row-tab-margin"></Row>
+          <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
             <Col span={6}>
               <CustomLabel label={"Sale to :"} readOnly={readOnly} />
             </Col>
-            <Col span={16} className='pd-left-2'>
+            <Col span={16} className="pd-left-2">
               {readOnly ? (
                 <>
-                  <Space align='baseline'>
+                  <Space align="baseline">
                     {data_head.item_sale_local ? (
                       <CheckSquareOutlined />
                     ) : (
@@ -510,7 +512,7 @@ const TabItemDetail = ({
                     <Text>Local</Text>
                   </Space>
                   <br />
-                  <Space align='baseline'>
+                  <Space align="baseline">
                     {data_head.item_sale_export ? (
                       <CheckSquareOutlined />
                     ) : (
@@ -521,7 +523,7 @@ const TabItemDetail = ({
                 </>
               ) : (
                 <>
-                  <Space align='baseline'>
+                  <Space align="baseline">
                     <Checkbox
                       checked={data_head.item_sale_local}
                       onChange={(e) =>
@@ -533,7 +535,7 @@ const TabItemDetail = ({
                     <Text>Local</Text>
                   </Space>
                   <br />
-                  <Space align='baseline'>
+                  <Space align="baseline">
                     <Checkbox
                       checked={data_head.item_sale_export}
                       onChange={(e) =>
@@ -551,18 +553,18 @@ const TabItemDetail = ({
         </Col>
       </Row>
 
-      <Row className='col-2 mt-2'>
+      <Row className="col-2 mt-2">
         <Col span={24}>
-          <Space direction='vertical' className={"full-width"}>
+          <Space direction="vertical" className={"full-width"}>
             <Text strong>Notes </Text>
             {readOnly ? (
-              <Text className='text-view'>
+              <Text className="text-view">
                 {data_head.item_remark ? data_head.item_remark : "-"}
               </Text>
             ) : (
               <TextArea
-                name='item_remark'
-                placeholder='Notes'
+                name="item_remark"
+                placeholder="Notes"
                 onChange={(e) =>
                   upDateFormValue({ item_remark: e.target.value })
                 }

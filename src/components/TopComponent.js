@@ -40,7 +40,10 @@ function TopContent(props) {
     keepLog.keep_log_action("Click Edit Button");
     props.edit === "modal"
       ? props.openModal("Edit")
-      : props.history.push(props.edit.path);
+      : props.history.push({
+          pathname: props.edit.path,
+          state: props.edit?.state,
+        });
   };
   const onSave = () => {
     keepLog.keep_log_action("Click Save Button");

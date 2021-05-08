@@ -1,7 +1,8 @@
 import { Checkbox, Col, Row, Table } from "antd";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useContext } from "react";
 import CustomLabel from "../../../../components/CustomLabel";
+import { NPRFormContext } from "./RDForm";
 const columns = [
   {
     title: "",
@@ -30,31 +31,33 @@ const columns = [
     width: "30%",
   },
 ];
-const NPRSampleRequestTab = ({ state }) => {
+const NPRSampleRequestTab = () => {
+  const { state } = useContext(NPRFormContext);
+
   const formulation = [
     {
       subject_left: "TARGET PRICE",
       subject_right: "TAXURE APPERANCE",
-      val_left: state.npr_target_price,
-      val_right: state.npr_texture_apperance,
+      val_left: state.npr_target_price || "-",
+      val_right: state.npr_texture_apperance || "-",
     },
     {
       subject_left: "PRODUCT BENCHMARK",
       subject_right: "COLOR",
-      val_left: state.npr_production_benchmark,
-      val_right: state.npr_color,
+      val_left: state.npr_production_benchmark || "-",
+      val_right: state.npr_color || "-",
     },
     {
       subject_left: "PRODUCT CLAIM",
       subject_right: "ODOR",
-      val_left: state.npr_production_claim,
-      val_right: state.npr_odor,
+      val_left: state.npr_production_claim || "-",
+      val_right: state.npr_odor || "-",
     },
     {
       subject_left: "FORMULA LEVEL",
       subject_right: "SPECIAL REQUIREMENT",
-      val_left: state.npr_formula_level,
-      val_right: state.npr_special_requirement,
+      val_left: state.npr_formula_level || "-",
+      val_right: state.npr_special_requirement || "-",
     },
   ];
   return (

@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getNPRList } from "../../../../actions/sales/nprActions";
+import DetailLoading from "../../../../components/DetailLoading";
 import MainLayout from "../../../../components/MainLayout";
 import NPRTable from "./NPRTable";
 
 const NPRList = () => {
   const dispatch = useDispatch();
-  const { list } = useSelector((state) => state.sales.operations.npr);
+  const { operations, loading } = useSelector((state) => state.sales);
+  const { list } = operations.npr;
   const [state, setState] = useState(list);
   useEffect(() => {
     dispatch(getNPRList());
   }, []);
+  useEffect(() => {
+    setState(list);
+  }, [list]);
   const layoutConfig = {
     projectId: 7,
     title: "SALES",
@@ -48,7 +53,7 @@ const NPRList = () => {
   return (
     <>
       <MainLayout {...layoutConfig}>
-        <NPRTable dataSource={state} />
+        {loading ? <DetailLoading /> : <NPRTable dataSource={state} />}
       </MainLayout>
     </>
   );

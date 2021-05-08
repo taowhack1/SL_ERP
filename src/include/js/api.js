@@ -2,6 +2,7 @@
 
 //HRM
 export const api_get_production_emp = `/hrm/employees/production`;
+export const api_get_rd_emp = `/hrm/employees/rd`;
 //qc
 export const api_qc_receive_list = `/qa/qc/item`;
 export const api_qc_receive_detail_list = `/qa/qc/item/detail`;

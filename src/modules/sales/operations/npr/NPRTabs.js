@@ -1,29 +1,55 @@
 import { Tabs } from "antd";
-import React from "react";
+import React, { useContext } from "react";
+import { useSelector } from "react-redux";
 
 import NPRConponentsTab from "./NPRConponentsTab";
 import NPRCustomerProductGroupTab from "./NPRCustomerProductGroupTab";
+import NPRFormulaTab from "./NPRFormulaTab";
 import NPRGeneralDetailTab from "./NPRGeneralDetailTab";
+import NPRPICTab from "./NPRPICTab";
 import NPRSampleRequestTab from "./NPRSampleRequestTab";
-const NPRTabs = ({ state }) => {
+import { NPRFormContext } from "./RDForm";
+const NPRTabs = () => {
+  const {
+    state: { tg_trans_status_id },
+  } = useContext(NPRFormContext);
+  const {
+    authData: { department_id },
+  } = useSelector((state) => state.auth);
   return (
     <>
-      <Tabs>
+      <Tabs defaultActiveKey={"0"}>
         <Tabs.TabPane tab={"General Detail"} key={0}>
-          <NPRGeneralDetailTab state={state} />
+          <NPRGeneralDetailTab />
         </Tabs.TabPane>
         <Tabs.TabPane tab={"Customer & Product Group"} key={1}>
-          <NPRCustomerProductGroupTab state={state} />
+          <NPRCustomerProductGroupTab />
         </Tabs.TabPane>
         <Tabs.TabPane tab={"Details of Sample Request"} key={2}>
-          <NPRSampleRequestTab state={state} />
+          <NPRSampleRequestTab />
         </Tabs.TabPane>
         <Tabs.TabPane tab={"Components"} key={3}>
-          <NPRConponentsTab state={state} />
+          <NPRConponentsTab />
         </Tabs.TabPane>
+        {
+          // 10 = MIS , 11 = RD , 13 = PU , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE
+          <>
+            {[1, 10, 11, 90].includes(department_id) && (
+              <Tabs.TabPane tab={"R&D PIC"} key={4}>
+                <NPRPICTab />
+              </Tabs.TabPane>
+            )}
+
+            {tg_trans_status_id !== 1 && (
+              <Tabs.TabPane tab={"R&D Formula"} key={5}>
+                <NPRFormulaTab />
+              </Tabs.TabPane>
+            )}
+          </>
+        }
       </Tabs>
     </>
   );
 };
 
-export default NPRTabs;
+export default React.memo(NPRTabs);

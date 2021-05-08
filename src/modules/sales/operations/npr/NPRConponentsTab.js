@@ -1,58 +1,70 @@
 import { Checkbox, Col, Row, Table, Tabs } from "antd";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useContext } from "react";
 import CustomLabel from "../../../../components/CustomLabel";
-
+import { convertDigit } from "../../../../include/js/main_config";
+import { NPRFormContext } from "./RDForm";
 const componentColumns = [
   {
     title: "Item Code",
-    dataIndex: "item_no",
+    dataIndex: "npr_detail_item_no",
     align: "left",
-    render: (val) => <Text strong>{val}</Text>,
     width: "13%",
+    render: (val) => val || "-",
   },
   {
     title: "Description",
-    dataIndex: "item_name",
+    dataIndex: "npr_detail_item_name",
     align: "left",
     width: "20%",
+    ellipsis: true,
+    render: (val) => val || "-",
   },
   {
     title: "Supply by",
-    dataIndex: "weight_machine_user_name",
+    dataIndex: "npr_detail_supply_by",
     align: "left",
-    render: (val) => <Text strong>{val}</Text>,
-    width: "15%",
+    width: "10%",
+    render: (val) => val || "-",
   },
   {
     title: "Supplier",
-    dataIndex: "",
+    dataIndex: "npr_detail_supply_name",
     align: "left",
     width: "20%",
+    ellipsis: true,
+    render: (val) => val || "-",
   },
   {
-    title: "% Waste with customer",
-    dataIndex: "",
-    align: "left",
-    width: "10%",
+    title: (
+      <div className="text-center">
+        <Text>% Waste with customer</Text>
+      </div>
+    ),
+    dataIndex: "npr_detail_watse_percent_qty",
+    align: "right",
+    width: "7%",
+    render: (val) => convertDigit(val || 0, 4),
   },
   {
     title: "Picture",
     dataIndex: "",
     align: "left",
     width: "5%",
+    render: (val) => val || "-",
   },
 ];
-const NPRConponentsTab = ({ state }) => {
+const NPRConponentsTab = () => {
+  const { state } = useContext(NPRFormContext);
   return (
     <>
       <div className="form-section pd-left-2 pd-right-2">
         <div className="form-section-detail" style={{ padding: 10 }}>
           <Table
             columns={componentColumns}
-            dataSource={[]}
+            dataSource={state.npr_detail}
             pagination={false}
-            rowKey={"id"}
+            rowKey={"npr_detail_id"}
             size={"small"}
             className="full-width"
             bordered

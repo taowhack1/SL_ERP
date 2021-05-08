@@ -1,35 +1,31 @@
-import { Checkbox, Col, Input, Row } from "antd";
-import Text from "antd/lib/typography/Text";
 import React, { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useParams } from "react-router";
-import CustomLabel from "../../../../components/CustomLabel";
 import MainLayout from "../../../../components/MainLayout";
 import NPRTabs from "./NPRTabs";
-import { getNPRByID } from "../../../../actions/sales/nprActions";
+import {
+  getNPRByID,
+  getNPRItemList,
+} from "../../../../actions/sales/nprActions";
 import NPRHead from "./NPRHead";
+import { get_qa_conditions_master } from "../../../../actions/qa/qaTestAction";
+import { useDispatch, useSelector } from "react-redux";
+import DetailLoading from "../../../../components/DetailLoading";
+import { getRDEmp } from "../../../../actions/hrm";
+export const NPRFormContext = React.createContext();
 const initialState = {
   npr_responsed_required_by: null,
   npr_responsed_delivery_date: null,
   user_name: null,
   npr_responsed_remark: null,
   tg_trans_status_id: 1,
+  npr_formula_detail: [],
 };
 const RDForm = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
-  console.log(id);
-
-  const [loading, setLoading] = useState(false);
-  const [state, setState] = useState({});
-  const {
-    register,
-    formState: { error },
-    control,
-    handleSubmit,
-    setValue,
-  } = useForm({
-    defaultValues: initialState,
-  });
+  const [state, setState] = useState(initialState);
+  const { user_name } = useSelector((state) => state.auth.authData);
+  // const { loading } = useSelector((state) => state.sales);
   const layoutConfig = useMemo(
     () => ({
       projectId: 7,
@@ -39,32 +35,32 @@ const RDForm = () => {
       breadcrumb: ["Sales", "NPR"],
       search: false,
       create: "",
-      buttonAction: ["Save", "Discard"],
+      buttonAction: ["Back"],
       edit: {},
+      back: "/sales/npr",
       discard: "/sales/npr",
       save: "function",
-      onSave: () => {
-        handleSubmit(onSubmit);
-      },
     }),
     []
   );
   useEffect(() => {
-    setLoading(true);
     const getData = async () => {
-      // data = await getNPRByID(id);
+      dispatch(getRDEmp());
+      dispatch(getNPRItemList());
+      dispatch(get_qa_conditions_master(3, 1, 1, 1));
       const resp = await getNPRByID(id);
-      if (resp.success) setState(resp.data);
-      setLoading(false);
+      if (resp.success) {
+        setState(resp.data);
+      }
     };
     getData();
   }, [id]);
-  const onSubmit = (data) => console.log("submit", data);
+
   console.log("data", state);
   return (
     <>
       <MainLayout {...layoutConfig}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <NPRFormContext.Provider value={{ id, state, setState, user_name }}>
           <div id="form">
             <div
               className="full-width text-center mb-2"
@@ -75,7 +71,7 @@ const RDForm = () => {
             <NPRHead state={state} />
             <NPRTabs state={state} />
           </div>
-        </form>
+        </NPRFormContext.Provider>
       </MainLayout>
     </>
   );

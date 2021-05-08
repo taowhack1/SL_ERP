@@ -1,5 +1,6 @@
 import numeral from "numeral";
 const errorText = {
+  formValid: "ERROR ! Please fill your form completely.",
   getData:
     "ERROR ! Can't get any data from the server. Please Try again later.",
   tokenExpired: "ERROR ! Session has been expired. Please Sign-in again.",
@@ -59,9 +60,9 @@ const convertDigit = (value, decimalPoint = 6) => {
 };
 // Sv.Test
 const api_server = `http://192.168.5.222:3009`;
-const report_server = `http://192.168.9.211:8080/report_dev`;
+// const report_server = `http://192.168.9.211:8080/report_dev`;
 // Sv.Production
-// export const report_server = `http://192.168.1.211:8080/report_purch`;
+const report_server = `http://192.168.9.211:8080/report_purch`;
 // export const api_server = `http://192.168.1.210:3009`;
 // export const report_server = `http://192.168.5.207`;
 

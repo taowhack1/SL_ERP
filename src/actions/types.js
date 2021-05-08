@@ -12,6 +12,7 @@ export const SET_LOADING = "SET_LOADING";
 export const GET_SELECT_DEP = "GET_SELECT_DEP";
 export const GET_COUNTRY = "GET_COUNTRY";
 export const GET_PRODUCTION_EMP = "GET_PRODUCTION_EMP";
+export const GET_RD_EMP = "GET_RD_EMP";
 
 // System Config.
 export const DECIMAL_UPDATE = "DECIMAL_UPDATE";
