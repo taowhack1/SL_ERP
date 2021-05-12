@@ -67,25 +67,20 @@ const TempItemFormDetailTab = () => {
             </Row>
             <Row className="col-2 row-margin-vertical">
               <Col span={6}>
-                <CustomLabel label="Cost :" />
+                <CustomLabel label="Vendor Name :" />
               </Col>
               <Col span={17}>
                 <Controller
                   render={({ field }) =>
-                    InputNumberField({
+                    InputField({
                       fieldProps: {
                         className: "full-width",
-                        placeholder: "Cost",
-                        defaultValue: 0.0,
-                        min: 0.0,
-                        max: 100,
-                        step: 1.0,
-                        ...getNumberFormat(4),
+                        placeholder: "Vendor Name",
                         onChange: (val) => field.onChange(val || 0),
                       },
                     })
                   }
-                  name="item_sample_cost"
+                  name="item_sample_name_vendor"
                   control={control}
                 />
               </Col>
@@ -148,6 +143,31 @@ const TempItemFormDetailTab = () => {
                 {errors && errors.uom_id && (
                   <span className="error"> * This field is required.</span>
                 )}
+              </Col>
+            </Row>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={6} offset={1}>
+                <CustomLabel label="Cost :" />
+              </Col>
+              <Col span={16}>
+                <Controller
+                  render={({ field }) =>
+                    InputNumberField({
+                      fieldProps: {
+                        className: "full-width",
+                        placeholder: "Cost",
+                        defaultValue: 0.0,
+                        min: 0.0,
+                        max: 100,
+                        step: 1.0,
+                        ...getNumberFormat(4),
+                        onChange: (val) => field.onChange(val || 0),
+                      },
+                    })
+                  }
+                  name="item_sample_cost"
+                  control={control}
+                />
               </Col>
             </Row>
           </Col>
