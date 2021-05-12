@@ -11,10 +11,10 @@ import NPRSampleRequestTab from "./NPRSampleRequestTab";
 import { NPRFormContext } from "./RDForm";
 const NPRTabs = () => {
   const {
-    state: { tg_trans_status_id },
+    state: { tg_trans_status_id, trans_id },
   } = useContext(NPRFormContext);
   const {
-    authData: { department_id },
+    authData: { department_id, user_name },
   } = useSelector((state) => state.auth);
   return (
     <>
@@ -33,19 +33,21 @@ const NPRTabs = () => {
         </Tabs.TabPane>
         {
           // 10 = MIS , 11 = RD , 13 = PU , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE
-          <>
-            {[1, 10, 11, 90].includes(department_id) && (
-              <Tabs.TabPane tab={"R&D PIC"} key={4}>
-                <NPRPICTab />
-              </Tabs.TabPane>
-            )}
+          trans_id !== 1 && (
+            <>
+              {[1, 10, 11, 90].includes(department_id) && (
+                <Tabs.TabPane tab={"R&D PIC"} key={4}>
+                  <NPRPICTab />
+                </Tabs.TabPane>
+              )}
 
-            {tg_trans_status_id !== 1 && (
-              <Tabs.TabPane tab={"R&D Formula"} key={5}>
-                <NPRFormulaTab />
-              </Tabs.TabPane>
-            )}
-          </>
+              {trans_id > 2 && (
+                <Tabs.TabPane tab={"R&D Formula"} key={5}>
+                  <NPRFormulaTab />
+                </Tabs.TabPane>
+              )}
+            </>
+          )
         }
       </Tabs>
     </>

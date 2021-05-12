@@ -50,18 +50,23 @@ const initialStateFormulaQA = {
   qa_method_name: null,
 };
 const RDDevelopmentForm = ({ data, formula, setFormula }) => {
-  const history = useHistory();
-  const { id, user_name, state: mainState } = useContext(NPRFormContext);
-  console.log("mainState", mainState);
+  const { tg_trans_status_id } = data;
+
+  const {
+    id,
+    user_name,
+    department_id,
+    state: mainState,
+  } = useContext(NPRFormContext);
+
   const {
     npr_customer_no: npr_formula_customer_no,
     npr_customer_name: npr_formula_customer_name,
     npr_product_no: npr_formula_product_no,
     npr_product_name: npr_formula_product_name,
     npr_sample_request_qty: npr_formula_sample_qty,
-    //     tg_trans_close_id,
-    // tg_trans_status_id
   } = mainState;
+
   const formRef = {
     npr_formula_customer_no,
     npr_formula_customer_name,
@@ -69,18 +74,22 @@ const RDDevelopmentForm = ({ data, formula, setFormula }) => {
     npr_formula_product_name,
     npr_formula_sample_qty,
   };
-  const { tg_trans_close_id, tg_trans_status_id } = data;
-  console.log("initial formula data", data);
-  // const disabledEdit = tg_trans_status_id !== 4 && tg_trans_close_id !== 3 ? false : true
-  const disabledEdit = tg_trans_status_id !== 4 ? false : true;
+
+  const disabledEdit =
+    tg_trans_status_id !== 4 &&
+    (user_name === mainState.npr_responsed_required_by || department_id === 1)
+      ? false
+      : true;
   const [state, setState] = useState(data);
   const { npr_formula_detail, npr_formula_qa, npr_formula_id } = state;
 
   useEffect(() => {
-    setState({
-      ...data,
-      ...formRef,
-    });
+    data.npr_formula_id
+      ? setState(data)
+      : setState({
+          ...data,
+          ...formRef,
+        });
   }, [data]);
 
   const onSubmit = async () => {
@@ -192,12 +201,14 @@ const RDDevelopmentForm = ({ data, formula, setFormula }) => {
     onChange,
     state,
   };
+
   const onPrintFormula = () => {
     window.open(
       `${report_server}/report_npr_formula.aspx?npr_formula_no=${state.npr_formula_no}`,
       false
     );
   };
+
   const onPrintLabel = () => {
     window.open("//www.youtube.com", false);
   };
@@ -246,6 +257,7 @@ const RDDevelopmentForm = ({ data, formula, setFormula }) => {
                 <CustomSelect
                   allowClear
                   showSearch
+                  disabled={disabledEdit}
                   placeholder={"Select Reference Formula"}
                   data={formula.filter((obj) => obj.npr_formula_id !== null)}
                   field_id="npr_formula_id"

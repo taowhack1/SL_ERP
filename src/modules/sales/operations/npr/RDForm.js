@@ -24,7 +24,9 @@ const RDForm = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [state, setState] = useState(initialState);
-  const { user_name } = useSelector((state) => state.auth.authData);
+  const { user_name, department_id } = useSelector(
+    (state) => state.auth.authData
+  );
   // const { loading } = useSelector((state) => state.sales);
   const layoutConfig = useMemo(
     () => ({
@@ -60,7 +62,9 @@ const RDForm = () => {
   return (
     <>
       <MainLayout {...layoutConfig}>
-        <NPRFormContext.Provider value={{ id, state, setState, user_name }}>
+        <NPRFormContext.Provider
+          value={{ id, state, setState, user_name, department_id }}
+        >
           <div id="form">
             <div
               className="full-width text-center mb-2"

@@ -56,7 +56,12 @@ const initialState = {
 };
 
 const RDFormulaList = () => {
-  const { id } = useContext(NPRFormContext);
+  const {
+    id,
+    user_name,
+    department_id,
+    state: mainState,
+  } = useContext(NPRFormContext);
   const [formula, setFormula] = useState([initialState]);
   useEffect(() => {
     const getNPRFormulaList = async (id) => {
@@ -74,11 +79,17 @@ const RDFormulaList = () => {
     <>
       <div className="form-section-head d-flex">
         <h3>Formula List</h3>
-        {!formula.some((obj) => obj.npr_formula_id === null) && (
-          <Button size="small" className="primary ml-2" onClick={onAddRevision}>
-            Add Rev.
-          </Button>
-        )}
+        {!formula.some((obj) => obj.npr_formula_id === null) &&
+          (user_name === mainState.npr_responsed_required_by ||
+            department_id === 1) && (
+            <Button
+              size="small"
+              className="primary ml-2"
+              onClick={onAddRevision}
+            >
+              Add Rev.
+            </Button>
+          )}
       </div>
       <Tabs>
         {formula.map((obj) => (

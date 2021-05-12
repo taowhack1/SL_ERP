@@ -1,8 +1,31 @@
-import { SearchOutlined } from "@ant-design/icons";
 import { Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useHistory } from "react-router";
+const getSalesStatus = (id, close_id) => {
+  let status = "Draft";
+  switch (true) {
+    case id === 1 && close_id === 1:
+      status = "Draft";
+      break;
+    case id === 2 && close_id === 1:
+      status = "Approve";
+      break;
+    case id === 3 && close_id === 1:
+      status = "Cancel";
+      break;
+    case id === 4 && close_id === 1:
+      status = "Develop";
+      break;
+    case id === 4 && close_id === 3:
+      status = "Finished";
+      break;
+    default:
+      status = "N/A";
+      break;
+  }
+  return status;
+};
 const columns = [
   {
     title: "No.",
@@ -13,7 +36,7 @@ const columns = [
   },
   {
     title: "NPR No.",
-    align: "center",
+    align: "left",
     dataIndex: "npr_no",
     width: "15%",
   },
@@ -72,7 +95,7 @@ const columns = [
         dataIndex: "npr_responsed_required_by_name",
         width: "15%",
         ellipsis: true,
-        render: (val) => val || "-",
+        render: (val) => <Text style={{ color: "blue" }}>{val}</Text> || "-",
       },
       {
         title: "Accept Date",
@@ -86,22 +109,16 @@ const columns = [
         align: "center",
         dataIndex: "npr_responsed_delivery_date",
         width: "10%",
-        render: (val) => val || "-",
-      },
-      {
-        title: "Status",
-        align: "center",
-        dataIndex: "tg_trans_status_id",
-        width: "7%",
-        render: (val, record) => (
-          <SearchOutlined
-            className="button-icon"
-            name="view-status"
-            style={{ padding: "2px 15px" }}
-          />
-        ),
+        render: (val) => <Text style={{ color: "blue" }}>{val}</Text> || "-",
       },
     ],
+  },
+  {
+    title: "Status",
+    align: "center",
+    dataIndex: "trans_status",
+    width: "15%",
+    render: (val, record) => <Text>{val || "N/A"}</Text>,
   },
 ];
 

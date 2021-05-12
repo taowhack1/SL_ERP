@@ -1,10 +1,8 @@
-import { Button, Col, DatePicker, message, Row, Spin } from "antd";
-import React, { useContext, useEffect } from "react";
+import { Button, Col, message, Row, Spin } from "antd";
+import React, { useContext } from "react";
 import CustomLabel from "../../../../components/CustomLabel";
-import CustomSelect from "../../../../components/CustomSelect";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { getRDEmp } from "../../../../actions/hrm";
 import { Controller, useForm } from "react-hook-form";
 import {
   DatePickerField,
@@ -13,14 +11,11 @@ import {
 import { NPRFormContext } from "./RDForm";
 import { SET_LOADING } from "../../../../actions/types";
 import { saveNPRAssignment } from "../../../../actions/sales/nprActions";
-const initialState = {
-  npr_responsed_required_by: null,
-  npr_responsed_delivery_date: null,
-  user_name: null,
-  npr_responsed_remark: null,
-  tg_trans_status_id: 1,
-};
+import { useHistory } from "react-router";
+import Swal from "sweetalert2";
+
 const RDPIC = () => {
+  const history = useHistory();
   const { id, state, setState } = useContext(NPRFormContext);
   const { npr_responsed_delivery_date, npr_responsed_required_by } = state;
   console.log("state", state);
@@ -32,7 +27,6 @@ const RDPIC = () => {
     control,
     formState: { error },
     handleSubmit,
-    reset,
   } = useForm({
     defaultValues: {
       npr_responsed_delivery_date: npr_responsed_delivery_date
@@ -48,7 +42,7 @@ const RDPIC = () => {
       ...data,
       user_name,
       commit: 1,
-      tg_trans_status_id: 2,
+      tg_trans_status_id: 4,
       npr_responsed_remark: null,
       npr_responsed_delivery_date: moment(
         data.npr_responsed_delivery_date
@@ -61,8 +55,18 @@ const RDPIC = () => {
     setTimeout(() => {
       dispatch({ type: SET_LOADING, payload: false });
       if (resp.success) {
-        message.success("Assign PIC Success.");
-        setState(resp.data);
+        // alert("Assign PIC Success.");
+        Swal.fire({
+          title: "Assign PIC Success.",
+          icon: "success",
+          confirmButtonText: `OK`,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            history.push("/sales/npr");
+          }
+        });
+
+        // setState(resp.data);
       }
     }, 1000);
   };
@@ -88,7 +92,7 @@ const RDPIC = () => {
               <Col span={12} className="pd-right-2">
                 <Row className="col-2">
                   <Col span={8}>
-                    <CustomLabel label="Person In Charge :" />
+                    <CustomLabel label="Person In Charge :" require />
                   </Col>
                   <Col span={16}>
                     <Controller
@@ -120,7 +124,7 @@ const RDPIC = () => {
               <Col span={12} className="pd-left-2">
                 <Row className="col-2">
                   <Col span={8}>
-                    <CustomLabel label="Due Date :" />
+                    <CustomLabel label="Due Date :" require />
                   </Col>
                   <Col span={16}>
                     <Controller
