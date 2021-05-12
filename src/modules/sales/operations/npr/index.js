@@ -24,7 +24,7 @@ const NPRList = () => {
     breadcrumb: ["Sales", "NPR"],
     search: true,
     create: "",
-    buttonAction: ["Edit"],
+    buttonAction: [],
     edit: {
       path: "/sales/npr/1",
     },

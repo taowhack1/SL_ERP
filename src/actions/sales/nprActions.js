@@ -8,9 +8,10 @@ const GET_NPR_LIST = "GET_NPR_LIST";
 const GET_NPR_ITEM_LIST = "GET_NPR_ITEM_LIST";
 const apiNPR = `/sales/npr`;
 const apiNPRItems = `/list/item/npr`;
-const apiNPRRD = `/sales/npr/rd`;
+const apiNPRRD = `/sales/npr_rd`;
 const apiGetNPRFormula = `/sales/npr_formula/npr`;
 const apiNPRFormula = `/sales/npr_formula`;
+const apiGetNPRFeedback = `/sales/npr_satisfaction`;
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   try {
@@ -200,6 +201,35 @@ const saveNPRFormula = (id = null, data) => {
     return { success: false, data: null };
   }
 };
+const getNPRFeedback = (id) => {
+  try {
+    if (id === null || id === undefined)
+      return message.error("Error! Missing NPR ID.");
+    return axios
+      .get(`${apiGetNPRFeedback}/${id}`, header_config)
+      .then((res) => {
+        console.log("then");
+        console.log("res ", res);
+        // if (res.data) {
+        return { success: true, data: res.data };
+        // } else {
+        //   message.error(errorText.getData);
+        //   return { success: false, data: null };
+        // }
+      })
+      .catch((error) => {
+        console.log("catch");
+        if (!error.response) message.error(errorText.network);
+        if (error.response) message.error(errorText.getData);
+        return { success: false, data: null, error: error.response };
+      });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,
@@ -209,4 +239,5 @@ export {
   saveNPRAssignment,
   getNPRFormula,
   saveNPRFormula,
+  getNPRFeedback,
 };

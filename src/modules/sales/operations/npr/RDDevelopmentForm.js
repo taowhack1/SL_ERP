@@ -173,11 +173,17 @@ const RDDevelopmentForm = ({ data, formula, setFormula }) => {
           prev.npr_formula_qa.filter((obj) => obj.id !== id)
         ),
       }));
+    const setQA = (data) =>
+      setState((prev) => ({
+        ...prev,
+        npr_formula_qa: sortData(data),
+      }));
     return {
       onChangeHead,
       onChangeQA,
       onAddRowQA,
       onDeleteRowQA,
+      setQA,
       state: data,
     };
   }, [state.npr_formula_qa, setState]);
@@ -228,9 +234,7 @@ const RDDevelopmentForm = ({ data, formula, setFormula }) => {
           Save Change
         </Button>
       </div>
-      {disabledEdit && (
-        <span className="require">* Pending for sales accept.</span>
-      )}
+      {disabledEdit && <span className="require">* Pending sales accept.</span>}
       {!npr_formula_id && (
         <Row className="col-2 row-margin-vertical">
           <Col span={12}>

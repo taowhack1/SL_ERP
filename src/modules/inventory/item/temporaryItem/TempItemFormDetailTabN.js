@@ -143,7 +143,7 @@ const TempItemFormDetailTab = () => {
               <Col span={16}>
                 <InputNumber
                   name="item_sample_cost"
-                  placeholder="Percentage"
+                  placeholder="Cost"
                   value={state.item_sample_cost}
                   defaultValue={0.0}
                   min={0.0}

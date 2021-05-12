@@ -3,6 +3,7 @@ import { Input, Popconfirm } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useSelector } from "react-redux";
+import AntdTableDragable from "../../../../components/AntdTableDragable";
 import CustomLabel from "../../../../components/CustomLabel";
 import CustomSelect from "../../../../components/CustomSelect";
 import CustomTable from "../../../../components/CustomTable";
@@ -180,6 +181,7 @@ const RDTestItem = ({
   onChangeQA,
   onAddRowQA,
   onDeleteRowQA,
+  setQA,
   readOnly,
 }) => {
   const {
@@ -192,7 +194,8 @@ const RDTestItem = ({
     <>
       <div className="form-section">
         <>
-          <CustomTable
+          <AntdTableDragable
+            pagination={{ pageSize: 999 }}
             rowClassName="row-table-detail"
             columns={columns({
               readOnly,
@@ -203,7 +206,9 @@ const RDTestItem = ({
             })}
             dataSource={data}
             rowKey={"id"}
-            onAdd={!readOnly && onAddRowQA}
+            setState={setQA}
+            onAdd={onAddRowQA}
+            editable={!readOnly}
           />
         </>
       </div>

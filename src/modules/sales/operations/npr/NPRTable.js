@@ -1,7 +1,7 @@
+import { SearchOutlined } from "@ant-design/icons";
 import { Table } from "antd";
 import Text from "antd/lib/typography/Text";
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import { useHistory } from "react-router";
 const columns = [
   {
@@ -92,8 +92,14 @@ const columns = [
         title: "Status",
         align: "center",
         dataIndex: "tg_trans_status_id",
-        width: "10%",
-        ellipsis: true,
+        width: "7%",
+        render: (val, record) => (
+          <SearchOutlined
+            className="button-icon"
+            name="view-status"
+            style={{ padding: "2px 15px" }}
+          />
+        ),
       },
     ],
   },
@@ -117,7 +123,7 @@ const NPRTable = ({ dataSource }) => {
           pageSizeOptions: ["10", "15", "20", "25", "30", "50"],
         }}
         onRow={(record) => ({
-          onClick: () => viewRecord(record),
+          onClick: (e) => viewRecord(record),
         })}
       />
     </>

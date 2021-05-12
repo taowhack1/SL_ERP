@@ -18,6 +18,7 @@ const CustomTable = (props) => {
     footer,
     scroll,
     pagination,
+    sortDirections,
   } = props;
   const [state, setState] = useState({
     pagination: {
@@ -44,6 +45,7 @@ const CustomTable = (props) => {
     <>
       <Table
         title={title}
+        sortDirections={sortDirections || ["ascend"]}
         className={props.className ?? "table-detail"}
         rowClassName={rowClassName}
         loading={loading}

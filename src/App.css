@@ -730,6 +730,10 @@ div.ant-tabs-tab > div {
 .col-left-2 {
   padding-left: 20px;
 }
+.pd-left-3,
+.col-left-3 {
+  padding-left: 30px;
+}
 .pd-right-1,
 .col-right-1 {
   padding-right: 10px;
@@ -1171,6 +1175,10 @@ div.ant-row.table > div > div {
   border: none !important;
   cursor: context-menu !important;
   color: #717171 !important;
+}
+textarea.disabled-input:focus,
+input.disabled-input:focus {
+  outline: none;
 }
 
 tr.drop-over-downward td {

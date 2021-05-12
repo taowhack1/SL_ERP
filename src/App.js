@@ -109,6 +109,8 @@ import RDForm from "./modules/sales/operations/npr/RDForm";
 import TemporaryItems from "./modules/inventory/item/temporaryItem";
 import TempItemCreate from "./modules/inventory/item/temporaryItem/TempItemCreate";
 import TempItemForm from "./modules/inventory/item/temporaryItem/TempItemForm";
+import SatisficationCategoryList from "./modules/sales/masterData/satisfication/SatisficationCategoryList";
+import SatisficationForm from "./modules/sales/masterData/satisfication/SatisficationForm";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -443,6 +445,12 @@ const App = (props) => {
               path="/sales/config/customers/edit/:id"
               component={CustomerCreate}
             />
+            <Route exact path="/sales/master/satisfication">
+              <SatisficationCategoryList />
+            </Route>
+            <Route exact path="/sales/master/satisfication/edit/:id">
+              <SatisficationForm />
+            </Route>
             {/* QA QC */}
             <Route exact path="/qa">
               <QualityAssurance />

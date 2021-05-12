@@ -20,6 +20,7 @@ const AntdTableDragable = (props) => {
     className,
     footer,
     readOnly,
+    editable,
   } = props;
   const moveRow = useCallback(
     (dragIndex, hoverIndex) => {
@@ -42,7 +43,40 @@ const AntdTableDragable = (props) => {
   };
   return (
     <>
-      <DndProvider backend={HTML5Backend}>
+      {editable ? (
+        <DndProvider backend={HTML5Backend}>
+          <Table
+            size="small"
+            bordered
+            title={title}
+            className={className ?? "table-detail"}
+            rowClassName={rowClassName}
+            rowKey={rowKey}
+            components={components}
+            columns={columns}
+            dataSource={dataSource}
+            pagination={pagination}
+            scroll={scroll ?? null}
+            onRow={(record, index) => ({
+              index,
+              moveRow,
+              onClick,
+            })}
+            footer={() => (
+              <>
+                {footer}
+                {!readOnly && (
+                  <div className="mt-1">
+                    <Button type="dashed" onClick={onAdd} block>
+                      <PlusOutlined /> Add a line
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          />
+        </DndProvider>
+      ) : (
         <Table
           size="small"
           bordered
@@ -50,34 +84,15 @@ const AntdTableDragable = (props) => {
           className={className ?? "table-detail"}
           rowClassName={rowClassName}
           rowKey={rowKey}
-          components={components}
           columns={columns}
           dataSource={dataSource}
           pagination={pagination}
           scroll={scroll ?? null}
           onRow={(record, index) => ({
-            index,
-            moveRow,
             onClick,
           })}
-          footer={
-            onAdd
-              ? () => (
-                  <>
-                    {footer}
-                    {!readOnly && (
-                      <div className="mt-1">
-                        <Button type="dashed" onClick={onAdd} block>
-                          <PlusOutlined /> Add a line
-                        </Button>
-                      </div>
-                    )}
-                  </>
-                )
-              : footer ?? null
-          }
         />
-      </DndProvider>
+      )}
     </>
   );
 };

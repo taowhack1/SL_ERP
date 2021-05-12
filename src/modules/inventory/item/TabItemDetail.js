@@ -27,6 +27,7 @@ import {
 import CustomLabel from "../../../components/CustomLabel";
 import ItemUOMConversion from "./ItemUOMConversion";
 import Modal from "antd/lib/modal/Modal";
+import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 const { TextArea } = Input;
 
 const TabItemDetail = ({
@@ -182,11 +183,7 @@ const TabItemDetail = ({
           )}
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
-              <CustomLabel
-                label={"Shelf life (day) :"}
-                require
-                readOnly={readOnly}
-              />
+              <CustomLabel label={"Shelf life (day) :"} readOnly={readOnly} />
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -425,11 +422,7 @@ const TabItemDetail = ({
           <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>
             <Col span={6}>
-              <CustomLabel
-                label={"Storage Condition :"}
-                require
-                readOnly={readOnly}
-              />
+              <CustomLabel label={"Condition :"} require readOnly={readOnly} />
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -460,6 +453,41 @@ const TabItemDetail = ({
                           item_control_name: null,
                         });
                   }}
+                />
+              )}
+            </Col>
+          </Row>
+          <Row className="col-2 row-margin-vertical">
+            <Col span={2}></Col>
+            <Col span={6}>
+              <CustomLabel label={"Cost :"} readOnly={readOnly} />
+            </Col>
+            <Col span={16} className={readOnly ? "text-left" : "text-right"}>
+              {readOnly ? (
+                <Text className="text-view pd-right-3">
+                  {data_head.item_cost
+                    ? convertDigit(data_head.item_cost, 4)
+                    : "-"}
+                </Text>
+              ) : (
+                <InputNumber
+                  name="item_cost"
+                  placeholder="Cost"
+                  value={data_head.item_cost}
+                  defaultValue={0.0}
+                  min={0.0}
+                  max={100}
+                  step={1.0}
+                  {...getNumberFormat(4)}
+                  onChange={(data) => {
+                    upDateFormValue({
+                      item_cost: data,
+                    });
+                  }}
+                  className={
+                    readOnly ? "full-width disabled-input" : "full-width"
+                  }
+                  disabled={readOnly}
                 />
               )}
             </Col>

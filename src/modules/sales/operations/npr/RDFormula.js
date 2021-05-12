@@ -1,13 +1,11 @@
 import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
-import { Col, Input, InputNumber, Popconfirm, Row } from "antd";
-import TextArea from "antd/lib/input/TextArea";
+import { Input, InputNumber, Popconfirm } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useSelector } from "react-redux";
 import AntdTableDragable from "../../../../components/AntdTableDragable";
 import CustomLabel from "../../../../components/CustomLabel";
 import CustomSelect from "../../../../components/CustomSelect";
-import CustomTable from "../../../../components/CustomTable";
 import DetailLoading from "../../../../components/DetailLoading";
 import {
   convertDigit,
@@ -187,19 +185,6 @@ const RDFormula = ({
           <DetailLoading />
         ) : (
           <>
-            {/* <CustomTable
-              rowClassName="row-table-detail"
-              columns={columns({
-                readOnly,
-                itemList,
-                deleteRow: onDeleteRowFormula,
-                onChange: onChangeFormula,
-              })}
-              dataSource={data}
-              rowKey={"id"}
-              onAdd={!readOnly && onAddRowFormula}
-              pagination={{ pageSize: 999 }}
-            /> */}
             <AntdTableDragable
               pagination={{ pageSize: 999 }}
               rowClassName="row-table-detail"
@@ -213,6 +198,7 @@ const RDFormula = ({
               rowKey={"id"}
               setState={setFormula}
               onAdd={onAddRowFormula}
+              editable={!readOnly}
             />
           </>
         )}

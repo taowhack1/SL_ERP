@@ -2,6 +2,7 @@ import { Tabs } from "antd";
 import React from "react";
 import RDFormula from "../RDFormula";
 import RDTestItem from "../RDTestItem";
+import RDFormulaFeedback from "./RDFormulaFeedback";
 import RDFormulaGeneralDetail from "./RDFormulaGeneralDetail";
 import RDFormulaProcedure from "./RDFormulaProcedure";
 
@@ -33,6 +34,9 @@ const RDDevelopmentTabs = ({
 
         <Tabs.TabPane tab={"QA"} key={3}>
           <RDTestItem data={npr_formula_qa} {...rdDevQA} readOnly={readOnly} />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab={"Feedback"} key={4}>
+          <RDFormulaFeedback readOnly={readOnly} />
         </Tabs.TabPane>
       </Tabs>
     </>

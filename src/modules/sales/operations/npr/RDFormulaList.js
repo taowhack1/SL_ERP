@@ -58,7 +58,6 @@ const initialState = {
 const RDFormulaList = () => {
   const { id } = useContext(NPRFormContext);
   const [formula, setFormula] = useState([initialState]);
-  // const [tab, setTab] = useState();
   useEffect(() => {
     const getNPRFormulaList = async (id) => {
       const resp = await getNPRFormula(id);
@@ -71,9 +70,6 @@ const RDFormulaList = () => {
 
   const onAddRevision = () =>
     setFormula((prev) => sortData([...prev, initialState]));
-  // useEffect(() => {
-  // setTab(formula.length - 1);
-  // }, [formula.length]);
   return (
     <>
       <div className="form-section-head d-flex">
@@ -84,14 +80,7 @@ const RDFormulaList = () => {
           </Button>
         )}
       </div>
-      <Tabs
-      // activeKey={`${tab}`}
-      // onChange={(val) =>
-      //   formula.some((obj) => obj.npr_formula_id === null)
-      //     ? alert("Please save data before change tabs.")
-      //     : setTab(val)
-      // }
-      >
+      <Tabs>
         {formula.map((obj) => (
           <Tabs.TabPane tab={obj.npr_formula_no} key={obj.id}>
             <div className="mb-3">
