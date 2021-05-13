@@ -158,7 +158,6 @@ const TempItemFormDetailTab = () => {
                         placeholder: "Cost",
                         defaultValue: 0.0,
                         min: 0.0,
-                        max: 100,
                         step: 1.0,
                         ...getNumberFormat(4),
                         onChange: (val) => field.onChange(val || 0),

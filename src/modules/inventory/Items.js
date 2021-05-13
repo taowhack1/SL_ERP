@@ -109,16 +109,6 @@ const Items = (props) => {
     setItems(dataItems);
   }, [dataItems.length]);
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //     return () => {
-  //       clearTimeout();
-  //     };
-  //   }, 1200);
-  // }, [items]);
-
   const redirect_to_view = (id) => {
     history.push("/inventory/items/view/" + (id ? id : "new"));
   };

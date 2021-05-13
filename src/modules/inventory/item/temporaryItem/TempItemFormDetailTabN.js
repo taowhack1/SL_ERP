@@ -147,7 +147,6 @@ const TempItemFormDetailTab = () => {
                   value={state.item_sample_cost}
                   defaultValue={0.0}
                   min={0.0}
-                  max={100}
                   step={1.0}
                   {...getNumberFormat(4)}
                   onChange={(data) => {

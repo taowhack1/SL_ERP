@@ -26,6 +26,7 @@ const columns = ({
         <>
           <input
             {...register(`npr_satisfaction_spec_detail.${index}.user_name`)}
+            defaultValue={user_name}
             className="d-none"
           />
           <input
@@ -104,7 +105,6 @@ const SatisficationFormDetail = () => {
   const { append, remove, fields, loading, user_name, register, setValue } =
     useFormContext();
   console.log("loading", loading);
-  const onSearch = (text) => console.log(text);
   const getRowClassName = (record, index) => {
     let rowClass = "row-table-detail ";
     // rowClass += !record[field.status] ? "row-table-detail-inactive" : "";
@@ -114,14 +114,6 @@ const SatisficationFormDetail = () => {
   return (
     <>
       <CustomTable
-        title={() => {
-          return (
-            <div className="text-right table-color">
-              <Search className={"half-width"} onSearch={onSearch} />
-            </div>
-          );
-        }}
-        sortDirections={["descend"]}
         loading={loading}
         columns={columns({ remove, fields, register, setValue, id, user_name })}
         rowClassName={getRowClassName}

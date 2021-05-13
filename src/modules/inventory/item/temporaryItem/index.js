@@ -84,6 +84,10 @@ const columns = ({ viewRecord }) => [
 ];
 const TemporaryItems = () => {
   const history = useHistory();
+  const [state, setState] = useState();
+  const dispatch = useDispatch();
+  const { master_data, loading } = useSelector((state) => state.inventory);
+  const { sampleItems } = master_data;
 
   const layoutConfig = useMemo(
     () => ({
@@ -97,15 +101,30 @@ const TemporaryItems = () => {
       create: "/inventory/master_data/temp_item/create",
       edit: {},
       discard: "/inventory",
+      onSearch: (text) => {
+        const filterData = text
+          ? sampleItems.filter(
+              (obj) =>
+                obj.item_sample_no.toUpperCase().indexOf(text.toUpperCase()) >=
+                  0 ||
+                obj.item_sample_name_trade
+                  .toUpperCase()
+                  .indexOf(text.toUpperCase()) >= 0
+            )
+          : sampleItems;
+        console.log(filterData, text);
+        setState(filterData);
+      },
     }),
     []
   );
-  const dispatch = useDispatch();
-  const { master_data, loading } = useSelector((state) => state.inventory);
-  const { sampleItems } = master_data;
+
   useEffect(() => {
     dispatch(getSampleItems());
   }, []);
+  useEffect(() => {
+    setState(sampleItems);
+  }, [sampleItems]);
   const viewRecord = (id, data) => {
     history.push({
       pathname: "/inventory/master_data/temp_item/view/" + id,
@@ -123,7 +142,7 @@ const TemporaryItems = () => {
             <Table
               loading={loading}
               // rowClassName="row-table-detail"
-              dataSource={sampleItems}
+              dataSource={state}
               columns={columns({ viewRecord })}
               size={"small"}
               rowKey="id"
