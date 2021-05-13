@@ -49,7 +49,7 @@ const initialStateFormulaQA = {
   qa_method_id: null,
   qa_method_name: null,
 };
-const RDDevelopmentForm = ({ data, formula, setFormula }) => {
+const RDDevelopmentForm = ({ data, formula, setFormula, isFinished }) => {
   const { tg_trans_status_id } = data;
 
   const {
@@ -77,6 +77,7 @@ const RDDevelopmentForm = ({ data, formula, setFormula }) => {
 
   const disabledEdit =
     tg_trans_status_id !== 4 &&
+    !isFinished &&
     (user_name === mainState.npr_responsed_required_by || department_id === 1)
       ? false
       : true;
@@ -210,7 +211,10 @@ const RDDevelopmentForm = ({ data, formula, setFormula }) => {
   };
 
   const onPrintLabel = () => {
-    window.open("//www.youtube.com", false);
+    window.open(
+      `${report_server}/report_npr_formula_qr_code.aspx?npr_formula_no=${state.npr_formula_no}`,
+      false
+    );
   };
 
   console.log("disabledEdit :", disabledEdit, formula);
@@ -235,15 +239,17 @@ const RDDevelopmentForm = ({ data, formula, setFormula }) => {
             Print QR Code
           </Button>
         </div>
-        <Button
-          onClick={onSubmit}
-          disabled={disabledEdit}
-          className={disabledEdit ? "btn-disabled" : "primary"}
-          size="small"
-          loading={false}
-        >
-          Save Change
-        </Button>
+        {!isFinished && (
+          <Button
+            onClick={onSubmit}
+            disabled={disabledEdit}
+            className={disabledEdit ? "btn-disabled" : "primary"}
+            size="small"
+            loading={false}
+          >
+            Save Change
+          </Button>
+        )}
       </div>
       {disabledEdit && <span className="require">* Pending sales accept.</span>}
       {!npr_formula_id && (

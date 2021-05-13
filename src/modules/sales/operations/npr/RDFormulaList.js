@@ -75,11 +75,16 @@ const RDFormulaList = () => {
 
   const onAddRevision = () =>
     setFormula((prev) => sortData([...prev, initialState]));
+
+  const isFinished = formula.some(
+    (obj) => obj.npr_formula_id !== null && obj.tg_trans_status_id === 4
+  );
   return (
     <>
       <div className="form-section-head d-flex">
         <h3>Formula List</h3>
         {!formula.some((obj) => obj.npr_formula_id === null) &&
+          !isFinished &&
           (user_name === mainState.npr_responsed_required_by ||
             department_id === 1) && (
             <Button
@@ -105,6 +110,7 @@ const RDFormulaList = () => {
                 }}
                 formula={formula}
                 setFormula={setFormula}
+                isFinished={isFinished}
               />
             </div>
           </Tabs.TabPane>

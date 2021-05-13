@@ -13,6 +13,7 @@ import { SET_LOADING } from "../../../../actions/types";
 import { saveNPRAssignment } from "../../../../actions/sales/nprActions";
 import { useHistory } from "react-router";
 import Swal from "sweetalert2";
+import Text from "antd/lib/typography/Text";
 
 const RDPIC = () => {
   const history = useHistory();
@@ -76,14 +77,16 @@ const RDPIC = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-section-head flex-space">
           <h3>Assignment</h3>
-          <Button
-            htmlType="submit"
-            className="primary"
-            size="small"
-            loading={loading}
-          >
-            Save Change
-          </Button>
+          {state.trans_id >= 2 && state.trans_id <= 5 && (
+            <Button
+              htmlType="submit"
+              className="primary"
+              size="small"
+              loading={loading}
+            >
+              Save Change
+            </Button>
+          )}
         </div>
 
         <div className="form-section">
@@ -95,28 +98,36 @@ const RDPIC = () => {
                     <CustomLabel label="Person In Charge :" require />
                   </Col>
                   <Col span={16}>
-                    <Controller
-                      render={({ field }) =>
-                        SelectField({
-                          fieldProps: {
-                            className: "full-width",
-                            placeholder: "Select person in charge",
-                            showSearch: true,
-                            onChange: (val) => field.onChange(val || null),
-                            ...field,
-                          },
-                          dataSource: rdEmp,
-                          fieldName: "employee_no_name",
-                          fieldId: "employee_no",
-                        })
-                      }
-                      control={control}
-                      name="npr_responsed_required_by"
-                      rules={{ required: true }}
-                      defaultValue={npr_responsed_required_by}
-                    />
-                    {error && error?.npr_responsed_required_by && (
-                      <span className="require">This field is required.</span>
+                    {state.trans_id >= 6 ? (
+                      <Text>{state.npr_responsed_required_by_no_name}</Text>
+                    ) : (
+                      <>
+                        <Controller
+                          render={({ field }) =>
+                            SelectField({
+                              fieldProps: {
+                                className: "full-width",
+                                placeholder: "Select person in charge",
+                                showSearch: true,
+                                onChange: (val) => field.onChange(val || null),
+                                ...field,
+                              },
+                              dataSource: rdEmp,
+                              fieldName: "employee_no_name",
+                              fieldId: "employee_no",
+                            })
+                          }
+                          control={control}
+                          name="npr_responsed_required_by"
+                          rules={{ required: true }}
+                          defaultValue={npr_responsed_required_by}
+                        />
+                        {error && error?.npr_responsed_required_by && (
+                          <span className="require">
+                            This field is required.
+                          </span>
+                        )}
+                      </>
                     )}
                   </Col>
                 </Row>
@@ -127,31 +138,39 @@ const RDPIC = () => {
                     <CustomLabel label="Due Date :" require />
                   </Col>
                   <Col span={16}>
-                    <Controller
-                      render={({ field }) =>
-                        DatePickerField({
-                          fieldProps: {
-                            className: "full-width",
-                            placeholder: "Due date",
-                            format: "DD/MM/YYYY",
-                            onChange: (val) =>
-                              field.onChange(
-                                val
-                                  ? console.log(
-                                      moment(val).format("DD/MM/YYYY")
-                                    )
-                                  : null
-                              ),
-                            ...field,
-                          },
-                        })
-                      }
-                      control={control}
-                      name="npr_responsed_delivery_date"
-                      rules={{ required: true }}
-                    />
-                    {error && error?.npr_responsed_delivery_date && (
-                      <span className="require">This field is required.</span>
+                    {state.trans_id >= 6 ? (
+                      <Text>{state.npr_responsed_delivery_date}</Text>
+                    ) : (
+                      <>
+                        <Controller
+                          render={({ field }) =>
+                            DatePickerField({
+                              fieldProps: {
+                                className: "full-width",
+                                placeholder: "Due date",
+                                format: "DD/MM/YYYY",
+                                onChange: (val) =>
+                                  field.onChange(
+                                    val
+                                      ? console.log(
+                                          moment(val).format("DD/MM/YYYY")
+                                        )
+                                      : null
+                                  ),
+                                ...field,
+                              },
+                            })
+                          }
+                          control={control}
+                          name="npr_responsed_delivery_date"
+                          rules={{ required: true }}
+                        />
+                        {error && error?.npr_responsed_delivery_date && (
+                          <span className="require">
+                            This field is required.
+                          </span>
+                        )}
+                      </>
                     )}
                   </Col>
                 </Row>

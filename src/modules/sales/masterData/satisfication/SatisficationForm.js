@@ -1,9 +1,13 @@
+import { message } from "antd";
 import React, { useMemo, useState } from "react";
 import { useEffect } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { getSatisfication } from "../../../../actions/sales/satisficationActions";
+import {
+  getSatisfication,
+  saveSatisfication,
+} from "../../../../actions/sales/satisficationActions";
 import MainLayout from "../../../../components/MainLayout";
 import { sortDataWithoutCommit } from "../../../../include/js/function_main";
 import SatisficationFormHead from "./SatisficationFormHead";
@@ -28,38 +32,6 @@ const SatisficationForm = () => {
     defaultValues: [],
   });
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     console.log("getValues", methods.getValues());
-  //     methods.reset({
-  //       ...methods.getValues(),
-  //       satisfication_detail: [
-  //         {
-  //           id: 0,
-  //           satisfication_detail_id: null,
-  //           qa_specification_id: 1,
-  //         },
-  //         {
-  //           id: 1,
-  //           satisfication_detail_id: null,
-  //           qa_specification_id: 2,
-  //         },
-  //         {
-  //           id: 2,
-  //           satisfication_detail_id: null,
-  //           qa_specification_id: 3,
-  //         },
-  //         {
-  //           id: 3,
-  //           satisfication_detail_id: 1,
-  //           qa_specification_id: 4,
-  //           status: 1,
-  //         },
-  //       ],
-  //     });
-  //     setLoading(false);
-  //   }, 2000);
-  // }, []);
   const layoutConfig = useMemo(
     () => ({
       projectId: 7,
@@ -81,14 +53,54 @@ const SatisficationForm = () => {
     []
   );
 
-  const onSubmit = (data) => {
-    console.log("submit ", data);
+  const onSubmit = async (data) => {
+    setLoading(true);
+    console.log("submit get", methods.getValues());
+    console.log("submit data", data);
+    const filterData = {
+      post: data.npr_satisfaction_spec_detail.filter(
+        (obj) => obj.commit === 1 && obj.npr_satisfaction_spec_id === null
+      ),
+      put: data.npr_satisfaction_spec_detail.filter(
+        (obj) => obj.commit === 1 && obj.npr_satisfaction_spec_id !== null
+      ),
+    };
+    const saveData = async () => {
+      const resp = await saveSatisfication(id, filterData.post, filterData.put);
+      console.log("onSubmit", resp);
+      if (resp[0].value !== 0 && resp[0].value.success) {
+        message.success({
+          content: "Add New Specification Subject Completed..",
+          key: "add",
+        });
+      }
+      if (resp[1].value !== 0 && resp[1].value.success) {
+        message.success({
+          content: "Update Specification Subject Completed..",
+          key: "update",
+        });
+      }
+      const getData = async () => {
+        const resp = await getSatisfication(id);
+        console.log("resp get", resp);
+        methods.reset({
+          ...resp.data[0],
+          npr_satisfaction_spec_detail: sortDataWithoutCommit(
+            resp.data[0].npr_satisfaction_spec_detail
+          ),
+        });
+        setTimeout(() => setLoading(false), 1000);
+      };
+      getData();
+    };
+    saveData();
   };
 
   useEffect(() => {
     setLoading(true);
     const getData = async () => {
       const resp = await getSatisfication(id);
+      console.log("resp get", resp);
       methods.reset({
         ...resp.data[0],
         npr_satisfaction_spec_detail: sortDataWithoutCommit(
@@ -99,6 +111,7 @@ const SatisficationForm = () => {
     };
     getData();
   }, []);
+  console.log("getdata", methods.getValues());
   return (
     <>
       <MainLayout {...layoutConfig}>

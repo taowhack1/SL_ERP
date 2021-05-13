@@ -6,7 +6,16 @@ import { Controller, useFormContext } from "react-hook-form";
 import { useParams } from "react-router";
 import CustomTable from "../../../../components/CustomTable";
 import Search from "../../../../components/Search";
-const columns = ({ remove, control, readOnly, fields }) => [
+const columns = ({
+  remove,
+  control,
+  readOnly,
+  fields,
+  register,
+  setValue,
+  id,
+  user_name,
+}) => [
   {
     title: "Specification.",
     dataIndex: "qa_specification_id",
@@ -14,12 +23,31 @@ const columns = ({ remove, control, readOnly, fields }) => [
     ellipsis: false,
     render: (val, record, index) => {
       return (
-        <Controller
-          control={control}
-          name={`npr_satisfaction_spec_detail.${index}.npr_satisfaction_spec_name`}
-          defaultValue={val}
-          render={({ field }) => <Input {...field} size={"small"} />}
-        />
+        <>
+          <input
+            {...register(`npr_satisfaction_spec_detail.${index}.user_name`)}
+            className="d-none"
+          />
+          <input
+            {...register(
+              `npr_satisfaction_spec_detail.${index}.npr_satisfaction_spec_id`
+            )}
+            htmltype="number"
+            className="d-none"
+          />
+          <input
+            {...register(`npr_satisfaction_spec_detail.${index}.category_id`)}
+            htmltype="number"
+            defaultValue={id}
+            className="d-none"
+          />
+          <Controller
+            control={control}
+            name={`npr_satisfaction_spec_detail.${index}.npr_satisfaction_spec_name`}
+            defaultValue={val}
+            render={({ field }) => <Input {...field} size={"small"} />}
+          />
+        </>
       );
     },
   },
@@ -32,15 +60,28 @@ const columns = ({ remove, control, readOnly, fields }) => [
     dataIndex: "id",
     align: "center",
     width: "5%",
-    render: (value, record, index) => {
+    render: (_, record, index) => {
       if (readOnly) {
         return null;
       } else {
         return record.npr_satisfaction_spec_id !== null ? (
-          <Switch
-            size="small"
-            title="Active / In-Active"
-            checked={record.npr_satisfaction_spec_actived}
+          <Controller
+            control={control}
+            name={`npr_satisfaction_spec_detail.${index}.npr_satisfaction_spec_actived`}
+            render={({ field: { onChange, value } }) => (
+              <Switch
+                onChange={(val) => {
+                  onChange(val);
+                  setValue(`npr_satisfaction_spec_detail.${index}.commit`, 1);
+                  setValue(
+                    `npr_satisfaction_spec_detail.${index}.user_name`,
+                    user_name
+                  );
+                }}
+                checked={value}
+                size="small"
+              />
+            )}
           />
         ) : (
           <Popconfirm
@@ -60,7 +101,8 @@ const columns = ({ remove, control, readOnly, fields }) => [
 ];
 const SatisficationFormDetail = () => {
   const { id } = useParams();
-  const { append, remove, fields, loading, user_name } = useFormContext();
+  const { append, remove, fields, loading, user_name, register, setValue } =
+    useFormContext();
   console.log("loading", loading);
   const onSearch = (text) => console.log(text);
   const getRowClassName = (record, index) => {
@@ -68,7 +110,7 @@ const SatisficationFormDetail = () => {
     // rowClass += !record[field.status] ? "row-table-detail-inactive" : "";
     return rowClass;
   };
-
+  console.log("fields ", fields);
   return (
     <>
       <CustomTable
@@ -81,7 +123,7 @@ const SatisficationFormDetail = () => {
         }}
         sortDirections={["descend"]}
         loading={loading}
-        columns={columns({ remove, fields })}
+        columns={columns({ remove, fields, register, setValue, id, user_name })}
         rowClassName={getRowClassName}
         dataSource={fields}
         rowKey="id"
@@ -90,7 +132,7 @@ const SatisficationFormDetail = () => {
           append({
             npr_satisfaction_spec_id: null,
             npr_satisfaction_spec_name: null,
-            category_id: id,
+            category_id: parseInt(id),
             user_name: user_name,
             npr_satisfaction_spec_remark: null,
             npr_satisfaction_spec_name_th: null,

@@ -11,6 +11,8 @@ import { get_qa_conditions_master } from "../../../../actions/qa/qaTestAction";
 import { useDispatch, useSelector } from "react-redux";
 import DetailLoading from "../../../../components/DetailLoading";
 import { getRDEmp } from "../../../../actions/hrm";
+import { PrinterOutlined } from "@ant-design/icons";
+import { report_server } from "../../../../include/js/main_config";
 export const NPRFormContext = React.createContext();
 const initialState = {
   npr_responsed_required_by: null,
@@ -39,11 +41,22 @@ const RDForm = () => {
       create: "",
       buttonAction: ["Back"],
       edit: {},
+      action: [
+        {
+          name: (
+            <span>
+              <PrinterOutlined className="pd-right-1 button-icon" />
+              Print NPR
+            </span>
+          ),
+          link: `${report_server}/report_npr.aspx?npr_no=${state.npr_no}`,
+        },
+      ],
       back: "/sales/npr",
       discard: "/sales/npr",
       save: "function",
     }),
-    []
+    [state.npr_no]
   );
   useEffect(() => {
     const getData = async () => {
