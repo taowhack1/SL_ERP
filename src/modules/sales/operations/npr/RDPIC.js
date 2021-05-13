@@ -1,4 +1,4 @@
-import { Button, Col, message, Row, Spin } from "antd";
+import { Button, Col, Row, Spin } from "antd";
 import React, { useContext } from "react";
 import CustomLabel from "../../../../components/CustomLabel";
 import moment from "moment";
@@ -17,9 +17,9 @@ import Text from "antd/lib/typography/Text";
 
 const RDPIC = () => {
   const history = useHistory();
-  const { id, state, setState } = useContext(NPRFormContext);
+  const { id, state } = useContext(NPRFormContext);
   const { npr_responsed_delivery_date, npr_responsed_required_by } = state;
-  console.log("state", state);
+
   const dispatch = useDispatch();
   const { user_name } = useSelector((state) => state.auth.authData);
   const { loading } = useSelector((state) => state.hrm);
@@ -71,13 +71,13 @@ const RDPIC = () => {
       }
     }, 1000);
   };
-  console.log(error);
+  const editable = state.trans_id >= 2 && state.trans_id <= 5 ? true : false;
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-section-head flex-space">
           <h3>Assignment</h3>
-          {state.trans_id >= 2 && state.trans_id <= 5 && (
+          {editable && (
             <Button
               htmlType="submit"
               className="primary"

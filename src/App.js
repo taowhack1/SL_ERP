@@ -111,6 +111,7 @@ import TempItemCreate from "./modules/inventory/item/temporaryItem/TempItemCreat
 import TempItemForm from "./modules/inventory/item/temporaryItem/TempItemForm";
 import SatisficationCategoryList from "./modules/sales/masterData/satisfication/SatisficationCategoryList";
 import SatisficationForm from "./modules/sales/masterData/satisfication/SatisficationForm";
+import Logout from "./modules/system/Logout";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -147,6 +148,9 @@ const App = (props) => {
           <Switch>
             <Route exact path="/login">
               <Login />
+            </Route>
+            <Route exact path="/logout">
+              <Logout />
             </Route>
             <Route exact path="/change_password">
               <ChangePassword />
