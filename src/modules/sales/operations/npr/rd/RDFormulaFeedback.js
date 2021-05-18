@@ -14,7 +14,7 @@ const columns = [
   },
   {
     title: "Spec",
-    dataIndex: "npr_satisfaction_spec_name_th",
+    dataIndex: "npr_satisfaction_spec_name",
     width: "30%",
     align: "left",
     ellipsis: true,
@@ -36,18 +36,19 @@ const columns = [
     render: (val) => val || "-",
   },
 ];
-const RDFormulaFeedback = () => {
-  const { id } = useContext(NPRFormContext);
+
+const RDFormulaFeedback = ({ npr_formula_id }) => {
   const [feedback, setFeedback] = useState([]);
   useEffect(() => {
     // DO. FETCH FEEDBACK
-    const getNPRFeedbackList = async (id) => {
-      const resp = await getNPRFeedback(id);
+    const getNPRFeedbackList = async (npr_formula_id) => {
+      const resp = await getNPRFeedback(npr_formula_id);
+      console.log("GET FEEDBACK ", resp, npr_formula_id);
       if (resp.success) {
-        setFeedback(sortData(resp.data.npr_satisfaction_detail || []));
+        setFeedback(sortData(resp.data));
       }
     };
-    getNPRFeedbackList(id);
+    getNPRFeedbackList(npr_formula_id);
   }, []);
   return (
     <>

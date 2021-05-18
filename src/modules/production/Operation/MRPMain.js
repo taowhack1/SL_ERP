@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
 import { Row, Col, Table, Button, Tabs, Modal } from "antd";
@@ -85,46 +85,49 @@ const MRPMain = (props) => {
         : setStateMRP(mrpList);
     },
   };
-  const onChangeSeach = ({
-    mrp_id,
-    item_id,
-    mrp_plan_start_date,
-    mrp_plan_end_date,
-    mrp_due_date_start,
-    mrp_due_date_end,
-  }) => {
-    let search_data = mrpList;
-
-    console.log(
+  const onChangeSeach = useCallback(
+    ({
       mrp_id,
       item_id,
       mrp_plan_start_date,
       mrp_plan_end_date,
       mrp_due_date_start,
-      mrp_due_date_end
-    );
-    if (mrp_id) {
-      search_data = search_data.filter((data) => data.mrp_id === mrp_id);
-    }
-    if (item_id) {
-      search_data = search_data.filter((data) => data.item_id === item_id);
-    }
-    if (mrp_plan_start_date) {
-      search_data = search_data.filter(
-        (data) =>
-          data.mrp_plan_start_date >= mrp_plan_start_date &&
-          data.mrp_plan_end_date <= mrp_plan_end_date
+      mrp_due_date_end,
+    }) => {
+      let search_data = mrpList;
+
+      console.log(
+        mrp_id,
+        item_id,
+        mrp_plan_start_date,
+        mrp_plan_end_date,
+        mrp_due_date_start,
+        mrp_due_date_end
       );
-    }
-    if (mrp_due_date_start) {
-      search_data = search_data.filter(
-        (data) =>
-          data.mrp_delivery_date >= mrp_due_date_start &&
-          data.mrp_delivery_date <= mrp_due_date_end
-      );
-    }
-    setStateMRP(search_data);
-  };
+      if (mrp_id) {
+        search_data = search_data.filter((data) => data.mrp_id === mrp_id);
+      }
+      if (item_id) {
+        search_data = search_data.filter((data) => data.item_id === item_id);
+      }
+      if (mrp_plan_start_date) {
+        search_data = search_data.filter(
+          (data) =>
+            data.mrp_plan_start_date >= mrp_plan_start_date &&
+            data.mrp_plan_end_date <= mrp_plan_end_date
+        );
+      }
+      if (mrp_due_date_start) {
+        search_data = search_data.filter(
+          (data) =>
+            data.mrp_delivery_date >= mrp_due_date_start &&
+            data.mrp_delivery_date <= mrp_due_date_end
+        );
+      }
+      setStateMRP(search_data);
+    },
+    [stateMRP]
+  );
 
   useEffect(() => {
     dispatch(getAllMRP(auth.user_name));

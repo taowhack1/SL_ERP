@@ -35,6 +35,7 @@ import {
   VatID,
   Zip,
 } from "../../actions/purchase/vendorActions";
+import CustomLabel from "../../components/CustomLabel";
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
@@ -51,29 +52,18 @@ const CustomerCreate = (props) => {
   const currency_list = useSelector(
     (state) => state.accounting.master_data.currency
   );
-  const customer_group = useSelector(
-    (state) => state.purchase.vendor.vendor_group
-  );
-  const customer_category = useSelector(
-    (state) => state.purchase.vendor.vendor_category
-  );
-  const customer_language = useSelector(
-    (state) => state.purchase.vendor.vendor_language
-  );
-  const customer_country = useSelector(
-    (state) => state.purchase.vendor.vendor_country
-  );
-  const customer_province = useSelector(
-    (state) => state.purchase.vendor.vendor_province
-  );
-  const customer_district = useSelector(
-    (state) => state.purchase.vendor.vendor_district
-  );
-  const customer_tambon = useSelector(
-    (state) => state.purchase.vendor.vendor_tambon
-  );
-  const customer_vat = useSelector((state) => state.purchase.vendor.vendor_vat);
-  const customer_zip = useSelector((state) => state.purchase.vendor.vendor_zip);
+  const {
+    vendor_group: customer_group,
+    vendor_category: customer_category,
+    vendor_language: customer_language,
+    vendor_country: customer_country,
+    vendor_province: customer_province,
+    vendor_district: customer_district,
+    vendor_tambon: customer_tambon,
+    vendor_vat: customer_vat,
+    vendor_zip: customer_zip,
+  } = useSelector((state) => state.purchase.vendor);
+
   const data =
     props.location && props.location.state ? props.location.state : 0;
   const initialStateDetail = [
@@ -81,13 +71,13 @@ const CustomerCreate = (props) => {
   ];
   const [dataDetail, detailDispatch] = useReducer(reducer, initialStateDetail);
   const [data_head, set_data_head] = useState(
-    data !== undefined
-      ? { ...data, commit: 1, user_name: auth.user_name }
+    data
+      ? { ...data.data_head, commit: 1, user_name: auth.user_name }
       : {
           ...customer_fields,
           commit: 1,
           user_name: auth.user_name,
-          cnv_customer_created: moment().format("DD/MM/YYYY"),
+          customer_created: moment().format("DD/MM/YYYY"),
         }
   );
   const callback = (key) => {};
@@ -102,11 +92,25 @@ const CustomerCreate = (props) => {
     dispatch(Language());
     dispatch(Country());
     dispatch(VatID());
+    data.data_head && dispatch(District(data.data_head.province_id));
+    data.data_head && dispatch(Tambon(data.data_head.district_id));
+    data.data_head && dispatch(Zip(data.data_head.tambon_id));
     detailDispatch({
       type: "SET_DETAIL",
       payload:
         data && data.dataDetail.length ? data.dataDetail : initialStateDetail,
     });
+    console.log("data", data);
+    set_data_head(
+      data
+        ? { ...data.data_head, commit: 1, user_name: auth.user_name }
+        : {
+            ...customer_fields,
+            commit: 1,
+            user_name: auth.user_name,
+            customer_created: moment().format("DD/MM/YYYY"),
+          }
+    );
   }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
@@ -183,7 +187,7 @@ const CustomerCreate = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{data_head.cnv_customer_created}</Text>
+            <Text className="text-view">{data_head.customer_created}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-tab-margin">
@@ -221,17 +225,22 @@ const CustomerCreate = (props) => {
                   <Col span={12}>
                     <Row className="row-margin">
                       <Col span={5}>
-                        <Text strong>Short Name</Text>
+                        <CustomLabel
+                          label={"Short Name"}
+                          require
+                          readOnly={false}
+                        />
                       </Col>
                       <Col span={18}>
                         <Input
                           name="customer_name_short"
+                          disabled={data_head.customer_id ? true : false}
                           onChange={(e) =>
                             upDateFormValue({
                               customer_name_short: e.target.value,
                             })
                           }
-                          placeholder={"SRL"}
+                          placeholder={"eg. SRL"}
                           value={data_head.customer_name_short}
                         />
                       </Col>
@@ -640,12 +649,12 @@ const CustomerCreate = (props) => {
                 <Row className="col-2 row-margin-vertical">
                   <Col span={12}>
                     <Row className="row-margin">
-                      <Col span={5}>
+                      <Col span={7}>
                         <Text strong>
                           <span className="require">* </span>Condition Billing
                         </Text>
                       </Col>
-                      <Col span={18}>
+                      <Col span={16}>
                         <Input
                           name="customer_condition_billing"
                           placeholder="e.g. Affter Delivery"
@@ -662,12 +671,12 @@ const CustomerCreate = (props) => {
                       <Col span={1}></Col>
                     </Row>
                     <Row className="row-margin">
-                      <Col span={5}>
+                      <Col span={7}>
                         <Text strong>
                           <span className="require">* </span>Payment Terms
                         </Text>
                       </Col>
-                      <Col span={18}>
+                      <Col span={16}>
                         <CustomSelect
                           placeholder={"Payment Term"}
                           allowClear
@@ -693,12 +702,12 @@ const CustomerCreate = (props) => {
                       <Col span={1}></Col>
                     </Row>
                     <Row className="row-margin">
-                      <Col span={5}>
+                      <Col span={7}>
                         <Text strong>
                           <span className="require">* </span>Credit Limit
                         </Text>
                       </Col>
-                      <Col span={18}>
+                      <Col span={16}>
                         <Row>
                           <Col span={12}>
                             <InputNumber

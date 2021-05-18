@@ -13,6 +13,7 @@ const RDDevelopmentTabs = ({
   rdDevFormula,
   rdDevQA,
   useFormValue,
+  npr_formula_id,
 }) => {
   return (
     <>
@@ -36,7 +37,10 @@ const RDDevelopmentTabs = ({
           <RDTestItem data={npr_formula_qa} {...rdDevQA} readOnly={readOnly} />
         </Tabs.TabPane>
         <Tabs.TabPane tab={"Feedback"} key={4}>
-          <RDFormulaFeedback readOnly={readOnly} />
+          <RDFormulaFeedback
+            readOnly={readOnly}
+            npr_formula_id={npr_formula_id}
+          />
         </Tabs.TabPane>
       </Tabs>
     </>

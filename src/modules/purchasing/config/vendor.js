@@ -119,6 +119,12 @@ export const vendor_require_fields = [
   "vendor_address",
   "currency_id",
   "payment_term_id",
+  "vendor_category_id",
+  "vendor_group_id",
+  "vat_id",
+  "vendor_tax_no",
+  "vendor_limit_credit",
+  "vendor_condition_billing",
 ];
 
 export const addressColumns_vendor = [

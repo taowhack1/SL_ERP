@@ -116,22 +116,23 @@ const SO_Detail = ({
                   className="col-2"
                 >
                   <Col span={9} className="text-string">
-                    <Select
+                    <CustomSelect
                       allowClear
                       showSearch
-                      placeholder="Item"
+                      size="small"
+                      placeholder={"Item"}
+                      data={select_items ?? []}
                       name="item_id"
                       field_id="item_id"
-                      field_name="item_name"
+                      field_name="item_no_name"
                       value={line.item_no_name}
-                      size="small"
                       onChange={(data, option) => {
                         data !== undefined
                           ? onChangeValue(line.id, {
-                              item_id: data,
-                              uom_id: option.uom_id,
-                              item_no_name: option.title,
-                              uom_no: option.uom_no,
+                              item_id: option.data.item_id,
+                              uom_id: option.data.uom_id,
+                              item_no_name: option.data.item_no_name,
+                              uom_no: option.data.uom_no,
                             })
                           : onChangeValue(line.id, {
                               item_id: null,
@@ -140,29 +141,7 @@ const SO_Detail = ({
                               uom_no: null,
                             });
                       }}
-                      className={"full-width"}
-                      filterOption={(inputValue, option) =>
-                        option.title &&
-                        option.title
-                          .toUpperCase()
-                          .indexOf(inputValue.toUpperCase()) !== -1
-                      }
-                    >
-                      {select_items &&
-                        select_items.map((item, key) => {
-                          return (
-                            <Option
-                              key={key}
-                              value={item.item_id}
-                              title={item.item_no_name}
-                              uom_id={item.uom_id}
-                              uom_no={item.uom_no}
-                            >
-                              {item.item_no_name}
-                            </Option>
-                          );
-                        })}
-                    </Select>
+                    />
                   </Col>
                   <Col span={3} className="text-number">
                     <InputNumber
@@ -231,29 +210,6 @@ const SO_Detail = ({
                       size="small"
                     />
                   </Col>
-                  {/* <Col span={3} className="text-number">
-                    <InputNumber
-                      {...numberFormat}
-                      name="item_discount"
-                      placeholder="Discount"
-                      value={line.so_detail_discount}
-                      min={0.0}
-                      step={5}
-                      onChange={(data) => {
-                        onChangeValue(line.id, {
-                          so_detail_discount: data,
-                          so_detail_total_price: calSubtotal(
-                            line.so_detail_qty,
-                            line.so_detail_price,
-                            data
-                          ),
-                        });
-                        updateAmount();
-                      }}
-                      className={"full-width"}
-                      size="small"
-                    />
-                  </Col> */}
                   <Col span={3} className="text-number">
                     <div className="total-number">
                       {convertDigit(line.so_detail_total_price, 4)}
@@ -357,11 +313,6 @@ const SO_Detail = ({
                       {convertDigit(line.so_detail_price, 4)}
                     </Text>
                   </Col>
-                  {/* <Col span={3} className="text-number">
-                    <Text className="text-view">
-                      {convertDigit(line.so_detail_discount)}
-                    </Text>
-                  </Col> */}
                   <Col span={3} className="text-number">
                     <Text className="text-view">
                       {convertDigit(line.so_detail_total_price, 4)}

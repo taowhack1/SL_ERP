@@ -53,21 +53,21 @@ const VendorCreate = (props) => {
     vendor_province,
     vendor_district,
     vendor_tambon,
+    vendor_vat,
+    vendor_zip,
   } = useSelector((state) => state.purchase.vendor);
-  const vendor_vat = useSelector((state) => state.purchase.vendor.vendor_vat);
-  const vendor_zip = useSelector((state) => state.purchase.vendor.vendor_zip);
   const data =
     props.location && props.location.state ? props.location.state : 0;
   const initialStateDetail = [VendorDetailFileds];
   const [dataDetail, detailDispatch] = useReducer(reducer, initialStateDetail);
   const [data_head, set_data_head] = useState(
-    data !== undefined
-      ? { ...data, commit: 1, user_name: auth.user_name }
+    data
+      ? { ...data.data_head, commit: 1, user_name: auth.user_name }
       : {
           ...vendor_fields,
           commit: 1,
           user_name: auth.user_name,
-          cnv_vendor_created: moment().format("DD/MM/YYYY"),
+          vendor_created: moment().format("DD/MM/YYYY"),
         }
   );
 
@@ -83,11 +83,24 @@ const VendorCreate = (props) => {
     dispatch(Language());
     dispatch(Country());
     dispatch(VatID());
+    data.data_head && dispatch(District(data.data_head.province_id));
+    data.data_head && dispatch(Tambon(data.data_head.district_id));
+    data.data_head && dispatch(Zip(data.data_head.tambon_id));
     detailDispatch({
       type: "SET_DETAIL",
       payload:
         data && data.dataDetail.length ? data.dataDetail : initialStateDetail,
     });
+    set_data_head(
+      data
+        ? { ...data.data_head, commit: 1, user_name: auth.user_name }
+        : {
+            ...vendor_fields,
+            commit: 1,
+            user_name: auth.user_name,
+            vendor_created: moment().format("DD/MM/YYYY"),
+          }
+    );
   }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
@@ -113,8 +126,18 @@ const VendorCreate = (props) => {
       const key = "validate";
       const validate = validateFormHead(data_head, vendor_require_fields);
       if (validate.validate) {
-        const data = [{ ...data_head, vendor_detail: dataDetail }];
-        console.log("pass");
+        const data = [
+          {
+            ...data_head,
+            vendor_detail: dataDetail.filter(
+              (obj) =>
+                obj.commit &&
+                obj.address_type_id !== null &&
+                obj.vendor_detail_address !== null
+            ),
+          },
+        ];
+        console.log("pass", data);
         data_head.vendor_id
           ? dispatch(update_vendor(data_head.vendor_id, data, redirect_to_view))
           : dispatch(create_vendor(data, redirect_to_view));
@@ -142,7 +165,7 @@ const VendorCreate = (props) => {
   const redirect_to_view = (id) => {
     history.push("/purchase/vendor/view/" + (id ? id : "new"));
   };
-
+  console.log("data_head", data_head);
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -161,7 +184,7 @@ const VendorCreate = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{data_head.cnv_vendor_created}</Text>
+            <Text className="text-view">{data_head.vendor_created}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-tab-margin">
@@ -204,6 +227,7 @@ const VendorCreate = (props) => {
                       <Col span={18}>
                         <Input
                           name="vendor_name_short"
+                          disabled={data_head.vendor_id ? true : false}
                           onChange={(e) =>
                             upDateFormValue({
                               vendor_name_short: e.target.value,
@@ -615,12 +639,12 @@ const VendorCreate = (props) => {
                 <Row className="col-2 row-margin-vertical">
                   <Col span={12}>
                     <Row className="row-margin">
-                      <Col span={5}>
+                      <Col span={7}>
                         <Text strong>
                           <span className="require">* </span>Condition Billing
                         </Text>
                       </Col>
-                      <Col span={18}>
+                      <Col span={16}>
                         <Input
                           name="vendor_condition_billing"
                           placeholder="e.g. Affter Delivery"
@@ -637,12 +661,12 @@ const VendorCreate = (props) => {
                       <Col span={1}></Col>
                     </Row>
                     <Row className="row-margin">
-                      <Col span={5}>
+                      <Col span={7}>
                         <Text strong>
                           <span className="require">* </span>Payment Terms
                         </Text>
                       </Col>
-                      <Col span={18}>
+                      <Col span={16}>
                         <CustomSelect
                           placeholder={"Payment Term"}
                           allowClear
@@ -668,12 +692,12 @@ const VendorCreate = (props) => {
                       <Col span={1}></Col>
                     </Row>
                     <Row className="row-margin">
-                      <Col span={5}>
+                      <Col span={7}>
                         <Text strong>
                           <span className="require">* </span>Credit Limit
                         </Text>
                       </Col>
-                      <Col span={18}>
+                      <Col span={16}>
                         <Row>
                           <Col span={12}>
                             <InputNumber

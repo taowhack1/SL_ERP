@@ -57,43 +57,43 @@ const SatisficationForm = () => {
     // setLoading(true);
     console.log("submit get", methods.getValues());
     console.log("submit data", data);
-    // const filterData = {
-    //   post: data.npr_satisfaction_spec_detail.filter(
-    //     (obj) => obj.commit === 1 && obj.npr_satisfaction_spec_id === null
-    //   ),
-    //   put: data.npr_satisfaction_spec_detail.filter(
-    //     (obj) => obj.commit === 1 && obj.npr_satisfaction_spec_id !== null
-    //   ),
-    // };
-    // const saveData = async () => {
-    //   const resp = await saveSatisfication(id, filterData.post, filterData.put);
-    //   console.log("onSubmit", resp);
-    //   if (resp[0].value !== 0 && resp[0].value.success) {
-    //     message.success({
-    //       content: "Add New Specification Subject Completed..",
-    //       key: "add",
-    //     });
-    //   }
-    //   if (resp[1].value !== 0 && resp[1].value.success) {
-    //     message.success({
-    //       content: "Update Specification Subject Completed..",
-    //       key: "update",
-    //     });
-    //   }
-    //   const getData = async () => {
-    //     const resp = await getSatisfication(id);
-    //     console.log("resp get", resp);
-    //     methods.reset({
-    //       ...resp.data[0],
-    //       npr_satisfaction_spec_detail: sortDataWithoutCommit(
-    //         resp.data[0].npr_satisfaction_spec_detail
-    //       ),
-    //     });
-    //     setTimeout(() => setLoading(false), 1000);
-    //   };
-    //   getData();
-    // };
-    // saveData();
+    const filterData = {
+      post: data.npr_satisfaction_spec_detail.filter(
+        (obj) => obj.commit === 1 && obj.npr_satisfaction_spec_id === null
+      ),
+      put: data.npr_satisfaction_spec_detail.filter(
+        (obj) => obj.commit === 1 && obj.npr_satisfaction_spec_id !== null
+      ),
+    };
+    const saveData = async () => {
+      const resp = await saveSatisfication(id, filterData.post, filterData.put);
+      console.log("onSubmit", resp);
+      if (resp[0].value !== 0 && resp[0].value.success) {
+        message.success({
+          content: "Add New Specification Subject Completed..",
+          key: "add",
+        });
+      }
+      if (resp[1].value !== 0 && resp[1].value.success) {
+        message.success({
+          content: "Update Specification Subject Completed..",
+          key: "update",
+        });
+      }
+      const getData = async () => {
+        const resp = await getSatisfication(id);
+        console.log("resp get", resp);
+        methods.reset({
+          ...resp.data[0],
+          npr_satisfaction_spec_detail: sortDataWithoutCommit(
+            resp.data[0].npr_satisfaction_spec_detail
+          ),
+        });
+        setTimeout(() => setLoading(false), 1000);
+      };
+      getData();
+    };
+    saveData();
   };
 
   useEffect(() => {

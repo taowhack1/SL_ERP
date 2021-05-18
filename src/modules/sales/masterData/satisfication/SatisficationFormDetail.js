@@ -46,7 +46,17 @@ const columns = ({
             control={control}
             name={`npr_satisfaction_spec_detail.${index}.npr_satisfaction_spec_name`}
             defaultValue={val}
-            render={({ field }) => <Input {...field} size={"small"} />}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                onChange={(val) => {
+                  onChange(val);
+                  setValue(`npr_satisfaction_spec_detail.${index}.commit`, 1);
+                }}
+                value={value}
+                size={"small"}
+                disabled={record.npr_satisfaction_spec_actived ? false : true}
+              />
+            )}
           />
         </>
       );
@@ -74,10 +84,6 @@ const columns = ({
                 onChange={(val) => {
                   onChange(val);
                   setValue(`npr_satisfaction_spec_detail.${index}.commit`, 1);
-                  setValue(
-                    `npr_satisfaction_spec_detail.${index}.user_name`,
-                    user_name
-                  );
                 }}
                 checked={value}
                 size="small"
@@ -128,6 +134,7 @@ const SatisficationFormDetail = () => {
             user_name: user_name,
             npr_satisfaction_spec_remark: null,
             npr_satisfaction_spec_name_th: null,
+            npr_satisfaction_spec_actived: true,
             commit: 1,
           })
         }

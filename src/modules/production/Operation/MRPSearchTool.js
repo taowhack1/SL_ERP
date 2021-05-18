@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import CustomSelect from "../../../components/CustomSelect";
 import moment from "moment";
+import MRPViewSalesOrderList from "./mrp/MRPViewSalesOrderList";
 const { RangePicker } = DatePicker;
 const MRPSearchTool = ({ onChangeSeach }) => {
   const { item_list } = useSelector((state) => state.inventory.master_data);
@@ -175,12 +176,8 @@ const MRPSearchTool = ({ onChangeSeach }) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={4}></Col>
-          <Col span={8}>
-            {/* <Search
-              onSearch={changeSearchBox}
-              search={state.search_text}
-            /> */}
+          <Col span={11} offset={2}>
+            <MRPViewSalesOrderList />
           </Col>
 
           <Col span={1}></Col>

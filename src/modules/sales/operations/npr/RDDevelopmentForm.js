@@ -8,24 +8,7 @@ import { useHistory } from "react-router";
 import CustomLabel from "../../../../components/CustomLabel";
 import CustomSelect from "../../../../components/CustomSelect";
 import { report_server } from "../../../../include/js/main_config";
-const initialState = {
-  id: 0,
-  npr_id: null,
-  user_name: null,
-  npr_formula_no: "New Revision",
-  npr_formula_remark: null,
-  npr_formula_ref_id: null,
-  npr_formula_description: null,
-  npr_formula_product_no: null,
-  npr_formula_product_name: null,
-  npr_formula_customer_no: null,
-  npr_formula_customer_name: null,
-  npr_formula_sample_qty: null,
-  npr_formula_product_description: null,
-  npr_formula_product_used: null,
-  npr_formula_procedure: null,
-  commit: 1,
-};
+
 const initialStateFormula = {
   id: 0,
   npr_formula_detail_part: null,
@@ -322,6 +305,7 @@ const RDDevelopmentForm = ({ data, formula, setFormula, isFinished }) => {
         rdDevFormula={rdDevFormula}
         rdDevQA={rdDevQA}
         useFormValue={useFormValue}
+        npr_formula_id={npr_formula_id}
       />
     </>
   );

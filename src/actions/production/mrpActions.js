@@ -19,15 +19,21 @@ const getMRPHead = (id, user_name) =>
   axios.get(`${api_mrp}/${id}&${user_name}`, header_config);
 
 export const getSOReference = () => (dispatch) => {
-  axios.get(`${api_mrp_so_ref}`, header_config).then((res) => {
-    dispatch({ type: GET_MRP_SO_REF, payload: res.data });
-  });
+  axios
+    .get(`${api_mrp_so_ref}`, header_config)
+    .then((res) => {
+      dispatch({ type: GET_MRP_SO_REF, payload: res.data });
+    })
+    .catch((error) => console.log(error));
 };
 export const getAllMRP = (user_name) => async (dispatch) => {
-  await axios.get(`${api_mrp}/all/${user_name}`, header_config).then((res) => {
-    console.log("getAllMRP", res.data);
-    dispatch({ type: GET_ALL_MRP, payload: res.data[0] });
-  });
+  await axios
+    .get(`${api_mrp}/all/${user_name}`, header_config)
+    .then((res) => {
+      console.log("getAllMRP", res.data);
+      dispatch({ type: GET_ALL_MRP, payload: res.data[0] });
+    })
+    .catch((error) => console.log(error));
 };
 export const getMRPByID = (id, user_name, redirect) => {
   console.log("getMRPByID");

@@ -11,7 +11,7 @@ const apiNPRItems = `/list/item/npr`;
 const apiNPRRD = `/sales/npr_rd`;
 const apiGetNPRFormula = `/sales/npr_formula/npr`;
 const apiNPRFormula = `/sales/npr_formula`;
-const apiGetNPRFeedback = `/sales/npr_satisfaction`;
+const apiGetNPRFeedback = `/sales/npr_satisfication/formula`;
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   try {
@@ -208,14 +208,9 @@ const getNPRFeedback = (id) => {
     return axios
       .get(`${apiGetNPRFeedback}/${id}`, header_config)
       .then((res) => {
-        console.log("then");
+        const { data } = res.data;
         console.log("res ", res);
-        // if (res.data) {
-        return { success: true, data: res.data };
-        // } else {
-        //   message.error(errorText.getData);
-        //   return { success: false, data: null };
-        // }
+        return { success: true, data: data };
       })
       .catch((error) => {
         console.log("catch");

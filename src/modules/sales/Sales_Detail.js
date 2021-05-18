@@ -65,6 +65,7 @@ const ItemLine = ({
   };
 
   const onChangeValue = (rowId, data) => {
+    console.log("onChangeValue", rowId, data);
     detailDispatch({
       type: "CHANGE_DETAIL_VALUE",
       payload: {
@@ -130,7 +131,7 @@ const ItemLine = ({
                           ? onChangeValue(line.id, {
                               item_id: option.data.item_id,
                               uom_id: option.data.uom_id,
-                              item_no_name: option.data.title,
+                              item_no_name: option.data.item_no_name,
                               uom_no: option.data.uom_no,
                             })
                           : onChangeValue(line.id, {
@@ -209,30 +210,6 @@ const ItemLine = ({
                       size="small"
                     />
                   </Col>
-                  {/* <Col span={3} className="text-number">
-                    {console.log(line.qn_detail_discount)}
-                    <InputNumber
-                      {...getNumberFormat(4)}
-                      name="item_discount"
-                      placeholder="Discount"
-                      value={line.qn_detail_discount}
-                      min={0.0}
-                      step={5}
-                      onChange={(data) => {
-                        onChangeValue(line.id, {
-                          qn_detail_discount: data,
-                          qn_detail_total_price: calSubtotal(
-                            line.qn_detail_qty,
-                            line.qn_detail_price,
-                            data
-                          ),
-                        });
-                        updateAmount();
-                      }}
-                      className={"full-width"}
-                      size="small"
-                    />
-                  </Col> */}
                   <Col span={3} className="text-number">
                     <div className="total-number">
                       {convertDigit(line.qn_detail_total_price, 4)}
@@ -316,11 +293,6 @@ const ItemLine = ({
                       {convertDigit(line.qn_detail_price, 4)}
                     </Text>
                   </Col>
-                  {/* <Col span={3} className="text-number">
-                    <Text className="text-view">
-                      {convertDigit(line.qn_detail_discount)}
-                    </Text>
-                  </Col> */}
                   <Col span={3} className="text-number">
                     <Text className="text-view">
                       {convertDigit(line.qn_detail_total_price, 4)}
