@@ -8,6 +8,9 @@ import { useHistory } from "react-router";
 import CustomLabel from "../../../../components/CustomLabel";
 import CustomSelect from "../../../../components/CustomSelect";
 import { report_server } from "../../../../include/js/main_config";
+import { useForm, FormProvider } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { SET_LOADING } from "../../../../actions/types";
 
 const initialStateFormula = {
   id: 0,
@@ -32,7 +35,14 @@ const initialStateFormulaQA = {
   qa_method_id: null,
   qa_method_name: null,
 };
-const RDDevelopmentForm = ({ data, formula, setFormula, isFinished }) => {
+const RDDevelopmentForm = ({
+  data,
+  formula,
+  setFormula,
+  isFinished,
+  initialState,
+}) => {
+  const dispatch = useDispatch();
   const { tg_trans_status_id } = data;
 
   const {
@@ -48,6 +58,7 @@ const RDDevelopmentForm = ({ data, formula, setFormula, isFinished }) => {
     npr_product_no: npr_formula_product_no,
     npr_product_name: npr_formula_product_name,
     npr_sample_request_qty: npr_formula_sample_qty,
+    category_id,
   } = mainState;
 
   const formRef = {
@@ -64,7 +75,14 @@ const RDDevelopmentForm = ({ data, formula, setFormula, isFinished }) => {
     (user_name === mainState.npr_responsed_required_by || department_id === 1)
       ? false
       : true;
+
   const [state, setState] = useState(data);
+  const methods = useForm({
+    defaultValues: {
+      npr_formula_remark_detail: sortData(data.npr_formula_remark_detail),
+    },
+  });
+
   const { npr_formula_detail, npr_formula_qa, npr_formula_id } = state;
 
   useEffect(() => {
@@ -74,26 +92,41 @@ const RDDevelopmentForm = ({ data, formula, setFormula, isFinished }) => {
           ...data,
           ...formRef,
         });
+    methods.reset({
+      npr_formula_remark_detail: sortData(data.npr_formula_remark_detail),
+    });
   }, [data]);
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
+    console.log("onSubmit", data);
     const saveData = {
       ...state,
+      ...data,
       npr_id: id,
       commit: 1,
       user_name,
     };
     console.log("saveData", saveData);
+    dispatch({ type: SET_LOADING, payload: true });
     const resp = await saveNPRFormula(npr_formula_id, saveData);
     if (resp.success) {
+      console.log("resp save", resp);
       const formulaLength = formula.length;
-      !saveData.npr_formula_id &&
-        setFormula([
-          ...formula.filter((obj) => obj.npr_formula_id !== null),
-          { ...resp.data, id: formulaLength - 1 },
-        ]);
+      !saveData.npr_formula_id
+        ? setFormula([
+            ...formula.filter((obj) => obj.npr_formula_id !== null),
+            { ...resp.data, id: formulaLength - 1 },
+          ])
+        : setFormula(
+            formula.map((obj) =>
+              obj.npr_formula_id === saveData.npr_formula_id
+                ? { ...obj, ...resp.data }
+                : obj
+            )
+          );
     }
     console.log(resp.data);
+    dispatch({ type: SET_LOADING, payload: false });
   };
   const onChange = (data) => {
     console.log("onChange", data);
@@ -184,6 +217,7 @@ const RDDevelopmentForm = ({ data, formula, setFormula, isFinished }) => {
   const useFormValue = {
     onChange,
     state,
+    category_id,
   };
 
   const onPrintFormula = () => {
@@ -201,112 +235,110 @@ const RDDevelopmentForm = ({ data, formula, setFormula, isFinished }) => {
   };
 
   console.log("disabledEdit :", disabledEdit, formula);
+
+  const formContextValue = useMemo(
+    () => ({
+      ...methods,
+      readOnly: disabledEdit,
+      npr_formula_id,
+      user_name,
+    }),
+    [methods, disabledEdit]
+  );
   return (
     <>
-      <div className="form-section-head flex-space mb-1 mt-3">
-        <div className="button-group">
-          <Button
-            size="small"
-            loading={false}
-            disabled={npr_formula_id ? false : true}
-            onClick={onPrintFormula}
-          >
-            Print Formula
-          </Button>
-          <Button
-            size="small"
-            loading={false}
-            disabled={npr_formula_id ? false : true}
-            onClick={onPrintLabel}
-          >
-            Print QR Code
-          </Button>
-        </div>
-        {!isFinished && (
-          <Button
-            onClick={onSubmit}
-            disabled={disabledEdit}
-            className={disabledEdit ? "btn-disabled" : "primary"}
-            size="small"
-            loading={false}
-          >
-            Save Change
-          </Button>
-        )}
-      </div>
-      {disabledEdit && <span className="require">* Pending sales accept.</span>}
-      {!npr_formula_id && (
-        <Row className="col-2 row-margin-vertical">
-          <Col span={12}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <FormProvider {...formContextValue}>
+          <div className="form-section-head flex-space mb-1 mt-3">
+            <div className="button-group">
+              <Button
+                size="small"
+                loading={false}
+                disabled={npr_formula_id ? false : true}
+                onClick={onPrintFormula}
+              >
+                Print Formula
+              </Button>
+              <Button
+                size="small"
+                loading={false}
+                disabled={npr_formula_id ? false : true}
+                onClick={onPrintLabel}
+              >
+                Print QR Code
+              </Button>
+            </div>
+            {!isFinished && (
+              <Button
+                // onClick={onSubmit}
+                htmlType={"submit"}
+                disabled={disabledEdit}
+                className={disabledEdit ? "btn-disabled" : "primary"}
+                size="small"
+                loading={false}
+              >
+                Save Change
+              </Button>
+            )}
+          </div>
+          {disabledEdit && (
+            <span className="require">* Pending sales accept.</span>
+          )}
+          {!npr_formula_id && (
             <Row className="col-2 row-margin-vertical">
-              <Col span={8}>
-                <CustomLabel label="Ref. Formula :" />
-              </Col>
-              <Col span={16}>
-                <CustomSelect
-                  allowClear
-                  showSearch
-                  disabled={disabledEdit}
-                  placeholder={"Select Reference Formula"}
-                  data={formula.filter((obj) => obj.npr_formula_id !== null)}
-                  field_id="npr_formula_id"
-                  field_name="npr_formula_no"
-                  value={state?.npr_formula_ref_no}
-                  onChange={(val, props) => {
-                    const {
-                      npr_formula_id,
-                      npr_formula_no,
-                      npr_formula_detail,
-                      npr_formula_qa,
-                      npr_formula_customer_no,
-                      npr_formula_customer_name,
-                      npr_formula_product_no,
-                      npr_formula_product_name,
-                      npr_formula_sample_qty,
-                      npr_formula_product_used,
-                      npr_formula_product_description,
-                      npr_formula_procedure,
-                    } = props.data;
-                    val !== null || val !== undefined
-                      ? onChange({
-                          npr_formula_ref_id: npr_formula_id,
-                          npr_formula_ref_no: npr_formula_no,
-                          npr_formula_detail: sortData(npr_formula_detail),
-                          npr_formula_qa: sortData(npr_formula_qa),
-                          npr_formula_customer_no,
-                          npr_formula_customer_name,
-                          npr_formula_product_no,
-                          npr_formula_product_name,
-                          npr_formula_sample_qty,
-                          npr_formula_product_used,
-                          npr_formula_product_description,
-                          npr_formula_procedure,
-                          commit: 1,
-                        })
-                      : onChange({
-                          npr_formula_ref_id: null,
-                          npr_formula_ref_no: null,
-                          npr_formula_detail: null,
-                          npr_formula_qa: null,
-                          npr_formula_procedure: null,
-                          ...formRef,
-                        });
-                  }}
-                />
+              <Col span={12}>
+                <Row className="col-2 row-margin-vertical">
+                  <Col span={8}>
+                    <CustomLabel label="Ref. Formula :" />
+                  </Col>
+                  <Col span={16}>
+                    <CustomSelect
+                      allowClear
+                      showSearch
+                      disabled={disabledEdit}
+                      placeholder={"Select Reference Formula"}
+                      data={formula.filter(
+                        (obj) => obj.npr_formula_id !== null
+                      )}
+                      field_id="npr_formula_id"
+                      field_name="npr_formula_no"
+                      value={state?.npr_formula_ref_no}
+                      onChange={(val, props) => {
+                        val !== null && val !== undefined
+                          ? onChange({
+                              ...props.data,
+                              npr_formula_ref_id: props.data.npr_formula_id,
+                              npr_formula_ref_no: props.data.npr_formula_no,
+                              npr_formula_detail: sortData(
+                                props.data.npr_formula_detail
+                              ),
+                              npr_formula_qa: sortData(
+                                props.data.npr_formula_qa
+                              ),
+                              npr_formula_id: null,
+                              tg_trans_status_id: 1,
+                              tg_trans_close_id: 1,
+                              commit: 1,
+                            })
+                          : onChange({ ...initialState, ...formRef });
+                      }}
+                    />
+                  </Col>
+                </Row>
               </Col>
             </Row>
-          </Col>
-        </Row>
-      )}
-      <RDDevelopmentTabs
-        readOnly={disabledEdit}
-        npr_formula_detail={npr_formula_detail}
-        npr_formula_qa={npr_formula_qa}
-        rdDevFormula={rdDevFormula}
-        rdDevQA={rdDevQA}
-        useFormValue={useFormValue}
-        npr_formula_id={npr_formula_id}
-      />
+          )}
+          <RDDevelopmentTabs
+            readOnly={disabledEdit}
+            npr_formula_detail={npr_formula_detail}
+            npr_formula_qa={npr_formula_qa}
+            rdDevFormula={rdDevFormula}
+            rdDevQA={rdDevQA}
+            useFormValue={useFormValue}
+            npr_formula_id={npr_formula_id}
+          />
+        </FormProvider>
+      </form>
     </>
   );
 };

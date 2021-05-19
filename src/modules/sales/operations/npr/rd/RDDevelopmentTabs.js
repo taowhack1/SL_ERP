@@ -5,6 +5,7 @@ import RDTestItem from "../RDTestItem";
 import RDFormulaFeedback from "./RDFormulaFeedback";
 import RDFormulaGeneralDetail from "./RDFormulaGeneralDetail";
 import RDFormulaProcedure from "./RDFormulaProcedure";
+import RDFormulaRemarkDetail from "./RDFormulaRemarkDetail";
 
 const RDDevelopmentTabs = ({
   readOnly,
@@ -36,7 +37,10 @@ const RDDevelopmentTabs = ({
         <Tabs.TabPane tab={"QA"} key={3}>
           <RDTestItem data={npr_formula_qa} {...rdDevQA} readOnly={readOnly} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab={"Feedback"} key={4}>
+        <Tabs.TabPane tab={"Remark"} key={4}>
+          <RDFormulaRemarkDetail readOnly={readOnly} />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab={"Feedback"} key={5}>
           <RDFormulaFeedback
             readOnly={readOnly}
             npr_formula_id={npr_formula_id}
