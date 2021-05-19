@@ -1,6 +1,10 @@
 /** @format */
 
-import { GET_NPR_ITEM_LIST, GET_NPR_LIST } from "../actions/sales/nprActions";
+import {
+  GET_NPR_ITEM_LIST,
+  GET_NPR_LIST,
+  GET_NPR_SMD_MASTER_DATA,
+} from "../actions/sales/nprActions";
 import {
   SET_QN_LIST,
   RESET_QN,
@@ -45,6 +49,7 @@ const inititalState = {
   },
   master_data: {
     customers: [],
+    smd: {},
   },
 };
 
@@ -101,6 +106,15 @@ export default (state = inititalState, action) => {
             ...state.npr,
             itemList: action.payload,
           },
+        },
+      };
+    case GET_NPR_SMD_MASTER_DATA:
+      return {
+        ...state,
+        loading: false,
+        master_data: {
+          ...state.master_data,
+          smd: action.payload,
         },
       };
     case RESET_ALL_SALES:

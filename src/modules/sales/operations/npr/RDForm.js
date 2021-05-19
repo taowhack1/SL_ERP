@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import MainLayout from "../../../../components/MainLayout";
@@ -5,6 +7,7 @@ import NPRTabs from "./NPRTabs";
 import {
   getNPRByID,
   getNPRItemList,
+  getNPRSMDMasterData,
 } from "../../../../actions/sales/nprActions";
 import NPRHead from "./NPRHead";
 import { get_qa_conditions_master } from "../../../../actions/qa/qaTestAction";
@@ -45,7 +48,7 @@ const RDForm = () => {
         {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               Print NPR
             </span>
           ),
@@ -63,6 +66,7 @@ const RDForm = () => {
       dispatch(getRDEmp());
       dispatch(getNPRItemList());
       dispatch(get_qa_conditions_master(3, 1, 1, 1));
+      dispatch(getNPRSMDMasterData());
       const resp = await getNPRByID(id);
       if (resp.success) {
         setState(resp.data);
@@ -76,13 +80,11 @@ const RDForm = () => {
     <>
       <MainLayout {...layoutConfig}>
         <NPRFormContext.Provider
-          value={{ id, state, setState, user_name, department_id }}
-        >
-          <div id="form">
+          value={{ id, state, setState, user_name, department_id }}>
+          <div id='form'>
             <div
-              className="full-width text-center mb-2"
-              style={{ borderBottom: "1px solid #c0c0c0" }}
-            >
+              className='full-width text-center mb-2'
+              style={{ borderBottom: "1px solid #c0c0c0" }}>
               <h1>NEW PRODUCT REQUISITION FORM</h1>
             </div>
             <NPRHead state={state} />

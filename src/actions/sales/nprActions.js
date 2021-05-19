@@ -1,3 +1,5 @@
+/** @format */
+
 import { message } from "antd";
 import axios from "axios";
 import { sortData } from "../../include/js/function_main";
@@ -6,12 +8,14 @@ import { SET_LOADING } from "../types";
 
 const GET_NPR_LIST = "GET_NPR_LIST";
 const GET_NPR_ITEM_LIST = "GET_NPR_ITEM_LIST";
+const GET_NPR_SMD_MASTER_DATA = "GET_NPR_SMD_MASTER_DATA";
 const apiNPR = `/sales/npr`;
 const apiNPRItems = `/list/item/npr`;
 const apiNPRRD = `/sales/npr_rd`;
 const apiGetNPRFormula = `/sales/npr_formula/npr`;
 const apiNPRFormula = `/sales/npr_formula`;
 const apiGetNPRFeedback = `/sales/npr_satisfication/formula`;
+const apiNPRSMDMasterData = `/list/smd_item_master_data`;
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   try {
@@ -225,9 +229,39 @@ const getNPRFeedback = (id) => {
     return { success: false, data: null };
   }
 };
+const getNPRSMDMasterData = () => (dispatch) => {
+  dispatch({ type: SET_LOADING, payload: true });
+  try {
+    axios
+      .get(`${apiNPRSMDMasterData}`, header_config)
+      .then((res) => {
+        console.log("then");
+        console.log("res ", res);
+        if (res.data) {
+          dispatch({ type: GET_NPR_SMD_MASTER_DATA, payload: res.data });
+        } else {
+          message.error(errorText.getData);
+          dispatch({ type: SET_LOADING, payload: false });
+        }
+      })
+      .catch((error) => {
+        console.log("catch");
+        dispatch({ type: SET_LOADING, payload: false });
+        if (!error.response) message.error(errorText.network);
+        if (error.response) message.error(errorText.getData);
+      });
+  } catch (error) {
+    dispatch({ type: SET_LOADING, payload: false });
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+  }
+};
+
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,
+  GET_NPR_SMD_MASTER_DATA,
   getNPRList,
   getNPRByID,
   getNPRItemList,
@@ -235,4 +269,5 @@ export {
   getNPRFormula,
   saveNPRFormula,
   getNPRFeedback,
+  getNPRSMDMasterData,
 };
