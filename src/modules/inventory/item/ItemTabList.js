@@ -112,36 +112,6 @@ const TabPanel = ({
             </Tabs.TabPane>
           )}
 
-        {/* 
-        ยังไม่ใช้งาน
-        {type_id !== undefined &&
-          type_id &&
-          type_id === 3 &&
-          [1, 10, 11].includes(department_id) && (
-            <Tabs.TabPane
-              tab={
-                <span className="tab_pane">
-                  <span className="require">* </span>
-                  {"Production Process"}
-                </span>
-              }
-              key={"4"}
-            >
-              <TabProductionProcess
-                data_head={data_head}
-                upDateFormValue={upDateFormValue}
-                // formula
-                data_production_process_detail={data_production_process_detail}
-                productionProcessDetailDispatch={
-                  productionProcessDetailDispatch
-                }
-                readOnly={readOnly}
-              />
-            </Tabs.TabPane>
-          )} 
-          ยังไม่ใช้งาน
-          */}
-
         {type_id !== undefined &&
           type_id &&
           [1, 2, 3, 4, 5].includes(type_id) &&
@@ -162,7 +132,7 @@ const TabPanel = ({
         {type_id !== undefined &&
           type_id &&
           ![3, 4, 5].includes(type_id) &&
-          [1, 10, 13, 90].includes(department_id) && (
+          [1, 10,11, 13, 90].includes(department_id) && (
             <Tabs.TabPane
               tab={
                 <CustomLabel
