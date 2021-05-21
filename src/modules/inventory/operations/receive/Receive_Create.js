@@ -19,15 +19,10 @@ import {
   create_receive,
   getReceiveById,
   get_po_receive_list,
-  receive_actions,
   update_receive,
 } from "../../../../actions/inventory/receiveActions";
-import {
-  header_config,
-  report_server,
-} from "../../../../include/js/main_config";
+import { header_config } from "../../../../include/js/main_config";
 import { api_receive_get_ref_po_detail } from "../../../../include/js/api";
-import { get_log_by_id, reset_comments } from "../../../../actions/comment&log";
 
 import MainLayout from "../../../../components/MainLayout";
 import moment from "moment";
@@ -43,7 +38,6 @@ import ReceiveHead from "./ReceiveHead";
 import ReceiveTabs from "./ReceiveTabs";
 import DetailLoading from "../../../../components/DetailLoading";
 import { AppContext, ReceiveContext } from "../../../../include/js/context";
-import ModalRemark from "../../../../components/Modal_Remark";
 import { getAllItems } from "../../../../actions/inventory/itemActions";
 import { get_all_vendor } from "../../../../actions/purchase/vendorActions";
 
@@ -124,9 +118,9 @@ const Receive_Create = (props) => {
       ? [
           readOnly && {
             name: "Print",
-            link: `${report_server}/report_receive2.aspx?receive_no=${
-              state && state.receive_no
-            }`,
+            link: `${
+              process.env.REACT_APP_REPORT_SERVER
+            }/report_receive2.aspx?receive_no=${state && state.receive_no}`,
           },
           state &&
             state.button_cancel && {

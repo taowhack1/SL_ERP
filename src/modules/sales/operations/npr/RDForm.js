@@ -12,10 +12,8 @@ import {
 import NPRHead from "./NPRHead";
 import { get_qa_conditions_master } from "../../../../actions/qa/qaTestAction";
 import { useDispatch, useSelector } from "react-redux";
-import DetailLoading from "../../../../components/DetailLoading";
 import { getRDEmp } from "../../../../actions/hrm";
 import { PrinterOutlined } from "@ant-design/icons";
-import { report_server } from "../../../../include/js/main_config";
 export const NPRFormContext = React.createContext();
 const initialState = {
   npr_responsed_required_by: null,
@@ -48,11 +46,11 @@ const RDForm = () => {
         {
           name: (
             <span>
-              <PrinterOutlined className='pd-right-1 button-icon' />
+              <PrinterOutlined className="pd-right-1 button-icon" />
               Print NPR
             </span>
           ),
-          link: `${report_server}/report_npr.aspx?npr_no=${state.npr_no}`,
+          link: `${process.env.REACT_APP_REPORT_SERVER}/report_npr.aspx?npr_no=${state.npr_no}`,
         },
       ],
       back: "/sales/npr",
@@ -80,11 +78,13 @@ const RDForm = () => {
     <>
       <MainLayout {...layoutConfig}>
         <NPRFormContext.Provider
-          value={{ id, state, setState, user_name, department_id }}>
-          <div id='form'>
+          value={{ id, state, setState, user_name, department_id }}
+        >
+          <div id="form">
             <div
-              className='full-width text-center mb-2'
-              style={{ borderBottom: "1px solid #c0c0c0" }}>
+              className="full-width text-center mb-2"
+              style={{ borderBottom: "1px solid #c0c0c0" }}
+            >
               <h1>NEW PRODUCT REQUISITION FORM</h1>
             </div>
             <NPRHead state={state} />

@@ -7,7 +7,6 @@ import RDDevelopmentTabs from "./rd/RDDevelopmentTabs";
 import { useHistory } from "react-router";
 import CustomLabel from "../../../../components/CustomLabel";
 import CustomSelect from "../../../../components/CustomSelect";
-import { report_server } from "../../../../include/js/main_config";
 import { useForm, FormProvider } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { SET_LOADING } from "../../../../actions/types";
@@ -102,12 +101,25 @@ const RDDevelopmentForm = ({
     const saveData = {
       ...state,
       ...data,
+      // npr_formula_detail: state.npr_formula_detail.filter(
+      //   (obj) =>
+      //     obj.trans_field_id !== null &&
+      //     obj.trans_id !== null &&
+      //     obj.npr_formula_detail_percent_qty !== null
+      // ),
+      // npr_formula_qa: state.npr_formula_qa.filter(
+      //   (obj) => obj.qa_specification_id !== null
+      // ),
+      // npr_formula_remark_detail: data.npr_formula_remark_detail.filter(
+      //   (obj) =>
+      //     obj.npr_formula_remark !== null &&
+      //     obj.npr_formula_remark_created_by !== null
+      // ),
       npr_id: id,
       commit: 1,
       user_name,
     };
     console.log("saveData", saveData);
-    dispatch({ type: SET_LOADING, payload: true });
     const resp = await saveNPRFormula(npr_formula_id, saveData);
     if (resp.success) {
       console.log("resp save", resp);
@@ -126,7 +138,6 @@ const RDDevelopmentForm = ({
           );
     }
     console.log(resp.data);
-    dispatch({ type: SET_LOADING, payload: false });
   };
   const onChange = (data) => {
     console.log("onChange", data);
@@ -222,14 +233,14 @@ const RDDevelopmentForm = ({
 
   const onPrintFormula = () => {
     window.open(
-      `${report_server}/report_npr_formula.aspx?npr_formula_no=${state.npr_formula_no}`,
+      `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula.aspx?npr_formula_no=${state.npr_formula_no}`,
       false
     );
   };
 
   const onPrintLabel = () => {
     window.open(
-      `${report_server}/report_npr_formula_qr_code.aspx?npr_formula_no=${state.npr_formula_no}`,
+      `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula_qr_code.aspx?npr_formula_no=${state.npr_formula_no}`,
       false
     );
   };
@@ -282,7 +293,7 @@ const RDDevelopmentForm = ({
             )}
           </div>
           {disabledEdit && (
-            <span className="require">* Pending sales accept.</span>
+            <span className="require">* Pending Sales Accept.</span>
           )}
           {!npr_formula_id && (
             <Row className="col-2 row-margin-vertical">

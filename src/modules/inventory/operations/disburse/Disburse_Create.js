@@ -6,10 +6,7 @@ import {
   create_disburse,
   update_disburse,
 } from "../../../../actions/inventory/disburseActions";
-import {
-  header_config,
-  report_server,
-} from "../../../../include/js/main_config";
+import { header_config } from "../../../../include/js/main_config";
 import { api_disburse_get_ref_issue_detail } from "../../../../include/js/api";
 import { get_log_by_id, reset_comments } from "../../../../actions/comment&log";
 
@@ -78,20 +75,6 @@ const DisburseCreate = (props) => {
     ],
     search: false,
     buttonAction: ["Save", "Validate", "Discard"],
-    // action: [
-    //   {
-    //     name: "Print",
-    //     link: `${report_server}/report_pr.aspx?pr_no=${
-    //       data_head && data_head.disburse_id
-    //     }`,
-    //   },
-    //   data_head &&
-    //     data_head.button_cancel && {
-    //       name: "Cancel",
-    //       cancel: true,
-    //       link: ``,
-    //     },
-    // ],
     step: {
       current: data_head && data_head.node_stay - 1,
       step: flow,

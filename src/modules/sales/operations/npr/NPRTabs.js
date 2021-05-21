@@ -11,10 +11,10 @@ import NPRSampleRequestTab from "./NPRSampleRequestTab";
 import { NPRFormContext } from "./RDForm";
 const NPRTabs = () => {
   const {
-    state: { tg_trans_status_id, trans_id },
+    state: { trans_id },
   } = useContext(NPRFormContext);
   const {
-    authData: { department_id, user_name },
+    authData: { department_id },
   } = useSelector((state) => state.auth);
   return (
     <>

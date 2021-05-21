@@ -9,7 +9,6 @@ import Detail from "./Issue_Detail";
 import { get_log_by_id, reset_comments } from "../../actions/comment&log";
 import { issue_actions } from "../../actions/inventory/issueActions";
 import ModalRemark from "../../components/Modal_Remark";
-import { report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 import CustomLabel from "../../components/CustomLabel";
 import { FileSearchOutlined, SearchOutlined } from "@ant-design/icons";
@@ -84,9 +83,9 @@ const Issue_View = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/report_ream1.aspx?issue_no=${
-          data_head && data_head.issue_no
-        }`,
+        link: `${
+          process.env.REACT_APP_REPORT_SERVER
+        }/report_ream1.aspx?issue_no=${data_head && data_head.issue_no}`,
       },
       data_head &&
         data_head.button_cancel && {

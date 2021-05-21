@@ -59,16 +59,7 @@ const convertDigit = (value, decimalPoint = 6) => {
   return typeof value === "number" && numeral(value).format(format);
 };
 // Sv.Test
-const api_server = `http://192.168.5.222:3009`;
-// const report_server = `http://192.168.9.211:8080/report_dev`;
-// Sv.Production
-const report_server = `http://192.168.9.211:8080/report_purch`;
-// const api_server = `http://192.168.9.210:3009`;
-// export const report_server = `http://192.168.5.207`;
-
 export {
-  api_server,
-  report_server,
   getNumberFormat,
   convertDigit,
   numberFormat,

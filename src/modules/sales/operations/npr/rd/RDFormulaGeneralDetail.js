@@ -146,9 +146,8 @@ const RDFormulaGeneralDetail = ({ readOnly, useFormValue }) => {
             </div>
           </Col>
         </Row>
-
         {
-          // supplement food or cosmetic  only  seee this section
+          //supplement food or cosmetic  only  seee this section
           [87, 88].includes(category_id) && (
             <>
               {category_id === 88 ? ( //is costmetic ?
@@ -395,7 +394,6 @@ const RDFormulaGeneralDetail = ({ readOnly, useFormValue }) => {
             </>
           )
         }
-
         <div className="form-section">
           <Row className="col-2 row-margin-vertical">
             <Col span={24}>

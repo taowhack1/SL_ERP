@@ -23,7 +23,6 @@ import { getConfigurationItemType } from "../../../../actions/inventory/configur
 import { getConfigurationCategory } from "../../../../actions/inventory/configurations/category/categoryAction";
 import { getAllItems } from "../../../../actions/inventory/itemActions";
 import { getMasterDataItem } from "../../../../actions/inventory";
-import { report_server } from "../../../../include/js/main_config";
 import { useHistory } from "react-router";
 import { validateFormHead } from "../../../../include/js/function_main";
 const StockCard = () => {
@@ -135,8 +134,8 @@ const StockCard = () => {
   console.log("state", state);
   return (
     <MainLayout {...config}>
-      <div id='form'>
-        <Row className='col-2'>
+      <div id="form">
+        <Row className="col-2">
           <Row></Row>
           <Col span={8}>
             <h2>
@@ -146,18 +145,18 @@ const StockCard = () => {
           </Col>
           <Col span={12}></Col>
           <Col span={2}></Col>
-          <Col span={2} className='text-right'>
-            <Text className='text-view'></Text>
+          <Col span={2} className="text-right">
+            <Text className="text-view"></Text>
           </Col>
         </Row>
-        <Row className='row-margin'>
+        <Row className="row-margin">
           <Col span={3}>
             <Text strong>All item :</Text>
           </Col>
           <Col span={18}>
             <Row>
               <Checkbox
-                name='item_type_all'
+                name="item_type_all"
                 checked={state.all}
                 onChange={(e) => {
                   changeState({
@@ -166,7 +165,8 @@ const StockCard = () => {
                     category_id: null,
                     item_id: null,
                   });
-                }}>
+                }}
+              >
                 All
               </Checkbox>
               <Col span={12}></Col>
@@ -174,7 +174,7 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className='row-margin'>
+        <Row className="row-margin">
           <Col span={3}>
             <Text strong>Item type :</Text>
           </Col>
@@ -193,10 +193,10 @@ const StockCard = () => {
                   disabled={state.all ? true : false}
                   allowClear
                   placeholder={"Item type"}
-                  name='type_id'
+                  name="type_id"
                   data={itemType}
-                  field_id='type_id'
-                  field_name='type_no_name'
+                  field_id="type_id"
+                  field_name="type_no_name"
                   onChange={(data) => {
                     data
                       ? changeState({
@@ -213,7 +213,7 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className='row-margin'>
+        <Row className="row-margin">
           <Col span={3}>
             <Text strong>Item category : </Text>
           </Col>
@@ -232,7 +232,7 @@ const StockCard = () => {
                   disabled={state.all ? true : false}
                   allowClear
                   placeholder={"Item category"}
-                  name='category_id'
+                  name="category_id"
                   data={
                     state.type_id
                       ? itemCategory.filter(
@@ -240,8 +240,8 @@ const StockCard = () => {
                         )
                       : itemCategory
                   }
-                  field_id='category_id'
-                  field_name='category_no_name'
+                  field_id="category_id"
+                  field_name="category_no_name"
                   onChange={(data, option) => {
                     data
                       ? changeState({
@@ -260,7 +260,7 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className='row-margin'>
+        <Row className="row-margin">
           <Col span={3}>
             <Text strong>Item code : </Text>
           </Col>
@@ -278,9 +278,9 @@ const StockCard = () => {
                 <CustomSelect
                   disabled={state.all ? true : false}
                   placeholder={"Item code"}
-                  name='item_id'
-                  field_id='item_id'
-                  field_name='item_no_name'
+                  name="item_id"
+                  field_id="item_id"
+                  field_name="item_no_name"
                   data={
                     state.category_id
                       ? items.filter(
@@ -304,7 +304,7 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className='row-margin'>
+        <Row className="row-margin">
           <Col span={3}>
             <Text strong>Date : </Text>
           </Col>
@@ -312,9 +312,9 @@ const StockCard = () => {
             <Row>
               <Col span={12}>
                 <RangePicker
-                  name='stock_card_date_start'
+                  name="stock_card_date_start"
                   required={true}
-                  className='full-width'
+                  className="full-width"
                   format={dateFormat}
                   value={[
                     state.stock_card_date_start
@@ -341,7 +341,7 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className='row-margin'>
+        <Row className="row-margin">
           <Col span={3}>
             <Text strong></Text>
           </Col>
@@ -349,23 +349,25 @@ const StockCard = () => {
             <Row>
               <Col span={4}>
                 <Button
-                  type='primary'
-                  name='showReport'
-                  className='full-width'
+                  type="primary"
+                  name="showReport"
+                  className="full-width"
                   icon={<SearchOutlined />}
                   onClick={(e) => showReport(e.target.textContent)}
-                  value='showReport'>
+                  value="showReport"
+                >
                   Search
                 </Button>
               </Col>
               <Col span={4}></Col>
               <Col span={4}>
                 <Button
-                  className='search-button'
+                  className="search-button"
                   danger
                   icon={<ClearOutlined />}
-                  className='full-width'
-                  onClick={reset_state}>
+                  className="full-width"
+                  onClick={reset_state}
+                >
                   Clear Search
                 </Button>{" "}
               </Col>
@@ -373,7 +375,7 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className='row-margin'>
+        <Row className="row-margin">
           <Col span={3}>
             <Text strong></Text>
           </Col>
@@ -381,12 +383,13 @@ const StockCard = () => {
             <Row>
               <Col span={4}>
                 <Button
-                  type='default'
-                  name='excel'
-                  className='full-width'
+                  type="default"
+                  name="excel"
+                  className="full-width"
                   icon={<FileOutlined />}
-                  value='excel'
-                  onClick={(e) => showReport(e.target.textContent)}>
+                  value="excel"
+                  onClick={(e) => showReport(e.target.textContent)}
+                >
                   Exel Download
                 </Button>
               </Col>

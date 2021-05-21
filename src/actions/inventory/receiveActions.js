@@ -2,13 +2,12 @@ import {
   GET_RECEIVE_LIST,
   GET_PO_RECEIVE_LIST,
   GET_PO_DETAIL_REF,
-  GET_RECEIVE_HEAD,
   RESET_RECEIVE,
   GET_RECEIVE_BY_ID,
 } from "../types";
 import axios from "axios";
 import { sortData } from "../../include/js/function_main";
-import { api_server, header_config } from "../../include/js/main_config";
+import { header_config } from "../../include/js/main_config";
 import {
   api_receive_get_ref_po_detail,
   api_receive_get_ref_po_head,
@@ -148,21 +147,95 @@ export const get_receive_by_id = (id, user_name) => async (dispatch) => {
   }
 };
 
-export const create_receive = (user_name, data, redirect) => async (
-  dispatch
-) => {
-  const data_detail = data.receive_detail ?? [];
-  let temp_sub_detail = [];
-  let temp_detail = data_detail;
-  temp_detail.map((detail) => temp_sub_detail.push(detail.receive_sub_detail));
-  console.log("Create Receive", data, data_detail);
-  try {
-    await axios
-      .post(api_receive, data, header_config)
-      .then(async (res) => {
-        console.log("INSERT_HEAD", res);
-        if (res.data[0][0]) {
-          const receive_id = res.data[0][0].receive_id;
+export const create_receive =
+  (user_name, data, redirect) => async (dispatch) => {
+    const data_detail = data.receive_detail ?? [];
+    let temp_sub_detail = [];
+    let temp_detail = data_detail;
+    temp_detail.map((detail) =>
+      temp_sub_detail.push(detail.receive_sub_detail)
+    );
+    console.log("Create Receive", data, data_detail);
+    try {
+      await axios
+        .post(api_receive, data, header_config)
+        .then(async (res) => {
+          console.log("INSERT_HEAD", res);
+          if (res.data[0][0]) {
+            const receive_id = res.data[0][0].receive_id;
+            await axios
+              .post(
+                `${api_receive_detail}/${receive_id}`,
+                data_detail,
+                header_config
+              )
+              .then((res) => {
+                const data_detail = res.data[0];
+                let data_sub_detail = [];
+
+                data_detail.forEach((detail, index) => {
+                  temp_sub_detail[index].forEach((sub) => {
+                    sub.receive_detail_id = detail.receive_detail_id;
+                    data_sub_detail.push(sub);
+                  });
+                });
+
+                console.log("data_sub_detail", data_sub_detail);
+                console.log("INSERT_DETAIL", res);
+
+                axios
+                  .post(
+                    `${api_receive_sub_detail}/${receive_id}`,
+                    data_sub_detail,
+                    header_config
+                  )
+                  .then((res) => {
+                    console.log("INSERT SUB DETAIL", res);
+                    dispatch(get_receive_by_id(receive_id, user_name));
+                    message.success({
+                      content: "Receive Created.",
+                      key: "validate",
+                      duration: 2,
+                    });
+                    redirect(receive_id);
+                  });
+              });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          message.error({
+            content: "Somethings went wrong. \n" + error,
+            key: "validate",
+            duration: 2,
+          });
+        });
+    } catch (error) {
+      console.log(error);
+      message.error({
+        content: "Somethings went wrong. \n" + error,
+        key: "validate",
+        duration: 2,
+      });
+    }
+  };
+
+export const update_receive =
+  (receive_id, user_name, data, redirect) => async (dispatch) => {
+    const data_detail = data.receive_detail;
+    let temp_sub_detail = [];
+    let temp_detail = data_detail;
+    temp_detail.map((detail) =>
+      temp_sub_detail.push(detail.receive_sub_detail)
+    );
+    const agi_post_sub_detail = `/inventory/receive_detail_sub/receive_detail`;
+
+    console.log("update_receive_data", receive_id, data, data_detail);
+    try {
+      await axios
+        .put(`${api_receive}/${receive_id}`, data, header_config)
+        .then(async (res) => {
+          console.log("Update Receive");
           await axios
             .post(
               `${api_receive_detail}/${receive_id}`,
@@ -170,11 +243,12 @@ export const create_receive = (user_name, data, redirect) => async (
               header_config
             )
             .then((res) => {
+              console.log("Update_DETAIL", res);
               const data_detail = res.data[0];
               let data_sub_detail = [];
 
-              data_detail.forEach((detail, index) => {
-                temp_sub_detail[index].forEach((sub) => {
+              data_detail.map((detail, index) => {
+                temp_sub_detail[index].map((sub) => {
                   sub.receive_detail_id = detail.receive_detail_id;
                   data_sub_detail.push(sub);
                 });
@@ -185,7 +259,7 @@ export const create_receive = (user_name, data, redirect) => async (
 
               axios
                 .post(
-                  `${api_receive_sub_detail}/${receive_id}`,
+                  `${agi_post_sub_detail}/${receive_id}`,
                   data_sub_detail,
                   header_config
                 )
@@ -193,104 +267,31 @@ export const create_receive = (user_name, data, redirect) => async (
                   console.log("INSERT SUB DETAIL", res);
                   dispatch(get_receive_by_id(receive_id, user_name));
                   message.success({
-                    content: "Receive Created.",
+                    content: "Receive Updated.",
                     key: "validate",
                     duration: 2,
                   });
                   redirect(receive_id);
                 });
+            })
+            .catch((error) => {
+              console.log(error);
+              message.error({
+                content: "Somethings went wrong.\n" + error,
+                key: "validate",
+                duration: 2,
+              });
             });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        message.error({
-          content: "Somethings went wrong. \n" + error,
-          key: "validate",
-          duration: 2,
         });
+    } catch (error) {
+      console.log(error);
+      message.error({
+        content: "Somethings went wrong. \n" + error,
+        key: "validate",
+        duration: 2,
       });
-  } catch (error) {
-    console.log(error);
-    message.error({
-      content: "Somethings went wrong. \n" + error,
-      key: "validate",
-      duration: 2,
-    });
-  }
-};
-
-export const update_receive = (receive_id, user_name, data, redirect) => async (
-  dispatch
-) => {
-  const data_detail = data.receive_detail;
-  let temp_sub_detail = [];
-  let temp_detail = data_detail;
-  temp_detail.map((detail) => temp_sub_detail.push(detail.receive_sub_detail));
-  const agi_post_sub_detail = `${api_server}/api/inventory/receive_detail_sub/receive_detail`;
-
-  console.log("update_receive_data", receive_id, data, data_detail);
-  try {
-    await axios
-      .put(`${api_receive}/${receive_id}`, data, header_config)
-      .then(async (res) => {
-        console.log("Update Receive");
-        await axios
-          .post(
-            `${api_receive_detail}/${receive_id}`,
-            data_detail,
-            header_config
-          )
-          .then((res) => {
-            console.log("Update_DETAIL", res);
-            const data_detail = res.data[0];
-            let data_sub_detail = [];
-
-            data_detail.map((detail, index) => {
-              temp_sub_detail[index].map((sub) => {
-                sub.receive_detail_id = detail.receive_detail_id;
-                data_sub_detail.push(sub);
-              });
-            });
-
-            console.log("data_sub_detail", data_sub_detail);
-            console.log("INSERT_DETAIL", res);
-
-            axios
-              .post(
-                `${agi_post_sub_detail}/${receive_id}`,
-                data_sub_detail,
-                header_config
-              )
-              .then((res) => {
-                console.log("INSERT SUB DETAIL", res);
-                dispatch(get_receive_by_id(receive_id, user_name));
-                message.success({
-                  content: "Receive Updated.",
-                  key: "validate",
-                  duration: 2,
-                });
-                redirect(receive_id);
-              });
-          })
-          .catch((error) => {
-            console.log(error);
-            message.error({
-              content: "Somethings went wrong.\n" + error,
-              key: "validate",
-              duration: 2,
-            });
-          });
-      });
-  } catch (error) {
-    console.log(error);
-    message.error({
-      content: "Somethings went wrong. \n" + error,
-      key: "validate",
-      duration: 2,
-    });
-  }
-};
+    }
+  };
 
 export const receive_actions = async (data, receive_id, setReload) => {
   console.log("receive_actions");

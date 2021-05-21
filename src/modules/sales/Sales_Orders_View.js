@@ -8,7 +8,6 @@ import { so_actions } from "../../actions/sales";
 import Detail from "./Sales_Order_Detail";
 import ModalRemark from "../../components/Modal_Remark";
 import { get_log_by_id } from "../../actions/comment&log";
-import { report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 
 const { Text } = Typography;
@@ -82,7 +81,7 @@ const SaleOrderView = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/report_so.aspx?so_no=${
+        link: `${process.env.REACT_APP_REPORT_SERVER}/report_so.aspx?so_no=${
           data_head && data_head.so_no
         }`,
       },

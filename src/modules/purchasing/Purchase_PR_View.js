@@ -10,7 +10,6 @@ import TotalFooter from "../../components/TotalFooter";
 import ModalRemark from "../../components/Modal_Remark";
 import { pr_actions } from "../../actions/purchase/PR_Actions";
 import { get_log_by_id } from "../../actions/comment&log";
-import { report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 const { Text } = Typography;
 
@@ -83,7 +82,7 @@ const PRView = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/report_pr.aspx?pr_no=${data_head.pr_no}`,
+        link: `${process.env.REACT_APP_REPORT_SERVER}/report_pr.aspx?pr_no=${data_head.pr_no}`,
       },
       data_head.button_cancel && {
         name: "Cancel",

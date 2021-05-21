@@ -9,7 +9,6 @@ import TotalFooter from "../../components/TotalFooter";
 import ModalRemark from "../../components/Modal_Remark";
 import { qn_actions } from "../../actions/sales";
 import { get_log_by_id } from "../../actions/comment&log";
-import { report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 
 const { Text } = Typography;
@@ -85,9 +84,9 @@ const Sales_Quotations = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/report_quotation.aspx?qn_no=${
-          data_head && data_head.qn_no
-        }`,
+        link: `${
+          process.env.REACT_APP_REPORT_SERVER
+        }/report_quotation.aspx?qn_no=${data_head && data_head.qn_no}`,
       },
       data_head &&
         data_head.button_cancel && {

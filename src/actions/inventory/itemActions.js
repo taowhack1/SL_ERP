@@ -1,10 +1,5 @@
 import { GET_ALL_ITEMS, GET_ITEM_BY_ID } from "../types";
-import {
-  api_server,
-  errorText,
-  header_config,
-  report_server,
-} from "../../include/js/main_config";
+import { errorText, header_config } from "../../include/js/main_config";
 import {
   api_get_item_by_id,
   api_url,
@@ -314,428 +309,428 @@ export const getAllItems = (user_name) => async (dispatch) => {
     });
 };
 
-export const createNewItems = (data, user_name, redirect) => async (
-  dispatch
-) => {
-  const {
-    access_right,
-    data_head,
-    data_detail,
-    data_part,
-    data_qa_detail,
-    data_weight_detail,
-    data_packaging_detail,
-    data_file,
-    data_filling,
-  } = data;
-  console.log("createNewItems RawData :", data);
-  try {
-    axios
-      .post(api_url + "/inventory/item", data_head, header_config)
-      .then(async (res, rej) => {
-        console.log("THen Save ", res);
-        if (res.status === 200 && res.data[0].length) {
-          const item_id = res.data[0][0].item_id;
-          const qaData = {
-            new:
-              data_qa_detail.filter(
-                (obj) =>
-                  (obj.item_qa_id === null || obj.item_qa_id === undefined) &&
-                  obj.commit
-              ) ?? [],
-            update:
-              data_qa_detail.filter((obj) => obj.item_qa_id && obj.commit) ??
-              [],
-          };
-          console.log("qaData create", qaData);
-          Promise.allSettled([
-            save_uom_conversion(item_id, data_head.uom_conversion),
-            // access_right.vendor && saveItemVendor(item_id, data_detail),
-            ...saveItemVendor(item_id, data_detail, user_name),
-            access_right.formula && bind_part_and_formula(item_id, data_part),
-            access_right.qa && createNewQASpec(item_id, qaData.new),
-            access_right.qa && updateQASpec(item_id, qaData.update),
-            access_right.weight && bind_weight(item_id, data_weight_detail),
-            access_right.packaging &&
-              bind_packaging(item_id, data_packaging_detail),
-            access_right.attach_file &&
-              item_save_file(item_id, data_file, user_name),
-            access_right.filling && bind_filling(item_id, data_filling),
-          ])
-            .then(async (data) => {
-              console.log("Create Complete", data);
-              await dispatch(get_item_by_id(item_id, user_name, redirect));
-              message.success({
-                content: "Item Created.",
-                key: "validate",
-                duration: 2,
-              });
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-          return true;
-        } else {
-          alert("Something went wrong please try again...");
-          return false;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        openNotificationWithIcon(
-          "error",
-          "Error !",
-          `${error}.
-          Please contact admin.`
-        );
-      });
-  } catch ({ response }) {
-    openNotificationWithIcon(
-      "error",
-      "Error !",
-      `${response.statusText}.\n Please contact admin.`
-    );
-    // message.error({
-    //   content: "Somethings went wrong. \n" + error,
-    //   key: "error",
-    //   duration: 2,
-    // });
-  }
-};
-
-export const upDateItem = (item_id, data, user_name, redirect) => async (
-  dispatch
-) => {
-  const {
-    access_right,
-    data_head,
-    data_detail,
-    data_part,
-    data_qa_detail,
-    data_weight_detail,
-    data_packaging_detail,
-    data_file,
-    data_filling,
-  } = data;
-  console.log("upDateItem RawData :", data);
-  try {
-    axios
-      .put(api_url + "/inventory/item/" + item_id, data_head, header_config)
-      .then(async (res) => {
-        if (res.status === 200 && res.data[0].length) {
-          const qaData = {
-            new:
-              data_qa_detail
-                .map((obj) => {
-                  return {
-                    ...obj,
-                    item_qa_detail: obj.item_qa_detail.filter(
-                      (objD) =>
-                        objD.commit &&
-                        objD.qa_specification_id !== null &&
-                        objD.qa_method_id !== null &&
-                        objD.qa_specification_id !== null
-                    ),
-                  };
-                })
-                .filter(
+export const createNewItems =
+  (data, user_name, redirect) => async (dispatch) => {
+    const {
+      access_right,
+      data_head,
+      data_detail,
+      data_part,
+      data_qa_detail,
+      data_weight_detail,
+      data_packaging_detail,
+      data_file,
+      data_filling,
+    } = data;
+    console.log("createNewItems RawData :", data);
+    try {
+      axios
+        .post(api_url + "/inventory/item", data_head, header_config)
+        .then(async (res, rej) => {
+          console.log("THen Save ", res);
+          if (res.status === 200 && res.data[0].length) {
+            const item_id = res.data[0][0].item_id;
+            const qaData = {
+              new:
+                data_qa_detail.filter(
                   (obj) =>
                     (obj.item_qa_id === null || obj.item_qa_id === undefined) &&
                     obj.commit
                 ) ?? [],
-            update:
-              data_qa_detail
-                .map((obj) => {
-                  return {
-                    ...obj,
-                    item_qa_detail: obj.item_qa_detail.filter(
-                      (objD) =>
-                        objD.commit &&
-                        objD.qa_specification_id !== null &&
-                        objD.qa_method_id !== null &&
-                        objD.qa_specification_id !== null
-                    ),
-                  };
-                })
-                .filter((obj) => obj.item_qa_id && obj.commit) ?? [],
-          };
-          console.log("qaData", qaData);
-          Promise.allSettled([
-            save_uom_conversion(item_id, data_head.uom_conversion),
-            ...saveItemVendor(item_id, data_detail, user_name),
-            access_right.formula && bind_part_and_formula(item_id, data_part),
-            access_right.qa && createNewQASpec(item_id, qaData.new),
-            access_right.qa && updateQASpec(item_id, qaData.update),
-            access_right.weight && bind_weight(item_id, data_weight_detail),
-            access_right.packaging &&
-              bind_packaging(item_id, data_packaging_detail),
-            // access_right.attach_file &&
-            item_save_file(item_id, data_file, user_name),
-            access_right.filling && bind_filling(item_id, data_filling),
-          ])
-            .then((data) => {
-              console.log("Update Complete", data);
-              if (data[2].value) {
-                Promise.allSettled(data[2].value).then((res) => {
-                  console.log("Then Update File");
+              update:
+                data_qa_detail.filter((obj) => obj.item_qa_id && obj.commit) ??
+                [],
+            };
+            console.log("qaData create", qaData);
+            Promise.allSettled([
+              save_uom_conversion(item_id, data_head.uom_conversion),
+              // access_right.vendor && saveItemVendor(item_id, data_detail),
+              ...saveItemVendor(item_id, data_detail, user_name),
+              access_right.formula && bind_part_and_formula(item_id, data_part),
+              access_right.qa && createNewQASpec(item_id, qaData.new),
+              access_right.qa && updateQASpec(item_id, qaData.update),
+              access_right.weight && bind_weight(item_id, data_weight_detail),
+              access_right.packaging &&
+                bind_packaging(item_id, data_packaging_detail),
+              access_right.attach_file &&
+                item_save_file(item_id, data_file, user_name),
+              access_right.filling && bind_filling(item_id, data_filling),
+            ])
+              .then(async (data) => {
+                console.log("Create Complete", data);
+                await dispatch(get_item_by_id(item_id, user_name, redirect));
+                message.success({
+                  content: "Item Created.",
+                  key: "validate",
+                  duration: 2,
+                });
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            return true;
+          } else {
+            alert("Something went wrong please try again...");
+            return false;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          openNotificationWithIcon(
+            "error",
+            "Error !",
+            `${error}.
+          Please contact admin.`
+          );
+        });
+    } catch ({ response }) {
+      openNotificationWithIcon(
+        "error",
+        "Error !",
+        `${response.statusText}.\n Please contact admin.`
+      );
+      // message.error({
+      //   content: "Somethings went wrong. \n" + error,
+      //   key: "error",
+      //   duration: 2,
+      // });
+    }
+  };
+
+export const upDateItem =
+  (item_id, data, user_name, redirect) => async (dispatch) => {
+    const {
+      access_right,
+      data_head,
+      data_detail,
+      data_part,
+      data_qa_detail,
+      data_weight_detail,
+      data_packaging_detail,
+      data_file,
+      data_filling,
+    } = data;
+    console.log("upDateItem RawData :", data);
+    try {
+      axios
+        .put(api_url + "/inventory/item/" + item_id, data_head, header_config)
+        .then(async (res) => {
+          if (res.status === 200 && res.data[0].length) {
+            const qaData = {
+              new:
+                data_qa_detail
+                  .map((obj) => {
+                    return {
+                      ...obj,
+                      item_qa_detail: obj.item_qa_detail.filter(
+                        (objD) =>
+                          objD.commit &&
+                          objD.qa_specification_id !== null &&
+                          objD.qa_method_id !== null &&
+                          objD.qa_specification_id !== null
+                      ),
+                    };
+                  })
+                  .filter(
+                    (obj) =>
+                      (obj.item_qa_id === null ||
+                        obj.item_qa_id === undefined) &&
+                      obj.commit
+                  ) ?? [],
+              update:
+                data_qa_detail
+                  .map((obj) => {
+                    return {
+                      ...obj,
+                      item_qa_detail: obj.item_qa_detail.filter(
+                        (objD) =>
+                          objD.commit &&
+                          objD.qa_specification_id !== null &&
+                          objD.qa_method_id !== null &&
+                          objD.qa_specification_id !== null
+                      ),
+                    };
+                  })
+                  .filter((obj) => obj.item_qa_id && obj.commit) ?? [],
+            };
+            console.log("qaData", qaData);
+            Promise.allSettled([
+              save_uom_conversion(item_id, data_head.uom_conversion),
+              ...saveItemVendor(item_id, data_detail, user_name),
+              access_right.formula && bind_part_and_formula(item_id, data_part),
+              access_right.qa && createNewQASpec(item_id, qaData.new),
+              access_right.qa && updateQASpec(item_id, qaData.update),
+              access_right.weight && bind_weight(item_id, data_weight_detail),
+              access_right.packaging &&
+                bind_packaging(item_id, data_packaging_detail),
+              // access_right.attach_file &&
+              item_save_file(item_id, data_file, user_name),
+              access_right.filling && bind_filling(item_id, data_filling),
+            ])
+              .then((data) => {
+                console.log("Update Complete", data);
+                if (data[2].value) {
+                  Promise.allSettled(data[2].value).then((res) => {
+                    console.log("Then Update File");
+                    dispatch(get_item_by_id(item_id, user_name, redirect));
+                    message.success({
+                      content: "Item Update.",
+                      key: "validate",
+                      duration: 2,
+                    });
+                  });
+                } else {
                   dispatch(get_item_by_id(item_id, user_name, redirect));
                   message.success({
                     content: "Item Update.",
                     key: "validate",
                     duration: 2,
                   });
-                });
-              } else {
-                dispatch(get_item_by_id(item_id, user_name, redirect));
-                message.success({
-                  content: "Item Update.",
-                  key: "validate",
-                  duration: 2,
-                });
-              }
-            })
-            .catch((error) => {
-              console.log("Promise Catch");
-            });
+                }
+              })
+              .catch((error) => {
+                console.log("Promise Catch");
+              });
 
-          // return true;
-        } else {
-          alert("Something went wrong please try again...");
-          // return false;
-        }
-      });
-  } catch (error) {
-    console.log(error);
-    message.error({
-      content: "Somethings went wrong. \n" + error,
-      key: "error",
-      duration: 2,
-    });
-  }
-};
-
-export const get_item_by_id = (item_id, user_name, redirect) => async (
-  dispatch
-) => {
-  console.log("GET_ITEM_BY_ID FUNCTION");
-
-  try {
-    if (item_id) {
-      console.log(`${api_get_item_by_id}/${item_id}&${user_name}`);
-      const res_head = axios.get(
-        `${api_get_item_by_id}/${item_id}&${user_name}`,
-        header_config
-      );
-      const res_detail = axios.get(
-        `${api_item_vendor}/${item_id}`,
-        header_config
-      );
-      const res_part = axios.get(
-        `${api_get_part_and_formula_all}/${item_id}`,
-        header_config
-      );
-      const res_qa = axios.get(`${api_item_qa}/${item_id}`, header_config);
-      const res_weight = axios.get(
-        `${api_item_weight}/${item_id}`,
-        header_config
-      );
-      const res_packaging = axios.get(
-        `${api_item_packaging}/${item_id}`,
-        header_config
-      );
-      const res_file = axios.get(
-        `${api_upload_file}/${item_id}`,
-        header_config
-      );
-      const res_filling = axios.get(
-        `${api_filling_process}/${item_id}`,
-        header_config
-      );
-      const res_uom_conversion = axios.get(
-        `${api_item_uom_conversion}/${item_id}`,
-        header_config
-      );
-      Promise.allSettled([
-        res_head,
-        res_detail,
-        res_part,
-        res_qa,
-        res_weight,
-        res_packaging,
-        res_file,
-        res_filling,
-        res_uom_conversion,
-      ])
-        .then((data) => {
-          console.log("Promise.allSettled GET ITEM BY ID", data);
-          const packingItemData = (data) => {
-            const data_part = sortData(
-              data[2].value.data &&
-                data[2].value.data.map((obj) => {
-                  return {
-                    ...obj,
-                    item_part_specification_detail: sortData(
-                      obj.item_part_specification_detail
-                    ),
-                    item_formula: sortData(obj.item_formula),
-                    item_part_mix: sortData(obj.item_part_mix),
-                  };
-                })
-            );
-            const data_file_temp = data[6].value.data[0];
-            const item = {
-              data_head: {
-                ...data[0].value.data.main_master,
-                // item_qa: sortData(data[3].value.data),
-                uom_conversion: sortDataWithoutCommit(data[8].value.data[0]),
-                qa_spec: sortData(
-                  data[3]?.value?.data?.map((obj) => {
-                    return {
-                      ...obj,
-                      item_qa_detail: sortData(obj.item_qa_detail),
-                    };
-                  })
-                ),
-                pu_vendor: sortDataWithoutCommit(
-                  data[1].value?.data?.map((obj, key) => {
-                    return {
-                      ...obj,
-                      item_vendor_detail: sortData(obj.item_vendor_detail),
-                      item_vendor_detail_document: {
-                        certificate: {
-                          2: obj.item_vendor_detail_document.length
-                            ? convertFileField(
-                                obj.item_vendor_detail_document.filter(
-                                  (file) => file.file_type_id === 2
-                                )[0]
-                              )
-                            : null,
-                          3: obj.item_vendor_detail_document.length
-                            ? convertFileField(
-                                obj.item_vendor_detail_document.filter(
-                                  (file) => file.file_type_id === 3
-                                )[0]
-                              )
-                            : null,
-                          4: obj.item_vendor_detail_document.length
-                            ? convertFileField(
-                                obj.item_vendor_detail_document.filter(
-                                  (file) => file.file_type_id === 4
-                                )[0]
-                              )
-                            : null,
-                          5: obj.item_vendor_detail_document.length
-                            ? convertFileField(
-                                obj.item_vendor_detail_document.filter(
-                                  (file) => file.file_type_id === 5
-                                )[0]
-                              )
-                            : null,
-                          6: obj.item_vendor_detail_document.length
-                            ? convertFileField(
-                                obj.item_vendor_detail_document.filter(
-                                  (file) => file.file_type_id === 6
-                                )[0]
-                              )
-                            : null,
-                        },
-                      },
-                    };
-                  })
-                ),
-              },
-              // data_detail: [],
-              data_part: data_part,
-              data_weight_detail: sortData(data[4].value.data[0]),
-              data_packaging_detail: sortData(data[5].value.data[0]),
-              data_file: {
-                item_image:
-                  data_file_temp.length &&
-                  convertFileField(
-                    data_file_temp.filter((file) => file.file_type_id === 1)[0]
-                  ),
-                certificate: {
-                  2:
-                    data_file_temp.length &&
-                    convertFileField(
-                      data_file_temp.filter(
-                        (file) => file.file_type_id === 2
-                      )[0]
-                    ),
-                  3:
-                    data_file_temp.length &&
-                    convertFileField(
-                      data_file_temp.filter(
-                        (file) => file.file_type_id === 3
-                      )[0]
-                    ),
-                  4:
-                    data_file_temp.length &&
-                    convertFileField(
-                      data_file_temp.filter(
-                        (file) => file.file_type_id === 4
-                      )[0]
-                    ),
-                  5:
-                    data_file_temp.length &&
-                    convertFileField(
-                      data_file_temp.filter(
-                        (file) => file.file_type_id === 5
-                      )[0]
-                    ),
-                  6:
-                    data_file_temp.length &&
-                    convertFileField(
-                      data_file_temp.filter(
-                        (file) => file.file_type_id === 6
-                      )[0]
-                    ),
-                  7:
-                    data_file_temp.length &&
-                    convertFileField(
-                      data_file_temp.filter(
-                        (file) => file.file_type_id === 7
-                      )[0]
-                    ),
-                  8:
-                    data_file_temp.length &&
-                    convertFileField(
-                      data_file_temp.filter(
-                        (file) => file.file_type_id === 8
-                      )[0]
-                    ),
-                  9:
-                    data_file_temp.length &&
-                    convertFileField(
-                      data_file_temp.filter(
-                        (file) => file.file_type_id === 9
-                      )[0]
-                    ),
-                },
-              },
-              data_filling: sortData(data[7].value.data[0]),
-            };
-
-            return item;
-          };
-          const itemData = packingItemData(data);
-          console.log("itemData", itemData);
-          dispatch({ type: GET_ITEM_BY_ID, payload: itemData });
-          itemData.data_head && redirect && redirect(item_id);
-        })
-        .catch((error) => {
-          console.log(error);
-          message.error({
-            content: "Somethings went wrong or Network Error.",
-            key: "validate",
-            duration: 4,
-          });
+            // return true;
+          } else {
+            alert("Something went wrong please try again...");
+            // return false;
+          }
         });
+    } catch (error) {
+      console.log(error);
+      message.error({
+        content: "Somethings went wrong. \n" + error,
+        key: "error",
+        duration: 2,
+      });
     }
-  } catch (error) {
-    alert("Oops! Somethings went wrong..\n" + error);
-  }
-};
+  };
+
+export const get_item_by_id =
+  (item_id, user_name, redirect) => async (dispatch) => {
+    console.log("GET_ITEM_BY_ID FUNCTION");
+
+    try {
+      if (item_id) {
+        console.log(`${api_get_item_by_id}/${item_id}&${user_name}`);
+        const res_head = axios.get(
+          `${api_get_item_by_id}/${item_id}&${user_name}`,
+          header_config
+        );
+        const res_detail = axios.get(
+          `${api_item_vendor}/${item_id}`,
+          header_config
+        );
+        const res_part = axios.get(
+          `${api_get_part_and_formula_all}/${item_id}`,
+          header_config
+        );
+        const res_qa = axios.get(`${api_item_qa}/${item_id}`, header_config);
+        const res_weight = axios.get(
+          `${api_item_weight}/${item_id}`,
+          header_config
+        );
+        const res_packaging = axios.get(
+          `${api_item_packaging}/${item_id}`,
+          header_config
+        );
+        const res_file = axios.get(
+          `${api_upload_file}/${item_id}`,
+          header_config
+        );
+        const res_filling = axios.get(
+          `${api_filling_process}/${item_id}`,
+          header_config
+        );
+        const res_uom_conversion = axios.get(
+          `${api_item_uom_conversion}/${item_id}`,
+          header_config
+        );
+        Promise.allSettled([
+          res_head,
+          res_detail,
+          res_part,
+          res_qa,
+          res_weight,
+          res_packaging,
+          res_file,
+          res_filling,
+          res_uom_conversion,
+        ])
+          .then((data) => {
+            console.log("Promise.allSettled GET ITEM BY ID", data);
+            const packingItemData = (data) => {
+              const data_part = sortData(
+                data[2].value.data &&
+                  data[2].value.data.map((obj) => {
+                    return {
+                      ...obj,
+                      item_part_specification_detail: sortData(
+                        obj.item_part_specification_detail
+                      ),
+                      item_formula: sortData(obj.item_formula),
+                      item_part_mix: sortData(obj.item_part_mix),
+                    };
+                  })
+              );
+              const data_file_temp = data[6].value.data[0];
+              const item = {
+                data_head: {
+                  ...data[0].value.data.main_master,
+                  // item_qa: sortData(data[3].value.data),
+                  uom_conversion: sortDataWithoutCommit(data[8].value.data[0]),
+                  qa_spec: sortData(
+                    data[3]?.value?.data?.map((obj) => {
+                      return {
+                        ...obj,
+                        item_qa_detail: sortData(obj.item_qa_detail),
+                      };
+                    })
+                  ),
+                  pu_vendor: sortDataWithoutCommit(
+                    data[1].value?.data?.map((obj, key) => {
+                      return {
+                        ...obj,
+                        item_vendor_detail: sortData(obj.item_vendor_detail),
+                        item_vendor_detail_document: {
+                          certificate: {
+                            2: obj.item_vendor_detail_document.length
+                              ? convertFileField(
+                                  obj.item_vendor_detail_document.filter(
+                                    (file) => file.file_type_id === 2
+                                  )[0]
+                                )
+                              : null,
+                            3: obj.item_vendor_detail_document.length
+                              ? convertFileField(
+                                  obj.item_vendor_detail_document.filter(
+                                    (file) => file.file_type_id === 3
+                                  )[0]
+                                )
+                              : null,
+                            4: obj.item_vendor_detail_document.length
+                              ? convertFileField(
+                                  obj.item_vendor_detail_document.filter(
+                                    (file) => file.file_type_id === 4
+                                  )[0]
+                                )
+                              : null,
+                            5: obj.item_vendor_detail_document.length
+                              ? convertFileField(
+                                  obj.item_vendor_detail_document.filter(
+                                    (file) => file.file_type_id === 5
+                                  )[0]
+                                )
+                              : null,
+                            6: obj.item_vendor_detail_document.length
+                              ? convertFileField(
+                                  obj.item_vendor_detail_document.filter(
+                                    (file) => file.file_type_id === 6
+                                  )[0]
+                                )
+                              : null,
+                          },
+                        },
+                      };
+                    })
+                  ),
+                },
+                // data_detail: [],
+                data_part: data_part,
+                data_weight_detail: sortData(data[4].value.data[0]),
+                data_packaging_detail: sortData(data[5].value.data[0]),
+                data_file: {
+                  item_image:
+                    data_file_temp.length &&
+                    convertFileField(
+                      data_file_temp.filter(
+                        (file) => file.file_type_id === 1
+                      )[0]
+                    ),
+                  certificate: {
+                    2:
+                      data_file_temp.length &&
+                      convertFileField(
+                        data_file_temp.filter(
+                          (file) => file.file_type_id === 2
+                        )[0]
+                      ),
+                    3:
+                      data_file_temp.length &&
+                      convertFileField(
+                        data_file_temp.filter(
+                          (file) => file.file_type_id === 3
+                        )[0]
+                      ),
+                    4:
+                      data_file_temp.length &&
+                      convertFileField(
+                        data_file_temp.filter(
+                          (file) => file.file_type_id === 4
+                        )[0]
+                      ),
+                    5:
+                      data_file_temp.length &&
+                      convertFileField(
+                        data_file_temp.filter(
+                          (file) => file.file_type_id === 5
+                        )[0]
+                      ),
+                    6:
+                      data_file_temp.length &&
+                      convertFileField(
+                        data_file_temp.filter(
+                          (file) => file.file_type_id === 6
+                        )[0]
+                      ),
+                    7:
+                      data_file_temp.length &&
+                      convertFileField(
+                        data_file_temp.filter(
+                          (file) => file.file_type_id === 7
+                        )[0]
+                      ),
+                    8:
+                      data_file_temp.length &&
+                      convertFileField(
+                        data_file_temp.filter(
+                          (file) => file.file_type_id === 8
+                        )[0]
+                      ),
+                    9:
+                      data_file_temp.length &&
+                      convertFileField(
+                        data_file_temp.filter(
+                          (file) => file.file_type_id === 9
+                        )[0]
+                      ),
+                  },
+                },
+                data_filling: sortData(data[7].value.data[0]),
+              };
+
+              return item;
+            };
+            const itemData = packingItemData(data);
+            console.log("itemData", itemData);
+            dispatch({ type: GET_ITEM_BY_ID, payload: itemData });
+            itemData.data_head && redirect && redirect(item_id);
+          })
+          .catch((error) => {
+            console.log(error);
+            message.error({
+              content: "Somethings went wrong or Network Error.",
+              key: "validate",
+              duration: 4,
+            });
+          });
+      }
+    } catch (error) {
+      alert("Oops! Somethings went wrong..\n" + error);
+    }
+  };
 
 export const item_actions = (data, item_id) => (dispatch) => {
   data.commit = 1;
@@ -866,7 +861,7 @@ export const getItemAction = (
               Raw Material Specification
             </span>
           ),
-          link: `${report_server}/report_rawmaterial_specification.aspx?item_code=${item_no}`,
+          link: `${process.env.REACT_APP_REPORT_SERVER}/report_rawmaterial_specification.aspx?item_code=${item_no}`,
         },
       ]);
       break;
@@ -879,7 +874,7 @@ export const getItemAction = (
               Package Specification
             </span>
           ),
-          link: `${report_server}/report_package_specification.aspx?item_code=${item_no}`,
+          link: `${process.env.REACT_APP_REPORT_SERVER}/report_package_specification.aspx?item_code=${item_no}`,
         },
       ]);
       break;
@@ -893,7 +888,7 @@ export const getItemAction = (
               Master Formula
             </span>
           ),
-          link: `${report_server}/report_bulk_formula.aspx?item_code=${item_no}`,
+          link: `${process.env.REACT_APP_REPORT_SERVER}/report_bulk_formula.aspx?item_code=${item_no}`,
         },
         {
           name: (
@@ -902,7 +897,7 @@ export const getItemAction = (
               Bulk Specification
             </span>
           ),
-          link: `${report_server}/report_bulk_specification.aspx?item_code=${item_no}`,
+          link: `${process.env.REACT_APP_REPORT_SERVER}/report_bulk_specification.aspx?item_code=${item_no}`,
         },
         certificate["9"].url && {
           name: (
@@ -934,17 +929,6 @@ export const getItemAction = (
       break;
   }
   return action.length > 0 ? action : null;
-  // return [
-  // {
-  //   name: "Export Master Formula",
-  //   link: `${report_server}report_bulk_formula.aspx?item_code=${data_head.item_no}`,
-  // },
-  // data_head.button_cancel && {
-  //   name: "Cancel",
-  //   cancel: true,
-  //   link: ``,
-  // },
-  // ]
 };
 
 const saveSampleItem = (id = null, data) => {

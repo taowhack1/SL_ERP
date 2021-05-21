@@ -12,7 +12,6 @@ import {
   create_issue,
   update_issue,
 } from "../../actions/inventory/issueActions";
-import { report_server } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 import {
   validateFormDetail,

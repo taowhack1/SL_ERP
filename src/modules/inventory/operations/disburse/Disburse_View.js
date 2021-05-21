@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Tabs, Typography } from "antd";
 import { disburse_actions } from "../../../../actions/inventory/disburseActions";
-import { report_server } from "../../../../include/js/main_config";
 import { get_log_by_id, reset_comments } from "../../../../actions/comment&log";
 import MainLayout from "../../../../components/MainLayout";
 import Comments from "../../../../components/Comments";
@@ -76,12 +75,6 @@ const DisburseView = (props) => {
       "Back",
     ],
     action: [
-      // {
-      //   name: "Print",
-      //   link: `${report_server}/report_pr.aspx?pr_no=${
-      //     data_head && data_head.disburse_id
-      //   }`,
-      // },
       data_head &&
         data_head.button_cancel && {
           name: "Cancel",

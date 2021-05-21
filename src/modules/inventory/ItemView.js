@@ -17,7 +17,6 @@ import ModalRemark from "../../components/Modal_Remark";
 import { FileContext, ItemContext } from "../../include/js/context";
 import { sum2DArrOdjWithField } from "../../include/js/function_main";
 import Barcode from "react-barcode";
-import { report_server } from "../../include/js/main_config";
 import ItemRevisionDetail from "./item/ItemRevisionDetail";
 import { itemVendorDocumentFields } from "./config/item";
 

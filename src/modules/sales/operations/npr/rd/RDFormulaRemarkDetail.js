@@ -2,13 +2,14 @@ import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
 import { Popconfirm } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import { register } from "numeral";
+import React, { useEffect } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomTable from "../../../../../components/CustomTable";
 import DetailLoading from "../../../../../components/DetailLoading";
-const columns = ({ readOnly, remove, control }) => [
+const columns = ({ readOnly, remove, control, register }) => [
   {
     title: (
       <div className="text-center">
@@ -34,12 +35,30 @@ const columns = ({ readOnly, remove, control }) => [
           <p>{val || "-"}</p>
         </div>
       ) : (
-        <Controller
-          render={({ field }) => <TextArea {...field} />}
-          name={`npr_formula_remark_detail.${index}.npr_formula_remark`}
-          defaultValue={val}
-          control={control}
-        />
+        <>
+          <input
+            {...register(`npr_formula_remark_detail.${index}.npr_formula_id`)}
+            className="d-none"
+          />
+          <input
+            {...register(
+              `npr_formula_remark_detail.${index}.npr_formula_remark_created_by`
+            )}
+            className="d-none"
+          />
+          <input
+            {...register(
+              `npr_formula_remark_detail.${index}.npr_formula_remark_active`
+            )}
+            className="d-none"
+          />
+          <Controller
+            render={({ field }) => <TextArea {...field} />}
+            name={`npr_formula_remark_detail.${index}.npr_formula_remark`}
+            defaultValue={val}
+            control={control}
+          />
+        </>
       ),
   },
   {
@@ -72,8 +91,7 @@ const columns = ({ readOnly, remove, control }) => [
 ];
 
 const RDFormulaRemarkDetail = () => {
-  const { loading } = useSelector((state) => state.sales);
-  const { control, errors, readOnly, npr_formula_id, user_name } =
+  const { control, errors, readOnly, npr_formula_id, user_name, register } =
     useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -90,20 +108,16 @@ const RDFormulaRemarkDetail = () => {
   return (
     <>
       <div className="form-section ">
-        {loading ? (
-          <DetailLoading />
-        ) : (
-          <>
-            <CustomTable
-              dataSource={fields}
-              rowKey={"id"}
-              columns={columns({ control, errors, readOnly, remove })}
-              pageSize={50}
-              rowClassName="row-table-detail"
-              onAdd={!readOnly && addRow}
-            />
-          </>
-        )}
+        <>
+          <CustomTable
+            dataSource={fields}
+            rowKey={"id"}
+            columns={columns({ control, errors, readOnly, remove, register })}
+            pageSize={50}
+            rowClassName="row-table-detail"
+            onAdd={!readOnly && addRow}
+          />
+        </>
       </div>
     </>
   );

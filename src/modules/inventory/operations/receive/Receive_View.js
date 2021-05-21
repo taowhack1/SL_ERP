@@ -11,7 +11,6 @@ import {
   receive_actions,
 } from "../../../../actions/inventory/receiveActions";
 import ModalRemark from "../../../../components/Modal_Remark";
-import { report_server } from "../../../../include/js/main_config";
 import Authorize from "../../../system/Authorize";
 import { AppContext, ReceiveContext } from "../../../../include/js/context";
 import { useHistory, useParams } from "react-router-dom";
@@ -99,9 +98,9 @@ const Receive_View = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/report_receive2.aspx?receive_no=${
-          state && state.receive_no
-        }`,
+        link: `${
+          process.env.REACT_APP_REPORT_SERVER
+        }/report_receive2.aspx?receive_no=${state && state.receive_no}`,
       },
       state &&
         state.button_cancel && {

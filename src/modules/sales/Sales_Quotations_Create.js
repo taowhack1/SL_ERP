@@ -15,7 +15,7 @@ import CustomSelect from "../../components/CustomSelect";
 import { update_quotation } from "../../actions/sales";
 import { create_quotation } from "../../actions/sales";
 import axios from "axios";
-import { api_server, header_config } from "../../include/js/main_config";
+import { header_config } from "../../include/js/main_config";
 import {
   validateFormDetail,
   validateFormHead,
@@ -76,7 +76,7 @@ const CustomerCreate = (props) => {
   useEffect(() => {
     function getDetail() {
       axios
-        .get(`${api_server}/api/sales/qn_detail/${data.qn_id}`, header_config)
+        .get(`/sales/qn_detail/${data.qn_id}`, header_config)
         .then((res) => {
           detailDispatch({ type: "SET_DETAIL", payload: res.data[0] });
         })

@@ -163,6 +163,7 @@ const PurchaseRequisitionCreate = (props) => {
     );
   };
   console.log("PR DATA", data_head, data_detail);
+  console.log("vendors", vendors);
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -305,10 +306,18 @@ const PurchaseRequisitionCreate = (props) => {
                   ? upDateFormValue({
                       vendor_id: data,
                       vendor_no_name: option.title,
+                      currency_id: option.data.currency_id,
+                      currency_no: option.data.currency_no,
+                      vat_id: option.data.vat_id,
+                      vat_rate: option.data.vat_rate,
                     })
                   : upDateFormValue({
                       vendor_id: null,
                       vendor_no_name: null,
+                      currency_id: null,
+                      currency_no: null,
+                      vat_id: null,
+                      vat_rate: null,
                     });
               }}
             />

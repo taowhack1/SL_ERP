@@ -11,7 +11,7 @@ import { po_actions } from "../../actions/purchase/PO_Actions";
 import { get_log_by_id } from "../../actions/comment&log";
 import ModalRemark from "../../components/Modal_Remark";
 
-import { convertDigit, report_server } from "../../include/js/main_config";
+import { convertDigit } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
 
 const { Text } = Typography;
@@ -84,7 +84,7 @@ const PurchaseOrderCreate = (props) => {
     action: [
       {
         name: "Print",
-        link: `${report_server}/report_po.aspx?po_no=${data_head.po_no}`,
+        link: `${process.env.REACT_APP_REPORT_SERVER}/report_po.aspx?po_no=${data_head.po_no}`,
       },
       data_head.button_cancel && {
         name: "Cancel",
