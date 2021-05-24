@@ -2,7 +2,10 @@ import { Button, Col, Row } from "antd";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { sortData } from "../../../../include/js/function_main";
 import { NPRFormContext } from "./RDForm";
-import { saveNPRFormula } from "../../../../actions/sales/nprActions";
+import {
+  saveNPRFormula,
+  saveNPRFormulaRemark,
+} from "../../../../actions/sales/nprActions";
 import RDDevelopmentTabs from "./rd/RDDevelopmentTabs";
 import { useHistory } from "react-router";
 import CustomLabel from "../../../../components/CustomLabel";
@@ -98,46 +101,58 @@ const RDDevelopmentForm = ({
 
   const onSubmit = async (data) => {
     console.log("onSubmit", data);
-    const saveData = {
-      ...state,
-      ...data,
-      npr_formula_detail: state.npr_formula_detail.filter(
-        (obj) =>
-          obj.trans_field_id !== null &&
-          obj.trans_id !== null &&
-          obj.npr_formula_detail_percent_qty !== null
-      ),
-      npr_formula_qa: state.npr_formula_qa.filter(
-        (obj) => obj.qa_specification_id !== null
-      ),
-      npr_formula_remark_detail: data.npr_formula_remark_detail.filter(
+    if (isFinished) {
+      const saveData = data.npr_formula_remark_detail.filter(
         (obj) =>
           obj.npr_formula_remark !== null &&
           obj.npr_formula_remark_created_by !== null
-      ),
-      npr_id: id,
-      commit: 1,
-      user_name,
-    };
-    console.log("saveData", saveData);
-    const resp = await saveNPRFormula(npr_formula_id, saveData);
-    if (resp.success) {
-      console.log("resp save", resp);
-      const formulaLength = formula.length;
-      !saveData.npr_formula_id
-        ? setFormula([
-            ...formula.filter((obj) => obj.npr_formula_id !== null),
-            { ...resp.data, id: formulaLength - 1 },
-          ])
-        : setFormula(
-            formula.map((obj) =>
-              obj.npr_formula_id === saveData.npr_formula_id
-                ? { ...obj, ...resp.data }
-                : obj
-            )
-          );
+      );
+      console.log("remark data", data);
+      console.log("saveData", saveData);
+      const resp = await saveNPRFormulaRemark(npr_formula_id, saveData);
+      console.log("sucess", resp);
+    } else {
+      const saveData = {
+        ...state,
+        ...data,
+        npr_formula_detail: state.npr_formula_detail.filter(
+          (obj) =>
+            obj.trans_field_id !== null &&
+            obj.trans_id !== null &&
+            obj.npr_formula_detail_percent_qty !== null
+        ),
+        npr_formula_qa: state.npr_formula_qa.filter(
+          (obj) => obj.qa_specification_id !== null
+        ),
+        npr_formula_remark_detail: data.npr_formula_remark_detail.filter(
+          (obj) =>
+            obj.npr_formula_remark !== null &&
+            obj.npr_formula_remark_created_by !== null
+        ),
+        npr_id: id,
+        commit: 1,
+        user_name,
+      };
+      console.log("saveData", saveData);
+      const resp = await saveNPRFormula(npr_formula_id, saveData);
+      if (resp.success) {
+        console.log("resp save", resp);
+        const formulaLength = formula.length;
+        !saveData.npr_formula_id
+          ? setFormula([
+              ...formula.filter((obj) => obj.npr_formula_id !== null),
+              { ...resp.data, id: formulaLength - 1 },
+            ])
+          : setFormula(
+              formula.map((obj) =>
+                obj.npr_formula_id === saveData.npr_formula_id
+                  ? { ...obj, ...resp.data }
+                  : obj
+              )
+            );
+      }
+      console.log(resp.data);
     }
-    console.log(resp.data);
   };
   const onChange = (data) => {
     console.log("onChange", data);
@@ -289,6 +304,17 @@ const RDDevelopmentForm = ({
                 loading={false}
               >
                 Save Change
+              </Button>
+            )}
+            {isFinished && (
+              <Button
+                // onClick={onSubmit}
+                htmlType={"submit"}
+                className={"primary"}
+                size="small"
+                loading={false}
+              >
+                Save Remark
               </Button>
             )}
           </div>

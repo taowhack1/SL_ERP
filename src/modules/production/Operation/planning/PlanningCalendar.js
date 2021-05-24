@@ -11,7 +11,6 @@ import DetailLoading from "../../../../components/DetailLoading";
 import { convertTimeToHr } from "../../../../include/js/function_main";
 import { convertDigit } from "../../../../include/js/main_config";
 import Search from "../../../../components/Search";
-import { SET_LOADING_PLANNING_CALENDAR } from "../../../../actions/types";
 import interactionPlugin from "@fullcalendar/interaction";
 import PlanningModal from "./PlanningModal";
 import $ from "jquery";
@@ -19,8 +18,9 @@ let countRender = 1;
 const CustomFullCalendar = () => {
   const dispatch = useDispatch();
   const { costCenter, plan } = useSelector(
-    (state) => state.production.planning
+    (state) => state.production.operations.planning
   );
+  console.log("redux data", costCenter, plan);
   const { loading } = useSelector((state) => state.production);
   const [state, setState] = useState({
     costCenter,
@@ -47,8 +47,6 @@ const CustomFullCalendar = () => {
       visible: false,
       data: {},
     });
-    dispatch({ type: SET_LOADING_PLANNING_CALENDAR, payload: true });
-    dispatch({ type: SET_LOADING_PLANNING_CALENDAR, payload: false });
   };
   const onSearch = (type, text) => {
     switch (type) {
@@ -67,16 +65,7 @@ const CustomFullCalendar = () => {
         break;
     }
   };
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 1:
-        return "#59FF34";
-      case 2:
-        return "red";
-      default:
-        return "red";
-    }
-  };
+
   const materialStatusBar = () => (
     <Row className="col-2 mt-1">
       <Col span={20} offset={4}>

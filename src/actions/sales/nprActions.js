@@ -16,6 +16,7 @@ const apiGetNPRFormula = `/sales/npr_formula/npr`;
 const apiNPRFormula = `/sales/npr_formula`;
 const apiGetNPRFeedback = `/sales/npr_satisfication/formula`;
 const apiNPRSMDMasterData = `/list/smd_item_master_data`;
+const apiNPRSaveFormulaRemark = `/sales/npr_formula/remark`;
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   try {
@@ -205,6 +206,7 @@ const saveNPRFormula = (id = null, data) => {
     return { success: false, data: null };
   }
 };
+
 const getNPRFeedback = (id) => {
   try {
     if (id === null || id === undefined)
@@ -258,6 +260,46 @@ const getNPRSMDMasterData = () => (dispatch) => {
   }
 };
 
+const saveNPRFormulaRemark = (npr_formula_id = null, data) => {
+  console.log("saveNPRFormula", data);
+  try {
+    if (!npr_formula_id)
+      return { success: false, data: null, message: "Missing npr_formula_id " };
+    return axios
+      .post(`${apiNPRSaveFormulaRemark}/${npr_formula_id}`, data, header_config)
+      .then((res) => {
+        console.log("then");
+        const {
+          npr_formula_id,
+          input_data,
+          return_data: { success, data: returnData },
+        } = res.data;
+        console.log("res ", res);
+        if (success) {
+          message.success("Save Successfully..");
+          return { success: true, data: returnData };
+        } else {
+          message.error(errorText.getData);
+          return { success: false, data: null };
+        }
+      })
+      .catch((error) => {
+        console.log("catch");
+        if (!error.response) {
+          message.error(errorText.network);
+        } else {
+          message.error(errorText.formValid);
+        }
+        return { success: false, data: null, error: error.response };
+      });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
+
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,
@@ -270,4 +312,5 @@ export {
   saveNPRFormula,
   getNPRFeedback,
   getNPRSMDMasterData,
+  saveNPRFormulaRemark,
 };

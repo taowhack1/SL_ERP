@@ -22,7 +22,6 @@ import {
   GET_FGITEM,
   GET_ROUTING_ONE,
   GET_PLANNING_CALENDAR_DATA,
-  SET_LOADING_PLANNING_CALENDAR,
 } from "../actions/types";
 
 export const initialState = {
@@ -191,21 +190,16 @@ export default (state = initialState, action) => {
     //   jobs: [],
     // },
 
-    case SET_LOADING_PLANNING_CALENDAR:
-      return {
-        ...state,
-        planning: {
-          ...state.planning,
-          loading: action.payload,
-        },
-      };
     case GET_PLANNING_CALENDAR_DATA:
       return {
         ...state,
-        planning: {
-          ...state.planning,
-          loading: false,
-          ...action.payload,
+        operations: {
+          ...state.operations,
+          planning: {
+            ...state.operations.planning,
+            loading: false,
+            ...action.payload,
+          },
         },
       };
 
