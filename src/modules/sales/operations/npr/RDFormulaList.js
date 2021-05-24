@@ -54,7 +54,7 @@ const initialState = {
   smd_item_sp_taste_id: null,
   smd_item_sp_taste_name: null,
   tg_trans_close_id: 1,
-  tg_trans_status_id: 1,
+  tg_trans_status_id: 2,
   trans_close_name: null,
   trans_close_no: null,
   trans_close_no_name: null,

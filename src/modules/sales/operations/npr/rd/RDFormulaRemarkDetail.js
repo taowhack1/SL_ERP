@@ -90,8 +90,8 @@ const columns = ({ readOnly, remove, control, register }) => [
   },
 ];
 
-const RDFormulaRemarkDetail = () => {
-  const { control, errors, readOnly, npr_formula_id, user_name, register } =
+const RDFormulaRemarkDetail = ({ readOnly }) => {
+  const { control, errors, npr_formula_id, user_name, register } =
     useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,

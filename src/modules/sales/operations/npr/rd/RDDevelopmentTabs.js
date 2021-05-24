@@ -38,7 +38,7 @@ const RDDevelopmentTabs = ({
           <RDTestItem data={npr_formula_qa} {...rdDevQA} readOnly={readOnly} />
         </Tabs.TabPane>
         <Tabs.TabPane tab={"Remark"} key={4}>
-          <RDFormulaRemarkDetail readOnly={readOnly} />
+          <RDFormulaRemarkDetail readOnly={false} />
         </Tabs.TabPane>
         <Tabs.TabPane tab={"Feedback"} key={5}>
           <RDFormulaFeedback

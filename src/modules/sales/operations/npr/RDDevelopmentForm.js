@@ -101,20 +101,20 @@ const RDDevelopmentForm = ({
     const saveData = {
       ...state,
       ...data,
-      // npr_formula_detail: state.npr_formula_detail.filter(
-      //   (obj) =>
-      //     obj.trans_field_id !== null &&
-      //     obj.trans_id !== null &&
-      //     obj.npr_formula_detail_percent_qty !== null
-      // ),
-      // npr_formula_qa: state.npr_formula_qa.filter(
-      //   (obj) => obj.qa_specification_id !== null
-      // ),
-      // npr_formula_remark_detail: data.npr_formula_remark_detail.filter(
-      //   (obj) =>
-      //     obj.npr_formula_remark !== null &&
-      //     obj.npr_formula_remark_created_by !== null
-      // ),
+      npr_formula_detail: state.npr_formula_detail.filter(
+        (obj) =>
+          obj.trans_field_id !== null &&
+          obj.trans_id !== null &&
+          obj.npr_formula_detail_percent_qty !== null
+      ),
+      npr_formula_qa: state.npr_formula_qa.filter(
+        (obj) => obj.qa_specification_id !== null
+      ),
+      npr_formula_remark_detail: data.npr_formula_remark_detail.filter(
+        (obj) =>
+          obj.npr_formula_remark !== null &&
+          obj.npr_formula_remark_created_by !== null
+      ),
       npr_id: id,
       commit: 1,
       user_name,
