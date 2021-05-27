@@ -50,6 +50,7 @@ const Dashboard = (props) => {
     title: "DASHBOARD",
     show: true,
     breadcrumb: ["Welcome to SiriLaboratories ERP System"],
+    home: "/",
     search: false,
     // action: ["Print"],
     // step: {

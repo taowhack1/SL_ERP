@@ -1,5 +1,3 @@
-/** @format */
-
 import { Col, Input, InputNumber, message, Row, Tabs, Typography } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -105,9 +103,9 @@ function UOMCreate(props) {
     : uomFieldsReQuire;
   return (
     <MainLayout {...config}>
-      <div id='form'>
+      <div id="form">
         {/* {Head} */}
-        <Row className='col-2'>
+        <Row className="col-2">
           <Col span={8}>
             <h2>
               <strong>
@@ -121,49 +119,50 @@ function UOMCreate(props) {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className='text-view'>{dataUOMCreate.uom_created}</Text>
+            <Text className="text-view">{dataUOMCreate.uom_created}</Text>
           </Col>
         </Row>
 
-        <Row className='col-2 row-tab-margin'>
+        <Row className="col-2 row-tab-margin">
           <Col span={24} style={{ marginBottom: 8 }}>
             <Title level={5}>
-              <span className='require'>* </span>Name :{" "}
+              <span className="require">* </span>Name :{" "}
             </Title>
             <Col span={24}>
               <Input
-                placeholder='Name'
-                name='uom_name'
+                placeholder="Name"
+                name="uom_name"
                 onChange={(e) => upDateFormValue({ uom_name: e.target.value })}
                 value={dataUOMCreate.uom_name}
               />
             </Col>
           </Col>
         </Row>
-        <Row className='col-2 row-tab-margin-l'>
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
-            <Tabs defaultActiveKey='1'>
+            <Tabs defaultActiveKey="1">
               <Tabs.TabPane
                 tab={
                   <span>
-                    <span className='require'>* </span>
+                    <span className="require">* </span>
                     Detail
                   </span>
                 }
-                key='1'>
+                key="1"
+              >
                 {/*Information */}
-                <Row className='col-2 row-margin-vertical'>
-                  <Col span={12} className='col-border-right'>
-                    <Row className='row-margin'>
+                <Row className="col-2 row-margin-vertical">
+                  <Col span={12} className="col-border-right">
+                    <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>
-                          <span className='require'>*</span> Short Name :
+                          <span className="require">*</span> Short Name :
                         </Text>
                       </Col>
                       <Col span={18}>
                         <Input
-                          name='uom_no'
-                          placeholder='Short Name'
+                          name="uom_no"
+                          placeholder="Short Name"
                           onChange={(e) =>
                             upDateFormValue({ uom_no: e.target.value })
                           }
@@ -172,10 +171,10 @@ function UOMCreate(props) {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className='row-margin'>
+                    <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>
-                          <span className='require'>*</span> Unit Value :
+                          <span className="require">*</span> Unit Value :
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -183,8 +182,8 @@ function UOMCreate(props) {
                           {...getNumberFormat(3)}
                           className={"full-width"}
                           min={0}
-                          placeholder='Value'
-                          name='unit_value'
+                          placeholder="Value"
+                          name="unit_value"
                           value={dataUOMCreate.unit_value}
                           onChange={(value) =>
                             upDateFormValue({ unit_value: value })
@@ -193,13 +192,13 @@ function UOMCreate(props) {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className='row-margin'>
+                    <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>Thai Name :</Text>
                       </Col>
                       <Col span={18}>
                         <Input
-                          name='uom_name_th'
+                          name="uom_name_th"
                           placeholder={"Thai Name"}
                           onChange={(e) =>
                             upDateFormValue({
@@ -211,13 +210,13 @@ function UOMCreate(props) {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className='row-margin'>
+                    <Row className="row-margin">
                       <Col span={5}>
                         <Text strong>Description :</Text>
                       </Col>
                       <Col span={18}>
                         <Input
-                          name='uom_remark'
+                          name="uom_remark"
                           placeholder={"Description"}
                           onChange={(e) =>
                             upDateFormValue({ uom_remark: e.target.value })
@@ -230,7 +229,7 @@ function UOMCreate(props) {
                   </Col>
                   {/* { col right} */}
                   <Col span={12}>
-                    <Row className='col-2 row-margin-vertical'>
+                    <Row className="col-2 row-margin-vertical">
                       <Col span={1}></Col>
                       <Col span={6}>
                         <Text strong>Reference Unit :</Text>
@@ -242,9 +241,9 @@ function UOMCreate(props) {
                           placeholder={
                             "Reference Unit of Measure for this category"
                           }
-                          name='uom_name_ref'
-                          field_id='uom_id'
-                          field_name='uom_name'
+                          name="uom_name_ref"
+                          field_id="uom_id"
+                          field_name="uom_name"
                           value={dataUOMCreate.uom_name_ref}
                           data={uom}
                           onChange={(data, option) => {
@@ -264,11 +263,11 @@ function UOMCreate(props) {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className='col-2 row-margin-vertical'>
+                    <Row className="col-2 row-margin-vertical">
                       <Col span={1}></Col>
                       <Col span={6}>
                         <Text strong>
-                          <span className='require'>
+                          <span className="require">
                             {" "}
                             {dataUOMCreate.uom_name_ref ? "*" : ""}
                           </span>{" "}
@@ -278,8 +277,8 @@ function UOMCreate(props) {
                       <Col span={15}>
                         <Input
                           disabled={dataUOMCreate.uom_name_ref ? false : true}
-                          placeholder='e.g: 1*(reference unit)=ratio*(this unit)'
-                          name='ratio'
+                          placeholder="e.g: 1*(reference unit)=ratio*(this unit)"
+                          name="ratio"
                           onChange={(e) =>
                             upDateFormValue({ ratio: e.target.value })
                           }
@@ -288,11 +287,11 @@ function UOMCreate(props) {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className='row-margin'>
+                    <Row className="row-margin">
                       <Col span={1}></Col>
                       <Col span={6}>
                         <Text strong>
-                          <span className='require'>
+                          <span className="require">
                             {dataUOMCreate.uom_name_ref ? "*" : ""}
                           </span>{" "}
                           Type :
@@ -306,9 +305,9 @@ function UOMCreate(props) {
                           placeholder={
                             "Bigger,Smaller,Equal than the reference Unit of Measure"
                           }
-                          name='size_of_ref'
-                          field_id='uom_id'
-                          field_name='uom_name'
+                          name="size_of_ref"
+                          field_id="uom_id"
+                          field_name="uom_name"
                           value={dataUOMCreate.size_of_ref}
                           options={dataOptions}
                           onChange={(dataOption, option) => {

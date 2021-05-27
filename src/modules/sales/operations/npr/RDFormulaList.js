@@ -10,6 +10,7 @@ import RDDevelopmentForm from "./RDDevelopmentForm";
 const initialState = {
   id: 0,
   commit: 1,
+  category_id: null,
   npr_created: null,
   npr_created_by_name: null,
   npr_created_by_no_name: null,
@@ -63,31 +64,31 @@ const initialState = {
   trans_status_no_name: null,
   user_name: null,
   npr_formula_detail: [
-    // {
-    //   id: 0,
-    //   npr_formula_detail_part: null,
-    //   npr_formula_detail_percent_qty: 0,
-    //   npr_formula_detail_qty: 0,
-    //   trans_id: null,
-    //   trans_field_id: null,
-    //   npr_formula_detail_remark: null,
-    //   item_no_name: null,
-    // },
+    {
+      id: 0,
+      npr_formula_detail_part: null,
+      npr_formula_detail_percent_qty: 0,
+      npr_formula_detail_qty: 0,
+      trans_id: null,
+      trans_field_id: null,
+      npr_formula_detail_remark: null,
+      item_no_name: null,
+    },
   ],
   npr_formula_qa: [
-    // {
-    //   id: 0,
-    //   npr_formula_id: null,
-    //   npr_formula_qa_id: null,
-    //   npr_formula_qa_result: null,
-    //   npr_formula_qa_remark: null,
-    //   qa_subject_id: null,
-    //   qa_subject_name: null,
-    //   qa_specification_id: null,
-    //   qa_specification_name: null,
-    //   qa_method_id: null,
-    //   qa_method_name: null,
-    // },
+    {
+      id: 0,
+      npr_formula_id: null,
+      npr_formula_qa_id: null,
+      npr_formula_qa_result: null,
+      npr_formula_qa_remark: null,
+      qa_subject_id: null,
+      qa_subject_name: null,
+      qa_specification_id: null,
+      qa_specification_name: null,
+      qa_method_id: null,
+      qa_method_name: null,
+    },
   ],
   npr_formula_remark_detail: [],
 };
@@ -99,6 +100,7 @@ const RDFormulaList = () => {
     department_id,
     state: mainState,
   } = useContext(NPRFormContext);
+  const { category_id } = mainState;
   const [formula, setFormula] = useState([initialState]);
   useEffect(() => {
     const getNPRFormulaList = async (id) => {
@@ -111,11 +113,12 @@ const RDFormulaList = () => {
   }, []);
 
   const onAddRevision = () =>
-    setFormula((prev) => sortData([...prev, initialState]));
+    setFormula((prev) => sortData([...prev, { ...initialState, category_id }]));
 
   const isFinished = formula.some(
     (obj) => obj.npr_formula_id !== null && obj.tg_trans_status_id === 4
   );
+
   return (
     <>
       <div className="form-section-head d-flex">

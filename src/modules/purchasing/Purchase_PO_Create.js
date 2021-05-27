@@ -407,6 +407,7 @@ const PurchaseOrderCreate = (props) => {
                         currency_id: option.data.currency_id,
                         currency_no: option.data.currency_no,
                         vat_rate: option.data.vat_rate,
+                        vat_id: option.data.vat_id,
                       })
                     : upDateFormValue({
                         vendor_id: null,
@@ -416,6 +417,7 @@ const PurchaseOrderCreate = (props) => {
                         currency_id: 1,
                         currency_no: "THB",
                         vat_rate: 0,
+                        vat_id: option.data.vat_id,
                       })
                 }
               />

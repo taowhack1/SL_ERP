@@ -240,11 +240,14 @@ const RDDevelopmentForm = ({
     };
   }, [state.npr_formula_qa, setState]);
 
-  const useFormValue = {
-    onChange,
-    state,
-    category_id,
-  };
+  const useFormValue = useMemo(
+    () => ({
+      onChange,
+      state,
+      category_id,
+    }),
+    [onChange, state, category_id]
+  );
 
   const onPrintFormula = () => {
     window.open(
@@ -259,8 +262,6 @@ const RDDevelopmentForm = ({
       false
     );
   };
-
-  console.log("disabledEdit :", disabledEdit, formula);
 
   const formContextValue = useMemo(
     () => ({

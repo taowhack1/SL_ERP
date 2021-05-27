@@ -853,7 +853,8 @@ export const getItemAction = (
     });
   switch (type_id) {
     case 1:
-      return action.concat([
+      action = [
+        ...action,
         {
           name: (
             <span>
@@ -863,9 +864,11 @@ export const getItemAction = (
           ),
           link: `${process.env.REACT_APP_REPORT_SERVER}/report_rawmaterial_specification.aspx?item_code=${item_no}`,
         },
-      ]);
+      ];
+      break;
     case 2:
-      return  action.concat([
+      action = [
+        ...action,
         {
           name: (
             <span>
@@ -875,9 +878,10 @@ export const getItemAction = (
           ),
           link: `${process.env.REACT_APP_REPORT_SERVER}/report_package_specification.aspx?item_code=${item_no}`,
         },
-      ]);
+      ];
+      break;
     case 3:
-      return  action = [
+      action = [
         ...action,
         {
           name: (
@@ -907,9 +911,9 @@ export const getItemAction = (
           link: `${certificate["9"].url}`,
         },
       ];
-
+      break;
     case 4:
-      return  action = [
+      action = [
         ...action,
         certificate["8"].url && {
           name: (
@@ -921,9 +925,11 @@ export const getItemAction = (
           link: `${certificate["8"].url}`,
         },
       ];
+      break;
     default:
       break;
   }
+  console.log("action", action);
   return action.length > 0 ? action : null;
 };
 
