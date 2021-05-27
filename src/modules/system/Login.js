@@ -86,6 +86,18 @@ const LoginForm = (props) => {
       lasted_update: "6/11/2020 11.00",
       manual_link: "./Manual_ERP_SL_Inventory.pdf",
     },
+    {
+      manual_id: 4,
+      manual_pdf_name: "NPR For Sales",
+      lasted_update: "27/05/2021 09.42",
+      manual_link: "./Manual_NPR_Sales.pdf",
+    },
+    {
+      manual_id: 5,
+      manual_pdf_name: "NPR For R&D",
+      lasted_update: "27/05/2021 09.42",
+      manual_link: "./Manual_NPR_RD.pdf",
+    },
   ];
   return (
     <>
