@@ -155,7 +155,7 @@ const TabPanel = ({
         {type_id !== undefined &&
           type_id &&
           [4, 5].includes(type_id) &&
-          [1, 10, 11, 90].includes(department_id) && (
+          [1, 10, 11, 18, 90].includes(department_id) && (
             // [1, 10, 11, 18].includes(department_id) && (
             <Tabs.TabPane
               tab={

@@ -112,20 +112,20 @@ const StockCard = () => {
     if (validate.validate) {
       if (formButton == "Exel Download") {
         if (state.item_id != null) {
-          const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
+          const link = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
           window.open(link);
         }
         if (state.all == true) {
-          const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?&all=all&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
+          const link = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?&all=all&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
           window.open(link);
         }
       } else {
         if (state.item_id != null) {
-          const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
+          const link = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
           window.open(link);
         }
         if (state.all == true) {
-          const link = `http://192.168.1.211:8080/report_purch/report_stock_card.aspx?&all=all&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
+          const link = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?&all=all&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
           window.open(link);
         }
       }

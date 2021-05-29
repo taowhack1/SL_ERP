@@ -6,7 +6,7 @@ const CustomSelect = (props) => {
     <Select
       {...props}
       filterOption={(inputValue, option) =>
-        option.title.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+        option?.title?.toUpperCase()?.indexOf(inputValue?.toUpperCase()) !== -1
       }
       className={"full-width " + props?.className}
     >
