@@ -2,14 +2,12 @@ import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
 import { Popconfirm } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Text from "antd/lib/typography/Text";
-import { register } from "numeral";
-import React, { useEffect } from "react";
+import React from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-import { useSelector } from "react-redux";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomTable from "../../../../../components/CustomTable";
-import DetailLoading from "../../../../../components/DetailLoading";
-const columns = ({ readOnly, remove, control, register }) => [
+import moment from "moment";
+const columns = ({ readOnly, remove, control, register, user_name }) => [
   {
     title: (
       <div className="text-center">
@@ -18,7 +16,7 @@ const columns = ({ readOnly, remove, control, register }) => [
     ),
     width: "5%",
     align: "center",
-    render: (val, record, index) => index + 1,
+    render: (index) => index + 1,
   },
   {
     title: (
@@ -30,10 +28,8 @@ const columns = ({ readOnly, remove, control, register }) => [
     align: "left",
     ellipsis: true,
     render: (val, record, index) =>
-      readOnly ? (
-        <div className="text-value">
-          <p>{val || "-"}</p>
-        </div>
+      record.npr_formula_remark_created_by !== user_name ? (
+        <div>{val || "-"}</div>
       ) : (
         <>
           <input
@@ -63,6 +59,25 @@ const columns = ({ readOnly, remove, control, register }) => [
   },
   {
     title: (
+      <div className="text-center">
+        <CustomLabel label={"Date"} readOnly={readOnly} />
+      </div>
+    ),
+    dataIndex: "npr_formula_remark_created",
+    align: "center",
+    width: "10%",
+    ellipsis: true,
+    render: (val, record, index) =>
+      val ? (
+        <div className="text-value">
+          <p>{val || "-"}</p>
+        </div>
+      ) : (
+        <>{moment().format("DD/MM/YYYY")}</>
+      ),
+  },
+  {
+    title: (
       <Text strong>
         <EllipsisOutlined />
       </Text>
@@ -70,28 +85,24 @@ const columns = ({ readOnly, remove, control, register }) => [
     align: "center",
     width: "5%",
     render: (value, record, index) => {
-      if (readOnly) {
-        return null;
-      } else {
-        return (
-          <Popconfirm
-            onConfirm={() => {
-              remove(index);
-            }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
-            <DeleteTwoTone />
-          </Popconfirm>
-        );
-      }
+      return user_name !== record.npr_formula_remark_created_by ? null : (
+        <Popconfirm
+          onConfirm={() => {
+            remove(index);
+          }}
+          title="Are you sure you want to delete this row？"
+          okText="Yes"
+          cancelText="No"
+        >
+          <DeleteTwoTone />
+        </Popconfirm>
+      );
     },
   },
 ];
 
-const RDFormulaRemarkDetail = ({ readOnly }) => {
-  const { control, errors, npr_formula_id, user_name, register } =
+const RDFormulaRemarkDetail = () => {
+  const { control, errors, npr_formula_id, user_name, register, readOnly } =
     useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -104,15 +115,21 @@ const RDFormulaRemarkDetail = ({ readOnly }) => {
       npr_formula_id,
       npr_formula_remark_created_by: user_name,
     });
-  console.log(fields);
   return (
     <>
-      <div className="form-section ">
+      <div className="form-section">
         <>
           <CustomTable
             dataSource={fields}
             rowKey={"id"}
-            columns={columns({ control, errors, readOnly, remove, register })}
+            columns={columns({
+              control,
+              errors,
+              readOnly,
+              remove,
+              register,
+              user_name,
+            })}
             pageSize={50}
             rowClassName="row-table-detail"
             onAdd={!readOnly && addRow}
@@ -123,4 +140,4 @@ const RDFormulaRemarkDetail = ({ readOnly }) => {
   );
 };
 
-export default RDFormulaRemarkDetail;
+export default React.memo(RDFormulaRemarkDetail);

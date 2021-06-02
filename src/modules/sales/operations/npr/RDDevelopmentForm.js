@@ -13,6 +13,7 @@ import CustomSelect from "../../../../components/CustomSelect";
 import { useForm, FormProvider } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { SET_LOADING } from "../../../../actions/types";
+import { formEdit, formView } from "../../../../include/js/formType";
 
 const initialStateFormula = {
   id: 0,
@@ -40,11 +41,12 @@ const initialStateFormulaQA = {
 const RDDevelopmentForm = ({
   data,
   formula,
+  refFormula,
   setFormula,
   isFinished,
   initialState,
 }) => {
-  const dispatch = useDispatch();
+  const [formMethod, setFormMethod] = useState(formView);
   const { tg_trans_status_id } = data;
 
   const {
@@ -61,6 +63,7 @@ const RDDevelopmentForm = ({
     npr_product_name: npr_formula_product_name,
     npr_sample_request_qty: npr_formula_sample_qty,
     category_id,
+    npr_id,
   } = mainState;
 
   const formRef = {
@@ -70,13 +73,15 @@ const RDDevelopmentForm = ({
     npr_formula_product_name,
     npr_formula_sample_qty,
   };
-
-  const disabledEdit =
-    tg_trans_status_id !== 4 &&
-    !isFinished &&
-    (user_name === mainState.npr_responsed_required_by || department_id === 1)
-      ? false
-      : true;
+  const status = {
+    disabledEdit:
+      tg_trans_status_id !== 4 &&
+      !isFinished &&
+      (user_name === mainState.npr_responsed_required_by || department_id === 1)
+        ? false
+        : true,
+    isFormulaReference: npr_id !== data.npr_id && data.npr_id !== null,
+  };
 
   const [state, setState] = useState(data);
   const methods = useForm({
@@ -85,15 +90,25 @@ const RDDevelopmentForm = ({
     },
   });
 
-  const { npr_formula_detail, npr_formula_qa, npr_formula_id } = state;
+  const {
+    npr_formula_detail,
+    npr_formula_qa,
+    npr_formula_id,
+    npr_no: npr_formula_no_ref,
+  } = state;
 
   useEffect(() => {
-    data.npr_formula_id
-      ? setState(data)
-      : setState({
-          ...data,
-          ...formRef,
-        });
+    console.log("formula data", data);
+    if (data.npr_formula_id) {
+      setState(data);
+      setFormMethod(formView);
+    } else {
+      setState({
+        ...data,
+        ...formRef,
+      });
+      setFormMethod(formEdit);
+    }
     methods.reset({
       npr_formula_remark_detail: sortData(data.npr_formula_remark_detail),
     });
@@ -150,9 +165,11 @@ const RDDevelopmentForm = ({
                   : obj
               )
             );
+        setFormMethod(formView);
       }
       console.log(resp.data);
     }
+    setFormMethod(formView);
   };
   const onChange = (data) => {
     console.log("onChange", data);
@@ -262,64 +279,84 @@ const RDDevelopmentForm = ({
       false
     );
   };
-
+  const readOnly = formMethod === formView;
   const formContextValue = useMemo(
     () => ({
       ...methods,
-      readOnly: disabledEdit,
+      readOnly,
       npr_formula_id,
       user_name,
     }),
-    [methods, disabledEdit]
+    [methods, formMethod]
   );
+  console.log("readOnly : ", readOnly, " formula :", state);
   return (
     <>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <FormProvider {...formContextValue}>
-          <div className="form-section-head flex-space mb-1 mt-3">
-            <div className="button-group">
-              <Button
-                size="small"
-                loading={false}
-                disabled={npr_formula_id ? false : true}
-                onClick={onPrintFormula}
-              >
-                Print Formula
-              </Button>
-              <Button
-                size="small"
-                loading={false}
-                disabled={npr_formula_id ? false : true}
-                onClick={onPrintLabel}
-              >
-                Print QR Code
-              </Button>
+          {status.isFormulaReference && (
+            <h3>{`Formula From [ ${npr_formula_no_ref} ]`}</h3>
+          )}
+          {formMethod === formView ? (
+            <div className="form-section-head flex-space mb-1 mt-3">
+              <div className="button-group">
+                <Button
+                  size="small"
+                  loading={false}
+                  disabled={npr_formula_id ? false : true}
+                  onClick={onPrintFormula}
+                >
+                  Print Formula
+                </Button>
+                <Button
+                  size="small"
+                  loading={false}
+                  disabled={npr_formula_id ? false : true}
+                  onClick={onPrintLabel}
+                >
+                  Print QR Code
+                </Button>
+              </div>
+              {!status.disabledEdit && (
+                <Button
+                  className={"primary"}
+                  size="small"
+                  loading={false}
+                  onClick={() => setFormMethod(formEdit)}
+                >
+                  Edit Form
+                </Button>
+              )}
             </div>
-            {!isFinished && (
-              <Button
-                // onClick={onSubmit}
-                htmlType={"submit"}
-                disabled={disabledEdit}
-                className={disabledEdit ? "btn-disabled" : "primary"}
-                size="small"
-                loading={false}
-              >
-                Save Change
-              </Button>
-            )}
-            {isFinished && (
-              <Button
-                // onClick={onSubmit}
-                htmlType={"submit"}
-                className={"primary"}
-                size="small"
-                loading={false}
-              >
-                Save Remark
-              </Button>
-            )}
-          </div>
-          {disabledEdit && (
+          ) : (
+            <div className="form-section-head d-flex flex-end mb-1 mt-3">
+              <>
+                {!isFinished && (
+                  <Button
+                    htmlType={"submit"}
+                    disabled={status.disabledEdit}
+                    className={status.disabledEdit ? "btn-disabled" : "primary"}
+                    size="small"
+                    loading={false}
+                  >
+                    Save Change
+                  </Button>
+                )}
+                {isFinished && (
+                  <Button
+                    // onClick={onSubmit}
+                    htmlType={"submit"}
+                    className={"primary"}
+                    size="small"
+                    loading={false}
+                  >
+                    Save Remark
+                  </Button>
+                )}
+              </>
+            </div>
+          )}
+          {status.disabledEdit && (
             <span className="require">* Pending Sales Accept.</span>
           )}
           {!npr_formula_id && (
@@ -333,11 +370,9 @@ const RDDevelopmentForm = ({
                     <CustomSelect
                       allowClear
                       showSearch
-                      disabled={disabledEdit}
+                      disabled={status.disabledEdit}
                       placeholder={"Select Reference Formula"}
-                      data={formula.filter(
-                        (obj) => obj.npr_formula_id !== null
-                      )}
+                      data={refFormula}
                       field_id="npr_formula_id"
                       field_name="npr_formula_no"
                       value={state?.npr_formula_ref_no}
@@ -354,8 +389,8 @@ const RDDevelopmentForm = ({
                                 props.data.npr_formula_qa
                               ),
                               npr_formula_id: null,
-                              tg_trans_status_id: 1,
                               tg_trans_close_id: 1,
+                              tg_trans_status_id: 2,
                               commit: 1,
                             })
                           : onChange({ ...initialState, ...formRef });
@@ -367,7 +402,7 @@ const RDDevelopmentForm = ({
             </Row>
           )}
           <RDDevelopmentTabs
-            readOnly={disabledEdit}
+            // readOnly={status.disabledEdit}
             npr_formula_detail={npr_formula_detail}
             npr_formula_qa={npr_formula_qa}
             rdDevFormula={rdDevFormula}

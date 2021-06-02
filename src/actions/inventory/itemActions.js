@@ -924,6 +924,15 @@ export const getItemAction = (
           ),
           link: `${certificate["8"].url}`,
         },
+        {
+          name: (
+            <span>
+              <PrinterOutlined className="pd-right-1 button-icon" />
+              FG Specification
+            </span>
+          ),
+          link: `${process.env.REACT_APP_REPORT_SERVER}/report_fg_package.aspx?item_code=${item_no}`,
+        },
       ];
       break;
     default:

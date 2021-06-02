@@ -856,10 +856,14 @@ hr {
 }
 div.d-flex {
   display: flex;
+}
+div.flex-start {
   align-items: flex-start;
+  align-items: center;
 }
 div.flex-end {
   justify-content: flex-end;
+  align-items: center;
 }
 div.flex-space {
   display: flex;

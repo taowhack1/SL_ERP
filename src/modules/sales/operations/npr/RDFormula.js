@@ -2,6 +2,7 @@ import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
 import { Input, InputNumber, Popconfirm } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
+import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
 import AntdTableDragable from "../../../../components/AntdTableDragable";
 import CustomLabel from "../../../../components/CustomLabel";
@@ -74,12 +75,8 @@ const columns = ({ readOnly, itemList = [], deleteRow, onChange }) => [
           field_name="item_no_name"
           value={val}
           onChange={(val, props) => {
-            const {
-              trans_id,
-              trans_field_id,
-              item_cost,
-              item_no_name,
-            } = props.data;
+            const { trans_id, trans_field_id, item_cost, item_no_name } =
+              props.data;
             console.log("select item", props.data);
             val !== null || val !== undefined
               ? onChange(record.id, {
@@ -172,12 +169,11 @@ const RDFormula = ({
   onChangeFormula,
   onAddRowFormula,
   onDeleteRowFormula,
-  readOnly,
   setFormula,
 }) => {
   const { itemList } = useSelector((state) => state.sales.operations.npr);
   const { loading } = useSelector((state) => state.sales);
-  console.log("RDFormula data", data);
+  const { readOnly } = useFormContext();
   return (
     <>
       <div className="form-section ">

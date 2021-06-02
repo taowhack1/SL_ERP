@@ -17,6 +17,8 @@ const apiNPRFormula = `/sales/npr_formula`;
 const apiGetNPRFeedback = `/sales/npr_satisfication/formula`;
 const apiNPRSMDMasterData = `/list/smd_item_master_data`;
 const apiNPRSaveFormulaRemark = `/sales/npr_formula/remark`;
+const apiNPRAllRevisionFormula = `/sales/npr_formula/running`;
+
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   try {
@@ -127,8 +129,8 @@ const getNPRFormula = (id) => {
     return axios
       .get(`${apiGetNPRFormula}/${id}`, header_config)
       .then((res) => {
-        console.log("then");
-        console.log("res ", res);
+        console.log(`${apiGetNPRFormula}/${id}`);
+        console.log("getNPRFormula", res.data);
         if (res.data) {
           return { success: true, data: res.data };
         } else {
@@ -237,8 +239,6 @@ const getNPRSMDMasterData = () => (dispatch) => {
     axios
       .get(`${apiNPRSMDMasterData}`, header_config)
       .then((res) => {
-        console.log("then");
-        console.log("res ", res);
         if (res.data) {
           dispatch({ type: GET_NPR_SMD_MASTER_DATA, payload: res.data });
         } else {
@@ -300,6 +300,40 @@ const saveNPRFormulaRemark = (npr_formula_id = null, data) => {
   }
 };
 
+const getNPRAllRevisionFormula = (npr_running_id = null) => {
+  console.log("getNPRAllRevisionFormula");
+  try {
+    if (!npr_running_id)
+      return { success: false, data: null, message: "Missing npr_running_id " };
+    return axios
+      .get(`${apiNPRAllRevisionFormula}/${npr_running_id}`, header_config)
+      .then((res2) => {
+        console.log(`${apiNPRAllRevisionFormula}/${npr_running_id}`);
+        console.log("getNPRAllRevisionFormula", res2.data);
+        if (res2.status === 200) {
+          return { success: true, data: res2.data };
+        } else {
+          message.error(errorText.getData);
+          return { success: false, data: null };
+        }
+      })
+      .catch((error) => {
+        console.log("catch");
+        if (!error.response) {
+          message.error(errorText.network);
+        } else {
+          message.error(errorText.formValid);
+        }
+        return { success: false, data: null, error: error.response };
+      });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
+
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,
@@ -313,4 +347,5 @@ export {
   getNPRFeedback,
   getNPRSMDMasterData,
   saveNPRFormulaRemark,
+  getNPRAllRevisionFormula,
 };

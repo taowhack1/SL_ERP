@@ -2,6 +2,7 @@ import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
 import { Input, Popconfirm } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
+import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
 import AntdTableDragable from "../../../../components/AntdTableDragable";
 import CustomLabel from "../../../../components/CustomLabel";
@@ -176,18 +177,10 @@ const columns = ({ readOnly, deleteRow, onChange, subject, spec }) => [
     },
   },
 ];
-const RDTestItem = ({
-  data,
-  onChangeQA,
-  onAddRowQA,
-  onDeleteRowQA,
-  setQA,
-  readOnly,
-}) => {
-  const {
-    conditions_subject: subject,
-    conditions_specification: spec,
-  } = useSelector((state) => state.qa.qa_master_data);
+const RDTestItem = ({ data, onChangeQA, onAddRowQA, onDeleteRowQA, setQA }) => {
+  const { conditions_subject: subject, conditions_specification: spec } =
+    useSelector((state) => state.qa.qa_master_data);
+  const { readOnly } = useFormContext();
 
   console.log("RDTestItem data", data);
   return (

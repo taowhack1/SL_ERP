@@ -93,7 +93,27 @@ const NPRSampleRequestTab = () => {
             className="full-width mt-2 mb-2"
             bordered
           />
-
+          <Row className="col-2 row-margin-vertical">
+            <Col span={4}>
+              <CustomLabel label="Packaging :" />
+            </Col>
+            <Col span={6}>
+              <Checkbox
+                disabled
+                checked={state.npr_packaging_id === 1 ? true : false}
+              />
+              <Text className="ml-2">Standard for testing</Text>
+            </Col>
+            <Col span={10}>
+              <Checkbox
+                disabled
+                checked={state.npr_packaging_id === 2 ? true : false}
+              />
+              <Text className="ml-2">
+                Require actual packaging for testing, specify
+              </Text>
+            </Col>
+          </Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={24}>
               <CustomLabel label="Remark :" />

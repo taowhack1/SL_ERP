@@ -1,15 +1,22 @@
-/** @format */
-
 import { Checkbox, Col, Input, InputNumber, Row } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useContext } from "react";
+import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomSelect from "../../../../../components/CustomSelect";
-import { getNumberFormat } from "../../../../../include/js/main_config";
+import {
+  convertDigit,
+  getNumberFormat,
+} from "../../../../../include/js/main_config";
+import { NPRFormContext } from "../RDForm";
 
-const RDFormulaGeneralDetail = ({ readOnly, useFormValue }) => {
+const RDFormulaGeneralDetail = ({ useFormValue }) => {
+  const {
+    state: { npr_sample_request_qty: sample_request_qty },
+  } = useContext(NPRFormContext);
+  const { readOnly } = useFormContext();
   const { onChange, state, category_id } = useFormValue;
   const {
     npr_formula_product_no,
@@ -39,7 +46,7 @@ const RDFormulaGeneralDetail = ({ readOnly, useFormValue }) => {
     smd_item_sp_properties,
     smd_item_sp_taste,
   } = useSelector((state) => state.sales.master_data.smd);
-  console.log("state", state);
+  console.log("formMethod", readOnly);
   return (
     <>
       <>
@@ -59,25 +66,45 @@ const RDFormulaGeneralDetail = ({ readOnly, useFormValue }) => {
                     }
                     className="mr-3"
                   />
-
                   <Text>Finished</Text>
                 </Col>
               </Row>
               <Row className="col-2 row-margin-vertical">
                 <Col span={8}>
                   <CustomLabel
-                    label="Sample Quantity :"
+                    label="Sample Request Qty. :"
+                    readOnly={readOnly}
+                  />
+                </Col>
+                <Col
+                  span={16}
+                  className={readOnly ? "text-left" : "text-right"}
+                >
+                  <Text className="pd-right-2">
+                    {convertDigit(sample_request_qty || 0, 4)}
+                  </Text>
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={8}>
+                  <CustomLabel
+                    label="Batch Size :"
                     require
                     readOnly={readOnly}
                   />
                 </Col>
-                <Col span={16}>
+                <Col
+                  span={16}
+                  className={readOnly ? "text-left" : "text-right"}
+                >
                   {readOnly ? (
-                    <Text>{npr_formula_sample_qty}</Text>
+                    <Text className="pd-right-2">
+                      {convertDigit(npr_formula_sample_qty || 0, 4)}
+                    </Text>
                   ) : (
                     <InputNumber
                       name="npr_formula_sample_qty"
-                      placeholder="Sameple Quantity"
+                      placeholder="Batch Size"
                       defaultValue={0.0}
                       min={0.0}
                       {...getNumberFormat(4)}
@@ -97,6 +124,7 @@ const RDFormulaGeneralDetail = ({ readOnly, useFormValue }) => {
           </Col>
           <Col span={12}>
             <div className="form-section">
+              <Row className="col-2 row-margin-vertical"></Row>
               <Row className="col-2 row-margin-vertical">
                 <Col span={8}>
                   <CustomLabel
@@ -349,7 +377,6 @@ const RDFormulaGeneralDetail = ({ readOnly, useFormValue }) => {
                     </Col>
                     <Col span={12}>
                       <div className="form-section">
-                        {" "}
                         <Row className="col-2 row-margin-vertical">
                           <Col span={8}>
                             <CustomLabel
@@ -397,7 +424,11 @@ const RDFormulaGeneralDetail = ({ readOnly, useFormValue }) => {
         <div className="form-section">
           <Row className="col-2 row-margin-vertical">
             <Col span={24}>
-              <CustomLabel label="Description :" require readOnly={readOnly} />
+              <CustomLabel
+                label="Product Description :"
+                require
+                readOnly={readOnly}
+              />
             </Col>
             <Col span={24}>
               {readOnly ? (
@@ -420,7 +451,7 @@ const RDFormulaGeneralDetail = ({ readOnly, useFormValue }) => {
           </Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={24}>
-              <CustomLabel label="Used :" require readOnly={readOnly} />
+              <CustomLabel label="Product Used :" require readOnly={readOnly} />
             </Col>
             <Col span={24}>
               {readOnly ? (

@@ -1,7 +1,10 @@
 import { Button, Tabs } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { NPRFormContext } from "./RDForm";
-import { getNPRFormula } from "../../../../actions/sales/nprActions";
+import {
+  getNPRAllRevisionFormula,
+  getNPRFormula,
+} from "../../../../actions/sales/nprActions";
 import {
   sortData,
   sortDataWithoutCommit,
@@ -100,28 +103,41 @@ const RDFormulaList = () => {
     department_id,
     state: mainState,
   } = useContext(NPRFormContext);
-  const { category_id } = mainState;
+  const { category_id, npr_running_id, npr_id } = mainState;
   const [formula, setFormula] = useState([initialState]);
+  const [refFormula, setRefFormula] = useState([]);
   useEffect(() => {
     const getNPRFormulaList = async (id) => {
       const resp = await getNPRFormula(id);
       if (resp.success) {
+        console.log("getNPRFormulaList", resp);
         setFormula(sortDataWithoutCommit(resp.data));
       }
+      const getNPRFormulaRef = async (npr_running_id) => {
+        const resp2 = await getNPRAllRevisionFormula(npr_running_id);
+        if (resp2.success) {
+          console.log("getNPRFormulaRef", resp2);
+          setRefFormula(sortDataWithoutCommit(resp2.data));
+        }
+      };
+      getNPRFormulaRef(npr_running_id);
     };
+
     getNPRFormulaList(id);
-  }, []);
+  }, [id, npr_running_id]);
 
   const onAddRevision = () =>
     setFormula((prev) => sortData([...prev, { ...initialState, category_id }]));
 
   const isFinished = formula.some(
-    (obj) => obj.npr_formula_id !== null && obj.tg_trans_status_id === 4
+    (obj) =>
+      obj.npr_formula_id !== null &&
+      obj.tg_trans_status_id === 4 &&
+      obj.npr_id === npr_id
   );
-
   return (
     <>
-      <div className="form-section-head d-flex">
+      <div className="form-section-head d-flex flex-start">
         <h3>Formula List</h3>
         {!formula.some((obj) => obj.npr_formula_id === null) &&
           !isFinished &&
@@ -149,6 +165,7 @@ const RDFormulaList = () => {
                   npr_formula_qa: sortDataWithoutCommit(obj.npr_formula_qa),
                 }}
                 formula={formula}
+                refFormula={refFormula}
                 setFormula={setFormula}
                 isFinished={isFinished}
                 initialState={initialState}
