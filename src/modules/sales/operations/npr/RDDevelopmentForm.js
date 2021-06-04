@@ -47,6 +47,7 @@ const RDDevelopmentForm = ({
   initialState,
 }) => {
   const [formMethod, setFormMethod] = useState(formView);
+  const [disabledBatchUpdate, setDisabledBatchUpdate] = useState(true);
   const { tg_trans_status_id } = data;
 
   const {
@@ -116,57 +117,58 @@ const RDDevelopmentForm = ({
 
   const onSubmit = async (data) => {
     console.log("onSubmit", data);
-    if (isFinished) {
-      const saveData = data.npr_formula_remark_detail.filter(
+    // if (isFinished) {
+    // const saveData = data.npr_formula_remark_detail.filter(
+    //   (obj) =>
+    //     obj.npr_formula_remark !== null &&
+    //     obj.npr_formula_remark_created_by !== null
+    // );
+    // console.log("remark data", data);
+    // console.log("saveData", saveData);
+    // const resp2 = await saveNPRFormulaRemark(npr_formula_id, saveData);
+    // console.log("sucess", resp2);
+    // } else {
+    const saveData2 = {
+      ...state,
+      ...data,
+      npr_formula_detail: state.npr_formula_detail.filter(
+        (obj) =>
+          obj.trans_field_id !== null &&
+          obj.trans_id !== null &&
+          obj.npr_formula_detail_percent_qty !== null
+      ),
+      npr_formula_qa: state.npr_formula_qa.filter(
+        (obj) => obj.qa_specification_id !== null
+      ),
+      npr_formula_remark_detail: data.npr_formula_remark_detail.filter(
         (obj) =>
           obj.npr_formula_remark !== null &&
           obj.npr_formula_remark_created_by !== null
-      );
-      console.log("remark data", data);
-      console.log("saveData", saveData);
-      const resp = await saveNPRFormulaRemark(npr_formula_id, saveData);
-      console.log("sucess", resp);
-    } else {
-      const saveData = {
-        ...state,
-        ...data,
-        npr_formula_detail: state.npr_formula_detail.filter(
-          (obj) =>
-            obj.trans_field_id !== null &&
-            obj.trans_id !== null &&
-            obj.npr_formula_detail_percent_qty !== null
-        ),
-        npr_formula_qa: state.npr_formula_qa.filter(
-          (obj) => obj.qa_specification_id !== null
-        ),
-        npr_formula_remark_detail: data.npr_formula_remark_detail.filter(
-          (obj) =>
-            obj.npr_formula_remark !== null &&
-            obj.npr_formula_remark_created_by !== null
-        ),
-        npr_id: id,
-        commit: 1,
-        user_name,
-      };
-      console.log("saveData", saveData);
-      const resp = await saveNPRFormula(npr_formula_id, saveData);
-      if (resp.success) {
-        console.log("resp save", resp);
-        const formulaLength = formula.length;
-        !saveData.npr_formula_id
-          ? setFormula([
-              ...formula.filter((obj) => obj.npr_formula_id !== null),
-              { ...resp.data, id: formulaLength - 1 },
-            ])
-          : setFormula(
-              formula.map((obj) =>
-                obj.npr_formula_id === saveData.npr_formula_id
-                  ? { ...obj, ...resp.data }
-                  : obj
-              )
-            );
-        setFormMethod(formView);
-      }
+      ),
+      npr_id: id,
+      commit: 1,
+      user_name,
+    };
+    console.log("saveData2", saveData2);
+    const resp = await saveNPRFormula(npr_formula_id, saveData2);
+    if (resp.success) {
+      console.log("resp save", resp);
+      const formulaLength = formula.length;
+      !saveData2.npr_formula_id
+        ? setFormula([
+            ...formula.filter((obj) => obj.npr_formula_id !== null),
+            { ...resp.data, id: formulaLength - 1 },
+          ])
+        : setFormula(
+            formula.map((obj) =>
+              obj.npr_formula_id === saveData2.npr_formula_id
+                ? { ...obj, ...resp.data }
+                : obj
+            )
+          );
+      setFormMethod(formView);
+      setDisabledBatchUpdate(true);
+      // }
       console.log(resp.data);
     }
     setFormMethod(formView);
@@ -286,8 +288,10 @@ const RDDevelopmentForm = ({
       readOnly,
       npr_formula_id,
       user_name,
+      tg_trans_status_id,
+      disabledBatchUpdate,
     }),
-    [methods, formMethod]
+    [methods, formMethod, tg_trans_status_id, disabledBatchUpdate]
   );
   console.log("readOnly : ", readOnly, " formula :", state);
   return (
@@ -297,7 +301,7 @@ const RDDevelopmentForm = ({
           {status.isFormulaReference && (
             <h3>{`Formula From [ ${npr_formula_no_ref} ]`}</h3>
           )}
-          {formMethod === formView ? (
+          {formMethod === formView && disabledBatchUpdate ? (
             <div className="form-section-head flex-space mb-1 mt-3">
               <div className="button-group">
                 <Button
@@ -317,12 +321,17 @@ const RDDevelopmentForm = ({
                   Print QR Code
                 </Button>
               </div>
-              {!status.disabledEdit && (
+              {((!status.disabledEdit && tg_trans_status_id !== 4) ||
+                tg_trans_status_id === 4) && (
                 <Button
                   className={"primary"}
                   size="small"
                   loading={false}
-                  onClick={() => setFormMethod(formEdit)}
+                  onClick={() =>
+                    tg_trans_status_id !== 4
+                      ? setFormMethod(formEdit)
+                      : setDisabledBatchUpdate(false)
+                  }
                 >
                   Edit Form
                 </Button>
@@ -331,31 +340,39 @@ const RDDevelopmentForm = ({
           ) : (
             <div className="form-section-head d-flex flex-end mb-1 mt-3">
               <>
-                {!isFinished && (
-                  <Button
-                    htmlType={"submit"}
-                    disabled={status.disabledEdit}
-                    className={status.disabledEdit ? "btn-disabled" : "primary"}
-                    size="small"
-                    loading={false}
-                  >
-                    Save Change
-                  </Button>
-                )}
-                {isFinished && (
-                  <Button
-                    // onClick={onSubmit}
-                    htmlType={"submit"}
-                    className={"primary"}
-                    size="small"
-                    loading={false}
-                  >
-                    Save Remark
-                  </Button>
-                )}
+                <Button
+                  htmlType={"submit"}
+                  className={"primary"}
+                  size="small"
+                  loading={false}
+                >
+                  Save Change
+                </Button>
               </>
             </div>
           )}
+          {/* {tg_trans_status_id === 4 && disabledBatchUpdate ? (
+            <Button
+              className={"primary"}
+              size="small"
+              loading={false}
+              onClick={() => setDisabledBatchUpdate(false)}
+            >
+              Edit Batch Size
+            </Button>
+          ) : (
+            tg_trans_status_id === 4 &&
+            !disabledBatchUpdate && (
+              <Button
+                htmlType={"submit"}
+                className={"primary"}
+                size="small"
+                loading={false}
+              >
+                Save Change
+              </Button>
+            )
+          )} */}
           {status.disabledEdit && (
             <span className="require">* Pending Sales Accept.</span>
           )}

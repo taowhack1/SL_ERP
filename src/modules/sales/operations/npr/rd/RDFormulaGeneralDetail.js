@@ -16,6 +16,8 @@ const RDFormulaGeneralDetail = ({ useFormValue }) => {
   const {
     state: { npr_sample_request_qty: sample_request_qty },
   } = useContext(NPRFormContext);
+  const { disabledBatchUpdate, tg_trans_status_id: formula_trans_status_id } =
+    useFormContext();
   const { readOnly } = useFormContext();
   const { onChange, state, category_id } = useFormValue;
   const {
@@ -47,6 +49,9 @@ const RDFormulaGeneralDetail = ({ useFormValue }) => {
     smd_item_sp_taste,
   } = useSelector((state) => state.sales.master_data.smd);
   console.log("formMethod", readOnly);
+  console.log("disabledBatchUpdate", disabledBatchUpdate);
+  const disabledEditBatch =
+    tg_trans_status_id === 4 ? disabledBatchUpdate : readOnly;
   return (
     <>
       <>
@@ -90,14 +95,14 @@ const RDFormulaGeneralDetail = ({ useFormValue }) => {
                   <CustomLabel
                     label="Batch Size :"
                     require
-                    readOnly={readOnly}
+                    readOnly={disabledEditBatch}
                   />
                 </Col>
                 <Col
                   span={16}
-                  className={readOnly ? "text-left" : "text-right"}
+                  className={disabledEditBatch ? "text-left" : "text-right"}
                 >
-                  {readOnly ? (
+                  {disabledEditBatch ? (
                     <Text className="pd-right-2">
                       {convertDigit(npr_formula_sample_qty || 0, 4)}
                     </Text>

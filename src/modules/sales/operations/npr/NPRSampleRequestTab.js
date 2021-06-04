@@ -38,8 +38,8 @@ const NPRSampleRequestTab = () => {
     {
       subject_left: "TARGET PRICE",
       subject_right: "TAXURE APPERANCE",
-      val_left: state.npr_target_price || "-",
-      val_right: state.npr_texture_apperance || "-",
+      val_left: state.npr_target_price || "0",
+      val_right: state.npr_texture_appearance || "-",
     },
     {
       subject_left: "PRODUCT BENCHMARK",

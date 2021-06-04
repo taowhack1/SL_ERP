@@ -919,7 +919,7 @@ export const getItemAction = (
           name: (
             <span>
               <PrinterOutlined className="pd-right-1 button-icon" />
-              Finished Product Specification
+              FINISHED PRODUCT FILLING SPECIFACTION
             </span>
           ),
           link: `${certificate["8"].url}`,
@@ -928,7 +928,7 @@ export const getItemAction = (
           name: (
             <span>
               <PrinterOutlined className="pd-right-1 button-icon" />
-              FG Specification
+              FINSHED PRODUCT SPECIFICATION
             </span>
           ),
           link: `${process.env.REACT_APP_REPORT_SERVER}/report_fg_package.aspx?item_code=${item_no}`,

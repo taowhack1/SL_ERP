@@ -8,16 +8,17 @@ import CustomLabel from "../../../../../components/CustomLabel";
 import CustomTable from "../../../../../components/CustomTable";
 import moment from "moment";
 const columns = ({ readOnly, remove, control, register, user_name }) => [
-  {
-    title: (
-      <div className="text-center">
-        <Text>No.</Text>
-      </div>
-    ),
-    width: "5%",
-    align: "center",
-    render: (index) => index + 1,
-  },
+  // {
+  //   title: (
+  //     <div className="text-center">
+  //       <Text>No.</Text>
+  //     </div>
+  //   ),
+  //   dataIndex: "id",
+  //   width: "5%",
+  //   align: "center",
+  //   render: (index,record) => index + 1,
+  // },
   {
     title: (
       <div className="text-center">
@@ -28,7 +29,7 @@ const columns = ({ readOnly, remove, control, register, user_name }) => [
     align: "left",
     ellipsis: true,
     render: (val, record, index) =>
-      record.npr_formula_remark_created_by !== user_name ? (
+      record.npr_formula_remark_created_by !== user_name || readOnly ? (
         <div>{val || "-"}</div>
       ) : (
         <>
@@ -70,7 +71,7 @@ const columns = ({ readOnly, remove, control, register, user_name }) => [
     render: (val, record, index) =>
       val ? (
         <div className="text-value">
-          <p>{val || "-"}</p>
+          <span>{val || "-"}</span>
         </div>
       ) : (
         <>{moment().format("DD/MM/YYYY")}</>
@@ -85,17 +86,20 @@ const columns = ({ readOnly, remove, control, register, user_name }) => [
     align: "center",
     width: "5%",
     render: (value, record, index) => {
-      return user_name !== record.npr_formula_remark_created_by ? null : (
-        <Popconfirm
-          onConfirm={() => {
-            remove(index);
-          }}
-          title="Are you sure you want to delete this row？"
-          okText="Yes"
-          cancelText="No"
-        >
-          <DeleteTwoTone />
-        </Popconfirm>
+      return (
+        user_name !== record.npr_formula_remark_created_by ||
+        (record.npr_formula_remark_id === null && (
+          <Popconfirm
+            onConfirm={() => {
+              remove(index);
+            }}
+            title="Are you sure you want to delete this row？"
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteTwoTone />
+          </Popconfirm>
+        ))
       );
     },
   },
@@ -111,10 +115,12 @@ const RDFormulaRemarkDetail = () => {
   const addRow = () =>
     append({
       npr_formula_remark: null,
+      npr_formula_remark_id: null,
       npr_formula_remark_active: 1,
       npr_formula_id,
       npr_formula_remark_created_by: user_name,
     });
+  console.log(fields);
   return (
     <>
       <div className="form-section">

@@ -45,14 +45,17 @@ const getNPRItemList = () => (dispatch) => {
     dispatch({ type: SET_LOADING, payload: false });
   }
 };
-const getNPRList = () => (dispatch) => {
+const getNPRList = (branch_id) => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   try {
     axios
       .get(`${apiNPR}`, header_config)
       .then((res) => {
         if (res.data) {
-          dispatch({ type: GET_NPR_LIST, payload: sortData(res.data) });
+          const data = res.data.filter((obj) =>
+            branch_id === 3 ? obj.branch_id === branch_id : obj
+          );
+          dispatch({ type: GET_NPR_LIST, payload: sortData(data) });
         } else {
           message.error(errorText.getData);
         }

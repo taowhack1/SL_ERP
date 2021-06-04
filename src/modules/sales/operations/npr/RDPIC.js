@@ -95,7 +95,11 @@ const RDPIC = () => {
               <Col span={12} className="pd-right-2">
                 <Row className="col-2">
                   <Col span={8}>
-                    <CustomLabel label="Person In Charge :" require />
+                    <CustomLabel
+                      label="Person In Charge :"
+                      require
+                      readOnly={state.trans_id > 6}
+                    />
                   </Col>
                   <Col span={16}>
                     {state.trans_id >= 6 ? (
@@ -135,7 +139,11 @@ const RDPIC = () => {
               <Col span={12} className="pd-left-2">
                 <Row className="col-2">
                   <Col span={8}>
-                    <CustomLabel label="Due Date :" require />
+                    <CustomLabel
+                      label="Due Date :"
+                      require
+                      readOnly={state.trans_id > 6 ? false : false}
+                    />
                   </Col>
                   <Col span={16}>
                     {state.trans_id >= 6 ? (
