@@ -112,6 +112,7 @@ import TempItemForm from "./modules/inventory/item/temporaryItem/TempItemForm";
 import SatisficationCategoryList from "./modules/sales/masterData/satisfication/SatisficationCategoryList";
 import SatisficationForm from "./modules/sales/masterData/satisfication/SatisficationForm";
 import Logout from "./modules/system/Logout";
+import CompareFormulaMain from "./modules/sales/reporting/compareFormula";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -432,6 +433,10 @@ const App = (props) => {
               path="/sales/orders/edit/:id"
               component={SaleOrderCreate}
             />
+            {/* SALES REPORTING */}
+            <Route exact path="/sales/reporting/compareformula">
+              <CompareFormulaMain />
+            </Route>
             {/* SALES CONFIGURATION */}
             <Route exact path="/sales/config/customers">
               <Customer />

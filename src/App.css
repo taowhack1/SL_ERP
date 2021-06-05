@@ -1192,3 +1192,6 @@ tr.drop-over-downward td {
 tr.drop-over-upward td {
   border-top: 2px dashed #1890ff;
 }
+.tb-col-sm {
+  padding: 4px 4px !important;
+}

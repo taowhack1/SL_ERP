@@ -4,14 +4,14 @@ import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { useSelector } from "react-redux";
-import AntdTableDragable from "../../../../components/AntdTableDragable";
-import CustomLabel from "../../../../components/CustomLabel";
-import CustomSelect from "../../../../components/CustomSelect";
-import DetailLoading from "../../../../components/DetailLoading";
+import AntdTableDragable from "../../../../../components/AntdTableDragable";
+import CustomLabel from "../../../../../components/CustomLabel";
+import CustomSelect from "../../../../../components/CustomSelect";
+import DetailLoading from "../../../../../components/DetailLoading";
 import {
   convertDigit,
   getNumberFormat,
-} from "../../../../include/js/main_config";
+} from "../../../../../include/js/main_config";
 const columns = ({ readOnly, itemList = [], deleteRow, onChange }) => [
   {
     title: (

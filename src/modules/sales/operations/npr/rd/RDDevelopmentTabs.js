@@ -1,6 +1,6 @@
 import { Tabs } from "antd";
 import React from "react";
-import RDFormula from "../RDFormula";
+import RDFormula from "./RDFormula";
 import RDTestItem from "../RDTestItem";
 import RDFormulaFeedback from "./RDFormulaFeedback";
 import RDFormulaGeneralDetail from "./RDFormulaGeneralDetail";
