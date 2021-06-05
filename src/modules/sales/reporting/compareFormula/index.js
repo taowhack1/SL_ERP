@@ -1,5 +1,5 @@
-import { Button, Col, DatePicker, Row, Table } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import { Button, Col, DatePicker, Modal, Row, Table } from "antd";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getNPRList } from "../../../../actions/sales/nprActions";
 import DetailLoading from "../../../../components/DetailLoading";
@@ -14,7 +14,59 @@ import {
 import { convertDigit } from "../../../../include/js/main_config";
 import CustomLabel from "../../../../components/CustomLabel";
 import moment from "moment";
-
+import ModalSelectFormula from "./ModalSelectFormula";
+const mockupData = [
+  {
+    npr_formula_detail_part1: "A",
+    npr_formula_detail_part_no1: "01",
+    item_no_name1: "TEST ITEM 1",
+    npr_formula_detail_percent_qty1: 10.5321,
+    npr_formula_detail_item_cost1: 120,
+    item_no_name2: "TEST ITEM 1",
+    npr_formula_detail_percent_qty2: 10.5321,
+    npr_formula_detail_item_cost2: 120,
+  },
+  {
+    npr_formula_detail_part1: "A",
+    npr_formula_detail_part_no1: "02",
+    item_no_name1: "TEST ITEM 2",
+    npr_formula_detail_percent_qty1: 15,
+    npr_formula_detail_item_cost1: 5.721,
+    item_no_name2: "TEST ITEM 2",
+    npr_formula_detail_percent_qty2: 25,
+    npr_formula_detail_item_cost2: 5.721,
+  },
+  {
+    npr_formula_detail_part1: "A",
+    npr_formula_detail_part_no1: "03",
+    item_no_name1: "TEST ITEM 3",
+    npr_formula_detail_percent_qty1: 0.1234,
+    npr_formula_detail_item_cost1: 120,
+    item_no_name2: null,
+    npr_formula_detail_percent_qty2: null,
+    npr_formula_detail_item_cost2: null,
+  },
+  {
+    npr_formula_detail_part1: "B",
+    npr_formula_detail_part_no1: "04",
+    item_no_name1: "TEST ITEM 4",
+    npr_formula_detail_percent_qty1: 33.3333,
+    npr_formula_detail_item_cost1: 10,
+    item_no_name2: "TEST ITEM 4",
+    npr_formula_detail_percent_qty2: 33.3333,
+    npr_formula_detail_item_cost2: 10,
+  },
+  {
+    npr_formula_detail_part1: "C",
+    npr_formula_detail_part_no1: "05",
+    item_no_name1: "TEST ITEM 5",
+    npr_formula_detail_percent_qty1: 5.763,
+    npr_formula_detail_item_cost1: 111.1,
+    item_no_name2: null,
+    npr_formula_detail_percent_qty2: null,
+    npr_formula_detail_item_cost2: null,
+  },
+];
 const columns = ({ onChangeSearch, formula_list_1, formula_list_2 }) => [
   {
     title: (
@@ -22,7 +74,7 @@ const columns = ({ onChangeSearch, formula_list_1, formula_list_2 }) => [
         <CustomLabel label={"Part"} />
       </div>
     ),
-    dataIndex: "npr_formula_detail_part",
+    dataIndex: "npr_formula_detail_part1",
     width: "15%",
     align: "center",
     className: "tb-col-sm",
@@ -34,16 +86,16 @@ const columns = ({ onChangeSearch, formula_list_1, formula_list_2 }) => [
         <CustomLabel label={"No."} />
       </div>
     ),
-    dataIndex: "id",
+    dataIndex: "npr_formula_detail_part_no1",
     width: "15%",
     align: "center",
     className: "tb-col-sm",
-    render: (val) => val + 1,
+    render: (val) => val,
   },
   {
     title: (
       <>
-        <CustomSelect
+        {/* <CustomSelect
           showSearch
           allowClear
           className="full-width"
@@ -54,10 +106,12 @@ const columns = ({ onChangeSearch, formula_list_1, formula_list_2 }) => [
           onChange={(val) =>
             onChangeSearch({ npr_formula_id_1: val ? val : null })
           }
-        />
+        /> */}
+        <Text strong>KCC-AP-01C / NPRm001-2021-003</Text>
       </>
     ),
     width: "34%",
+    align: "center",
     className: "tb-col-sm",
     children: [
       {
@@ -66,7 +120,7 @@ const columns = ({ onChangeSearch, formula_list_1, formula_list_2 }) => [
             <CustomLabel label={"Item"} />
           </div>
         ),
-        dataIndex: "item_no_name",
+        dataIndex: "item_no_name1",
         align: "left",
         width: "40%",
         ellipsis: true,
@@ -83,19 +137,19 @@ const columns = ({ onChangeSearch, formula_list_1, formula_list_2 }) => [
             <CustomLabel label={"%"} />
           </div>
         ),
-        dataIndex: "npr_formula_detail_percent_qty",
+        dataIndex: "npr_formula_detail_percent_qty1",
         width: "20%",
         align: "right",
         className: "tb-col-sm",
-        render: (val, record) => convertDigit(val || 0, 4),
+        render: (val, record) => (val ? convertDigit(val, 4) : "-"),
       },
       {
         title: <div className="text-center">Cost</div>,
-        dataIndex: "npr_formula_detail_item_cost",
+        dataIndex: "npr_formula_detail_item_cost1",
         width: "20%",
         align: "right",
         className: "tb-col-sm",
-        render: (val) => convertDigit(val || 0, 4),
+        render: (val) => (val ? convertDigit(val, 4) : "-"),
       },
     ],
   },
@@ -107,7 +161,7 @@ const columns = ({ onChangeSearch, formula_list_1, formula_list_2 }) => [
   {
     title: (
       <>
-        <CustomSelect
+        {/* <CustomSelect
           showSearch
           allowClear
           className="full-width"
@@ -118,44 +172,21 @@ const columns = ({ onChangeSearch, formula_list_1, formula_list_2 }) => [
           onChange={(val) =>
             onChangeSearch({ npr_formula_id_2: val ? val : null })
           }
-        />
+        /> */}
+        <Text strong>KCC-BB-01A / NPRm005-2021-001</Text>
       </>
     ),
     width: "34%",
+    align: "center",
     className: "tb-col-sm",
     children: [
-      //   {
-      //     title: (
-      //       <div className="text-center">
-      //         <CustomLabel label={"Part"} />
-      //       </div>
-      //     ),
-      //     dataIndex: "npr_formula_detail_part",
-      //     width: "15%",
-      //     align: "center",
-      //     className: "tb-col-sm",
-      //     render: (val, record) => <Text>{val}</Text>,
-      //   },
-      //   {
-      //     title: (
-      //       <div className="text-center">
-      //         <CustomLabel label={"No."} />
-      //       </div>
-      //     ),
-      //     dataIndex: "id",
-      //     width: "15%",
-      //     align: "center",
-      //     className: "tb-col-sm",
-      //     render: (val) => val + 1,
-      //   },
-
       {
         title: (
           <div className="text-center">
             <CustomLabel label={"Item"} />
           </div>
         ),
-        dataIndex: "item_no_name",
+        dataIndex: "item_no_name2",
         align: "left",
         width: "40%",
         ellipsis: true,
@@ -172,19 +203,19 @@ const columns = ({ onChangeSearch, formula_list_1, formula_list_2 }) => [
             <CustomLabel label={"%"} />
           </div>
         ),
-        dataIndex: "npr_formula_detail_percent_qty",
+        dataIndex: "npr_formula_detail_percent_qty2",
         width: "20%",
         align: "right",
         className: "tb-col-sm",
-        render: (val, record) => convertDigit(val || 0, 4),
+        render: (val, record) => (val ? convertDigit(val, 4) : "-"),
       },
       {
         title: <div className="text-center">Cost</div>,
-        dataIndex: "npr_formula_detail_item_cost",
+        dataIndex: "npr_formula_detail_item_cost2",
         width: "20%",
         align: "right",
         className: "tb-col-sm",
-        render: (val) => convertDigit(val || 0, 4),
+        render: (val) => (val ? convertDigit(val, 4) : "-"),
       },
     ],
   },
@@ -201,6 +232,11 @@ const CompareFormulaMain = () => {
     secondYear: null,
     npr_formula_id_1: null,
     npr_formula_id_2: null,
+  });
+  const [modal, setModal] = useState({
+    visible: false,
+    npr_formula_1: [],
+    npr_formula_2: [],
   });
   useEffect(() => {
     dispatch(getNPRList(branch_id));
@@ -226,6 +262,11 @@ const CompareFormulaMain = () => {
     },
     [state]
   );
+  const onSearch = useCallback(() => {
+    console.log("Click Search Formula");
+    setModal({ ...modal, visible: true });
+  }, [state.npr_id_1, state.npr_id_2, state.year_1, state.year_2]);
+  const modalConfig = useMemo(() => ({ modal, setModal }), [modal, setModal]);
   console.log("search", state);
   return (
     <>
@@ -258,6 +299,7 @@ const CompareFormulaMain = () => {
                           onChange={(val) =>
                             onChangeSearch({ npr_id_1: val ? val : null })
                           }
+                          defaultValue={"NPRm001-2021"}
                         />
                       </Col>
                       <Col span={8}>
@@ -295,6 +337,7 @@ const CompareFormulaMain = () => {
                           onChange={(val) =>
                             onChangeSearch({ npr_id_2: val ? val : null })
                           }
+                          defaultValue={"NPRm005-2021"}
                         />
                       </Col>
                       <Col span={8}>
@@ -316,7 +359,11 @@ const CompareFormulaMain = () => {
                 </Row>
                 <Row className="col-2 mt-3">
                   <Col span={24} className="text-center">
-                    <Button icon={<SearchOutlined />} className="primary">
+                    <Button
+                      icon={<SearchOutlined />}
+                      className="primary"
+                      onClick={onSearch}
+                    >
                       Search Formula
                     </Button>
                   </Col>
@@ -336,7 +383,7 @@ const CompareFormulaMain = () => {
                       formula_list_1: [],
                       formula_list_2: [],
                     })}
-                    dataSource={[]}
+                    dataSource={mockupData}
                     pagination={{ pageSize: 999 }}
                     rowKey={"id"}
                     rowClassName="row-table-detail"
@@ -344,6 +391,7 @@ const CompareFormulaMain = () => {
                   />
                 </Col>
               </Row>
+              <ModalSelectFormula {...modalConfig} />
             </div>
           </>
         )}
