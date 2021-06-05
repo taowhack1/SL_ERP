@@ -117,17 +117,6 @@ const RDDevelopmentForm = ({
 
   const onSubmit = async (data) => {
     console.log("onSubmit", data);
-    // if (isFinished) {
-    // const saveData = data.npr_formula_remark_detail.filter(
-    //   (obj) =>
-    //     obj.npr_formula_remark !== null &&
-    //     obj.npr_formula_remark_created_by !== null
-    // );
-    // console.log("remark data", data);
-    // console.log("saveData", saveData);
-    // const resp2 = await saveNPRFormulaRemark(npr_formula_id, saveData);
-    // console.log("sucess", resp2);
-    // } else {
     const saveData2 = {
       ...state,
       ...data,
@@ -162,13 +151,12 @@ const RDDevelopmentForm = ({
         : setFormula(
             formula.map((obj) =>
               obj.npr_formula_id === saveData2.npr_formula_id
-                ? { ...obj, ...resp.data }
+                ? { id: obj.id, ...resp.data }
                 : obj
             )
           );
       setFormMethod(formView);
       setDisabledBatchUpdate(true);
-      // }
       console.log(resp.data);
     }
     setFormMethod(formView);

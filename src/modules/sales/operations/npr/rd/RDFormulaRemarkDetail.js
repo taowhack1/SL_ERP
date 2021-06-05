@@ -1,5 +1,5 @@
 import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
-import { Popconfirm } from "antd";
+import { Popconfirm, Switch } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Text from "antd/lib/typography/Text";
 import React from "react";
@@ -34,6 +34,12 @@ const columns = ({ readOnly, remove, control, register, user_name }) => [
       ) : (
         <>
           <input
+            {...register(
+              `npr_formula_remark_detail.${index}.npr_formula_remark_id`
+            )}
+            className="d-none"
+          />
+          <input
             {...register(`npr_formula_remark_detail.${index}.npr_formula_id`)}
             className="d-none"
           />
@@ -43,12 +49,7 @@ const columns = ({ readOnly, remove, control, register, user_name }) => [
             )}
             className="d-none"
           />
-          <input
-            {...register(
-              `npr_formula_remark_detail.${index}.npr_formula_remark_active`
-            )}
-            className="d-none"
-          />
+
           <Controller
             render={({ field }) => <TextArea {...field} />}
             name={`npr_formula_remark_detail.${index}.npr_formula_remark`}
@@ -83,31 +84,93 @@ const columns = ({ readOnly, remove, control, register, user_name }) => [
         <EllipsisOutlined />
       </Text>
     ),
+    dataIndex: "npr_formula_remark_active",
     align: "center",
     width: "5%",
     render: (value, record, index) => {
-      return (
-        user_name !== record.npr_formula_remark_created_by ||
-        (record.npr_formula_remark_id === null && (
-          <Popconfirm
-            onConfirm={() => {
-              remove(index);
-            }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
-            <DeleteTwoTone />
-          </Popconfirm>
-        ))
-      );
+      return !readOnly ? (
+        user_name === record.npr_formula_remark_created_by ? (
+          record.npr_formula_remark_id === null ? (
+            <Popconfirm
+              onConfirm={() => {
+                remove(index);
+              }}
+              title="Are you sure you want to delete this row？"
+              okText="Yes"
+              cancelText="No"
+            >
+              <DeleteTwoTone />
+              <input
+                {...register(
+                  `npr_formula_remark_detail.${index}.npr_formula_remark_active`
+                )}
+                className="d-none"
+              />
+            </Popconfirm>
+          ) : (
+            <Controller
+              name={`npr_formula_remark_detail.${index}.npr_formula_remark_active`}
+              control={control}
+              render={({ field }) => (
+                <Switch
+                  size="small"
+                  title="Active / In-Active"
+                  {...field}
+                  defaultChecked={value}
+                />
+              )}
+            />
+          )
+        ) : null
+      ) : null;
+      // !readOnly ?
+      //   user_name !== record.npr_formula_remark_created_by &&
+      //   record.npr_formula_remark_id === null ? (
+      //   <Popconfirm
+      //     onConfirm={() => {
+      //       remove(index);
+      //     }}
+      //     title="Are you sure you want to delete this row？"
+      //     okText="Yes"
+      //     cancelText="No"
+      //   >
+      //     <DeleteTwoTone />
+      //     <input
+      //       {...register(
+      //         `npr_formula_remark_detail.${index}.npr_formula_remark_active`
+      //       )}
+      //       className="d-none"
+      //     />
+      //   </Popconfirm>
+      // ) : (
+      //   <Controller
+      //     name={`npr_formula_remark_detail.${index}.npr_formula_remark_active`}
+      //     control={control}
+      //     render={({ field }) => (
+      //       <Switch
+      //         size="small"
+      //         title="Active / In-Active"
+      //         {...field}
+      //         defaultChecked={value}
+      //       />
+      //     )}
+      //   />
+      // );
     },
   },
 ];
 
 const RDFormulaRemarkDetail = () => {
-  const { control, errors, npr_formula_id, user_name, register, readOnly } =
-    useFormContext();
+  const {
+    control,
+    errors,
+    npr_formula_id,
+    user_name,
+    register,
+    readOnly,
+    tg_trans_status_id,
+    disabledBatchUpdate,
+  } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "npr_formula_remark_detail",
@@ -120,6 +183,8 @@ const RDFormulaRemarkDetail = () => {
       npr_formula_id,
       npr_formula_remark_created_by: user_name,
     });
+  const disabledUpdateRemark =
+    tg_trans_status_id === 4 ? disabledBatchUpdate : readOnly;
   console.log(fields);
   return (
     <>
@@ -131,14 +196,14 @@ const RDFormulaRemarkDetail = () => {
             columns={columns({
               control,
               errors,
-              readOnly,
+              readOnly: disabledUpdateRemark,
               remove,
               register,
               user_name,
             })}
             pageSize={50}
             rowClassName="row-table-detail"
-            onAdd={!readOnly && addRow}
+            onAdd={!disabledUpdateRemark && addRow}
           />
         </>
       </div>
