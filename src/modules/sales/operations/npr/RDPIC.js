@@ -84,7 +84,7 @@ const RDPIC = () => {
               size="small"
               loading={loading}
             >
-              Save Change
+              Save
             </Button>
           )}
         </div>

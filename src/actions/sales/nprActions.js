@@ -18,6 +18,7 @@ const apiGetNPRFeedback = `/sales/npr_satisfication/formula`;
 const apiNPRSMDMasterData = `/list/smd_item_master_data`;
 const apiNPRSaveFormulaRemark = `/sales/npr_formula/remark`;
 const apiNPRAllRevisionFormula = `/sales/npr_formula/running`;
+const apiGetNPRByYear = `/list/npr/npr_formula/year`;
 
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
@@ -337,6 +338,31 @@ const getNPRAllRevisionFormula = (npr_running_id = null) => {
   }
 };
 
+const getNPRByYear = (year = "2020") => {
+  try {
+    return axios
+      .get(`${apiGetNPRByYear}/${year}`, header_config)
+      .then((resp) => {
+        console.log(resp);
+        if (resp.status === 200) {
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,
@@ -351,4 +377,5 @@ export {
   getNPRSMDMasterData,
   saveNPRFormulaRemark,
   getNPRAllRevisionFormula,
+  getNPRByYear,
 };

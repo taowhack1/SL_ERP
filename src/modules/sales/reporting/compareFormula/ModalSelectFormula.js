@@ -1,36 +1,45 @@
 import { Button, Checkbox, Col, Input, Modal, Row, Spin, Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useState } from "react";
-const columns = [
+const columns = ({ checked_id, onChange, keyId, keyNo }) => [
   {
-    title: <Input data={[]} placeholder={"Search Formula"} />,
+    title: (
+      <div className="text-center">
+        <Text strong>Check</Text>
+      </div>
+    ),
+    dataIndex: "npr_formula_id",
+    align: "center",
+    render: (val, record) => (
+      <Checkbox
+        checked={checked_id === val ? true : false}
+        onChange={(e) => {
+          e.target.checked
+            ? onChange({
+                [keyId]: val,
+                [keyNo]: record.npr_formula_no,
+              })
+            : onChange({
+                [keyId]: null,
+                [keyNo]: null,
+              });
+        }}
+      />
+    ),
     className: "tb-col-sm",
-    children: [
-      {
-        title: (
-          <div className="text-center">
-            <Text strong>Check</Text>
-          </div>
-        ),
-        dataIndex: "npr_formula_id",
-        align: "center",
-        render: (val, record) => <Checkbox />,
-        className: "tb-col-sm",
-        width: "15%",
-      },
-      {
-        title: (
-          <div className="text-center">
-            <Text strong>Formula No.</Text>
-          </div>
-        ),
-        dataIndex: "npr_formula_no",
-        align: "left",
-        render: (val, record) => <Text className="pd-left-3">{val}</Text>,
-        className: "tb-col-sm",
-        width: "85%",
-      },
-    ],
+    width: "15%",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>Formula No.</Text>
+      </div>
+    ),
+    dataIndex: "npr_formula_no",
+    align: "left",
+    render: (val, record) => <Text className="pd-left-3">{val}</Text>,
+    className: "tb-col-sm",
+    width: "85%",
   },
 ];
 const mockupData1 = [
@@ -69,32 +78,65 @@ const mockupData2 = [
 ];
 const ModalSelectFormula = (props) => {
   console.log("props", props);
-  const { modal, setModal } = props;
+  const { modal, setModal, onClickCompareFormula } = props;
+  const { visible, npr_no_1, npr_no_2, npr_formula_1, npr_formula_2 } = modal;
   const [loading, setLoading] = useState(false);
+  const [state, setState] = useState({
+    npr_formula_id_1: null,
+    npr_formula_no_1: null,
+    npr_formula_id_2: null,
+    npr_formula_no_2: null,
+  });
   const onCancel = () => {
     console.log("Discard");
     setModal({ ...modal, visible: false });
   };
-  const onOk = () => {
+  const onOk = async () => {
+    const {
+      npr_formula_id_1,
+      npr_formula_no_1,
+      npr_formula_id_2,
+      npr_formula_no_2,
+    } = state;
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    const resp = await onClickCompareFormula({
+      npr_formula_id_1,
+      npr_formula_no_1,
+      npr_formula_id_2,
+      npr_formula_no_2,
+    });
+    setLoading(false);
+    if (resp.success) {
       setModal({ ...modal, visible: false });
-      console.log("Compare");
-    }, 1800);
+    }
+    console.log("resp on modal", resp);
+    console.log("after resp modal");
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setModal({ ...modal, visible: false });
+    //   console.log("Compare");
+    // }, 1800);
   };
+  const onChangeFormula = (data) => setState({ ...state, ...data });
+
+  const disabledCompare = !state.npr_formula_id_1 || !state.npr_formula_id_2;
+  console.log("state", state);
   return (
     <>
       <Modal
-        visible={modal.visible}
+        visible={visible}
         width={800}
         title={"Select formula to compare."}
-        destroyOnClose
         footer={[
           <Button loading={loading} onClick={onCancel}>
             Discard
           </Button>,
-          <Button className="primary" loading={loading} onClick={onOk}>
+          <Button
+            className={disabledCompare ? "" : "primary"}
+            disabled={disabledCompare}
+            loading={loading}
+            onClick={onOk}
+          >
             Compare
           </Button>,
         ]}
@@ -106,13 +148,18 @@ const ModalSelectFormula = (props) => {
           <Row className="col-2 mt-1" gutter={16}>
             <Col span={12}>
               <div className="full-width text-center">
-                <Text strong>NPRm001-2021</Text>
+                <Text strong>{npr_no_1}</Text>
               </div>
               <Table
-                columns={columns}
+                columns={columns({
+                  checked_id: state.npr_formula_id_1,
+                  onChange: onChangeFormula,
+                  keyId: "npr_formula_id_1",
+                  keyNo: "npr_formula_no_1",
+                })}
                 className="mt-3"
                 rowClassName="row-table-detail"
-                dataSource={mockupData1}
+                dataSource={npr_formula_1}
                 bordered
                 pagination={false}
                 scroll={450}
@@ -120,14 +167,19 @@ const ModalSelectFormula = (props) => {
             </Col>
             <Col span={12}>
               <div className="full-width text-center">
-                <Text strong>NPRm005-2021</Text>
+                <Text strong>{npr_no_2}</Text>
               </div>
 
               <Table
-                columns={columns}
+                columns={columns({
+                  checked_id: state.npr_formula_id_2,
+                  onChange: onChangeFormula,
+                  keyId: "npr_formula_id_2",
+                  keyNo: "npr_formula_no_2",
+                })}
                 className="mt-3"
                 rowClassName="row-table-detail"
-                dataSource={mockupData2}
+                dataSource={npr_formula_2}
                 bordered
                 pagination={false}
                 scroll={450}

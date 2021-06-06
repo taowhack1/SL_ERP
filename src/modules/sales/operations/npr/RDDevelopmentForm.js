@@ -334,7 +334,7 @@ const RDDevelopmentForm = ({
                   size="small"
                   loading={false}
                 >
-                  Save Change
+                  Save
                 </Button>
               </>
             </div>
