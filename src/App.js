@@ -396,6 +396,7 @@ const App = (props) => {
             <Route exact path="/sales/npr">
               <NPRList />
             </Route>
+            {/* <Route exact path="/sales/npr/pk_price" component={RDForm} /> */}
             <Route exact path="/sales/npr/:id" component={RDForm} />
 
             {/* SALES  Quotations */}

@@ -27,6 +27,9 @@ import { withRouter } from "react-router-dom";
 
 import Authorize from "../system/Authorize";
 import CustomLabel from "../../components/CustomLabel";
+import { get_all_vendor } from "../../actions/purchase/vendorActions";
+import { getMasterDataItem } from "../../actions/inventory";
+import { get_vendor_payment_term_list } from "../../actions/accounting";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -57,6 +60,10 @@ const PurchaseRequisitionCreate = (props) => {
       return step.all_group_in_node;
     });
   useEffect(() => {
+    dispatch(get_all_vendor());
+    dispatch(getMasterDataItem());
+    dispatch(get_vendor_payment_term_list());
+
     headDispatch({
       type: "SET_HEAD",
       payload: data.data_head

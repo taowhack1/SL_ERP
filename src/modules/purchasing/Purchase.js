@@ -15,9 +15,6 @@ const Purchase = (props) => {
   const current_project = useSelector((state) => state.auth.currentProject);
 
   useEffect(() => {
-    dispatch(get_all_vendor());
-    dispatch(getMasterDataItem());
-    dispatch(get_vendor_payment_term_list());
     dispatch(reset_comments());
   }, [dispatch]);
   console.log("current_project", current_project);

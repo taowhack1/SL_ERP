@@ -77,7 +77,6 @@ const getNPRByID = (id = null) => {
     return axios
       .get(`${apiNPR}/${id}`, header_config)
       .then((res) => {
-        console.log("res ", res);
         if (res.data) {
           return { success: true, data: res.data };
         } else {
@@ -97,15 +96,12 @@ const getNPRByID = (id = null) => {
   }
 };
 const saveNPRAssignment = (id = null, data) => {
-  console.log("saveNPRAssignment", id, data);
   try {
     if (id === null || id === undefined)
       return message.error("Error! Missing NPR ID.");
     return axios
       .put(`${apiNPRRD}/${id}`, data, header_config)
       .then((res) => {
-        console.log("then");
-        console.log("res ", res);
         if (res.data) {
           return { success: true, data: res.data };
         } else {
@@ -114,13 +110,11 @@ const saveNPRAssignment = (id = null, data) => {
         }
       })
       .catch((error) => {
-        console.log("catch");
         if (!error.response) message.error(errorText.network);
         if (error.response) message.error(errorText.getData);
         return { success: false, data: null, error: error.response };
       });
   } catch (error) {
-    console.log("try catch");
     console.log(error);
     message.error(errorText.getData);
     return { success: false, data: null };
@@ -133,8 +127,6 @@ const getNPRFormula = (id) => {
     return axios
       .get(`${apiGetNPRFormula}/${id}`, header_config)
       .then((res) => {
-        console.log(`${apiGetNPRFormula}/${id}`);
-        console.log("getNPRFormula", res.data);
         if (res.data) {
           return { success: true, data: res.data };
         } else {
@@ -143,13 +135,11 @@ const getNPRFormula = (id) => {
         }
       })
       .catch((error) => {
-        console.log("catch");
         if (!error.response) message.error(errorText.network);
         if (error.response) message.error(errorText.getData);
         return { success: false, data: null, error: error.response };
       });
   } catch (error) {
-    console.log("try catch");
     console.log(error);
     message.error(errorText.getData);
     return { success: false, data: null };
@@ -157,14 +147,11 @@ const getNPRFormula = (id) => {
 };
 
 const saveNPRFormula = (id = null, data) => {
-  console.log("saveNPRFormula", data);
   try {
     return id
       ? axios
           .put(`${apiNPRFormula}/${id}`, [data], header_config)
           .then((res) => {
-            console.log("then");
-            console.log("res ", res);
             if (res.data) {
               message.success("Update Successfully..");
               return { success: true, data: res.data };
@@ -174,8 +161,6 @@ const saveNPRFormula = (id = null, data) => {
             }
           })
           .catch((error) => {
-            console.log("catch");
-            console.log(error.response);
             if (!error.response) {
               message.error(errorText.network);
             } else {
@@ -186,8 +171,6 @@ const saveNPRFormula = (id = null, data) => {
       : axios
           .post(`${apiNPRFormula}/`, [data], header_config)
           .then((res) => {
-            console.log("then");
-            console.log("res ", res);
             if (res.data) {
               message.success("Save Successfully..");
               return { success: true, data: res.data };
@@ -197,7 +180,6 @@ const saveNPRFormula = (id = null, data) => {
             }
           })
           .catch((error) => {
-            console.log("catch");
             if (!error.response) {
               message.error(errorText.network);
             } else {
@@ -206,7 +188,6 @@ const saveNPRFormula = (id = null, data) => {
             return { success: false, data: null, error: error.response };
           });
   } catch (error) {
-    console.log("try catch");
     console.log(error);
     message.error(errorText.getData);
     return { success: false, data: null };
@@ -221,17 +202,14 @@ const getNPRFeedback = (id) => {
       .get(`${apiGetNPRFeedback}/${id}`, header_config)
       .then((res) => {
         const { data } = res.data;
-        console.log("res ", res);
         return { success: true, data: data };
       })
       .catch((error) => {
-        console.log("catch");
         if (!error.response) message.error(errorText.network);
         if (error.response) message.error(errorText.getData);
         return { success: false, data: null, error: error.response };
       });
   } catch (error) {
-    console.log("try catch");
     console.log(error);
     message.error(errorText.getData);
     return { success: false, data: null };
@@ -251,34 +229,27 @@ const getNPRSMDMasterData = () => (dispatch) => {
         }
       })
       .catch((error) => {
-        console.log("catch");
         dispatch({ type: SET_LOADING, payload: false });
         if (!error.response) message.error(errorText.network);
         if (error.response) message.error(errorText.getData);
       });
   } catch (error) {
     dispatch({ type: SET_LOADING, payload: false });
-    console.log("try catch");
     console.log(error);
     message.error(errorText.getData);
   }
 };
 
 const saveNPRFormulaRemark = (npr_formula_id = null, data) => {
-  console.log("saveNPRFormula", data);
   try {
     if (!npr_formula_id)
       return { success: false, data: null, message: "Missing npr_formula_id " };
     return axios
       .post(`${apiNPRSaveFormulaRemark}/${npr_formula_id}`, data, header_config)
       .then((res) => {
-        console.log("then");
         const {
-          npr_formula_id,
-          input_data,
           return_data: { success, data: returnData },
         } = res.data;
-        console.log("res ", res);
         if (success) {
           message.success("Save Successfully..");
           return { success: true, data: returnData };
@@ -288,7 +259,6 @@ const saveNPRFormulaRemark = (npr_formula_id = null, data) => {
         }
       })
       .catch((error) => {
-        console.log("catch");
         if (!error.response) {
           message.error(errorText.network);
         } else {
@@ -305,15 +275,12 @@ const saveNPRFormulaRemark = (npr_formula_id = null, data) => {
 };
 
 const getNPRAllRevisionFormula = (npr_running_id = null) => {
-  console.log("getNPRAllRevisionFormula");
   try {
     if (!npr_running_id)
       return { success: false, data: null, message: "Missing npr_running_id " };
     return axios
       .get(`${apiNPRAllRevisionFormula}/${npr_running_id}`, header_config)
       .then((res2) => {
-        console.log(`${apiNPRAllRevisionFormula}/${npr_running_id}`);
-        console.log("getNPRAllRevisionFormula", res2.data);
         if (res2.status === 200) {
           return { success: true, data: res2.data };
         } else {
@@ -338,13 +305,20 @@ const getNPRAllRevisionFormula = (npr_running_id = null) => {
   }
 };
 
-const getNPRByYear = (year = "2020") => {
+const getNPRByYear = (
+  year = "2020",
+  customer_name = "tao",
+  product_name = "0"
+) => {
   try {
     return axios
-      .get(`${apiGetNPRByYear}/${year}`, header_config)
+      .get(
+        `${apiGetNPRByYear}/${year}&${customer_name}&${product_name}`,
+        header_config
+      )
       .then((resp) => {
-        console.log(resp);
         if (resp.status === 200) {
+          console.log("resp.data", resp.data);
           return { success: true, data: resp.data, message: "Success" };
         } else {
           return { success: false, data: [], message: resp };

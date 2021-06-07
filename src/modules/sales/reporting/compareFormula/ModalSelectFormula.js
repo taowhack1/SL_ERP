@@ -1,4 +1,4 @@
-import { Button, Checkbox, Col, Input, Modal, Row, Spin, Table } from "antd";
+import { Button, Checkbox, Col, Modal, Row, Spin, Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useState } from "react";
 const columns = ({ checked_id, onChange, keyId, keyNo }) => [
@@ -77,7 +77,6 @@ const mockupData2 = [
   },
 ];
 const ModalSelectFormula = (props) => {
-  console.log("props", props);
   const { modal, setModal, onClickCompareFormula } = props;
   const { visible, npr_no_1, npr_no_2, npr_formula_1, npr_formula_2 } = modal;
   const [loading, setLoading] = useState(false);
@@ -88,7 +87,6 @@ const ModalSelectFormula = (props) => {
     npr_formula_no_2: null,
   });
   const onCancel = () => {
-    console.log("Discard");
     setModal({ ...modal, visible: false });
   };
   const onOk = async () => {
@@ -109,18 +107,10 @@ const ModalSelectFormula = (props) => {
     if (resp.success) {
       setModal({ ...modal, visible: false });
     }
-    console.log("resp on modal", resp);
-    console.log("after resp modal");
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setModal({ ...modal, visible: false });
-    //   console.log("Compare");
-    // }, 1800);
   };
   const onChangeFormula = (data) => setState({ ...state, ...data });
 
   const disabledCompare = !state.npr_formula_id_1 || !state.npr_formula_id_2;
-  console.log("state", state);
   return (
     <>
       <Modal

@@ -1,26 +1,10 @@
-import {
-  Button,
-  Checkbox,
-  Col,
-  DatePicker,
-  Modal,
-  Row,
-  Space,
-  Table,
-} from "antd";
+import { Button, Checkbox, Col, DatePicker, Row, Space, Table } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getNPRByYear, getNPRList } from "../../../../actions/sales/nprActions";
-import DetailLoading from "../../../../components/DetailLoading";
+import { getNPRByYear } from "../../../../actions/sales/nprActions";
 import MainLayout from "../../../../components/MainLayout";
 import CustomSelect from "../../../../components/CustomSelect";
 import Text from "antd/lib/typography/Text";
-import {
-  DownloadOutlined,
-  PrinterOutlined,
-  PrinterTwoTone,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { DownloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { convertDigit } from "../../../../include/js/main_config";
 import CustomLabel from "../../../../components/CustomLabel";
 import moment from "moment";
@@ -29,59 +13,7 @@ import {
   getCompareFormula,
   getFormulaNoByNPRId,
 } from "../../../../actions/sales/reporting";
-import axios from "axios";
-const mockupData = [
-  {
-    npr_formula_detail_part1: "A",
-    npr_formula_detail_part_no1: "01",
-    item_no_name1: "TEST ITEM 1",
-    npr_formula_detail_percent_qty1: 10.5321,
-    npr_formula_detail_item_cost1: 120,
-    item_no_name2: "TEST ITEM 1",
-    npr_formula_detail_percent_qty2: 10.5321,
-    npr_formula_detail_item_cost2: 120,
-  },
-  {
-    npr_formula_detail_part1: "A",
-    npr_formula_detail_part_no1: "02",
-    item_no_name1: "TEST ITEM 2",
-    npr_formula_detail_percent_qty1: 15,
-    npr_formula_detail_item_cost1: 5.721,
-    item_no_name2: "TEST ITEM 2",
-    npr_formula_detail_percent_qty2: 25,
-    npr_formula_detail_item_cost2: 5.721,
-  },
-  {
-    npr_formula_detail_part1: "A",
-    npr_formula_detail_part_no1: "03",
-    item_no_name1: "TEST ITEM 3",
-    npr_formula_detail_percent_qty1: 0.1234,
-    npr_formula_detail_item_cost1: 120,
-    item_no_name2: null,
-    npr_formula_detail_percent_qty2: null,
-    npr_formula_detail_item_cost2: null,
-  },
-  {
-    npr_formula_detail_part1: "B",
-    npr_formula_detail_part_no1: "04",
-    item_no_name1: "TEST ITEM 4",
-    npr_formula_detail_percent_qty1: 33.3333,
-    npr_formula_detail_item_cost1: 10,
-    item_no_name2: "TEST ITEM 4",
-    npr_formula_detail_percent_qty2: 33.3333,
-    npr_formula_detail_item_cost2: 10,
-  },
-  {
-    npr_formula_detail_part1: "C",
-    npr_formula_detail_part_no1: "05",
-    item_no_name1: "TEST ITEM 5",
-    npr_formula_detail_percent_qty1: 5.763,
-    npr_formula_detail_item_cost1: 111.1,
-    item_no_name2: null,
-    npr_formula_detail_percent_qty2: null,
-    npr_formula_detail_item_cost2: null,
-  },
-];
+import { pad2number } from "../../../../include/js/function_main";
 const columns = ({
   columnsConfig: { showPart, showPartNo, showItem, showCost },
   npr_formula_no_1,
@@ -114,24 +46,12 @@ const columns = ({
   {
     title: (
       <>
-        {/* <CustomSelect
-          showSearch
-          allowClear
-          className="full-width"
-          placeholder="Formula No.1"
-          field_id="npr_formula_id"
-          field_name="npr_formula_no"
-          data={formula_list_1}
-          onChange={(val) =>
-            onChangeSearch({ npr_formula_id_1: val ? val : null })
-          }
-        /> */}
         <Text strong>{npr_formula_no_1 || "Formula No.1"}</Text>
       </>
     ),
     width: "34%",
     align: "center",
-    className: "tb-col-sm",
+    className: "tb-col-sm bg-tb-primary",
     children: [
       {
         title: (
@@ -175,30 +95,18 @@ const columns = ({
   },
   {
     title: "",
-    className: "tb-col-sm",
+    className: "tb-col-sm bg-tb-disabled",
     width: "2%",
   },
   {
     title: (
       <>
-        {/* <CustomSelect
-          showSearch
-          allowClear
-          className="full-width"
-          placeholder="Formula No.2"
-          field_id="npr_formula_id"
-          field_name="npr_formula_no"
-          data={formula_list_2}
-          onChange={(val) =>
-            onChangeSearch({ npr_formula_id_2: val ? val : null })
-          }
-        /> */}
         <Text strong>{npr_formula_no_2 || "Formula No.2"}</Text>
       </>
     ),
     width: "34%",
     align: "center",
-    className: "tb-col-sm",
+    className: "tb-col-sm bg-tb-secondary",
     children: [
       {
         title: (
@@ -269,7 +177,6 @@ const initialState = {
   npr_formula_compare_result: [],
 };
 const CompareFormulaMain = () => {
-  const { branch_id } = useSelector((state) => state.auth.authData);
   // const { loading } = useSelector((state) => state.sales);
   const [loading, setLoading] = useState(false);
   // keep search value
@@ -305,7 +212,6 @@ const CompareFormulaMain = () => {
     //  Do get NPR Formula by default current year
     const getData = async (year) => {
       const resp = await getNPRByYear(year);
-      console.log("resp get default year", resp);
       setMasterData({
         ...masterData,
         npr_list_1: resp.data,
@@ -318,7 +224,6 @@ const CompareFormulaMain = () => {
   const onChangeYear = async (key, year) => {
     // Do get npr by year when year has been change.
     const resp = await getNPRByYear(year);
-    console.log("resp get onChangeYear ", resp);
     setMasterData({
       ...masterData,
       [key]: resp.data,
@@ -338,10 +243,6 @@ const CompareFormulaMain = () => {
     setLoading(true);
     const respFormula1 = await getFormulaNoByNPRId(state.npr_id_1);
     const respFormula2 = await getFormulaNoByNPRId(state.npr_id_2);
-
-    // setTimeout(() => {
-    console.log("respFormula1 :", respFormula1);
-    console.log("respFormula2 :", respFormula2);
     setLoading(false);
     setModal({
       ...modal,
@@ -351,7 +252,6 @@ const CompareFormulaMain = () => {
       npr_formula_1: respFormula1.data,
       npr_formula_2: respFormula2.data,
     });
-    // }, 800);
   }, [state.npr_id_1, state.npr_id_2]);
 
   const onClickCompareFormula = useCallback(
@@ -363,7 +263,6 @@ const CompareFormulaMain = () => {
     }) => {
       // Receive 2 npr_formula_id for compare when click Compare on the Modal
       const resp = await getCompareFormula(npr_formula_id_1, npr_formula_id_2);
-      console.log("resp index.js", resp);
       if (resp.success) {
         setState({
           ...state,
@@ -371,7 +270,10 @@ const CompareFormulaMain = () => {
           npr_formula_no_1,
           npr_formula_id_2,
           npr_formula_no_2,
-          npr_formula_compare_result: resp.data,
+          npr_formula_compare_result: resp.data.map((obj, index) => ({
+            ...obj,
+            npr_formula_part_no: pad2number(index + 1),
+          })),
         });
       }
       return resp;
@@ -384,13 +286,9 @@ const CompareFormulaMain = () => {
     [modal, setModal, onClickCompareFormula]
   );
   const disabledSearch = !state.npr_id_1 || !state.npr_id_2;
-  console.log("state :", state);
   return (
     <>
       <MainLayout {...layoutConfig}>
-        {/* {loading ? (
-          <DetailLoading />
-        ) : ( */}
         <>
           <div id="form">
             <h1>Compare Formula</h1>
@@ -399,9 +297,11 @@ const CompareFormulaMain = () => {
               <Row gutter={24}>
                 <Col span={12}>
                   <Row className="col-2">
-                    <div className="detail-tab-row">
-                      <Text strong>NPR No.1</Text>
-                    </div>
+                    <Col span={24} className="text-center">
+                      <div className="detail-tab-row">
+                        <Text strong>NPR No.1</Text>
+                      </div>
+                    </Col>
                   </Row>
                   <Row className="col-2 mt-1" gutter={8}>
                     <Col span={8}>
@@ -452,9 +352,11 @@ const CompareFormulaMain = () => {
                 </Col>
                 <Col span={12}>
                   <Row className="col-2">
-                    <div className="detail-tab-row">
-                      <Text strong>NPR No.2</Text>
-                    </div>
+                    <Col span={24} className="text-center">
+                      <div className="detail-tab-row">
+                        <Text strong>NPR No.2</Text>
+                      </div>
+                    </Col>
                   </Row>
                   <Row className="col-2 mt-1" gutter={8}>
                     <Col span={8}>
@@ -582,7 +484,7 @@ const CompareFormulaMain = () => {
                     npr_formula_no_2: state.npr_formula_no_2,
                   })}
                   dataSource={state.npr_formula_compare_result}
-                  pagination={{ pageSize: 999 }}
+                  pagination={false}
                   rowKey={"id"}
                   rowClassName="row-table-detail"
                   bordered
@@ -592,7 +494,6 @@ const CompareFormulaMain = () => {
             <ModalSelectFormula {...modalConfig} />
           </div>
         </>
-        {/* )} */}
       </MainLayout>
     </>
   );

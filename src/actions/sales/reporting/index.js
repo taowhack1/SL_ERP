@@ -12,7 +12,6 @@ const getCompareFormula = (npr_formula_id_1, npr_formula_id_2) => {
         header_config
       )
       .then((resp) => {
-        console.log(resp);
         if (resp.status === 200) {
           return { success: true, data: resp.data, message: "success" };
         } else {
@@ -34,7 +33,6 @@ const getFormulaNoByNPRId = (npr_id) => {
     return axios
       .get(`${apiGetFormulaNoByNPRId}/${npr_id}`, header_config)
       .then((resp) => {
-        console.log(resp);
         if (resp.status === 200) {
           return { success: true, data: resp.data, message: "success" };
         } else {

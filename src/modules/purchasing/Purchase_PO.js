@@ -32,8 +32,6 @@ const PurchaseOrders = (props) => {
     dispatch(get_po_list(auth.user_name));
     dispatch(get_open_po_list());
     dispatch(reset_po_data());
-    dispatch(get_vendor_payment_term_list());
-    dispatch(getMasterDataItem());
     return () => {
       dispatch(reset_comments());
       setData([]);

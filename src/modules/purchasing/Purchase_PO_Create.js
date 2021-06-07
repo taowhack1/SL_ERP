@@ -39,6 +39,9 @@ import {
 
 import Authorize from "../system/Authorize";
 import CustomLabel from "../../components/CustomLabel";
+import { getMasterDataItem } from "../../actions/inventory";
+import { get_vendor_payment_term_list } from "../../actions/accounting";
+import { get_all_vendor } from "../../actions/purchase/vendorActions";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -78,6 +81,10 @@ const PurchaseOrderCreate = (props) => {
     });
 
   useEffect(() => {
+    dispatch(get_all_vendor());
+    dispatch(get_vendor_payment_term_list());
+    dispatch(getMasterDataItem());
+
     const setEditableData = () => {
       headDispatch({
         type: "SET_HEAD",

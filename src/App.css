@@ -1195,3 +1195,12 @@ tr.drop-over-upward td {
 .tb-col-sm {
   padding: 4px 4px !important;
 }
+.bg-tb-primary {
+  background-color: #ebebf8 !important;
+}
+.bg-tb-secondary {
+  background-color: #e8f7e8 !important;
+}
+.bg-tb-disabled {
+  background-color: #f3f2f2 !important;
+}
