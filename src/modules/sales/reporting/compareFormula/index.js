@@ -280,11 +280,19 @@ const CompareFormulaMain = () => {
     },
     [state]
   );
+
   const modalConfig = useMemo(
     // Set Modal config.
     () => ({ modal, setModal, onClickCompareFormula }),
     [modal, setModal, onClickCompareFormula]
   );
+
+  const onPrintCompareFormula = () =>
+    window.open(
+      `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula_separate.aspx?npr_formula_id_1=${state.npr_formula_id_1}&npr_formula_id_2=${state.npr_formula_id_2}`,
+      "_blank"
+    );
+
   const disabledSearch = !state.npr_id_1 || !state.npr_id_2;
   return (
     <>
@@ -471,6 +479,7 @@ const CompareFormulaMain = () => {
               <Button
                 icon={<DownloadOutlined className="button-icon" />}
                 className="button-icon"
+                onClick={onPrintCompareFormula}
               >
                 Export Excel
               </Button>
