@@ -64,6 +64,8 @@ const StockCard = () => {
     stock_card_date_start: null,
     stock_card_date_end: null,
     all: false,
+    eachLotBatch: false,
+    LotBatch: 0,
   });
   const changeState = (stateKeyValue) => {
     setState({
@@ -83,6 +85,8 @@ const StockCard = () => {
       stock_card_date_start: null,
       stock_card_date_end: null,
       all: false,
+      eachLotBatch: false,
+      LotBatch: 0,
     });
   };
   const FieldsRequire = ["stock_card_date_start", "stock_card_date_end"];
@@ -98,6 +102,13 @@ const StockCard = () => {
   const dateFormat = "DD/MM/YYYY";
 
   const showReport = (formButton) => {
+    const report_stock_card = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?`;
+    const report_stock_card_lotbatch = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card_lotbatch.aspx?`;
+    const value = `&item_all=${state.item_all}&item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
+    const exel = `${report_stock_card}${value}&export_excel=true`;
+    const exel_lotbatch = `${report_stock_card_lotbatch}${value}&export_excel=true`;
+    const pdf_web_view = `${report_stock_card}${value}`;
+    const pdf_web_view_lotbatch = `${report_stock_card_lotbatch}${value}`;
     console.log("formButton", formButton);
     let validate = null;
     if (state.all == true) {
@@ -107,11 +118,17 @@ const StockCard = () => {
     }
     if (validate.validate) {
       if (formButton == "Exel Download") {
-        const link = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?&item_all=${state.item_all}&item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
-        window.open(link);
+        if (state.LotBatch == 1) {
+          window.open(exel_lotbatch);
+        } else {
+          window.open(exel);
+        }
       } else {
-        const link = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?&item_all=${state.item_all}&item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
-        window.open(link);
+        if (state.LotBatch == 1) {
+          window.open(pdf_web_view_lotbatch);
+        } else {
+          window.open(pdf_web_view);
+        }
       }
     }
   };
@@ -157,6 +174,33 @@ const StockCard = () => {
                       });
                 }}>
                 All
+              </Checkbox>
+              <Col span={12}></Col>
+            </Row>
+          </Col>
+          <Col span={1}></Col>
+        </Row>
+        <Row className='row-margin'>
+          <Col span={3}>
+            <Text strong>Lot / batch :</Text>
+          </Col>
+          <Col span={18}>
+            <Row>
+              <Checkbox
+                name='item_type_all'
+                checked={state.eachLotBatch}
+                onChange={(e) => {
+                  e.target.checked
+                    ? changeState({
+                        eachLotBatch: e.target.checked,
+                        LotBatch: 1,
+                      })
+                    : changeState({
+                        eachLotBatch: e.target.checked,
+                        LotBatch: 0,
+                      });
+                }}>
+                Each Lot / batch
               </Checkbox>
               <Col span={12}></Col>
             </Row>
