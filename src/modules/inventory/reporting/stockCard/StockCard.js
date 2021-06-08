@@ -56,6 +56,7 @@ const StockCard = () => {
   const [state, setState] = useState({
     type_id: null,
     category_id: null,
+    item_all: 0,
     item_id: null,
     item_type_all: false,
     item_category_all: false,
@@ -63,6 +64,8 @@ const StockCard = () => {
     stock_card_date_start: null,
     stock_card_date_end: null,
     all: false,
+    eachLotBatch: false,
+    LotBatch: 0,
   });
   const changeState = (stateKeyValue) => {
     setState({
@@ -73,6 +76,7 @@ const StockCard = () => {
   const reset_state = () => {
     setState({
       type_id: null,
+      item_all: 0,
       category_id: null,
       item_id: null,
       item_type_all: false,
@@ -81,15 +85,11 @@ const StockCard = () => {
       stock_card_date_start: null,
       stock_card_date_end: null,
       all: false,
+      eachLotBatch: false,
+      LotBatch: 0,
     });
   };
-  const FieldsRequire = [
-    "stock_card_date_start",
-    "stock_card_date_end",
-    "type_id",
-    "category_id",
-    "item_id",
-  ];
+  const FieldsRequire = ["stock_card_date_start", "stock_card_date_end"];
   const FieldsRequire_all_check = ["stock_card_date_start"];
   useEffect(() => {
     dispatch(getMasterDataItem(auth.user_name, setLoading, false));
@@ -102,6 +102,13 @@ const StockCard = () => {
   const dateFormat = "DD/MM/YYYY";
 
   const showReport = (formButton) => {
+    const report_stock_card = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?`;
+    const report_stock_card_lotbatch = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card_lotbatch.aspx?`;
+    const value = `&item_all=${state.item_all}&item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
+    const exel = `${report_stock_card}${value}&export_excel=true`;
+    const exel_lotbatch = `${report_stock_card_lotbatch}${value}&export_excel=true`;
+    const pdf_web_view = `${report_stock_card}${value}`;
+    const pdf_web_view_lotbatch = `${report_stock_card_lotbatch}${value}`;
     console.log("formButton", formButton);
     let validate = null;
     if (state.all == true) {
@@ -111,22 +118,16 @@ const StockCard = () => {
     }
     if (validate.validate) {
       if (formButton == "Exel Download") {
-        if (state.item_id != null) {
-          const link = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
-          window.open(link);
-        }
-        if (state.all == true) {
-          const link = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?&all=all&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}&export_excel=true`;
-          window.open(link);
+        if (state.LotBatch == 1) {
+          window.open(exel_lotbatch);
+        } else {
+          window.open(exel);
         }
       } else {
-        if (state.item_id != null) {
-          const link = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
-          window.open(link);
-        }
-        if (state.all == true) {
-          const link = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?&all=all&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
-          window.open(link);
+        if (state.LotBatch == 1) {
+          window.open(pdf_web_view_lotbatch);
+        } else {
+          window.open(pdf_web_view);
         }
       }
     }
@@ -134,8 +135,8 @@ const StockCard = () => {
   console.log("state", state);
   return (
     <MainLayout {...config}>
-      <div id="form">
-        <Row className="col-2">
+      <div id='form'>
+        <Row className='col-2'>
           <Row></Row>
           <Col span={8}>
             <h2>
@@ -145,28 +146,33 @@ const StockCard = () => {
           </Col>
           <Col span={12}></Col>
           <Col span={2}></Col>
-          <Col span={2} className="text-right">
-            <Text className="text-view"></Text>
+          <Col span={2} className='text-right'>
+            <Text className='text-view'></Text>
           </Col>
         </Row>
-        <Row className="row-margin">
+        <Row className='row-margin'>
           <Col span={3}>
             <Text strong>All item :</Text>
           </Col>
           <Col span={18}>
             <Row>
               <Checkbox
-                name="item_type_all"
+                name='item_type_all'
                 checked={state.all}
                 onChange={(e) => {
-                  changeState({
-                    all: e.target.checked,
-                    type_id: null,
-                    category_id: null,
-                    item_id: null,
-                  });
-                }}
-              >
+                  e.target.checked
+                    ? changeState({
+                        all: e.target.checked,
+                        item_all: 1,
+                        type_id: null,
+                        category_id: null,
+                        item_id: null,
+                      })
+                    : changeState({
+                        all: e.target.checked,
+                        item_all: 0,
+                      });
+                }}>
                 All
               </Checkbox>
               <Col span={12}></Col>
@@ -174,29 +180,49 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className="row-margin">
+        <Row className='row-margin'>
+          <Col span={3}>
+            <Text strong>Lot / batch :</Text>
+          </Col>
+          <Col span={18}>
+            <Row>
+              <Checkbox
+                name='item_type_all'
+                checked={state.eachLotBatch}
+                onChange={(e) => {
+                  e.target.checked
+                    ? changeState({
+                        eachLotBatch: e.target.checked,
+                        LotBatch: 1,
+                      })
+                    : changeState({
+                        eachLotBatch: e.target.checked,
+                        LotBatch: 0,
+                      });
+                }}>
+                Each Lot / batch
+              </Checkbox>
+              <Col span={12}></Col>
+            </Row>
+          </Col>
+          <Col span={1}></Col>
+        </Row>
+        <Row className='row-margin'>
           <Col span={3}>
             <Text strong>Item type :</Text>
           </Col>
           <Col span={18}>
             <Row>
-              {/* <Checkbox
-                name='item_type_all'
-                checked={state.item_type_all}
-                onChange={(e) => {
-                  changeState({ item_type_all: e.target.checked });
-                }}>
-                All
-              </Checkbox> */}
               <Col span={12}>
                 <CustomSelect
                   disabled={state.all ? true : false}
                   allowClear
+                  showSearch
                   placeholder={"Item type"}
-                  name="type_id"
+                  name='type_id'
                   data={itemType}
-                  field_id="type_id"
-                  field_name="type_no_name"
+                  field_id='type_id'
+                  field_name='type_no_name'
                   onChange={(data) => {
                     data
                       ? changeState({
@@ -213,26 +239,19 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className="row-margin">
+        <Row className='row-margin'>
           <Col span={3}>
             <Text strong>Item category : </Text>
           </Col>
           <Col span={18}>
             <Row>
-              {/* <Checkbox
-                name='item_category_all'
-                checked={state.item_category_all}
-                onChange={(e) => {
-                  changeState({ item_category_all: e.target.checked });
-                }}>
-                All
-              </Checkbox> */}
               <Col span={12}>
                 <CustomSelect
                   disabled={state.all ? true : false}
                   allowClear
+                  showSearch
                   placeholder={"Item category"}
-                  name="category_id"
+                  name='category_id'
                   data={
                     state.type_id
                       ? itemCategory.filter(
@@ -240,8 +259,8 @@ const StockCard = () => {
                         )
                       : itemCategory
                   }
-                  field_id="category_id"
-                  field_name="category_no_name"
+                  field_id='category_id'
+                  field_name='category_no_name'
                   onChange={(data, option) => {
                     data
                       ? changeState({
@@ -260,27 +279,21 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className="row-margin">
+        <Row className='row-margin'>
           <Col span={3}>
             <Text strong>Item code : </Text>
           </Col>
           <Col span={18}>
             <Row>
-              {/* <Checkbox
-                name='itme_id_all'
-                checked={state.item_id_all}
-                onChange={(e) => {
-                  changeState({ item_id_all: e.target.checked });
-                }}>
-                All
-              </Checkbox> */}
               <Col span={12}>
                 <CustomSelect
+                  allowClear
+                  showSearch
                   disabled={state.all ? true : false}
                   placeholder={"Item code"}
-                  name="item_id"
-                  field_id="item_id"
-                  field_name="item_no_name"
+                  name='item_id'
+                  field_id='item_id'
+                  field_name='item_no_name'
                   data={
                     state.category_id
                       ? items.filter(
@@ -304,7 +317,7 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className="row-margin">
+        <Row className='row-margin'>
           <Col span={3}>
             <Text strong>Date : </Text>
           </Col>
@@ -312,23 +325,23 @@ const StockCard = () => {
             <Row>
               <Col span={12}>
                 <RangePicker
-                  name="stock_card_date_start"
+                  name='stock_card_date_start'
                   required={true}
-                  className="full-width"
+                  className='full-width'
                   format={dateFormat}
                   value={[
                     state.stock_card_date_start
-                      ? moment(state.stock_card_date_start, "YYYY-MM-DD")
+                      ? moment(state.stock_card_date_start, "DD/MM/YYYY")
                       : "",
                     state.stock_card_date_end
-                      ? moment(state.stock_card_date_end, "YYYY-MM-DD")
+                      ? moment(state.stock_card_date_end, "DD/MM/YYYY")
                       : "",
                   ]}
                   onChange={(data) => {
                     data
                       ? changeState({
-                          stock_card_date_start: data[0].format("YYYY-MM-DD"),
-                          stock_card_date_end: data[1].format("YYYY-MM-DD"),
+                          stock_card_date_start: data[0].format("DD/MM/YYYY"),
+                          stock_card_date_end: data[1].format("DD/MM/YYYY"),
                         })
                       : changeState({
                           stock_card_date_start: null,
@@ -341,7 +354,7 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className="row-margin">
+        <Row className='row-margin'>
           <Col span={3}>
             <Text strong></Text>
           </Col>
@@ -349,25 +362,23 @@ const StockCard = () => {
             <Row>
               <Col span={4}>
                 <Button
-                  type="primary"
-                  name="showReport"
-                  className="full-width"
+                  type='primary'
+                  name='showReport'
+                  className='full-width'
                   icon={<SearchOutlined />}
                   onClick={(e) => showReport(e.target.textContent)}
-                  value="showReport"
-                >
+                  value='showReport'>
                   Search
                 </Button>
               </Col>
               <Col span={4}></Col>
               <Col span={4}>
                 <Button
-                  className="search-button"
+                  className='search-button'
                   danger
                   icon={<ClearOutlined />}
-                  className="full-width"
-                  onClick={reset_state}
-                >
+                  className='full-width'
+                  onClick={reset_state}>
                   Clear Search
                 </Button>{" "}
               </Col>
@@ -375,7 +386,7 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className="row-margin">
+        <Row className='row-margin'>
           <Col span={3}>
             <Text strong></Text>
           </Col>
@@ -383,13 +394,12 @@ const StockCard = () => {
             <Row>
               <Col span={4}>
                 <Button
-                  type="default"
-                  name="excel"
-                  className="full-width"
+                  type='default'
+                  name='excel'
+                  className='full-width'
                   icon={<FileOutlined />}
-                  value="excel"
-                  onClick={(e) => showReport(e.target.textContent)}
-                >
+                  value='excel'
+                  onClick={(e) => showReport(e.target.textContent)}>
                   Exel Download
                 </Button>
               </Col>
