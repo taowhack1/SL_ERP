@@ -14,6 +14,8 @@ import { useForm, FormProvider } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { SET_LOADING } from "../../../../actions/types";
 import { formEdit, formView } from "../../../../include/js/formType";
+import useKeepLogs from "../../../logs/useKeepLogs";
+import Authorize from "../../../system/Authorize";
 
 const initialStateFormula = {
   id: 0,
@@ -46,6 +48,9 @@ const RDDevelopmentForm = ({
   isFinished,
   initialState,
 }) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const [formMethod, setFormMethod] = useState(formView);
   const [disabledBatchUpdate, setDisabledBatchUpdate] = useState(true);
   const { tg_trans_status_id } = data;
@@ -116,6 +121,7 @@ const RDDevelopmentForm = ({
   }, [data]);
 
   const onSubmit = async (data) => {
+    keepLog.keep_log_action("Save Formula : ", state.npr_formula_no);
     console.log("onSubmit", data);
     const saveData2 = {
       ...state,
@@ -158,6 +164,9 @@ const RDDevelopmentForm = ({
       setFormMethod(formView);
       setDisabledBatchUpdate(true);
       console.log(resp.data);
+      keepLog.keep_log_action("Save Formula Success: ", state.npr_formula_no);
+    } else {
+      keepLog.keep_log_action("Save Formula Fail : ", state.npr_formula_no);
     }
     setFormMethod(formView);
   };
@@ -257,6 +266,7 @@ const RDDevelopmentForm = ({
   );
 
   const onPrintFormula = () => {
+    keepLog.keep_log_action("Print Formula : ", state.npr_formula_no);
     window.open(
       `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula.aspx?npr_formula_no=${state.npr_formula_no}`,
       false
@@ -264,6 +274,7 @@ const RDDevelopmentForm = ({
   };
 
   const onPrintLabel = () => {
+    keepLog.keep_log_action("Edit Formula Label : ", state.npr_formula_no);
     window.open(
       `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula_qr_code.aspx?npr_formula_no=${state.npr_formula_no}`,
       false
@@ -315,11 +326,15 @@ const RDDevelopmentForm = ({
                   className={"primary"}
                   size="small"
                   loading={false}
-                  onClick={() =>
+                  onClick={() => {
                     tg_trans_status_id !== 4
                       ? setFormMethod(formEdit)
-                      : setDisabledBatchUpdate(false)
-                  }
+                      : setDisabledBatchUpdate(false);
+                    keepLog.keep_log_action(
+                      "Edit Formula : ",
+                      state.npr_formula_no
+                    );
+                  }}
                 >
                   Edit Form
                 </Button>

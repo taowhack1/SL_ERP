@@ -14,8 +14,13 @@ import { saveNPRAssignment } from "../../../../actions/sales/nprActions";
 import { useHistory } from "react-router";
 import Swal from "sweetalert2";
 import Text from "antd/lib/typography/Text";
+import useKeepLogs from "../../../logs/useKeepLogs";
+import Authorize from "../../../system/Authorize";
 
 const RDPIC = () => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const history = useHistory();
   const { id, state } = useContext(NPRFormContext);
   const { npr_responsed_delivery_date, npr_responsed_required_by } = state;
@@ -38,6 +43,10 @@ const RDPIC = () => {
   });
 
   const onSubmit = async (data) => {
+    keepLog.keep_log_action(
+      `${user_name} Save NPR PIC : FROM ${npr_responsed_required_by} to ${data.npr_responsed_required_by}`,
+      state.npr_no
+    );
     dispatch({ type: SET_LOADING, payload: true });
     const saveData = {
       ...data,
@@ -66,7 +75,7 @@ const RDPIC = () => {
             history.push("/sales/npr");
           }
         });
-
+        keepLog.keep_log_action("Save NPR PIC : ", state.npr_no);
         // setState(resp.data);
       }
     }, 1000);

@@ -2,30 +2,8 @@ import { Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useHistory } from "react-router";
-const getSalesStatus = (id, close_id) => {
-  let status = "Draft";
-  switch (true) {
-    case id === 1 && close_id === 1:
-      status = "Draft";
-      break;
-    case id === 2 && close_id === 1:
-      status = "Approve";
-      break;
-    case id === 3 && close_id === 1:
-      status = "Cancel";
-      break;
-    case id === 4 && close_id === 1:
-      status = "Develop";
-      break;
-    case id === 4 && close_id === 3:
-      status = "Finished";
-      break;
-    default:
-      status = "N/A";
-      break;
-  }
-  return status;
-};
+import useKeepLogs from "../../../logs/useKeepLogs";
+import Authorize from "../../../system/Authorize";
 const columns = [
   {
     title: "No.",
@@ -123,6 +101,9 @@ const columns = [
 ];
 
 const NPRTable = ({ dataSource }) => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const history = useHistory();
   const viewRecord = (record) =>
     history.push("/sales/npr/" + record.npr_id, record);
@@ -140,7 +121,10 @@ const NPRTable = ({ dataSource }) => {
           pageSizeOptions: ["10", "15", "20", "25", "30", "50"],
         }}
         onRow={(record) => ({
-          onClick: (e) => viewRecord(record),
+          onClick: (e) => {
+            viewRecord(record);
+            keepLog.keep_log_action("View NPR : ", record.npr_no);
+          },
         })}
       />
     </>

@@ -14,6 +14,8 @@ import {
   getFormulaNoByNPRId,
 } from "../../../../actions/sales/reporting";
 import { pad2number } from "../../../../include/js/function_main";
+import useKeepLogs from "../../../logs/useKeepLogs";
+import Authorize from "../../../system/Authorize";
 const columns = ({
   columnsConfig: { showPart, showPartNo, showItem, showCost },
   npr_formula_no_1,
@@ -177,6 +179,9 @@ const initialState = {
   npr_formula_compare_result: [],
 };
 const CompareFormulaMain = () => {
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   // const { loading } = useSelector((state) => state.sales);
   const [loading, setLoading] = useState(false);
   // keep search value
@@ -240,6 +245,9 @@ const CompareFormulaMain = () => {
 
   const onSearch = useCallback(async () => {
     // Do when click Search Formula
+    keepLog.keep_log_action(
+      `Compare Formula : ${state.npr_id_1} : ${state.npr_id_2}`
+    );
     setLoading(true);
     const respFormula1 = await getFormulaNoByNPRId(state.npr_id_1);
     const respFormula2 = await getFormulaNoByNPRId(state.npr_id_2);

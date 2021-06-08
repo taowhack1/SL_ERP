@@ -6,7 +6,7 @@ const useKeepLogs = () => {
   const auth = useSelector((state) => state.auth.authData);
   const currentProject = useSelector((state) => state.auth.currentProject);
   const currentMenu = useSelector((state) => state.auth.currentMenu);
-  const keep_log_action = (action) => {
+  const keep_log_action = (action, text = "") => {
     console.log("set_context : ", action);
     currentProject &&
       currentMenu &&
@@ -15,7 +15,7 @@ const useKeepLogs = () => {
         log_detail: {
           ...context.log_detail,
           db_all_log_project: currentProject.project_name,
-          db_all_log_action: action,
+          db_all_log_action: `${action} ${text}`,
           ip_address: auth.ip_address,
           user_name: auth.user_name,
           branch_id: auth.branch_id,
