@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { getNPRFeedback } from "../../../../../actions/sales/nprActions";
 import CustomTable from "../../../../../components/CustomTable";
 import { sortData } from "../../../../../include/js/function_main";
-import { NPRFormContext } from "../RDForm";
+import { NPRFormContext } from "../NPRViewById";
 const columns = [
   {
     title: "No.",

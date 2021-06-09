@@ -27,7 +27,7 @@ const NPRList = () => {
     create: "",
     buttonAction: [],
     edit: {
-      path: "/sales/npr/1",
+      path: "/sales/npr/rd/1",
     },
     discard: "",
     onCancel: () => {

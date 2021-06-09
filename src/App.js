@@ -104,8 +104,6 @@ import StockCard from "./modules/inventory/reporting/stockCard/StockCard";
 import TimeSheet from "./modules/production/Operation/production/production/timesheet/TimeSheet";
 import ProductionSelectMachine from "./modules/production/Operation/production/production/costCenter/ProductionSelectMachine";
 import ProductionMain from "./modules/production/Operation/production/ProductionMain";
-import NPRList from "./modules/sales/operations/npr";
-import RDForm from "./modules/sales/operations/npr/RDForm";
 import TemporaryItems from "./modules/inventory/item/temporaryItem";
 import TempItemCreate from "./modules/inventory/item/temporaryItem/TempItemCreate";
 import TempItemForm from "./modules/inventory/item/temporaryItem/TempItemForm";
@@ -113,13 +111,13 @@ import SatisficationCategoryList from "./modules/sales/masterData/satisfication/
 import SatisficationForm from "./modules/sales/masterData/satisfication/SatisficationForm";
 import Logout from "./modules/system/Logout";
 import CompareFormulaMain from "./modules/sales/reporting/compareFormula";
+import NPRRoute from "./modules/sales/operations/npr/NPRRoute";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
     status: false,
   },
 };
-// class App extends Component {
 const App = (props) => {
   const auth = useSelector((state) => state.auth.authData);
   const { currentProject, currentMenu } = useSelector((state) => state.auth);
@@ -393,11 +391,17 @@ const App = (props) => {
               <Sales />
             </Route>
             {/* SALES OPERATIONS */}
-            <Route exact path="/sales/npr">
-              <NPRList />
+            <Route path="/sales/npr">
+              <NPRRoute />
             </Route>
-            {/* <Route exact path="/sales/npr/pk_price" component={RDForm} /> */}
-            <Route exact path="/sales/npr/:id" component={RDForm} />
+            {/* <Route
+              exact
+              path="/sales/npr/pk_price/:id"
+              component={NPRViewById}
+            />
+            <Route exact path="/sales/npr/pu" component={NPRListForPU} />
+
+            <Route exact path="/sales/npr/rd/:id" component={NPRViewById} /> */}
 
             {/* SALES  Quotations */}
             <Route exact path="/sales/quotations">
@@ -584,6 +588,5 @@ const App = (props) => {
     // </Provider>
   );
 };
-// }
 
 export default App;

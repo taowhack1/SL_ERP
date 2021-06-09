@@ -106,7 +106,7 @@ const NPRTable = ({ dataSource }) => {
   authorize.check_authorize();
   const history = useHistory();
   const viewRecord = (record) =>
-    history.push("/sales/npr/" + record.npr_id, record);
+    history.push("/sales/npr/rd/" + record.npr_id, record);
   console.log("NPRTable ", dataSource);
   return (
     <>

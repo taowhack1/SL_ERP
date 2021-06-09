@@ -87,7 +87,9 @@ function TopContent(props) {
   const onBack = () => {
     keepLog.keep_log_action("Click Back Button");
     props.onBack && props.onBack();
-    props.history.push(props.back);
+    typeof props.back === "string"
+      ? props.history.push(props.back)
+      : props.back();
   };
   const onCancel = () => {
     message.success({ content: "Cancel", key: "validate", duration: 1 });

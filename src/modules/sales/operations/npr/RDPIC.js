@@ -8,7 +8,7 @@ import {
   DatePickerField,
   SelectField,
 } from "../../../../components/AntDesignComponent";
-import { NPRFormContext } from "./RDForm";
+import { NPRFormContext } from "./NPRViewById";
 import { SET_LOADING } from "../../../../actions/types";
 import { saveNPRAssignment } from "../../../../actions/sales/nprActions";
 import { useHistory } from "react-router";
@@ -72,7 +72,7 @@ const RDPIC = () => {
           confirmButtonText: `OK`,
         }).then((result) => {
           if (result.isConfirmed) {
-            history.push("/sales/npr");
+            history.push("/sales/npr/rd");
           }
         });
         keepLog.keep_log_action("Save NPR PIC : ", state.npr_no);

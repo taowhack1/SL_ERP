@@ -4,7 +4,12 @@ import { getNPRByYear } from "../../../../actions/sales/nprActions";
 import MainLayout from "../../../../components/MainLayout";
 import CustomSelect from "../../../../components/CustomSelect";
 import Text from "antd/lib/typography/Text";
-import { DownloadOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  DownloadOutlined,
+  PrinterOutlined,
+  PrinterTwoTone,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { convertDigit } from "../../../../include/js/main_config";
 import CustomLabel from "../../../../components/CustomLabel";
 import moment from "moment";
@@ -302,6 +307,7 @@ const CompareFormulaMain = () => {
     );
 
   const disabledSearch = !state.npr_id_1 || !state.npr_id_2;
+  const disabledPrintBtn = !state.npr_formula_id_1 || !state.npr_formula_id_2;
   return (
     <>
       <MainLayout {...layoutConfig}>
@@ -485,11 +491,14 @@ const CompareFormulaMain = () => {
                 </div>
               </Space>
               <Button
-                icon={<DownloadOutlined className="button-icon" />}
-                className="button-icon"
+                icon={
+                  disabledPrintBtn ? <PrinterOutlined /> : <PrinterTwoTone />
+                }
+                className={disabledPrintBtn ? "" : "button-icon"}
                 onClick={onPrintCompareFormula}
+                disabled={disabledPrintBtn}
               >
-                Export Excel
+                Print
               </Button>
             </div>
             <Row className="col-2" gutter={8}>

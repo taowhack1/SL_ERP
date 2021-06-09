@@ -1,7 +1,7 @@
 import { Button, Col, Row } from "antd";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { sortData } from "../../../../include/js/function_main";
-import { NPRFormContext } from "./RDForm";
+import { NPRFormContext } from "./NPRViewById";
 import {
   saveNPRFormula,
   saveNPRFormulaRemark,
@@ -54,11 +54,12 @@ const RDDevelopmentForm = ({
   const [formMethod, setFormMethod] = useState(formView);
   const [disabledBatchUpdate, setDisabledBatchUpdate] = useState(true);
   const { tg_trans_status_id } = data;
-
+  console.log(data, "data");
   const {
     id,
     user_name,
     department_id,
+    department,
     state: mainState,
   } = useContext(NPRFormContext);
 
@@ -290,7 +291,13 @@ const RDDevelopmentForm = ({
       tg_trans_status_id,
       disabledBatchUpdate,
     }),
-    [methods, formMethod, tg_trans_status_id, disabledBatchUpdate]
+    [
+      methods,
+      formMethod,
+      npr_formula_id,
+      tg_trans_status_id,
+      disabledBatchUpdate,
+    ]
   );
   console.log("readOnly : ", readOnly, " formula :", state);
   return (
@@ -330,13 +337,9 @@ const RDDevelopmentForm = ({
                     tg_trans_status_id !== 4
                       ? setFormMethod(formEdit)
                       : setDisabledBatchUpdate(false);
-                    keepLog.keep_log_action(
-                      "Edit Formula : ",
-                      state.npr_formula_no
-                    );
                   }}
                 >
-                  Edit Form
+                  Edit
                 </Button>
               )}
             </div>
@@ -354,28 +357,6 @@ const RDDevelopmentForm = ({
               </>
             </div>
           )}
-          {/* {tg_trans_status_id === 4 && disabledBatchUpdate ? (
-            <Button
-              className={"primary"}
-              size="small"
-              loading={false}
-              onClick={() => setDisabledBatchUpdate(false)}
-            >
-              Edit Batch Size
-            </Button>
-          ) : (
-            tg_trans_status_id === 4 &&
-            !disabledBatchUpdate && (
-              <Button
-                htmlType={"submit"}
-                className={"primary"}
-                size="small"
-                loading={false}
-              >
-                Save Change
-              </Button>
-            )
-          )} */}
           {status.disabledEdit && (
             <span className="require">* Pending Sales Accept.</span>
           )}
@@ -422,7 +403,6 @@ const RDDevelopmentForm = ({
             </Row>
           )}
           <RDDevelopmentTabs
-            // readOnly={status.disabledEdit}
             npr_formula_detail={npr_formula_detail}
             npr_formula_qa={npr_formula_qa}
             rdDevFormula={rdDevFormula}

@@ -1,7 +1,7 @@
 import { Checkbox, Col, Row, Tabs } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useContext } from "react";
-import { NPRFormContext } from "./RDForm";
+import { NPRFormContext } from "./NPRViewById";
 import CustomLabel from "../../../../components/CustomLabel";
 const NPRCustomerProductGroupTab = () => {
   const { state } = useContext(NPRFormContext);

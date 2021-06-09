@@ -10,7 +10,7 @@ import {
   convertDigit,
   getNumberFormat,
 } from "../../../../../include/js/main_config";
-import { NPRFormContext } from "../RDForm";
+import { NPRFormContext } from "../NPRViewById";
 
 const RDFormulaGeneralDetail = ({ useFormValue }) => {
   const {
@@ -438,7 +438,7 @@ const RDFormulaGeneralDetail = ({ useFormValue }) => {
             <Col span={24}>
               {readOnly ? (
                 <div className="pd-left-2 text-value">
-                  <Text>{npr_formula_product_name}</Text>
+                  <Text>{npr_formula_product_description}</Text>
                 </div>
               ) : (
                 <TextArea
@@ -461,7 +461,7 @@ const RDFormulaGeneralDetail = ({ useFormValue }) => {
             <Col span={24}>
               {readOnly ? (
                 <div className="pd-left-2 text-value">
-                  <Text>{npr_formula_product_name}</Text>
+                  <Text>{npr_formula_product_used}</Text>
                 </div>
               ) : (
                 <TextArea

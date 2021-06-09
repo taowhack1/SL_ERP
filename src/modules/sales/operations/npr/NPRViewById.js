@@ -1,7 +1,5 @@
-/** @format */
-
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router";
+import { useHistory, useParams, useRouteMatch } from "react-router";
 import MainLayout from "../../../../components/MainLayout";
 import NPRTabs from "./NPRTabs";
 import {
@@ -23,14 +21,14 @@ const initialState = {
   tg_trans_status_id: 1,
   npr_formula_detail: [],
 };
-const RDForm = () => {
+const NPRViewById = () => {
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const history = useHistory();
+  const { department, id } = useParams();
   const [state, setState] = useState(initialState);
   const { user_name, department_id } = useSelector(
     (state) => state.auth.authData
   );
-  // const { loading } = useSelector((state) => state.sales);
   const layoutConfig = useMemo(
     () => ({
       projectId: 7,
@@ -53,7 +51,7 @@ const RDForm = () => {
           link: `${process.env.REACT_APP_REPORT_SERVER}/report_npr.aspx?npr_no=${state.npr_no}`,
         },
       ],
-      back: "/sales/npr",
+      back: history.goBack,
       discard: "/sales/npr",
       save: "function",
     }),
@@ -78,7 +76,7 @@ const RDForm = () => {
     <>
       <MainLayout {...layoutConfig}>
         <NPRFormContext.Provider
-          value={{ id, state, setState, user_name, department_id }}
+          value={{ id, state, setState, user_name, department_id, department }}
         >
           <div id="form">
             <div
@@ -96,4 +94,4 @@ const RDForm = () => {
   );
 };
 
-export default RDForm;
+export default NPRViewById;
