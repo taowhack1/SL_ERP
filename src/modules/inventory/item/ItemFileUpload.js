@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState } from "react";
 import { Upload, Modal, Space, Button } from "antd";
 import {
@@ -148,23 +150,22 @@ const ItemFileUpload = ({
           <>
             <Upload
               {...uploadConfig}
-              listType="picture-card"
-              className="avatar-uploader"
+              listType='picture-card'
+              className='avatar-uploader'
               fileList={file_temp}
               disabled={readOnly}
-              onPreview={handlePreview}
-            >
+              onPreview={handlePreview}>
               {file_temp.length ? null : uploadButton}
             </Upload>
           </>
         );
       case "View":
         return (
-          <div className="input-center-disabled">
+          <div className='input-center-disabled'>
             <Space>
               <EyeOutlined
-                className="button-icon"
-                title="View Image"
+                className='button-icon'
+                title='View Image'
                 onClick={() => handlePreview(file_temp)}
               />
               View
@@ -181,21 +182,19 @@ const ItemFileUpload = ({
                     {...uploadConfig}
                     fileList={file_temp}
                     disabled={readOnly}
-                    onPreview={handlePreview}
-                  >
+                    onPreview={handlePreview}>
                     {readOnly || file_temp.length ? (
                       file_temp[0].item_file_path ? null : (
                         <Button
                           icon={<UploadOutlined />}
-                          disabled={chkbox_upload_fields ? 0 : 1}
-                        >
+                          disabled={chkbox_upload_fields ? 0 : 1}>
                           Click to upload
                         </Button>
                       )
                     ) : null}
                   </Upload>
                 ) : (
-                  <Text className="text-view">No file.</Text>
+                  <Text className='text-view'>No file.</Text>
                 )
               ) : null
             ) : (
@@ -203,16 +202,14 @@ const ItemFileUpload = ({
                 {...uploadConfig}
                 fileList={file_temp[0] && file_temp[0].name ? file_temp : []}
                 disabled={readOnly}
-                onPreview={handlePreview}
-              >
+                onPreview={handlePreview}>
                 {readOnly ||
                 (file_temp.length && file_temp[0] && file_temp[0].name)
                   ? null
                   : (
                       <Button
                         icon={<UploadOutlined />}
-                        disabled={chkbox_upload_fields ? 0 : 1}
-                      >
+                        disabled={chkbox_upload_fields ? 0 : 1}>
                         Click to upload
                       </Button>
                     ) ?? null}
@@ -235,9 +232,8 @@ const ItemFileUpload = ({
         visible={previewVisible}
         title={previewTitle}
         footer={null}
-        onCancel={handleCancel}
-      >
-        <img alt="example" className={"full-width"} src={previewImage} />
+        onCancel={handleCancel}>
+        <img alt='example' className={"full-width"} src={previewImage} />
       </Modal>
     </>
   );

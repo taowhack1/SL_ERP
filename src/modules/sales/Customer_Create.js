@@ -17,7 +17,7 @@ import {
   update_customer,
 } from "../../actions/sales/customerActions";
 import Authorize from "../system/Authorize";
-
+import Customer_uploadfile from "./Customer_uploadfile";
 import { validateFormHead } from "../../include/js/function_main";
 import { useHistory } from "react-router-dom";
 import { numberFormat } from "../../include/js/main_config";
@@ -171,9 +171,9 @@ const CustomerCreate = (props) => {
 
   return (
     <MainLayout {...config}>
-      <div id="form">
+      <div id='form'>
         {/* Head */}
-        <Row className="col-2">
+        <Row className='col-2'>
           <Col span={8}>
             <h2>
               <strong>
@@ -187,43 +187,42 @@ const CustomerCreate = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className="text-view">{data_head.customer_created}</Text>
+            <Text className='text-view'>{data_head.customer_created}</Text>
           </Col>
         </Row>
-        <Row className="col-2 row-tab-margin">
+        <Row className='col-2 row-tab-margin'>
           <Col span={24} style={{ marginBottom: 8 }}>
             <Title level={5}>
-              <span className="require">* </span>Name{" "}
+              <span className='require'>* </span>Name{" "}
             </Title>
             <Col span={24}>
               <Input
-                name="customer_name"
+                name='customer_name'
                 onChange={(e) =>
                   upDateFormValue({ customer_name: e.target.value })
                 }
                 value={data_head.customer_name}
-                placeholder="Name"
+                placeholder='Name'
               />
             </Col>
           </Col>
         </Row>
 
-        <Row className="col-2 row-tab-margin-l">
+        <Row className='col-2 row-tab-margin-l'>
           <Col span={24}>
-            <Tabs defaultActiveKey="1" onChange={callback}>
+            <Tabs defaultActiveKey='1' onChange={callback}>
               <Tabs.TabPane
                 tab={
                   <span>
-                    <span className="require">* </span>
+                    <span className='require'>* </span>
                     Contact & Detail
                   </span>
                 }
-                key="1"
-              >
+                key='1'>
                 {/* Address & Information */}
-                <Row className="col-2 row-margin-vertical">
+                <Row className='col-2 row-margin-vertical'>
                   <Col span={12}>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={5}>
                         <CustomLabel
                           label={"Short Name"}
@@ -233,7 +232,7 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={18}>
                         <Input
-                          name="customer_name_short"
+                          name='customer_name_short'
                           disabled={data_head.customer_id ? true : false}
                           onChange={(e) =>
                             upDateFormValue({
@@ -246,13 +245,13 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={5}>
                         <Text strong>Phone</Text>
                       </Col>
                       <Col span={18}>
                         <Input
-                          name="customer_phone"
+                          name='customer_phone'
                           onChange={(e) =>
                             upDateFormValue({ customer_phone: e.target.value })
                           }
@@ -262,13 +261,13 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={5}>
                         <Text strong>Mobile</Text>
                       </Col>
                       <Col span={18}>
                         <Input
-                          name="customer_mobile"
+                          name='customer_mobile'
                           onChange={(e) =>
                             upDateFormValue({ customer_mobile: e.target.value })
                           }
@@ -278,13 +277,13 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={5}>
                         <Text strong>Email</Text>
                       </Col>
                       <Col span={18}>
                         <Input
-                          name="customer_email"
+                          name='customer_email'
                           onChange={(e) =>
                             upDateFormValue({ customer_email: e.target.value })
                           }
@@ -294,10 +293,10 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">* </span>Category
+                          <span className='require'>* </span>Category
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -305,9 +304,9 @@ const CustomerCreate = (props) => {
                           placeholder={"Category"}
                           allowClear
                           showSearch
-                          name="customer_category_id"
-                          field_id="vendor_category_id"
-                          field_name="vendor_category_no_name"
+                          name='customer_category_id'
+                          field_id='vendor_category_id'
+                          field_name='vendor_category_no_name'
                           value={data_head.customer_category_id}
                           data={customer_category}
                           onChange={(data, option) =>
@@ -325,10 +324,10 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">* </span>group
+                          <span className='require'>* </span>group
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -336,9 +335,9 @@ const CustomerCreate = (props) => {
                           placeholder={"Group"}
                           allowClear
                           showSearch
-                          name="customer_group_id"
-                          field_id="vendor_group_id"
-                          field_name="vendor_group_no_name"
+                          name='customer_group_id'
+                          field_id='vendor_group_id'
+                          field_name='vendor_group_no_name'
                           value={data_head.customer_group_id}
                           data={customer_group}
                           onChange={(data, option) =>
@@ -358,17 +357,17 @@ const CustomerCreate = (props) => {
                     </Row>
                   </Col>
                   <Col span={12}>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={1}></Col>
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">* </span>Address
+                          <span className='require'>* </span>Address
                         </Text>
                       </Col>
                       <Col span={18}>
                         <Input
-                          name="customer_address"
-                          placeholder="Address"
+                          name='customer_address'
+                          placeholder='Address'
                           value={data_head.customer_address}
                           onChange={(e) =>
                             upDateFormValue({
@@ -378,7 +377,7 @@ const CustomerCreate = (props) => {
                         />
                       </Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={1}></Col>
                       <Col span={5}>
                         <Text strong></Text>
@@ -388,9 +387,9 @@ const CustomerCreate = (props) => {
                           placeholder={"Province"}
                           allowClear
                           showSearch
-                          name="province_id"
-                          field_id="province_id"
-                          field_name="province_name"
+                          name='province_id'
+                          field_id='province_id'
+                          field_name='province_name'
                           value={data_head.province_id}
                           data={customer_province ?? [""]}
                           onChange={(data, option) => {
@@ -418,9 +417,9 @@ const CustomerCreate = (props) => {
                           allowClear
                           showSearch
                           disabled={data_head.province_id ? false : true}
-                          name="district_id"
-                          field_id="district_id"
-                          field_name="district_name"
+                          name='district_id'
+                          field_id='district_id'
+                          field_name='district_name'
                           value={data_head.district_id}
                           data={customer_district ?? []}
                           onChange={(data, option) => {
@@ -446,9 +445,9 @@ const CustomerCreate = (props) => {
                           allowClear
                           showSearch
                           disabled={data_head.district_id ? false : true}
-                          name="tambon_id"
-                          field_id="tambon_id"
-                          field_name="tambon_name"
+                          name='tambon_id'
+                          field_id='tambon_id'
+                          field_name='tambon_name'
                           value={data_head.tambon_id}
                           data={customer_tambon ?? []}
                           onChange={(data, option) =>
@@ -469,7 +468,7 @@ const CustomerCreate = (props) => {
                         />
                       </Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={1}></Col>
                       <Col span={5}>
                         <Text strong></Text>
@@ -480,9 +479,9 @@ const CustomerCreate = (props) => {
                           allowClear
                           showSearch
                           disabled={data_head.tambon_id ? false : true}
-                          name="zip_id"
-                          field_id="zip_id"
-                          field_name="zip_name"
+                          name='zip_id'
+                          field_id='zip_id'
+                          field_name='zip_name'
                           value={data_head.zip_id}
                           data={customer_zip ?? []}
                           onChange={(data, option) =>
@@ -503,9 +502,9 @@ const CustomerCreate = (props) => {
                           placeholder={"Language"}
                           allowClear
                           showSearch
-                          name="language_id"
-                          field_id="language_id"
-                          field_name="language_name"
+                          name='language_id'
+                          field_id='language_id'
+                          field_name='language_name'
                           value={data_head.language_id}
                           data={customer_language ?? []}
                           onChange={(data, option) =>
@@ -526,9 +525,9 @@ const CustomerCreate = (props) => {
                           placeholder={"Country"}
                           allowClear
                           showSearch
-                          name="country_id"
-                          field_id="country_id"
-                          field_name="country_name"
+                          name='country_id'
+                          field_id='country_id'
+                          field_name='country_name'
                           value={data_head.country_id}
                           data={customer_country ?? []}
                           onChange={(data, option) =>
@@ -545,11 +544,11 @@ const CustomerCreate = (props) => {
                         />
                       </Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={1}></Col>
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">* </span>Currency
+                          <span className='require'>* </span>Currency
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -557,9 +556,9 @@ const CustomerCreate = (props) => {
                           placeholder={"Currency"}
                           allowClear
                           showSearch
-                          name="currency_id"
-                          field_id="currency_id"
-                          field_name="currency_no"
+                          name='currency_id'
+                          field_id='currency_id'
+                          field_name='currency_no'
                           value={data_head.currency_no}
                           data={currency_list}
                           onChange={(data, option) =>
@@ -576,11 +575,11 @@ const CustomerCreate = (props) => {
                         />
                       </Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={1}></Col>
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">* </span>Vat ID
+                          <span className='require'>* </span>Vat ID
                         </Text>
                       </Col>
                       <Col span={18}>
@@ -588,9 +587,9 @@ const CustomerCreate = (props) => {
                           placeholder={"Vat"}
                           allowClear
                           showSearch
-                          name="vat_id"
-                          field_id="vat_id"
-                          field_name="vat_name"
+                          name='vat_id'
+                          field_id='vat_id'
+                          field_name='vat_name'
                           value={data_head.vat_id}
                           data={customer_vat}
                           onChange={(data, option) =>
@@ -607,17 +606,17 @@ const CustomerCreate = (props) => {
                         />
                       </Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={1}></Col>
                       <Col span={5}>
                         <Text strong>
-                          <span className="require">* </span>Tax ID
+                          <span className='require'>* </span>Tax ID
                         </Text>
                       </Col>
                       <Col span={18}>
                         <Input
-                          name="customer_tax_no"
-                          placeholder="Tax ID"
+                          name='customer_tax_no'
+                          placeholder='Tax ID'
                           className={"full-width"}
                           value={data_head.customer_tax_no}
                           onChange={(e) =>
@@ -629,7 +628,7 @@ const CustomerCreate = (props) => {
                   </Col>
                 </Row>
               </Tabs.TabPane>
-              <Tabs.TabPane tab={<span>Other Address</span>} key="2">
+              <Tabs.TabPane tab={<span>Other Address</span>} key='2'>
                 <Customer_OrtherAddress
                   dataDetail={dataDetail}
                   readOnly={false}
@@ -640,24 +639,23 @@ const CustomerCreate = (props) => {
               <Tabs.TabPane
                 tab={
                   <span>
-                    <span className="require">* </span>
+                    <span className='require'>* </span>
                     Sales
                   </span>
                 }
-                key="3"
-              >
-                <Row className="col-2 row-margin-vertical">
+                key='3'>
+                <Row className='col-2 row-margin-vertical'>
                   <Col span={12}>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={7}>
                         <Text strong>
-                          <span className="require">* </span>Condition Billing
+                          <span className='require'>* </span>Condition Billing
                         </Text>
                       </Col>
                       <Col span={16}>
                         <Input
-                          name="customer_condition_billing"
-                          placeholder="e.g. Affter Delivery"
+                          name='customer_condition_billing'
+                          placeholder='e.g. Affter Delivery'
                           value={data_head.customer_condition_billing}
                           onChange={(data) => {
                             upDateFormValue({
@@ -670,10 +668,10 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={7}>
                         <Text strong>
-                          <span className="require">* </span>Payment Terms
+                          <span className='require'>* </span>Payment Terms
                         </Text>
                       </Col>
                       <Col span={16}>
@@ -681,9 +679,9 @@ const CustomerCreate = (props) => {
                           placeholder={"Payment Term"}
                           allowClear
                           showSearch
-                          name="payment_term_id"
-                          field_id="payment_term_id"
-                          field_name="payment_term_no_name"
+                          name='payment_term_id'
+                          field_id='payment_term_id'
+                          field_name='payment_term_no_name'
                           value={data_head.payment_term_no_name}
                           data={customer_payment_terms}
                           onChange={(data, option) =>
@@ -701,18 +699,18 @@ const CustomerCreate = (props) => {
                       </Col>
                       <Col span={1}></Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={7}>
                         <Text strong>
-                          <span className="require">* </span>Credit Limit
+                          <span className='require'>* </span>Credit Limit
                         </Text>
                       </Col>
                       <Col span={16}>
                         <Row>
                           <Col span={12}>
                             <InputNumber
-                              name="customer_limit_credit"
-                              placeholder="Credit Limit"
+                              name='customer_limit_credit'
+                              placeholder='Credit Limit'
                               value={data_head.customer_limit_credit}
                               precision={3}
                               {...numberFormat}
@@ -732,8 +730,7 @@ const CustomerCreate = (props) => {
                               style={{
                                 verticalAlign: "middle",
                                 paddingLeft: 10,
-                              }}
-                            >
+                              }}>
                               {data_head.currency_no}
                             </Text>
                           </Col>
@@ -743,12 +740,12 @@ const CustomerCreate = (props) => {
                     </Row>
                   </Col>
                   <Col span={12}>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={1}></Col>
                       <Col span={5}></Col>
                       <Col span={18}></Col>
                     </Row>
-                    <Row className="row-margin">
+                    <Row className='row-margin'>
                       <Col span={1}></Col>
                       <Col span={5}></Col>
                       <Col span={18}></Col>
@@ -756,16 +753,19 @@ const CustomerCreate = (props) => {
                   </Col>
                 </Row>
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Notes" key="4">
+              <Tabs.TabPane tab='Notes' key='4'>
                 <TextArea
                   rows={3}
-                  name="customer_remark"
+                  name='customer_remark'
                   placeholder={"Notes"}
                   value={data_head.customer_remark}
                   onChange={(e) =>
                     upDateFormValue({ customer_remark: e.target.value })
                   }
                 />
+              </Tabs.TabPane>
+              <Tabs.TabPane tab='Attach File'>
+                <Customer_uploadfile dataDetail={dataDetail} readOnly={false} />
               </Tabs.TabPane>
             </Tabs>
           </Col>
