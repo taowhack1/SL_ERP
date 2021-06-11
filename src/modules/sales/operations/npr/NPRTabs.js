@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 
 import NPRComponentsTab from "./NPRComponentsTab";
+import NPRComponentsTabView from "./NPRComponentsTabView";
 import NPRCustomerProductGroupTab from "./NPRCustomerProductGroupTab";
 import NPRFormulaTab from "./NPRFormulaTab";
 import NPRGeneralDetailTab from "./NPRGeneralDetailTab";
@@ -30,7 +31,11 @@ const NPRTabs = () => {
           <NPRSampleRequestTab />
         </Tabs.TabPane>
         <Tabs.TabPane tab={"Components"} key={3}>
-          <NPRComponentsTab />
+          {department === "pu" ? (
+            <NPRComponentsTab />
+          ) : (
+            <NPRComponentsTabView />
+          )}
         </Tabs.TabPane>
         {
           // 10 = MIS , 11 = RD , 13 = PU , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE

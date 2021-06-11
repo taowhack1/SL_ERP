@@ -6,6 +6,7 @@ import {
   GET_PRODUCTION_EMP,
   GET_RD_EMP,
 } from "../actions/types";
+import { GET_PU_EMP } from "../actions/hrm";
 const initialState = {
   loading: false,
   department: null,
@@ -14,6 +15,7 @@ const initialState = {
   employee: {
     production: [],
     rd: [],
+    pu: [],
   },
 };
 export default (state = initialState, action) => {
@@ -42,6 +44,15 @@ export default (state = initialState, action) => {
         employee: {
           ...state.employee,
           rd: action.payload,
+        },
+      };
+    case GET_PU_EMP:
+      return {
+        ...state,
+        loading: false,
+        employee: {
+          ...state.employee,
+          pu: action.payload,
         },
       };
     default:

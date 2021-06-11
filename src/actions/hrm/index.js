@@ -18,6 +18,8 @@ import {
 import { header_config } from "../../include/js/main_config";
 import { message } from "antd";
 
+const apiGetPurchaseEmp = `/hrm/employees/purchase`;
+const GET_PU_EMP = "GET_PU_EMP";
 const get_select_dep = () => (dispatch) => {
   try {
     axios.post(api_query, query_select_dep, header_config).then((res) =>
@@ -120,6 +122,38 @@ const getRDEmp = () => (dispatch) => {
     dispatch({ type: SET_LOADING, payload: false });
   }
 };
+const getPUEmp = () => (dispatch) => {
+  dispatch({ type: SET_LOADING, payload: true });
+  try {
+    axios
+      .get(apiGetPurchaseEmp, header_config)
+      .then((res) => {
+        // do with res.data
+        if (res.status === 200) {
+          dispatch({ type: GET_PU_EMP, payload: res.data });
+        } else {
+          dispatch({ type: GET_PU_EMP, payload: [] });
+        }
+      })
+      .catch((error) => {
+        // do with error.response
+        dispatch({ type: GET_PU_EMP, payload: [] });
+        dispatch({ type: SET_LOADING, payload: false });
+        if (!error.response)
+          return message.error("Network Error. Try gain later.");
+        console.log(error.response);
+        message.error(
+          `Error ${error.response.status}. Can't get any data from the server. Please try again later.`
+        );
+      });
+  } catch (error) {
+    dispatch({ type: GET_PU_EMP, payload: [] });
+    message.error(
+      `Error! Can't get any data from the server. Please try again later.`
+    );
+    dispatch({ type: SET_LOADING, payload: false });
+  }
+};
 
 export {
   get_select_dep,
@@ -127,4 +161,6 @@ export {
   getCountry,
   getProductionEmp,
   getRDEmp,
+  GET_PU_EMP,
+  getPUEmp,
 };

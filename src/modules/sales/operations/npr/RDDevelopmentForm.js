@@ -357,9 +357,11 @@ const RDDevelopmentForm = ({
               </>
             </div>
           )}
-          {status.disabledEdit && (
-            <span className="require">* Pending Sales Accept.</span>
-          )}
+          {tg_trans_status_id === 4 &&
+            mainState.tg_trans_status_id === 4 &&
+            mainState.tg_trans_close_id !== 3 && (
+              <span className="require">* Pending Sales Accept.</span>
+            )}
           {!npr_formula_id && (
             <Row className="col-2 row-margin-vertical">
               <Col span={12}>

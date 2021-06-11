@@ -19,6 +19,7 @@ const apiNPRSMDMasterData = `/list/smd_item_master_data`;
 const apiNPRSaveFormulaRemark = `/sales/npr_formula/remark`;
 const apiNPRAllRevisionFormula = `/sales/npr_formula/running`;
 const apiGetNPRByYear = `/list/npr/npr_formula/year`;
+const apiNPRPkPrice = `/sales/npr_price`;
 
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
@@ -307,7 +308,7 @@ const getNPRAllRevisionFormula = (npr_running_id = null) => {
 
 const getNPRByYear = (
   year = "2020",
-  customer_name = "tao",
+  customer_name = "0",
   product_name = "0"
 ) => {
   try {
@@ -336,6 +337,83 @@ const getNPRByYear = (
     return { success: false, data: [], message: error };
   }
 };
+const getNPRPkPrice = (npr_id) => {
+  try {
+    console.log("getNPRPkPrice", npr_id);
+    if (!npr_id) return { success: false, data: {}, message: "Missing npr_id" };
+    return axios
+      .get(`${apiNPRPkPrice}/${npr_id}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: {}, message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
+
+const saveNPRPkPrice = (data) => {
+  try {
+    return data.npr_price_id
+      ? axios
+          .put(`${apiNPRPkPrice}/${data.npr_price_id}`, [data], header_config)
+          .then((res) => {
+            console.log("PUT res", res);
+            if (res.status === 200) {
+              message.success("Update Successfully..");
+              return { success: true, data: res.data };
+            } else {
+              message.error(errorText.getData);
+              return { success: false, data: null };
+            }
+          })
+          .catch((error) => {
+            if (!error.response) {
+              message.error(errorText.network);
+            } else {
+              message.error(errorText.formValid);
+            }
+            return { success: false, data: null, error: error.response };
+          })
+      : axios
+          .post(`${apiNPRPkPrice}`, [data], header_config)
+          .then((res) => {
+            console.log("POST res", res);
+            if (res.status === 200) {
+              message.success("Update Successfully..");
+              return { success: true, data: res.data };
+            } else {
+              message.error(errorText.getData);
+              return { success: false, data: null };
+            }
+          })
+          .catch((error) => {
+            if (!error.response) {
+              message.error(errorText.network);
+            } else {
+              message.error(errorText.formValid);
+            }
+            return { success: false, data: null, error: error.response };
+          });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
 
 export {
   GET_NPR_LIST,
@@ -352,4 +430,6 @@ export {
   saveNPRFormulaRemark,
   getNPRAllRevisionFormula,
   getNPRByYear,
+  getNPRPkPrice,
+  saveNPRPkPrice,
 };

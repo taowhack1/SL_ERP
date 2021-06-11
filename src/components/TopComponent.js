@@ -38,12 +38,16 @@ function TopContent(props) {
   };
   const onEdit = () => {
     keepLog.keep_log_action("Click Edit Button");
-    props.edit === "modal"
-      ? props.openModal("Edit")
-      : props.history.push({
-          pathname: props.edit.path,
-          state: props.edit?.state,
-        });
+    if (typeof props.edit === "function") {
+      props.edit();
+    } else {
+      props.edit === "modal"
+        ? props.openModal("Edit")
+        : props.history.push({
+            pathname: props.edit.path,
+            state: props.edit?.state,
+          });
+    }
   };
   const onSave = () => {
     keepLog.keep_log_action("Click Save Button");

@@ -187,7 +187,6 @@ export const quotation_require_fields_detail = [
   "item_id",
   "uom_id",
   "qn_detail_qty",
-  "qn_detail_price",
 ];
 
 export const quotation_detail_columns = [
@@ -451,6 +450,6 @@ export const so_require_fields_detail = [
   "item_id",
   "uom_id",
   "so_detail_qty",
-  "so_detail_price",
+  // "so_detail_price",
   "so_detail_delivery_date",
 ];

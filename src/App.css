@@ -491,18 +491,23 @@ div:empty:before {
 .col-form-right {
   border-right: 1px solid gray;
 }
+.w-100,
 .full-width {
   width: 100%;
 }
+.w-90,
 .width-90 {
   width: 90%;
 }
+.w-80,
 .width-80 {
   width: 80%;
 }
+.w-10,
 .width-10 {
   width: 10%;
 }
+.w-50,
 .width-50,
 .half-width {
   width: 50%;
@@ -539,6 +544,14 @@ span.require {
 }
 .error {
   color: red;
+}
+.complete,
+span.complete {
+  color: #00e617;
+  font-weight: bold;
+}
+.complete {
+  color: #00e617;
 }
 
 .button-in-table {
@@ -1203,4 +1216,12 @@ tr.drop-over-upward td {
 }
 .bg-tb-disabled {
   background-color: #f3f2f2 !important;
+}
+
+.ant-card-grid.card-grid-sm {
+  padding: 8px;
+}
+
+.pre-wrap {
+  white-space: pre-wrap;
 }
