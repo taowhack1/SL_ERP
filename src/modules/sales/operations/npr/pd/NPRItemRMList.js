@@ -1,11 +1,9 @@
-import { Col, InputNumber, Row } from "antd";
+import { CheckCircleOutlined } from "@ant-design/icons";
+import { InputNumber } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import CustomTable from "../../../../../components/CustomTable";
-import {
-  convertDigit,
-  getNumberFormat,
-} from "../../../../../include/js/main_config";
+import { getNumberFormat } from "../../../../../include/js/main_config";
 const columns = [
   {
     title: "No.",
@@ -28,8 +26,15 @@ const columns = [
   },
   {
     title: (
-      <div className="text-center">
-        <Text>% Waste</Text>
+      <div>
+        <InputNumber
+          {...getNumberFormat(4)}
+          placeholder="% Waste"
+          step={1}
+          min={0}
+          size="small"
+          className="w-100"
+        />
       </div>
     ),
     dataIndex: "npr_product_cost_waste_percent_qty",

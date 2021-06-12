@@ -28,8 +28,15 @@ const columns = [
   },
   {
     title: (
-      <div className="text-center">
-        <Text>% Waste</Text>
+      <div>
+        <InputNumber
+          {...getNumberFormat(4)}
+          placeholder="% Waste"
+          step={1}
+          min={0}
+          size="small"
+          className="w-100"
+        />
       </div>
     ),
     dataIndex: "npr_product_cost_waste_percent_qty",

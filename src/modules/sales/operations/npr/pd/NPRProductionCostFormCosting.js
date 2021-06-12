@@ -1,6 +1,7 @@
 import { Col, DatePicker, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
+import { useFormContext } from "react-hook-form";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomSelect from "../../../../../components/CustomSelect";
 import CustomTable from "../../../../../components/CustomTable";
@@ -9,6 +10,10 @@ import NPRItemPackageList from "./NPRItemPackageList";
 import NPRItemRMList from "./NPRItemRMList";
 
 const NPRProductionCostFormCosting = () => {
+  const {
+    formMethod: { control, register, erros },
+    fieldArray: { field, append, remove },
+  } = useFormContext();
   return (
     <div className="form-section">
       <Row className="mt-2 mb-2 col-2" gutter={24}>

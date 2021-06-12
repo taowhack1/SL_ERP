@@ -39,6 +39,26 @@ const columns = [
   {
     title: (
       <div className="text-center">
+        <Text>FG Qty</Text>
+      </div>
+    ),
+    dataIndex: "fg_qty",
+    align: "right",
+    className: "tb-col-sm",
+    render: (val) => (
+      <InputNumber
+        value={val}
+        placeholder="FG Qty."
+        step={50}
+        min={0}
+        size="small"
+        className="full-width"
+      />
+    ),
+  },
+  {
+    title: (
+      <div className="text-center">
         <Text>Cost</Text>
       </div>
     ),
@@ -62,16 +82,19 @@ const mockupData = [
   {
     id: 0,
     batch_size: 300,
+    fg_qty: 630,
     batch_cost: 1500,
   },
   {
     id: 1,
     batch_size: 600,
+    fg_qty: 1260,
     batch_cost: 2300,
   },
   {
     id: 2,
     batch_size: 900,
+    fg_qty: 1590,
     batch_cost: 4000,
   },
 ];
