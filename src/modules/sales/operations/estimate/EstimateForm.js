@@ -1,36 +1,70 @@
 /** @format */
 
-import React, { useEffect, useMemo, useState } from "react";
-import { useHistory, useParams } from "react-router";
-import MainLayout from "../../../../../components/MainLayout";
-import { useDispatch, useSelector } from "react-redux";
-import { PrinterOutlined } from "@ant-design/icons";
-import { getNPRByID } from "../../../../../actions/sales/nprActions";
-import NPRProductionCostFormTabList from "./NPRProductionCostFormTabList";
-import { Col, Row } from "antd";
+import MainLayout from "../../../../components/MainLayout";
 import Text from "antd/lib/typography/Text";
-const NPRPDContext = React.createContext();
-
-const initialState = {};
-const NPRPRoductionCostForm = () => {
+import { Col, Row } from "antd";
+import React, { useEffect, useMemo } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
+import { PrinterOutlined } from "@ant-design/icons";
+import {
+  getNPRByID,
+  getNPRItemList,
+  getNPRList,
+  getNPRSMDMasterData,
+} from "../../../../actions/sales/nprActions";
+import DetailLoading from "../../../../components/DetailLoading";
+import useKeepLogs from "../../../logs/useKeepLogs";
+import { getRDEmp } from "../../../../actions/hrm";
+import { getUOMList } from "../../../../actions/inventory";
+import { get_qa_conditions_master } from "../../../../actions/qa/qaTestAction";
+import { useParams } from "react-router-dom";
+import EstimateFormTab from "../estimate/EstimateFormTab";
+const NPREstimateContext = React.createContext();
+const EstimateForm = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { department, id } = useParams();
+  const initialState = {};
   const [state, setState] = useState(initialState);
   const [method, setMethod] = useState("view");
   const { user_name, department_id } = useSelector(
     (state) => state.auth.authData
   );
+  useEffect(() => {
+    const getData = async () => {
+      dispatch(getRDEmp());
+      dispatch(getNPRItemList());
+      dispatch(getUOMList());
+      dispatch(get_qa_conditions_master(3, 1, 1, 1));
+      dispatch(getNPRSMDMasterData());
+      const resp = await getNPRByID(id);
+      if (resp.success) {
+        setState(resp.data);
+      }
+    };
+    getData();
+  }, [id]);
+  const {
+    npr_no,
+    npr_product_no_name,
+    category_name,
+    npr_created_by_no_name,
+    npr_created,
+    npr_request_date,
+    npr_customer_name,
+  } = state;
   const layoutConfig = useMemo(
     () => ({
       projectId: 7,
       title: "SALES",
       home: "/sales",
       show: true,
-      breadcrumb: ["Sales", "NPR"],
+      breadcrumb: ["Sales", "NPR", "Estimate"],
       search: false,
       create: "",
-      buttonAction: method === "view" ? ["Edit", "Back"] : ["Save", "Discard"],
+      buttonAction: method === "view" ? ["", "Back"] : ["Save", "Discard"],
       edit: () => setMethod("edit"),
       action: [
         {
@@ -49,36 +83,16 @@ const NPRPRoductionCostForm = () => {
     }),
     [state.npr_no]
   );
-
-  useEffect(() => {
-    const getData = async () => {
-      const resp = await getNPRByID(id);
-      if (resp.success) {
-        setState(resp.data);
-      }
-    };
-    getData();
-  }, [id]);
-
-  const {
-    npr_no,
-    npr_product_no_name,
-    category_name,
-    npr_created_by_no_name,
-    npr_created,
-    npr_request_date,
-    npr_customer_name,
-  } = state;
   console.log("state", state);
   return (
     <>
       <MainLayout {...layoutConfig}>
-        <NPRPDContext.Provider value={[]}>
+        <NPREstimateContext.Provider value={[]}>
           <div id='form'>
             <div
               className='full-width text-center mb-2'
               style={{ borderBottom: "1px solid #c0c0c0" }}>
-              <h1>NPR. COSTING</h1>
+              <h1>NPR. Estimate</h1>
             </div>
             <div className='form-section'>
               <Row className='mt-2 col-2' gutter={24}>
@@ -151,13 +165,13 @@ const NPRPRoductionCostForm = () => {
                   </Row>
                 </Col>
               </Row>
-              <NPRProductionCostFormTabList method={method} />
+              <EstimateFormTab method={method} />
             </div>
           </div>
-        </NPRPDContext.Provider>
+        </NPREstimateContext.Provider>
       </MainLayout>
     </>
   );
 };
 
-export default NPRPRoductionCostForm;
+export default EstimateForm;
