@@ -136,7 +136,6 @@ const Customer_OrtherAddress = ({
           </>
         ) : (
           <>
-            {" "}
             {dataDetail.length > 0 &&
               dataDetail.map((line, key) => (
                 <Row
