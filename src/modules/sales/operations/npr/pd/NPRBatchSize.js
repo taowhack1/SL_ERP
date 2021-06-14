@@ -2,6 +2,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Button, Col, InputNumber, Row, Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
+import { useFormContext } from "react-hook-form";
 import CustomTable from "../../../../../components/CustomTable";
 import {
   convertDigit,
@@ -98,25 +99,49 @@ const mockupData = [
     batch_cost: 4000,
   },
 ];
+const initialState = {
+  npr_product_cost_detail_batch_size: null,
+  npr_product_cost_detail_fg_qty: null,
+  npr_product_cost_detail_cost: null,
+  npr_product_cost_detail_remark: null,
+  uom_id: null,
+};
 const NPRBatchSize = () => {
+  const {
+    formMethod: { control, register, formState: error, watch },
+    fieldArray: { field, append, remove },
+    readOnly,
+    PDEmp,
+  } = useFormContext();
+  console.log(field);
   return (
     <>
       <div className="under-line mb-1 d-flex flex-start flex-row">
         <Text strong>Batch Size</Text>
-        <Button className="ml-2 primary" size="small">
+        <Button
+          className="ml-2 primary"
+          size="small"
+          onClick={() => append(initialState)}
+        >
           <PlusOutlined />
           Add Batch Size
         </Button>
       </div>
 
-      <Table
+      <CustomTable
         columns={columns}
-        dataSource={mockupData}
+        dataSource={field}
         bordered
         rowKey={"id"}
-        style={{ width: "50%" }}
+        className="w-50"
         pagination={false}
         rowClassName="row-table-detail"
+        // onAdd={append}
+        // footer={
+        //   <Button className="full-width" type="ghost">
+        //     Add Batch Size
+        //   </Button>
+        // }
       />
     </>
   );

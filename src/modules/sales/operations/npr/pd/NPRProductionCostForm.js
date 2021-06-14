@@ -93,14 +93,12 @@ const NPRPRoductionCostForm = () => {
       const resp = await getNPRByID(id);
       if (resp.success) {
         setState(resp.data);
-        // formMethod.reset({
-        //   npr_product_cost_response_date: null,
-        // });
+        // formMethod.reset(initialState);
       }
     };
     dispatch(getProductionEmp());
     getData();
-  }, [id]);
+  }, [id, method]);
 
   const {
     npr_no,
@@ -114,6 +112,7 @@ const NPRPRoductionCostForm = () => {
 
   const formMethod = useForm({
     defaultValue: initialState,
+    shouldFocusError: true,
   });
   const fieldArray = useFieldArray({
     control: formMethod.control,
@@ -133,6 +132,7 @@ const NPRPRoductionCostForm = () => {
     console.log("onSubmit ", data);
   };
   console.log("state , method", state, method);
+  console.log("formMethod.error", formMethod.formState.errors);
   return (
     <>
       <FormProvider {...contextValue}>

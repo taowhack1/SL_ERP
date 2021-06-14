@@ -5,7 +5,7 @@ import {
 } from "@ant-design/icons";
 import { Col, Row, Table } from "antd";
 import Text from "antd/lib/typography/Text";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import CustomLabel from "../../../../components/CustomLabel";
 import CustomTable from "../../../../components/CustomTable";
 import ModalViewImages from "../../../../components/ModalViewImages";
@@ -33,7 +33,7 @@ const componentColumns = ({ viewImages }) => [
     title: "Description",
     dataIndex: "npr_detail_item_name",
     align: "left",
-    ellipsis: true,
+    ellipsis: false,
     className: "tb-col-sm",
     render: (val) => val || "-",
   },
@@ -68,12 +68,15 @@ const componentColumns = ({ viewImages }) => [
   },
   {
     title: "Picture",
-    dataIndex: "",
+    dataIndex: "component_file",
     align: "center",
     width: "5%",
     className: "tb-col-sm",
     render: (val) => (
-      <PictureOutlined className="button-icon" onClick={viewImages} />
+      <PictureOutlined
+        className="button-icon"
+        onClick={() => viewImages(val)}
+      />
     ),
   },
 ];
@@ -95,11 +98,16 @@ const NPRComponentsTabView = () => {
   const [modal, setModal] = useState({
     visible: false,
     loading: false,
+    dataSource: [],
+    field: {
+      name: "name",
+      path: "item_file_path",
+    },
   });
 
-  const viewImages = () => setModal({ ...modal, visible: true });
+  const viewImages = (files) =>
+    setModal({ ...modal, visible: true, dataSource: files || [] });
   const onCloseModal = () => setModal({ ...modal, visible: false });
-
   const [state, setState] = useState(initialState);
 
   useEffect(() => {
@@ -188,7 +196,10 @@ const NPRComponentsTabView = () => {
       </>
     );
   };
-
+  const modalConfig = useMemo(
+    () => ({ ...modal, onClose: onCloseModal }),
+    [modal, onCloseModal]
+  );
   const { tg_trans_status_id: trans_id } = state;
 
   return (
@@ -242,7 +253,7 @@ const NPRComponentsTabView = () => {
           </Row>
           <Table
             columns={componentColumns({ viewImages })}
-            dataSource={mainState.npr_detail}
+            dataSource={mainState.npr_detail2}
             pagination={false}
             rowKey={"npr_detail_id"}
             size={"small"}
@@ -262,11 +273,7 @@ const NPRComponentsTabView = () => {
           </Row>
         </div>
       </div>
-      <ModalViewImages
-        {...modal}
-        onClose={onCloseModal}
-        dataSource={mockupImages}
-      />
+      <ModalViewImages {...modalConfig} />
     </>
   );
 };

@@ -25,8 +25,6 @@ import {
   getNumberFormat,
 } from "../../../../include/js/main_config";
 import { NPRFormContext } from "./NPRViewById";
-import imagesTest from "../../../../image/no_image.svg";
-import imagesTest2 from "../../../../image/unnamed.png";
 import {
   sortData,
   validateFormHead,
@@ -39,6 +37,31 @@ import {
   saveNPRPkPrice,
 } from "../../../../actions/sales/nprActions";
 import moment from "moment";
+
+const initialState = {
+  npr_id: null,
+  npr_price_request_date: null,
+  npr_price_request_by: null,
+  user_name: null,
+  npr_price_description: null,
+  npr_price_remark: null,
+  commit: 1,
+  tg_trans_status_id: 1,
+  tg_trans_close_id: 1,
+  npr_price_detail: [],
+};
+const initialStateDetail = {
+  id: 0,
+  npr_detail_id: null,
+  npr_detail_price_remark: null,
+  npr_price_detail_item_no: null,
+  npr_price_detail_item_name: null,
+  npr_price_detail_supply_by: null,
+  npr_price_detail_supply_name: null,
+  npr_price_detail_cost: 0,
+  npr_price_detail_moq: 0,
+  uom_id: null,
+};
 
 const componentColumns = ({ viewImages }) => [
   {
@@ -53,7 +76,8 @@ const componentColumns = ({ viewImages }) => [
     title: "Description",
     dataIndex: "npr_detail_item_name",
     align: "left",
-    ellipsis: true,
+    ellipsis: false,
+    width: "45%",
     className: "tb-col-sm",
     render: (val) => val || "-",
   },
@@ -101,30 +125,6 @@ const componentColumns = ({ viewImages }) => [
   },
 ];
 
-const initialState = {
-  npr_id: null,
-  npr_price_request_date: null,
-  npr_price_request_by: null,
-  user_name: null,
-  npr_price_description: null,
-  npr_price_remark: null,
-  commit: 1,
-  tg_trans_status_id: 1,
-  tg_trans_close_id: 1,
-  npr_price_detail: [],
-};
-const initialStateDetail = {
-  id: 0,
-  npr_detail_id: null,
-  npr_detail_price_remark: null,
-  npr_price_detail_item_no: null,
-  npr_price_detail_item_name: null,
-  npr_price_detail_supply_by: null,
-  npr_price_detail_supply_name: null,
-  npr_price_detail_cost: 0,
-  npr_price_detail_moq: 0,
-  uom_id: null,
-};
 const NPRComponentsTab = () => {
   const dispatch = useDispatch();
   const {

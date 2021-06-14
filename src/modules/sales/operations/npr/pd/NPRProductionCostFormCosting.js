@@ -16,7 +16,7 @@ import moment from "moment";
 
 const NPRProductionCostFormCosting = () => {
   const {
-    formMethod: { control, register, error, watch },
+    formMethod: { control, register, formState: error, watch },
     fieldArray: { field, append, remove },
     readOnly,
     PDEmp,
