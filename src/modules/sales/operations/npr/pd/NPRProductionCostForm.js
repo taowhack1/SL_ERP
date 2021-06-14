@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { PrinterOutlined } from "@ant-design/icons";
 import { getNPRByID } from "../../../../../actions/sales/nprActions";
 import NPRProductionCostFormTabList from "./NPRProductionCostFormTabList";
-import { Col, Row } from "antd";
+import { Button, Col, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { getProductionEmp } from "../../../../../actions/hrm";
+import moment from "moment";
 const NPRPDContext = React.createContext();
 
 const initialState = {
@@ -47,6 +49,7 @@ const NPRPRoductionCostForm = () => {
   const { user_name, department_id } = useSelector(
     (state) => state.auth.authData
   );
+  const { production: PDEmp } = useSelector((state) => state.hrm.employee);
   const layoutConfig = useMemo(
     () => ({
       projectId: 7,
@@ -57,7 +60,10 @@ const NPRPRoductionCostForm = () => {
       search: false,
       create: "",
       buttonAction: method === "view" ? ["Edit", "Back"] : ["Save", "Discard"],
-      edit: () => setMethod("edit"),
+      edit: () => {
+        console.log("Click Edit");
+        setMethod("edit");
+      },
       action: [
         {
           name: (
@@ -72,8 +78,14 @@ const NPRPRoductionCostForm = () => {
       back: history.goBack,
       discard: "/sales/npr/pd",
       save: "function",
+      onSave: () => {
+        console.log("Save Click");
+        const el = document.getElementById("submit");
+        console.log("el", el);
+        el.click();
+      },
     }),
-    [state.npr_no]
+    [state.npr_no, method]
   );
 
   useEffect(() => {
@@ -81,8 +93,12 @@ const NPRPRoductionCostForm = () => {
       const resp = await getNPRByID(id);
       if (resp.success) {
         setState(resp.data);
+        // formMethod.reset({
+        //   npr_product_cost_response_date: null,
+        // });
       }
     };
+    dispatch(getProductionEmp());
     getData();
   }, [id]);
 
@@ -107,14 +123,20 @@ const NPRPRoductionCostForm = () => {
     () => ({
       formMethod,
       fieldArray,
+      readOnly: method === "view" ? true : false,
+      PDEmp,
     }),
-    [formMethod, fieldArray]
+    [formMethod, fieldArray, method, PDEmp]
   );
-  console.log("state", state);
+  const onSubmit = (data) => {
+    console.log("SUBMITTTTTTTTTTTT");
+    console.log("onSubmit ", data);
+  };
+  console.log("state , method", state, method);
   return (
     <>
       <FormProvider {...contextValue}>
-        <form onSubmit={formMethod.handleSubmit}>
+        <form onSubmit={formMethod.handleSubmit(onSubmit)}>
           <MainLayout {...layoutConfig}>
             <NPRPDContext.Provider value={[]}>
               <div id="form">
@@ -199,11 +221,14 @@ const NPRPRoductionCostForm = () => {
                       </Row>
                     </Col>
                   </Row>
-                  <NPRProductionCostFormTabList method={method} />
+                  <NPRProductionCostFormTabList />
                 </div>
               </div>
             </NPRPDContext.Provider>
           </MainLayout>
+          <button type="submit" id="submit">
+            Submit
+          </button>
         </form>
       </FormProvider>
     </>

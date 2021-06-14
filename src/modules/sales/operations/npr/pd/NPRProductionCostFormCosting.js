@@ -1,19 +1,28 @@
 import { Col, DatePicker, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
+import {
+  DatePickerField,
+  SelectField,
+} from "../../../../../components/AntDesignComponent";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomSelect from "../../../../../components/CustomSelect";
 import CustomTable from "../../../../../components/CustomTable";
 import NPRBatchSize from "./NPRBatchSize";
 import NPRItemPackageList from "./NPRItemPackageList";
 import NPRItemRMList from "./NPRItemRMList";
+import moment from "moment";
 
 const NPRProductionCostFormCosting = () => {
   const {
-    formMethod: { control, register, erros },
+    formMethod: { control, register, error, watch },
     fieldArray: { field, append, remove },
+    readOnly,
+    PDEmp,
   } = useFormContext();
+  // console.log("watch", watch());
+  console.log("render");
   return (
     <div className="form-section">
       <Row className="mt-2 mb-2 col-2" gutter={24}>
@@ -23,29 +32,43 @@ const NPRProductionCostFormCosting = () => {
               <CustomLabel
                 label="Person In Charge"
                 require
-                // readOnly={disabledAssign}
+                readOnly={readOnly}
               />
             </Col>
             <Col span={16}>
-              <CustomSelect
-                showSearch
-                allowClear
-                //   disabled={disabledAssign}
-                placeholder="Person In Charge"
-                //   data={pu}
-                className="w-100"
-                name="npr_price_request_by"
-                field_id="employee_no"
-                field_name="employee_no_name"
-                //   value={state.npr_price_request_by}
-                //   onChange={(val, record) =>
-                //     val !== undefined
-                //       ? onChangeHead({
-                //           npr_price_request_by: record.data.employee_no,
-                //         })
-                //       : onChangeHead({ npr_price_request_by: null })
-                //   }
-              />
+              {readOnly ? (
+                <input
+                  className="disabled-input"
+                  readOnly={readOnly}
+                  {...register("npr_product_cost_response_by")}
+                />
+              ) : (
+                <>
+                  <Controller
+                    render={({ field }) =>
+                      SelectField({
+                        fieldProps: {
+                          className: "full-width",
+
+                          showSearch: true,
+                          onChange: (val) => field.onChange(val || null),
+                          ...field,
+                          placeholder: "Select person in charge",
+                        },
+                        dataSource: PDEmp,
+                        fieldName: "employee_no_name",
+                        fieldId: "employee_no",
+                      })
+                    }
+                    control={control}
+                    name="npr_product_cost_response_by"
+                    rules={{ required: true }}
+                  />
+                  {error && error?.npr_product_cost_response_by && (
+                    <span className="require">This field is required.</span>
+                  )}
+                </>
+              )}
             </Col>
           </Row>
         </Col>
@@ -53,29 +76,38 @@ const NPRProductionCostFormCosting = () => {
         <Col span={12}>
           <Row className="col-2 row-margin-vertical">
             <Col span={8}>
-              <CustomLabel label="Delivery Date" require />
+              <CustomLabel label="Delivery Date" require readOnly={readOnly} />
             </Col>
             <Col span={16}>
-              <DatePicker
-                name={"npr_price_request_date"}
-                format={"DD/MM/YYYY"}
-                className={"full-width"}
-                placeholder="Delivery Date"
-                //   disabled={disabledAssign}
-                required
-                //   value={
-                //     state.npr_price_request_date
-                //       ? moment(state.npr_price_request_date, "DD/MM/YYYY")
-                //       : null
-                //   }
-                //   onChange={(val) =>
-                //     onChangeHead({
-                //       npr_price_request_date: val
-                //         ? moment(val).format("DD/MM/YYYY")
-                //         : null,
-                //     })
-                //   }
-              />
+              {readOnly ? (
+                <input
+                  className="disabled-input"
+                  readOnly={readOnly}
+                  {...register("npr_product_cost_response_date")}
+                />
+              ) : (
+                <>
+                  <Controller
+                    render={({ field: { value, onChange } }) =>
+                      DatePickerField({
+                        fieldProps: {
+                          className: "full-width",
+                          placeholder: "Due date",
+                          format: "DD/MM/YYYY",
+                          onChange: (val) => onChange(val ? val : null),
+                          value: value,
+                        },
+                      })
+                    }
+                    control={control}
+                    name="npr_product_cost_response_date"
+                    rules={{ required: true }}
+                  />
+                  {error && error?.npr_product_cost_response_date && (
+                    <span className="require">This field is required.</span>
+                  )}
+                </>
+              )}
             </Col>
           </Row>
         </Col>
@@ -93,4 +125,4 @@ const NPRProductionCostFormCosting = () => {
   );
 };
 
-export default NPRProductionCostFormCosting;
+export default React.memo(NPRProductionCostFormCosting);

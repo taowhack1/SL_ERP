@@ -73,7 +73,7 @@ const columns = [
         dataIndex: "npr_responsed_required_by_name",
         width: "15%",
         ellipsis: true,
-        render: (val) => <Text style={{ color: "blue" }}>{val}</Text> || "-",
+        render: (val) => <Text style={{ color: "blue" }}>{val || "-"}</Text>,
       },
       {
         title: "Accept Date",
@@ -87,7 +87,7 @@ const columns = [
         align: "center",
         dataIndex: "npr_responsed_delivery_date",
         width: "10%",
-        render: (val) => <Text style={{ color: "blue" }}>{val}</Text> || "-",
+        render: (val) => <Text style={{ color: "blue" }}>{val || "-"}</Text>,
       },
     ],
   },
@@ -118,7 +118,6 @@ const NPRTable = ({ dataSource }) => {
         dataSource={dataSource}
         pagination={{
           pageSize: 15,
-          pageSizeOptions: ["10", "15", "20", "25", "30", "50"],
         }}
         onRow={(record) => ({
           onClick: (e) => {

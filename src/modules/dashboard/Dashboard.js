@@ -16,14 +16,12 @@ const Dashboard = (props) => {
   const auth = useSelector(
     (state) => state.auth.authData && state.auth.authData
   );
-  console.log("auth", auth);
   if (!auth) {
     alert("Authentication required\nPlase Login.");
     history.push("/login");
   }
 
   const { salary } = useSelector((state) => state.salary);
-  console.log(salary);
   const dispatch = useDispatch();
 
   const [state, setState] = useState({

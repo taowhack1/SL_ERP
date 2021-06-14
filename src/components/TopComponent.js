@@ -38,9 +38,12 @@ function TopContent(props) {
   };
   const onEdit = () => {
     keepLog.keep_log_action("Click Edit Button");
+    console.log();
     if (typeof props.edit === "function") {
+      console.log("Edit Functcion");
       props.edit();
     } else {
+      console.log("ELSE EDIT Functcion");
       props.edit === "modal"
         ? props.openModal("Edit")
         : props.history.push({
@@ -216,9 +219,9 @@ function TopContent(props) {
                   </Button>
                 ))}
               {props.buttonAction.includes("Edit") &&
-                (props.edit === "modal" ? (
+                (props.edit === "modal" || typeof props.edit === "function" ? (
                   <Button
-                    // className="primary"
+                    className="primary"
                     onClick={onEdit}
                     disabled={props.disabledEditBtn}
                   >

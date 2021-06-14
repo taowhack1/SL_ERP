@@ -15,7 +15,7 @@ import {
   Table,
 } from "antd";
 import Text from "antd/lib/typography/Text";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import CustomLabel from "../../../../components/CustomLabel";
 import CustomSelect from "../../../../components/CustomSelect";
 import CustomTable from "../../../../components/CustomTable";
@@ -40,12 +40,6 @@ import {
 } from "../../../../actions/sales/nprActions";
 import moment from "moment";
 
-const mockupImages = [
-  {
-    name: "TEST 1",
-    path: imagesTest,
-  },
-];
 const componentColumns = ({ viewImages }) => [
   {
     title: "Item Code",
@@ -94,12 +88,15 @@ const componentColumns = ({ viewImages }) => [
   },
   {
     title: "Picture",
-    dataIndex: "",
+    dataIndex: "component_file",
     align: "center",
     width: "5%",
     className: "tb-col-sm",
     render: (val) => (
-      <PictureOutlined className="button-icon" onClick={viewImages} />
+      <PictureOutlined
+        className="button-icon"
+        onClick={() => viewImages(val)}
+      />
     ),
   },
 ];
@@ -131,7 +128,7 @@ const initialStateDetail = {
 const NPRComponentsTab = () => {
   const dispatch = useDispatch();
   const {
-    auth: { user_name },
+    auth: { user_name, department_id },
   } = useContext(AppContext);
   const { state: mainState } = useContext(NPRFormContext);
   const { itemList } = useSelector((state) => state.sales.operations.npr);
@@ -140,16 +137,22 @@ const NPRComponentsTab = () => {
   const [modal, setModal] = useState({
     visible: false,
     loading: false,
+    dataSource: [],
+    field: {
+      name: "name",
+      path: "item_file_path",
+    },
   });
 
-  const viewImages = () => setModal({ ...modal, visible: true });
+  const viewImages = (files) =>
+    setModal({ ...modal, visible: true, dataSource: files || [] });
   const onCloseModal = () => setModal({ ...modal, visible: false });
 
   const [state, setState] = useState(initialState);
   const [method, setMethod] = useState("view");
   useEffect(() => {
     mainState.npr_id && dispatch(getPUEmp());
-  }, []);
+  }, [mainState.npr_id]);
 
   useEffect(() => {
     const getData = async () => {
@@ -411,15 +414,27 @@ const NPRComponentsTab = () => {
   const onChangeHead = (data) =>
     setState((prev) => ({ ...prev, ...data, commit: 1 }));
 
+  const modalConfig = useMemo(
+    () => ({ ...modal, onClose: onCloseModal }),
+    [modal, onCloseModal]
+  );
   const { tg_trans_status_id: trans_id, tg_trans_close_id: close_id } = state;
   const pageStatus = {
-    disabledAssign: trans_id !== 1 || method === "view" || trans_id === 4,
-    disabledEdit: trans_id === 4,
+    disabledAssign:
+      (trans_id !== 1 && trans_id === 4 && method === "view") ||
+      method === "view",
+    disabledEdit:
+      (trans_id === 4 ||
+        (user_name !== state.npr_price_request_by && method === "view")) &&
+      ![1].includes(department_id),
     isFinish: trans_id === 4,
+    showDetail:
+      state.npr_price_request_by &&
+      state.npr_price_id !== null &&
+      state.npr_price_id !== undefined,
   };
   const { disabledAssign, disabledEdit, isFinish } = pageStatus;
-  console.log("state", state);
-  console.log("Page Status ", method, pageStatus);
+  console.log("modal", modal);
   return (
     <>
       <div className="form-section pd-left-2 pd-right-2">
@@ -554,12 +569,12 @@ const NPRComponentsTab = () => {
           </Row>
           <Table
             columns={componentColumns({ viewImages })}
-            dataSource={mainState.npr_detail}
+            dataSource={mainState.npr_detail2}
             pagination={false}
             rowKey={"npr_detail_id"}
             size={"small"}
             className="full-width"
-            expandable={{ expandedRowRender }}
+            expandable={pageStatus.showDetail && { expandedRowRender }}
             bordered
           />
           <Row className="col-2 row-margin-vertical">
@@ -574,11 +589,7 @@ const NPRComponentsTab = () => {
           </Row>
         </div>
       </div>
-      <ModalViewImages
-        {...modal}
-        onClose={onCloseModal}
-        dataSource={mockupImages}
-      />
+      <ModalViewImages {...modalConfig} />
     </>
   );
 };

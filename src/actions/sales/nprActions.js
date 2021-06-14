@@ -20,7 +20,8 @@ const apiNPRSaveFormulaRemark = `/sales/npr_formula/remark`;
 const apiNPRAllRevisionFormula = `/sales/npr_formula/running`;
 const apiGetNPRByYear = `/list/npr/npr_formula/year`;
 const apiNPRPkPrice = `/sales/npr_price`;
-const apiGetNPRPDCost = `/sales/npr_product_cost`;
+// const apiGetNPRPDCost = `/sales/npr_product_cost`;
+const apiNPRPDCost = `/sales/npr_product_cost`;
 
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
@@ -79,6 +80,7 @@ const getNPRByID = (id = null) => {
     return axios
       .get(`${apiNPR}/${id}`, header_config)
       .then((res) => {
+        console.log("getNPRByID", res);
         if (res.data) {
           return { success: true, data: res.data };
         } else {
@@ -421,7 +423,7 @@ const getNPRPDCost = (npr_id) => {
     console.log("getNPRPkPrice", npr_id);
     if (!npr_id) return { success: false, data: {}, message: "Missing npr_id" };
     return axios
-      .get(`${apiGetNPRPDCost}/${npr_id}`, header_config)
+      .get(`${apiNPRPDCost}/${npr_id}`, header_config)
       .then((resp) => {
         if (resp.status === 200) {
           console.log("resp.data", resp.data);
@@ -460,4 +462,5 @@ export {
   getNPRByYear,
   getNPRPkPrice,
   saveNPRPkPrice,
+  getNPRPDCost,
 };
