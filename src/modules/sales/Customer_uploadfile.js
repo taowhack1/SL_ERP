@@ -5,34 +5,41 @@ import { Button, Col, Row, Space, Upload } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Column from "antd/lib/table/Column";
 import Text from "antd/lib/typography/Text";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import CustomLabel from "../../components/CustomLabel";
 import ItemFileUpload from "../inventory/item/ItemFileUpload";
-
+export const item_file = {
+  companycer: [],
+  memorandum: [],
+};
 const Customer_uploadfile = ({ dataDetail, readOnly }) => {
   const button_file_1 = useRef(null);
   const button_file_2 = useRef(null);
+  const [data_file, setFile] = useState(item_file);
   const file = "test";
-  const file_type_id = 11;
+  //const file_type_id = 11;
   const [loading, setLoading] = useState(false);
-  // const updateFile = useCallback(
-  //   (data, type) => {
-  //     type === 1
-  //       ? setFile({ ...data_file, ...data })
-  //       : setFile({
-  //           ...data_file,
-  //           certificate: { ...data_file.certificate, ...data },
-  //         });
-  //   },
-  //   [data_file]
-  // );
-  // const saveFile = (file_type_id, file_tmp) => {
-  //   if (file_type_id === 1) {
-  //     updateFile({ item_image: file_tmp }, file_type_id);
-  //   } else {
-  //     updateFile({ [file_type_id]: file_tmp }, file_type_id);
-  //   }
-  // };
+  const updateFile = useCallback(
+    (data, type) => {
+      type === 11
+        ? setFile({
+            ...data_file,
+            companycer: { ...data_file.companycer, ...data },
+          })
+        : setFile({
+            ...data_file,
+            memorandum: { ...data_file.memorandum, ...data },
+          });
+    },
+    [data_file]
+  );
+  const saveFile = (file_type_id, file_tmp) => {
+    if (file_type_id === 11) {
+      updateFile({ [file_type_id]: file_tmp }, file_type_id);
+    } else {
+      updateFile({ [file_type_id]: file_tmp }, file_type_id);
+    }
+  };
   function getBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -55,37 +62,41 @@ const Customer_uploadfile = ({ dataDetail, readOnly }) => {
   const handleCancel = () => {
     setState({ ...state, previewVisible: false });
   };
-  const handleChange = async ({ file, fileList }) => {
-    setLoading(true);
-    console.log("file", file);
-    console.log("fileList", fileList);
-    const reader = new FileReader();
-    let file_tmp = null;
-    if (fileList.length) {
+  const handleChange =
+    (file_type_id) =>
+    async ({ file, fileList, event }) => {
+      setLoading(true);
       console.log("file", file);
-      file_tmp = file;
-      file_tmp = fileList[0];
-      reader.readAsDataURL(file);
-      reader.onload = (e) => {
-        console.log("reader.onload", file, e.target);
-        file_tmp.uid = file.uid;
-        file_tmp.thumbUrl = e.target.result;
-        file_tmp.url = e.target.result;
-        file_tmp.url = e.target.result;
-        file_tmp.file = e.target.result;
-        file_tmp.commit = 1;
-        file_tmp.file_type_id = file_type_id;
-        file_tmp.file_name = file.name;
-        file_tmp.file_type = file.type;
-        console.log(file_tmp);
-        setFileList2([{ ...file_tmp }]);
+      console.log("fileList", fileList);
+      console.log("event", event);
+      console.log("file_type_id", file_type_id);
+      const reader = new FileReader();
+      let file_tmp = null;
+      if (fileList.length) {
+        console.log("file", file);
+        file_tmp = file;
+        file_tmp = fileList[0];
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+          console.log("reader.onload", file, e.target);
+          file_tmp.uid = file.uid;
+          file_tmp.thumbUrl = e.target.result;
+          file_tmp.url = e.target.result;
+          file_tmp.url = e.target.result;
+          file_tmp.file = e.target.result;
+          file_tmp.commit = 1;
+          file_tmp.file_type_id = file_type_id;
+          file_tmp.file_name = file.name;
+          file_tmp.file_type = file.type;
+          console.log("file_tmp", file_tmp);
+          saveFile(file_type_id, file_tmp);
+          setLoading(false);
+        };
+      } else {
+        saveFile(file_type_id, file_tmp);
         setLoading(false);
-      };
-    } else {
-      //saveFile(file_type_id, file_tmp);
-      setLoading(false);
-    }
-  };
+      }
+    };
   const handlePreview = async (file) => {
     console.log("file", file);
     if (!file.url && !file.preview) {
@@ -131,7 +142,7 @@ const Customer_uploadfile = ({ dataDetail, readOnly }) => {
     beforeUpload: (file, file_list) => {
       return false;
     },
-    onChange: handleChange,
+    // onChange: handleChange,
     oncancel: handleCancel,
     showUploadList: {
       showDownloadIcon: true,
@@ -150,6 +161,7 @@ const Customer_uploadfile = ({ dataDetail, readOnly }) => {
   const [fileList2, setFileList2] = useState([]);
   const [fileList3, setFileList3] = useState([]);
   console.log("fileList2", fileList2);
+  console.log("data_file", data_file);
   return (
     <>
       {!readOnly ? (
@@ -164,7 +176,10 @@ const Customer_uploadfile = ({ dataDetail, readOnly }) => {
                   </Text>
                 </Col>
                 <Col span={8}>
-                  <Upload {...uploadConfig}>
+                  <Upload
+                    {...uploadConfig}
+                    onChange={handleChange(11)}
+                    name='company'>
                     {fileList2.length >= 1 ? null : uploadButton}
                   </Upload>
                 </Col>
@@ -176,7 +191,10 @@ const Customer_uploadfile = ({ dataDetail, readOnly }) => {
                   <Text strong>Memorandum Document (เอกสาร บริคณห์สนธิ)</Text>
                 </Col>
                 <Col span={8}>
-                  <Upload {...uploadConfig}>
+                  <Upload
+                    {...uploadConfig}
+                    onChange={handleChange(12)}
+                    name='memorandum'>
                     <Button icon={<UploadOutlined />}>Select File</Button>
                   </Upload>
                 </Col>

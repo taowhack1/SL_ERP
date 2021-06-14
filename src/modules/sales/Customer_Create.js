@@ -168,7 +168,7 @@ const CustomerCreate = (props) => {
   };
   console.log("dataDetail", dataDetail);
   console.log("initialStateDetail", { ...initialStateDetail });
-
+  console.log("data_head", data_head);
   return (
     <MainLayout {...config}>
       <div id='form'>
