@@ -784,6 +784,7 @@ const CustomerCreate = (props) => {
               </Tabs.TabPane>
               <Tabs.TabPane tab='Attach File'>
                 <Customer_uploadfile
+                  data_head={data_head}
                   data_file={data_file}
                   setFile={setFile}
                   user_name={auth.user_name}

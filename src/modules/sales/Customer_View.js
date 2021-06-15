@@ -261,7 +261,7 @@ const CustomerView = (props) => {
                 <Text className='text-view'>{data_head.customer_remark}</Text>
               </Tabs.TabPane>
               <Tabs.TabPane tab='Attach File'>
-                <Customer_uploadfile dataDetail={dataDetail} readOnly={true} />
+                <Customer_uploadfile data_head={data_head} readOnly={true} />
               </Tabs.TabPane>
             </Tabs>
           </Col>

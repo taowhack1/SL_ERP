@@ -8,7 +8,13 @@ import Text from "antd/lib/typography/Text";
 import React, { useCallback, useRef, useState } from "react";
 import CustomLabel from "../../components/CustomLabel";
 import ItemFileUpload from "../inventory/item/ItemFileUpload";
-const Customer_uploadfile = ({ data_file, setFile, user_name, readOnly }) => {
+const Customer_uploadfile = ({
+  data_head,
+  data_file,
+  setFile,
+  user_name,
+  readOnly,
+}) => {
   const button_file_1 = useRef(null);
   const button_file_2 = useRef(null);
   const file = "test";
@@ -145,18 +151,30 @@ const Customer_uploadfile = ({ data_file, setFile, user_name, readOnly }) => {
     },
     maxCount: 1,
   };
-  const [fileList, setFileList] = useState([
-    {
-      uid: "-1",
-      name: "image1.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ]);
   const [fileList2, setFileList2] = useState([]);
   const [fileList3, setFileList3] = useState([]);
+  const customer_file =
+    data_head && data_head.customer_file
+      ? [
+          ...data_head.customer_file?.map((file) => ({
+            uid: file.file_type_id,
+            name: file.item_file_remark,
+            status: "done",
+            url: `${process.env.REACT_APP_SERVER}/${file.item_file_path}`,
+          })),
+        ]
+      : [];
+  const company = customer_file
+    ? customer_file.filter((file) => file.uid == 11)
+    : [];
+  const Memorandum = customer_file
+    ? customer_file.filter((file) => file.uid == 12)
+    : [];
   console.log("fileList2", fileList2);
   console.log("data_file", data_file);
+  console.log("customer_file", customer_file);
+  console.log("Memorandum", Memorandum);
+  console.log("company", company);
   return (
     <>
       {!readOnly ? (
@@ -199,7 +217,6 @@ const Customer_uploadfile = ({ data_file, setFile, user_name, readOnly }) => {
         </>
       ) : (
         <>
-          {" "}
           <Row className='col-2'>
             <Col span={12}>
               <Row className='row-margin'>
@@ -209,7 +226,11 @@ const Customer_uploadfile = ({ data_file, setFile, user_name, readOnly }) => {
                   </Text>
                 </Col>
                 <Col span={8}>
-                  <Upload fileList={fileList}></Upload>
+                  {company.length > 0 ? (
+                    <Upload fileList={company}></Upload>
+                  ) : (
+                    <Text>-</Text>
+                  )}
                 </Col>
               </Row>
             </Col>
@@ -219,7 +240,11 @@ const Customer_uploadfile = ({ data_file, setFile, user_name, readOnly }) => {
                   <Text strong>Memorandum Document (เอกสาร บริคณห์สนธิ)</Text>
                 </Col>
                 <Col span={8}>
-                  <Upload fileList={fileList}></Upload>
+                  {Memorandum.length > 0 ? (
+                    <Upload fileList={Memorandum}></Upload>
+                  ) : (
+                    <Text>-</Text>
+                  )}
                 </Col>
               </Row>
             </Col>

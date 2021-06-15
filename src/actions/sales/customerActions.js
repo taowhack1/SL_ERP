@@ -122,12 +122,12 @@ export const saveFile = (customer_id, data_file, redirect) => (dispatch) => {
     formData.append("file", fileList);
     formData.append("user_name", data_file.user_name);
     formData.append("commit", 1);
-    formData.append("item_file_remark", 11);
+    formData.append("item_file_remark", `เอกสารภ.ธ.20_${customer_id}`);
     formData.append("file_type_id", 11);
     formData2.append("file", fileList2);
     formData2.append("user_name", data_file.user_name);
     formData2.append("commit", 1);
-    formData2.append("item_file_remark", 12);
+    formData2.append("item_file_remark", `เอกสาร บริคณห์สนธิ_${customer_id}`);
     formData2.append("file_type_id", 12);
     if (fileList != "nofile") {
       promiseFunction.push(
