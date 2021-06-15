@@ -1,9 +1,10 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Text from "antd/lib/typography/Text";
 import { Modal, Button, Table, Row, Col, Divider, InputNumber } from "antd";
 import CustomSelect from "../../../../components/CustomSelect";
+import { CalculatorOutlined } from "@ant-design/icons";
 const columns = (showModal) => [
   {
     title: "Batch Size.",
@@ -51,11 +52,13 @@ const columns = (showModal) => [
 ];
 const dataSource = [
   {
+    id: 1,
     batch: "100",
     date: "10/06/2021",
     sale: "phaichayon boonyong",
   },
   {
+    id: 2,
     batch: "200",
     date: "10/06/2021",
     sale: "phaichayon boonyong",
@@ -94,6 +97,43 @@ const EstimateFormTabHistory = () => {
     setVisible(false);
   };
 
+  //? x = ( ราคาต้นทุน + ( ราคาต้นทุน * ( เผื่อเสีย / 100 ) ) )
+  //? total = x + ( x * ( markup / 100 ) )
+
+  const [ptotal, setPTotal] = useState(0);
+  const [totalRM, setTotalRM] = useState(0);
+  const [totalPK, setTotal] = useState(0);
+  const [totalCS, setTotalCS] = useState(0);
+  const [costRM, setCostRM] = useState(0);
+  const [costPK, setCostPK] = useState(0);
+  const [costCS, setCostCS] = useState(0);
+  const [lostRM, setLostRM] = useState(3);
+  const [lostPK, setLostPK] = useState(3);
+  const [lostCS, setLostCS] = useState(3);
+  const [markupRM, setMarkupRM] = useState(10);
+  const [markupPK, setMarkupPK] = useState(10);
+  const [markupCS, setMarkupCS] = useState(10);
+  const [loading, setLoading] = useState(false);
+  const reCal = () => {
+    console.log("recal");
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  };
+  const CalculateOnchange = () => {};
+  const CalculateRawmat = (e) => {
+    // setCost(e && e?.cost ? e.cost : cost);
+    // setLost(e && e?.lost ? e.lost : lost);
+    // setMarkup(e && e?.markup ? e.markup : markup);
+    console.log(e);
+
+    // setPTotal(cost + cost * (lost / 100));
+
+    // setTotal(ptotal + ptotal * (markup / 100));
+  };
+  const CalculatePackage = () => {};
+  const CalculateCost = () => {};
   return (
     <>
       <Button className='primary' onClick={showModal}>
@@ -126,36 +166,136 @@ const EstimateFormTabHistory = () => {
         confirmLoading={confirmLoading}
         onCancel={handleCancel}>
         <Row>
-          <Col span={3}>Batch Size</Col>
+          <Col span={3}>
+            <Text strong>Batch Size</Text>
+          </Col>
           <Col span={6}>
             <CustomSelect
               placeholder='Select batch size'
               data={select}
               allowClear
               field_id='label'
-              field_name='value'></CustomSelect>
+              field_name='value'
+              onChange={(e) => {
+                CalculateRawmat();
+              }}></CustomSelect>
           </Col>
         </Row>
         <Divider />
         <div className='form-section'>
-          <Text strong>ราคาวัตถุดิบ Raw Material</Text>
-          <Row gutter={[8, 8]}>
-            <Col span={3}>ราคาต้นทุน</Col>
-            <Col span={3}>+</Col>
-            <Col span={3}>เผื่อเสีย</Col>
-            <Col span={3}>+</Col>
-            <Col span={3}>mark up</Col>
-            <Col span={3}>=</Col>
-            <Col span={3}>Total</Col>
+          <Text strong>
+            <u>ราคาวัตถุดิบ Raw Material </u>
+          </Text>
+          <Row gutter={[8, 8]} className='mt-1'>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>ราคาต้นทุน</Text>
+            </Col>
             <Col span={3}></Col>
-
-            <Col span={3}>
-              <InputNumber min={0} />
-              {/*ราคาต้นทุน  */}
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>เผื่อเสีย</Text>
+            </Col>
+            <Col span={3}></Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>mark up</Text>
             </Col>
             <Col span={3}></Col>
             <Col span={3}>
+              <Text strong>Total</Text>
+            </Col>
+            <Col span={3}></Col>
+
+            <Col span={3}>
               <InputNumber
+                min={0}
+                style={{ width: "100%" }}
+                formatter={(value) =>
+                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                onChange={(e) => {
+                  CalculateRawmat({ cost: e });
+                }}
+              />
+              {/*ราคาต้นทุน  */}
+            </Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>+</Text>
+            </Col>
+            <Col span={3}>
+              <InputNumber
+                style={{ width: "100%" }}
+                defaultValue={3}
+                min={0}
+                max={100}
+                formatter={(value) => `${value}%`}
+                parser={(value) => value.replace("%", "")}
+                onChange={(e) => {
+                  CalculateRawmat({ lost: e });
+                }}
+              />
+              {/*เผื่อเสีย  */}
+            </Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>+</Text>
+            </Col>
+            <Col span={3}>
+              <InputNumber
+                style={{ width: "100%" }}
+                defaultValue={10}
+                min={0}
+                max={100}
+                onChange={(e) => {
+                  CalculateRawmat({ markup: e });
+                }}
+                formatter={(value) => `${value}%`}
+                parser={(value) => value.replace("%", "")}
+              />
+              {/*mark up  */}
+            </Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>=</Text>
+            </Col>
+            <Col span={3}>
+              <InputNumber
+                style={{ width: "100%" }}
+                disabled={true}
+                value={totalRM}
+              />
+              {/*total  */}
+            </Col>
+            <Col span={3}></Col>
+          </Row>
+          <Divider />
+          <Text strong>
+            <u>ราคาวัตถุดิบ packinging</u>
+          </Text>
+          <Row gutter={[8, 8]} className='mt-1'>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>ราคาต้นทุน</Text>
+            </Col>
+            <Col span={3}></Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>เผื่อเสีย</Text>
+            </Col>
+            <Col span={3}></Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>mark up</Text>
+            </Col>
+            <Col span={3}></Col>
+            <Col span={3}>
+              <Text strong>Total</Text>
+            </Col>
+            <Col span={3}></Col>
+
+            <Col span={3}>
+              <InputNumber style={{ width: "100%" }} min={0} />
+              {/*ราคาต้นทุน  */}
+            </Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>+</Text>
+            </Col>
+            <Col span={3}>
+              <InputNumber
+                style={{ width: "100%" }}
                 defaultValue={3}
                 min={0}
                 max={100}
@@ -164,9 +304,12 @@ const EstimateFormTabHistory = () => {
               />
               {/*เผื่อเสีย  */}
             </Col>
-            <Col span={3}></Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>+</Text>
+            </Col>
             <Col span={3}>
               <InputNumber
+                style={{ width: "100%" }}
                 defaultValue={10}
                 min={0}
                 max={100}
@@ -175,43 +318,62 @@ const EstimateFormTabHistory = () => {
               />
               {/*mark up  */}
             </Col>
-            <Col span={3}></Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>=</Text>
+            </Col>
             <Col span={3}>
-              <InputNumber disabled={true} />
+              <InputNumber style={{ width: "100%" }} disabled={true} />
               {/*total  */}
             </Col>
             <Col span={3}></Col>
           </Row>
           <Divider />
-          <Text strong>ราคาวัตถุดิบ packinging</Text>
-          <Row gutter={[8, 8]}>
-            <Col span={3}>ราคาต้นทุน</Col>
-            <Col span={3}>+</Col>
-            <Col span={3}>เผื่อเสีย</Col>
-            <Col span={3}>+</Col>
-            <Col span={3}>mark up</Col>
-            <Col span={3}>=</Col>
-            <Col span={3}>Total</Col>
+          <Text strong>
+            <u>ราคาต้นทุนการผลิต</u>
+          </Text>
+          <Row gutter={[8, 8]} className='mt-1'>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>ราคาต้นทุน</Text>
+            </Col>
             <Col span={3}></Col>
-
-            <Col span={3}>
-              <InputNumber min={0} />
-              {/*ราคาต้นทุน  */}
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong></Text>
+            </Col>
+            <Col span={3}></Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>mark up</Text>
             </Col>
             <Col span={3}></Col>
             <Col span={3}>
-              <InputNumber
+              <Text strong>Total</Text>
+            </Col>
+            <Col span={3}></Col>
+
+            <Col span={3}>
+              <InputNumber style={{ width: "100%" }} min={0} />
+              {/*ราคาต้นทุน  */}
+            </Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong></Text>
+            </Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>+</Text>
+              {/* <InputNumber
+                style={{ width: "100%" }}
                 defaultValue={3}
                 min={0}
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
-              />
+              /> */}
               {/*เผื่อเสีย  */}
             </Col>
-            <Col span={3}></Col>
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong></Text>
+            </Col>
             <Col span={3}>
               <InputNumber
+                style={{ width: "100%" }}
                 defaultValue={10}
                 min={0}
                 max={100}
@@ -220,79 +382,32 @@ const EstimateFormTabHistory = () => {
               />
               {/*mark up  */}
             </Col>
-            <Col span={3}></Col>
-            <Col span={3}>
-              <InputNumber disabled={true} />
-              {/*total  */}
+            <Col span={3} style={{ textAlign: "center" }}>
+              <Text strong>=</Text>
             </Col>
-            <Col span={3}></Col>
-          </Row>
-          <Divider />
-          <Text strong>ราคาวัตถุดิบ </Text>
-          <Row gutter={[8, 8]}>
-            <Col span={3}>ราคาต้นทุน</Col>
-            <Col span={3}>+</Col>
-            <Col span={3}>เผื่อเสีย</Col>
-            <Col span={3}>+</Col>
-            <Col span={3}>mark up</Col>
-            <Col span={3}>=</Col>
-            <Col span={3}>Total</Col>
-            <Col span={3}></Col>
-
             <Col span={3}>
-              <InputNumber min={0} />
-              {/*ราคาต้นทุน  */}
-            </Col>
-            <Col span={3}></Col>
-            <Col span={3}>
-              <InputNumber
-                defaultValue={3}
-                min={0}
-                max={100}
-                formatter={(value) => `${value}%`}
-                parser={(value) => value.replace("%", "")}
-              />
-              {/*เผื่อเสีย  */}
-            </Col>
-            <Col span={3}></Col>
-            <Col span={3}>
-              <InputNumber
-                defaultValue={10}
-                min={0}
-                max={100}
-                formatter={(value) => `${value}%`}
-                parser={(value) => value.replace("%", "")}
-              />
-              {/*mark up  */}
-            </Col>
-            <Col span={3}></Col>
-            <Col span={3}>
-              <InputNumber disabled={true} />
+              <InputNumber style={{ width: "100%" }} disabled={true} />
               {/*total  */}
             </Col>
             <Col span={3}></Col>
           </Row>
           <Divider />
           <Row gutter={[8, 8]}>
-            <Col span={3}></Col>
-            <Col span={3}></Col>
-            <Col span={3}></Col>
-            <Col span={3}></Col>
-            <Col span={3}></Col>
-            <Col span={3}></Col>
-            <Col span={3}></Col>
-            <Col span={3}></Col>
-
-            <Col span={3}></Col>
-            <Col span={3}></Col>
-            <Col span={3}></Col>
-            <Col span={3}></Col>
-            <Col span={3}></Col>
-            <Col span={3} style={{ textAlign: "right" }}>
+            <Col span={12}></Col>
+            <Col span={3} style={{ width: "100%" }}>
+              <Button
+                block
+                icon={<CalculatorOutlined className='button-icon' />}
+                onClick={() => reCal()}
+                loading={loading}>
+                Calculate
+              </Button>
+            </Col>
+            <Col span={3} style={{ textAlign: "center" }}>
               <Text strong>Total </Text>
             </Col>
             <Col span={3}>
-              <InputNumber disabled={true} />
+              <InputNumber style={{ width: "100%" }} disabled={true} />
               {/*total  */}
             </Col>
             <Col span={3}></Col>
