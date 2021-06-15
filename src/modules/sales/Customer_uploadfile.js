@@ -8,14 +8,9 @@ import Text from "antd/lib/typography/Text";
 import React, { useCallback, useRef, useState } from "react";
 import CustomLabel from "../../components/CustomLabel";
 import ItemFileUpload from "../inventory/item/ItemFileUpload";
-export const item_file = {
-  companycer: [],
-  memorandum: [],
-};
-const Customer_uploadfile = ({ dataDetail, readOnly }) => {
+const Customer_uploadfile = ({ data_file, setFile, user_name, readOnly }) => {
   const button_file_1 = useRef(null);
   const button_file_2 = useRef(null);
-  const [data_file, setFile] = useState(item_file);
   const file = "test";
   //const file_type_id = 11;
   const [loading, setLoading] = useState(false);
@@ -35,9 +30,9 @@ const Customer_uploadfile = ({ dataDetail, readOnly }) => {
   );
   const saveFile = (file_type_id, file_tmp) => {
     if (file_type_id === 11) {
-      updateFile({ [file_type_id]: file_tmp }, file_type_id);
+      updateFile({ [0]: file_tmp }, file_type_id);
     } else {
-      updateFile({ [file_type_id]: file_tmp }, file_type_id);
+      updateFile({ [0]: file_tmp }, file_type_id);
     }
   };
   function getBase64(file) {

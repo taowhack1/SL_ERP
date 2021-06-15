@@ -23,6 +23,7 @@ export const api_vendor_category = `/list/vendor/category`;
 export const api_vat_id = `/list/vat`;
 //customer
 export const api_customer = `/sales/customer`;
+export const api_customer_file = `/upload/customer/file`;
 //address
 export const api_language = `/list/language`;
 export const api_country = `/list/country`;

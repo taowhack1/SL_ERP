@@ -69,6 +69,12 @@ const CustomerCreate = (props) => {
   const initialStateDetail = [
     { ...CustomerDetailFileds, user_name: auth.user_name },
   ];
+  const customer_file = {
+    companycer: [],
+    memorandum: [],
+    user_name: auth.user_name,
+  };
+  const [data_file, setFile] = useState(customer_file);
   const [dataDetail, detailDispatch] = useReducer(reducer, initialStateDetail);
   const [data_head, set_data_head] = useState(
     data
@@ -135,13 +141,25 @@ const CustomerCreate = (props) => {
       const key = "validate";
       const validate = validateFormHead(data_head, customer_require_fields);
       if (validate.validate) {
-        const data = [{ ...data_head, customer_detail: dataDetail }];
+        const data = [
+          {
+            ...data_head,
+            customer_detail: dataDetail.filter(
+              (detail) => detail.address_type_id != null
+            ),
+          },
+        ];
         console.log("pass", data);
         data_head.customer_id
           ? dispatch(
-              update_customer(data_head.customer_id, data, redirect_to_view)
+              update_customer(
+                data_head.customer_id,
+                data,
+                data_file,
+                redirect_to_view
+              )
             )
-          : dispatch(create_customer(data, redirect_to_view));
+          : dispatch(create_customer(data, data_file, redirect_to_view));
         console.log("customer_id", data_head.customer_id);
       } else {
         message.warning({
@@ -765,7 +783,12 @@ const CustomerCreate = (props) => {
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab='Attach File'>
-                <Customer_uploadfile dataDetail={dataDetail} readOnly={false} />
+                <Customer_uploadfile
+                  data_file={data_file}
+                  setFile={setFile}
+                  user_name={auth.user_name}
+                  readOnly={false}
+                />
               </Tabs.TabPane>
             </Tabs>
           </Col>
