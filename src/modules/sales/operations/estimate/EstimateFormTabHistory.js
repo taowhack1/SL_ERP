@@ -126,7 +126,9 @@ const EstimateFormTabHistory = () => {
         confirmLoading={confirmLoading}
         onCancel={handleCancel}>
         <Row>
-          <Col span={3}>Batch Size</Col>
+          <Col span={3}>
+            <Text strong>Batch Size</Text>
+          </Col>
           <Col span={6}>
             <CustomSelect
               placeholder='Select batch size'
@@ -150,12 +152,13 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
 
             <Col span={3}>
-              <InputNumber min={0} />
+              <InputNumber min={0} style={{ width: "100%" }} />
               {/*ราคาต้นทุน  */}
             </Col>
             <Col span={3}></Col>
             <Col span={3}>
               <InputNumber
+                style={{ width: "100%" }}
                 defaultValue={3}
                 min={0}
                 max={100}
@@ -167,6 +170,7 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
             <Col span={3}>
               <InputNumber
+                style={{ width: "100%" }}
                 defaultValue={10}
                 min={0}
                 max={100}
@@ -177,7 +181,7 @@ const EstimateFormTabHistory = () => {
             </Col>
             <Col span={3}></Col>
             <Col span={3}>
-              <InputNumber disabled={true} />
+              <InputNumber style={{ width: "100%" }} disabled={true} />
               {/*total  */}
             </Col>
             <Col span={3}></Col>
@@ -195,12 +199,13 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
 
             <Col span={3}>
-              <InputNumber min={0} />
+              <InputNumber style={{ width: "100%" }} min={0} />
               {/*ราคาต้นทุน  */}
             </Col>
             <Col span={3}></Col>
             <Col span={3}>
               <InputNumber
+                style={{ width: "100%" }}
                 defaultValue={3}
                 min={0}
                 max={100}
@@ -212,6 +217,7 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
             <Col span={3}>
               <InputNumber
+                style={{ width: "100%" }}
                 defaultValue={10}
                 min={0}
                 max={100}
@@ -222,7 +228,7 @@ const EstimateFormTabHistory = () => {
             </Col>
             <Col span={3}></Col>
             <Col span={3}>
-              <InputNumber disabled={true} />
+              <InputNumber style={{ width: "100%" }} disabled={true} />
               {/*total  */}
             </Col>
             <Col span={3}></Col>
@@ -240,12 +246,13 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
 
             <Col span={3}>
-              <InputNumber min={0} />
+              <InputNumber style={{ width: "100%" }} min={0} />
               {/*ราคาต้นทุน  */}
             </Col>
             <Col span={3}></Col>
             <Col span={3}>
               <InputNumber
+                style={{ width: "100%" }}
                 defaultValue={3}
                 min={0}
                 max={100}
@@ -257,6 +264,7 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
             <Col span={3}>
               <InputNumber
+                style={{ width: "100%" }}
                 defaultValue={10}
                 min={0}
                 max={100}
@@ -267,7 +275,7 @@ const EstimateFormTabHistory = () => {
             </Col>
             <Col span={3}></Col>
             <Col span={3}>
-              <InputNumber disabled={true} />
+              <InputNumber style={{ width: "100%" }} disabled={true} />
               {/*total  */}
             </Col>
             <Col span={3}></Col>
@@ -292,7 +300,7 @@ const EstimateFormTabHistory = () => {
               <Text strong>Total </Text>
             </Col>
             <Col span={3}>
-              <InputNumber disabled={true} />
+              <InputNumber style={{ width: "100%" }} disabled={true} />
               {/*total  */}
             </Col>
             <Col span={3}></Col>
