@@ -1,11 +1,6 @@
 import Text from "antd/lib/typography/Text";
 import React from "react";
-import {
-  Controller,
-  useFieldArray,
-  useFormContext,
-  useWatch,
-} from "react-hook-form";
+import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { InputNumberField } from "../../../../../components/AntDesignComponent";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomTable from "../../../../../components/CustomTable";
@@ -81,29 +76,31 @@ const columns = ({ control, readOnly, register, errors }) => [
       ),
   },
 ];
-const NPRItemPKList = () => {
+const NPRItemRMList = () => {
   const {
     formMethod: { control, register, errors, watch },
     readOnly,
   } = useFormContext();
-  // const { fields } = useFieldArray({
-  //   control: control,
-  //   name: "npr_price_detail",
-  // });
-  const packaging = useWatch({
+  const { fields: formula } = useFieldArray({
+    control: control,
+    name: "npr_formula_detail",
+  });
+  const { fields: packaging } = useFieldArray({
+    control: control,
     name: "npr_price_detail",
-    control,
   });
   console.log("packaging", packaging);
+  console.log("formula", formula);
+  // const { npr_formula_procedure } = watch();
   return (
     <>
-      {/* <div className="under-line mb-1">
+      <div className="under-line mb-1">
         <Text strong>Procedure :</Text>
       </div>
-      <p className="pre-wrap pd-left-2">{`${npr_formula_procedure}`}</p> */}
+      {/* <p className="pre-wrap pd-left-2">{`${npr_formula_procedure}`}</p> */}
 
       <div className="under-line mb-1">
-        <Text strong>Packaging</Text>
+        <Text strong>Formula</Text>
       </div>
       <CustomTable
         columns={columns({
@@ -112,9 +109,9 @@ const NPRItemPKList = () => {
           errors,
           readOnly,
         })}
-        dataSource={packaging}
+        dataSource={formula}
         bordered
-        rowKey={"npr_price_detail_id"}
+        rowKey={"id"}
         pagination={false}
         rowClassName="row-table-detail"
       />
@@ -122,4 +119,4 @@ const NPRItemPKList = () => {
   );
 };
 
-export default React.memo(NPRItemPKList);
+export default React.memo(NPRItemRMList);

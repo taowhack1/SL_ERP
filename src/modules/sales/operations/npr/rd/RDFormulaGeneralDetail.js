@@ -95,14 +95,16 @@ const RDFormulaGeneralDetail = ({ useFormValue }) => {
                   <CustomLabel
                     label="Batch Size :"
                     require
-                    readOnly={disabledEditBatch}
+                    readOnly={disabledEditBatch && readOnly}
                   />
                 </Col>
                 <Col
                   span={16}
-                  className={disabledEditBatch ? "text-left" : "text-right"}
+                  className={
+                    disabledEditBatch && readOnly ? "text-left" : "text-right"
+                  }
                 >
-                  {disabledEditBatch ? (
+                  {disabledEditBatch && readOnly ? (
                     <Text className="pd-right-2">
                       {convertDigit(npr_formula_sample_qty || 0, 4)}
                     </Text>

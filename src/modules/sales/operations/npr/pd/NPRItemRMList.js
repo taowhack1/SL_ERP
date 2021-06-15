@@ -1,10 +1,19 @@
-import { CheckCircleOutlined } from "@ant-design/icons";
-import { InputNumber } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
+import {
+  Controller,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from "react-hook-form";
+import { InputNumberField } from "../../../../../components/AntDesignComponent";
+import CustomLabel from "../../../../../components/CustomLabel";
 import CustomTable from "../../../../../components/CustomTable";
-import { getNumberFormat } from "../../../../../include/js/main_config";
-const columns = [
+import {
+  convertDigit,
+  getNumberFormat,
+} from "../../../../../include/js/main_config";
+const columns = ({ control, readOnly, register, errors }) => [
   {
     title: "No.",
     dataIndex: "id",
@@ -26,67 +35,86 @@ const columns = [
   },
   {
     title: (
-      <div>
-        <InputNumber
-          {...getNumberFormat(4)}
-          placeholder="% Waste"
-          step={1}
-          min={0}
-          size="small"
-          className="w-100"
-        />
+      <div className="text-center">
+        <CustomLabel require readOnly={readOnly} label={"% Waste"} />
       </div>
     ),
     dataIndex: "npr_product_cost_waste_percent_qty",
     align: "right",
     width: "20%",
     className: "tb-col-sm",
-    render: (val) => (
-      <InputNumber
-        {...getNumberFormat(4)}
-        value={val}
-        placeholder="% Waste"
-        step={1}
-        min={0}
-        size="small"
-        className="full-width"
-      />
-    ),
-  },
-];
-const mockupData = [
-  {
-    id: 0,
-    item_no_name: "[TEST1] TEST ITEM RM 1",
-    npr_product_cost_waste_percent_qty: 3,
-  },
-  {
-    id: 1,
-    item_no_name: "[TEST2] TEST ITEM RM 2",
-    npr_product_cost_waste_percent_qty: 3,
-  },
-  {
-    id: 2,
-    item_no_name: "[TEST3] TEST ITEM RM 3",
-    npr_product_cost_waste_percent_qty: 3,
+    render: (val, record, key) =>
+      readOnly ? (
+        <Text>{convertDigit(val || 0, 3)}</Text>
+      ) : (
+        <>
+          <input
+            {...register(`npr_formula_detail.${key}.npr_formula_detail_id`)}
+            className="d-none"
+          />
+          <Controller
+            control={control}
+            name={`npr_formula_detail.${key}.npr_formula_detail_waste_percent_qty`}
+            render={({ field: { value, onChange } }) =>
+              InputNumberField({
+                fieldProps: {
+                  ...getNumberFormat(4),
+                  placeholder: "% Waste",
+                  step: 1,
+                  min: 0,
+                  size: "small",
+                  className: "full-width",
+                  value,
+                  onChange: (val) => onChange(val),
+                },
+              })
+            }
+            defaultValue={val}
+            rules={{ required: true }}
+          />
+          {errors &&
+            errors?.npr_formula_detail?.key
+              ?.npr_formula_detail_waste_percent_qty && (
+              <span className="require">This field is required.</span>
+            )}
+        </>
+      ),
   },
 ];
 const NPRItemRMList = () => {
+  const {
+    formMethod: { control, register, errors, watch },
+    readOnly,
+  } = useFormContext();
+  // const { fields } = useFieldArray({
+  //   control: control,
+  //   name: "npr_price_detail",
+  // });
+  const formula = useWatch({
+    name: "npr_formula_detail",
+    control,
+  });
+  console.log("formula", formula);
   return (
     <>
-      <div className="under-line mb-1">
+      {/* <div className="under-line mb-1">
         <Text strong>Procedure :</Text>
       </div>
-      <p className="pre-wrap pd-left-2">{`test test\ntest\ntest333`}</p>
+      <p className="pre-wrap pd-left-2">{`${npr_formula_procedure}`}</p> */}
 
       <div className="under-line mb-1">
-        <Text strong>Formula</Text>
+        <Text strong>Raw Material</Text>
       </div>
       <CustomTable
-        columns={columns}
-        dataSource={mockupData}
+        columns={columns({
+          control,
+          register,
+          errors,
+          readOnly,
+        })}
+        dataSource={formula}
         bordered
-        rowKey={"id"}
+        rowKey={"npr_formula_detail_id"}
         pagination={false}
         rowClassName="row-table-detail"
       />
@@ -94,4 +122,4 @@ const NPRItemRMList = () => {
   );
 };
 
-export default NPRItemRMList;
+export default React.memo(NPRItemRMList);

@@ -13,7 +13,7 @@ import {
   convertDigit,
   getNumberFormat,
 } from "../../../../../include/js/main_config";
-const columns = ({ remove, readOnly = false, errors, control }) => [
+const columns = ({ remove, readOnly = false, error, control }) => [
   {
     title: "No.",
     dataIndex: "id",
@@ -55,7 +55,7 @@ const columns = ({ remove, readOnly = false, errors, control }) => [
               }
               defaultValue={val}
             />
-            {errors && errors?.npr_product_cost_response_date && (
+            {error && error?.npr_product_cost_response_date && (
               <span className="require">This field is required.</span>
             )}
           </>
@@ -95,7 +95,7 @@ const columns = ({ remove, readOnly = false, errors, control }) => [
             }
             defaultValue={val}
           />
-          {errors && errors?.npr_product_cost_response_date && (
+          {error && error?.npr_product_cost_response_date && (
             <span className="require">This field is required.</span>
           )}
         </>
@@ -134,7 +134,7 @@ const columns = ({ remove, readOnly = false, errors, control }) => [
             }
             defaultValue={val}
           />
-          {errors && errors?.npr_product_cost_response_date && (
+          {error && error?.npr_product_cost_response_date && (
             <span className="require">This field is required.</span>
           )}
         </>
@@ -177,7 +177,7 @@ const initialState = {
 };
 const NPRBatchSize = () => {
   const {
-    formMethod: { control, register, errors },
+    formMethod: { control, register, formState: error },
     readOnly,
     PDEmp,
   } = useFormContext();
@@ -205,7 +205,7 @@ const NPRBatchSize = () => {
       </div>
 
       <CustomTable
-        columns={columns({ remove, control, register, errors, readOnly })}
+        columns={columns({ remove, control, register, error, readOnly })}
         dataSource={fields}
         bordered
         rowKey={"id"}

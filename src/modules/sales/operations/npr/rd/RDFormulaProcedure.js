@@ -17,8 +17,10 @@ const RDFormulaProcedure = ({ useFormValue }) => {
           </Col>
           <Col span={24}>
             {readOnly ? (
-              <div className="pd-left-2 text-value">
-                <p>{state.npr_formula_description}</p>
+              <div className="pd-left-2">
+                <Text className="pre-wrap">
+                  {state.npr_formula_description}
+                </Text>
               </div>
             ) : (
               <Input
@@ -38,7 +40,7 @@ const RDFormulaProcedure = ({ useFormValue }) => {
           <Col span={24}>
             {readOnly ? (
               <div className="pd-left-2 text-value">
-                <p>{state.npr_formula_procedure}</p>
+                <Text className="pre-wrap">{state.npr_formula_procedure}</Text>
               </div>
             ) : (
               <TextArea

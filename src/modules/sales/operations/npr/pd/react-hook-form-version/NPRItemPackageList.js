@@ -1,11 +1,6 @@
 import Text from "antd/lib/typography/Text";
 import React from "react";
-import {
-  Controller,
-  useFieldArray,
-  useFormContext,
-  useWatch,
-} from "react-hook-form";
+import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { InputNumberField } from "../../../../../components/AntDesignComponent";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomTable from "../../../../../components/CustomTable";
@@ -86,15 +81,10 @@ const NPRItemPKList = () => {
     formMethod: { control, register, errors, watch },
     readOnly,
   } = useFormContext();
-  // const { fields } = useFieldArray({
-  //   control: control,
-  //   name: "npr_price_detail",
-  // });
-  const packaging = useWatch({
+  const { fields } = useFieldArray({
+    control: control,
     name: "npr_price_detail",
-    control,
   });
-  console.log("packaging", packaging);
   return (
     <>
       {/* <div className="under-line mb-1">
@@ -112,9 +102,9 @@ const NPRItemPKList = () => {
           errors,
           readOnly,
         })}
-        dataSource={packaging}
+        dataSource={fields}
         bordered
-        rowKey={"npr_price_detail_id"}
+        rowKey={"id"}
         pagination={false}
         rowClassName="row-table-detail"
       />

@@ -40,6 +40,7 @@ import moment from "moment";
 
 const initialState = {
   npr_id: null,
+  npr_price_id: null,
   npr_price_request_date: null,
   npr_price_request_by: null,
   user_name: null,
@@ -453,10 +454,11 @@ const NPRComponentsTab = () => {
                 <>
                   <Checkbox
                     checked={trans_id === 4 ? true : false}
-                    disabled={method === "view"}
+                    disabled={method === "view" || state.npr_price_id === null}
                     onChange={(e) =>
                       onChangeHead({
                         tg_trans_status_id: e.target.checked ? 4 : 2,
+                        tg_trans_close_id: e.target.checked ? 3 : 1,
                       })
                     }
                   />
@@ -520,8 +522,12 @@ const NPRComponentsTab = () => {
                         val !== undefined
                           ? onChangeHead({
                               npr_price_request_by: record.data.employee_no,
+                              tg_trans_status_id: 2,
                             })
-                          : onChangeHead({ npr_price_request_by: null })
+                          : onChangeHead({
+                              npr_price_request_by: null,
+                              tg_trans_status_id: 1,
+                            })
                       }
                     />
                   )}

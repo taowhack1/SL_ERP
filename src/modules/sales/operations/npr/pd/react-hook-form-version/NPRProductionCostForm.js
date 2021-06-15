@@ -15,7 +15,6 @@ import Text from "antd/lib/typography/Text";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { getProductionEmp } from "../../../../../actions/hrm";
 import moment from "moment";
-import { sortData } from "../../../../../include/js/function_main";
 const NPRPDContext = React.createContext();
 
 const initialState = {
@@ -31,9 +30,9 @@ const initialState = {
   npr_product_cost_response_by: null,
   tg_trans_status_id: 1,
   tg_trans_close_id: 1,
-  npr_product_cost_detail: [],
-  npr_price_detail: [],
-  npr_formula_detail: [],
+  npr_product_cost_detail: [1, 2, 3],
+  npr_price_detail: [4, 5, 6],
+  npr_formula_detail: [7, 8, 9],
 };
 const NPRPRoductionCostForm = () => {
   const dispatch = useDispatch();
@@ -100,7 +99,36 @@ const NPRPRoductionCostForm = () => {
     formState: { errors },
     watch,
   } = useForm({
-    defaultValues: initialState,
+    defaultValues: {
+      npr_id: null,
+      npr_formula_id: null,
+      npr_product_cost_request_date: null,
+      npr_product_cost_request_by: null,
+      user_name: null,
+      npr_product_cost_remark: null,
+      commit: 1,
+      npr_product_cost_description: null,
+      npr_product_cost_response_date: null,
+      npr_product_cost_response_by: null,
+      tg_trans_status_id: 1,
+      tg_trans_close_id: 1,
+      npr_product_cost_detail: [],
+      npr_price_detail: [],
+      npr_formula_detail: [],
+    },
+  });
+
+  const { fields: batchFields } = useFieldArray({
+    control,
+    name: "npr_product_cost_detail",
+  });
+  const { fields: formulaFields } = useFieldArray({
+    control,
+    name: "npr_formula_detail",
+  });
+  const { fields: packageFields } = useFieldArray({
+    control,
+    name: "npr_price_detail",
   });
 
   const contextValue = React.useMemo(
@@ -124,24 +152,35 @@ const NPRPRoductionCostForm = () => {
           npr_product_cost_detail,
           npr_formula_detail,
           npr_price_detail,
+          npr_formula_id,
+          npr_formula_no,
+          npr_no,
+          npr_responsed_required_by,
+          sales_created_by,
         } = respCost.data;
-        console.log(
-          `ALL Detail`,
+        reset({
           npr_product_cost_detail,
           npr_formula_detail,
-          npr_price_detail
-        );
-        reset(respCost.data);
+          npr_price_detail,
+          npr_formula_id,
+          npr_formula_no,
+          npr_no,
+          npr_responsed_required_by,
+          sales_created_by,
+        });
       }
     };
     dispatch(getProductionEmp());
     getData();
-  }, [id]);
+  }, [id, method]);
   const onSubmit = (data) => {
     console.log("SUBMIT");
     console.log("onSubmit ", data);
   };
-  console.log("Watch()", watch());
+  console.log("@DATA Main : ", watch());
+  console.log("@DATA batch : ", batchFields);
+  console.log("@DATA formula : ", formulaFields);
+  console.log("@DATA package : ", packageFields);
   return (
     <>
       <FormProvider {...contextValue}>

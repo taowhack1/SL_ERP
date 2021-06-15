@@ -14,10 +14,9 @@ import NPRItemPackageList from "./NPRItemPackageList";
 import NPRItemRMList from "./NPRItemRMList";
 import moment from "moment";
 
-const NPRProductionCostFormCosting = () => {
+const NPRProductionCostFormTabCosting = () => {
   const {
-    formMethod: { control, register, formState: error, watch },
-    fieldArray: { field, append, remove },
+    formMethod: { control, register, errors, watch },
     readOnly,
     PDEmp,
   } = useFormContext();
@@ -62,9 +61,9 @@ const NPRProductionCostFormCosting = () => {
                     }
                     control={control}
                     name="npr_product_cost_response_by"
-                    rules={{ required: true }}
+                    // rules={{ required: true }}
                   />
-                  {error && error?.npr_product_cost_response_by && (
+                  {errors && errors?.npr_product_cost_response_by && (
                     <span className="require">This field is required.</span>
                   )}
                 </>
@@ -101,9 +100,9 @@ const NPRProductionCostFormCosting = () => {
                     }
                     control={control}
                     name="npr_product_cost_response_date"
-                    rules={{ required: true }}
+                    // rules={{ required: true }}
                   />
-                  {error && error?.npr_product_cost_response_date && (
+                  {errors && errors?.npr_product_cost_response_date && (
                     <span className="require">This field is required.</span>
                   )}
                 </>
@@ -112,17 +111,17 @@ const NPRProductionCostFormCosting = () => {
           </Row>
         </Col>
       </Row>
-      <div className="mt-3">
+      {/* <div className="mt-3">
         <NPRBatchSize />
-      </div>
-      <div className="mt-3">
+      </div> */}
+      {/* <div className="mt-3">
         <NPRItemRMList />
-      </div>
-      <div className="mt-3">
+      </div> */}
+      {/* <div className="mt-3">
         <NPRItemPackageList />
-      </div>
+      </div> */}
     </div>
   );
 };
 
-export default React.memo(NPRProductionCostFormCosting);
+export default React.memo(NPRProductionCostFormTabCosting);
