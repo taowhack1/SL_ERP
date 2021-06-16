@@ -477,7 +477,7 @@ const saveNPRPDCost = (data) => {
           .then((res) => {
             console.log("POST res", res);
             if (res.status === 200) {
-              message.success("Update Successfully..");
+              message.success("Save Successfully..");
               return { success: true, data: res.data };
             } else {
               message.error(errorText.getData);

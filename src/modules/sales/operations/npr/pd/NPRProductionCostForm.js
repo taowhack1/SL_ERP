@@ -233,10 +233,7 @@ const NPRPRoductionCostForm = () => {
 
     const resp = await saveNPRPDCost(saveData);
     if (resp.success) {
-      message.success("Save Successfully.", 4);
       setMethod("view");
-    } else {
-      message.error("Error. Can't Save. Plase Contact Admin.", 4);
     }
   };
   return (
