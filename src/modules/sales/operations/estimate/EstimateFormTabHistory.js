@@ -5,6 +5,10 @@ import Text from "antd/lib/typography/Text";
 import { Modal, Button, Table, Row, Col, Divider, InputNumber } from "antd";
 import CustomSelect from "../../../../components/CustomSelect";
 import { CalculatorOutlined } from "@ant-design/icons";
+import {
+  convertDigit,
+  getNumberFormat,
+} from "../../../../include/js/main_config";
 const columns = (showModal) => [
   {
     title: "Batch Size.",
@@ -251,9 +255,7 @@ const EstimateFormTabHistory = () => {
               <InputNumber
                 min={0}
                 style={{ width: "100%" }}
-                formatter={(value) =>
-                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                }
+                {...getNumberFormat(4)}
                 onChange={(value) => {
                   setCostRM(value);
                 }}
@@ -301,7 +303,7 @@ const EstimateFormTabHistory = () => {
               <Text strong>=</Text>
             </Col>
             <Col span={3}>
-              <Text>{totalRM}</Text>
+              <Text>{convertDigit(totalRM, 4) ?? "-"}</Text>
               {/* <InputNumber
                 style={{ width: "100%" }}
                 disabled={true}
@@ -387,7 +389,7 @@ const EstimateFormTabHistory = () => {
               <Text strong>=</Text>
             </Col>
             <Col span={3}>
-              <Text>{totalPK}</Text>
+              <Text>{convertDigit(totalPK, 4) ?? "-"}</Text>
               {/* <InputNumber
                 style={{ width: "100%" }}
                 disabled={true}
@@ -471,7 +473,7 @@ const EstimateFormTabHistory = () => {
               <Text strong>=</Text>
             </Col>
             <Col span={3}>
-              <Text>{totalCS}</Text>
+              <Text>{convertDigit(totalCS, 4) ?? "-"}</Text>
               {/* <InputNumber
                 style={{ width: "100%" }}
                 disabled={true}
@@ -497,7 +499,7 @@ const EstimateFormTabHistory = () => {
               <Text strong>Total </Text>
             </Col>
             <Col span={3}>
-              <Text>{total}</Text>
+              <Text>{convertDigit(total, 4) ?? "-"}</Text>
               {/* <InputNumber
                 style={{ width: "100%" }}
                 disabled={true}
