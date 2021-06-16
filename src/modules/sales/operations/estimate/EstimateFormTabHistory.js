@@ -114,6 +114,7 @@ const EstimateFormTabHistory = () => {
   const [markupPK, setMarkupPK] = useState(10);
   const [markupCS, setMarkupCS] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [display, setDisplay] = useState(true);
   const reCal = () => {
     console.log("recal");
     const preTotalRM = costRM + costRM * (lostRM / 100);
@@ -128,6 +129,7 @@ const EstimateFormTabHistory = () => {
     setTotal(totalCSValue + totalPKValue + totalRMValue);
     setLoading(true);
     setTimeout(() => {
+      setDisplay(false);
       setLoading(false);
     }, 2000);
   };
@@ -189,10 +191,23 @@ const EstimateFormTabHistory = () => {
       <Modal
         title='Edit Estimate '
         visible={visible}
-        onOk={handleOk}
+        onCancel={handleCancel}
         width={1000}
         confirmLoading={confirmLoading}
-        onCancel={handleCancel}>
+        footer={[
+          <Button key='back' onClick={handleCancel} className='mr-5'>
+            Discard
+          </Button>,
+          <Button
+            key='submit'
+            type={display ? "" : "primary"}
+            style={{ width: "10%" }}
+            disabled={display}
+            onClick={handleOk}
+            loading={confirmLoading}>
+            Save
+          </Button>,
+        ]}>
         <Row>
           <Col span={3}>
             <Text strong>Batch Size</Text>
@@ -286,11 +301,12 @@ const EstimateFormTabHistory = () => {
               <Text strong>=</Text>
             </Col>
             <Col span={3}>
-              <InputNumber
+              <Text>{totalRM}</Text>
+              {/* <InputNumber
                 style={{ width: "100%" }}
                 disabled={true}
                 value={totalRM}
-              />
+              /> */}
               {/*total  */}
             </Col>
             <Col span={3}></Col>
@@ -371,11 +387,12 @@ const EstimateFormTabHistory = () => {
               <Text strong>=</Text>
             </Col>
             <Col span={3}>
-              <InputNumber
+              <Text>{totalPK}</Text>
+              {/* <InputNumber
                 style={{ width: "100%" }}
                 disabled={true}
                 value={totalPK}
-              />
+              /> */}
               {/*total  */}
             </Col>
             <Col span={3}></Col>
@@ -454,11 +471,12 @@ const EstimateFormTabHistory = () => {
               <Text strong>=</Text>
             </Col>
             <Col span={3}>
-              <InputNumber
+              <Text>{totalCS}</Text>
+              {/* <InputNumber
                 style={{ width: "100%" }}
                 disabled={true}
                 value={totalCS}
-              />
+              /> */}
               {/*total  */}
             </Col>
             <Col span={3}></Col>
@@ -479,11 +497,12 @@ const EstimateFormTabHistory = () => {
               <Text strong>Total </Text>
             </Col>
             <Col span={3}>
-              <InputNumber
+              <Text>{total}</Text>
+              {/* <InputNumber
                 style={{ width: "100%" }}
                 disabled={true}
                 value={total}
-              />
+              /> */}
               {/*total  */}
             </Col>
             <Col span={3}></Col>
