@@ -116,13 +116,23 @@ const EstimateFormTabHistory = () => {
   const [loading, setLoading] = useState(false);
   const reCal = () => {
     console.log("recal");
+    const preTotalRM = costRM + costRM * (lostRM / 100);
+    const preTotalPK = costPK + costPK * (lostPK / 100);
+    const preTotalCS = costCS + costCS;
+    setTotalRM(preTotalRM + preTotalRM * (markupRM / 100));
+    setTotalPK(preTotalPK + preTotalPK * (markupPK / 100));
+    setTotalCS(preTotalCS + preTotalCS * (markupCS / 100));
+    const totalRMValue = preTotalRM + preTotalRM * (markupRM / 100);
+    const totalPKValue = preTotalPK + preTotalPK * (markupPK / 100);
+    const totalCSValue = preTotalCS + preTotalCS * (markupCS / 100);
+    setTotal(totalCSValue + totalPKValue + totalRMValue);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   };
   const CalculateOnchange = () => {};
-  const CalculateValueBatch = (e) => {
+  const CalculateValueBatch = () => {
     const costRMValue = 5000;
     const costPKValue = 4000;
     const costCSValue = 6000;
@@ -131,7 +141,6 @@ const EstimateFormTabHistory = () => {
     const markupRMValue = 20;
     const markupPKValue = 20;
     const markupCSValue = 20;
-    console.log(e);
     setCostRM(costRMValue);
     setCostPK(costPKValue);
     setCostCS(costCSValue);
@@ -143,12 +152,16 @@ const EstimateFormTabHistory = () => {
     const preTotalRM = costRMValue + costRMValue * (lostRMValue / 100);
     const preTotalPK = costPKValue + costPKValue * (lostPKValue / 100);
     const preTotalCS = costCSValue + costCSValue;
+    const totalRMValue = preTotalRM + preTotalRM * (markupRMValue / 100);
+    const totalPKValue = preTotalPK + preTotalPK * (markupPKValue / 100);
+    const totalCSValue = preTotalCS + preTotalCS * (markupCSValue / 100);
     setTotalRM(preTotalRM + preTotalRM * (markupRMValue / 100));
     setTotalPK(preTotalPK + preTotalPK * (markupPKValue / 100));
     setTotalCS(preTotalCS + preTotalCS * (markupCSValue / 100));
+    setTotal(totalCSValue + totalPKValue + totalRMValue);
   };
   const CalculatePackage = () => {};
-  const CalculateCost = () => {};
+  const CalculateTotal = () => {};
   return (
     <>
       <Button className='primary' onClick={showModal}>
@@ -305,7 +318,17 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
 
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} min={0} value={costPK} />
+              <InputNumber
+                style={{ width: "100%" }}
+                min={0}
+                value={costPK}
+                formatter={(value) =>
+                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                onChange={(value) => {
+                  setCostPK(value);
+                }}
+              />
               {/*ราคาต้นทุน  */}
             </Col>
             <Col span={3} style={{ textAlign: "center" }}>
@@ -319,6 +342,9 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
+                onChange={(value) => {
+                  setLostPK(value);
+                }}
                 value={lostPK}
               />
               {/*เผื่อเสีย  */}
@@ -334,6 +360,9 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
+                onChange={(value) => {
+                  setMarkupPK(value);
+                }}
                 value={markupPK}
               />
               {/*mark up  */}
@@ -374,7 +403,18 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
 
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} min={0} value={costCS} />
+              <InputNumber
+                style={{ width: "100%" }}
+                min={0}
+                formatter={(value) =>
+                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                onChange={(value) => {
+                  setCostCS(value);
+                }}
+                value={costCS}
+              />
+
               {/*ราคาต้นทุน  */}
             </Col>
             <Col span={3} style={{ textAlign: "center" }}>
@@ -403,6 +443,9 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
+                onChange={(value) => {
+                  setMarkupCS(value);
+                }}
                 value={markupCS}
               />
               {/*mark up  */}
