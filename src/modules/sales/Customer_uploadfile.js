@@ -175,6 +175,7 @@ const Customer_uploadfile = ({
   console.log("customer_file", customer_file);
   console.log("Memorandum", Memorandum);
   console.log("company", company);
+  console.log("data_file.companycer", data_file?.companycer[0]);
   return (
     <>
       {!readOnly ? (
@@ -185,7 +186,7 @@ const Customer_uploadfile = ({
               <Row className='row-margin'>
                 <Col span={8} className='row-margin'>
                   <Text strong>
-                    company certificate Document (เอกสาร ภ.ธ. 20){" "}
+                    Company Certificate Document (เอกสาร ภ.ธ. 20){" "}
                   </Text>
                 </Col>
                 <Col span={8}>
@@ -193,8 +194,15 @@ const Customer_uploadfile = ({
                     {...uploadConfig}
                     onChange={handleChange(11)}
                     name='company'>
-                    {fileList2.length >= 1 ? null : uploadButton}
+                    {data_file?.companycer[0] === undefined ||
+                    data_file?.companycer[0] === null
+                      ? uploadButton
+                      : null}
                   </Upload>
+                  {data_file?.companycer[0] === undefined ||
+                  data_file?.companycer[0] === null ? (
+                    <Upload fileList={company}></Upload>
+                  ) : null}
                 </Col>
               </Row>
             </Col>
@@ -208,8 +216,15 @@ const Customer_uploadfile = ({
                     {...uploadConfig}
                     onChange={handleChange(12)}
                     name='memorandum'>
-                    <Button icon={<UploadOutlined />}>Select File</Button>
+                    {data_file?.memorandum[0] === undefined ||
+                    data_file?.memorandum[0] === null
+                      ? uploadButton
+                      : null}
                   </Upload>
+                  {data_file?.memorandum[0] === undefined ||
+                  data_file?.memorandum[0] === null ? (
+                    <Upload fileList={Memorandum}></Upload>
+                  ) : null}
                 </Col>
               </Row>
             </Col>
