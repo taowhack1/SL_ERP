@@ -100,9 +100,9 @@ const EstimateFormTabHistory = () => {
   //? x = ( ราคาต้นทุน + ( ราคาต้นทุน * ( เผื่อเสีย / 100 ) ) )
   //? total = x + ( x * ( markup / 100 ) )
 
-  const [ptotal, setPTotal] = useState(0);
+  const [total, setTotal] = useState(0);
   const [totalRM, setTotalRM] = useState(0);
-  const [totalPK, setTotal] = useState(0);
+  const [totalPK, setTotalPK] = useState(0);
   const [totalCS, setTotalCS] = useState(0);
   const [costRM, setCostRM] = useState(0);
   const [costPK, setCostPK] = useState(0);
@@ -122,15 +122,30 @@ const EstimateFormTabHistory = () => {
     }, 2000);
   };
   const CalculateOnchange = () => {};
-  const CalculateRawmat = (e) => {
-    // setCost(e && e?.cost ? e.cost : cost);
-    // setLost(e && e?.lost ? e.lost : lost);
-    // setMarkup(e && e?.markup ? e.markup : markup);
+  const CalculateValueBatch = (e) => {
+    const costRMValue = 5000;
+    const costPKValue = 4000;
+    const costCSValue = 6000;
+    const lostRMValue = 5;
+    const lostPKValue = 5;
+    const markupRMValue = 20;
+    const markupPKValue = 20;
+    const markupCSValue = 20;
     console.log(e);
-
-    // setPTotal(cost + cost * (lost / 100));
-
-    // setTotal(ptotal + ptotal * (markup / 100));
+    setCostRM(costRMValue);
+    setCostPK(costPKValue);
+    setCostCS(costCSValue);
+    setLostRM(5);
+    setLostPK(5);
+    setMarkupRM(20);
+    setMarkupPK(20);
+    setMarkupCS(20);
+    const preTotalRM = costRMValue + costRMValue * (lostRMValue / 100);
+    const preTotalPK = costPKValue + costPKValue * (lostPKValue / 100);
+    const preTotalCS = costCSValue + costCSValue;
+    setTotalRM(preTotalRM + preTotalRM * (markupRMValue / 100));
+    setTotalPK(preTotalPK + preTotalPK * (markupPKValue / 100));
+    setTotalCS(preTotalCS + preTotalCS * (markupCSValue / 100));
   };
   const CalculatePackage = () => {};
   const CalculateCost = () => {};
@@ -177,7 +192,7 @@ const EstimateFormTabHistory = () => {
               field_id='label'
               field_name='value'
               onChange={(e) => {
-                CalculateRawmat();
+                CalculateValueBatch();
               }}></CustomSelect>
           </Col>
         </Row>
@@ -211,9 +226,10 @@ const EstimateFormTabHistory = () => {
                 formatter={(value) =>
                   `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 }
-                onChange={(e) => {
-                  CalculateRawmat({ cost: e });
+                onChange={(value) => {
+                  setCostRM(value);
                 }}
+                value={costRM}
               />
               {/*ราคาต้นทุน  */}
             </Col>
@@ -228,9 +244,10 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
-                onChange={(e) => {
-                  CalculateRawmat({ lost: e });
+                onChange={(value) => {
+                  setLostRM(value);
                 }}
+                value={lostRM}
               />
               {/*เผื่อเสีย  */}
             </Col>
@@ -243,11 +260,12 @@ const EstimateFormTabHistory = () => {
                 defaultValue={10}
                 min={0}
                 max={100}
-                onChange={(e) => {
-                  CalculateRawmat({ markup: e });
+                onChange={(value) => {
+                  setMarkupRM(value);
                 }}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
+                value={markupRM}
               />
               {/*mark up  */}
             </Col>
@@ -266,7 +284,7 @@ const EstimateFormTabHistory = () => {
           </Row>
           <Divider />
           <Text strong>
-            <u>ราคาวัตถุดิบ packinging</u>
+            <u>ราคาวัตถุดิบ packaging</u>
           </Text>
           <Row gutter={[8, 8]} className='mt-1'>
             <Col span={3} style={{ textAlign: "center" }}>
@@ -287,7 +305,7 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
 
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} min={0} />
+              <InputNumber style={{ width: "100%" }} min={0} value={costPK} />
               {/*ราคาต้นทุน  */}
             </Col>
             <Col span={3} style={{ textAlign: "center" }}>
@@ -301,6 +319,7 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
+                value={lostPK}
               />
               {/*เผื่อเสีย  */}
             </Col>
@@ -315,6 +334,7 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
+                value={markupPK}
               />
               {/*mark up  */}
             </Col>
@@ -322,7 +342,11 @@ const EstimateFormTabHistory = () => {
               <Text strong>=</Text>
             </Col>
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} disabled={true} />
+              <InputNumber
+                style={{ width: "100%" }}
+                disabled={true}
+                value={totalPK}
+              />
               {/*total  */}
             </Col>
             <Col span={3}></Col>
@@ -350,7 +374,7 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
 
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} min={0} />
+              <InputNumber style={{ width: "100%" }} min={0} value={costCS} />
               {/*ราคาต้นทุน  */}
             </Col>
             <Col span={3} style={{ textAlign: "center" }}>
@@ -379,6 +403,7 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
+                value={markupCS}
               />
               {/*mark up  */}
             </Col>
@@ -386,7 +411,11 @@ const EstimateFormTabHistory = () => {
               <Text strong>=</Text>
             </Col>
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} disabled={true} />
+              <InputNumber
+                style={{ width: "100%" }}
+                disabled={true}
+                value={totalCS}
+              />
               {/*total  */}
             </Col>
             <Col span={3}></Col>
@@ -407,7 +436,11 @@ const EstimateFormTabHistory = () => {
               <Text strong>Total </Text>
             </Col>
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} disabled={true} />
+              <InputNumber
+                style={{ width: "100%" }}
+                disabled={true}
+                value={total}
+              />
               {/*total  */}
             </Col>
             <Col span={3}></Col>
