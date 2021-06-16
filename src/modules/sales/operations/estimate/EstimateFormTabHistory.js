@@ -5,6 +5,10 @@ import Text from "antd/lib/typography/Text";
 import { Modal, Button, Table, Row, Col, Divider, InputNumber } from "antd";
 import CustomSelect from "../../../../components/CustomSelect";
 import { CalculatorOutlined } from "@ant-design/icons";
+import {
+  convertDigit,
+  getNumberFormat,
+} from "../../../../include/js/main_config";
 const columns = (showModal) => [
   {
     title: "Batch Size.",
@@ -100,9 +104,9 @@ const EstimateFormTabHistory = () => {
   //? x = ( ราคาต้นทุน + ( ราคาต้นทุน * ( เผื่อเสีย / 100 ) ) )
   //? total = x + ( x * ( markup / 100 ) )
 
-  const [ptotal, setPTotal] = useState(0);
+  const [total, setTotal] = useState(0);
   const [totalRM, setTotalRM] = useState(0);
-  const [totalPK, setTotal] = useState(0);
+  const [totalPK, setTotalPK] = useState(0);
   const [totalCS, setTotalCS] = useState(0);
   const [costRM, setCostRM] = useState(0);
   const [costPK, setCostPK] = useState(0);
@@ -114,26 +118,56 @@ const EstimateFormTabHistory = () => {
   const [markupPK, setMarkupPK] = useState(10);
   const [markupCS, setMarkupCS] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [display, setDisplay] = useState(true);
   const reCal = () => {
     console.log("recal");
+    const preTotalRM = costRM + costRM * (lostRM / 100);
+    const preTotalPK = costPK + costPK * (lostPK / 100);
+    const preTotalCS = costCS + costCS;
+    setTotalRM(preTotalRM + preTotalRM * (markupRM / 100));
+    setTotalPK(preTotalPK + preTotalPK * (markupPK / 100));
+    setTotalCS(preTotalCS + preTotalCS * (markupCS / 100));
+    const totalRMValue = preTotalRM + preTotalRM * (markupRM / 100);
+    const totalPKValue = preTotalPK + preTotalPK * (markupPK / 100);
+    const totalCSValue = preTotalCS + preTotalCS * (markupCS / 100);
+    setTotal(totalCSValue + totalPKValue + totalRMValue);
     setLoading(true);
     setTimeout(() => {
+      setDisplay(false);
       setLoading(false);
     }, 2000);
   };
   const CalculateOnchange = () => {};
-  const CalculateRawmat = (e) => {
-    // setCost(e && e?.cost ? e.cost : cost);
-    // setLost(e && e?.lost ? e.lost : lost);
-    // setMarkup(e && e?.markup ? e.markup : markup);
-    console.log(e);
-
-    // setPTotal(cost + cost * (lost / 100));
-
-    // setTotal(ptotal + ptotal * (markup / 100));
+  const CalculateValueBatch = () => {
+    const costRMValue = 5000;
+    const costPKValue = 4000;
+    const costCSValue = 6000;
+    const lostRMValue = 5;
+    const lostPKValue = 5;
+    const markupRMValue = 20;
+    const markupPKValue = 20;
+    const markupCSValue = 20;
+    setCostRM(costRMValue);
+    setCostPK(costPKValue);
+    setCostCS(costCSValue);
+    setLostRM(5);
+    setLostPK(5);
+    setMarkupRM(20);
+    setMarkupPK(20);
+    setMarkupCS(20);
+    const preTotalRM = costRMValue + costRMValue * (lostRMValue / 100);
+    const preTotalPK = costPKValue + costPKValue * (lostPKValue / 100);
+    const preTotalCS = costCSValue + costCSValue;
+    const totalRMValue = preTotalRM + preTotalRM * (markupRMValue / 100);
+    const totalPKValue = preTotalPK + preTotalPK * (markupPKValue / 100);
+    const totalCSValue = preTotalCS + preTotalCS * (markupCSValue / 100);
+    setTotalRM(preTotalRM + preTotalRM * (markupRMValue / 100));
+    setTotalPK(preTotalPK + preTotalPK * (markupPKValue / 100));
+    setTotalCS(preTotalCS + preTotalCS * (markupCSValue / 100));
+    setTotal(totalCSValue + totalPKValue + totalRMValue);
   };
   const CalculatePackage = () => {};
-  const CalculateCost = () => {};
+  const CalculateTotal = () => {};
   return (
     <>
       <Button className='primary' onClick={showModal}>
@@ -161,10 +195,23 @@ const EstimateFormTabHistory = () => {
       <Modal
         title='Edit Estimate '
         visible={visible}
-        onOk={handleOk}
+        onCancel={handleCancel}
         width={1000}
         confirmLoading={confirmLoading}
-        onCancel={handleCancel}>
+        footer={[
+          <Button key='back' onClick={handleCancel} className='mr-5'>
+            Discard
+          </Button>,
+          <Button
+            key='submit'
+            type={display ? "" : "primary"}
+            style={{ width: "10%" }}
+            disabled={display}
+            onClick={handleOk}
+            loading={confirmLoading}>
+            Save
+          </Button>,
+        ]}>
         <Row>
           <Col span={3}>
             <Text strong>Batch Size</Text>
@@ -177,7 +224,8 @@ const EstimateFormTabHistory = () => {
               field_id='label'
               field_name='value'
               onChange={(e) => {
-                CalculateRawmat();
+                CalculateValueBatch();
+                setDisplay(false);
               }}></CustomSelect>
           </Col>
         </Row>
@@ -208,12 +256,12 @@ const EstimateFormTabHistory = () => {
               <InputNumber
                 min={0}
                 style={{ width: "100%" }}
-                formatter={(value) =>
-                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                }
-                onChange={(e) => {
-                  CalculateRawmat({ cost: e });
+                {...getNumberFormat(4)}
+                onChange={(value) => {
+                  setCostRM(value);
+                  setDisplay(true);
                 }}
+                value={costRM}
               />
               {/*ราคาต้นทุน  */}
             </Col>
@@ -228,9 +276,11 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
-                onChange={(e) => {
-                  CalculateRawmat({ lost: e });
+                onChange={(value) => {
+                  setLostRM(value);
+                  setDisplay(true);
                 }}
+                value={lostRM}
               />
               {/*เผื่อเสีย  */}
             </Col>
@@ -243,11 +293,13 @@ const EstimateFormTabHistory = () => {
                 defaultValue={10}
                 min={0}
                 max={100}
-                onChange={(e) => {
-                  CalculateRawmat({ markup: e });
+                onChange={(value) => {
+                  setMarkupRM(value);
+                  setDisplay(true);
                 }}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
+                value={markupRM}
               />
               {/*mark up  */}
             </Col>
@@ -255,18 +307,19 @@ const EstimateFormTabHistory = () => {
               <Text strong>=</Text>
             </Col>
             <Col span={3}>
-              <InputNumber
+              <Text>{convertDigit(totalRM, 4) ?? "-"}</Text>
+              {/* <InputNumber
                 style={{ width: "100%" }}
                 disabled={true}
                 value={totalRM}
-              />
+              /> */}
               {/*total  */}
             </Col>
             <Col span={3}></Col>
           </Row>
           <Divider />
           <Text strong>
-            <u>ราคาวัตถุดิบ packinging</u>
+            <u>ราคาวัตถุดิบ packaging</u>
           </Text>
           <Row gutter={[8, 8]} className='mt-1'>
             <Col span={3} style={{ textAlign: "center" }}>
@@ -287,7 +340,18 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
 
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} min={0} />
+              <InputNumber
+                style={{ width: "100%" }}
+                min={0}
+                value={costPK}
+                formatter={(value) =>
+                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                onChange={(value) => {
+                  setCostPK(value);
+                  setDisplay(true);
+                }}
+              />
               {/*ราคาต้นทุน  */}
             </Col>
             <Col span={3} style={{ textAlign: "center" }}>
@@ -301,6 +365,11 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
+                onChange={(value) => {
+                  setLostPK(value);
+                  setDisplay(true);
+                }}
+                value={lostPK}
               />
               {/*เผื่อเสีย  */}
             </Col>
@@ -315,6 +384,11 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
+                onChange={(value) => {
+                  setMarkupPK(value);
+                  setDisplay(true);
+                }}
+                value={markupPK}
               />
               {/*mark up  */}
             </Col>
@@ -322,7 +396,12 @@ const EstimateFormTabHistory = () => {
               <Text strong>=</Text>
             </Col>
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} disabled={true} />
+              <Text>{convertDigit(totalPK, 4) ?? "-"}</Text>
+              {/* <InputNumber
+                style={{ width: "100%" }}
+                disabled={true}
+                value={totalPK}
+              /> */}
               {/*total  */}
             </Col>
             <Col span={3}></Col>
@@ -350,7 +429,19 @@ const EstimateFormTabHistory = () => {
             <Col span={3}></Col>
 
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} min={0} />
+              <InputNumber
+                style={{ width: "100%" }}
+                min={0}
+                formatter={(value) =>
+                  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                }
+                onChange={(value) => {
+                  setCostCS(value);
+                  setDisplay(true);
+                }}
+                value={costCS}
+              />
+
               {/*ราคาต้นทุน  */}
             </Col>
             <Col span={3} style={{ textAlign: "center" }}>
@@ -379,6 +470,11 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
+                onChange={(value) => {
+                  setMarkupCS(value);
+                  setDisplay(true);
+                }}
+                value={markupCS}
               />
               {/*mark up  */}
             </Col>
@@ -386,7 +482,12 @@ const EstimateFormTabHistory = () => {
               <Text strong>=</Text>
             </Col>
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} disabled={true} />
+              <Text>{convertDigit(totalCS, 4) ?? "-"}</Text>
+              {/* <InputNumber
+                style={{ width: "100%" }}
+                disabled={true}
+                value={totalCS}
+              /> */}
               {/*total  */}
             </Col>
             <Col span={3}></Col>
@@ -407,7 +508,12 @@ const EstimateFormTabHistory = () => {
               <Text strong>Total </Text>
             </Col>
             <Col span={3}>
-              <InputNumber style={{ width: "100%" }} disabled={true} />
+              <Text>{convertDigit(total, 4) ?? "-"}</Text>
+              {/* <InputNumber
+                style={{ width: "100%" }}
+                disabled={true}
+                value={total}
+              /> */}
               {/*total  */}
             </Col>
             <Col span={3}></Col>
