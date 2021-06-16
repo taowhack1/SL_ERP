@@ -168,9 +168,7 @@ const NPRBatchSize = () => {
   const append = () =>
     setBatchSize((prev) => sortData([...prev, initialState]));
   const remove = (id) =>
-    setBatchSize((prev) =>
-      sortData((prev) => prev.filter((obj) => obj.id === id))
-    );
+    setBatchSize((prev) => sortData(prev.filter((obj) => obj.id !== id)));
   const onChange = (id, data) =>
     setBatchSize((prev) =>
       prev.map((obj) => (obj.id === id ? { ...obj, ...data } : obj))

@@ -37,6 +37,9 @@ const NPRPRoductionCostForm = () => {
     (state) => state.auth.authData
   );
   const { production: PDEmp } = useSelector((state) => state.hrm.employee);
+
+  const { tg_trans_status_id: tg_trans } = costing;
+  console.log("tg_trans ", tg_trans);
   const layoutConfig = useMemo(
     () => ({
       projectId: 7,
@@ -46,7 +49,12 @@ const NPRPRoductionCostForm = () => {
       breadcrumb: ["Sales", "NPR"],
       search: false,
       create: "",
-      buttonAction: method === "view" ? ["Edit", "Back"] : ["Save", "Discard"],
+      buttonAction:
+        method === "view"
+          ? tg_trans === 4 && ![1].includes(department_id)
+            ? ["Back"]
+            : ["Edit", "Back"]
+          : ["Save", "Discard"],
       edit: () => {
         console.log("Click Edit");
         setMethod("edit");
@@ -72,7 +80,7 @@ const NPRPRoductionCostForm = () => {
         el.click();
       },
     }),
-    [state.npr_no, method]
+    [state.npr_no, method, tg_trans]
   );
   const {
     npr_no,
@@ -130,7 +138,6 @@ const NPRPRoductionCostForm = () => {
           npr_product_cost_request_by,
           npr_product_cost_request_date,
           npr_product_cost_response_date,
-          npr_product_cost_response_by,
           tg_trans_status_id,
           tg_trans_close_id,
           npr_id,
@@ -139,7 +146,8 @@ const NPRPRoductionCostForm = () => {
           sales_created_by,
           sales_created_by_no_name,
           npr_responsed_required_by,
-          rd_responsed_required_by_no_name,
+          npr_product_cost_response_by,
+          npr_product_cost_response_by_no_name,
           npr_formula_id,
           npr_formula_no,
           npr_formula_procedure,
@@ -155,7 +163,6 @@ const NPRPRoductionCostForm = () => {
           npr_product_cost_request_by,
           npr_product_cost_request_date,
           npr_product_cost_response_date,
-          npr_product_cost_response_by,
           tg_trans_status_id: tg_trans_status_id || 1,
           tg_trans_close_id: tg_trans_close_id || 1,
           npr_id,
@@ -164,7 +171,8 @@ const NPRPRoductionCostForm = () => {
           sales_created_by,
           sales_created_by_no_name,
           npr_responsed_required_by,
-          rd_responsed_required_by_no_name,
+          npr_product_cost_response_by,
+          npr_product_cost_response_by_no_name,
           npr_formula_id,
           npr_formula_no,
           npr_formula_procedure,
@@ -218,7 +226,7 @@ const NPRPRoductionCostForm = () => {
 
     const saveData = {
       ...costing,
-      npr_product_cost_detail: costing,
+      npr_product_cost_detail: batchSize,
       npr_formula_detail: rawMatt,
       npr_price_detail: packaging,
     };

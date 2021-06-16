@@ -61,16 +61,16 @@ const EstimateForm = () => {
       title: "SALES",
       home: "/sales",
       show: true,
-      breadcrumb: ["Sales", "NPR", "Estimate"],
+      breadcrumb: ["Sales", "Estimate"],
       search: false,
       create: "",
-      buttonAction: method === "view" ? ["", "Back"] : ["Save", "Discard"],
+      buttonAction: method === "view" ? ["Back"] : ["Save", "Discard"],
       edit: () => setMethod("edit"),
       action: [
         {
           name: (
             <span>
-              <PrinterOutlined className='pd-right-1 button-icon' />
+              <PrinterOutlined className="pd-right-1 button-icon" />
               Print NPR
             </span>
           ),
@@ -88,77 +88,78 @@ const EstimateForm = () => {
     <>
       <MainLayout {...layoutConfig}>
         <NPREstimateContext.Provider value={[]}>
-          <div id='form'>
+          <div id="form">
             <div
-              className='full-width text-center mb-2'
-              style={{ borderBottom: "1px solid #c0c0c0" }}>
+              className="full-width text-center mb-2"
+              style={{ borderBottom: "1px solid #c0c0c0" }}
+            >
               <h1>NPR. Estimate</h1>
             </div>
-            <div className='form-section'>
-              <Row className='mt-2 col-2' gutter={24}>
+            <div className="form-section">
+              <Row className="mt-2 col-2" gutter={24}>
                 <Col span={12}>
-                  <Row className='col-2 mt-1 mb-1'>
+                  <Row className="col-2 mt-1 mb-1">
                     <Col span={8}>
                       <Text strong>NPR No. :</Text>
                     </Col>
                     <Col span={16}>
-                      <Text className='text-value'>{npr_no || "-"}</Text>
+                      <Text className="text-value">{npr_no || "-"}</Text>
                     </Col>
                   </Row>
-                  <Row className='col-2 mt-1 mb-1'>
+                  <Row className="col-2 mt-1 mb-1">
                     <Col span={8}>
                       <Text strong>Product :</Text>
                     </Col>
                     <Col span={16}>
-                      <Text className='text-value'>
+                      <Text className="text-value">
                         {npr_product_no_name || "-"}
                       </Text>
                     </Col>
                   </Row>
-                  <Row className='col-2 mt-1 mb-1'>
+                  <Row className="col-2 mt-1 mb-1">
                     <Col span={8}>
                       <Text strong>Category :</Text>
                     </Col>
                     <Col span={16}>
-                      <Text className='text-value'>{category_name || "-"}</Text>
+                      <Text className="text-value">{category_name || "-"}</Text>
                     </Col>
                   </Row>
-                  <Row className='col-2 mt-1 mb-1'>
+                  <Row className="col-2 mt-1 mb-1">
                     <Col span={8}>
                       <Text strong>Customer :</Text>
                     </Col>
                     <Col span={16}>
-                      <Text className='text-value'>
+                      <Text className="text-value">
                         {npr_customer_name || "-"}
                       </Text>
                     </Col>
                   </Row>
                 </Col>
                 <Col span={12}>
-                  <Row className='col-2 mt-1 mb-1'>
+                  <Row className="col-2 mt-1 mb-1">
                     <Col span={8}>
                       <Text strong>Sales Person :</Text>
                     </Col>
                     <Col span={16}>
-                      <Text className='text-value'>
+                      <Text className="text-value">
                         {npr_created_by_no_name || "-"}
                       </Text>
                     </Col>
                   </Row>
-                  <Row className='col-2 mt-1 mb-1'>
+                  <Row className="col-2 mt-1 mb-1">
                     <Col span={8}>
                       <Text strong>Issued Date :</Text>
                     </Col>
                     <Col span={16}>
-                      <Text className='text-value'>{npr_created || "-"}</Text>
+                      <Text className="text-value">{npr_created || "-"}</Text>
                     </Col>
                   </Row>
-                  <Row className='col-2 mt-1 mb-1'>
+                  <Row className="col-2 mt-1 mb-1">
                     <Col span={8}>
                       <Text strong>Request Date :</Text>
                     </Col>
                     <Col span={16}>
-                      <Text className='text-value'>
+                      <Text className="text-value">
                         {npr_request_date || "-"}
                       </Text>
                     </Col>

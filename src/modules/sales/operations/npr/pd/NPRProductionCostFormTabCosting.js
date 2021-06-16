@@ -73,7 +73,9 @@ const NPRProductionCostFormTabCosting = () => {
             </Col>
             <Col span={16}>
               {readOnly ? (
-                <Text>{costing.npr_product_cost_response_by || "-"}</Text>
+                <Text>
+                  {costing.npr_product_cost_response_by_no_name || "-"}
+                </Text>
               ) : (
                 <CustomSelect
                   showSearch

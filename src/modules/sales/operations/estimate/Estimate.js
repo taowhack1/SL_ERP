@@ -32,7 +32,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text>Product</Text>
       </div>
     ),
@@ -44,7 +44,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text>Customer</Text>
       </div>
     ),
@@ -56,7 +56,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text>Sales Person</Text>
       </div>
     ),
@@ -71,7 +71,7 @@ const columns = [
     children: [
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <Text>RD</Text>
           </div>
         ),
@@ -169,7 +169,7 @@ const Estimate = () => {
             onRow={(record) => ({
               onClick: (e) => {
                 viewRecord(record);
-                keepLog.keep_log_action("View NPR : ", record.npr_no);
+                keepLog.keep_log_action("View Estimate NPR : ", record.npr_no);
               },
             })}
           />
