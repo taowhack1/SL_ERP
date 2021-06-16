@@ -445,6 +445,61 @@ const getNPRPDCost = (npr_id) => {
   }
 };
 
+const saveNPRPDCost = (data) => {
+  try {
+    return data.npr_product_cost_id
+      ? axios
+          .put(
+            `${apiNPRPDCost}/${data.npr_product_cost_id}`,
+            [data],
+            header_config
+          )
+          .then((res) => {
+            console.log("PUT res", res);
+            if (res.status === 200) {
+              message.success("Update Successfully..");
+              return { success: true, data: res.data };
+            } else {
+              message.error(errorText.getData);
+              return { success: false, data: null };
+            }
+          })
+          .catch((error) => {
+            if (!error.response) {
+              message.error(errorText.network);
+            } else {
+              message.error(errorText.formValid);
+            }
+            return { success: false, data: null, error: error.response };
+          })
+      : axios
+          .post(`${apiNPRPDCost}`, [data], header_config)
+          .then((res) => {
+            console.log("POST res", res);
+            if (res.status === 200) {
+              message.success("Update Successfully..");
+              return { success: true, data: res.data };
+            } else {
+              message.error(errorText.getData);
+              return { success: false, data: null };
+            }
+          })
+          .catch((error) => {
+            if (!error.response) {
+              message.error(errorText.network);
+            } else {
+              message.error(errorText.formValid);
+            }
+            return { success: false, data: null, error: error.response };
+          });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
+
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,
@@ -463,4 +518,5 @@ export {
   getNPRPkPrice,
   saveNPRPkPrice,
   getNPRPDCost,
+  saveNPRPDCost,
 };

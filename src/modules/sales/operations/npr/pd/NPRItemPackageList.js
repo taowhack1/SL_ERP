@@ -1,26 +1,27 @@
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useContext } from "react";
 import {
   Controller,
   useFieldArray,
   useFormContext,
   useWatch,
 } from "react-hook-form";
-import { InputNumberField } from "../../../../../components/AntDesignComponent";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomTable from "../../../../../components/CustomTable";
 import {
   convertDigit,
   getNumberFormat,
 } from "../../../../../include/js/main_config";
-const columns = ({ control, readOnly, register, errors }) => [
+import { InputNumber } from "antd";
+import { NPRPDContext } from "./NPRProductionCostForm";
+const columns = ({ readOnly, errors, onChange }) => [
   {
     title: "No.",
     dataIndex: "id",
     width: "5%",
     align: "center",
     className: "tb-col-sm",
-    render: (val, _, index) => index + 1,
+    render: (val, _, index) => val + 1,
   },
   {
     title: (
@@ -39,82 +40,54 @@ const columns = ({ control, readOnly, register, errors }) => [
         <CustomLabel require readOnly={readOnly} label={"% Waste"} />
       </div>
     ),
-    dataIndex: "npr_product_cost_waste_percent_qty",
+    dataIndex: "npr_price_detail_waste_percent_qty",
     align: "right",
     width: "20%",
     className: "tb-col-sm",
     render: (val, record, key) =>
       readOnly ? (
-        <Text>{convertDigit(val || 0, 3)}</Text>
+        <Text>{convertDigit(val || 0, 4)}</Text>
       ) : (
         <>
-          <input
-            {...register(`npr_formula_detail.${key}.npr_formula_detail_id`)}
-            className="d-none"
+          <InputNumber
+            name="npr_price_detail_waste_percent_qty"
+            placeholder="% Waste"
+            min={0}
+            step={1}
+            value={val}
+            onChange={(data) => {
+              onChange(record.id, {
+                npr_price_detail_waste_percent_qty: data,
+              });
+            }}
+            size="small"
+            className="full-width"
+            {...getNumberFormat(4)}
           />
-          <Controller
-            control={control}
-            name={`npr_formula_detail.${key}.npr_formula_detail_waste_percent_qty`}
-            render={({ field: { value, onChange } }) =>
-              InputNumberField({
-                fieldProps: {
-                  ...getNumberFormat(4),
-                  placeholder: "% Waste",
-                  step: 1,
-                  min: 0,
-                  size: "small",
-                  className: "full-width",
-                  value,
-                  onChange: (val) => onChange(val),
-                },
-              })
-            }
-            defaultValue={val}
-            rules={{ required: true }}
-          />
-          {errors &&
-            errors?.npr_formula_detail?.key
-              ?.npr_formula_detail_waste_percent_qty && (
-              <span className="require">This field is required.</span>
-            )}
         </>
       ),
   },
 ];
 const NPRItemPKList = () => {
-  const {
-    formMethod: { control, register, errors, watch },
-    readOnly,
-  } = useFormContext();
-  // const { fields } = useFieldArray({
-  //   control: control,
-  //   name: "npr_price_detail",
-  // });
-  const packaging = useWatch({
-    name: "npr_price_detail",
-    control,
-  });
-  console.log("packaging", packaging);
+  const { packaging, setPackaging, readOnly } = useContext(NPRPDContext);
+  const onChange = (id, data) =>
+    setPackaging((prev) =>
+      prev.map((obj) => (obj.id === id ? { ...obj, ...data } : obj))
+    );
+  console.log("formula", packaging);
   return (
     <>
-      {/* <div className="under-line mb-1">
-        <Text strong>Procedure :</Text>
-      </div>
-      <p className="pre-wrap pd-left-2">{`${npr_formula_procedure}`}</p> */}
-
       <div className="under-line mb-1">
         <Text strong>Packaging</Text>
       </div>
       <CustomTable
         columns={columns({
-          control,
-          register,
-          errors,
+          onChange,
           readOnly,
         })}
         dataSource={packaging}
         bordered
-        rowKey={"npr_price_detail_id"}
+        rowKey={"id"}
         pagination={false}
         rowClassName="row-table-detail"
       />

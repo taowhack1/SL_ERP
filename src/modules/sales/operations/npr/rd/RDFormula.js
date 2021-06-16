@@ -112,7 +112,6 @@ const columns = ({ readOnly, itemList = [], deleteRow, onChange }) => [
         <InputNumber
           name="npr_formula_detail_percent_qty"
           placeholder="Percentage"
-          value={val}
           defaultValue={0.0}
           min={0.0}
           max={100}

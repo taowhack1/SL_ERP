@@ -5,22 +5,24 @@ import {
 } from "@ant-design/icons";
 import { Button, Col, InputNumber, Popconfirm, Row, Table } from "antd";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useContext } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { InputNumberField } from "../../../../../components/AntDesignComponent";
 import CustomTable from "../../../../../components/CustomTable";
+import { sortData } from "../../../../../include/js/function_main";
 import {
   convertDigit,
   getNumberFormat,
 } from "../../../../../include/js/main_config";
-const columns = ({ remove, readOnly = false, errors, control }) => [
+import { NPRPDContext } from "./NPRProductionCostForm";
+const columns = ({ remove, readOnly = false, onChange, errors }) => [
   {
     title: "No.",
     dataIndex: "id",
     width: "5%",
     align: "center",
     className: "tb-col-sm",
-    render: (val, _, index) => index + 1,
+    render: (val, _, index) => val + 1,
   },
   {
     title: (
@@ -28,34 +30,31 @@ const columns = ({ remove, readOnly = false, errors, control }) => [
         <Text>Batch Size</Text>
       </div>
     ),
-    dataIndex: "batch_size",
+    dataIndex: "npr_product_cost_detail_batch_size",
     align: "right",
     className: "tb-col-sm",
     render: (val, record, key) => (
       <>
         {readOnly ? (
-          <Text>{convertDigit(val, 3)}</Text>
+          <Text>{convertDigit(val, 4)}</Text>
         ) : (
           <>
-            <Controller
-              control={control}
-              name={`npr_product_cost_detail.${key}.npr_product_cost_detail_batch_size`}
-              render={({ field }) =>
-                InputNumberField({
-                  fieldProps: {
-                    ...getNumberFormat(3),
-                    placeholder: "Batch Size",
-                    step: 50,
-                    min: 0,
-                    size: "small",
-                    className: "full-width",
-                    ...field,
-                  },
-                })
-              }
-              defaultValue={val}
+            <InputNumber
+              name="npr_product_cost_detail_batch_size"
+              placeholder="Batch Size"
+              min={0}
+              step={1}
+              value={val}
+              onChange={(data) => {
+                onChange(record.id, {
+                  npr_product_cost_detail_batch_size: data,
+                });
+              }}
+              size="small"
+              className="full-width"
+              {...getNumberFormat(4)}
             />
-            {errors && errors?.npr_product_cost_response_date && (
+            {errors && errors?.npr_product_cost_detail_batch_size && (
               <span className="require">This field is required.</span>
             )}
           </>
@@ -74,30 +73,24 @@ const columns = ({ remove, readOnly = false, errors, control }) => [
     className: "tb-col-sm",
     render: (val, record, key) =>
       readOnly ? (
-        <Text>{convertDigit(val, 3)}</Text>
+        <Text>{convertDigit(val, 4)}</Text>
       ) : (
         <>
-          <Controller
-            control={control}
-            name={`npr_product_cost_detail.${key}.npr_product_cost_detail_fg_qty`}
-            render={({ field }) =>
-              InputNumberField({
-                fieldProps: {
-                  ...getNumberFormat(3),
-                  placeholder: "Batch Size",
-                  step: 1,
-                  min: 0,
-                  size: "small",
-                  className: "full-width",
-                  ...field,
-                },
-              })
-            }
-            defaultValue={val}
+          <InputNumber
+            name="npr_product_cost_detail_fg_qty"
+            placeholder="FG Qty"
+            min={0}
+            step={1}
+            value={val}
+            onChange={(data) => {
+              onChange(record.id, {
+                npr_product_cost_detail_fg_qty: data,
+              });
+            }}
+            size="small"
+            className="full-width"
+            {...getNumberFormat(4)}
           />
-          {errors && errors?.npr_product_cost_response_date && (
-            <span className="require">This field is required.</span>
-          )}
         </>
       ),
   },
@@ -112,31 +105,24 @@ const columns = ({ remove, readOnly = false, errors, control }) => [
     className: "tb-col-sm",
     render: (val, record, key) =>
       readOnly ? (
-        <Text>{convertDigit(val, 3)}</Text>
+        <Text>{convertDigit(val, 4)}</Text>
       ) : (
         <>
-          <Controller
-            control={control}
-            name={`npr_product_cost_detail.${key}.npr_product_cost_detail_cost`}
-            render={({ field: { value, onChange } }) =>
-              InputNumberField({
-                fieldProps: {
-                  ...getNumberFormat(3),
-                  placeholder: "Cost",
-                  step: 1,
-                  min: 0,
-                  size: "small",
-                  className: "full-width",
-                  value,
-                  onChange: (val) => onChange(val),
-                },
-              })
-            }
-            defaultValue={val}
+          <InputNumber
+            name="npr_product_cost_detail_cost"
+            placeholder="Cost"
+            min={0}
+            step={1}
+            value={val}
+            onChange={(data) => {
+              onChange(record.id, {
+                npr_product_cost_detail_cost: data,
+              });
+            }}
+            size="small"
+            className="full-width"
+            {...getNumberFormat(4)}
           />
-          {errors && errors?.npr_product_cost_response_date && (
-            <span className="require">This field is required.</span>
-          )}
         </>
       ),
   },
@@ -147,6 +133,7 @@ const columns = ({ remove, readOnly = false, errors, control }) => [
       </Text>
     ),
     align: "center",
+    dataIndex: "id",
     width: "5%",
     render: (value, record, index) => {
       if (readOnly) {
@@ -155,7 +142,7 @@ const columns = ({ remove, readOnly = false, errors, control }) => [
         return (
           <Popconfirm
             onConfirm={() => {
-              remove(index);
+              remove(value);
             }}
             title="Are you sure you want to delete this row？"
             okText="Yes"
@@ -176,28 +163,25 @@ const initialState = {
   uom_id: null,
 };
 const NPRBatchSize = () => {
-  const {
-    formMethod: { control, register, errors },
-    readOnly,
-    PDEmp,
-  } = useFormContext();
+  const { batchSize, setBatchSize, readOnly, PDEmp } = useContext(NPRPDContext);
 
-  const { fields, append, remove } = useFieldArray({
-    control: control,
-    name: "npr_product_cost_detail",
-  });
-
-  console.log("BatchSize", fields);
+  const append = () =>
+    setBatchSize((prev) => sortData([...prev, initialState]));
+  const remove = (id) =>
+    setBatchSize((prev) =>
+      sortData((prev) => prev.filter((obj) => obj.id === id))
+    );
+  const onChange = (id, data) =>
+    setBatchSize((prev) =>
+      prev.map((obj) => (obj.id === id ? { ...obj, ...data } : obj))
+    );
+  console.log("BatchSize", batchSize);
   return (
     <>
       <div className="under-line mb-1 d-flex flex-start flex-row">
         <Text strong>Batch Size</Text>
         {!readOnly && (
-          <Button
-            className="ml-2 primary"
-            size="small"
-            onClick={() => append(initialState)}
-          >
+          <Button className="ml-2 primary" size="small" onClick={append}>
             <PlusOutlined />
             Add Batch Size
           </Button>
@@ -205,8 +189,8 @@ const NPRBatchSize = () => {
       </div>
 
       <CustomTable
-        columns={columns({ remove, control, register, errors, readOnly })}
-        dataSource={fields}
+        columns={columns({ remove, readOnly, onChange })}
+        dataSource={batchSize}
         bordered
         rowKey={"id"}
         className="w-50 table-detail"
