@@ -225,6 +225,7 @@ const EstimateFormTabHistory = () => {
               field_name='value'
               onChange={(e) => {
                 CalculateValueBatch();
+                setDisplay(false);
               }}></CustomSelect>
           </Col>
         </Row>
@@ -258,6 +259,7 @@ const EstimateFormTabHistory = () => {
                 {...getNumberFormat(4)}
                 onChange={(value) => {
                   setCostRM(value);
+                  setDisplay(true);
                 }}
                 value={costRM}
               />
@@ -276,6 +278,7 @@ const EstimateFormTabHistory = () => {
                 parser={(value) => value.replace("%", "")}
                 onChange={(value) => {
                   setLostRM(value);
+                  setDisplay(true);
                 }}
                 value={lostRM}
               />
@@ -292,6 +295,7 @@ const EstimateFormTabHistory = () => {
                 max={100}
                 onChange={(value) => {
                   setMarkupRM(value);
+                  setDisplay(true);
                 }}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
@@ -345,6 +349,7 @@ const EstimateFormTabHistory = () => {
                 }
                 onChange={(value) => {
                   setCostPK(value);
+                  setDisplay(true);
                 }}
               />
               {/*ราคาต้นทุน  */}
@@ -362,6 +367,7 @@ const EstimateFormTabHistory = () => {
                 parser={(value) => value.replace("%", "")}
                 onChange={(value) => {
                   setLostPK(value);
+                  setDisplay(true);
                 }}
                 value={lostPK}
               />
@@ -380,6 +386,7 @@ const EstimateFormTabHistory = () => {
                 parser={(value) => value.replace("%", "")}
                 onChange={(value) => {
                   setMarkupPK(value);
+                  setDisplay(true);
                 }}
                 value={markupPK}
               />
@@ -430,6 +437,7 @@ const EstimateFormTabHistory = () => {
                 }
                 onChange={(value) => {
                   setCostCS(value);
+                  setDisplay(true);
                 }}
                 value={costCS}
               />
@@ -464,6 +472,7 @@ const EstimateFormTabHistory = () => {
                 parser={(value) => value.replace("%", "")}
                 onChange={(value) => {
                   setMarkupCS(value);
+                  setDisplay(true);
                 }}
                 value={markupCS}
               />
