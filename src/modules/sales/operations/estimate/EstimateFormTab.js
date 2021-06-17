@@ -14,4 +14,4 @@ const EstimateFormTab = () => {
   );
 };
 
-export default EstimateFormTab;
+export default React.memo(EstimateFormTab);

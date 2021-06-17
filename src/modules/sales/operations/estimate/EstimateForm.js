@@ -21,13 +21,12 @@ import { getUOMList } from "../../../../actions/inventory";
 import { get_qa_conditions_master } from "../../../../actions/qa/qaTestAction";
 import { useParams } from "react-router-dom";
 import EstimateFormTab from "../estimate/EstimateFormTab";
-const NPREstimateContext = React.createContext();
+export const NPREstimateContext = React.createContext();
 const EstimateForm = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { department, id } = useParams();
-  const initialState = {};
-  const [state, setState] = useState(initialState);
+  const { id } = useParams();
+  const [state, setState] = useState({});
   const [method, setMethod] = useState("view");
   const { user_name, department_id } = useSelector(
     (state) => state.auth.authData
@@ -78,16 +77,34 @@ const EstimateForm = () => {
         },
       ],
       back: history.goBack,
-      discard: "/sales/npr/pd",
+      discard: "/sales/operation/estimate",
       save: "function",
     }),
-    [state.npr_no]
+    [state.npr_no, method]
   );
+
+  const [modal, setModal] = useState({
+    visible: false,
+    loading: false,
+  });
+
+  const onOpen = () => setModal((prev) => ({ ...prev, visible: true }));
+  const onClose = () => setModal((prev) => ({ ...prev, visible: false }));
+
+  const contextValue = React.useMemo(
+    () => ({
+      onOpen,
+      onClose,
+      modal,
+    }),
+    [onOpen, onClose, modal]
+  );
+
   console.log("state", state);
   return (
     <>
       <MainLayout {...layoutConfig}>
-        <NPREstimateContext.Provider value={[]}>
+        <NPREstimateContext.Provider value={contextValue}>
           <div id="form">
             <div
               className="full-width text-center mb-2"
