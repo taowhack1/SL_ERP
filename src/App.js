@@ -114,6 +114,8 @@ import CompareFormulaMain from "./modules/sales/reporting/compareFormula";
 import NPRRoute from "./modules/sales/operations/npr/NPRRoute";
 import Estimate from "./modules/sales/operations/estimate/Estimate";
 import EstimateForm from "./modules/sales/operations/estimate/EstimateForm";
+import DeliveryOrder from "./modules/sales/operations/deliveryoder/DeliveryOrder";
+import DeliveryOrderForm from "./modules/sales/operations/deliveryoder/DeliveryOrderForm";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -391,6 +393,12 @@ const App = (props) => {
             {/* SALES */}
             <Route exact path='/sales'>
               <Sales />
+            </Route>
+            <Route exact path='/sales/operation/do'>
+              <DeliveryOrder />
+            </Route>
+            <Route exact path='/sales/operation/do/:id'>
+              <DeliveryOrderForm />
             </Route>
             <Route exact path='/sales/operation/estimate'>
               <Estimate />
