@@ -22,6 +22,8 @@ const apiGetNPRByYear = `/list/npr/npr_formula/year`;
 const apiNPRPkPrice = `/sales/npr_price`;
 // const apiGetNPRPDCost = `/sales/npr_product_cost`;
 const apiNPRPDCost = `/sales/npr_product_cost`;
+const apiNPREstimate = `/sales/npr_estimate`;
+const apiNPREstimateCalculator = `/sales/npr_estimate/calculate`;
 
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
@@ -500,6 +502,69 @@ const saveNPRPDCost = (data) => {
   }
 };
 
+const getNPREstimate = (id) => {
+  try {
+    if (!id) return { success: false, data: {}, message: "Missing id" };
+    return axios
+      .get(`${apiNPREstimate}/${id}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: {}, message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
+
+const getEstimateCalculate = (data) => {
+  const {
+    npr_id,
+    npr_formula_id,
+    npr_product_cost_detail_id,
+    npr_formula_detail_qty_markup,
+    npr_price_detail_qty_markup,
+    npr_product_cost_detail_qty_markup,
+  } = data;
+  const queryString = `${npr_id}&${npr_formula_id}&${npr_product_cost_detail_id}&${npr_formula_detail_qty_markup}&${npr_price_detail_qty_markup}&${npr_product_cost_detail_qty_markup}`;
+
+  try {
+    if (!queryString)
+      return { success: false, data: {}, message: "Missing queryString" };
+    return axios
+      .get(`${apiNPREstimateCalculator}/${queryString}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: {}, message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
+
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,
@@ -519,4 +584,6 @@ export {
   saveNPRPkPrice,
   getNPRPDCost,
   saveNPRPDCost,
+  getNPREstimate,
+  getEstimateCalculate,
 };

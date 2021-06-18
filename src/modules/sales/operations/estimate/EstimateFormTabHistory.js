@@ -3,7 +3,14 @@ import Text from "antd/lib/typography/Text";
 import { Button, Table } from "antd";
 import ModalEstimateFormCalculator from "./ModalEstimateFormCalculator";
 import { NPREstimateContext } from "./EstimateForm";
+import { getNPREstimate } from "../../../../actions/sales/nprActions";
 const columns = ({ onOpen }) => [
+  {
+    title: "No.",
+    align: "center",
+    width: "5%",
+    render: (_, _2, index) => index + 1,
+  },
   {
     title: "Batch Size.",
     align: "left",
@@ -12,7 +19,7 @@ const columns = ({ onOpen }) => [
     render: (val) => val,
   },
   {
-    title: "Date",
+    title: "Create Date",
     align: "center",
     dataIndex: "date",
     width: "10%",
@@ -58,13 +65,10 @@ const EstimateFormTabHistory = () => {
   //? x = ( ราคาต้นทุน + ( ราคาต้นทุน * ( เผื่อเสีย / 100 ) ) )
   //? total = x + ( x * ( markup / 100 ) )
 
-  useEffect(() => {
-    //Do Something.
-  }, []);
   return (
     <>
       <Button className="primary" onClick={onOpen}>
-        Add
+        Add New
       </Button>
 
       <Table
@@ -84,38 +88,3 @@ const EstimateFormTabHistory = () => {
 };
 
 export default React.memo(EstimateFormTabHistory);
-
-// const npr_data = [
-//   {
-//     batch_size:100,
-//     estimate_detail:[
-//       {
-//         name:"ราคาวัตถุดิบ "
-//       }
-//     ],
-//     npr_formula_detail:[
-//       {
-//         item:1,
-//         qtyByBatchSize:1,
-//         uom_no:"kg"
-//       },
-//       {
-//         item:2,
-//         qtyByBatchSize:0.5,
-//         uom_no:"kg"
-//       },
-//     ],
-//     npr_price_detail:[
-//       {
-//         item:1,
-//         qtyByBatchSize:100,
-//         uom_no:"pcs"
-//       },
-//       {
-//         item:2,
-//         qtyByBatchSize:100,
-//         uom_no:"pcs"
-//       },
-//     ]
-//   }
-// ]

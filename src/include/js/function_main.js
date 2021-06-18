@@ -12,6 +12,7 @@ import Text from "antd/lib/typography/Text";
 import { convertDigit } from "./main_config";
 
 export const sortData = (arrObject, fieldId) => {
+  if (!Array.isArray(arrObject)) return [];
   let copyData = arrObject;
   let temp = [];
   if (copyData.length) {
