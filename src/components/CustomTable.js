@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState } from "react";
 import { Button, Col, Row, Table } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -17,6 +19,7 @@ const CustomTable = (props) => {
     disabledAddRow,
     footer,
     scroll,
+    expandable,
     pagination,
     sortDirections,
   } = props;
@@ -53,27 +56,27 @@ const CustomTable = (props) => {
         dataSource={dataSource}
         onChange={onChange}
         bordered
-        size="small"
+        size='small'
         rowKey={rowKey}
         pagination={pagination !== undefined ? pagination : state.pagination}
         summary={props.summary ?? null}
         scroll={scroll ?? null}
+        expandable={expandable}
         footer={
           onAdd
             ? () => (
                 <>
                   {footer}
                   {!readOnly && (
-                    <div className="mt-1">
+                    <div className='mt-1'>
                       <Button
                         disabled={disabledAddRow ?? false}
-                        type="dashed"
+                        type='dashed'
                         onClick={() => {
                           onAdd();
                           focusLastPage && focusOnLast();
                         }}
-                        block
-                      >
+                        block>
                         <PlusOutlined /> Add a line
                       </Button>
                     </div>
