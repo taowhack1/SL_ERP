@@ -18,17 +18,32 @@ import {
 } from "@ant-design/icons";
 import { sortData } from "../../../../include/js/function_main";
 const DeliveryOrderFormDetail = () => {
+  const so_data = [
+    { id: 1, label: "SO21030001(mockup)", value: "	SO21030001" },
+    { id: 1, label: "SO21030002(mockup)", value: "	SO21030002" },
+  ];
+  const so_detail_data = [
+    {
+      id: 1,
+      label: "[ 401SRLA000100 ] SIRILAB ADVANCE REPAIR FACIAL SERUM 18 g",
+      value: "401SRLA000100",
+      quantity: 1,
+      unit: "pcs",
+      unitprice: "10",
+      totalprice: "10",
+    },
+  ];
   const initialStateDo = {
     doTable_Head: [],
-    doTable_Detail: [],
   };
   const initialStateDoHead = {
     id: 0,
     so: null,
+    doTable_Detail: [],
   };
   const initialStateDoDetail = {
     id: 0,
-    item: null,
+    item: 1,
   };
   const {
     method,
@@ -60,21 +75,25 @@ const DeliveryOrderFormDetail = () => {
     }
   }, []);
 
-  const onAddDetail = (npr_detail_id) =>
+  const onAddDetail = (index) =>
     setState((prev) => ({
-      ...prev,
+      doTable_Head: sortData([...prev.doTable_Head]),
       doTable_Detail: sortData([
-        ...prev.doTable_Detail,
-        { ...initialStateDoDetail, npr_detail_id },
+        ...prev.doTable_Head[index].doTable_Detail,
+        { ...initialStateDoDetail },
       ]),
     }));
-  const onAddHead = (npr_detail_id) =>
+  // const onAddDetail = () => {
+  //   console.log("data_detail", state.doTable_Head[0].doTable_Detail);
+  // doTable_Detail: sortData([
+  //   ...prev.doTable_Head[index].doTable_Detail,
+  //   { ...initialStateDoDetail },
+  // ]),
+  // };
+  const onAddHead = () =>
     setState((prev) => ({
       ...prev,
-      doTable_Head: sortData([
-        ...prev.doTable_Head,
-        { ...initialStateDoHead, npr_detail_id },
-      ]),
+      doTable_Head: sortData([...prev.doTable_Head, { ...initialStateDoHead }]),
     }));
   const onDeleteHead = (key) =>
     setState((prev) => ({
@@ -100,7 +119,7 @@ const DeliveryOrderFormDetail = () => {
             <Text>Item</Text>
           </div>
         ),
-        dataIndex: "",
+        dataIndex: "label",
         align: "left",
         width: "15%",
         ellipsis: true,
@@ -112,7 +131,7 @@ const DeliveryOrderFormDetail = () => {
             <Text>Quantity</Text>
           </div>
         ),
-        dataIndex: "",
+        dataIndex: "quantity",
         align: "right",
         width: "15%",
         className: "tb-col-sm",
@@ -123,7 +142,7 @@ const DeliveryOrderFormDetail = () => {
             <Text>Unit</Text>
           </div>
         ),
-        dataIndex: "",
+        dataIndex: "unit",
         align: "right",
         width: "10%",
         className: "tb-col-sm",
@@ -134,7 +153,7 @@ const DeliveryOrderFormDetail = () => {
             <Text>Unit Price</Text>
           </div>
         ),
-        dataIndex: "",
+        dataIndex: "unitprice",
         align: "left",
         width: "10%",
         className: "tb-col-sm",
@@ -145,7 +164,7 @@ const DeliveryOrderFormDetail = () => {
             <Text>Total Price</Text>
           </div>
         ),
-        dataIndex: "",
+        dataIndex: "totalprice",
         align: "left",
         width: "10%",
         className: "tb-col-sm",
@@ -158,12 +177,12 @@ const DeliveryOrderFormDetail = () => {
           // dataSource={state.npr_price_detail.filter(
           //   (obj) => obj.npr_detail_id === npr_detail_id
           // )}
-          dataSource={state.doTable_Detail}
+          dataSource={so_detail_data}
           bordered
           rowKey={"id"}
           pagination={false}
           rowClassName='row-table-detail'
-          onAdd={method !== "view" && (() => onAddDetail())}
+          onAdd={method !== "view" && (() => onAddDetail(index))}
         />
       </>
     );
@@ -190,10 +209,10 @@ const DeliveryOrderFormDetail = () => {
               placeholder={"So Number"}
               showSearch
               size={"small"}
+              data={so_data}
               className='full-width'
-              field_name='so_no'
-              field_id='so_id'
-              value={val}
+              field_name='label'
+              field_id='value'
             />
           </>
         ),
