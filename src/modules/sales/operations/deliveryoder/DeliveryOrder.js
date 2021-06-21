@@ -12,20 +12,26 @@ import { useHistory } from "react-router";
 import Search from "../../../../components/Search";
 const columnsSo = [
   {
-    title: "No.",
+    title: "No",
     align: "center",
     dataIndex: "id",
     width: "5%",
     render: (val) => val + 1,
   },
   {
-    title: "SO No.",
+    title: "SO No",
     align: "left",
     dataIndex: "so",
     width: "15%",
   },
   {
-    title: "Date",
+    title: "Customer",
+    align: "left",
+    dataIndex: "customer",
+    width: "15%",
+  },
+  {
+    title: "Due Date",
     align: "center",
     dataIndex: "date",
     width: "10%",
@@ -58,7 +64,7 @@ const columnsDo = [
     width: "15%",
   },
   {
-    title: "Date",
+    title: "Due Date",
     align: "center",
     dataIndex: "date",
     width: "10%",
@@ -69,16 +75,19 @@ const dataSo = [
     id: 0,
     so: "SO21030001",
     date: "17/06/2564",
+    customer: "customer",
   },
   {
     id: 1,
     so: "SO21030002",
     date: "17/06/2564",
+    customer: "customer",
   },
   {
     id: 2,
     so: "SO21030003",
     date: "17/06/2564",
+    customer: "customer",
   },
 ];
 const dataDo = [

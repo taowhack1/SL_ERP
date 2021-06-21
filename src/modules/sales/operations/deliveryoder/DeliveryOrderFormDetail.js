@@ -78,10 +78,10 @@ const DeliveryOrderFormDetail = () => {
   const onAddDetail = (index) =>
     setState((prev) => ({
       doTable_Head: sortData([...prev.doTable_Head]),
-      doTable_Detail: sortData([
-        ...prev.doTable_Head[index].doTable_Detail,
-        { ...initialStateDoDetail },
-      ]),
+      // doTable_Detail: sortData([
+      //   ...prev.doTable_Head[index].doTable_Detail,
+      //   { ...initialStateDoDetail },
+      // ]),
     }));
   // const onAddDetail = () => {
   //   console.log("data_detail", state.doTable_Head[0].doTable_Detail);
@@ -182,7 +182,7 @@ const DeliveryOrderFormDetail = () => {
           rowKey={"id"}
           pagination={false}
           rowClassName='row-table-detail'
-          onAdd={method !== "view" && (() => onAddDetail(index))}
+          // onAdd={method !== "view" && (() => onAddDetail(index))}
         />
       </>
     );
