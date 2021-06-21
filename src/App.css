@@ -883,12 +883,14 @@ div.flex-space {
   justify-content: space-between;
   align-items: center;
 }
-.font-25 {
+.font-xl .font-25 {
   font-size: 25px;
 }
+.font-l,
 .font-20 {
   font-size: 20px;
 }
+.font-m,
 .font-18 {
   font-size: 18px;
 }
@@ -1224,4 +1226,8 @@ tr.drop-over-upward td {
 
 .pre-wrap {
   white-space: pre-wrap;
+}
+
+.text-primary {
+  color: blue !important;
 }

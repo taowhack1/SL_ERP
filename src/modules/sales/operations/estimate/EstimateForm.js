@@ -1,14 +1,15 @@
 import MainLayout from "../../../../components/MainLayout";
 import Text from "antd/lib/typography/Text";
-import { Col, Row } from "antd";
+import { Col, message, Row } from "antd";
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { PrinterOutlined } from "@ant-design/icons";
+import { ExportOutlined, PrinterOutlined } from "@ant-design/icons";
 import {
   getNPRByID,
   getNPREstimate,
+  saveEstimate,
 } from "../../../../actions/sales/nprActions";
 import { useParams } from "react-router-dom";
 import EstimateFormTab from "../estimate/EstimateFormTab";
@@ -24,6 +25,7 @@ const initialState = {
   tg_trans_close_id: 1,
   npr_estimate_detail: [
     {
+      id: null,
       npr_estimate_detail_active: 1,
       npr_id: null,
       npr_formula_id: null,
@@ -67,6 +69,11 @@ const EstimateForm = () => {
   const { user_name, department_id } = useSelector(
     (state) => state.auth.authData
   );
+  const [modal, setModal] = useState({
+    visible: false,
+    loading: false,
+    estimateData: null,
+  });
   useEffect(() => {
     const getData = async (id) => {
       const resp = await getNPRByID(id);
@@ -78,17 +85,15 @@ const EstimateForm = () => {
       if (respEstimate.success) {
         setEstimate({
           ...respEstimate.data,
-          npr_estimate_detail: sortData(
-            respEstimate.data.npr_estimate_calculate
-          ),
-          npr_estimate_calculate: [],
+          npr_estimate_detail: sortData(respEstimate.data.npr_estimate_detail),
         });
       }
     };
     id && getData(id);
-  }, [id]);
+  }, [id, modal.visible]);
 
   const {
+    npr_id,
     npr_no,
     npr_product_no_name,
     category_name,
@@ -97,6 +102,31 @@ const EstimateForm = () => {
     npr_request_date,
     npr_customer_name,
   } = state;
+  const onOpen = (estimateData) =>
+    setModal((prev) => ({
+      ...prev,
+      visible: true,
+      estimateData: estimateData ?? null,
+    }));
+  const onClose = () => setModal((prev) => ({ ...prev, visible: false }));
+  const onPrint = () =>
+    window.open(
+      `${process.env.REACT_APP_REPORT_SERVER}/report_npr_estimate.aspx?npr_estimate_no=${estimate.npr_estimate_no}`
+    );
+  const onOpenQN = async () => {
+    const saveData = {
+      ...estimate,
+      commit: 1,
+      user_name,
+      tg_trans_status_id: 4,
+      tg_trans_close_id: 3,
+    };
+    console.log("saveData", saveData);
+    const resp = await saveEstimate(saveData, false);
+    if (resp.success) {
+      message.success("Open Quotations Success.", 4);
+    }
+  };
 
   const layoutConfig = useMemo(
     () => ({
@@ -119,34 +149,47 @@ const EstimateForm = () => {
           ),
           link: `${process.env.REACT_APP_REPORT_SERVER}/report_npr.aspx?npr_no=${state.npr_no}`,
         },
+        {
+          name: (
+            <span>
+              <PrinterOutlined className="pd-right-1 button-icon" />
+              Print Estimate Price
+            </span>
+          ),
+          link: `${process.env.REACT_APP_REPORT_SERVER}/report_npr_estimate.aspx?npr_estimate_no=${estimate.npr_estimate_no}`,
+        },
+        {
+          name: (
+            <span>
+              <ExportOutlined className="pd-right-1 button-icon" />
+              Estimate to Quotations
+            </span>
+          ),
+          link: `#`,
+          callBack: onOpenQN,
+        },
       ],
       back: history.goBack,
       discard: "/sales/operation/estimate",
       save: "function",
     }),
-    [state.npr_no, method]
+    [state, estimate, method, onOpenQN]
   );
-
-  const [modal, setModal] = useState({
-    visible: false,
-    loading: false,
-  });
-
-  const onOpen = () => setModal((prev) => ({ ...prev, visible: true }));
-  const onClose = () => setModal((prev) => ({ ...prev, visible: false }));
 
   const contextValue = React.useMemo(
     () => ({
+      npr_id,
       onOpen,
       onClose,
       modal,
       estimate,
       setEstimate,
+      user_name,
+      onPrint,
     }),
-    [onOpen, onClose, modal, estimate, setEstimate]
+    [npr_id, onOpen, onClose, modal, estimate, setEstimate, user_name, onPrint]
   );
 
-  console.log("estimate", estimate);
   return (
     <>
       <MainLayout {...layoutConfig}>

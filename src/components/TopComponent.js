@@ -131,7 +131,7 @@ function TopContent(props) {
                     {item.name}
                   </Text>
                 </Menu.Item>
-              ) : item.link ? (
+              ) : item.link !== "#" ? (
                 <Menu.Item key={index}>
                   <a
                     rel="noopener noreferrer"

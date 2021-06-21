@@ -529,16 +529,15 @@ const getNPREstimate = (id) => {
 };
 
 const getEstimateCalculate = (data) => {
-  const {
-    npr_id,
-    npr_formula_id,
-    npr_product_cost_detail_id,
-    npr_formula_detail_qty_markup,
-    npr_price_detail_qty_markup,
-    npr_product_cost_detail_qty_markup,
-  } = data;
-  const queryString = `${npr_id}&${npr_formula_id}&${npr_product_cost_detail_id}&${npr_formula_detail_qty_markup}&${npr_price_detail_qty_markup}&${npr_product_cost_detail_qty_markup}`;
-
+  const { npr_id, npr_formula_id, npr_product_cost_detail_id } = data;
+  const estimateMarkup = data.npr_estimate_detail_sub
+    .map((obj) => obj.npr_estimate_detail_sub_mark_up_percent_qty)
+    .toString()
+    .replaceAll(",", "&");
+  console.log("estimateMarkup", estimateMarkup);
+  console.log("getEstimate");
+  const queryString = `${npr_id}&${npr_formula_id}&${npr_product_cost_detail_id}&${estimateMarkup}`;
+  console.log("queryString", queryString);
   try {
     if (!queryString)
       return { success: false, data: {}, message: "Missing queryString" };
@@ -565,6 +564,62 @@ const getEstimateCalculate = (data) => {
   }
 };
 
+const saveEstimate = (data, alert) => {
+  console.log("Save Estimate data", data);
+  try {
+    return data.npr_estimate_id
+      ? axios
+          .put(
+            `${apiNPREstimate}/${data.npr_estimate_id}`,
+            [data],
+            header_config
+          )
+          .then((res) => {
+            console.log("PUT res", res);
+            if (res.status === 200) {
+              alert && message.success("Update Successfully..");
+              return { success: true, data: res.data };
+            } else {
+              message.error(errorText.getData);
+              return { success: false, data: null };
+            }
+          })
+          .catch((error) => {
+            if (!error.response) {
+              message.error(errorText.network);
+            } else {
+              message.error(errorText.formValid);
+            }
+            return { success: false, data: null, error: error.response };
+          })
+      : axios
+          .post(`${apiNPREstimate}`, [data], header_config)
+          .then((res) => {
+            console.log("POST res", res);
+            if (res.status === 200) {
+              alert && message.success("Save Successfully..");
+              return { success: true, data: res.data };
+            } else {
+              message.error(errorText.getData);
+              return { success: false, data: null };
+            }
+          })
+          .catch((error) => {
+            if (!error.response) {
+              message.error(errorText.network);
+            } else {
+              message.error(errorText.formValid);
+            }
+            return { success: false, data: null, error: error.response };
+          });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
+
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,
@@ -586,4 +641,5 @@ export {
   saveNPRPDCost,
   getNPREstimate,
   getEstimateCalculate,
+  saveEstimate,
 };

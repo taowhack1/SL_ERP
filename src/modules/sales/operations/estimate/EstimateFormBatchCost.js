@@ -10,7 +10,6 @@ const EstimateFormBatchCost = ({
   data,
   onChangeMarkup,
 }) => {
-  console.log("EstimateFormBatchCost", data);
   return (
     <>
       <Divider />
@@ -57,12 +56,14 @@ const EstimateFormBatchCost = ({
               parser={(value) => value.replace("%", "")}
               precision={4}
               min={0}
-              max={100}
               className="w-100"
               size="small"
+              disabled={data.npr_product_cost_detail_id !== null ? false : true}
               value={data[fields[2]] || 0}
               defaultValue={data[fields[2]] || 0}
-              onChange={(val) => onChangeMarkup({ [fields[2]]: val })}
+              onChange={(val) =>
+                onChangeMarkup(data.npr_estimate_type_id, { [fields[2]]: val })
+              }
             />
           ) : (
             "-"
