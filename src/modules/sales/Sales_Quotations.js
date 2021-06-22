@@ -64,7 +64,7 @@ const Quotations = (props) => {
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
-                    dispatch(get_quotation_by_id(record.qn_id, auth.user_name));
+                    // dispatch(get_quotation_by_id(record.qn_id, auth.user_name));
                     keepLog.keep_log_action(record.qn_no);
                     props.history.push({
                       pathname: "/sales/quotations/view/" + record.qn_id,

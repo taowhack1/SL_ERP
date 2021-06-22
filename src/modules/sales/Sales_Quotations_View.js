@@ -7,9 +7,10 @@ import ItemLine from "./Sales_Detail";
 import Comments from "../../components/Comments";
 import TotalFooter from "../../components/TotalFooter";
 import ModalRemark from "../../components/Modal_Remark";
-import { qn_actions } from "../../actions/sales";
+import { get_quotation_by_id, qn_actions } from "../../actions/sales";
 import { get_log_by_id } from "../../actions/comment&log";
 import Authorize from "../system/Authorize";
+import { useParams } from "react-router";
 
 const { Text } = Typography;
 
@@ -17,6 +18,7 @@ const Sales_Quotations = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
+  const { id: qn_id } = useParams();
   const [tab, setTab] = useState("1");
   const auth = useSelector((state) => state.auth.authData);
   const data_head = useSelector((state) => state.sales.qn.qn_head);
@@ -37,7 +39,11 @@ const Sales_Quotations = (props) => {
   const callback = (key) => {
     setTab(key);
   };
-  console.log("data_head.process_id", data_head.process_id);
+
+  useEffect(() => {
+    dispatch(get_quotation_by_id(qn_id, auth.user_name));
+  }, []);
+
   useEffect(() => {
     data_head &&
       data_head.process_id &&
