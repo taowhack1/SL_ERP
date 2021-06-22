@@ -123,8 +123,9 @@ const EstimateForm = () => {
     };
     console.log("saveData", saveData);
     const resp = await saveEstimate(saveData, false);
-    if (resp.success) {
+    if (resp.success && resp.data.qn_id) {
       message.success("Open Quotations Success.", 4);
+      history.push(`/sales/quotations/view/${resp.data.qn_id}`);
     }
   };
 

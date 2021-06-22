@@ -267,6 +267,32 @@ export const getRefStatus = ({
   }
 };
 
+// export const getStatus = ({tg_trans_status_id : trans,tg_trans_close_id : close}) =>{
+//   const status = [
+//     {
+//       tg_trans_status_id:1,
+//       tg_trans_close_id:1,
+
+//     },
+//     {
+//       tg_trans_status_id:1,
+//       tg_trans_close_id:1
+//     },
+//     {
+//       tg_trans_status_id:1,
+//       tg_trans_close_id:1
+//     },
+//     {
+//       tg_trans_status_id:1,
+//       tg_trans_close_id:1
+//     },
+//     {
+//       tg_trans_status_id:1,
+//       tg_trans_close_id:1
+//     },
+//   ]
+// }
+
 export const get_pre_run_no = (prev, index, value) => {
   console.log("get_pre_run_no", prev);
   if ((index !== null || index !== undefined) && prev.length) {

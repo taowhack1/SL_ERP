@@ -15,7 +15,7 @@ const NPRList = () => {
     dispatch(getNPRList(branch_id));
   }, []);
   useEffect(() => {
-    setState(list);
+    setState(list?.filter((obj) => obj.tg_trans_status_id !== 1));
   }, [list]);
   const layoutConfig = {
     projectId: 7,

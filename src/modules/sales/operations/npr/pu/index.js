@@ -114,12 +114,13 @@ const NPRListForPU = () => {
   const { branch_id } = useSelector((state) => state.auth.authData);
   const { operations, loading } = useSelector((state) => state.sales);
   const list = operations.npr.list;
+
   const [state, setState] = useState(list);
   useEffect(() => {
     dispatch(getNPRList(branch_id));
   }, []);
   useEffect(() => {
-    setState(list);
+    setState(list?.filter((obj) => obj.tg_trans_status_id !== 1));
   }, [list]);
   const layoutConfig = {
     projectId: 7,
