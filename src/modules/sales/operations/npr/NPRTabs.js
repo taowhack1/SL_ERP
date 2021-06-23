@@ -20,7 +20,7 @@ const NPRTabs = () => {
   } = useSelector((state) => state.auth);
   return (
     <>
-      <Tabs defaultActiveKey={"3"}>
+      <Tabs defaultActiveKey={"0"}>
         <Tabs.TabPane tab={"General Detail"} key={0}>
           <NPRGeneralDetailTab />
         </Tabs.TabPane>
