@@ -132,40 +132,33 @@ const columns = ({ onOpen }) => [
     ),
   },
 ];
+
+const initialState = {
+  npr_id: null,
+  npr_additional_request_qty: null,
+  user_name: null,
+  commit: null,
+  npr_additional_remark: null,
+  npr_additional_request_date: null,
+  npr_additional_request_by: null,
+  npr_additional_response_date: null,
+  npr_additional_response_by: null,
+  npr_additional_response_due_date: null,
+  npr_additional_response_actual_date: null,
+  npr_additional_actual_qty: null,
+  npr_additional_receive_date: null,
+  npr_additional_receive_by: null,
+  tg_trans_status_id: null,
+  tg_trans_close_id: null,
+};
 const RDRequestSample = () => {
   const { id } = useParams();
   const [state, setState] = useState([]);
   const [modal, setModal] = useState({
     visible: false,
     loading: false,
-    data: null,
+    data: initialState,
   });
-  const mockupData = [
-    {
-      id: 0,
-      request_date: "20/06/2021",
-      request_qty: 10,
-      response_qty: 10,
-      response_by_name: "Test Employee 1",
-      response_date: "22/06/2021",
-      response_due_date: "23/06/2021",
-      response_actual_date: "23/06/2021",
-      batch_size: 150,
-      status: "Pending R&D",
-    },
-    {
-      id: 1,
-      request_date: "20/06/2021",
-      request_qty: 15,
-      response_qty: 15,
-      response_by_name: "Test Employee 2",
-      response_date: "22/06/2021",
-      response_due_date: "23/06/2021",
-      response_actual_date: "23/06/2021",
-      batch_size: 80,
-      status: "Complete",
-    },
-  ];
   const onOpen = (data) =>
     setModal((prev) => ({ ...prev, visible: true, ...data }));
   const onClose = () => setModal((prev) => ({ ...prev, visible: false }));

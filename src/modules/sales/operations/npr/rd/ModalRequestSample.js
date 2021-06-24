@@ -1,12 +1,19 @@
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 import { Button, Col, DatePicker, InputNumber, Row } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomSelect from "../../../../../components/CustomSelect";
 import { convertDigit } from "../../../../../include/js/main_config";
 
-const ModalRequestSample = ({ visible = true, readOnly = true, onClose }) => {
+const ModalRequestSample = ({
+  visible = true,
+  readOnly = true,
+  data,
+  onClose,
+}) => {
   const modalConfig = {
     title: "Request Sample",
     visible,
@@ -22,6 +29,28 @@ const ModalRequestSample = ({ visible = true, readOnly = true, onClose }) => {
       </Button>,
     ],
   };
+  const {
+    register,
+    control,
+    formState: { errors },
+    handleSubmit,
+    reset,
+    watch,
+  } = useForm({
+    defaultValues: data,
+  });
+  useEffect(() => {
+    reset(data);
+  }, [data]);
+  const {
+    npr_additional_created_by_name,
+    npr_additional_request_date,
+    npr_additional_request_qty,
+    npr_additional_remark,
+  } = data;
+  const watchForm = watch();
+  console.log("watchForm", watchForm);
+  console.log("data", data);
   return (
     <>
       <Modal {...modalConfig}>
@@ -56,7 +85,7 @@ const ModalRequestSample = ({ visible = true, readOnly = true, onClose }) => {
                   <CustomLabel
                     require
                     readOnly={readOnly}
-                    label={"Sample Qty :"}
+                    label={"Sample Qty. :"}
                   />
                 </Col>
                 <Col span={16}>
@@ -89,7 +118,11 @@ const ModalRequestSample = ({ visible = true, readOnly = true, onClose }) => {
                   />
                 </Col>
                 <Col span={16}>
-                  <Text>TEST</Text>
+                  <input
+                    {...register("npr_additional_created_by")}
+                    className="d-none"
+                  />
+                  <Text>{npr_additional_created_by_name || "-"}</Text>
                 </Col>
               </Row>
               <Row className="col-2 mt-1 mb-1" gutter={8}>
@@ -101,7 +134,11 @@ const ModalRequestSample = ({ visible = true, readOnly = true, onClose }) => {
                   />
                 </Col>
                 <Col span={16}>
-                  <Text>23/06/2021</Text>
+                  <input
+                    {...register("npr_additional_request_date")}
+                    className="d-none"
+                  />
+                  <Text>{npr_additional_request_date || "-"}</Text>
                 </Col>
               </Row>
               <Row className="col-2 mt-1 mb-1" gutter={8}>
@@ -109,11 +146,15 @@ const ModalRequestSample = ({ visible = true, readOnly = true, onClose }) => {
                   <CustomLabel
                     require
                     readOnly={readOnly}
-                    label={"Request Qty."}
+                    label={"Request Qty. :"}
                   />
                 </Col>
                 <Col span={16}>
-                  <Text>{convertDigit(10, 4)}</Text>
+                  <input
+                    {...register("npr_additional_request_qty")}
+                    className="d-none"
+                  />
+                  <Text>{convertDigit(npr_additional_request_qty, 4)}</Text>
                 </Col>
               </Row>
               <Row className="col-2 mt-1 mb-1" gutter={8}>
@@ -122,6 +163,13 @@ const ModalRequestSample = ({ visible = true, readOnly = true, onClose }) => {
                 </Col>
                 <Col span={16}>
                   <Text>Remark</Text>
+                  <input
+                    {...register("npr_additional_remark")}
+                    className="d-none"
+                  />
+                  <Text className="pre-wrap">
+                    {npr_additional_remark || "-"}
+                  </Text>
                 </Col>
               </Row>
             </Col>
