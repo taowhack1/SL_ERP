@@ -41,7 +41,7 @@ const RDPICResponse = () => {
       ),
     };
     console.log("Submit", saveData);
-    // const resp = await saveNPRAssignment(id, [saveData]);
+    // const resp = await updateNPRRDStatus(id, [saveData]);
     // console.log("RESPONSE ", resp);
     setTimeout(() => dispatch({ type: SET_LOADING, payload: false }), 1000);
   };

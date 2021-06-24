@@ -54,7 +54,7 @@ const columns = ({ onOpen, onPrint }) => [
         width: "10%",
         render: (val) =>
           convertDigit(
-            val.find((val) => val.npr_estimate_type_id === 1)
+            val?.find((val) => val.npr_estimate_type_id === 1)
               .npr_estimate_detail_sub_mark_up_percent_qty,
             4
           ) + " %",
@@ -70,7 +70,7 @@ const columns = ({ onOpen, onPrint }) => [
         width: "10%",
         render: (val) =>
           convertDigit(
-            val.find((val) => val.npr_estimate_type_id === 2)
+            val?.find((val) => val.npr_estimate_type_id === 2)
               .npr_estimate_detail_sub_mark_up_percent_qty,
             4
           ) + " %",
@@ -86,7 +86,7 @@ const columns = ({ onOpen, onPrint }) => [
         width: "10%",
         render: (val) =>
           convertDigit(
-            val.find((val) => val.npr_estimate_type_id === 3)
+            val?.find((val) => val.npr_estimate_type_id === 3)
               .npr_estimate_detail_sub_mark_up_percent_qty,
             4
           ) + " %",

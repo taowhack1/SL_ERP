@@ -1,10 +1,17 @@
-import { EditTwoTone, EllipsisOutlined } from "@ant-design/icons";
+import {
+  EditTwoTone,
+  EllipsisOutlined,
+  PrinterTwoTone,
+} from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { getNPRRequestSample } from "../../../../../actions/sales/nprActions";
 import CustomTable from "../../../../../components/CustomTable";
+import { sortData } from "../../../../../include/js/function_main";
 import { convertDigit } from "../../../../../include/js/main_config";
 import ModalRequestSample from "./ModalRequestSample";
-const columns = () => [
+const columns = ({ onOpen }) => [
   {
     title: (
       <div className="text-center">
@@ -22,7 +29,7 @@ const columns = () => [
         <Text>Request Date.</Text>
       </div>
     ),
-    dataIndex: "request_date",
+    dataIndex: "npr_additional_request_date",
     align: "center",
     width: "12.5%",
     render: (val) => val,
@@ -30,7 +37,7 @@ const columns = () => [
   {
     title: (
       <div className="text-center">
-        <Text>Qty.</Text>
+        <Text>Sample Qty.</Text>
       </div>
     ),
     align: "center",
@@ -42,9 +49,9 @@ const columns = () => [
             <Text>Request</Text>
           </div>
         ),
-        dataIndex: "request_qty",
+        dataIndex: "npr_additional_request_qty",
         align: "right",
-        render: (val) => convertDigit(val, 4),
+        render: (val) => (val ? convertDigit(val, 4) : "-"),
       },
       {
         title: (
@@ -52,11 +59,22 @@ const columns = () => [
             <Text>Actual</Text>
           </div>
         ),
-        dataIndex: "response_qty",
+        dataIndex: "npr_additional_actual_qty",
         align: "right",
-        render: (val) => convertDigit(val, 4),
+        render: (val) => (val ? convertDigit(val, 4) : "-"),
       },
     ],
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text>Batch Size(g)</Text>
+      </div>
+    ),
+    dataIndex: "npr_additional_batch_size",
+    width: "10%",
+    align: "right",
+    render: (val) => (val ? convertDigit(val, 4) : "-"),
   },
   {
     title: (
@@ -64,10 +82,10 @@ const columns = () => [
         <Text>PIC</Text>
       </div>
     ),
-    dataIndex: "response_by_name",
+    dataIndex: "npr_additional_response_by_no_name",
     align: "left",
-    width: "30%",
-    render: (val) => val,
+    width: "20%",
+    render: (val) => val || "-",
   },
   {
     title: (
@@ -75,10 +93,10 @@ const columns = () => [
         <Text>Due Date</Text>
       </div>
     ),
-    dataIndex: "response_due_date",
+    dataIndex: "npr_additional_response_due_date",
     align: "center",
-    width: "12.5%",
-    render: (val) => val,
+    width: "12%",
+    render: (val) => val || "-",
   },
   {
     title: (
@@ -86,10 +104,10 @@ const columns = () => [
         <Text>Status</Text>
       </div>
     ),
-    dataIndex: "status",
+    dataIndex: "trans_status",
     align: "center",
-    width: "12.5%",
-    render: (val) => <Text strong>{val}</Text>,
+    width: "12%",
+    render: (val) => <Text strong>{val || "N/A"}</Text>,
   },
   {
     title: (
@@ -99,11 +117,29 @@ const columns = () => [
     ),
     dataIndex: "id",
     align: "center",
-    width: "5%",
-    render: (val) => <EditTwoTone className="button-icon" />,
+    width: "7%",
+    render: (val, record) => (
+      <div className="text-center">
+        <PrinterTwoTone
+          className="button-icon"
+          onClick={() => onOpen({ data: null })}
+        />
+        <EditTwoTone
+          className="button-icon pd-left-1"
+          onClick={() => onOpen({ data: record })}
+        />
+      </div>
+    ),
   },
 ];
 const RDRequestSample = () => {
+  const { id } = useParams();
+  const [state, setState] = useState([]);
+  const [modal, setModal] = useState({
+    visible: false,
+    loading: false,
+    data: null,
+  });
   const mockupData = [
     {
       id: 0,
@@ -114,6 +150,7 @@ const RDRequestSample = () => {
       response_date: "22/06/2021",
       response_due_date: "23/06/2021",
       response_actual_date: "23/06/2021",
+      batch_size: 150,
       status: "Pending R&D",
     },
     {
@@ -125,19 +162,40 @@ const RDRequestSample = () => {
       response_date: "22/06/2021",
       response_due_date: "23/06/2021",
       response_actual_date: "23/06/2021",
+      batch_size: 80,
       status: "Complete",
     },
   ];
+  const onOpen = (data) =>
+    setModal((prev) => ({ ...prev, visible: true, ...data }));
+  const onClose = () => setModal((prev) => ({ ...prev, visible: false }));
 
+  const modalConfig = {
+    ...modal,
+    onClose,
+  };
+
+  useEffect(() => {
+    const getData = async (id) => {
+      const resp = await getNPRRequestSample(id);
+      console.log("RDRequestSample", resp);
+      if (resp.success) {
+        setState(sortData(resp.data));
+      }
+    };
+    getData(id);
+  }, [id]);
+
+  console.log("modal", modal);
   return (
     <div className="form-section">
       <CustomTable
         rowClassName="row-table-detail"
-        dataSource={mockupData}
-        columns={columns()}
+        dataSource={state}
+        columns={columns({ onOpen })}
         rowKey={"id"}
       />
-      <ModalRequestSample />
+      <ModalRequestSample {...modalConfig} />
     </div>
   );
 };

@@ -1,4 +1,5 @@
-import { Table } from "antd";
+import { EllipsisOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { Table, Tag } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useHistory } from "react-router";
@@ -75,13 +76,7 @@ const columns = [
         ellipsis: true,
         render: (val) => <Text style={{ color: "blue" }}>{val || "-"}</Text>,
       },
-      {
-        title: "Accept Date",
-        align: "left",
-        dataIndex: "npr_responsed_date",
-        width: "10%",
-        render: (val) => val || "-",
-      },
+
       {
         title: "Deliver Date",
         align: "center",
@@ -89,14 +84,36 @@ const columns = [
         width: "10%",
         render: (val) => <Text style={{ color: "blue" }}>{val || "-"}</Text>,
       },
+      {
+        title: "Status",
+        align: "center",
+        dataIndex: "rd_trans_status",
+        width: "10%",
+        render: (val) => val || "-",
+      },
     ],
   },
   {
-    title: "Status",
+    title: "NPR Status",
     align: "center",
     dataIndex: "trans_status",
     width: "15%",
     render: (val, record) => <Text>{val || "N/A"}</Text>,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <EllipsisOutlined />
+      </div>
+    ),
+    align: "center",
+    dataIndex: "",
+    width: "15%",
+    render: (val, record) => (
+      <Tag icon={<ExclamationCircleOutlined />} color="warning">
+        Request Sample
+      </Tag>
+    ),
   },
 ];
 

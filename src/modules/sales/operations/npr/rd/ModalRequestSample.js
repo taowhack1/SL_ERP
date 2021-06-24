@@ -6,27 +6,28 @@ import CustomLabel from "../../../../../components/CustomLabel";
 import CustomSelect from "../../../../../components/CustomSelect";
 import { convertDigit } from "../../../../../include/js/main_config";
 
-const ModalRequestSample = ({ visible = true, readOnly = true }) => {
+const ModalRequestSample = ({ visible = true, readOnly = true, onClose }) => {
   const modalConfig = {
     title: "Request Sample",
     visible,
     width: 800,
-    onOk: () => console.log("OK"),
-    onCancel: () => console.log("Cancel"),
+    onOk: onClose,
+    onCancel: onClose,
     footer: [
-      <Button key="discard">Discard</Button>,
-      <Button key="back" className="primary">
+      <Button key="discard" onClick={onClose}>
+        Discard
+      </Button>,
+      <Button key="back" className="primary" onClick={onClose}>
         Save
       </Button>,
     ],
   };
-
   return (
     <>
       <Modal {...modalConfig}>
         <div className="form-section">
           <Row className="col-2 mb-1" gutter={[36, 0]}>
-            <Col span={12}>
+            <Col span={12} className="col-border-right">
               <Row className="col-2 mb-1" gutter={8}>
                 <Col span={8}>
                   <CustomLabel require readOnly={readOnly} label={"PIC :"} />

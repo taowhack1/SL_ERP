@@ -10,7 +10,7 @@ import {
 } from "../../../../components/AntDesignComponent";
 import { NPRFormContext } from "./NPRViewById";
 import { SET_LOADING } from "../../../../actions/types";
-import { saveNPRAssignment } from "../../../../actions/sales/nprActions";
+import { updateNPRRDStatus } from "../../../../actions/sales/nprActions";
 import { useHistory } from "react-router";
 import Swal from "sweetalert2";
 import Text from "antd/lib/typography/Text";
@@ -23,7 +23,7 @@ const RDPIC = () => {
   authorize.check_authorize();
   const history = useHistory();
   const { id, state } = useContext(NPRFormContext);
-  const { npr_responsed_delivery_date, npr_responsed_required_by } = state;
+  const { npr_responsed_required_date, npr_responsed_required_by } = state;
 
   const dispatch = useDispatch();
   const { user_name } = useSelector((state) => state.auth.authData);
@@ -35,8 +35,8 @@ const RDPIC = () => {
     handleSubmit,
   } = useForm({
     defaultValues: {
-      npr_responsed_delivery_date: npr_responsed_delivery_date
-        ? moment(npr_responsed_delivery_date, "DD/MM/YYYY")
+      npr_responsed_required_date: npr_responsed_required_date
+        ? moment(npr_responsed_required_date, "DD/MM/YYYY")
         : null,
       npr_responsed_required_by,
     },
@@ -47,19 +47,21 @@ const RDPIC = () => {
       `${user_name} Save NPR PIC : FROM ${npr_responsed_required_by} to ${data.npr_responsed_required_by}`,
       state.npr_no
     );
-    dispatch({ type: SET_LOADING, payload: true });
+    // dispatch({ type: SET_LOADING, payload: true });
     const saveData = {
       ...data,
-      user_name,
+      npr_responsed_date_by: user_name,
+      npr_responsed_date: moment().format("DD/MM/YYYY"),
       commit: 1,
       tg_trans_status_id: 4,
+      tg_trans_close_id: 1,
       npr_responsed_remark: null,
-      npr_responsed_delivery_date: moment(
-        data.npr_responsed_delivery_date
+      npr_responsed_required_date: moment(
+        data.npr_responsed_required_date
       ).format("DD/MM/YYYY"),
     };
     console.log("Submit", saveData);
-    const resp = await saveNPRAssignment(id, [saveData]);
+    const resp = await updateNPRRDStatus(id, [saveData]);
 
     console.log("RESPONSE ", resp);
     setTimeout(() => {
@@ -80,6 +82,7 @@ const RDPIC = () => {
       }
     }, 1000);
   };
+
   const editable = state.trans_id >= 2 && state.trans_id <= 5 ? true : false;
   return (
     <>
@@ -156,7 +159,7 @@ const RDPIC = () => {
                   </Col>
                   <Col span={16}>
                     {state.trans_id >= 6 ? (
-                      <Text>{state.npr_responsed_delivery_date}</Text>
+                      <Text>{state.npr_responsed_required_date}</Text>
                     ) : (
                       <>
                         <Controller
@@ -179,10 +182,10 @@ const RDPIC = () => {
                             })
                           }
                           control={control}
-                          name="npr_responsed_delivery_date"
+                          name="npr_responsed_required_date"
                           rules={{ required: true }}
                         />
-                        {error && error?.npr_responsed_delivery_date && (
+                        {error && error?.npr_responsed_required_date && (
                           <span className="require">
                             This field is required.
                           </span>

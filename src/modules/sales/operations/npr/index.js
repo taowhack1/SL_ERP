@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getNPRList } from "../../../../actions/sales/nprActions";
 import DetailLoading from "../../../../components/DetailLoading";
 import MainLayout from "../../../../components/MainLayout";
+import { sortData } from "../../../../include/js/function_main";
 import NPRTable from "./NPRTable";
 
 const NPRList = () => {
@@ -15,7 +16,7 @@ const NPRList = () => {
     dispatch(getNPRList(branch_id));
   }, []);
   useEffect(() => {
-    setState(list?.filter((obj) => obj.tg_trans_status_id !== 1));
+    setState(sortData(list?.filter((obj) => obj.tg_trans_status_id !== 1)));
   }, [list]);
   const layoutConfig = {
     projectId: 7,

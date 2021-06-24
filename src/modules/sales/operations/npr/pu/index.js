@@ -6,6 +6,7 @@ import { useHistory } from "react-router";
 import { getNPRList } from "../../../../../actions/sales/nprActions";
 import DetailLoading from "../../../../../components/DetailLoading";
 import MainLayout from "../../../../../components/MainLayout";
+import { sortData } from "../../../../../include/js/function_main";
 import useKeepLogs from "../../../../logs/useKeepLogs";
 import Authorize from "../../../../system/Authorize";
 const columns = [
@@ -120,7 +121,7 @@ const NPRListForPU = () => {
     dispatch(getNPRList(branch_id));
   }, []);
   useEffect(() => {
-    setState(list?.filter((obj) => obj.tg_trans_status_id !== 1));
+    setState(sortData(list?.filter((obj) => obj.tg_trans_status_id !== 1)));
   }, [list]);
   const layoutConfig = {
     projectId: 7,

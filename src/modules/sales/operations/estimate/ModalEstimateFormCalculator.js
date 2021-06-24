@@ -135,6 +135,7 @@ const ModalEstimateFormCalculator = ({ visible = false }) => {
   };
   const calculate = async () => {
     const resp = await getEstimateCalculate(state);
+    console.log("calculate", resp);
     if (resp.success) {
       const { npr_estimate_detail_sub, tg_npr_estimate_detail_total_amount } =
         resp.data[0];
@@ -149,7 +150,6 @@ const ModalEstimateFormCalculator = ({ visible = false }) => {
       message.success("Calculate Complete..", 4);
     }
   };
-
   useEffect(() => {
     estimateData ? setState(estimateData) : getBatchCost();
   }, [visible]);

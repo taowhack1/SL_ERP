@@ -1,8 +1,9 @@
-import { Button, Col, Row } from "antd";
+import { Button, Col, message, Row } from "antd";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { sortData } from "../../../../include/js/function_main";
 import { NPRFormContext } from "./NPRViewById";
 import {
+  updateNPRRDStatus,
   saveNPRFormula,
   saveNPRFormulaRemark,
 } from "../../../../actions/sales/nprActions";
@@ -16,6 +17,7 @@ import { SET_LOADING } from "../../../../actions/types";
 import { formEdit, formView } from "../../../../include/js/formType";
 import useKeepLogs from "../../../logs/useKeepLogs";
 import Authorize from "../../../system/Authorize";
+import moment from "moment";
 
 const initialStateFormula = {
   id: 0,
@@ -148,6 +150,19 @@ const RDDevelopmentForm = ({
     console.log("saveData2", saveData2);
     const resp = await saveNPRFormula(npr_formula_id, saveData2);
     if (resp.success) {
+      if (saveData2.tg_trans_status_id === 4) {
+        const respDelivery = await updateNPRRDStatus(id, [
+          {
+            commit: 1,
+            npr_responsed_delivery_date: moment().format("DD/MM/YYYY"),
+            npr_responsed_delivery_by: user_name,
+          },
+        ]);
+        if (respDelivery.success) {
+          message.success("Complete Formula Development.", 4);
+        }
+      }
+
       console.log("resp save", resp);
       const formulaLength = formula.length;
       !saveData2.npr_formula_id

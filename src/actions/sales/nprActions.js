@@ -25,6 +25,9 @@ const apiNPRPDCost = `/sales/npr_product_cost`;
 const apiNPREstimate = `/sales/npr_estimate`;
 const apiNPREstimateCalculator = `/sales/npr_estimate/calculate`;
 
+const apiNPRUpdatePIC = `/sales/npr/update`;
+const apiNPRRequestSample = `/sales/npr_additional`;
+
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   try {
@@ -101,12 +104,12 @@ const getNPRByID = (id = null) => {
     return { success: false, data: null };
   }
 };
-const saveNPRAssignment = (id = null, data) => {
+const updateNPRRDStatus = (id = null, data) => {
   try {
     if (id === null || id === undefined)
       return message.error("Error! Missing NPR ID.");
     return axios
-      .put(`${apiNPRRD}/${id}`, data, header_config)
+      .put(`${apiNPRUpdatePIC}/${id}`, data, header_config)
       .then((res) => {
         if (res.data) {
           return { success: true, data: res.data };
@@ -126,6 +129,7 @@ const saveNPRAssignment = (id = null, data) => {
     return { success: false, data: null };
   }
 };
+
 const getNPRFormula = (id) => {
   try {
     if (id === null || id === undefined)
@@ -620,6 +624,34 @@ const saveEstimate = (data, alert) => {
   }
 };
 
+const getNPRRequestSample = (id) => {
+  try {
+    if (!id) {
+      message.error("Error! Missing ID.");
+      return { success: false, data: null };
+    }
+    return axios
+      .get(`${apiNPRRequestSample}/${id}`, header_config)
+      .then((res) => {
+        console.log("res", res);
+        if (res?.status === 200) {
+          return { success: true, data: res.data };
+        } else {
+          return { success: false, data: null };
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        message.error(errorText.getData);
+        return { success: false, data: null };
+      });
+  } catch (error) {
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
+
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,
@@ -627,7 +659,7 @@ export {
   getNPRList,
   getNPRByID,
   getNPRItemList,
-  saveNPRAssignment,
+  updateNPRRDStatus,
   getNPRFormula,
   saveNPRFormula,
   getNPRFeedback,
@@ -642,4 +674,5 @@ export {
   getNPREstimate,
   getEstimateCalculate,
   saveEstimate,
+  getNPRRequestSample,
 };
