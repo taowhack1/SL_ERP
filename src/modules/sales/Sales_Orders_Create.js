@@ -26,6 +26,7 @@ import {
   validateFormDetail,
   validateFormHead,
 } from "../../include/js/function_main";
+import { get_vat_list } from "../../actions/accounting";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -63,6 +64,7 @@ const SaleOrderCreate = (props) => {
   console.log("data", data);
   useEffect(() => {
     dispatch(get_qn_open_so());
+    dispatch(get_vat_list());
     headDispatch({
       type: "SET_HEAD",
       payload: data.data_head
