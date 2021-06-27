@@ -1,14 +1,14 @@
 import { Button, Tabs } from "antd";
 import React, { useContext, useEffect, useState } from "react";
-import { NPRFormContext } from "./NPRViewById";
+import { NPRFormContext } from "../NPRViewById";
 import {
   getNPRAllRevisionFormula,
   getNPRFormula,
-} from "../../../../actions/sales/nprActions";
+} from "../../../../../actions/sales/nprActions";
 import {
   sortData,
   sortDataWithoutCommit,
-} from "../../../../include/js/function_main";
+} from "../../../../../include/js/function_main";
 import RDDevelopmentForm from "./RDDevelopmentForm";
 const initialState = {
   id: 0,

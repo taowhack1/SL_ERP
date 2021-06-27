@@ -28,6 +28,8 @@ const apiNPREstimateCalculator = `/sales/npr_estimate/calculate`;
 const apiNPRUpdatePIC = `/sales/npr/update`;
 const apiNPRRequestSample = `/sales/npr_additional`;
 
+const apiUpdateNPRStatus = `/sales/npr/status`;
+
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   try {
@@ -62,7 +64,9 @@ const getNPRList = (branch_id) => (dispatch) => {
       .then((res) => {
         if (res.data) {
           const data = res.data.filter((obj) =>
-            branch_id === 3 ? obj.branch_id === branch_id : obj
+            branch_id === 3
+              ? obj.branch_id === branch_id && obj.npr_rd_type_id === 2
+              : obj
           );
           dispatch({ type: GET_NPR_LIST, payload: sortData(data) });
         } else {
@@ -652,6 +656,70 @@ const getNPRRequestSample = (id) => {
   }
 };
 
+const saveSampleRequest = (data, alert) => {
+  console.log("Save saveSampleRequest data", data);
+  try {
+    return axios
+      .put(
+        `${apiNPRRequestSample}/${data.npr_additional_id}`,
+        [data],
+        header_config
+      )
+      .then((res) => {
+        console.log("PUT res", res);
+        if (res.status === 200) {
+          alert && message.success("Update Successfully..");
+          return { success: true, data: res.data };
+        } else {
+          message.error(errorText.getData);
+          return { success: false, data: null };
+        }
+      })
+      .catch((error) => {
+        if (!error.response) {
+          message.error(errorText.network);
+        } else {
+          message.error(errorText.formValid);
+        }
+        return { success: false, data: null, error: error.response };
+      });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
+const updateNPRStatus = (data, alert) => {
+  console.log("updateNPRStatus data", data);
+  try {
+    return axios
+      .put(`${apiUpdateNPRStatus}/${data.npr_id}`, [data], header_config)
+      .then((res) => {
+        console.log("PUT res", res);
+        if (res.status === 200) {
+          alert && message.success("Update Successfully..");
+          return { success: true, data: res.data };
+        } else {
+          message.error(errorText.getData);
+          return { success: false, data: null };
+        }
+      })
+      .catch((error) => {
+        if (!error.response) {
+          message.error(errorText.network);
+        } else {
+          message.error(errorText.formValid);
+        }
+        return { success: false, data: null, error: error.response };
+      });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,
@@ -675,4 +743,6 @@ export {
   getEstimateCalculate,
   saveEstimate,
   getNPRRequestSample,
+  saveSampleRequest,
+  updateNPRStatus,
 };

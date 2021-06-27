@@ -11,6 +11,7 @@ import { get_quotation_by_id, qn_actions } from "../../actions/sales";
 import { get_log_by_id } from "../../actions/comment&log";
 import Authorize from "../system/Authorize";
 import { useParams } from "react-router";
+import { PrinterTwoTone } from "@ant-design/icons";
 
 const { Text } = Typography;
 
@@ -89,10 +90,24 @@ const Sales_Quotations = (props) => {
     ],
     action: [
       {
-        name: "Print",
+        name: (
+          <Text>
+            <PrinterTwoTone /> Print
+          </Text>
+        ),
         link: `${
           process.env.REACT_APP_REPORT_SERVER
-        }/report_quotation.aspx?qn_no=${data_head && data_head.qn_no}`,
+        }/report_quotation.aspx?qn_no=${data_head && data_head.qn_no}&price=0`,
+      },
+      {
+        name: (
+          <Text>
+            <PrinterTwoTone /> Print (Include Total)
+          </Text>
+        ),
+        link: `${
+          process.env.REACT_APP_REPORT_SERVER
+        }/report_quotation.aspx?qn_no=${data_head && data_head.qn_no}&price=1`,
       },
       data_head &&
         data_head.button_cancel && {
@@ -168,6 +183,7 @@ const Sales_Quotations = (props) => {
       dispatch(qn_actions(app_detail, data_head.qn_id));
     },
   };
+  console.log("data_head", data_head);
   return (
     <MainLayout {...config} data={data_head}>
       <div id="form">

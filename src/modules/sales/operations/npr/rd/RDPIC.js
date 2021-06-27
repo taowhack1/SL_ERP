@@ -1,34 +1,51 @@
 import { Button, Col, Row, Spin } from "antd";
-import React, { useContext } from "react";
-import CustomLabel from "../../../../components/CustomLabel";
+import React, { useContext, useState } from "react";
+import CustomLabel from "../../../../../components/CustomLabel";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { Controller, useForm } from "react-hook-form";
 import {
   DatePickerField,
   SelectField,
-} from "../../../../components/AntDesignComponent";
-import { NPRFormContext } from "./NPRViewById";
-import { SET_LOADING } from "../../../../actions/types";
-import { updateNPRRDStatus } from "../../../../actions/sales/nprActions";
+} from "../../../../../components/AntDesignComponent";
+import { NPRFormContext } from "../NPRViewById";
+import { SET_LOADING } from "../../../../../actions/types";
+import {
+  updateNPRRDStatus,
+  updateNPRStatus,
+} from "../../../../../actions/sales/nprActions";
 import { useHistory } from "react-router";
 import Swal from "sweetalert2";
 import Text from "antd/lib/typography/Text";
-import useKeepLogs from "../../../logs/useKeepLogs";
-import Authorize from "../../../system/Authorize";
+import useKeepLogs from "../../../../logs/useKeepLogs";
+import Authorize from "../../../../system/Authorize";
+import ModalRDReject from "./ModalRDReject";
 
 const RDPIC = () => {
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
   const history = useHistory();
-  const { id, state } = useContext(NPRFormContext);
-  const { npr_responsed_required_date, npr_responsed_required_by } = state;
-
   const dispatch = useDispatch();
   const { user_name } = useSelector((state) => state.auth.authData);
-  const { loading } = useSelector((state) => state.hrm);
+  // const { loading } = useSelector((state) => state.hrm);
   const { rd: rdEmp } = useSelector((state) => state.hrm.employee);
+
+  const { id, state } = useContext(NPRFormContext);
+  const { npr_responsed_required_date, npr_responsed_required_by } = state;
+  const [modal, setModal] = useState({
+    visible: false,
+    data: {
+      npr_id: id,
+      npr_remark_reject: null,
+      user_name,
+      commit: 1,
+      tg_trans_status_id: 1,
+      tg_trans_close_id: 1,
+    },
+  });
+
+  const [loading, setLoading] = useState(false);
   const {
     control,
     formState: { error },
@@ -64,25 +81,62 @@ const RDPIC = () => {
     const resp = await updateNPRRDStatus(id, [saveData]);
 
     console.log("RESPONSE ", resp);
-    setTimeout(() => {
+    // setTimeout(() => {
+    if (resp.success) {
       dispatch({ type: SET_LOADING, payload: false });
-      if (resp.success) {
-        // alert("Assign PIC Success.");
-        Swal.fire({
-          title: "Assign PIC Success.",
-          icon: "success",
-          confirmButtonText: `OK`,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            history.push("/sales/npr/rd");
-          }
-        });
-        keepLog.keep_log_action("Save NPR PIC : ", state.npr_no);
-        // setState(resp.data);
-      }
-    }, 1000);
+      // alert("Assign PIC Success.");
+      Swal.fire({
+        title: "Assign PIC Success.",
+        icon: "success",
+        confirmButtonText: `OK`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          history.push("/sales/npr/rd");
+        }
+      });
+      keepLog.keep_log_action("Save NPR PIC : ", state.npr_no);
+      // setState(resp.data);
+    }
+    // }, 1000);
   };
 
+  const onOpenReject = () => {
+    setModal((prev) => ({ ...prev, visible: true }));
+  };
+  const onCloseReject = () => {
+    setModal((prev) => ({ ...prev, visible: false }));
+  };
+  const onChangeRemarkReject = (text) =>
+    setModal((prev) => ({
+      ...prev,
+      data: { ...prev.data, npr_remark_reject: text },
+    }));
+  const onSubmitReject = async () => {
+    console.log("submitModal", modal);
+    setLoading(true);
+    const resp = await updateNPRStatus(modal.data);
+    if (resp.success) {
+      setLoading(false);
+      Swal.fire({
+        title: "Rejected.",
+        icon: "success",
+        confirmButtonText: `OK`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          history.push("/sales/npr/rd");
+        }
+      });
+      keepLog.keep_log_action("Reject NPR : ", state.npr_no);
+    }
+  };
+  const modalConfig = {
+    onOpenReject,
+    onCloseReject,
+    onChangeRemarkReject,
+    onSubmitReject,
+    modal,
+    loading,
+  };
   const editable = state.trans_id >= 2 && state.trans_id <= 5 ? true : false;
   return (
     <>
@@ -90,14 +144,24 @@ const RDPIC = () => {
         <div className="form-section-head flex-space">
           <h3>Assignment</h3>
           {editable && (
-            <Button
-              htmlType="submit"
-              className="primary"
-              size="small"
-              loading={loading}
-            >
-              Save
-            </Button>
+            <div>
+              <Button
+                className=""
+                size="small"
+                loading={loading}
+                onClick={onOpenReject}
+              >
+                Reject
+              </Button>
+              <Button
+                htmlType="submit"
+                className="primary"
+                size="small"
+                loading={loading}
+              >
+                Save
+              </Button>
+            </div>
           )}
         </div>
 
@@ -199,6 +263,7 @@ const RDPIC = () => {
           </Spin>
         </div>
       </form>
+      <ModalRDReject {...modalConfig} />
     </>
   );
 };

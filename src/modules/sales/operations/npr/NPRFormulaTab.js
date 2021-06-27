@@ -1,5 +1,5 @@
 import React from "react";
-import RDFormulaList from "./RDFormulaList";
+import RDFormulaList from "./rd/RDFormulaList";
 
 const NPRFormulaTab = () => {
   return (

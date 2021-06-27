@@ -13,7 +13,7 @@ import {
   so_detail_fields,
 } from "./configs";
 import CustomSelect from "../../components/CustomSelect";
-import { calSubtotal, sumArrObj } from "../../include/js/function_main";
+import { calSubtotal, sumArrObjWithVat } from "../../include/js/function_main";
 
 import { convertDigit, getNumberFormat } from "../../include/js/main_config";
 import TextArea from "antd/lib/input/TextArea";
@@ -27,6 +27,7 @@ const ItemLine = ({
   detailDispatch,
   headDispatch,
   vat_rate,
+  vat_include,
   project,
 }) => {
   // state
@@ -38,7 +39,13 @@ const ItemLine = ({
   );
 
   const updateAmount = () => {
-    const obj = sumArrObj(data_detail, "qn_detail_total_price", vat_rate);
+    const obj = sumArrObjWithVat(
+      data_detail,
+      "qn_detail_total_price",
+      vat_rate,
+      vat_include
+    );
+    console.log("updateAmount", obj);
     headDispatch({
       type: "CHANGE_HEAD_VALUE",
       payload: {
@@ -48,10 +55,12 @@ const ItemLine = ({
       },
     });
   };
-
   useEffect(() => {
     !readOnly && updateAmount();
-  }, [data_detail]);
+  }, [readOnly, vat_rate, vat_include]);
+  useEffect(() => {
+    !readOnly && updateAmount();
+  }, [readOnly, data_detail]);
 
   // function
   const addLine = () => {

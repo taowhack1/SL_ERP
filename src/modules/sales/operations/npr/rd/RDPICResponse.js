@@ -2,10 +2,10 @@ import { Button, Checkbox, Col, Row, Spin } from "antd";
 import React, { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import CustomLabel from "../../../../components/CustomLabel";
+import CustomLabel from "../../../../../components/CustomLabel";
 import moment from "moment";
-import { DatePickerField } from "../../../../components/AntDesignComponent";
-import { SET_LOADING } from "../../../../actions/types";
+import { DatePickerField } from "../../../../../components/AntDesignComponent";
+import { SET_LOADING } from "../../../../../actions/types";
 import { NPRFormContext } from "./RDForm";
 const RDPICResponse = () => {
   const dispatch = useDispatch();

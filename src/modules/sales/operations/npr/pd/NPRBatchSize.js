@@ -126,34 +126,34 @@ const columns = ({ remove, readOnly = false, onChange, errors }) => [
         </>
       ),
   },
-  {
-    title: (
-      <Text strong>
-        <EllipsisOutlined />
-      </Text>
-    ),
-    align: "center",
-    dataIndex: "id",
-    width: "5%",
-    render: (value, record, index) => {
-      if (readOnly) {
-        return null;
-      } else {
-        return (
-          <Popconfirm
-            onConfirm={() => {
-              remove(value);
-            }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
-            <DeleteTwoTone />
-          </Popconfirm>
-        );
-      }
-    },
-  },
+  // {
+  //   title: (
+  //     <Text strong>
+  //       <EllipsisOutlined />
+  //     </Text>
+  //   ),
+  //   align: "center",
+  //   dataIndex: "id",
+  //   width: "5%",
+  //   render: (value, record, index) => {
+  //     if (readOnly) {
+  //       return null;
+  //     } else {
+  //       return (
+  //         <Popconfirm
+  //           onConfirm={() => {
+  //             remove(value);
+  //           }}
+  //           title="Are you sure you want to delete this row？"
+  //           okText="Yes"
+  //           cancelText="No"
+  //         >
+  //           <DeleteTwoTone />
+  //         </Popconfirm>
+  //       );
+  //     }
+  //   },
+  // },
 ];
 const initialState = {
   npr_product_cost_detail_batch_size: null,
@@ -178,12 +178,12 @@ const NPRBatchSize = () => {
     <>
       <div className="under-line mb-1 d-flex flex-start flex-row">
         <Text strong>Batch Size</Text>
-        {!readOnly && (
+        {/* {!readOnly && (
           <Button className="ml-2 primary" size="small" onClick={append}>
             <PlusOutlined />
             Add Batch Size
           </Button>
-        )}
+        )} */}
       </div>
 
       <CustomTable

@@ -131,6 +131,7 @@ const NPRPRoductionCostForm = () => {
         setState(resp.data);
 
         const respCost = await getNPRPDCost(id);
+        console.log("resp ", resp);
         console.log("respCost ", respCost);
         const {
           npr_product_cost_id,
@@ -209,10 +210,17 @@ const NPRPRoductionCostForm = () => {
       "npr_product_cost_request_date",
       "user_name",
     ]);
+    console.log(
+      batchValidate,
+      rawMattValidate,
+      packagingValidate,
+      costingValidate
+    );
     if (
-      [batchValidate, rawMattValidate, packagingValidate, costingValidate].some(
+      [batchValidate, rawMattValidate, packagingValidate].some(
         (boo) => boo === false
-      )
+      ) &&
+      !costingValidate
     ) {
       message.warning("Please fill your form completely.", 4);
       console.log(

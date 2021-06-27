@@ -24,7 +24,7 @@ const Quotations = (props) => {
   useEffect(() => {
     dispatch(reset_qn());
     dispatch(reset_comments());
-    dispatch(get_sale_master_data());
+
     dispatch(get_quotation_list(auth.user_name));
     dispatch(getMasterDataItem());
   }, []);

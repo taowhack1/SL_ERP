@@ -1,22 +1,22 @@
 import { Button, Col, message, Row } from "antd";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { sortData } from "../../../../include/js/function_main";
-import { NPRFormContext } from "./NPRViewById";
+import { sortData } from "../../../../../include/js/function_main";
+import { NPRFormContext } from "../NPRViewById";
 import {
   updateNPRRDStatus,
   saveNPRFormula,
   saveNPRFormulaRemark,
-} from "../../../../actions/sales/nprActions";
-import RDDevelopmentTabs from "./rd/RDDevelopmentTabs";
+} from "../../../../../actions/sales/nprActions";
+import RDDevelopmentTabs from "./RDDevelopmentTabs";
 import { useHistory } from "react-router";
-import CustomLabel from "../../../../components/CustomLabel";
-import CustomSelect from "../../../../components/CustomSelect";
+import CustomLabel from "../../../../../components/CustomLabel";
+import CustomSelect from "../../../../../components/CustomSelect";
 import { useForm, FormProvider } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { SET_LOADING } from "../../../../actions/types";
-import { formEdit, formView } from "../../../../include/js/formType";
-import useKeepLogs from "../../../logs/useKeepLogs";
-import Authorize from "../../../system/Authorize";
+import { SET_LOADING } from "../../../../../actions/types";
+import { formEdit, formView } from "../../../../../include/js/formType";
+import useKeepLogs from "../../../../logs/useKeepLogs";
+import Authorize from "../../../../system/Authorize";
 import moment from "moment";
 
 const initialStateFormula = {

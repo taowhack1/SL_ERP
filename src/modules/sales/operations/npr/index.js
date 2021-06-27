@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getRDEmp } from "../../../../actions/hrm";
 import { getNPRList } from "../../../../actions/sales/nprActions";
 import DetailLoading from "../../../../components/DetailLoading";
 import MainLayout from "../../../../components/MainLayout";
@@ -8,15 +9,26 @@ import NPRTable from "./NPRTable";
 
 const NPRList = () => {
   const dispatch = useDispatch();
-  const { branch_id } = useSelector((state) => state.auth.authData);
+  const { branch_id, department_id } = useSelector(
+    (state) => state.auth.authData
+  );
   const { operations, loading } = useSelector((state) => state.sales);
   const list = operations.npr.list;
   const [state, setState] = useState(list);
   useEffect(() => {
+    dispatch(getRDEmp());
     dispatch(getNPRList(branch_id));
   }, []);
   useEffect(() => {
-    setState(sortData(list?.filter((obj) => obj.tg_trans_status_id !== 1)));
+    setState(
+      sortData(
+        list?.filter(
+          (obj) =>
+            obj.tg_trans_status_id !== 1 &&
+            (department_id === 1 || obj.rd_type_branch_id === branch_id)
+        )
+      )
+    );
   }, [list]);
   const layoutConfig = {
     projectId: 7,
@@ -39,7 +51,8 @@ const NPRList = () => {
       setState(
         list.filter(
           (obj) =>
-            obj.npr_no?.toUpperCase()?.indexOf(text) >= 0 ||
+            ((department_id === 1 || obj.rd_type_branch_id === branch_id) &&
+              obj.npr_no?.toUpperCase()?.indexOf(text) >= 0) ||
             (obj.npr_product_name &&
               obj.npr_product_name?.toUpperCase()?.indexOf(text) >= 0) ||
             (obj.npr_customer_name &&
@@ -60,6 +73,7 @@ const NPRList = () => {
       );
     },
   };
+  console.log("List", state);
   return (
     <>
       <MainLayout {...layoutConfig}>

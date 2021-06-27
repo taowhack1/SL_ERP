@@ -6,14 +6,28 @@ import {
 import {
   GET_CURRENCY,
   GET_CUSTOMER_PAYMENT_TERM_LIST,
+  GET_VAT,
   GET_VENDOR_PAYMENT_TERM_LIST,
 } from "../types";
 import axios from "axios";
 import { header_config } from "../../include/js/main_config";
+
+const apiVat = `/list/vat`;
+export const get_vat_list = () => (dispatch) => {
+  axios
+    .get(apiVat, header_config)
+    .then((res) => dispatch({ type: GET_VAT, payload: res.data[0] }))
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 export const get_currency_list = () => (dispatch) => {
   axios
     .get(api_currency, header_config)
-    .then((res) => dispatch({ type: GET_CURRENCY, payload: res.data[0] }))
+    .then((res) => {
+      dispatch({ type: GET_CURRENCY, payload: res.data[0] });
+    })
     .catch((err) => {
       console.log(err);
     });

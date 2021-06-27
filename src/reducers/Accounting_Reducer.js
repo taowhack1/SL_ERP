@@ -2,6 +2,7 @@ import {
   GET_VENDOR_PAYMENT_TERM_LIST,
   GET_CUSTOMER_PAYMENT_TERM_LIST,
   GET_CURRENCY,
+  GET_VAT,
 } from "../actions/types";
 
 const initialState = {
@@ -9,6 +10,7 @@ const initialState = {
     vendor_payment_terms: [],
     customer_payment_terms: [],
     currency: [],
+    vat: [],
   },
 };
 export default (state = initialState, action) => {
@@ -35,6 +37,14 @@ export default (state = initialState, action) => {
         master_data: {
           ...state.master_data,
           currency: action.payload,
+        },
+      };
+    case GET_VAT:
+      return {
+        ...state,
+        master_data: {
+          ...state.master_data,
+          vat: action.payload,
         },
       };
     default:

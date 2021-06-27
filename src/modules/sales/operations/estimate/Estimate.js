@@ -9,6 +9,7 @@ import { useHistory } from "react-router";
 import { getNPRList } from "../../../../actions/sales/nprActions";
 import DetailLoading from "../../../../components/DetailLoading";
 import MainLayout from "../../../../components/MainLayout";
+import { getStatusByName } from "../../../../include/js/function_main";
 import useKeepLogs from "../../../logs/useKeepLogs";
 const columns = [
   {
@@ -67,6 +68,15 @@ const columns = [
     render: (val) => val || "-",
   },
   {
+    title: "NPR Status",
+    align: "center",
+    dataIndex: "trans_status",
+    width: "10%",
+    ellipsis: true,
+    className: "bg-tb-primary",
+    render: (val) => getStatusByName(val),
+  },
+  {
     title: "Status",
     children: [
       {
@@ -76,24 +86,24 @@ const columns = [
           </div>
         ),
         align: "center",
-        dataIndex: "trans_status",
+        dataIndex: "rd_trans_status",
         width: "10%",
         ellipsis: true,
-        render: (val) => <Text style={{ color: "blue" }}>{val}</Text> || "-",
+        render: (val) => getStatusByName(val),
       },
       {
         title: "PU",
         align: "center",
         dataIndex: "pu_trans_status",
         width: "10%",
-        render: (val) => <Text style={{ color: "blue" }}>{val}</Text> || "-",
+        render: (val) => getStatusByName(val),
       },
       {
         title: "PD",
         align: "center",
         dataIndex: "pd_trans_status",
         width: "10%",
-        render: (val) => <Text style={{ color: "blue" }}>{val}</Text> || "-",
+        render: (val) => getStatusByName(val),
       },
     ],
   },

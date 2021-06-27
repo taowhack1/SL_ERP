@@ -16,7 +16,7 @@ export const GET_RD_EMP = "GET_RD_EMP";
 
 // System Config.
 export const DECIMAL_UPDATE = "DECIMAL_UPDATE";
-export const GET_VAT = "GET_VAT";
+
 // Salary
 export const ADD_SALARY = "ADD_SALARY";
 export const DEL_SALARY = "DEL_SALARY";
@@ -152,6 +152,7 @@ export const GET_QC_REPORT_ITEM = "GET_QC_REPORT_ITEM";
 export const GET_VENDOR_PAYMENT_TERM_LIST = "GET_VENDOR_PAYMENT_TERM_LIST";
 export const GET_CUSTOMER_PAYMENT_TERM_LIST = "GET_CUSTOMER_PAYMENT_TERM_LIST";
 export const GET_CURRENCY = "GET_CURRENCY";
+export const GET_VAT = "GET_VAT";
 
 export const RESET_AUTHEN = "RESET_AUTHEN";
 export const RESET_SYSTEM = "RESET_SYSTEM";

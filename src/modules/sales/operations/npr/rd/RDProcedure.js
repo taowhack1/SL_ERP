@@ -1,7 +1,7 @@
 import TextArea from "antd/lib/input/TextArea";
 import Text from "antd/lib/typography/Text";
 import React from "react";
-import CustomTable from "../../../../components/CustomTable";
+import CustomTable from "../../../../../components/CustomTable";
 const columns = ({ readOnly }) => [
   {
     title: (

@@ -82,6 +82,31 @@ export const sumArrObj = (arrObj = [], field, vat = 0.07, discount = 0) => {
   return total ? summary : 0;
 };
 
+export const sumArrObjWithVat = (
+  arrObj = [],
+  sumField,
+  vat_rate = 0.07,
+  vat_include = false,
+  discount = 0
+) => {
+  let total = arrObj?.reduce((prev, current) => prev + current[sumField], 0);
+  total = total - discount;
+  let vat_amount = total * vat_rate;
+  let exclude_vat = 0;
+  if (vat_include) {
+    exclude_vat = total * (100 / (100 + vat_rate * 100));
+    vat_amount = total - exclude_vat;
+  } else {
+    exclude_vat = total;
+    total = total + vat_amount;
+  }
+  return {
+    exclude_vat,
+    vat: vat_amount,
+    include_vat: total,
+  };
+};
+
 export const sumArrOdjWithField = (arrObj = [], field) => {
   let numbers = [];
   arrObj &&
@@ -466,4 +491,52 @@ export const getPageButton = (action, obj) => {
   }
   console.log("button", button);
   return button;
+};
+
+export const getStatusByName = (statusName) => {
+  switch (statusName) {
+    case "Draft":
+      return (
+        <Tag className="w-100" color="default">
+          {statusName}
+        </Tag>
+      );
+    case "Pending":
+      return (
+        <Tag className="w-100" color="processing">
+          {statusName}
+        </Tag>
+      );
+    case "In-Process":
+      return (
+        <Tag className="w-100" color="blue">
+          {statusName}
+        </Tag>
+      );
+    case "Complete":
+      return (
+        <Tag className="w-100" color="success">
+          {statusName}
+        </Tag>
+      );
+    case "Pending Accept":
+    case "Pending R&D":
+      return (
+        <Tag className="w-100" color="warning">
+          {statusName}
+        </Tag>
+      );
+    case "Cancel":
+      return (
+        <Tag className="w-100" color="error">
+          {statusName}
+        </Tag>
+      );
+    default:
+      return (
+        <Tag className="w-100" color="default">
+          {statusName}
+        </Tag>
+      );
+  }
 };

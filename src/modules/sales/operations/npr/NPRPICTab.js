@@ -1,6 +1,5 @@
 import React from "react";
-import RDFormulaList from "./RDFormulaList";
-import RDPIC from "./RDPIC";
+import RDPIC from "./rd/RDPIC";
 const NPRPICTab = () => {
   return (
     <>

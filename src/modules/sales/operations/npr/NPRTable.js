@@ -1,11 +1,17 @@
-import { EllipsisOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
-import { Table, Tag } from "antd";
+import {
+  EllipsisOutlined,
+  ExclamationCircleOutlined,
+  FastForwardFilled,
+} from "@ant-design/icons";
+import { Badge, Table, Tag } from "antd";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { useHistory } from "react-router";
+import { getStatusByName } from "../../../../include/js/function_main";
 import useKeepLogs from "../../../logs/useKeepLogs";
 import Authorize from "../../../system/Authorize";
-const columns = [
+import ModalRDRequestSample from "./rd/requestSample/ModalRDRequestSample";
+const columns = ({ onOpen }) => [
   {
     title: "No.",
     align: "center",
@@ -62,6 +68,14 @@ const columns = [
     render: (val) => val || "-",
   },
   {
+    title: "NPR Status",
+    align: "center",
+    dataIndex: "trans_status",
+    width: "10%",
+    className: "bg-tb-primary",
+    render: (val, record) => getStatusByName(val),
+  },
+  {
     title: "R&D",
     children: [
       {
@@ -78,9 +92,9 @@ const columns = [
       },
 
       {
-        title: "Deliver Date",
+        title: "Due Date",
         align: "center",
-        dataIndex: "npr_responsed_delivery_date",
+        dataIndex: "npr_responsed_required_date",
         width: "10%",
         render: (val) => <Text style={{ color: "blue" }}>{val || "-"}</Text>,
       },
@@ -89,30 +103,22 @@ const columns = [
         align: "center",
         dataIndex: "rd_trans_status",
         width: "10%",
-        render: (val) => val || "-",
+        render: (val) => getStatusByName(val),
       },
     ],
   },
+
   {
-    title: "NPR Status",
+    title: <div className="text-center">Request Sample</div>,
     align: "center",
-    dataIndex: "trans_status",
-    width: "15%",
-    render: (val, record) => <Text>{val || "N/A"}</Text>,
-  },
-  {
-    title: (
-      <div className="text-center">
-        <EllipsisOutlined />
-      </div>
-    ),
-    align: "center",
-    dataIndex: "",
-    width: "15%",
+    dataIndex: "npr_id",
+    width: "10%",
     render: (val, record) => (
-      <Tag icon={<ExclamationCircleOutlined />} color="warning">
-        Request Sample
-      </Tag>
+      <Badge count={record.add_trans_id === 1 ? 1 : 0}>
+        <Tag color="warning" onClick={() => onOpen(val)} className="pointer">
+          Request Sample
+        </Tag>
+      </Badge>
     ),
   },
 ];
@@ -124,13 +130,28 @@ const NPRTable = ({ dataSource }) => {
   const history = useHistory();
   const viewRecord = (record) =>
     history.push("/sales/npr/rd/" + record.npr_id, record);
-  console.log("NPRTable ", dataSource);
+  const [modal, setModal] = useState({
+    visible: false,
+    loading: false,
+    id: null,
+  });
+  const onOpen = (id) => setModal((prev) => ({ ...prev, visible: true, id }));
+  const onClose = () => setModal((prev) => ({ ...prev, visible: false }));
+  const modalConfig = useMemo(
+    () => ({
+      ...modal,
+      readOnly: false,
+      onOpen,
+      onClose,
+    }),
+    [modal, onOpen, onClose]
+  );
   return (
     <>
       <Table
         size={"small"}
         rowKey={"id"}
-        columns={columns}
+        columns={columns({ onOpen })}
         bordered
         dataSource={dataSource}
         pagination={{
@@ -138,11 +159,16 @@ const NPRTable = ({ dataSource }) => {
         }}
         onRow={(record) => ({
           onClick: (e) => {
-            viewRecord(record);
-            keepLog.keep_log_action("View NPR : ", record.npr_no);
+            console.log(e.target.tagName);
+
+            if (e.target.tagName !== "SPAN") {
+              viewRecord(record);
+              keepLog.keep_log_action("View NPR : ", record.npr_no);
+            }
           },
         })}
       />
+      <ModalRDRequestSample {...modalConfig} />
     </>
   );
 };

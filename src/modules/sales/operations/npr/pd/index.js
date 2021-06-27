@@ -6,7 +6,10 @@ import { useHistory } from "react-router";
 import { getNPRList } from "../../../../../actions/sales/nprActions";
 import DetailLoading from "../../../../../components/DetailLoading";
 import MainLayout from "../../../../../components/MainLayout";
-import { sortData } from "../../../../../include/js/function_main";
+import {
+  getStatusByName,
+  sortData,
+} from "../../../../../include/js/function_main";
 import useKeepLogs from "../../../../logs/useKeepLogs";
 import Authorize from "../../../../system/Authorize";
 const columns = [
@@ -66,6 +69,14 @@ const columns = [
     render: (val) => val || "-",
   },
   {
+    title: "NPR Status",
+    align: "center",
+    dataIndex: "trans_status",
+    width: "10%",
+    className: "bg-tb-primary",
+    render: (val, record) => getStatusByName(val),
+  },
+  {
     title: "Production",
     children: [
       {
@@ -97,11 +108,11 @@ const columns = [
     ],
   },
   {
-    title: "Status",
+    title: "PD Status",
     align: "center",
     dataIndex: "pd_trans_status",
     width: "15%",
-    render: (val, record) => <Text>{val || "N/A"}</Text>,
+    render: (val, record) => getStatusByName(val),
   },
 ];
 
@@ -120,7 +131,7 @@ const NPRListForPD = () => {
     dispatch(getNPRList(branch_id));
   }, []);
   useEffect(() => {
-    setState(sortData(list?.filter((obj) => obj.tg_trans_status_id !== 1)));
+    setState(sortData(list?.filter((obj) => obj.tg_trans_status_id === 4)));
   }, [list]);
   const layoutConfig = {
     projectId: 7,

@@ -12,7 +12,7 @@ import {
   quotation_require_fields_detail,
 } from "./configs";
 import CustomSelect from "../../components/CustomSelect";
-import { update_quotation } from "../../actions/sales";
+import { get_sale_master_data, update_quotation } from "../../actions/sales";
 import { create_quotation } from "../../actions/sales";
 import axios from "axios";
 import { header_config } from "../../include/js/main_config";
@@ -25,6 +25,7 @@ import Authorize from "../system/Authorize";
 import { useHistory } from "react-router-dom";
 import ItemLine from "./Sales_Detail";
 import { mainReducer } from "../../include/reducer";
+import { get_vat_list } from "../../actions/accounting";
 const { TextArea } = Input;
 const { Text } = Typography;
 
@@ -46,8 +47,8 @@ const CustomerCreate = (props) => {
   const dataComment = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
   const masterData = useSelector((state) => state.sales.master_data);
-  const customer_payment_terms = useSelector(
-    (state) => state.accounting.master_data.customer_payment_terms
+  const { customer_payment_terms, vat: vatList } = useSelector(
+    (state) => state.accounting.master_data
   );
   const data =
     props.location && props.location.state ? props.location.state : 0;
@@ -71,6 +72,8 @@ const CustomerCreate = (props) => {
             qn_created: moment().format("DD/MM/YYYY"),
           },
     });
+    dispatch(get_vat_list());
+    dispatch(get_sale_master_data());
   }, []);
 
   useEffect(() => {
@@ -191,7 +194,12 @@ const CustomerCreate = (props) => {
   const redirect_to_view = (id) => {
     history.push("/sales/quotations/view/" + (id ? id : "new"));
   };
-
+  console.log(
+    "vat",
+    data_head.vat_id,
+    data_head.vat_rate,
+    data_head.vat_include
+  );
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -217,7 +225,7 @@ const CustomerCreate = (props) => {
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
-              <span className="require">* </span>Customer{" "}
+              <span className="require">* </span>Customer
             </Text>
           </Col>
           <Col span={8}>
@@ -243,6 +251,7 @@ const CustomerCreate = (props) => {
                       vat_id: option.data.vat_id,
                       vat_rate: option.data.vat_rate,
                       vat_name: option.data.vat_name,
+                      vat_include: option.data.vat_include,
                     })
                   : resetForm();
               }}
@@ -251,7 +260,7 @@ const CustomerCreate = (props) => {
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>
-              <span className="require">* </span>Expire Date{" "}
+              <span className="require">* </span>Expire Date
             </Text>
           </Col>
           <Col span={8}>
@@ -276,19 +285,28 @@ const CustomerCreate = (props) => {
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
-              <span className="require">* </span>Description
+              <span className="require">* </span>Vat
             </Text>
           </Col>
 
           <Col span={8}>
-            <Input
-              name="qn_description"
-              onChange={(e) =>
-                upDateFormValue({ qn_description: e.target.value })
-              }
-              value={data_head.qn_description}
-              placeholder="Description"
-            ></Input>
+            <CustomSelect
+              placeholder="Select Vat Type"
+              data={vatList || []}
+              field_id="vat_id"
+              field_name="vat_name"
+              showSearch
+              onChange={(val, option) => {
+                console.log("option", option);
+                upDateFormValue({
+                  vat_id: option.data.vat_id,
+                  vat_rate: option.data.vat_rate,
+                  vat_include: option.data.vat_include,
+                });
+              }}
+              value={data_head.vat_id}
+              defaultValue={1}
+            />
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -322,7 +340,24 @@ const CustomerCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3} offset={13}>
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Description
+            </Text>
+          </Col>
+
+          <Col span={8}>
+            <Input
+              name="qn_description"
+              onChange={(e) =>
+                upDateFormValue({ qn_description: e.target.value })
+              }
+              value={data_head.qn_description}
+              placeholder="Description"
+            ></Input>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}>
             <Text strong className={"pd-left-1"}>
               Currency
             </Text>
@@ -341,6 +376,7 @@ const CustomerCreate = (props) => {
                   readOnly={false}
                   data_detail={data_detail}
                   vat_rate={data_head.vat_rate}
+                  vat_include={data_head.vat_include}
                   detailDispatch={detailDispatch}
                   headDispatch={headDispatch}
                   project="quotation"

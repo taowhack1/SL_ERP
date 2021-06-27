@@ -99,8 +99,10 @@ const getRDEmp = () => (dispatch) => {
         // do with res.data
         if (res.status === 200) {
           dispatch({ type: GET_RD_EMP, payload: res.data });
+          dispatch({ type: SET_LOADING, payload: false });
         } else {
           dispatch({ type: GET_RD_EMP, payload: [] });
+          dispatch({ type: SET_LOADING, payload: false });
         }
       })
       .catch((error) => {

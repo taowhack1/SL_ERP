@@ -137,6 +137,7 @@ export const quotation_fields = {
   vat_name: null,
   vat_no_name: null,
   vat_rate: 0.07,
+  vat_include: false,
   currency_no: "THB",
   process_complete: null,
   trans_status_name: null,

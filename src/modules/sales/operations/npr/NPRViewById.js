@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getRDEmp } from "../../../../actions/hrm";
 import { PrinterOutlined } from "@ant-design/icons";
 import { getUOMList } from "../../../../actions/inventory";
+import { SET_LOADING } from "../../../../actions/types";
 export const NPRFormContext = React.createContext();
 const initialState = {
   npr_responsed_required_by: null,
@@ -60,7 +61,6 @@ const NPRViewById = () => {
   );
   useEffect(() => {
     const getData = async () => {
-      dispatch(getRDEmp());
       dispatch(getNPRItemList());
       dispatch(getUOMList());
       dispatch(get_qa_conditions_master(3, 1, 1, 1));
@@ -68,6 +68,7 @@ const NPRViewById = () => {
       const resp = await getNPRByID(id);
       if (resp.success) {
         setState(resp.data);
+        dispatch({ type: SET_LOADING, payload: false });
       }
     };
     getData();

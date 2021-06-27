@@ -70,14 +70,20 @@ const PurchaseOrders = (props) => {
       console.log(value);
       setLoading(true);
       setTimeout(() => {
-        const search_data = po_list.filter(
-          (po) => po.po_no.indexOf(value) >= 0
+        const search_data = po_list?.filter(
+          (po) =>
+            po?.po_no?.indexOf(value) >= 0 ||
+            po?.vendor_no_name?.indexOf(value) >= 0 ||
+            po?.po_created_by_no_name?.indexOf(value) >= 0 ||
+            po?.po_created?.indexOf(value) >= 0 ||
+            po?.po_description?.indexOf(value) >= 0
         );
         setData(search_data);
         setLoading(false);
       }, 1200);
     },
   };
+  console.log("po list", data);
   return (
     <div>
       <MainLayout {...config}>

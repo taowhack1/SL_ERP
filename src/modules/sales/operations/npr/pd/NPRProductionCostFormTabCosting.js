@@ -94,6 +94,7 @@ const NPRProductionCostFormTabCosting = () => {
                           npr_product_cost_response_by: record.data.employee_no,
                           tg_trans_status_id: 2,
                           npr_product_cost_request_by: user_name,
+                          npr_responsed_required_by: user_name,
                           npr_product_cost_request_date:
                             moment().format("DD/MM/YYYY"),
                         })
@@ -101,6 +102,7 @@ const NPRProductionCostFormTabCosting = () => {
                           npr_product_cost_response_by: null,
                           tg_trans_status_id: 1,
                           npr_product_cost_request_by: user_name,
+                          npr_responsed_required_by: user_name,
                           npr_product_cost_request_date:
                             moment().format("DD/MM/YYYY"),
                         })
