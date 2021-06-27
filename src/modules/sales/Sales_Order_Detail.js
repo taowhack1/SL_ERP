@@ -18,7 +18,11 @@ import moment from "moment";
 
 import { so_detail_fields, so_detail_columns } from "./configs";
 import CustomSelect from "../../components/CustomSelect";
-import { calSubtotal, sumArrObj } from "../../include/js/function_main";
+import {
+  calSubtotal,
+  sumArrObj,
+  sumArrObjWithVat,
+} from "../../include/js/function_main";
 
 import {
   convertDigit,
@@ -35,6 +39,7 @@ const SO_Detail = ({
   detailDispatch,
   headDispatch,
   vat_rate,
+  vat_include,
 }) => {
   // state
   const select_items = useSelector(
@@ -45,7 +50,12 @@ const SO_Detail = ({
   );
 
   const updateAmount = () => {
-    const obj = sumArrObj(data_detail, "so_detail_total_price", vat_rate);
+    const obj = sumArrObjWithVat(
+      data_detail,
+      "so_detail_total_price",
+      vat_rate,
+      vat_include
+    );
     headDispatch({
       type: "CHANGE_HEAD_VALUE",
       payload: {
@@ -58,7 +68,10 @@ const SO_Detail = ({
 
   useEffect(() => {
     !readOnly && updateAmount();
-  }, [data_detail]);
+  }, [readOnly, vat_rate, vat_include]);
+  useEffect(() => {
+    !readOnly && updateAmount();
+  }, [readOnly, data_detail]);
 
   // function
   const addLine = () => {

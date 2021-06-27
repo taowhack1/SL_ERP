@@ -44,8 +44,8 @@ const SaleOrderCreate = (props) => {
   const dataComment = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
   const masterData = useSelector((state) => state.sales.master_data);
-  const customer_payment_terms = useSelector(
-    (state) => state.accounting.master_data.customer_payment_terms
+  const { customer_payment_terms, vat: vatList } = useSelector(
+    (state) => state.accounting.master_data
   );
   const quotation_list = useSelector((state) => state.sales.so.qn_ref);
   const flow =
@@ -179,6 +179,8 @@ const SaleOrderCreate = (props) => {
     copyMain.so_agreement = copyRef.qn_agreement;
     copyMain.so_remark = copyRef.qn_remark;
     copyMain.vat_id = copyRef.vat_id;
+    copyMain.vat_rate = copyRef.vat_rate;
+    copyMain.vat_include = copyRef.vat_include;
     copyMain.currency_id = copyRef.currency_id;
     copyMain.tg_so_amount = copyRef.tg_qn_amount;
     copyMain.tg_so_discount = copyRef.tg_qn_discount;
@@ -193,7 +195,6 @@ const SaleOrderCreate = (props) => {
     copyMain.currency_name = copyRef.currency_name;
     copyMain.customer_no_name = copyRef.customer_no_name;
     copyMain.currency_no_name = copyRef.currency_no_name;
-    copyMain.vat_rate = copyRef.vat_rate;
     console.log("copyMain", copyMain);
     return copyMain;
   };
@@ -308,21 +309,30 @@ const SaleOrderCreate = (props) => {
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
-              <span className="require">* </span>Description :
+              <span className="require">* </span>Vat
             </Text>
           </Col>
 
           <Col span={8}>
-            <Input
-              name="so_description"
-              onChange={(e) =>
+            <CustomSelect
+              placeholder="Select Vat Type"
+              data={vatList || []}
+              field_id="vat_id"
+              field_name="vat_name"
+              showSearch
+              onChange={(val, option) => {
+                console.log("option", option);
                 headDispatch({
                   type: "CHANGE_HEAD_VALUE",
-                  payload: { so_description: e.target.value },
-                })
-              }
-              value={data_head.so_description}
-              placeholder="Description"
+                  payload: {
+                    vat_id: option.data.vat_id,
+                    vat_rate: option.data.vat_rate,
+                    vat_include: option.data.vat_include,
+                  },
+                });
+              }}
+              value={data_head.vat_id}
+              defaultValue={1}
             />
           </Col>
           <Col span={2}></Col>
@@ -347,15 +357,31 @@ const SaleOrderCreate = (props) => {
                   ? headDispatch({
                       type: "CHANGE_HEAD_VALUE",
                       payload: {
-                        customer_id: data,
-                        customer_no_name: option.title,
+                        currency_id: option.data.currency_id,
+                        currency_no: option.data.currency_no,
+                        customer_id: option.data.customer_id,
+                        customer_no_name: option.data.customer_no_name,
+                        payment_term_id: option.data.payment_term_id,
+                        payment_term_no_name: option.data.payment_term_no_name,
+                        vat_id: option.data.vat_id,
+                        vat_rate: option.data.vat_rate,
+                        vat_name: option.data.vat_name,
+                        vat_include: option.data.vat_include,
                       },
                     })
                   : headDispatch({
                       type: "CHANGE_HEAD_VALUE",
                       payload: {
+                        currency_id: 1,
+                        currency_no: "THB",
                         customer_id: null,
                         customer_no_name: null,
+                        payment_term_id: null,
+                        payment_term_no_name: null,
+                        vat_id: 1,
+                        vat_rate: 0.07,
+                        vat_name: "VAT 7%",
+                        vat_include: false,
                       },
                     });
               }}
@@ -363,27 +389,27 @@ const SaleOrderCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          {/* <Col span={3}>
-            <Text strong className={"pd-left-1"}>
-              Agreement :
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Description :
             </Text>
           </Col>
 
           <Col span={8}>
             <Input
-              name="so_agreement"
+              name="so_description"
               onChange={(e) =>
                 headDispatch({
                   type: "CHANGE_HEAD_VALUE",
-                  payload: { so_agreement: e.target.value },
+                  payload: { so_description: e.target.value },
                 })
               }
-              value={data_head.so_agreement}
-              placeholder="Agreement"
-            ></Input>
+              value={data_head.so_description}
+              placeholder="Description"
+            />
           </Col>
-          <Col span={2}></Col> */}
-          <Col span={3} offset={13}>
+          <Col span={2}></Col>
+          <Col span={3}>
             <Text strong>
               <span className="require">* </span>
               Payment Terms
@@ -429,6 +455,7 @@ const SaleOrderCreate = (props) => {
                   detailDispatch={detailDispatch}
                   headDispatch={headDispatch}
                   vat_rate={data_head.vat_rate}
+                  vat_include={data_head.vat_include}
                 />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Notes" key="2">

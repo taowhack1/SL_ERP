@@ -219,11 +219,11 @@ const SaleOrderView = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Description :</Text>
+            <Text strong>Vat :</Text>
           </Col>
 
           <Col span={8}>
-            <Text className="text-view">{data_head.so_description}</Text>
+            <Text className="text-view">{data_head.vat_name}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -231,6 +231,15 @@ const SaleOrderView = (props) => {
           </Col>
           <Col span={8}>
             <Text className="text-view">{data_head.payment_term_no_name}</Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Description :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Text className="text-view">{data_head.so_description}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-tab-margin-l">

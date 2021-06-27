@@ -233,13 +233,11 @@ const Sales_Quotations = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Description :</Text>
+            <Text strong>Vat :</Text>
           </Col>
 
           <Col span={8}>
-            <Text className="text-view">
-              {data_head && data_head.qn_description}
-            </Text>
+            <Text className="text-view">{data_head && data_head.vat_name}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -252,7 +250,17 @@ const Sales_Quotations = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3} offset={13}>
+          <Col span={3}>
+            <Text strong>Description :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Text className="text-view">
+              {data_head && data_head.qn_description}
+            </Text>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}>
             <Text strong>Currency :</Text>
           </Col>
 
