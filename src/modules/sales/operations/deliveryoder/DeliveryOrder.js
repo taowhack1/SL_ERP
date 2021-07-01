@@ -106,9 +106,6 @@ const DeliveryOrder = () => {
   const { operations, loading } = useSelector((state) => state.sales);
   const list = operations.npr.list;
   const [state, setState] = useState(list);
-  //   useEffect(() => {
-  //     dispatch(getNPRList(branch_id));
-  //   }, []);
   useEffect(() => {
     setState(list);
   }, [list]);
