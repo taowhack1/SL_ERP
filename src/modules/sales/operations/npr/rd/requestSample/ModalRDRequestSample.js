@@ -1,23 +1,23 @@
-import {
-  EditTwoTone,
-  EllipsisOutlined,
-  PrinterTwoTone,
-  TrophyOutlined,
-} from "@ant-design/icons";
+import { EllipsisOutlined, PrinterTwoTone } from "@ant-design/icons";
 import { Button, message } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import Text from "antd/lib/typography/Text";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useParams } from "react-router";
+import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 import {
+  getNPRList,
   getNPRRequestSample,
   saveSampleRequest,
 } from "../../../../../../actions/sales/nprActions";
 import CustomTable from "../../../../../../components/CustomTable";
 import { AppContext } from "../../../../../../include/js/context";
-import { sortData } from "../../../../../../include/js/function_main";
+import {
+  getStatusByName,
+  sortData,
+} from "../../../../../../include/js/function_main";
 import { convertDigit } from "../../../../../../include/js/main_config";
 import RequestSampleForm from "./RequestSampleForm";
 const columns = ({ onSelect }) => [
@@ -117,7 +117,7 @@ const columns = ({ onSelect }) => [
     dataIndex: "trans_status",
     align: "center",
     width: "12%",
-    render: (val) => <Text strong>{val || "N/A"}</Text>,
+    render: (val) => getStatusByName(val),
   },
   {
     title: (
@@ -128,18 +128,15 @@ const columns = ({ onSelect }) => [
     dataIndex: "id",
     align: "center",
     width: "5%",
-    render: (val, record) => (
-      <div className="text-center">
-        <PrinterTwoTone
-          className="button-icon"
-          // onClick={() => onOpen({ data: null })}
-        />
-        {/* <EditTwoTone
-          className="button-icon pd-left-1"
-          onClick={() => onSelect(record)}
-        /> */}
-      </div>
-    ),
+    render: (val, record) =>
+      record.npr_additional_batch_size !== null && (
+        <div className="text-center">
+          <PrinterTwoTone
+            className="button-icon"
+            // onClick={() => onOpen({ data: null })}
+          />
+        </div>
+      ),
   },
 ];
 const initialState = {
@@ -163,17 +160,13 @@ const initialState = {
   tg_trans_close_id: null,
   trans_id: null,
 };
-const ModalRDRequestSample = ({
-  visible = false,
-  readOnly = false,
-  id = null,
-  onClose,
-}) => {
+const ModalRDRequestSample = ({ visible = false, id = null, onClose }) => {
+  const dispatch = useDispatch();
   const [state, setState] = useState([]);
   const [record, setRecord] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const {
-    auth: { user_name },
+    auth: { user_name, branch_id },
   } = useContext(AppContext);
   const methods = useForm({
     defaultValues: initialState,
@@ -192,18 +185,41 @@ const ModalRDRequestSample = ({
   };
 
   const onSubmit = async (data) => {
+    setLoading(true);
     console.log("onSubmit", data);
     const resp = await saveSampleRequest(data, false);
     console.log("resp", resp);
     if (resp.success) {
-      message.success("Save Successfully.");
-      methods.reset(initialState);
+      await Swal.fire({
+        title: "Save Successfully!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: `Back to NPR`,
+        cancelButtonText: `Stay here`,
+        // cancelButtonColor: "blue",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // history.push("/sales/npr/rd");
+
+          console.log("Back");
+          dispatch(getNPRList(branch_id));
+
+          onClose();
+        } else {
+          console.log("Stay Here");
+          methods.reset(initialState);
+          setLoading(false);
+        }
+      });
+
+      // message.success("Save Successfully.");
     }
   };
 
   useEffect(() => {
     setLoading(true);
     const getData = async (id) => {
+      console.log("getDataModal");
       const resp = await getNPRRequestSample(id);
       console.log("ModalRDRequestSample", resp);
       if (resp.success) {
@@ -212,10 +228,9 @@ const ModalRDRequestSample = ({
       }
     };
     id && getData(id);
-  }, [id]);
+  }, [id, visible]);
 
   const npr_additional_id = methods.watch("npr_additional_id");
-  const watchData = methods.watch("trans_id");
   const disabledEdit = [5, 6].includes(record.trans_id);
   const contextValue = React.useMemo(
     () => ({
@@ -225,7 +240,7 @@ const ModalRDRequestSample = ({
       disabledEdit,
       record,
     }),
-    [id, methods.formState.errors, npr_additional_id]
+    [id, methods.formState.errors, npr_additional_id, visible]
   );
   const modalConfig = {
     title: "Request Sample",
@@ -233,6 +248,7 @@ const ModalRDRequestSample = ({
     width: 1000,
     onOk: onClose,
     onCancel: onClose,
+    destroyOnClose: true,
     footer: [
       <Button key="discard" onClick={onClose} loading={loading}>
         {disabledEdit ? "Back" : "Discard"}
@@ -256,17 +272,21 @@ const ModalRDRequestSample = ({
   };
 
   return (
-    <Modal {...modalConfig} destroyOnClose>
+    <Modal {...modalConfig}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <FormProvider {...contextValue}>
           <div className="under-line pb-1">
-            <Text className="detail-tab-header ">Form</Text>
+            <Text className="detail-tab-header " strong>
+              Form
+            </Text>
           </div>
           <div className="form-section">
             <RequestSampleForm />
           </div>
           <div className="under-line pb-1 mt-2">
-            <Text className="detail-tab-header ">History</Text>
+            <Text className="detail-tab-header " strong>
+              History
+            </Text>
           </div>
           <div className="form-section">
             <CustomTable
@@ -279,7 +299,6 @@ const ModalRDRequestSample = ({
                 onSelect(record);
               }}
             />
-            {/* <ModalRequestSample {...modalConfig} /> */}
           </div>
           <button type="submit" id="modal-submit-btn" className="d-none">
             Submit

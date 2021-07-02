@@ -75,22 +75,24 @@ const columns = ({ readOnly, itemList = [], deleteRow, onChange }) => [
           field_name="item_no_name"
           value={val}
           onChange={(val, props) => {
-            const { trans_id, trans_field_id, item_cost, item_no_name } =
-              props.data;
-            console.log("select item", props.data);
-            val !== null || val !== undefined
-              ? onChange(record.id, {
-                  trans_id,
-                  trans_field_id,
-                  item_no_name,
-                  npr_formula_detail_item_cost: item_cost,
-                })
-              : onChange(record.id, {
-                  trans_id: null,
-                  trans_field_id: null,
-                  item_no_name: null,
-                  npr_formula_detail_item_cost: 0,
-                });
+            console.log("val", val);
+            if (val !== null && val !== undefined) {
+              const { trans_id, trans_field_id, item_cost, item_no_name } =
+                props?.data;
+              onChange(record.id, {
+                trans_id,
+                trans_field_id,
+                item_no_name,
+                npr_formula_detail_item_cost: item_cost,
+              });
+            } else {
+              onChange(record.id, {
+                trans_id: null,
+                trans_field_id: null,
+                item_no_name: null,
+                npr_formula_detail_item_cost: 0,
+              });
+            }
           }}
         />
       ),

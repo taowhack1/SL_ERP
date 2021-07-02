@@ -336,7 +336,9 @@ const RDDevelopmentForm = ({
                 <Button
                   size="small"
                   loading={false}
-                  disabled={npr_formula_id ? false : true}
+                  disabled={
+                    npr_formula_id && tg_trans_status_id === 4 ? false : true
+                  }
                   onClick={onPrintLabel}
                 >
                   Print QR Code

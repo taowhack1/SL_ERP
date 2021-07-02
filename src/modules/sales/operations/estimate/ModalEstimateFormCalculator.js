@@ -85,11 +85,14 @@ const ModalEstimateFormCalculator = ({ visible = false }) => {
     // Do Submit
     setLoading(true);
     let detail = estimate.npr_estimate_detail.map((obj) =>
-      obj.npr_estimate_detail_id === state.npr_estimate_detail_id ? state : obj
+      obj.npr_product_cost_detail_id === state.npr_product_cost_detail_id
+        ? state
+        : obj
     );
-    if (!state.npr_estimate_detail_id) {
-      detail = [...detail, state];
-    }
+    console.log("estimate.npr_estimate_detail", estimate.npr_estimate_detail);
+    // if (!state.npr_estimate_detail_id) {
+    //   detail = [...detail, state];
+    // }
     const saveData = {
       npr_id,
       npr_estimate_id,
@@ -97,10 +100,11 @@ const ModalEstimateFormCalculator = ({ visible = false }) => {
       npr_estimate_description,
       commit: 1,
       user_name,
-      tg_trans_status_id,
-      tg_trans_close_id,
+      tg_trans_status_id: tg_trans_status_id || 1,
+      tg_trans_close_id: tg_trans_close_id || 1,
       npr_estimate_detail: detail,
     };
+    console.log("saveData", saveData);
     const resp = await saveEstimate(saveData, true);
     if (resp.success) {
       console.log("SAVE SUCCESS");

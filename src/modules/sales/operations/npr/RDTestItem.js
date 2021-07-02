@@ -47,16 +47,18 @@ const columns = ({ readOnly, deleteRow, onChange, subject, spec }) => [
           field_name="qa_subject_name"
           value={val}
           onChange={(val, props) => {
-            const { qa_subject_id, qa_subject_name } = props.data;
-            val !== null || val !== undefined
-              ? onChange(record.id, {
-                  qa_subject_id,
-                  qa_subject_name,
-                })
-              : onChange(record.id, {
-                  qa_subject_id: null,
-                  qa_subject_name: null,
-                });
+            if (val !== null && val !== undefined) {
+              const { qa_subject_id, qa_subject_name } = props.data;
+              onChange(record.id, {
+                qa_subject_id,
+                qa_subject_name,
+              });
+            } else {
+              onChange(record.id, {
+                qa_subject_id: null,
+                qa_subject_name: null,
+              });
+            }
           }}
         />
       ),
@@ -88,16 +90,18 @@ const columns = ({ readOnly, deleteRow, onChange, subject, spec }) => [
           field_name="qa_specification_name"
           value={val}
           onChange={(val, props) => {
-            const { qa_specification_id, qa_specification_name } = props.data;
-            val !== null || val !== undefined
-              ? onChange(record.id, {
-                  qa_specification_id,
-                  qa_specification_name,
-                })
-              : onChange(record.id, {
-                  qa_specification_id: null,
-                  qa_specification_name: null,
-                });
+            if (val !== null && val !== undefined) {
+              const { qa_specification_id, qa_specification_name } = props.data;
+              onChange(record.id, {
+                qa_specification_id,
+                qa_specification_name,
+              });
+            } else {
+              onChange(record.id, {
+                qa_specification_id: null,
+                qa_specification_name: null,
+              });
+            }
           }}
         />
       ),

@@ -1,12 +1,16 @@
 import {
+  EditTwoTone,
   EllipsisOutlined,
   ExclamationCircleOutlined,
   FastForwardFilled,
+  ProfileTwoTone,
 } from "@ant-design/icons";
 import { Badge, Table, Tag } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import { getNPRList } from "../../../../actions/sales/nprActions";
 import { getStatusByName } from "../../../../include/js/function_main";
 import useKeepLogs from "../../../logs/useKeepLogs";
 import Authorize from "../../../system/Authorize";
@@ -99,7 +103,7 @@ const columns = ({ onOpen }) => [
         render: (val) => <Text style={{ color: "blue" }}>{val || "-"}</Text>,
       },
       {
-        title: "Status",
+        title: "R&D Status",
         align: "center",
         dataIndex: "rd_trans_status",
         width: "10%",
@@ -107,19 +111,27 @@ const columns = ({ onOpen }) => [
       },
     ],
   },
-
   {
-    title: <div className="text-center">Request Sample</div>,
+    title: <div className="text-center">Sample Request</div>,
     align: "center",
     dataIndex: "npr_id",
     width: "10%",
-    render: (val, record) => (
-      <Badge count={record.add_trans_id === 1 ? 1 : 0}>
-        <Tag color="warning" onClick={() => onOpen(val)} className="pointer">
-          Request Sample
-        </Tag>
-      </Badge>
-    ),
+    render: (val, record) =>
+      // record.add_trans_id !== null && (
+      [2, 3].includes(record.add_trans_id) ? (
+        <Badge count={[2, 3].includes(record.add_trans_id) ? 1 : 0}>
+          <EditTwoTone
+            onClick={() => onOpen(val)}
+            className="pointer w-100 font-l"
+          />
+        </Badge>
+      ) : (
+        <ProfileTwoTone
+          onClick={() => onOpen(val)}
+          className="pointer w-100 font-l"
+        />
+      ),
+    // ),
   },
 ];
 
@@ -128,6 +140,8 @@ const NPRTable = ({ dataSource }) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const history = useHistory();
+  const dispatch = useDispatch();
+  const { branch_id } = useSelector((state) => state.auth.authData);
   const viewRecord = (record) =>
     history.push("/sales/npr/rd/" + record.npr_id, record);
   const [modal, setModal] = useState({
@@ -136,7 +150,10 @@ const NPRTable = ({ dataSource }) => {
     id: null,
   });
   const onOpen = (id) => setModal((prev) => ({ ...prev, visible: true, id }));
-  const onClose = () => setModal((prev) => ({ ...prev, visible: false }));
+  const onClose = () => {
+    dispatch(getNPRList(branch_id));
+    setModal((prev) => ({ ...prev, visible: false }));
+  };
   const modalConfig = useMemo(
     () => ({
       ...modal,
@@ -161,7 +178,7 @@ const NPRTable = ({ dataSource }) => {
           onClick: (e) => {
             console.log(e.target.tagName);
 
-            if (e.target.tagName !== "SPAN") {
+            if (!["path", "svg", "P"].includes(e.target.tagName)) {
               viewRecord(record);
               keepLog.keep_log_action("View NPR : ", record.npr_no);
             }

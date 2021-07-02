@@ -142,11 +142,13 @@ const EstimateFormTabHistory = () => {
     estimate: { npr_estimate_detail },
     modal: { visible },
   } = useContext(NPREstimateContext);
+
+  console.log("npr_estimate_detail", npr_estimate_detail);
   return (
     <>
-      <Button className="primary" onClick={() => onOpen()}>
+      {/* <Button className="primary" onClick={() => onOpen()}>
         Add New
-      </Button>
+      </Button> */}
 
       <Table
         className="mt-1"

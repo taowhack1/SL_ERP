@@ -22,20 +22,22 @@ const EstimateFormBatchCostList = ({ data, onChangeMarkup }) => {
   ];
   return (
     <>
-      {data?.npr_estimate_detail_sub?.map((obj, index) => (
-        <EstimateFormBatchCost
-          data={obj}
-          name={formName[index].name}
-          fields={formFields}
-          key={obj.npr_estimate_type_id}
-          showInput={
-            obj.npr_estimate_type_id === 3
-              ? [true, false, true, true]
-              : [true, true, true, true]
-          }
-          onChangeMarkup={onChangeMarkup}
-        />
-      ))}
+      {data?.npr_estimate_detail_sub
+        ?.filter((obj1) => obj1.npr_estimate_type_id === 1)
+        ?.map((obj, index) => (
+          <EstimateFormBatchCost
+            data={obj}
+            name={formName[index]?.name}
+            fields={formFields}
+            key={obj?.npr_estimate_type_id}
+            showInput={
+              obj?.npr_estimate_type_id === 3
+                ? [true, false, true, true]
+                : [true, true, true, true]
+            }
+            onChangeMarkup={onChangeMarkup}
+          />
+        ))}
     </>
   );
 };

@@ -24,39 +24,39 @@ const initialState = {
   tg_trans_status_id: 1,
   tg_trans_close_id: 1,
   npr_estimate_detail: [
-    {
-      id: null,
-      npr_estimate_detail_active: 1,
-      npr_id: null,
-      npr_formula_id: null,
-      npr_product_cost_detail_id: null,
-      npr_product_cost_detail_batch_size: null,
-      npr_product_cost_detail_fg_qty: 0,
-      tg_npr_estimate_detail_total_amount: 0,
-      npr_estimate_detail_sub: [
-        {
-          npr_estimate_type_id: 1,
-          npr_estimate_detail_sub_amount: null,
-          npr_estimate_detail_sub_waste_percent_qty: null,
-          npr_estimate_detail_sub_mark_up_percent_qty: null,
-          npr_estimate_detail_sub_total_amount: null,
-        },
-        {
-          npr_estimate_type_id: 2,
-          npr_estimate_detail_sub_amount: null,
-          npr_estimate_detail_sub_waste_percent_qty: null,
-          npr_estimate_detail_sub_mark_up_percent_qty: null,
-          npr_estimate_detail_sub_total_amount: null,
-        },
-        {
-          npr_estimate_type_id: 3,
-          npr_estimate_detail_sub_amount: null,
-          npr_estimate_detail_sub_waste_percent_qty: null,
-          npr_estimate_detail_sub_mark_up_percent_qty: null,
-          npr_estimate_detail_sub_total_amount: null,
-        },
-      ],
-    },
+    // {
+    //   id: null,
+    //   npr_estimate_detail_active: 1,
+    //   npr_id: null,
+    //   npr_formula_id: null,
+    //   npr_product_cost_detail_id: null,
+    //   npr_product_cost_detail_batch_size: 0,
+    //   npr_product_cost_detail_fg_qty: 0,
+    //   tg_npr_estimate_detail_total_amount: 0,
+    //   npr_estimate_detail_sub: [
+    //     {
+    //       npr_estimate_type_id: 1,
+    //       npr_estimate_detail_sub_amount: 0,
+    //       npr_estimate_detail_sub_waste_percent_qty: 0,
+    //       npr_estimate_detail_sub_mark_up_percent_qty: 0,
+    //       npr_estimate_detail_sub_total_amount: 0,
+    //     },
+    //     {
+    //       npr_estimate_type_id: 2,
+    //       npr_estimate_detail_sub_amount: 0,
+    //       npr_estimate_detail_sub_waste_percent_qty: 0,
+    //       npr_estimate_detail_sub_mark_up_percent_qty: 0,
+    //       npr_estimate_detail_sub_total_amount: 0,
+    //     },
+    //     {
+    //       npr_estimate_type_id: 3,
+    //       npr_estimate_detail_sub_amount: 0,
+    //       npr_estimate_detail_sub_waste_percent_qty: 0,
+    //       npr_estimate_detail_sub_mark_up_percent_qty: 0,
+    //       npr_estimate_detail_sub_total_amount: 0,
+    //     },
+    //   ],
+    // },
   ],
   npr_estimate_calculate: [],
 };
@@ -109,10 +109,35 @@ const EstimateForm = () => {
       estimateData: estimateData ?? null,
     }));
   const onClose = () => setModal((prev) => ({ ...prev, visible: false }));
-  const onPrint = () =>
-    window.open(
-      `${process.env.REACT_APP_REPORT_SERVER}/report_npr_estimate.aspx?npr_estimate_no=${estimate.npr_estimate_no}`
-    );
+  const onPrint = async () => {
+    console.log("onPrint", estimate);
+    if (estimate.npr_estimate_id !== null) {
+      window.open(
+        `${process.env.REACT_APP_REPORT_SERVER}/report_npr_estimate.aspx?npr_estimate_no=${estimate.npr_estimate_no}`
+      );
+    } else {
+      const saveData = {
+        ...estimate,
+        commit: 1,
+        user_name,
+        tg_trans_status_id: 1,
+        tg_trans_close_id: 1,
+      };
+      console.log("saveData", saveData);
+      const resp = await saveEstimate(saveData, false);
+      if (resp.success && resp.data.npr_estimate_no) {
+        window.open(
+          `${process.env.REACT_APP_REPORT_SERVER}/report_npr_estimate.aspx?npr_estimate_no=${resp.data.npr_estimate_no}`
+        );
+        setEstimate({
+          ...resp.data,
+          npr_estimate_detail: sortData(resp.data.npr_estimate_detail),
+        });
+      } else {
+        message.error("Can't open estimate report. Please contact admin.");
+      }
+    }
+  };
   const onOpenQN = async () => {
     const saveData = {
       ...estimate,
@@ -157,7 +182,8 @@ const EstimateForm = () => {
               Print Estimate Price
             </span>
           ),
-          link: `${process.env.REACT_APP_REPORT_SERVER}/report_npr_estimate.aspx?npr_estimate_no=${estimate.npr_estimate_no}`,
+          link: `#`,
+          callBack: onPrint,
         },
         {
           name: (
@@ -174,7 +200,7 @@ const EstimateForm = () => {
       discard: "/sales/operation/estimate",
       save: "function",
     }),
-    [state, estimate, method, onOpenQN]
+    [state, estimate, method, onOpenQN, onPrint]
   );
 
   const contextValue = React.useMemo(

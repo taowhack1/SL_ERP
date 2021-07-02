@@ -42,40 +42,6 @@ const columns = ({ checked_id, onChange, keyId, keyNo }) => [
     width: "85%",
   },
 ];
-const mockupData1 = [
-  {
-    id: 0,
-    npr_formula_id: 1,
-    npr_formula_no: "KCC-AP-01A / NPRm001-2021-001",
-  },
-  {
-    id: 1,
-    npr_formula_id: 2,
-    npr_formula_no: "KCC-AP-01B / NPRm001-2021-002",
-  },
-  {
-    id: 2,
-    npr_formula_id: 3,
-    npr_formula_no: "KCC-AP-01C / NPRm001-2021-003",
-  },
-  {
-    id: 4,
-    npr_formula_id: 4,
-    npr_formula_no: "KCC-AP-01D / NPRm001-2021-004",
-  },
-];
-const mockupData2 = [
-  {
-    id: 0,
-    npr_formula_id: 1,
-    npr_formula_no: "KCC-BB-01A / NPRm005-2021-001",
-  },
-  {
-    id: 1,
-    npr_formula_id: 2,
-    npr_formula_no: "KCC-BB-01B / NPRm005-2021-002",
-  },
-];
 const ModalSelectFormula = (props) => {
   const { modal, setModal, onClickCompareFormula } = props;
   const { visible, npr_no_1, npr_no_2, npr_formula_1, npr_formula_2 } = modal;

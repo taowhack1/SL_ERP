@@ -493,48 +493,88 @@ export const getPageButton = (action, obj) => {
   return button;
 };
 
-export const getStatusByName = (statusName) => {
+export const getStatusByName = (statusName, callBack) => {
   switch (statusName) {
     case "Draft":
       return (
-        <Tag className="w-100" color="default">
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="default"
+        >
           {statusName}
         </Tag>
       );
     case "Pending":
+    case "Develop":
       return (
-        <Tag className="w-100" color="processing">
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="processing"
+        >
           {statusName}
         </Tag>
       );
     case "In-Process":
       return (
-        <Tag className="w-100" color="blue">
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="blue"
+        >
           {statusName}
         </Tag>
       );
     case "Complete":
       return (
-        <Tag className="w-100" color="success">
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="success"
+        >
           {statusName}
         </Tag>
       );
     case "Pending Accept":
     case "Pending R&D":
+    case "Pending Satisfaction":
       return (
-        <Tag className="w-100" color="warning">
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="warning"
+        >
+          {statusName}
+        </Tag>
+      );
+    case "In-Process R&D":
+      return (
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="magenta"
+        >
           {statusName}
         </Tag>
       );
     case "Cancel":
       return (
-        <Tag className="w-100" color="error">
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="error"
+        >
           {statusName}
         </Tag>
       );
     default:
       return (
-        <Tag className="w-100" color="default">
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="default"
+        >
           {statusName}
         </Tag>
       );

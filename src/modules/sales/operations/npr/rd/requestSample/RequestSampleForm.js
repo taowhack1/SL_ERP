@@ -37,9 +37,6 @@ const RequestSampleForm = () => {
     },
   } = useFormContext();
   const watchData = watch("trans_id");
-  const watchAll = watch();
-  console.log("errors", errors);
-  console.log("watchAll", watchData, watchAll);
   return (
     <>
       <div className="form-section">
@@ -59,7 +56,10 @@ const RequestSampleForm = () => {
                     render={({ field }) =>
                       SelectField({
                         fieldProps: {
-                          disabled: npr_additional_id ? false : true,
+                          disabled:
+                            npr_additional_id && ![null, 1].includes(watchData)
+                              ? false
+                              : true,
                           className: "w-100",
                           placeholder: "Person in charge",
                           allowClear: true,
@@ -81,7 +81,9 @@ const RequestSampleForm = () => {
                     }
                     name="npr_additional_response_by"
                     control={control}
-                    rules={{ required: true }}
+                    rules={{
+                      required: ![null, 1].includes(watchData) ? true : false,
+                    }}
                   />
                 )}
 
@@ -244,9 +246,11 @@ const RequestSampleForm = () => {
                           console.log("onChange", val);
                           switch (val) {
                             case 1:
+                              // Reject
                               field.onChange(val);
                               setValue("tg_trans_status_id", 1);
                               setValue("tg_trans_close_id", 1);
+                              setValue("npr_additional_response_by", null);
                               setValue(
                                 "npr_additional_response_due_date",
                                 null
@@ -256,7 +260,9 @@ const RequestSampleForm = () => {
                               console.log("case 1");
                               break;
                             case 2:
+                            // Pending
                             case 3:
+                              // In-Process
                               field.onChange(val);
                               setValue("tg_trans_status_id", 2);
                               setValue("tg_trans_close_id", 1);
@@ -264,6 +270,7 @@ const RequestSampleForm = () => {
                               console.log("case 2,3");
                               break;
                             case 4:
+                              // Cancel
                               field.onChange(val);
                               setValue("tg_trans_status_id", 3);
                               setValue("tg_trans_close_id", 1);
@@ -272,6 +279,7 @@ const RequestSampleForm = () => {
                               console.log("case 4");
                               break;
                             case 5:
+                              // Finished
                               field.onChange(val);
                               setValue("tg_trans_status_id", 4);
                               setValue("tg_trans_close_id", 1);
@@ -280,6 +288,7 @@ const RequestSampleForm = () => {
                               console.log("case 5");
                               break;
                             case 6:
+                              // Complete
                               field.onChange(val);
                               setValue("tg_trans_status_id", 4);
                               setValue("tg_trans_close_id", 3);
