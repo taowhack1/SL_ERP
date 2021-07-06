@@ -39,60 +39,60 @@ const columns = ({ onOpen, onPrint }) => [
     width: "10%",
     render: (val) => convertDigit(val, 4),
   },
-  {
-    title: "Markup %",
-    align: "center",
-    children: [
-      {
-        title: (
-          <div className="text-center">
-            <Text>Raw Material</Text>
-          </div>
-        ),
-        align: "right",
-        dataIndex: "npr_estimate_detail_sub",
-        width: "10%",
-        render: (val) =>
-          convertDigit(
-            val?.find((val) => val.npr_estimate_type_id === 1)
-              .npr_estimate_detail_sub_mark_up_percent_qty,
-            4
-          ) + " %",
-      },
-      {
-        title: (
-          <div className="text-center">
-            <Text>Packaging</Text>
-          </div>
-        ),
-        align: "right",
-        dataIndex: "npr_estimate_detail_sub",
-        width: "10%",
-        render: (val) =>
-          convertDigit(
-            val?.find((val) => val.npr_estimate_type_id === 2)
-              .npr_estimate_detail_sub_mark_up_percent_qty,
-            4
-          ) + " %",
-      },
-      {
-        title: (
-          <div className="text-center">
-            <Text>Production</Text>
-          </div>
-        ),
-        align: "right",
-        dataIndex: "npr_estimate_detail_sub",
-        width: "10%",
-        render: (val) =>
-          convertDigit(
-            val?.find((val) => val.npr_estimate_type_id === 3)
-              .npr_estimate_detail_sub_mark_up_percent_qty,
-            4
-          ) + " %",
-      },
-    ],
-  },
+  // {
+  //   title: "Markup %",
+  //   align: "center",
+  //   children: [
+  //     {
+  //       title: (
+  //         <div className="text-center">
+  //           <Text>Raw Material</Text>
+  //         </div>
+  //       ),
+  //       align: "right",
+  //       dataIndex: "npr_estimate_detail_sub",
+  //       width: "10%",
+  //       render: (val) =>
+  //         convertDigit(
+  //           val?.find((val) => val.npr_estimate_type_id === 1)
+  //             .npr_estimate_detail_sub_mark_up_percent_qty,
+  //           4
+  //         ) + " %",
+  //     },
+  //     {
+  //       title: (
+  //         <div className="text-center">
+  //           <Text>Packaging</Text>
+  //         </div>
+  //       ),
+  //       align: "right",
+  //       dataIndex: "npr_estimate_detail_sub",
+  //       width: "10%",
+  //       render: (val) =>
+  //         convertDigit(
+  //           val?.find((val) => val.npr_estimate_type_id === 2)
+  //             .npr_estimate_detail_sub_mark_up_percent_qty,
+  //           4
+  //         ) + " %",
+  //     },
+  //     {
+  //       title: (
+  //         <div className="text-center">
+  //           <Text>Production</Text>
+  //         </div>
+  //       ),
+  //       align: "right",
+  //       dataIndex: "npr_estimate_detail_sub",
+  //       width: "10%",
+  //       render: (val) =>
+  //         convertDigit(
+  //           val?.find((val) => val.npr_estimate_type_id === 3)
+  //             .npr_estimate_detail_sub_mark_up_percent_qty,
+  //           4
+  //         ) + " %",
+  //     },
+  //   ],
+  // },
   {
     title: (
       <div className="text-center">
@@ -114,25 +114,25 @@ const columns = ({ onOpen, onPrint }) => [
     width: "5%",
     render: (_) => <Text strong>THB</Text>,
   },
-  {
-    title: (
-      <div className="text-center">
-        <EllipsisOutlined />
-      </div>
-    ),
-    align: "center",
-    width: "5%",
-    ellipsis: true,
-    dataIndex: "npr_estimate_detail_id",
-    render: (val, record) => {
-      return (
-        <EditTwoTone
-          className="button-icon  font-m"
-          onClick={() => onOpen(record)}
-        />
-      );
-    },
-  },
+  // {
+  //   title: (
+  //     <div className="text-center">
+  //       <EllipsisOutlined />
+  //     </div>
+  //   ),
+  //   align: "center",
+  //   width: "5%",
+  //   ellipsis: true,
+  //   dataIndex: "npr_estimate_detail_id",
+  //   render: (val, record) => {
+  //     return (
+  //       <EditTwoTone
+  //         className="button-icon  font-m"
+  //         onClick={() => onOpen(record)}
+  //       />
+  //     );
+  //   },
+  // },
 ];
 
 const EstimateFormTabHistory = () => {

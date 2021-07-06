@@ -362,8 +362,8 @@ const CustomFullCalendar = () => {
           <>
             <FullCalendar
               {...configs}
-              // eventContent={renderEventContent}
-              eventContent={renderEventContent2}
+              eventContent={renderEventContent}
+              // eventContent={renderEventContent2}
               schedulerLicenseKey={"CC-Attribution-NonCommercial-NoDerivatives"}
               plugins={[resourceTimelinePlugin, interactionPlugin]}
             />

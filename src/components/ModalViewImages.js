@@ -32,10 +32,10 @@ const ModalViewImages = (
         ]}
       >
         <Card>
-          {dataSource.map((obj) => {
+          {dataSource.map((obj, index) => {
             console.log(obj);
             return (
-              <Card.Grid className="card-grid-sm">
+              <Card.Grid className="card-grid-sm" key={index}>
                 <Card
                   className="pointer"
                   onClick={() =>

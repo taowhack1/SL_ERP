@@ -17,19 +17,26 @@ const columns = [
     align: "center",
     dataIndex: "id",
     width: "5%",
+    className: "tb-col-sm",
     render: (val) => val + 1,
   },
   {
-    title: "NPR No.",
+    title: (
+      <div className="text-center">
+        <Text>NPR No.</Text>
+      </div>
+    ),
     align: "left",
     dataIndex: "npr_no",
     width: "15%",
+    className: "tb-col-sm",
   },
   {
-    title: "NPR date",
+    title: "วันที่สร้าง NPR",
     align: "center",
     dataIndex: "npr_request_date",
     width: "10%",
+    className: "tb-col-sm",
   },
   {
     title: (
@@ -41,6 +48,7 @@ const columns = [
     dataIndex: "npr_product_name",
     width: "20%",
     ellipsis: true,
+    className: "tb-col-sm",
     render: (val) => val || "-",
   },
   {
@@ -53,6 +61,7 @@ const columns = [
     dataIndex: "npr_customer_name",
     width: "20%",
     ellipsis: true,
+    className: "tb-col-sm",
     render: (val) => val || "-",
   },
   {
@@ -65,15 +74,16 @@ const columns = [
     dataIndex: "npr_created_by_name",
     width: "15%",
     ellipsis: true,
+    className: "tb-col-sm",
     render: (val) => val || "-",
   },
   {
-    title: "NPR Status",
+    title: "สถานะ NPR",
     align: "center",
     dataIndex: "trans_status",
     width: "10%",
     ellipsis: true,
-    className: "bg-tb-primary",
+    className: "bg-tb-primary tb-col-sm",
     render: (val) => getStatusByName(val),
   },
   {
@@ -82,13 +92,14 @@ const columns = [
       {
         title: (
           <div className="text-center">
-            <Text>RD</Text>
+            <Text>R&D</Text>
           </div>
         ),
         align: "center",
         dataIndex: "rd_trans_status",
         width: "10%",
         ellipsis: true,
+        className: "tb-col-sm",
         render: (val) => getStatusByName(val),
       },
       {
@@ -96,6 +107,7 @@ const columns = [
         align: "center",
         dataIndex: "pu_trans_status",
         width: "10%",
+        className: "tb-col-sm",
         render: (val) => getStatusByName(val),
       },
       {
@@ -103,6 +115,7 @@ const columns = [
         align: "center",
         dataIndex: "pd_trans_status",
         width: "10%",
+        className: "tb-col-sm",
         render: (val) => getStatusByName(val),
       },
     ],

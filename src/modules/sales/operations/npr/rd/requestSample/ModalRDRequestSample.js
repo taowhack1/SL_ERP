@@ -20,7 +20,7 @@ import {
 } from "../../../../../../include/js/function_main";
 import { convertDigit } from "../../../../../../include/js/main_config";
 import RequestSampleForm from "./RequestSampleForm";
-const columns = ({ onSelect }) => [
+const columns = ({ onPrint }) => [
   {
     title: (
       <div className="text-center">
@@ -128,12 +128,12 @@ const columns = ({ onSelect }) => [
     dataIndex: "id",
     align: "center",
     width: "5%",
-    render: (val, record) =>
+    render: (record) =>
       record.npr_additional_batch_size !== null && (
         <div className="text-center">
           <PrinterTwoTone
             className="button-icon"
-            // onClick={() => onOpen({ data: null })}
+            onClick={() => onPrint(record)}
           />
         </div>
       ),
@@ -160,7 +160,13 @@ const initialState = {
   tg_trans_close_id: null,
   trans_id: null,
 };
-const ModalRDRequestSample = ({ visible = false, id = null, onClose }) => {
+const ModalRDRequestSample = ({
+  visible = false,
+  id = null,
+  npr_formula_no = null,
+  onClose,
+}) => {
+  console.log("npr_formula_no", npr_formula_no);
   const dispatch = useDispatch();
   const [state, setState] = useState([]);
   const [record, setRecord] = useState(initialState);
@@ -208,6 +214,13 @@ const ModalRDRequestSample = ({ visible = false, id = null, onClose }) => {
         } else {
           console.log("Stay Here");
           methods.reset(initialState);
+          setState((prev) =>
+            prev.map((obj) =>
+              obj.npr_additional_id === resp.data[0].npr_additional_id
+                ? { ...obj, ...resp.data[0] }
+                : obj
+            )
+          );
           setLoading(false);
         }
       });
@@ -215,6 +228,11 @@ const ModalRDRequestSample = ({ visible = false, id = null, onClose }) => {
       // message.success("Save Successfully.");
     }
   };
+
+  const onPrint = ({ npr_additional_batch_size = 0 }) =>
+    window.open(
+      `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula.aspx?npr_formula_no=${npr_formula_no}&sample_qty=${npr_additional_batch_size}`
+    );
 
   useEffect(() => {
     setLoading(true);
@@ -292,7 +310,7 @@ const ModalRDRequestSample = ({ visible = false, id = null, onClose }) => {
             <CustomTable
               rowClassName="row-table-detail pointer"
               dataSource={state}
-              columns={columns({ onSelect })}
+              columns={columns({ onPrint })}
               rowKey={"id"}
               onClick={(record, index) => {
                 message.info(`Record Selected.`);

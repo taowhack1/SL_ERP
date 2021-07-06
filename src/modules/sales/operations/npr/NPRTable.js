@@ -1,11 +1,5 @@
-import {
-  EditTwoTone,
-  EllipsisOutlined,
-  ExclamationCircleOutlined,
-  FastForwardFilled,
-  ProfileTwoTone,
-} from "@ant-design/icons";
-import { Badge, Table, Tag } from "antd";
+import { EditTwoTone, ProfileTwoTone } from "@ant-design/icons";
+import { Badge, Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,19 +15,26 @@ const columns = ({ onOpen }) => [
     align: "center",
     dataIndex: "id",
     width: "5%",
+    className: "tb-col-sm",
     render: (val) => val + 1,
   },
   {
-    title: "NPR No.",
+    title: (
+      <div className="text-center">
+        <Text>NPR No.</Text>
+      </div>
+    ),
     align: "left",
     dataIndex: "npr_no",
-    width: "15%",
+    width: "14%",
+    className: "tb-col-sm",
   },
   {
-    title: "NPR date",
+    title: "วันที่สร้าง NPR",
     align: "center",
     dataIndex: "npr_request_date",
     width: "10%",
+    className: "tb-col-sm",
   },
   {
     title: (
@@ -45,6 +46,7 @@ const columns = ({ onOpen }) => [
     dataIndex: "npr_product_name",
     width: "20%",
     ellipsis: true,
+    className: "tb-col-sm",
     render: (val) => val || "-",
   },
   {
@@ -57,6 +59,7 @@ const columns = ({ onOpen }) => [
     dataIndex: "npr_customer_name",
     width: "20%",
     ellipsis: true,
+    className: "tb-col-sm",
     render: (val) => val || "-",
   },
   {
@@ -69,6 +72,7 @@ const columns = ({ onOpen }) => [
     dataIndex: "npr_created_by_name",
     width: "15%",
     ellipsis: true,
+    className: "tb-col-sm",
     render: (val) => val || "-",
   },
   {
@@ -76,7 +80,8 @@ const columns = ({ onOpen }) => [
     align: "center",
     dataIndex: "trans_status",
     width: "10%",
-    className: "bg-tb-primary",
+    className: "bg-tb-primary tb-col-sm",
+    ellipsis: true,
     render: (val, record) => getStatusByName(val),
   },
   {
@@ -85,51 +90,59 @@ const columns = ({ onOpen }) => [
       {
         title: (
           <div className="text-center">
-            <Text>PIC</Text>
+            <Text>ผู้รับผิดชอบ</Text>
           </div>
         ),
         align: "left",
         dataIndex: "npr_responsed_required_by_name",
         width: "15%",
         ellipsis: true,
+        className: "tb-col-sm",
         render: (val) => <Text style={{ color: "blue" }}>{val || "-"}</Text>,
       },
 
       {
-        title: "Due Date",
+        title: "วันที่ส่งตัวอย่าง",
         align: "center",
         dataIndex: "npr_responsed_required_date",
         width: "10%",
+        className: "tb-col-sm",
         render: (val) => <Text style={{ color: "blue" }}>{val || "-"}</Text>,
       },
       {
-        title: "R&D Status",
+        title: "สถานะ R&D",
         align: "center",
         dataIndex: "rd_trans_status",
         width: "10%",
+        className: "tb-col-sm",
         render: (val) => getStatusByName(val),
       },
     ],
   },
   {
-    title: <div className="text-center">Sample Request</div>,
+    title: <div className="text-center">บันทึกการขอตัวอย่างเพิ่ม</div>,
     align: "center",
     dataIndex: "npr_id",
     width: "10%",
+    className: "tb-col-sm",
     render: (val, record) =>
       // record.add_trans_id !== null && (
-      [2, 3].includes(record.add_trans_id) ? (
-        <Badge count={[2, 3].includes(record.add_trans_id) ? 1 : 0}>
-          <EditTwoTone
-            onClick={() => onOpen(val)}
+      record.rd_tg_trans_status_id === 4 ? (
+        [2, 3].includes(record.add_trans_id) ? (
+          <Badge count={[2, 3].includes(record.add_trans_id) ? 1 : 0}>
+            <EditTwoTone
+              onClick={() => onOpen(record)}
+              className="pointer w-100 font-l"
+            />
+          </Badge>
+        ) : (
+          <ProfileTwoTone
+            onClick={() => onOpen(record)}
             className="pointer w-100 font-l"
           />
-        </Badge>
+        )
       ) : (
-        <ProfileTwoTone
-          onClick={() => onOpen(val)}
-          className="pointer w-100 font-l"
-        />
+        "-"
       ),
     // ),
   },
@@ -148,8 +161,15 @@ const NPRTable = ({ dataSource }) => {
     visible: false,
     loading: false,
     id: null,
+    npr_formula_no: null,
   });
-  const onOpen = (id) => setModal((prev) => ({ ...prev, visible: true, id }));
+  const onOpen = ({ npr_id, npr_formula_no }) =>
+    setModal((prev) => ({
+      ...prev,
+      visible: true,
+      id: npr_id,
+      npr_formula_no,
+    }));
   const onClose = () => {
     dispatch(getNPRList(branch_id));
     setModal((prev) => ({ ...prev, visible: false }));

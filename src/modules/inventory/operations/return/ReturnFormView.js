@@ -84,6 +84,10 @@ const ReturnFormView = () => {
       path: `${currentMenu.menu_url}/edit/` + id,
     },
     action: [
+      {
+        name: "Print",
+        link: `${process.env.REACT_APP_REPORT_SERVER}/report_return.aspx?return_no=${state.return_no}`,
+      },
       state.button_cancel && {
         name: "Cancel",
         cancel: true,

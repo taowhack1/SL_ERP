@@ -18,19 +18,26 @@ const columns = [
     align: "center",
     dataIndex: "id",
     width: "5%",
+    className: "tb-col-sm",
     render: (val) => val + 1,
   },
   {
-    title: "NPR No.",
+    title: (
+      <div className="text-center">
+        <Text>NPR No.</Text>
+      </div>
+    ),
     align: "left",
     dataIndex: "npr_no",
     width: "15%",
+    className: "tb-col-sm",
   },
   {
-    title: "NPR date",
+    title: "วันที่สร้าง NPR",
     align: "center",
     dataIndex: "npr_request_date",
     width: "10%",
+    className: "tb-col-sm",
   },
   {
     title: (
@@ -42,6 +49,7 @@ const columns = [
     dataIndex: "npr_product_name",
     width: "20%",
     ellipsis: true,
+    className: "tb-col-sm",
     render: (val) => val || "-",
   },
   {
@@ -54,6 +62,7 @@ const columns = [
     dataIndex: "npr_customer_name",
     width: "20%",
     ellipsis: true,
+    className: "tb-col-sm",
     render: (val) => val || "-",
   },
   {
@@ -66,14 +75,16 @@ const columns = [
     dataIndex: "npr_created_by_name",
     width: "15%",
     ellipsis: true,
+    className: "tb-col-sm",
     render: (val) => val || "-",
   },
   {
-    title: "NPR Status",
+    title: "สถานะ NPR",
     align: "center",
     dataIndex: "trans_status",
     width: "10%",
-    className: "bg-tb-primary",
+    ellipsis: true,
+    className: "bg-tb-primary tb-col-sm",
     render: (val, record) => getStatusByName(val),
   },
   {
@@ -82,37 +93,42 @@ const columns = [
       {
         title: (
           <div className="text-center">
-            <Text>PIC</Text>
+            <Text>ผู้รับผิดชอบ</Text>
           </div>
         ),
         align: "left",
         dataIndex: "npr_product_cost_response_by_no_name",
         width: "15%",
         ellipsis: true,
+        className: "tb-col-sm",
         render: (val) => <Text style={{ color: "blue" }}>{val || "-"}</Text>,
       },
       {
-        title: "Accept Date",
+        title: "วันที่รับงาน",
         align: "left",
         dataIndex: "npr_product_cost_response_date",
         width: "10%",
+        className: "tb-col-sm",
         render: (val) => val || "-",
       },
       {
-        title: "Deliver Date",
+        title: "วันที่ส่งงาน",
         align: "center",
         dataIndex: "npr_product_cost_request_date",
         width: "10%",
+        className: "tb-col-sm",
         render: (val) => <Text style={{ color: "blue" }}>{val || "-"}</Text>,
       },
+      {
+        title: "สถานะ",
+        align: "center",
+        dataIndex: "pd_trans_status",
+        width: "10%",
+        className: "tb-col-sm",
+        ellipsis: true,
+        render: (val, record) => getStatusByName(val),
+      },
     ],
-  },
-  {
-    title: "PD Status",
-    align: "center",
-    dataIndex: "pd_trans_status",
-    width: "15%",
-    render: (val, record) => getStatusByName(val),
   },
 ];
 
