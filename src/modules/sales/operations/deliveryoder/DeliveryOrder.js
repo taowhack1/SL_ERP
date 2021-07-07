@@ -25,7 +25,19 @@ const columnsSo = [
     width: "15%",
   },
   {
-    title: "Date",
+    title: "Customer Name",
+    align: "left",
+    dataIndex: "",
+    width: "15%",
+  },
+  {
+    title: "Description",
+    align: "left",
+    dataIndex: "",
+    width: "15%",
+  },
+  {
+    title: "Due Date",
     align: "center",
     dataIndex: "date",
     width: "10%",
@@ -43,24 +55,42 @@ const columnsDo = [
     title: "DO No.",
     align: "left",
     dataIndex: "do",
-    width: "15%",
+    width: "5%",
   },
   {
-    title: "mockup.",
+    title: "Customer Name.",
     align: "left",
     dataIndex: "",
     width: "15%",
   },
   {
-    title: "mockup.",
+    title: "Delivery Remark",
     align: "left",
     dataIndex: "",
     width: "15%",
   },
   {
-    title: "Date",
+    title: "Create Date.",
+    align: "left",
+    dataIndex: "",
+    width: "15%",
+  },
+  {
+    title: "วันที่ต้องส่ง",
     align: "center",
     dataIndex: "date",
+    width: "10%",
+  },
+  {
+    title: "วันที่กำหนดส่ง ",
+    align: "center",
+    dataIndex: "date",
+    width: "10%",
+  },
+  {
+    title: "Status",
+    align: "center",
+    dataIndex: "",
     width: "10%",
   },
 ];
@@ -152,14 +182,48 @@ const DeliveryOrder = () => {
           <DetailLoading />
         ) : (
           <>
-            <Row gutter={[8, 16]}>
-              <Col span={18} push={6}>
-                <Col span={24} align='right'>
-                  <Search className='top-search' style={{ width: "20%" }} />
-                </Col>
-                {/* <div style={{ width: "20%" }}>
-                  <Search className='top-search' />
-                </div> */}
+            <Row gutter={[16, 8]} className={"mt-1"}>
+              <Col flex={1} style={{ background: "#f9fbf1" }}>
+                <div className='ml-2'>
+                  <Text strong>Sales Order List</Text>
+                </div>
+                <div align='right'>
+                  <Search
+                    className='top-search mb-1 '
+                    style={{ width: "50%" }}
+                  />
+                </div>
+
+                <Table
+                  size={"small"}
+                  rowKey={"id"}
+                  columns={columnsSo}
+                  bordered
+                  dataSource={dataSo}
+                  rowClassName={"row-clickable"}
+                  onRow={(data, index) => {
+                    return {
+                      onClick: (e) => {
+                        console.log("e", e.target.tagName);
+                        history.push("/sales/operation/do/new");
+                      },
+                    };
+                  }}
+                  pagination={{
+                    pageSize: 15,
+                  }}
+                />
+              </Col>
+              <Col flex={4} style={{ background: "#edfae9" }}>
+                <div className='ml-2'>
+                  <Text strong>Delivery Order List</Text>
+                </div>
+                <div align='right'>
+                  <Search
+                    className='top-search mb-1 '
+                    style={{ width: "50%" }}
+                  />
+                </div>
                 <Table
                   size={"small"}
                   rowKey={"id"}
@@ -169,34 +233,9 @@ const DeliveryOrder = () => {
                   pagination={{
                     pageSize: 15,
                   }}
-                  //   onRow={(record) => ({
-                  //     onClick: (e) => {
-                  //       viewRecord(record);
-                  //       keepLog.keep_log_action(
-                  //         "View Estimate NPR : ",
-                  //         record.npr_no
-                  //       );
-                  //     },
-                  //   })}
-                />
-              </Col>
-              <Col span={6} pull={18}>
-                <Col span={24} align='right'>
-                  <Search className='top-search' style={{ width: "50%" }} />
-                </Col>
-                <Table
-                  size={"small"}
-                  rowKey={"id"}
-                  columns={columnsSo}
-                  bordered
-                  dataSource={dataSo}
-                  pagination={{
-                    pageSize: 15,
-                  }}
                 />
               </Col>
             </Row>
-            ,
           </>
         )}
       </MainLayout>
