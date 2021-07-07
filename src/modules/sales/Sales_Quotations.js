@@ -60,6 +60,7 @@ const Quotations = (props) => {
               onChange={onChange}
               rowKey="qn_id"
               size="small"
+              bordered
               rowClassName="row-pointer"
               onRow={(record, rowIndex) => {
                 return {

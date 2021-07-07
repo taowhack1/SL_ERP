@@ -11,15 +11,12 @@ import {
   addressColumns,
   addressData,
   CustomerDetailFileds,
-} from "./configs/customer";
+} from "../../configs/customer";
 import Text from "antd/lib/typography/Text";
-import CustomSelect from "../../components/CustomSelect";
+import CustomSelect from "../../../../components/CustomSelect";
 import TextArea from "antd/lib/input/TextArea";
 import { Switch } from "antd";
-import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
-import { useReducer } from "react";
-import { reducer } from "../qualityAssurance/reducers";
-const Customer_OrtherAddress = ({
+const CustomerAddressTab = ({
   dataDetail,
   detailDispatch,
   readOnly,
@@ -46,20 +43,20 @@ const Customer_OrtherAddress = ({
   console.log("dataDetail_in", dataDetail);
   return (
     <>
-      <div className='detail-form'>
-        <Row gutter={2} className='detail-table-head'>
+      <div className="detail-form">
+        <Row gutter={2} className="detail-table-head">
           {addressColumns &&
             addressColumns.map((col, key) => {
               return (
-                <Col key={col.id} span={col.size} className='col-outline'>
+                <Col key={col.id} span={col.size} className="col-outline">
                   {col.require && !readOnly && (
-                    <span className='require'>* </span>
+                    <span className="require">* </span>
                   )}
                   <Text strong>{col.name}</Text>
                 </Col>
               );
             })}
-          <Col span={1} className='col-outline'>
+          <Col span={1} className="col-outline">
             <Text strong>
               <EllipsisOutlined />
             </Text>
@@ -69,18 +66,18 @@ const Customer_OrtherAddress = ({
           <>
             {dataDetail.length > 0 &&
               dataDetail.map((line, key) => (
-                <Row className='form-row' key={key} name={`row-${key}`}>
-                  <Col span={1} className='text-center'>
+                <Row className="form-row" key={key} name={`row-${key}`}>
+                  <Col span={1} className="text-center">
                     {key + 1}
                   </Col>
-                  <Col span={6} className='text-left'>
+                  <Col span={6} className="text-left">
                     <CustomSelect
                       data={addressData}
                       style={{ width: "100%" }}
-                      field_id='address_type_id'
-                      field_name='address_type_name'
-                      name='address_type_id'
-                      placeholder='Select Category'
+                      field_id="address_type_id"
+                      field_name="address_type_name"
+                      name="address_type_id"
+                      placeholder="Select Category"
                       value={line.address_type_id}
                       onChange={(data, option) => {
                         data && data
@@ -90,25 +87,27 @@ const Customer_OrtherAddress = ({
                           : onChangeValue(line.id, {
                               address_type_id: null,
                             });
-                      }}></CustomSelect>
+                      }}
+                    />
                   </Col>
-                  <Col span={12} className='text-left'>
+                  <Col span={16} className="text-left">
                     <TextArea
-                      name='customer_detail_address'
+                      name="customer_detail_address"
                       autoSize={{ minRows: 1, maxRows: 2 }}
-                      placeholder='Enter Address'
+                      placeholder="Enter Address"
                       value={line.customer_detail_address}
                       onChange={(e) => {
                         onChangeValue(line.id, {
                           customer_detail_address: e.target.value,
                         });
-                      }}></TextArea>
+                      }}
+                    ></TextArea>
                   </Col>
-                  <Col span={4} className='text-center'>
+                  {/* <Col span={4} className="text-center">
                     <Switch
-                      name='customer_detail_actived'
-                      checkedChildren='Active'
-                      unCheckedChildren='In Active'
+                      name="customer_detail_actived"
+                      checkedChildren="Active"
+                      unCheckedChildren="In Active"
                       defaultChecked={
                         line.customer_detail_actived ? true : false
                       }
@@ -116,7 +115,7 @@ const Customer_OrtherAddress = ({
                         onChangeValue(line.id, { customer_detail_actived: e });
                       }}
                     />
-                  </Col>
+                  </Col> */}
                   <Col span={1} style={{ textAlign: "center" }}>
                     <DeleteTwoTone onClick={(e) => delLine(line.id)} />
                   </Col>
@@ -124,11 +123,12 @@ const Customer_OrtherAddress = ({
               ))}
             <div style={{ marginTop: 10 }}>
               <Button
-                type='dashed'
+                type="dashed"
                 block
                 onClick={() => {
                   addLine();
-                }}>
+                }}
+              >
                 <PlusOutlined />
                 Add a line
               </Button>
@@ -139,29 +139,32 @@ const Customer_OrtherAddress = ({
             {dataDetail.length > 0 &&
               dataDetail.map((line, key) => (
                 <Row
-                  className='form-row'
+                  className="form-row"
                   key={key}
                   name={`row-${key}`}
-                  gutter={3}>
-                  <Col span={1} className='text-center'>
+                  gutter={3}
+                >
+                  <Col span={1} className="text-center">
                     {key + 1}
                   </Col>
-                  <Col span={6} className='text-left'>
+                  <Col span={6} className="text-left">
                     <Text>{line.address_type_name}</Text>
                   </Col>
-                  <Col span={12} className='text-center'>
-                    <Text>{line.customer_detail_address}</Text>
+                  <Col span={16} className="text-left">
+                    <Text className="pre-wrap">
+                      {line.customer_detail_address}
+                    </Text>
                   </Col>
-                  <Col span={4} className='text-center'>
+                  {/* <Col span={4} className="text-center">
                     <Switch
-                      checkedChildren='Active'
-                      unCheckedChildren='In Active'
+                      checkedChildren="Active"
+                      unCheckedChildren="In Active"
                       disabled
                       defaultChecked={
                         line.customer_detail_actived ? true : false
                       }
                     />
-                  </Col>
+                  </Col> */}
                 </Row>
               ))}
           </>
@@ -171,4 +174,4 @@ const Customer_OrtherAddress = ({
   );
 };
 
-export default Customer_OrtherAddress;
+export default React.memo(CustomerAddressTab);

@@ -116,7 +116,6 @@ export const vendor_fields = {
 };
 export const vendor_require_fields = [
   "vendor_name",
-  "vendor_address",
   "currency_id",
   "payment_term_id",
   "vendor_category_id",
@@ -143,13 +142,7 @@ export const addressColumns_vendor = [
   {
     id: 2,
     name: "Address Detail",
-    size: 12,
-    require: true,
-  },
-  {
-    id: 3,
-    name: "Status",
-    size: 4,
+    size: 16,
     require: true,
   },
 ];

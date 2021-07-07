@@ -103,20 +103,20 @@ const TemporaryItems = () => {
       discard: "/inventory",
       onSearch: (text) => {
         const filterData = text
-          ? sampleItems.filter(
+          ? sampleItems?.filter(
               (obj) =>
-                obj.item_sample_no.toUpperCase().indexOf(text.toUpperCase()) >=
-                  0 ||
-                obj.item_sample_name_trade
-                  .toUpperCase()
-                  .indexOf(text.toUpperCase()) >= 0
+                obj?.item_sample_no
+                  ?.toUpperCase()
+                  ?.indexOf(text?.toUpperCase()) >= 0 ||
+                obj?.item_sample_name_trade
+                  ?.toUpperCase()
+                  ?.indexOf(text?.toUpperCase()) >= 0
             )
           : sampleItems;
-        console.log(filterData, text);
         setState(filterData);
       },
     }),
-    []
+    [sampleItems]
   );
 
   useEffect(() => {

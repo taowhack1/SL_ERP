@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../../../components/MainLayout";
 import $ from "jquery";
 import {
   get_all_vendor,
   get_vendor_by_id,
-} from "../../actions/purchase/vendorActions";
-import { vendor_columns } from "./config/vendor";
-import { get_vendor_payment_term_list } from "../../actions/accounting";
-import Authorize from "../system/Authorize";
-import useKeepLogs from "../logs/useKeepLogs";
+} from "../../../../actions/purchase/vendorActions";
+import { vendor_columns } from "../../config/vendor";
+import { get_vendor_payment_term_list } from "../../../../actions/accounting";
+import Authorize from "../../../system/Authorize";
+import useKeepLogs from "../../../logs/useKeepLogs";
 const Vendor = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();

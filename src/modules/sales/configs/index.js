@@ -14,6 +14,7 @@ export const quotationColumns = [
       compare: (a, b) => a.qn_id - b.qn_id,
       multiple: 3,
     },
+    render: (value) => value || "-",
   },
   {
     title: "Create Date",
@@ -21,6 +22,7 @@ export const quotationColumns = [
     key: "qn_created",
     width: "7%",
     align: "center",
+    render: (value) => value || "-",
   },
   {
     title: "Expire Date",
@@ -28,6 +30,7 @@ export const quotationColumns = [
     key: "qn_exp_date",
     width: "7%",
     align: "center",
+    render: (value) => value || "-",
   },
   {
     title: "Customer",
@@ -36,6 +39,7 @@ export const quotationColumns = [
     width: "20%",
     align: "left",
     ellipsis: true,
+    render: (value) => value || "-",
   },
   {
     title: "Description",
@@ -44,6 +48,7 @@ export const quotationColumns = [
     width: "18%",
     align: "left",
     ellipsis: true,
+    render: (value) => value || "-",
   },
   {
     title: "Salespersons",
@@ -52,6 +57,7 @@ export const quotationColumns = [
     width: "15%",
     align: "left",
     ellipsis: true,
+    render: (value) => value || "-",
   },
   {
     title: "Total Value",
@@ -92,6 +98,7 @@ export const quotationColumns = [
     render: (value, record, index) => {
       return getRefStatus(record);
     },
+    render: (value) => value || "-",
   },
 ];
 
@@ -238,6 +245,7 @@ export const so_columns = [
       compare: (a, b) => a.so_id - b.so_id,
       multiple: 3,
     },
+    render: (value) => value || "-",
   },
   {
     title: "Quotation Ref.",
@@ -249,6 +257,7 @@ export const so_columns = [
       compare: (a, b) => a.qn_id - b.qn_id,
       multiple: 3,
     },
+    render: (value) => value || "-",
   },
   {
     title: "Order Date",
@@ -256,6 +265,7 @@ export const so_columns = [
     key: "so_order_date",
     width: "8%",
     align: "center",
+    render: (value) => value || "-",
   },
   {
     title: "Delivery Date",
@@ -263,6 +273,7 @@ export const so_columns = [
     key: "tg_so_delivery_date",
     width: "8%",
     align: "center",
+    render: (value) => value || "-",
   },
   {
     title: "Customer",
@@ -271,6 +282,7 @@ export const so_columns = [
     width: "18%",
     align: "left",
     ellipsis: true,
+    render: (value) => value || "-",
   },
   {
     title: "Description",
@@ -279,6 +291,7 @@ export const so_columns = [
     width: "15%",
     align: "left",
     ellipsis: true,
+    render: (value) => value || "-",
   },
   {
     title: "Salesperson",
@@ -287,13 +300,14 @@ export const so_columns = [
     width: "15%",
     align: "left",
     ellipsis: true,
+    render: (value) => value || "-",
   },
   {
     title: "Total Value",
     dataIndex: "tg_so_total_amount",
     key: "tg_so_total_amount",
     width: "10%",
-    align: "center",
+    align: "right",
     sorter: {
       compare: (a, b) => a.tg_so_total_amount - b.tg_so_total_amount,
       multiple: 3,
@@ -342,11 +356,6 @@ export const so_detail_columns = [
     size: 3,
     require: true,
   },
-  // {
-  //   id: 4,
-  //   name: "Discount",
-  //   size: 3,
-  // },
   {
     id: 5,
     name: "Total Price",

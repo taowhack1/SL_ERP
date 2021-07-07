@@ -1,14 +1,8 @@
-/** @format */
-
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Col, Row, Space, Upload } from "antd";
-import TextArea from "antd/lib/input/TextArea";
-import Column from "antd/lib/table/Column";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useRef, useState } from "react";
-import CustomLabel from "../../components/CustomLabel";
-import ItemFileUpload from "../inventory/item/ItemFileUpload";
-const Customer_uploadfile = ({
+const CustomerDocumentTab = ({
   data_head,
   data_file,
   setFile,
@@ -170,20 +164,15 @@ const Customer_uploadfile = ({
   const Memorandum = customer_file
     ? customer_file.filter((file) => file.uid == 12)
     : [];
-  console.log("fileList2", fileList2);
-  console.log("data_file", data_file);
-  console.log("customer_file", customer_file);
-  console.log("Memorandum", Memorandum);
-  console.log("company", company);
   return (
     <>
       {!readOnly ? (
         <>
           {" "}
-          <Row className='col-2'>
+          <Row className="col-2">
             <Col span={12}>
-              <Row className='row-margin'>
-                <Col span={8} className='row-margin'>
+              <Row className="row-margin">
+                <Col span={8} className="row-margin">
                   <Text strong>
                     company certificate Document (เอกสาร ภ.ธ. 20){" "}
                   </Text>
@@ -192,22 +181,24 @@ const Customer_uploadfile = ({
                   <Upload
                     {...uploadConfig}
                     onChange={handleChange(11)}
-                    name='company'>
+                    name="company"
+                  >
                     {fileList2.length >= 1 ? null : uploadButton}
                   </Upload>
                 </Col>
               </Row>
             </Col>
             <Col span={12}>
-              <Row className='row-margin'>
-                <Col span={6} className='row-margin'>
+              <Row className="row-margin">
+                <Col span={6} className="row-margin">
                   <Text strong>Memorandum Document (เอกสาร บริคณห์สนธิ)</Text>
                 </Col>
                 <Col span={8}>
                   <Upload
                     {...uploadConfig}
                     onChange={handleChange(12)}
-                    name='memorandum'>
+                    name="memorandum"
+                  >
                     <Button icon={<UploadOutlined />}>Select File</Button>
                   </Upload>
                 </Col>
@@ -217,10 +208,10 @@ const Customer_uploadfile = ({
         </>
       ) : (
         <>
-          <Row className='col-2'>
+          <Row className="col-2">
             <Col span={12}>
-              <Row className='row-margin'>
-                <Col span={8} className='row-margin'>
+              <Row className="row-margin">
+                <Col span={8} className="row-margin">
                   <Text strong>
                     company certificate Document (เอกสาร ภ.ธ. 20)
                   </Text>
@@ -235,8 +226,8 @@ const Customer_uploadfile = ({
               </Row>
             </Col>
             <Col span={12}>
-              <Row className='row-margin'>
-                <Col span={6} className='row-margin'>
+              <Row className="row-margin">
+                <Col span={6} className="row-margin">
                   <Text strong>Memorandum Document (เอกสาร บริคณห์สนธิ)</Text>
                 </Col>
                 <Col span={8}>
@@ -255,4 +246,4 @@ const Customer_uploadfile = ({
   );
 };
 
-export default Customer_uploadfile;
+export default React.memo(CustomerDocumentTab);

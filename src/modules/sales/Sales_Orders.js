@@ -67,6 +67,7 @@ const SaleOrder = (props) => {
               onChange={onChange}
               rowKey={"so_id"}
               size="small"
+              bordered
               rowClassName="row-pointer"
               onRow={(record, rowIndex) => {
                 return {

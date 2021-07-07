@@ -145,14 +145,16 @@ const RDPIC = () => {
           <h3>Assignment</h3>
           {editable && (
             <div>
-              <Button
-                className=""
-                size="small"
-                loading={loading}
-                onClick={onOpenReject}
-              >
-                Reject
-              </Button>
+              {[null].includes(state.rd_tg_trans_status_id) && (
+                <Button
+                  className=""
+                  size="small"
+                  loading={loading}
+                  onClick={onOpenReject}
+                >
+                  Reject
+                </Button>
+              )}
               <Button
                 htmlType="submit"
                 className="primary"

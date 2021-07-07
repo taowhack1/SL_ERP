@@ -106,10 +106,11 @@ export const customer_columns = [
 export const customer_require_fields = [
   "customer_name",
   "customer_name_short",
-  "customer_address",
   "currency_id",
   "payment_term_id",
   "customer_limit_credit",
+  "customer_category_id",
+  "customer_group_id",
 ];
 
 export const addressColumns1 = [
@@ -177,13 +178,7 @@ export const addressColumns = [
   {
     id: 2,
     name: "Address Detail",
-    size: 12,
-    require: true,
-  },
-  {
-    id: 3,
-    name: "Status",
-    size: 4,
+    size: 16,
     require: true,
   },
 ];
@@ -193,7 +188,7 @@ export const CustomerDetailFileds = {
   customer_detail_position: null,
   customer_detail_remark: null,
   customer_detail_actived: true,
-  address_type_id: null,
+  address_type_id: 2,
 
   // customer_detail_created_by: null,
   // customer_detail_updated_by: null,
