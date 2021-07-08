@@ -1,5 +1,14 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { Row, Col, Input, Tabs, Typography, DatePicker, message } from "antd";
+import {
+  Row,
+  Col,
+  Input,
+  Tabs,
+  Typography,
+  DatePicker,
+  message,
+  Checkbox,
+} from "antd";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 
@@ -7,10 +16,16 @@ import Comments from "../../components/Comments";
 import TotalFooter from "../../components/TotalFooter";
 import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
-import { create_so, get_qn_open_so, update_so } from "../../actions/sales";
+import {
+  create_so,
+  getSalesType,
+  get_qn_open_so,
+  update_so,
+} from "../../actions/sales";
 import { header_config } from "../../include/js/main_config";
 import { api_qn_detail } from "../../include/js/api";
 import {
+  quotation_fields,
   so_detail_fields,
   so_fields,
   so_require_fields,
@@ -21,12 +36,13 @@ import { reducer } from "./reducers";
 import axios from "axios";
 import Authorize from "../system/Authorize";
 
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import {
   validateFormDetail,
   validateFormHead,
 } from "../../include/js/function_main";
 import { get_vat_list } from "../../actions/accounting";
+import CustomLabel from "../../components/CustomLabel";
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -34,6 +50,10 @@ const { Text } = Typography;
 const initialStateHead = so_fields;
 const initialStateDetail = [so_detail_fields];
 const SaleOrderCreate = (props) => {
+  const [selectData, setSelectData] = useState({
+    salesType: [],
+  });
+
   const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
@@ -58,11 +78,17 @@ const SaleOrderCreate = (props) => {
   const callback = (key) => {
     setTab(key);
   };
-
+  console.log(" props.location", props.location.state);
   const data =
     props.location && props.location.state ? props.location.state : 0;
   console.log("data", data);
   useEffect(() => {
+    const getSalesTypeData = async () => {
+      const resp = await getSalesType();
+      console.log("getSalesTypeData", resp);
+      setSelectData((prev) => ({ ...prev, salesType: resp.data }));
+    };
+    getSalesTypeData();
     dispatch(get_qn_open_so());
     dispatch(get_vat_list());
     headDispatch({
@@ -89,15 +115,22 @@ const SaleOrderCreate = (props) => {
       payload: data.data_detail ? data.data_detail : [so_detail_fields],
     });
   }, []);
+
   useEffect(() => {
-    data_head.qn_id &&
-      !data_head.so_id &&
+    console.log("SO UseEffect get Ref", quotation_list);
+    if (data_head.qn_id && !data_head.so_id && quotation_list.length) {
+      headDispatch({
+        type: "CHANGE_HEAD_VALUE",
+        payload: getDataRef(data_head.qn_id, data_head, quotation_list),
+      });
       axios
         .get(`${api_qn_detail}/ref/${data_head.qn_id}`, header_config)
         .then((res) => {
           detailDispatch({ type: "SET_DETAIL", payload: res.data[0] });
         });
-  }, [data_head.qn_id]);
+      message.success("Get Quotations reference success.", 4);
+    }
+  }, [data_head.qn_id, quotation_list]);
 
   const config = {
     projectId: current_project && current_project.project_id,
@@ -171,34 +204,39 @@ const SaleOrderCreate = (props) => {
   };
 
   const getDataRef = (refId, mainData, refData) => {
-    console.log("GET REF");
+    console.log("GET REF", refId, mainData, refData);
     let copyMain = {};
     let copyRef = refData.filter((data) => data.qn_id === refId)[0];
-    copyMain.qn_id = copyRef.qn_id;
-    copyMain.so_description = copyRef.qn_description;
-    copyMain.so_no_description = copyRef.qn_no_description;
-    copyMain.qn_no_description = copyRef.qn_no_description;
-    copyMain.so_agreement = copyRef.qn_agreement;
-    copyMain.so_remark = copyRef.qn_remark;
-    copyMain.vat_id = copyRef.vat_id;
-    copyMain.vat_rate = copyRef.vat_rate;
-    copyMain.vat_include = copyRef.vat_include;
-    copyMain.currency_id = copyRef.currency_id;
-    copyMain.tg_so_amount = copyRef.tg_qn_amount;
-    copyMain.tg_so_discount = copyRef.tg_qn_discount;
-    copyMain.tg_so_sum_amount = copyRef.tg_qn_sum_amount;
-    copyMain.tg_so_vat_amount = copyRef.tg_qn_vat_amount;
-    copyMain.tg_so_total_amount = copyRef.tg_qn_total_amount;
-    copyMain.customer_id = copyRef.customer_id;
-    copyMain.payment_term_id = copyRef.payment_term_id;
-    copyMain.payment_term_name = copyRef.payment_term_name;
-    copyMain.payment_term_no_name = copyRef.payment_term_no_name;
-    copyMain.currency_no = copyRef.currency_no;
-    copyMain.currency_name = copyRef.currency_name;
-    copyMain.customer_no_name = copyRef.customer_no_name;
-    copyMain.currency_no_name = copyRef.currency_no_name;
-    console.log("copyMain", copyMain);
-    return copyMain;
+    if (copyRef) {
+      copyMain.qn_id = copyRef.qn_id;
+      copyMain.so_description = copyRef.qn_description;
+      copyMain.so_no_description = copyRef.qn_no_description;
+      copyMain.qn_no_description = copyRef.qn_no_description;
+      copyMain.so_agreement = copyRef.qn_agreement;
+      copyMain.so_remark = copyRef.qn_remark;
+      copyMain.vat_id = copyRef.vat_id;
+      copyMain.vat_rate = copyRef.vat_rate;
+      copyMain.vat_include = copyRef.vat_include;
+      copyMain.currency_id = copyRef.currency_id;
+      copyMain.tg_so_amount = copyRef.tg_qn_amount;
+      copyMain.tg_so_discount = copyRef.tg_qn_discount;
+      copyMain.tg_so_sum_amount = copyRef.tg_qn_sum_amount;
+      copyMain.tg_so_vat_amount = copyRef.tg_qn_vat_amount;
+      copyMain.tg_so_total_amount = copyRef.tg_qn_total_amount;
+      copyMain.customer_id = copyRef.customer_id;
+      copyMain.payment_term_id = copyRef.payment_term_id;
+      copyMain.payment_term_name = copyRef.payment_term_name;
+      copyMain.payment_term_no_name = copyRef.payment_term_no_name;
+      copyMain.currency_no = copyRef.currency_no;
+      copyMain.currency_name = copyRef.currency_name;
+      copyMain.customer_no_name = copyRef.customer_no_name;
+      copyMain.currency_no_name = copyRef.currency_no_name;
+      copyMain.qn_tg_trans_close_id = 1;
+      console.log("copyMain", copyMain);
+      return copyMain;
+    } else {
+      return quotation_fields;
+    }
   };
   const resetForm = () => {
     headDispatch({
@@ -221,6 +259,7 @@ const SaleOrderCreate = (props) => {
   const redirect_to_view = (id) => {
     history.push("/sales/orders/view/" + (id ? id : "new"));
   };
+  console.log("data_head", data_head);
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -266,7 +305,9 @@ const SaleOrderCreate = (props) => {
                 if (data) {
                   headDispatch({
                     type: "CHANGE_HEAD_VALUE",
-                    payload: getDataRef(data, data_head, quotation_list),
+                    payload: {
+                      qn_id: data,
+                    },
                   });
                 } else {
                   resetForm();
@@ -309,33 +350,24 @@ const SaleOrderCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Vat
-            </Text>
-          </Col>
+          {/* Close QN */}
+          <Col span={3}></Col>
 
           <Col span={8}>
-            <CustomSelect
-              placeholder="Select Vat Type"
-              data={vatList || []}
-              field_id="vat_id"
-              field_name="vat_name"
-              showSearch
-              onChange={(val, option) => {
-                console.log("option", option);
+            <Checkbox
+              onChange={(e) =>
                 headDispatch({
                   type: "CHANGE_HEAD_VALUE",
                   payload: {
-                    vat_id: option.data.vat_id,
-                    vat_rate: option.data.vat_rate,
-                    vat_include: option.data.vat_include,
+                    qn_tg_trans_close_id: e.target.checked ? 2 : 1,
                   },
-                });
-              }}
-              value={data_head.vat_id}
-              defaultValue={1}
+                })
+              }
+              checked={
+                [2, 3].includes(data_head.qn_tg_trans_close_id) ? true : false
+              }
             />
+            <Text className="ml-2">{"Close Quotations."}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -393,23 +425,33 @@ const SaleOrderCreate = (props) => {
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
-              <span className="require">* </span>Description :
+              <span className="require">* </span>Vat
             </Text>
           </Col>
 
           <Col span={8}>
-            <Input
-              name="so_description"
-              onChange={(e) =>
+            <CustomSelect
+              placeholder="Select Vat Type"
+              data={vatList || []}
+              field_id="vat_id"
+              field_name="vat_name"
+              showSearch
+              onChange={(val, option) => {
+                console.log("option", option);
                 headDispatch({
                   type: "CHANGE_HEAD_VALUE",
-                  payload: { so_description: e.target.value },
-                })
-              }
-              value={data_head.so_description}
-              placeholder="Description"
+                  payload: {
+                    vat_id: option.data.vat_id,
+                    vat_rate: option.data.vat_rate,
+                    vat_include: option.data.vat_include,
+                  },
+                });
+              }}
+              value={data_head.vat_id}
+              defaultValue={1}
             />
           </Col>
+
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>
@@ -446,6 +488,53 @@ const SaleOrderCreate = (props) => {
               }}
             />
           </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Sales Type :
+            </Text>
+          </Col>
+
+          <Col span={8}>
+            <CustomSelect
+              name={"so_type_id"}
+              placeholder="สั่งผลิต / ขายทั่วไป"
+              data={selectData.salesType}
+              field_id="so_type_id"
+              field_name="so_type_name"
+              onChange={(val) =>
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: { so_type_id: val },
+                })
+              }
+              value={data_head.so_type_id}
+            />
+          </Col>
+          <Col span={2}></Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>Description :
+            </Text>
+          </Col>
+
+          <Col span={8}>
+            <Input
+              name="so_description"
+              onChange={(e) =>
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: { so_description: e.target.value },
+                })
+              }
+              value={data_head.so_description}
+              placeholder="Description"
+            />
+          </Col>
+          <Col span={2}></Col>
         </Row>
         <Row className="col-2 row-tab-margin-l">
           <Col span={24}>

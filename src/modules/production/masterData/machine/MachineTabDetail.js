@@ -32,9 +32,9 @@ const MachineTabDetail = ({ upDateFormValue, readOnly, data_head }) => {
                   className="full-width"
                   placeholder={"eg. 11509001"}
                   value={data_head.machine_cost_center}
-                  onChange={(val) =>
+                  onChange={(e) =>
                     upDateFormValue({
-                      machine_cost_center: val,
+                      machine_cost_center: e.target.value,
                     })
                   }
                 />

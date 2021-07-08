@@ -10,8 +10,8 @@ const CustomSelect = (props) => {
       }
       className={"full-width " + props?.className}
     >
-      {props.data &&
-        props.data.map((option, key) => {
+      {props?.data &&
+        props?.data.map((option, key) => {
           return (
             <Option
               key={key}

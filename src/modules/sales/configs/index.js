@@ -3,109 +3,12 @@ import {
   getSelfStepStatus,
 } from "../../../include/js/function_main";
 import { convertDigit } from "../../../include/js/main_config";
-export const quotationColumns = [
-  {
-    title: "Reference",
-    dataIndex: "qn_no",
-    key: "qn_no",
-    width: "7%",
-    align: "left",
-    sorter: {
-      compare: (a, b) => a.qn_id - b.qn_id,
-      multiple: 3,
-    },
-    render: (value) => value || "-",
-  },
-  {
-    title: "Create Date",
-    dataIndex: "qn_created",
-    key: "qn_created",
-    width: "7%",
-    align: "center",
-    render: (value) => value || "-",
-  },
-  {
-    title: "Expire Date",
-    dataIndex: "qn_exp_date",
-    key: "qn_exp_date",
-    width: "7%",
-    align: "center",
-    render: (value) => value || "-",
-  },
-  {
-    title: "Customer",
-    dataIndex: "customer_no_name",
-    key: "customer_no_name",
-    width: "20%",
-    align: "left",
-    ellipsis: true,
-    render: (value) => value || "-",
-  },
-  {
-    title: "Description",
-    dataIndex: "qn_description",
-    key: "qn_description",
-    width: "18%",
-    align: "left",
-    ellipsis: true,
-    render: (value) => value || "-",
-  },
-  {
-    title: "Salespersons",
-    dataIndex: "qn_created_by_no_name",
-    key: "qn_created_by_no_name",
-    width: "15%",
-    align: "left",
-    ellipsis: true,
-    render: (value) => value || "-",
-  },
-  {
-    title: "Total Value",
-    dataIndex: "tg_qn_total_amount",
-    key: "tg_qn_total_amount",
-    width: "10%",
-    align: "right",
-    sorter: {
-      compare: (a, b) => a.tg_qn_total_amount - b.tg_qn_total_amount,
-      multiple: 3,
-    },
-    render: (value) => convertDigit(value),
-    ellipsis: true,
-  },
-
-  {
-    title: "Quotations Status",
-    dataIndex: "trans_status_name",
-    key: "trans_status_name",
-    width: "8%",
-    align: "center",
-    sorter: {
-      compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
-      multiple: 3,
-    },
-    ellipsis: true,
-    render: (value, record, index) => {
-      return getSelfStepStatus(record);
-    },
-  },
-  {
-    title: "S/O Status",
-    dataIndex: "trans_close_name",
-    key: "trans_close_name",
-    width: "8%",
-    align: "center",
-    ellipsis: true,
-    render: (value, record, index) => {
-      return getRefStatus(record);
-    },
-    render: (value) => value || "-",
-  },
-];
 
 export const quotation_fields = {
   flow_id: null,
   qn_id: null,
   qn_no: null,
+  npr_id: null,
   qn_description: null,
   qn_no_description: null,
   qn_exp_date: null,
@@ -421,6 +324,8 @@ export const so_fields = {
   so_created_by_no_name: null,
   node_stay: null,
   tg_flow_max_node_id: null,
+  so_type_id: null,
+  qn_tg_trans_close_id: 1,
 };
 export const so_detail_fields = {
   id: 0,
@@ -454,6 +359,7 @@ export const so_require_fields = [
   "qn_id",
   "payment_term_id",
   "customer_id",
+  "so_type_id",
 ];
 
 export const so_require_fields_detail = [

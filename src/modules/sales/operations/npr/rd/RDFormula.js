@@ -119,7 +119,7 @@ const columns = ({ readOnly, itemList = [], deleteRow, onChange }) => [
           max={100}
           {...getNumberFormat(4)}
           step={0.0001}
-          val={val}
+          value={val}
           onChange={(data) => {
             onChange(record.id, {
               npr_formula_detail_percent_qty: data,
@@ -175,6 +175,8 @@ const RDFormula = ({
   const { itemList } = useSelector((state) => state.sales.operations.npr);
   const { loading } = useSelector((state) => state.sales);
   const { readOnly } = useFormContext();
+
+  console.log("RDFormula", data);
   return (
     <>
       <div className="form-section ">

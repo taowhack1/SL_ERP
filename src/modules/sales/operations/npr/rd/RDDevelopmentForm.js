@@ -194,13 +194,15 @@ const RDDevelopmentForm = ({
   const rdDevFormula = useMemo(() => {
     const onChangeHead = (data) =>
       setState((prev) => ({ ...prev, ...data, commit: 1 }));
-    const onChangeFormula = (id, data) =>
+    const onChangeFormula = (id, data) => {
+      console.log("data", data);
       setState((prev) => ({
         ...prev,
         npr_formula_detail: prev.npr_formula_detail.map((obj) =>
           obj.id === id ? { ...obj, ...data, commit: 1 } : obj
         ),
       }));
+    };
     const onAddRowFormula = () =>
       setState((prev) => ({
         ...prev,
@@ -216,11 +218,14 @@ const RDDevelopmentForm = ({
           prev.npr_formula_detail.filter((obj) => obj.id !== id)
         ),
       }));
-    const setFormula = (data) =>
+    const setFormula = (data) => {
+      console.log("setFormula", data);
       setState((prev) => ({
         ...prev,
         npr_formula_detail: sortData(data),
       }));
+    };
+
     return {
       onChangeHead,
       onChangeFormula,
@@ -229,7 +234,7 @@ const RDDevelopmentForm = ({
       state: data,
       setFormula,
     };
-  }, [state.npr_formula_detail, setState]);
+  }, [state.npr_formula_detail, data, setState]);
   const rdDevQA = useMemo(() => {
     const onChangeHead = (data) =>
       setState((prev) => ({ ...prev, ...data, commit: 1 }));

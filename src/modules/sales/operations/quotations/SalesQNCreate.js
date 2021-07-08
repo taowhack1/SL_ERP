@@ -1,38 +1,43 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Input, Tabs, Typography, DatePicker, message } from "antd";
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../../../components/MainLayout";
 import moment from "moment";
-import Comments from "../../components/Comments";
-import TotalFooter from "../../components/TotalFooter";
+import Comments from "../../../../components/Comments";
+import TotalFooter from "../../../../components/TotalFooter";
 import {
   quotation_detail_fields,
   quotation_fields,
   quotation_require_fields,
   quotation_require_fields_detail,
-} from "./configs";
-import CustomSelect from "../../components/CustomSelect";
-import { get_sale_master_data, update_quotation } from "../../actions/sales";
-import { create_quotation } from "../../actions/sales";
+} from "../../configs";
+import CustomSelect from "../../../../components/CustomSelect";
+import {
+  getNPRtoQN,
+  get_sale_master_data,
+  update_quotation,
+} from "../../../../actions/sales";
+import { create_quotation } from "../../../../actions/sales";
 import axios from "axios";
-import { header_config } from "../../include/js/main_config";
+import { header_config } from "../../../../include/js/main_config";
 import {
   validateFormDetail,
   validateFormHead,
-} from "../../include/js/function_main";
-import Authorize from "../system/Authorize";
+} from "../../../../include/js/function_main";
+import Authorize from "../../../system/Authorize";
 
 import { useHistory } from "react-router-dom";
-import ItemLine from "./Sales_Detail";
-import { mainReducer } from "../../include/reducer";
-import { get_vat_list } from "../../actions/accounting";
+import SalesQNDetail from "./SalesQNDetail";
+import { mainReducer } from "../../../../include/reducer";
+import { get_vat_list } from "../../../../actions/accounting";
+import CustomLabel from "../../../../components/CustomLabel";
 const { TextArea } = Input;
 const { Text } = Typography;
 
 const initialStateHead = quotation_fields;
 const initialStateDetail = [quotation_detail_fields];
 
-const CustomerCreate = (props) => {
+const SalesQNCreate = (props) => {
   const history = useHistory();
   const authorize = Authorize();
   authorize.check_authorize();
@@ -43,6 +48,9 @@ const CustomerCreate = (props) => {
     mainReducer,
     initialStateDetail
   );
+  const [refData, setRefData] = useState({
+    npr: [],
+  });
   const [data_head, headDispatch] = useReducer(mainReducer, initialStateHead);
   const dataComment = useSelector((state) => state.log.comment_log);
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -53,6 +61,11 @@ const CustomerCreate = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
   useEffect(() => {
+    const getData = async () => {
+      const respNPR = await getNPRtoQN();
+      setRefData((prev) => ({ ...prev, npr: respNPR.data }));
+    };
+    getData();
     headDispatch({
       type: "SET_HEAD",
       payload: data
@@ -98,9 +111,9 @@ const CustomerCreate = (props) => {
     });
 
   const config = {
-    projectId: current_project && current_project.project_id,
-    title: current_project && current_project.project_name,
-    home: current_project && current_project.project_url,
+    projectId: 7,
+    title: "SALES",
+    home: "/sales",
     show: true,
     breadcrumb: [
       "Home",
@@ -221,7 +234,31 @@ const CustomerCreate = (props) => {
             {moment(data_head.qn_created, "DD/MM/YYYY").format("DD/MM/YYYY")}
           </Col>
         </Row>
-        {/* Address & Information */}
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <CustomLabel readOnly={false} label="NPR Ref." />
+          </Col>
+          <Col span={8}>
+            <CustomSelect
+              allowClear
+              showSearch
+              placeholder={"Select NPR"}
+              field_id="npr_id"
+              name="npr_id"
+              field_name="npr_no"
+              value={data_head.npr_id}
+              data={refData.npr}
+              onChange={(data, option) => {
+                data !== undefined
+                  ? upDateFormValue({
+                      npr_id: option.data.npr_id,
+                      qn_description: `${option.data.npr_product_name} - ${option.data.npr_customer_name}`,
+                    })
+                  : resetForm();
+              }}
+            />
+          </Col>
+        </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
@@ -367,11 +404,12 @@ const CustomerCreate = (props) => {
             <Text>{data_head.currency_no}</Text>
           </Col>
         </Row>
+
         <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
-                <ItemLine
+                <SalesQNDetail
                   qn_id={data_head.qn_id}
                   readOnly={false}
                   data_detail={data_detail}
@@ -411,4 +449,4 @@ const CustomerCreate = (props) => {
   );
 };
 
-export default React.memo(CustomerCreate);
+export default React.memo(SalesQNCreate);

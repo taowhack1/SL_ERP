@@ -1,12 +1,4 @@
-import {
-  Button,
-  Row,
-  Col,
-  InputNumber,
-  Typography,
-  Select,
-  DatePicker,
-} from "antd";
+import { Button, Row, Col, InputNumber, Typography, DatePicker } from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
@@ -18,20 +10,11 @@ import moment from "moment";
 
 import { so_detail_fields, so_detail_columns } from "./configs";
 import CustomSelect from "../../components/CustomSelect";
-import {
-  calSubtotal,
-  sumArrObj,
-  sumArrObjWithVat,
-} from "../../include/js/function_main";
+import { calSubtotal, sumArrObjWithVat } from "../../include/js/function_main";
 
-import {
-  convertDigit,
-  getNumberFormat,
-  numberFormat,
-} from "../../include/js/main_config";
+import { convertDigit, getNumberFormat } from "../../include/js/main_config";
 import TextArea from "antd/lib/input/TextArea";
 const { Text } = Typography;
-const { Option } = Select;
 
 const SO_Detail = ({
   readOnly,

@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Tabs, Typography, message } from "antd";
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../../../components/MainLayout";
 import moment from "moment";
-import ItemLine from "./Sales_Detail";
-import Comments from "../../components/Comments";
-import TotalFooter from "../../components/TotalFooter";
-import ModalRemark from "../../components/Modal_Remark";
-import { get_quotation_by_id, qn_actions } from "../../actions/sales";
-import { get_log_by_id } from "../../actions/comment&log";
-import Authorize from "../system/Authorize";
+import SalesQNDetail from "./SalesQNDetail";
+import Comments from "../../../../components/Comments";
+import TotalFooter from "../../../../components/TotalFooter";
+import ModalRemark from "../../../../components/Modal_Remark";
+import { get_quotation_by_id, qn_actions } from "../../../../actions/sales";
+import { get_log_by_id } from "../../../../actions/comment&log";
+import Authorize from "../../../system/Authorize";
 import { useParams } from "react-router";
 import { PrinterTwoTone } from "@ant-design/icons";
 
 const { Text } = Typography;
 
-const Sales_Quotations = (props) => {
+const SalesQNView = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -69,9 +69,9 @@ const Sales_Quotations = (props) => {
     dispatch(qn_actions(app_detail, data_head.qn_id));
   };
   const config = {
-    projectId: current_project && current_project.project_id,
-    title: current_project && current_project.project_name,
-    home: current_project && current_project.project_url,
+    projectId: 7,
+    title: "SALES",
+    home: "/sales",
     show: true,
     breadcrumb: [
       "Home",
@@ -214,6 +214,16 @@ const Sales_Quotations = (props) => {
         {/* Address & Information */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
+            <Text strong>NPR Ref.</Text>
+          </Col>
+          <Col span={8}>
+            <Text className="text-view">
+              {(data_head && data_head?.npr_no) || "-"}
+            </Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
             <Text strong>Customer </Text>
           </Col>
           <Col span={8}>
@@ -233,7 +243,7 @@ const Sales_Quotations = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Vat :</Text>
+            <Text strong>Vat</Text>
           </Col>
 
           <Col span={8}>
@@ -251,7 +261,7 @@ const Sales_Quotations = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Description :</Text>
+            <Text strong>Description</Text>
           </Col>
 
           <Col span={8}>
@@ -274,7 +284,7 @@ const Sales_Quotations = (props) => {
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <Tabs.TabPane tab="Request Detail" key="1">
-                <ItemLine
+                <SalesQNDetail
                   qn_id={data_head && data_head.qn_id}
                   readOnly={true}
                   data_detail={data_detail}
@@ -314,4 +324,4 @@ const Sales_Quotations = (props) => {
   );
 };
 
-export default Sales_Quotations;
+export default SalesQNView;

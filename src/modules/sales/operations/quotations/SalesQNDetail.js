@@ -11,16 +11,22 @@ import {
   quotation_detail_fields,
   quotation_detail_columns,
   so_detail_fields,
-} from "./configs";
-import CustomSelect from "../../components/CustomSelect";
-import { calSubtotal, sumArrObjWithVat } from "../../include/js/function_main";
+} from "../../configs";
+import CustomSelect from "../../../../components/CustomSelect";
+import {
+  calSubtotal,
+  sumArrObjWithVat,
+} from "../../../../include/js/function_main";
 
-import { convertDigit, getNumberFormat } from "../../include/js/main_config";
+import {
+  convertDigit,
+  getNumberFormat,
+} from "../../../../include/js/main_config";
 import TextArea from "antd/lib/input/TextArea";
 const { Text } = Typography;
 const { Option } = Select;
 
-const ItemLine = ({
+const SalesQNDetail = ({
   readOnly,
 
   data_detail,
@@ -344,4 +350,4 @@ const ItemLine = ({
   );
 };
 
-export default React.memo(ItemLine);
+export default React.memo(SalesQNDetail);

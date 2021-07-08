@@ -74,7 +74,7 @@ export const getMachineByID = (machine_id, redirect) => (dispatch) => {
         console.log(res.data);
         await dispatch({
           type: GET_MACHINE_BY_ID,
-          payload: { data_head: res.data[0][0], data_detail: [] },
+          payload: { data_head: res.data[0], data_detail: [] },
         });
         redirect(machine_id);
       })

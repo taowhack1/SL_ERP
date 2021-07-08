@@ -32,6 +32,7 @@ import {
 import { mainReducer } from "../../../../include/reducer";
 import MachineTabDetail from "./MachineTabDetail";
 import MachineTabCost from "./MachineTabCost";
+import { reducer } from "../../../qualityAssurance/reducers";
 const { Text } = Typography;
 const { TextArea } = Input;
 
@@ -46,11 +47,13 @@ const MachineCreate = (props) => {
   const dispatch = useDispatch();
   const data =
     props.location && props.location.state ? props.location.state : 0;
+
+  console.log("data", data);
   const auth = useSelector((state) => state.auth.authData);
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const dataComments = useSelector((state) => state.log.comment_log);
-  const [data_head, headDispatch] = useReducer(mainReducer, initialStateHead);
+  const [data_head, headDispatch] = useReducer(reducer, initialStateHead);
 
   const flow =
     data_head &&
@@ -69,8 +72,8 @@ const MachineCreate = (props) => {
     breadcrumb: [
       "Home",
       "Machine",
-      data_head.machine_cost_center ? "Edit" : "Create",
-      data_head.machine_cost_center && data_head.machine_cost_center,
+      data_head?.machine_cost_center ? "Edit" : "Create",
+      data_head?.machine_cost_center && data_head?.machine_cost_center,
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
@@ -148,7 +151,7 @@ const MachineCreate = (props) => {
   useEffect(() => {
     // GET LOG
     data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
-  }, [data_head]);
+  }, [data_head.process_id]);
 
   useEffect(() => {
     dispatch(getProductionMasterData());
@@ -160,7 +163,6 @@ const MachineCreate = (props) => {
   const redirect_to_view = (id) => {
     history.push("/production/machine/view/" + (id ? id : "new"));
   };
-
   return (
     <MainLayout {...config}>
       <div id="form">

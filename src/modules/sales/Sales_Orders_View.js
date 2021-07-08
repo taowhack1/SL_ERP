@@ -9,6 +9,7 @@ import Detail from "./Sales_Order_Detail";
 import ModalRemark from "../../components/Modal_Remark";
 import { get_log_by_id } from "../../actions/comment&log";
 import Authorize from "../system/Authorize";
+import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 const SaleOrderView = (props) => {
@@ -218,12 +219,16 @@ const SaleOrderView = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Vat :</Text>
-          </Col>
+          {/* close qn */}
+          <Col span={3}></Col>
 
           <Col span={8}>
-            <Text className="text-view">{data_head.vat_name}</Text>
+            {[2, 3].includes(data_head.qn_tg_trans_close_id) ? (
+              <CheckSquareOutlined />
+            ) : (
+              <BorderOutlined />
+            )}
+            <Text className="ml-3">{"Close Quotations."}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -231,6 +236,23 @@ const SaleOrderView = (props) => {
           </Col>
           <Col span={8}>
             <Text className="text-view">{data_head.payment_term_no_name}</Text>
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Sales Type :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Text className="text-view">{data_head.so_type_name}</Text>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}>
+            <Text strong>Vat :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Text className="text-view">{data_head.vat_name}</Text>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">

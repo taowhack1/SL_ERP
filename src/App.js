@@ -41,9 +41,9 @@ import VendorCreate from "./modules/purchasing/masterData/vendor/Vendor_Create";
 import VendorView from "./modules/purchasing/masterData/vendor/Vendor_View";
 
 import Sales from "./modules/sales/Sales";
-import Quotations from "./modules/sales/Sales_Quotations";
-import QuotationsCreate from "./modules/sales/Sales_Quotations_Create";
-import QuotationsView from "./modules/sales/Sales_Quotations_View";
+import Quotations from "./modules/sales/operations/quotations/SalesQN";
+import QuotationsCreate from "./modules/sales/operations/quotations/SalesQNCreate";
+import QuotationsView from "./modules/sales/operations/quotations/SalesQNView";
 import SaleOrder from "./modules/sales/Sales_Orders";
 import SaleOrderView from "./modules/sales/Sales_Orders_View";
 import SaleOrderCreate from "./modules/sales/Sales_Orders_Create";
@@ -441,9 +441,11 @@ const App = (props) => {
             <Route exact path="/sales/orders">
               <SaleOrder />
             </Route>
-            <Route exact path="/sales/orders/create">
-              <SaleOrderCreate />
-            </Route>
+            <Route
+              exact
+              path="/sales/orders/create"
+              component={SaleOrderCreate}
+            />
             <Route
               exact
               path="/sales/orders/view/:id"

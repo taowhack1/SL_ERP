@@ -24,6 +24,8 @@ import {
 import axios from "axios";
 import { message } from "antd";
 import { sortData } from "../../include/js/function_main";
+const apiNPRListToQN = `/sales/npr/ref/qn`;
+const apiSalesType = `/list/so_type`;
 export const get_quotation_list = (user_name) => (dispatch) => {
   axios.get(`${api_quo_list}/all/${user_name}`, header_config).then((res) => {
     dispatch({ type: SET_QN_LIST, payload: res.data[0] });
@@ -103,74 +105,65 @@ export const get_sale_master_data = () => (dispatch) => {
     });
 };
 
-export const create_so = (
-  user_name,
-  data_head,
-  data_detail,
-  redirect
-) => async (dispatch) => {
-  console.log("Create SO", data_head, data_detail);
-  try {
-    await axios.post(api_so, data_head, header_config).then(async (res) => {
-      console.log("INSERT_HEAD", res);
-      const so_id = res.data[0][0].so_id;
-      await axios
-        .post(`${api_so_detail}/${so_id}`, data_detail, header_config)
-        .then((res) => {
-          console.log("INSERT_DETAIL", res);
-          dispatch(get_so_by_id(so_id, user_name));
-          message.success({
-            content: "Sale Order Created.",
-            key: "validate",
-            duration: 2,
-          });
-          redirect(so_id);
-        });
-    });
-  } catch (error) {
-    console.log(error);
-    message.error({
-      content: "Somethings went wrong. \n" + error,
-      key: "validate",
-      duration: 2,
-    });
-  }
-};
-export const update_so = (
-  so_id,
-  user_name,
-  data_head,
-  data_detail,
-  redirect
-) => async (dispatch) => {
-  console.log("update_so_data", so_id, data_head, data_detail);
-  try {
-    await axios
-      .put(`${api_so}/${so_id}`, data_head, header_config)
-      .then(async (res) => {
-        console.log("Update SO");
+export const create_so =
+  (user_name, data_head, data_detail, redirect) => async (dispatch) => {
+    console.log("Create SO", data_head, data_detail);
+    try {
+      await axios.post(api_so, data_head, header_config).then(async (res) => {
+        console.log("INSERT_HEAD", res);
+        const so_id = res.data[0][0].so_id;
         await axios
           .post(`${api_so_detail}/${so_id}`, data_detail, header_config)
           .then((res) => {
-            console.log("Update_DETAIL", res);
+            console.log("INSERT_DETAIL", res);
             dispatch(get_so_by_id(so_id, user_name));
             message.success({
-              content: "Sale Order Updated.",
+              content: "Sale Order Created.",
               key: "validate",
               duration: 2,
             });
             redirect(so_id);
           });
       });
-  } catch (error) {
-    console.log(error);
-    message.error({
-      content: "Somethings went wrong. \n" + error,
-      key: "validate",
-      duration: 2,
-    });
-  }
-};
+    } catch (error) {
+      console.log(error);
+      message.error({
+        content: "Somethings went wrong. \n" + error,
+        key: "validate",
+        duration: 2,
+      });
+    }
+  };
+export const update_so =
+  (so_id, user_name, data_head, data_detail, redirect) => async (dispatch) => {
+    console.log("update_so_data", so_id, data_head, data_detail);
+    try {
+      await axios
+        .put(`${api_so}/${so_id}`, data_head, header_config)
+        .then(async (res) => {
+          console.log("Update SO");
+          await axios
+            .post(`${api_so_detail}/${so_id}`, data_detail, header_config)
+            .then((res) => {
+              console.log("Update_DETAIL", res);
+              dispatch(get_so_by_id(so_id, user_name));
+              message.success({
+                content: "Sale Order Updated.",
+                key: "validate",
+                duration: 2,
+              });
+              redirect(so_id);
+            });
+        });
+    } catch (error) {
+      console.log(error);
+      message.error({
+        content: "Somethings went wrong. \n" + error,
+        key: "validate",
+        duration: 2,
+      });
+    }
+  };
 
 export const get_quotation_by_id = (id, user_name) => async (dispatch) => {
   console.log("get_quotation_by_id", id, user_name);
@@ -203,102 +196,93 @@ export const get_quotation_by_id = (id, user_name) => async (dispatch) => {
   }
 };
 
-export const create_quotation = (
-  user_name,
-  data_head,
-  data_detail,
-  redirect
-) => async (dispatch) => {
-  console.log(data_head, data_detail);
-  console.log("Create QN");
-  try {
-    await axios
-      .post(api_create_quotation, data_head, header_config)
-      .then(async (res) => {
-        console.log("INSERT_HEAD", res);
-        const qn_id = res.data[0][0].qn_id;
-        await axios
-          .post(
-            `${api_create_quotation_detail}/${qn_id}`,
-            data_detail,
-            header_config
-          )
-          .then((res) => {
-            console.log("INSERT_DETAIL", res);
-            dispatch(get_quotation_by_id(qn_id, user_name));
-            message.success({
-              content: "Quotation Created.",
-              key: "validate",
-              duration: 2,
+export const create_quotation =
+  (user_name, data_head, data_detail, redirect) => async (dispatch) => {
+    console.log(data_head, data_detail);
+    console.log("Create QN");
+    try {
+      await axios
+        .post(api_create_quotation, data_head, header_config)
+        .then(async (res) => {
+          console.log("INSERT_HEAD", res);
+          const qn_id = res.data[0][0].qn_id;
+          await axios
+            .post(
+              `${api_create_quotation_detail}/${qn_id}`,
+              data_detail,
+              header_config
+            )
+            .then((res) => {
+              console.log("INSERT_DETAIL", res);
+              dispatch(get_quotation_by_id(qn_id, user_name));
+              message.success({
+                content: "Quotation Created.",
+                key: "validate",
+                duration: 2,
+              });
+              redirect(qn_id);
             });
-            redirect(qn_id);
+        })
+        .catch((error) => {
+          console.log(error);
+          message.error({
+            content: "Somethings went wrong. \n" + error,
+            key: "validate",
+            duration: 2,
           });
-      })
-      .catch((error) => {
-        console.log(error);
-        message.error({
-          content: "Somethings went wrong. \n" + error,
-          key: "validate",
-          duration: 2,
         });
+    } catch (error) {
+      console.log(error);
+      message.error({
+        content: "Somethings went wrong. \n" + error,
+        key: "validate",
+        duration: 2,
       });
-  } catch (error) {
-    console.log(error);
-    message.error({
-      content: "Somethings went wrong. \n" + error,
-      key: "validate",
-      duration: 2,
-    });
-  }
-};
+    }
+  };
 
-export const update_quotation = (
-  qn_id,
-  user_name,
-  data_head,
-  data_detail,
-  redirect
-) => async (dispatch) => {
-  console.log(data_head);
-  try {
-    await axios
-      .put(`${api_create_quotation}/${qn_id}`, data_head, header_config)
-      .then(async (res) => {
-        console.log("Update QN");
-        await axios
-          .post(
-            `${api_create_quotation_detail}/${qn_id}`,
-            data_detail,
-            header_config
-          )
-          .then((res) => {
-            console.log("Update_DETAIL", res);
-            dispatch(get_quotation_by_id(qn_id, user_name));
-            message.success({
-              content: "Quotation Updated.",
-              key: "validate",
-              duration: 2,
+export const update_quotation =
+  (qn_id, user_name, data_head, data_detail, redirect) => async (dispatch) => {
+    console.log(data_head);
+    try {
+      await axios
+        .put(`${api_create_quotation}/${qn_id}`, data_head, header_config)
+        .then(async (res) => {
+          console.log("Update QN");
+          await axios
+            .post(
+              `${api_create_quotation_detail}/${qn_id}`,
+              data_detail,
+              header_config
+            )
+            .then((res) => {
+              console.log("Update_DETAIL", res);
+              dispatch(get_quotation_by_id(qn_id, user_name));
+              message.success({
+                content: "Quotation Updated.",
+                key: "validate",
+                duration: 2,
+              });
+              redirect(qn_id);
+            })
+            .catch((error) => {
+              console.log(error);
+              message.error({
+                content: "Somethings went wrong.\n" + error,
+                key: "validate",
+                duration: 2,
+              });
             });
-            redirect(qn_id);
-          })
-          .catch((error) => {
-            console.log(error);
-            message.error({
-              content: "Somethings went wrong.\n" + error,
-              key: "validate",
-              duration: 2,
-            });
-          });
+        });
+    } catch (error) {
+      console.log(error);
+      message.error({
+        content: "Somethings went wrong. \n" + error,
+        key: "validate",
+        duration: 2,
       });
-  } catch (error) {
-    console.log(error);
-    message.error({
-      content: "Somethings went wrong. \n" + error,
-      key: "validate",
-      duration: 2,
-    });
-  }
-};
+    }
+  };
 
 export const qn_actions = (data, qn_id) => (dispatch) => {
   console.log("qn_actions");
@@ -329,3 +313,55 @@ export const reset_qn = () => (dispatch) => {
 export const reset_so = () => (dispatch) => {
   dispatch({ type: RESET_SO });
 };
+
+const getNPRtoQN = () => {
+  try {
+    return axios
+      .get(`${apiNPRListToQN}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: {}, message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
+const getSalesType = () => {
+  console.log("getSalesType");
+  try {
+    return axios
+      .get(`${apiSalesType}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+
+export { getNPRtoQN, getSalesType };

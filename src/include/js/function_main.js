@@ -254,19 +254,21 @@ export const getSelfStepStatus = ({
   }
 };
 
-export const getRefStatus = ({
-  trans_close_id,
-  trans_close_name,
-  trans_status_name,
-  process_complete,
-}) => {
+export const getRefStatus = (
+  { trans_close_id, trans_close_name, trans_status_name, process_complete },
+  callBack
+) => {
   if (trans_status_name === "Cancel" || !process_complete) {
     return "-";
   } else {
     switch (trans_close_id) {
       case 1:
         return (
-          <Tag color="purple" className="tag-status">
+          <Tag
+            color="purple"
+            className={callBack ? "tag-status function pointer" : "tag-status"}
+            {...(callBack && { onClick: callBack })}
+          >
             {trans_close_name}
           </Tag>
         );
@@ -291,32 +293,6 @@ export const getRefStatus = ({
     }
   }
 };
-
-// export const getStatus = ({tg_trans_status_id : trans,tg_trans_close_id : close}) =>{
-//   const status = [
-//     {
-//       tg_trans_status_id:1,
-//       tg_trans_close_id:1,
-
-//     },
-//     {
-//       tg_trans_status_id:1,
-//       tg_trans_close_id:1
-//     },
-//     {
-//       tg_trans_status_id:1,
-//       tg_trans_close_id:1
-//     },
-//     {
-//       tg_trans_status_id:1,
-//       tg_trans_close_id:1
-//     },
-//     {
-//       tg_trans_status_id:1,
-//       tg_trans_close_id:1
-//     },
-//   ]
-// }
 
 export const get_pre_run_no = (prev, index, value) => {
   console.log("get_pre_run_no", prev);

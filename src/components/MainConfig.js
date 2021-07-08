@@ -7,6 +7,7 @@ import { set_working_menu } from "../actions/authActions";
 import useKeepLogs from "../modules/logs/useKeepLogs";
 
 export default function MainConfig(props) {
+  console.log("Project ID : ", props?.projectId);
   const keepLog = useKeepLogs();
   const dispatch = useDispatch();
   const projectId = props.projectId && props.projectId ? props.projectId : 0;
