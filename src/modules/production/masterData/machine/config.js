@@ -82,6 +82,7 @@ export const machine_fields = {
   machine_cost_floor: 0,
   machine_cost_dl: 0,
   machine_cost_el: 0,
+  machine_detail: [],
 };
 
 export const machine_require_fields = [

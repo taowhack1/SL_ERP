@@ -26,6 +26,8 @@ import { message } from "antd";
 import { sortData } from "../../include/js/function_main";
 const apiNPRListToQN = `/sales/npr/ref/qn`;
 const apiSalesType = `/list/so_type`;
+const UPDATE_FILTER = "UPDATE_FILTER";
+
 export const get_quotation_list = (user_name) => (dispatch) => {
   axios.get(`${api_quo_list}/all/${user_name}`, header_config).then((res) => {
     dispatch({ type: SET_QN_LIST, payload: res.data[0] });
@@ -364,4 +366,16 @@ const getSalesType = () => {
   }
 };
 
-export { getNPRtoQN, getSalesType };
+const updateSOFilter = (payload) => (dispatch) => {
+  try {
+    dispatch({
+      type: UPDATE_FILTER,
+      payload,
+    });
+  } catch (error) {
+    console.log("error", error);
+    message.error("Error Update Filter.");
+  }
+};
+
+export { getNPRtoQN, getSalesType, updateSOFilter, UPDATE_FILTER };

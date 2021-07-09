@@ -126,6 +126,7 @@ const SaleOrderCreate = (props) => {
       axios
         .get(`${api_qn_detail}/ref/${data_head.qn_id}`, header_config)
         .then((res) => {
+          console.log("res detail", res.data[0]);
           detailDispatch({ type: "SET_DETAIL", payload: res.data[0] });
         });
       message.success("Get Quotations reference success.", 4);
@@ -499,7 +500,7 @@ const SaleOrderCreate = (props) => {
           <Col span={8}>
             <CustomSelect
               name={"so_type_id"}
-              placeholder="สั่งผลิต / ขายทั่วไป"
+              placeholder="สั่งผลิต / ขายอื่นๆ"
               data={selectData.salesType}
               field_id="so_type_id"
               field_name="so_type_name"

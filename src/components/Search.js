@@ -13,7 +13,7 @@ export default function Search(props) {
         size={props.size ?? "middle"}
         className={props.className ?? ""}
         placeholder={props.placeholder || "Search"}
-        value={props.search}
+        value={props.searchValue}
         allowClear
         onChange={(e) => {
           e.target.value ? onChange(e.target.value) : onChange("");

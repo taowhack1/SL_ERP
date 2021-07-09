@@ -175,7 +175,14 @@ function TopContent(props) {
             </div>
           </Col>
           <Col span={12} className="top-search">
-            <div>{props.search && <Search onSearch={props.onSearch} />}</div>
+            <div>
+              {props.search && (
+                <Search
+                  onSearch={props.onSearch}
+                  searchValue={props.searchValue}
+                />
+              )}
+            </div>
           </Col>
         </Row>
         <Row>
@@ -315,28 +322,35 @@ function TopContent(props) {
             )}
           </Col>
           <Col span={12}>
-            <div className="steps">
-              {props.step &&
-                props.step.step &&
-                props.step.step.map((item, index) => {
-                  const pass =
-                    props.step.current > index || props.step.process_complete
-                      ? "pass"
-                      : "";
-                  const current =
-                    props.step.current === index && !props.step.process_complete
-                      ? "current-step"
-                      : "";
-                  return (
-                    <span
-                      className={`step-item ${pass} ${current}`}
-                      key={index}
-                    >
-                      {item}
-                    </span>
-                  );
-                })}
-            </div>
+            {props.step ? (
+              <div className="steps">
+                {props.step &&
+                  props.step.step &&
+                  props.step.step.map((item, index) => {
+                    const pass =
+                      props.step.current > index || props.step.process_complete
+                        ? "pass"
+                        : "";
+                    const current =
+                      props.step.current === index &&
+                      !props.step.process_complete
+                        ? "current-step"
+                        : "";
+                    return (
+                      <span
+                        className={`step-item ${pass} ${current}`}
+                        key={index}
+                      >
+                        {item}
+                      </span>
+                    );
+                  })}
+              </div>
+            ) : (
+              <div className="top-right">
+                {props.searchBar && props.searchBar}
+              </div>
+            )}
           </Col>
         </Row>
         <Modal

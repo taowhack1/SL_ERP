@@ -1,5 +1,6 @@
 /** @format */
 
+import { UPDATE_FILTER } from "../actions/sales";
 import {
   GET_NPR_ITEM_LIST,
   GET_NPR_LIST,
@@ -32,6 +33,10 @@ const inititalState = {
     so_list: [],
     so_head: {},
     so_detail: [],
+    filter: {
+      salesType: 1,
+      keyword: null,
+    },
   },
   operations: {
     npr: {
@@ -82,6 +87,11 @@ export default (state = inititalState, action) => {
       return { ...state, so: { ...state.so, qn_ref: action.payload } };
     case GET_SO_BY_ID:
       return { ...state, so: { ...state.so, ...action.payload } };
+    case UPDATE_FILTER:
+      return {
+        ...state,
+        so: { ...state.so, filter: { ...state.so.filter, ...action.payload } },
+      };
     case GET_MASTER_DATA:
       return { ...state, master_data: { ...action.payload } };
     case GET_NPR_LIST:

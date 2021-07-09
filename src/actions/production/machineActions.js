@@ -26,7 +26,8 @@ export const createMachine = (data, redirect) => (dispatch) => {
   axios
     .post(api_machine, data, header_config)
     .then((res) => {
-      const machine_id = res.data[0][0].machine_id;
+      console.log("res createmacihne", res);
+      const machine_id = res.data.machine_id;
       message.success({
         content: "Machine Created.",
         key: "success",
