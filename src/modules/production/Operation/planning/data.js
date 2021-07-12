@@ -385,12 +385,12 @@ export const rawData = {
   mockupApiData: {
     plan: [
       {
-        id: "11502101-2021-04-01",
-        title: "A 2021-04-01",
-        resourceId: "11502101", //เครื่อง
+        id: "11502101-2021-07-01",
+        title: "A 2021-07-01",
+        resourceId: "11502203", //เครื่อง
         shift_job_id: 1,
         sort: 0,
-        start: "2021-04-01", // วัน
+        start: "2021-07-01", // วัน
         groupId: "J1",
         extends: {
           isShift: false,
@@ -398,34 +398,9 @@ export const rawData = {
         },
       },
       {
-        id: "11502101-2021-04-01",
-        title: "B 2021-04-01",
-        sort: 3,
-        resourceId: "11502101", //เครื่อง
-        shift_job_id: 2,
-        start: "2021-04-01", // วัน
-        extends: {
-          isShift: false,
-          isPlan: true,
-        },
-      },
-      {
-        id: "11502101-2021-04-01",
-        title: "A 2021-04-01",
-        sort: 1,
-        resourceId: "11502101", //เครื่อง
-        shift_job_id: 1,
-        start: "2021-04-01", // วัน
-        // allDay: true,
-        extends: {
-          isShift: false,
-          isPlan: true,
-        },
-      },
-      {
         id: "A-11502212-20210404",
-        resourceId: "11502101", //เครื่อง
-        start: "2021-04-01",
+        resourceId: "11502203", //เครื่อง
+        start: "2021-07-01",
         title: "กะเช้า",
         shift_job_id: 1,
         sort: 2,
@@ -443,7 +418,6 @@ export const rawData = {
               title: "PLN202104002",
               plan_job_no: "PLN2021040002",
               plan_job_plan_time: "01:00:00",
-
               mrp_no: "MRP202103001",
               so_no: "SO202103004",
               plan_job_worker: 1,
@@ -454,8 +428,8 @@ export const rawData = {
       },
       {
         id: "B-11502212-20210404",
-        resourceId: "11502101", //เครื่อง
-        start: "2021-04-01",
+        resourceId: "11502203", //เครื่อง
+        start: "2021-07-01",
         allDay: true,
         title: "กะกลางคืน",
         shift_job_id: 2,

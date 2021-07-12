@@ -1,21 +1,18 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Col, Row } from "antd";
+import { Col, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 import CustomClock from "../../../../../../components/CustomClock";
-import CustomTable from "../../../../../../components/CustomTable";
 import { ProductionContext } from "../../../../../../include/js/context";
 import { convertDigit } from "../../../../../../include/js/main_config";
-import { detailColumns, mockupdata } from "./timeConfig";
 
-const TimeSheetDetail = ({ status, setStatus, showConfirmEditQty }) => {
+const TimeSheetInfo = ({ status, setStatus }) => {
   const { form } = useContext(ProductionContext);
   const { plan } = form;
   const { start: timesheet } = useSelector(
     (state) => state.production.timesheet
   );
-  const { time_sheet_log_detail } = timesheet;
   console.log("timesheet detail render status", status);
   return (
     <>
@@ -115,4 +112,4 @@ const TimeSheetDetail = ({ status, setStatus, showConfirmEditQty }) => {
   );
 };
 
-export default React.memo(TimeSheetDetail);
+export default React.memo(TimeSheetInfo);

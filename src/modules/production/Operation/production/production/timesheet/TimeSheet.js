@@ -25,8 +25,9 @@ import CustomTable from "../../../../../../components/CustomTable";
 import CustomClock from "../../../../../../components/CustomClock";
 import { ProductionContext } from "../../../../../../include/js/context";
 import { useDispatch, useSelector } from "react-redux";
-import TimeSheetDetail from "./TimeSheetDetail";
+import TimeSheetInfo from "./TimeSheetInfo";
 import {
+  CLOSE_TIMESHEET,
   startTimesheet,
   START_TIMESHEET,
   updateTimesheet,
@@ -61,24 +62,14 @@ const TimeSheet = (props) => {
     updatedS++;
     return setTime({ s: updatedS, m: updatedM, h: updatedH });
   };
-  // const updateQuantity = (id, qty) => {
-  //   setTimesheetLog(
-  //     timesheetLog.map((obj) =>
-  //       obj.id === id ? { ...obj, time_sheet_log_qty: qty } : obj
-  //     )
-  //   );
-  // };
+
   const reset = () => {
     console.log("reset");
     clearInterval(interv);
     setStatus(0);
     setTime({ s: 0, m: 0, h: 0 });
   };
-  // console.log("dataHead", dataHead);
-  // useEffect(() => {
-  //   console.log("log has changed........");
-  //   setTimesheetLog(time_sheet_log_detail);
-  // }, [time_sheet_log_detail]);
+
   const timeValue = useMemo(() => time, [time]);
   const btnConfig = useMemo(() => {
     const resume = () => start();
@@ -269,12 +260,59 @@ const TimeSheet = (props) => {
       },
     });
   };
+
+  const confirmCloseJob = () => {
+    confirm({
+      title: "Confirm Close Job.",
+      icon: <ExclamationCircleOutlined />,
+      content: (
+        <>
+          <Text>
+            Are you sure your want to close job ?<br />
+          </Text>
+          {!timesheet.time_sheet_id && (
+            <Text>
+              If you click <b>YES</b> that mean you can't change data before
+            </Text>
+          )}
+        </>
+      ),
+
+      okText: "YES",
+      cancelText: "NO",
+      confirmLoading: true,
+      onOk(close) {
+        const saveTimesheet = async () => {
+          const resp = await updateTimesheet(
+            timesheet,
+            timesheet.time_sheet_id,
+            4
+          );
+
+          console.log("TIMSHEET Closed ", resp);
+          if (resp.success) {
+            dispatch({
+              type: CLOSE_TIMESHEET,
+              payload: resp.data,
+            });
+            close();
+          } else {
+            console.log("Success false ERRORRRRRR !!");
+          }
+        };
+        saveTimesheet();
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
+  };
   console.log(status);
   return (
     <div className={"pd-left-1 pd-right-1"}>
       <Row>
         <Col span={15} className="col-border-right" style={{ height: "90vh" }}>
-          <TimeSheetDetail
+          <TimeSheetInfo
             status={status}
             setStatus={setStatus}
             showConfirmEditQty={showConfirmEditQty}
@@ -282,11 +320,33 @@ const TimeSheet = (props) => {
           {status === 2 ? (
             <TimesheetTableLogEdit setStatus={setStatus} />
           ) : (
-            <TimesheetTableLog
-              status={status}
-              setStatus={setStatus}
-              showConfirmEditQty={showConfirmEditQty}
-            />
+            <>
+              <TimesheetTableLog status={status} setStatus={setStatus} />
+              <div className="full-width mt-2" style={{ padding: "0px 20%" }}>
+                <div className="flex-space">
+                  <Button
+                    block
+                    onClick={confirmCloseJob}
+                    className={
+                      timesheet.time_sheet_type_id === 3
+                        ? "primary timesheet-btn"
+                        : "timesheet-btn"
+                    }
+                    disabled={timesheet.time_sheet_type_id === 3 ? false : true}
+                  >
+                    Close Job
+                  </Button>
+                  <Button
+                    block
+                    className={"timesheet-btn"}
+                    disabled={timesheet.time_sheet_type_id === 3 ? false : true}
+                    onClick={showConfirmEditQty}
+                  >
+                    Edit Quantity
+                  </Button>
+                </div>
+              </div>
+            </>
           )}
         </Col>
         <Col span={9}>

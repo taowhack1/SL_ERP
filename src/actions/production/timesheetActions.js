@@ -10,6 +10,7 @@ const apiGetMachinePlan = `/production/machine/plan_job`;
 const apiGetTimesheetScanRMList = `/production/time_sheet/machine_process_scan`;
 const apiGetScanBarcodeDetail = `/production/time_sheet/machine_process_scan/barcode`;
 const apiTimesheet = `/production/time_sheet`;
+const apiTimesheetLog = `/production/time_sheet_log`;
 
 // const GET_TIMESHEET_MACHINE = "GET_TIMESHEET_MACHINE";
 const RESET_TIMESHEET = "RESET_TIMESHEET";
@@ -17,6 +18,7 @@ const GET_MACHINE_PLAN = "GET_MACHINE_PLAN";
 const GET_TIMESHEET_SCAN_RM_LIST = "GET_TIMESHEET_SCAN_RM_LIST";
 const START_TIMESHEET = "START_TIMESHEET";
 const UPDATE_TIMESHEET = "UPDATE_TIMESHEET";
+const CLOSE_TIMESHEET = "CLOSE_TIMESHEET";
 
 const getMachinePlan = (machine_id) => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
@@ -314,6 +316,34 @@ const updateTimesheet = (data, time_sheet_id, update_time_sheet_type_id) => {
     };
   }
 };
+
+const updateTimesheetLog = (data) => {
+  try {
+    const { time_sheet_log_id: id } = data;
+    if (!id) return { success: false, data: {}, message: "Missing id" };
+    return axios
+      .put(`${apiTimesheetLog}/${id}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: {}, message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
+
 const resetTimesheet = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: false });
   dispatch({ type: RESET_TIMESHEET });
@@ -325,6 +355,7 @@ export {
   START_TIMESHEET,
   UPDATE_TIMESHEET,
   RESET_TIMESHEET,
+  CLOSE_TIMESHEET,
   // GET_TIMESHEET_MACHINE,
   getMachinePlan,
   getTimesheetScanRMList,
@@ -332,5 +363,6 @@ export {
   startTimesheet,
   updateTimesheet,
   resetTimesheet,
+  updateTimesheetLog,
   // getTimesheetMachine,
 };

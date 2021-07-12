@@ -1,6 +1,5 @@
-import FullCalendar from "@fullcalendar/react";
-import React, { useCallback, useEffect, useState } from "react";
-import resourceTimelinePlugin from "@fullcalendar/resource-timeline";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+
 import Text from "antd/lib/typography/Text";
 import moment from "moment";
 import { Col, Row, Space } from "antd";
@@ -11,10 +10,52 @@ import DetailLoading from "../../../../components/DetailLoading";
 import { convertTimeToHr } from "../../../../include/js/function_main";
 import { convertDigit } from "../../../../include/js/main_config";
 import Search from "../../../../components/Search";
-import interactionPlugin from "@fullcalendar/interaction";
+
 import PlanningModal from "./PlanningModal";
 import $ from "jquery";
+import PlanningCalendarDetail from "./PlanningCalendarDetail";
 let countRender = 1;
+
+const materialStatusBar = () => (
+  <Row className="col-2 mt-1">
+    <Col span={20} offset={4}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CustomLabel label={"Material Status : "} />
+        <div
+          style={{
+            backgroundColor: "#59FF34",
+            borderRadius: "50%",
+            width: "14px",
+            height: "14px",
+            border: "1px solid gray",
+            marginRight: 10,
+          }}
+          className={"ml-2"}
+        ></div>
+        <CustomLabel label={"Ready"} readOnly={true} />
+        <div
+          style={{
+            backgroundColor: "red",
+            borderRadius: "50%",
+            width: "14px",
+            height: "14px",
+            border: "1px solid gray",
+            marginRight: 10,
+          }}
+          className={"ml-2"}
+        ></div>
+        <CustomLabel label={"Not Ready"} readOnly={true} />
+      </div>
+    </Col>
+  </Row>
+);
+
 const CustomFullCalendar = () => {
   const dispatch = useDispatch();
   const { costCenter, plan } = useSelector(
@@ -66,48 +107,8 @@ const CustomFullCalendar = () => {
     }
   };
 
-  const materialStatusBar = () => (
-    <Row className="col-2 mt-1">
-      <Col span={20} offset={4}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <CustomLabel label={"Material Status : "} />
-          <div
-            style={{
-              backgroundColor: "#59FF34",
-              borderRadius: "50%",
-              width: "14px",
-              height: "14px",
-              border: "1px solid gray",
-              marginRight: 10,
-            }}
-            className={"ml-2"}
-          ></div>
-          <CustomLabel label={"Ready"} readOnly={true} />
-          <div
-            style={{
-              backgroundColor: "red",
-              borderRadius: "50%",
-              width: "14px",
-              height: "14px",
-              border: "1px solid gray",
-              marginRight: 10,
-            }}
-            className={"ml-2"}
-          ></div>
-          <CustomLabel label={"Not Ready"} readOnly={true} />
-        </div>
-      </Col>
-    </Row>
-  );
-
   const renderEventContent = (eventInfo) => {
-    console.log(eventInfo);
+    console.log("eventInfo", eventInfo);
     const props = eventInfo.event._def.extendedProps;
     console.log("props", props);
     return (
@@ -216,98 +217,27 @@ const CustomFullCalendar = () => {
     );
   };
 
-  const renderLabelContent = (e) => {
-    const eventTitle = `[ ${e.resource._resource.id} ] ${e.fieldValue}`;
-    return (
-      <div className="pd-left-1" title={eventTitle}>
-        <Text>{"[ " + e.resource._resource.id + " ]"}</Text>
-        <br />
-        <p
-          style={{
-            maxWidth: 100,
-            overflowWrap: "break-word",
-            wordWrap: "break-word",
-          }}
-        >
-          {e.fieldValue}
-        </p>
-      </div>
-    );
-  };
-  const configs = {
-    resourceAreaWidth: 230,
-    editable: true,
-    // eventContent: renderEventContent,
-    initialView: "resourceTimelineMonth",
-    aspectRatio: 2.5,
-    timeZone: "UTC",
-    initialDate: moment().format("YYYY-MM-DD HH:mm:ss"),
-    resourceLabelContent: renderLabelContent,
-    resourceOrder: "sortNo",
-    eventOrder: "sort",
-    views: {
-      resourceTimelineMonth: {
-        slotMinWidth: 160,
-        slotLabelFormat: (value) => {
-          return (
-            moment(value.date.marker).format("ddd") +
-            " | " +
-            moment(value.date.marker)
-              .utc(true)
-              .subtract(7, "hours")
-              .format("DD/MM/YY")
-          );
-        },
-        businessHours: {
-          daysOfWeek: [1, 2, 3, 4, 5],
-        },
-      },
-      resourceTimelineDay: {
-        slotLabelFormat: (obj) => {
-          return moment(obj.date.marker)
-            .utc(true)
-            .subtract(7, "hours")
-            .format("H:mm");
-        },
-      },
-    },
-    // eventClick: (info) => {
-    //   info.el.style.backgroundColor = "white";
-    //   // console.log(info);
-    // },
-    nowIndicator: true,
-    events: state.plan,
-    timeZone: "UTC",
-    headerToolbar: {
-      left: "resourceTimelineMonth",
-      center: "title",
-      right: "prev,next",
-    },
-    resourceAreaHeaderContent: (
-      <div className="require full-width">
-        {/* Cost Center <br /> */}
-        <Search
-          onSearch={(text) => onSearch("costCenter", text)}
-          placeholder={"Cost Center"}
-        />
-      </div>
-    ),
-    // eventOrder: ["id"],
-    resources: state.costCenter,
-    eventTimeFormat: {
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-    },
-  };
   useEffect(() => {
     dispatch(getPlanningCalendarData());
   }, [dispatch]);
 
   console.log("render", countRender++);
   console.log("state", state);
-  const renderEventContent2 = useCallback(
-    (eventInfo) => {
+
+  const configs = useMemo(() => {
+    const renderLabelContent = (e) => {
+      console.log("renderLabelContent", e);
+      const eventTitle = `[ ${e.resource._resource.id} ] ${e.fieldValue}`;
+      return (
+        <div className="pd-left-1" title={eventTitle}>
+          <Text>{"[ " + e.resource._resource.id + " ]"}</Text>
+          <br />
+          <Text className="pre-wrap">{e.fieldValue}</Text>
+        </div>
+      );
+    };
+
+    const renderEventContent2 = (eventInfo) => {
       console.log(eventInfo);
       const eventProps = eventInfo.event._def;
       const data = eventProps.extendedProps.extends;
@@ -348,9 +278,72 @@ const CustomFullCalendar = () => {
           )}
         </div>
       );
-    },
-    [state]
-  );
+    };
+
+    return {
+      resourceAreaWidth: 230,
+      editable: true,
+      eventContent: renderEventContent2,
+      initialView: "resourceTimelineMonth",
+      aspectRatio: 2.5,
+      timeZone: "UTC",
+      initialDate: moment().format("YYYY-MM-DD HH:mm:ss"),
+      resourceLabelContent: renderLabelContent,
+      resourceOrder: "sortNo",
+      eventOrder: "sort",
+      views: {
+        resourceTimelineMonth: {
+          slotMinWidth: 160,
+          slotLabelFormat: (value) => {
+            return (
+              moment(value.date.marker).format("ddd") +
+              " | " +
+              moment(value.date.marker)
+                .utc(true)
+                .subtract(7, "hours")
+                .format("DD/MM/YY")
+            );
+          },
+          businessHours: {
+            daysOfWeek: [1, 2, 3, 4, 5],
+          },
+        },
+        resourceTimelineDay: {
+          slotLabelFormat: (obj) => {
+            return moment(obj.date.marker)
+              .utc(true)
+              .subtract(7, "hours")
+              .format("H:mm");
+          },
+        },
+      },
+      nowIndicator: true,
+      events: state.plan,
+      timeZone: "UTC",
+      headerToolbar: {
+        left: "resourceTimelineMonth",
+        center: "title",
+        right: "prev,next",
+      },
+      resourceAreaHeaderContent: (
+        <div className="require full-width">
+          {/* Cost Center <br /> */}
+          <Search
+            onSearch={(text) => onSearch("costCenter", text)}
+            placeholder={"Cost Center"}
+          />
+        </div>
+      ),
+      // eventOrder: ["id"],
+      resources: state.costCenter,
+      eventTimeFormat: {
+        hour12: false,
+        hour: "2-digit",
+        minute: "2-digit",
+      },
+    };
+  }, [state]);
+
   console.log(loading, state.costCenter);
 
   return (
@@ -360,13 +353,7 @@ const CustomFullCalendar = () => {
           <DetailLoading />
         ) : (
           <>
-            <FullCalendar
-              {...configs}
-              eventContent={renderEventContent}
-              // eventContent={renderEventContent2}
-              schedulerLicenseKey={"CC-Attribution-NonCommercial-NoDerivatives"}
-              plugins={[resourceTimelinePlugin, interactionPlugin]}
-            />
+            <PlanningCalendarDetail configs={configs} />
             {materialStatusBar()}
             <PlanningModal
               config={{

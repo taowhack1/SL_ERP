@@ -6,6 +6,7 @@ import CustomTable from "../../../../../../components/CustomTable";
 import { ProductionContext } from "../../../../../../include/js/context";
 import { getNumberFormat } from "../../../../../../include/js/main_config";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { updateTimesheetLog } from "../../../../../../actions/production/timesheetActions";
 const TimesheetTableLogEdit = ({ setStatus }) => {
   const { form } = useContext(ProductionContext);
   const { start: timesheet } = useSelector(
@@ -26,29 +27,29 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
     name: "time_sheet_log_detail",
     defaultValues: time_sheet_log_detail,
   });
-  const onSubmit = (data) => console.log("formData", data, "fields", fields);
-  const [visible, setVisible] = React.useState(false);
-  const [confirmLoading, setConfirmLoading] = React.useState(false);
-
-  const showPopconfirm = () => {
-    setVisible(true);
+  const onSubmit = async (data) => {
+    console.log("formData", data, "fields", fields);
+    const resp = await updateTimesheetLog(data);
+    if (resp.success) {
+      setStatus(0);
+      // do when success
+    } else {
+      // อยู่หน้าเดิม ขึ้นเออเร่อเตือน
+    }
+    setConfirmLoading(false);
   };
+  const [confirmLoading, setConfirmLoading] = React.useState(false);
 
   const handleOk = () => {
     setConfirmLoading(true);
     const btnSubmit = document.getElementById("submit-ts-log");
     btnSubmit && btnSubmit.click();
-    setTimeout(() => {
-      setVisible(false);
-      setConfirmLoading(false);
-    }, 2000);
   };
 
   const handleCancel = () => {
     console.log("Clicked cancel button");
-    setVisible(false);
   };
-
+  console.log("errors", errors);
   return (
     <>
       <div className="full-width mt-2 pd-left-1 pd-right-1">
@@ -116,19 +117,23 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 render: (value, record) => {
                   return (
                     <Controller
-                      as={
-                        <InputNumber
-                          {...getNumberFormat(3)}
-                          min={0}
-                          step={1}
-                          size={"small"}
-                          className="full-width"
-                        />
-                      }
+                      render={({ field: { value, onChange } }) => {
+                        console.log("value", value);
+                        return (
+                          <InputNumber
+                            {...getNumberFormat(3)}
+                            min={0}
+                            step={1}
+                            size={"small"}
+                            className="full-width"
+                            value={value || 0}
+                            onChange={onChange}
+                          />
+                        );
+                      }}
                       name={`time_sheet_log_detail[${record.ids}].time_sheet_log_qty`}
                       control={control}
                       rules={{ required: true }}
-                      defaultValue={fields[record.ids].time_sheet_log_qty}
                     />
                   );
                 },
@@ -163,7 +168,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
           >
             <Popconfirm
               title="Are you sure to save change?"
-              visible={visible}
+              // visible={visible}
               onConfirm={handleOk}
               okButtonProps={{ loading: confirmLoading }}
               onCancel={handleCancel}
@@ -175,7 +180,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 htmlType="submit"
                 id="submit-ts-log"
               >
-                Save
+                Save Change
               </Button>
             </Popconfirm>
             <Popconfirm

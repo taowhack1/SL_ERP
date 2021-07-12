@@ -104,6 +104,7 @@ const RDDevelopmentForm = ({
     npr_formula_qa,
     npr_formula_id,
     npr_no: npr_formula_no_ref,
+    npr_formula_sample_qty: batchSize,
   } = state;
 
   useEffect(() => {
@@ -286,10 +287,10 @@ const RDDevelopmentForm = ({
     [onChange, state, category_id]
   );
 
-  const onPrintFormula = () => {
+  const onPrintFormula = (batchSize) => {
     keepLog.keep_log_action("Print Formula : ", state.npr_formula_no);
     window.open(
-      `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula.aspx?npr_formula_no=${state.npr_formula_no}`,
+      `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula.aspx?npr_formula_no=${state.npr_formula_no}&sample_qty=${batchSize}`,
       false
     );
   };
@@ -334,7 +335,7 @@ const RDDevelopmentForm = ({
                   size="small"
                   loading={false}
                   disabled={npr_formula_id ? false : true}
-                  onClick={onPrintFormula}
+                  onClick={() => onPrintFormula(batchSize)}
                 >
                   Print Formula
                 </Button>
@@ -349,21 +350,23 @@ const RDDevelopmentForm = ({
                   Print QR Code
                 </Button>
               </div>
-              {((!status.disabledEdit && tg_trans_status_id !== 4) ||
-                tg_trans_status_id === 4) && (
-                <Button
-                  className={"primary"}
-                  size="small"
-                  loading={false}
-                  onClick={() => {
-                    tg_trans_status_id !== 4
-                      ? setFormMethod(formEdit)
-                      : setDisabledBatchUpdate(false);
-                  }}
-                >
-                  Edit
-                </Button>
-              )}
+              {
+                // (!status.disabledEdit && tg_trans_status_id !== 4) ||
+                tg_trans_status_id !== 4 && (
+                  <Button
+                    className={"primary"}
+                    size="small"
+                    loading={false}
+                    onClick={() => {
+                      tg_trans_status_id !== 4
+                        ? setFormMethod(formEdit)
+                        : setDisabledBatchUpdate(false);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                )
+              }
             </div>
           ) : (
             <div className="form-section-head d-flex flex-end mb-1 mt-3">

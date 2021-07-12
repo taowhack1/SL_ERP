@@ -27,29 +27,6 @@ const TimesheetTableLog = ({ status, setStatus, showConfirmEditQty }) => {
           scroll={{ y: (window.innerHeight * 0.75) / 2 }}
           size={"small"}
         />
-        <div className="full-width mt-2" style={{ padding: "0px 20%" }}>
-          <div className="flex-space">
-            <Button
-              block
-              className={
-                timesheet.time_sheet_type_id === 3
-                  ? "primary timesheet-btn"
-                  : "timesheet-btn"
-              }
-              disabled={timesheet.time_sheet_type_id === 3 ? false : true}
-            >
-              Close Job
-            </Button>
-            <Button
-              block
-              className={"timesheet-btn"}
-              disabled={timesheet.time_sheet_type_id === 3 ? false : true}
-              onClick={showConfirmEditQty}
-            >
-              Edit Quantity
-            </Button>
-          </div>
-        </div>
       </div>
     </>
   );

@@ -34,6 +34,10 @@ const RequestSampleForm = () => {
       npr_additional_actual_qty,
       npr_additional_batch_size,
       npr_additional_remark_reject,
+      npr_additional_created_by_name,
+      npr_additional_request_date,
+      npr_additional_remark,
+      npr_additional_request_qty,
     },
   } = useFormContext();
   const watchData = watch("trans_id");
@@ -377,9 +381,10 @@ const RequestSampleForm = () => {
                 <CustomLabel readOnly={readOnly} label={"Request By :"} />
               </Col>
               <Col span={16}>
+                {npr_additional_created_by_name || "-"}
                 <input
                   {...register("npr_additional_created_by")}
-                  className="disabled-input"
+                  className="disabled-input d-none"
                 />
               </Col>
             </Row>
@@ -388,9 +393,10 @@ const RequestSampleForm = () => {
                 <CustomLabel readOnly={readOnly} label={"Request Date :"} />
               </Col>
               <Col span={16}>
+                <Text className="pre-wrap">{npr_additional_request_date}</Text>
                 <input
                   {...register("npr_additional_request_date")}
-                  className="disabled-input"
+                  className="disabled-input d-none"
                 />
               </Col>
             </Row>
@@ -399,9 +405,10 @@ const RequestSampleForm = () => {
                 <CustomLabel readOnly={readOnly} label={"Request Qty. :"} />
               </Col>
               <Col span={16}>
+                {convertDigit(npr_additional_request_qty, 3)}
                 <input
                   {...register("npr_additional_request_qty")}
-                  className="disabled-input"
+                  className="disabled-input d-none"
                 />
               </Col>
             </Row>
@@ -410,9 +417,10 @@ const RequestSampleForm = () => {
                 <CustomLabel readOnly={readOnly} label={"Remark :"} />
               </Col>
               <Col span={16}>
+                <Text className="pre-wrap">{npr_additional_remark}</Text>
                 <input
                   {...register("npr_additional_remark")}
-                  className="disabled-input"
+                  className="disabled-input d-none"
                 />
               </Col>
             </Row>

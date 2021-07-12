@@ -1,6 +1,7 @@
 /** @format */
 
 import {
+  CLOSE_TIMESHEET,
   GET_MACHINE_PLAN,
   GET_TIMESHEET_SCAN_RM_LIST,
   RESET_TIMESHEET,
@@ -241,6 +242,7 @@ export default (state = initialState, action) => {
       };
     case START_TIMESHEET:
     case UPDATE_TIMESHEET:
+    case CLOSE_TIMESHEET:
       return {
         ...state,
 
