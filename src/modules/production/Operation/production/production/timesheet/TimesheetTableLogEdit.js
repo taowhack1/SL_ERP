@@ -1,13 +1,17 @@
+/** @format */
+
 import { Button, InputNumber, Popconfirm } from "antd";
 import Text from "antd/lib/typography/Text";
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { useSelector } from "react-redux";
 import CustomTable from "../../../../../../components/CustomTable";
 import { ProductionContext } from "../../../../../../include/js/context";
 import { getNumberFormat } from "../../../../../../include/js/main_config";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { updateTimesheetLog } from "../../../../../../actions/production/timesheetActions";
+
 const TimesheetTableLogEdit = ({ setStatus }) => {
+  const btnSubmit = useRef(null);
   const { form } = useContext(ProductionContext);
   const { start: timesheet } = useSelector(
     (state) => state.production.timesheet
@@ -29,7 +33,8 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
   });
   const onSubmit = async (data) => {
     console.log("formData", data, "fields", fields);
-    const resp = await updateTimesheetLog(data);
+    const resp = await updateTimesheetLog({ ...data, fields });
+    console.log("resp_faa", resp);
     if (resp.success) {
       setStatus(0);
       // do when success
@@ -42,8 +47,8 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
 
   const handleOk = () => {
     setConfirmLoading(true);
-    const btnSubmit = document.getElementById("submit-ts-log");
-    btnSubmit && btnSubmit.click();
+    console.log("Clicked OK button");
+    btnSubmit.current.click();
   };
 
   const handleCancel = () => {
@@ -52,7 +57,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
   console.log("errors", errors);
   return (
     <>
-      <div className="full-width mt-2 pd-left-1 pd-right-1">
+      <div className='full-width mt-2 pd-left-1 pd-right-1'>
         <form onSubmit={handleSubmit(onSubmit)}>
           <CustomTable
             columns={[
@@ -74,7 +79,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 align: "center",
                 ellipsis: true,
                 render: (value) => {
-                  return <Text className="text-value">{value || "-"}</Text>;
+                  return <Text className='text-value'>{value || "-"}</Text>;
                 },
               },
               {
@@ -85,7 +90,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 ellipsis: true,
                 render: (value) => {
                   return (
-                    <Text className="text-value">{value || "-"}</Text>
+                    <Text className='text-value'>{value || "-"}</Text>
                     // <Text className="text-value">{value ? value.split(" ")[1] : "-"}</Text>
                   );
                 },
@@ -98,7 +103,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 ellipsis: true,
                 render: (value, record) => {
                   return (
-                    <Text className="text-value">
+                    <Text className='text-value'>
                       {record.time_sheet_log_date_to ? value : "-"}
                     </Text>
                   );
@@ -106,7 +111,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
               },
               {
                 title: (
-                  <div className="text-center">
+                  <div className='text-center'>
                     <Text>Total Qty.</Text>
                   </div>
                 ),
@@ -117,7 +122,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 render: (value, record) => {
                   return (
                     <Controller
-                      render={({ field: { value, onChange } }) => {
+                      render={({ field: { value, onChange, onBlur } }) => {
                         console.log("value", value);
                         return (
                           <InputNumber
@@ -125,7 +130,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                             min={0}
                             step={1}
                             size={"small"}
-                            className="full-width"
+                            className='full-width'
                             value={value || 0}
                             onChange={onChange}
                           />
@@ -140,7 +145,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
               },
               {
                 title: (
-                  <div className="text-center">
+                  <div className='text-center'>
                     <Text>Remark</Text>
                   </div>
                 ),
@@ -149,12 +154,12 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 align: "left",
                 ellipsis: true,
                 render: (value) => {
-                  return <Text className="text-value">{value || "-"}</Text>;
+                  return <Text className='text-value'>{value || "-"}</Text>;
                 },
               },
             ]}
             dataSource={fields}
-            rowKey="ids"
+            rowKey='ids'
             rowClassName={(row, index) =>
               index % 2 === 0 ? "row-hl row-table-detail" : "row-table-detail"
             }
@@ -163,35 +168,35 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
             size={"small"}
           />
           <div
-            className="full-width mt-2 flex-space"
-            style={{ padding: "0px 20%" }}
-          >
+            className='full-width mt-2 flex-space'
+            style={{ padding: "0px 20%" }}>
             <Popconfirm
-              title="Are you sure to save change?"
+              title='Are you sure to save change?'
               // visible={visible}
               onConfirm={handleOk}
               okButtonProps={{ loading: confirmLoading }}
-              onCancel={handleCancel}
-            >
+              onCancel={handleCancel}>
               <Button
                 block
                 className={"timesheet-btn primary"}
                 //   onClick={() => setStatus(0)}
-                htmlType="submit"
-                id="submit-ts-log"
-              >
+                htmlType='submit'
+                id='submit-ts-log'>
                 Save Change
               </Button>
             </Popconfirm>
             <Popconfirm
-              title="Are you sure to discard change?"
+              title='Are you sure to discard change?'
               onConfirm={() => setStatus(0)}
-              onCancel={() => console.log("cancel")}
-            >
+              onCancel={() => console.log("cancel")}>
               <Button block className={"timesheet-btn"}>
                 Discard
               </Button>
             </Popconfirm>
+            <input
+              type='hidden'
+              ref={btnSubmit}
+              onClick={handleSubmit(onSubmit)}></input>
           </div>
         </form>
       </div>

@@ -1,3 +1,5 @@
+/** @format */
+
 import { Col, message, Row, Spin } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -172,7 +174,7 @@ const ProductionMain = ({ props, children }) => {
   useEffect(() => {
     console.log("useEffect set machine plan");
     const setInitialState = () => {
-      console.log(timesheet.machine);
+      console.log("timesheet.machine", timesheet.machine);
       setForm({
         ...form,
         machine: timesheet.machine,
@@ -193,14 +195,14 @@ const ProductionMain = ({ props, children }) => {
   return (
     <>
       <ProductionContext.Provider value={contextValue}>
-        <div className="production-main primary">
-          <div className="production-container">
+        <div className='production-main primary'>
+          <div className='production-container'>
             {loading ? (
               <Spin>
                 <DetailLoading />
               </Spin>
             ) : (
-              <Row className="col-2">
+              <Row className='col-2'>
                 {/* <Col span={step.current === 0 ? 6 : 0}>
                   <div className="mr-2 mt-1">
                     <ProductionJobList dataSource={mockupData} />
@@ -208,7 +210,7 @@ const ProductionMain = ({ props, children }) => {
                 </Col>
                 <Col span={step.current === 0 ? 18 : 24}> */}
                 <Col span={24}>
-                  <div className="production-step-content">
+                  <div className='production-step-content'>
                     {step.stepList.length > 0 && (
                       <>
                         <ProductionHeader

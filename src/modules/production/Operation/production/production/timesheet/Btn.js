@@ -9,10 +9,19 @@ const Btn = (props) => {
       {props.status === 0 ? (
         <div>
           <button
-            className="stopwatch-btn stopwatch-btn-gre"
-            onClick={props.showConfirmstart}
-          >
+            className='stopwatch-btn stopwatch-btn-gre'
+            onClick={() => props.showConfirmstart("setup")}>
+            Setup
+          </button>
+          <button
+            className='stopwatch-btn stopwatch-btn-gre'
+            onClick={() => props.showConfirmstart("start")}>
             Start
+          </button>
+          <button
+            className='stopwatch-btn stopwatch-btn-gre'
+            onClick={() => props.showConfirmstart("clean")}>
+            clean
           </button>
           {/* <button
             className="stopwatch-btn stopwatch-btn-gray"
@@ -28,16 +37,14 @@ const Btn = (props) => {
       {props.status === 1 ? ( //When Timesheet Start
         <div>
           <button
-            className="stopwatch-btn stopwatch-btn-red"
-            onClick={props.showConfirmstop}
-          >
+            className='stopwatch-btn stopwatch-btn-red'
+            onClick={props.showConfirmstop}>
             Stop
           </button>
 
           <button
-            className="stopwatch-btn stopwatch-btn-gray"
-            onClick={() => props.showConfirmstop("issue")}
-          >
+            className='stopwatch-btn stopwatch-btn-gray'
+            onClick={() => props.showConfirmstop("issue")}>
             Issue
           </button>
         </div>
@@ -48,10 +55,9 @@ const Btn = (props) => {
       {props.status === 2 ? (
         <div>
           <button
-            className="stopwatch-btn stopwatch-btn-disabled"
+            className='stopwatch-btn stopwatch-btn-disabled'
             onClick={props.showConfirmstart}
-            disabled
-          >
+            disabled>
             Start
           </button>
         </div>

@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   Button,
   Col,
@@ -51,11 +53,11 @@ const TimeSheet = (props) => {
     updatedM = time.m,
     updatedH = time.h;
   const run = () => {
-    if (updatedM === 60) {
+    if (updatedM === 59) {
       updatedH++;
       updatedM = 0;
     }
-    if (updatedS === 60) {
+    if (updatedS === 59) {
       updatedM++;
       updatedS = 0;
     }
@@ -93,31 +95,31 @@ const TimeSheet = (props) => {
           <>
             {machine.machine_process_qty ? (
               <div>
-                <label htmlFor="time_sheet_log_qty">
+                <label htmlFor='time_sheet_log_qty'>
                   <b>Input Quantity</b>
                 </label>
                 <InputNumber
                   {...getNumberFormat(3)}
                   min={0}
                   step={1}
-                  name="time_sheet_log_qty"
-                  className="full-width"
-                  id="time_sheet_log_qty"
+                  name='time_sheet_log_qty'
+                  className='full-width'
+                  id='time_sheet_log_qty'
                 />
               </div>
             ) : (
               <Text strong>Are you sure your want to stop timesheet ?.</Text>
             )}
             {type === "issue" && (
-              <div className="mt-1">
-                <label htmlFor="time_sheet_log_qty">
+              <div className='mt-1'>
+                <label htmlFor='time_sheet_log_qty'>
                   <b>Issue Remark</b>
                 </label>
                 <Input
                   minLength={5}
-                  name="time_sheet_log_remark"
-                  className="full-width"
-                  id="time_sheet_log_remark"
+                  name='time_sheet_log_remark'
+                  className='full-width'
+                  id='time_sheet_log_remark'
                 />
               </div>
             )}
@@ -174,7 +176,8 @@ const TimeSheet = (props) => {
         },
       });
     };
-    const showConfirmstart = () => {
+    const showConfirmstart = (type) => {
+      console.log("type", type);
       confirm({
         title: "Confirm Start",
         icon: <ExclamationCircleOutlined />,
@@ -311,7 +314,7 @@ const TimeSheet = (props) => {
   return (
     <div className={"pd-left-1 pd-right-1"}>
       <Row>
-        <Col span={15} className="col-border-right" style={{ height: "90vh" }}>
+        <Col span={15} className='col-border-right' style={{ height: "90vh" }}>
           <TimeSheetInfo
             status={status}
             setStatus={setStatus}
@@ -322,8 +325,8 @@ const TimeSheet = (props) => {
           ) : (
             <>
               <TimesheetTableLog status={status} setStatus={setStatus} />
-              <div className="full-width mt-2" style={{ padding: "0px 20%" }}>
-                <div className="flex-space">
+              <div className='full-width mt-2' style={{ padding: "0px 20%" }}>
+                <div className='flex-space'>
                   <Button
                     block
                     onClick={confirmCloseJob}
@@ -332,26 +335,26 @@ const TimeSheet = (props) => {
                         ? "primary timesheet-btn"
                         : "timesheet-btn"
                     }
-                    disabled={timesheet.time_sheet_type_id === 3 ? false : true}
-                  >
+                    disabled={
+                      timesheet.time_sheet_type_id === 3 ? false : true
+                    }>
                     Close Job
                   </Button>
-                  <Button
+                  {/* <Button
                     block
                     className={"timesheet-btn"}
                     disabled={timesheet.time_sheet_type_id === 3 ? false : true}
-                    onClick={showConfirmEditQty}
-                  >
+                    onClick={showConfirmEditQty}>
                     Edit Quantity
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             </>
           )}
         </Col>
         <Col span={9}>
-          <div className="timer-container">
-            <div className="stopwatch">
+          <div className='timer-container'>
+            <div className='stopwatch'>
               <Display time={timeValue} />
               <Btn {...btnConfig} />
             </div>

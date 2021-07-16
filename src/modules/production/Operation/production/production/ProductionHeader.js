@@ -1,3 +1,5 @@
+/** @format */
+
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { Button, Col, message, Progress, Row } from "antd";
 import React, { useContext } from "react";
@@ -6,8 +8,8 @@ import { ProductionContext } from "../../../../../include/js/context";
 import ProductionCostCenterTag from "../ProductionCostCenterTag";
 const disabledNextBtn = (currentStep) => (
   <Button
-    type="text"
-    className="flex-container item-center"
+    type='text'
+    className='flex-container item-center'
     style={{ float: "right" }}
     // disabled={true}
     onClick={() =>
@@ -18,8 +20,7 @@ const disabledNextBtn = (currentStep) => (
         : currentStep === 4
         ? message.warning("Can't go back, Timesheet has been started.")
         : null
-    }
-  >
+    }>
     <h4 className={"pd-right-1 text-disabled"}>NEXT</h4>
 
     <ArrowRightOutlined className={"font-25 text-disabled"} />
@@ -27,25 +28,23 @@ const disabledNextBtn = (currentStep) => (
 );
 const disabledPrevBtn = (currentStep) => (
   <Button
-    type="text"
-    className="flex-container item-center "
+    type='text'
+    className='flex-container item-center '
     onClick={() =>
       currentStep === 4
         ? message.warning("Can't go back, Timesheet has been started.")
         : null
-    }
-  >
+    }>
     <ArrowLeftOutlined className={"font-25  text-disabled"} />
     <h4 className={"pd-left-1  text-disabled"}>PREV.</h4>
   </Button>
 );
 const enableNextBtn = (nextStep) => (
   <Button
-    type="text"
-    className="flex-container item-center"
+    type='text'
+    className='flex-container item-center'
     onClick={nextStep}
-    style={{ float: "right" }}
-  >
+    style={{ float: "right" }}>
     <h4 className={"pd-right-1 button-icon"}>NEXT</h4>
 
     <ArrowRightOutlined className={"font-25 button-icon"} />
@@ -118,26 +117,25 @@ const ProductionHeader = ({ current, title }) => {
   console.log("header", current, title, step);
   return (
     <>
-      <Row className="col-2 mt-1 mb-1 under-line">
+      <Row className='col-2 mt-1 mb-1 under-line'>
         <ProductionCostCenterTag />
-        <Col span={4} className="text-left">
+        <Col span={4} className='text-left'>
           {current === 4 && timesheet.time_sheet_id ? (
             disabledPrevBtn(current)
           ) : (
             <Button
-              type="text"
-              className="flex-container item-center "
-              onClick={prevStep}
-            >
+              type='text'
+              className='flex-container item-center '
+              onClick={prevStep}>
               <ArrowLeftOutlined className={"font-25 button-icon"} />
               <h4 className={"pd-left-1 button-icon"}>PREV.</h4>
             </Button>
           )}
         </Col>
-        <Col span={16} className="text-center">
+        <Col span={16} className='text-center'>
           <h2>{title}</h2>
         </Col>
-        <Col span={4} className="text-right">
+        <Col span={4} className='text-right'>
           {getNextStepBtn(current, step)}
         </Col>
         {current === 2 && (
