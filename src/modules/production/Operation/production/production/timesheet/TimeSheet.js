@@ -17,8 +17,12 @@ import Btn from "./Btn";
 import Display from "./Display";
 import { detail, detailColumns, mockupdata } from "./timeConfig";
 import {
+  CheckCircleTwoTone,
   ClockCircleOutlined,
   ExclamationCircleOutlined,
+  ExportOutlined,
+  PauseCircleTwoTone,
+  PlayCircleTwoTone,
   SearchOutlined,
 } from "@ant-design/icons";
 import { getNumberFormat } from "../../../../../../include/js/main_config";
@@ -36,10 +40,12 @@ import {
 } from "../../../../../../actions/production/timesheetActions";
 import TimesheetTableLog from "./TimesheetTableLog";
 import TimesheetTableLogEdit from "./TimesheetTableLogEdit";
+import { useHistory } from "react-router-dom";
 const { confirm, warning } = Modal;
 
 const TimeSheet = (props) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { form } = useContext(ProductionContext);
   const { start: timesheet, machine } = useSelector(
     (state) => state.production.timesheet
@@ -48,18 +54,19 @@ const TimeSheet = (props) => {
   const [time, setTime] = useState({ s: 0, m: 0, h: 0 });
   const [interv, setInterv] = useState();
   const [status, setStatus] = useState(0);
-
+  const [stepBtn, setStepBtn] = useState("idel");
+  console.log("time", time);
   var updatedS = time.s,
     updatedM = time.m,
     updatedH = time.h;
   const run = () => {
-    if (updatedM === 59) {
+    if (updatedM === 59 && updatedS === 59) {
       updatedH++;
-      updatedM = 0;
+      updatedM = -1;
     }
     if (updatedS === 59) {
       updatedM++;
-      updatedS = 0;
+      updatedS = -1;
     }
     updatedS++;
     return setTime({ s: updatedS, m: updatedM, h: updatedH });
@@ -76,9 +83,10 @@ const TimeSheet = (props) => {
   const btnConfig = useMemo(() => {
     const resume = () => start();
 
-    const start = () => {
+    const start = (type) => {
       run();
       setStatus(1);
+      setStepBtn(type);
       setInterv(setInterval(run, 1000));
     };
     const stop = () => {
@@ -93,35 +101,91 @@ const TimeSheet = (props) => {
         cancelText: "NO",
         content: (
           <>
-            {machine.machine_process_qty ? (
-              <div>
-                <label htmlFor='time_sheet_log_qty'>
-                  <b>Input Quantity</b>
-                </label>
-                <InputNumber
-                  {...getNumberFormat(3)}
-                  min={0}
-                  step={1}
-                  name='time_sheet_log_qty'
-                  className='full-width'
-                  id='time_sheet_log_qty'
-                />
-              </div>
+            {type === "setup" ? (
+              <>
+                <div className='mt-1'>
+                  <label htmlFor='time_sheet_log_qty'>
+                    <b>Remark</b>
+                  </label>
+                  <Input
+                    minLength={5}
+                    name='time_sheet_log_remark'
+                    className='full-width'
+                    id='time_sheet_log_remark'
+                  />
+                </div>
+              </>
+            ) : type === "start" ? (
+              <>
+                {machine.machine_process_qty ? (
+                  <div>
+                    <label htmlFor='time_sheet_log_qty'>
+                      <b>Input Quantity</b>
+                    </label>
+                    <InputNumber
+                      {...getNumberFormat(3)}
+                      min={0}
+                      step={1}
+                      name='time_sheet_log_qty'
+                      className='full-width'
+                      id='time_sheet_log_qty'
+                    />
+                  </div>
+                ) : (
+                  <Text strong>
+                    Are you sure your want to stop timesheet ?.
+                  </Text>
+                )}
+              </>
+            ) : type === "clean" ? (
+              <>
+                <div className='mt-1'>
+                  <label htmlFor='time_sheet_log_qty'>
+                    <b>Remark</b>
+                  </label>
+                  <Input
+                    minLength={5}
+                    name='time_sheet_log_remark'
+                    className='full-width'
+                    id='time_sheet_log_remark'
+                  />
+                </div>
+              </>
             ) : (
-              <Text strong>Are you sure your want to stop timesheet ?.</Text>
-            )}
-            {type === "issue" && (
-              <div className='mt-1'>
-                <label htmlFor='time_sheet_log_qty'>
-                  <b>Issue Remark</b>
-                </label>
-                <Input
-                  minLength={5}
-                  name='time_sheet_log_remark'
-                  className='full-width'
-                  id='time_sheet_log_remark'
-                />
-              </div>
+              <>
+                {machine.machine_process_qty ? (
+                  <div>
+                    <label htmlFor='time_sheet_log_qty'>
+                      <b>Input Quantity</b>
+                    </label>
+                    <InputNumber
+                      {...getNumberFormat(3)}
+                      min={0}
+                      step={1}
+                      name='time_sheet_log_qty'
+                      className='full-width'
+                      id='time_sheet_log_qty'
+                    />
+                  </div>
+                ) : (
+                  <Text strong>
+                    Are you sure your want to stop timesheet ?.
+                  </Text>
+                )}
+                {type === "issue" && (
+                  <div className='mt-1'>
+                    <label htmlFor='time_sheet_log_qty'>
+                      <b>Issue Remark</b>
+                    </label>
+                    <Input
+                      minLength={5}
+                      name='time_sheet_log_remark'
+                      className='full-width'
+                      id='time_sheet_log_remark'
+                    />
+                  </div>
+                )}
+              </>
             )}
           </>
         ),
@@ -178,6 +242,7 @@ const TimeSheet = (props) => {
     };
     const showConfirmstart = (type) => {
       console.log("type", type);
+
       confirm({
         title: "Confirm Start",
         icon: <ExclamationCircleOutlined />,
@@ -205,7 +270,7 @@ const TimeSheet = (props) => {
 
             console.log("TIMSHEET IS STARTED ", resp);
             if (resp.success) {
-              start();
+              start(type);
 
               dispatch({
                 type: START_TIMESHEET,
@@ -242,12 +307,13 @@ const TimeSheet = (props) => {
 
     return {
       status,
+      stepBtn,
       resume,
       showConfirmstart,
       showConfirmbreak,
       showConfirmstop,
     };
-  }, [status, timesheet, timesheet.time_sheet_id]);
+  }, [status, stepBtn, timesheet, timesheet.time_sheet_id]);
   const showConfirmEditQty = () => {
     confirm({
       title: "Confirm Edit Quantity",
@@ -304,6 +370,7 @@ const TimeSheet = (props) => {
           }
         };
         saveTimesheet();
+        setStepBtn("close");
       },
       onCancel() {
         console.log("Cancel");
@@ -313,11 +380,23 @@ const TimeSheet = (props) => {
   console.log(status);
   return (
     <div className={"pd-left-1 pd-right-1"}>
+      {timesheet.time_sheet_type_id === 4 ? (
+        <>
+          <div className='exit-label'>
+            <Button onClick={() => window.location.reload()}>
+              <ExportOutlined /> Exit
+            </Button>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
       <Row>
         <Col span={15} className='col-border-right' style={{ height: "90vh" }}>
           <TimeSheetInfo
             status={status}
             setStatus={setStatus}
+            stepBtn={stepBtn}
             showConfirmEditQty={showConfirmEditQty}
           />
           {status === 2 ? (
@@ -353,6 +432,47 @@ const TimeSheet = (props) => {
           )}
         </Col>
         <Col span={9}>
+          <div className='timer-container-status'>
+            <Col span={6} offset={1}>
+              <Text style={{ fontSize: 40 }}>Status :</Text>
+            </Col>
+
+            <Col span={16} className='text-value'>
+              {timesheet.time_sheet_type_id &&
+              timesheet.time_sheet_type_id === 2 ? (
+                <>
+                  <PlayCircleTwoTone
+                    style={{ fontSize: 40 }}
+                    twoToneColor='#52c41a'
+                  />
+                </>
+              ) : timesheet.time_sheet_type_id === 3 ? (
+                <PauseCircleTwoTone
+                  style={{ fontSize: 40 }}
+                  twoToneColor='#ff0000'
+                />
+              ) : timesheet.time_sheet_type_id === 4 ? (
+                <CheckCircleTwoTone
+                  style={{ fontSize: 40 }}
+                  twoToneColor='#52c41a'
+                />
+              ) : null}
+
+              <Text strong className='pe-4' style={{ fontSize: 40 }}>
+                {}
+                {stepBtn === "setup"
+                  ? timesheet.time_sheet_type_id === 3
+                    ? `Stop-${stepBtn}`
+                    : stepBtn
+                  : stepBtn === "clean"
+                  ? timesheet.time_sheet_type_id === 3
+                    ? `Stop-${stepBtn}`
+                    : stepBtn
+                  : timesheet.time_sheet_type_name || "-"}
+                {/* {timesheet.time_sheet_type_name || "-"} */}
+              </Text>
+            </Col>
+          </div>
           <div className='timer-container'>
             <div className='stopwatch'>
               <Display time={timeValue} />

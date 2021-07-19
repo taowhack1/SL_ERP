@@ -115,6 +115,8 @@ const ProductionHeader = ({ current, title }) => {
     }
   };
   console.log("header", current, title, step);
+  console.log("timesheet.time_sheet_id", timesheet.time_sheet_id);
+  console.log("time_sheet_type_id", timesheet.time_sheet_type_id);
   return (
     <>
       <Row className='col-2 mt-1 mb-1 under-line'>

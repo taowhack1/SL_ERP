@@ -16,7 +16,7 @@ import CustomClock from "../../../../../../components/CustomClock";
 import { ProductionContext } from "../../../../../../include/js/context";
 import { convertDigit } from "../../../../../../include/js/main_config";
 import TimeSheetShowWorker from "./TimeSheetShowWorker";
-const TimeSheetInfo = ({ status, setStatus }) => {
+const TimeSheetInfo = ({ status, setStatus, stepBtn }) => {
   const { form } = useContext(ProductionContext);
   const { plan } = form;
   const { start: timesheet } = useSelector(
@@ -24,7 +24,6 @@ const TimeSheetInfo = ({ status, setStatus }) => {
   );
   const { production: empList } = useSelector((state) => state.hrm.employee);
   const [visible, setVisible] = useState(false);
-  const user = ["2200005", "2200007", "1200014"];
   const listWorker = empList.filter((emp, index) => {
     return form.worker.includes(emp.employee_no);
   });
@@ -124,16 +123,18 @@ const TimeSheetInfo = ({ status, setStatus }) => {
             <Col span={16} className='text-value'>
               {timesheet.time_sheet_type_id &&
               timesheet.time_sheet_type_id === 2 ? (
-                <PlayCircleTwoTone
-                  style={{ fontSize: "20px" }}
-                  twoToneColor='#52c41a'
-                />
+                <>
+                  <PlayCircleTwoTone
+                    style={{ fontSize: "20px" }}
+                    twoToneColor='#52c41a'
+                  />
+                </>
               ) : timesheet.time_sheet_type_id === 3 ? (
                 <PauseCircleTwoTone
                   style={{ fontSize: "20px" }}
                   twoToneColor='#ff0000'
                 />
-              ) : timesheet.time_sheet_type_id === 3 ? (
+              ) : timesheet.time_sheet_type_id === 4 ? (
                 <CheckCircleTwoTone
                   style={{ fontSize: "20px" }}
                   twoToneColor='#52c41a'
@@ -141,7 +142,17 @@ const TimeSheetInfo = ({ status, setStatus }) => {
               ) : null}
 
               <Text className='pe-4'>
-                {timesheet.time_sheet_type_name || "-"}
+                {}
+                {stepBtn === "setup"
+                  ? timesheet.time_sheet_type_id === 3
+                    ? `stop-${stepBtn}`
+                    : stepBtn
+                  : stepBtn === "clean"
+                  ? timesheet.time_sheet_type_id === 3
+                    ? `stop-${stepBtn}`
+                    : stepBtn
+                  : timesheet.time_sheet_type_name || "-"}
+                {/* {timesheet.time_sheet_type_name || "-"} */}
               </Text>
             </Col>
           </Row>

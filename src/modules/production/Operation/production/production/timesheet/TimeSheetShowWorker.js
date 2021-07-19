@@ -27,7 +27,7 @@ const TimeSheetShowWorker = ({ listWorker, openModal, closeModal }) => {
                     alt='example'
                     height={120}
                     src={
-                      emp.employee_image ||
+                      `${process.env.REACT_APP_SERVER}${emp.employee_image}` ||
                       require("../../../../../../image/unnamed.png")
                     }
                   />
