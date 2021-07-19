@@ -2,6 +2,7 @@
 
 import {
   getRefStatus,
+  getSelfStepStatus,
   warningTextValue,
 } from "../../../include/js/function_main";
 import {
@@ -106,7 +107,7 @@ export const mrp_columns = (showModal) => [
     align: "center",
     ellipsis: true,
     render: (value, record, index) => {
-      return getRefStatus(record);
+      return getSelfStepStatus(record);
     },
   },
   // {

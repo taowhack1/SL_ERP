@@ -416,7 +416,11 @@ const NPRComponentsTab = () => {
     setState((prev) => ({ ...prev, ...data, commit: 1 }));
 
   const modalConfig = useMemo(
-    () => ({ ...modal, onClose: onCloseModal }),
+    () => ({
+      ...modal,
+      onClose: onCloseModal,
+      fileServer: process.env.REACT_APP_ONLINE_PATH,
+    }),
     [modal, onCloseModal]
   );
   const { tg_trans_status_id: trans_id, tg_trans_close_id: close_id } = state;

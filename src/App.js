@@ -138,7 +138,7 @@ const App = (props) => {
     return {
       mainContext,
       setMainContext,
-      auth: auth,
+      auth,
       currentProject,
       currentMenu,
     };

@@ -977,10 +977,10 @@ div.fc-datagrid-cell-cushion.fc-scrollgrid-sync-inner {
 }
 
 .pointer {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 .arrow {
-  cursor: context-menu;
+  cursor: context-menu !important;
 }
 div.cc-tag {
   position: absolute;

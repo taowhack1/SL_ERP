@@ -61,34 +61,37 @@ const CustomFullCalendar = () => {
   const { costCenter, plan } = useSelector(
     (state) => state.production.operations.planning
   );
-  console.log("redux data", costCenter, plan);
+
   const { loading } = useSelector((state) => state.production);
+
   const [state, setState] = useState({
     costCenter,
     plan,
   });
-  const [search, setSearch] = useState({
-    costCenter: null,
-    plan: null,
-    date: null,
-  });
+
   const [modal, setModal] = useState({
     visible: false,
     data: {},
   });
-  console.log(state);
-  const openModal = (data) => setModal({ ...modal, visible: true, ...data });
+
+  const openModal = (plan) => {
+    console.log("plan", plan);
+    setModal({ ...modal, visible: true, data: plan });
+  };
+
   const closeModal = (data) =>
     setModal({
       visible: false,
       data: {},
     });
+
   const saveModal = (data) => {
     setModal({
       visible: false,
       data: {},
     });
   };
+
   const onSearch = (type, text) => {
     switch (type) {
       case "costCenter":
@@ -107,126 +110,12 @@ const CustomFullCalendar = () => {
     }
   };
 
-  const renderEventContent = (eventInfo) => {
-    console.log("eventInfo", eventInfo);
-    const props = eventInfo.event._def.extendedProps;
-    console.log("props", props);
-    return (
-      <>
-        <div className="arrow">
-          {props.shift.map((objShift, key) => (
-            <div key={objShift.id}>
-              <div
-                key={objShift.id}
-                className={"text-center arrow"}
-                style={{
-                  // backgroundColor: "white",
-                  // border: "1px solid #FFC357",
-                  borderRadius: 2,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%",
-                  backgroundColor: "white",
-                }}
-                onClick={() => {
-                  console.log(eventInfo);
-                  console.log("data", eventInfo.event._def.extendedProps);
-                }}
-              >
-                {/* Render Job */}
-                <div
-                  style={{
-                    borderRadius: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    width: "100%",
-                    zIndex: 1,
-                  }}
-                  className="arrow"
-                >
-                  {objShift?.job_detail?.length ? (
-                    objShift.job_detail.map((obj, key) => (
-                      <div
-                        key={obj.id}
-                        style={{
-                          borderRadius: 2,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          backgroundColor: "#78FFFD",
-                          border: "1px solid #00D8D4 ",
-                          width: "100%",
-                          marginTop: 5,
-                          padding: 2,
-                          zIndex: 10,
-                          boxShadow: "0px 0px 3px #ccc",
-                        }}
-                        className="job-head pointer"
-                        onClick={() =>
-                          openModal({ data: obj, visible: !modal.visible })
-                        }
-                      >
-                        <Text strong className="ml-1 mr-1">
-                          {obj.title}
-                        </Text>
-                        <Text strong>
-                          {convertTimeToHr(obj.plan_job_plan_time)} Hr.
-                        </Text>
-                      </div>
-                    ))
-                  ) : (
-                    <Text className="text-value">{"< - - - ว่าง - - - >"}</Text>
-                  )}
-                </div>
-              </div>
-              {/* Shift Tab */}
-              <div
-                style={{
-                  border: "1px solid #FFE3B0",
-                  marginTop: 5,
-                  backgroundColor: "#ffc459",
-                  boxShadow: "0px 0px 3px #ccc",
-                  fontSize: 14,
-                }}
-                className="arrow"
-              >
-                <Row className="col-2 pd-left-1">
-                  <Col span={15}>
-                    <Space size={8}>
-                      <Text strong>{objShift.title}</Text>
-                    </Space>
-                  </Col>
-                  <Col span={9}>
-                    <Text strong>
-                      {convertDigit(
-                        convertTimeToHr(objShift.sum_plan_job_plan_time),
-                        2
-                      ) ?? "-"}
-                    </Text>
-                    <Text strong>{" Hr."}</Text>
-                  </Col>
-                </Row>
-              </div>
-            </div>
-          ))}
-        </div>
-      </>
-    );
-  };
-
   useEffect(() => {
     dispatch(getPlanningCalendarData());
   }, [dispatch]);
 
-  console.log("render", countRender++);
-  console.log("state", state);
-
   const configs = useMemo(() => {
     const renderLabelContent = (e) => {
-      console.log("renderLabelContent", e);
       const eventTitle = `[ ${e.resource._resource.id} ] ${e.fieldValue}`;
       return (
         <div className="pd-left-1" title={eventTitle}>
@@ -238,44 +127,85 @@ const CustomFullCalendar = () => {
     };
 
     const renderEventContent2 = (eventInfo) => {
-      console.log(eventInfo);
       const eventProps = eventInfo.event._def;
       const data = eventProps.extendedProps.extends;
+      const dayShift = data.job_detail.filter((obj) => obj.shift_job_id === 1);
+      const nightShift = data.job_detail.filter(
+        (obj) => obj.shift_job_id === 2
+      );
       return (
         <div
-          onClick={() =>
-            eventProps.extendedProps.extends.isPlan && openModal(data)
-          }
+          // onClick={() =>
+          //   eventProps.extendedProps.extends.isPlan && openModal(data)
+          // }
+          className="text-center arrow"
         >
-          {eventProps.extendedProps.extends.isPlan ? (
-            <b>{eventProps.title}</b>
-          ) : (
-            <div className="text-center" style={{ color: "black" }}>
-              {eventProps.extendedProps.extends.job_detail.length === 0 && (
-                <div className="mb-1">
-                  <Text className="text-value">{"< - - - ว่าง - - - >"}</Text>
-                  <br />
+          {dayShift.length ? (
+            dayShift.map((plan) => {
+              const { plan_job_no, plan_job_plan_time, id } = plan;
+              return (
+                <div
+                  key={id}
+                  style={{
+                    border: "1px solid #c0c0c0",
+                    padding: 1,
+                    borderRadius: 2,
+                    backgroundColor: "blue",
+                    marginBottom: 5,
+                  }}
+                  className="text-center pointer"
+                  onClick={() => openModal(plan)}
+                >
+                  <b>{`${plan_job_no} - ${plan_job_plan_time}`}</b>
                 </div>
-              )}
+              );
+            })
+          ) : (
+            <Text key={"empty"}>{`< - - - ว่าง - - - >`}</Text>
+          )}
+          <div
+            style={{
+              border: "1px solid #c0c0c0",
+              padding: 1,
+              borderRadius: 2,
+              backgroundColor: "orange",
+              marginBottom: 5,
+            }}
+            className="text-center"
+          >
+            <b>{`Day : 03:00 Hr.`}</b>
+          </div>
+          {nightShift.length ? (
+            nightShift.map(({ plan_job_no, plan_job_plan_time, id }) => (
               <div
+                key={id}
                 style={{
                   border: "1px solid #c0c0c0",
-                  padding: 2,
+                  padding: 1,
                   borderRadius: 2,
-                  backgroundColor: "orange",
+                  backgroundColor: "purple",
                   marginBottom: 5,
                 }}
+                className="text-center pointer"
               >
-                <b>
-                  {eventProps.title +
-                    " " +
-                    eventProps.extendedProps.sum_plan_job_plan_time +
-                    " " +
-                    " hr."}
-                </b>
+                <b>{`${plan_job_no}`}</b>
               </div>
-            </div>
+            ))
+          ) : (
+            <Text key={"empty2"}>{`< - - - ว่าง - - - >`}</Text>
           )}
+          <div
+            style={{
+              border: "1px solid #c0c0c0",
+              padding: 1,
+              borderRadius: 2,
+              backgroundColor: "orange",
+              marginBottom: 5,
+            }}
+            className="text-center"
+          >
+            <b>{`Night : 04:00 Hr.`}</b>
+          </div>
         </div>
       );
     };
@@ -320,8 +250,14 @@ const CustomFullCalendar = () => {
       nowIndicator: true,
       events: state.plan,
       timeZone: "UTC",
+      customButtons: {
+        addPlanButton: {
+          text: "Add Plan",
+          click: () => console.log("Add Plan"),
+        },
+      },
       headerToolbar: {
-        left: "resourceTimelineMonth",
+        left: "addPlanButton",
         center: "title",
         right: "prev,next",
       },
@@ -343,9 +279,7 @@ const CustomFullCalendar = () => {
       },
     };
   }, [state]);
-
-  console.log(loading, state.costCenter);
-
+  useEffect(() => setState((prev) => ({ ...prev, plan })), [plan]);
   return (
     <>
       <div style={{ margin: "50px auto", width: "95%", height: 800 }}>
@@ -354,7 +288,7 @@ const CustomFullCalendar = () => {
         ) : (
           <>
             <PlanningCalendarDetail configs={configs} />
-            {materialStatusBar()}
+            {/* {materialStatusBar()} */}
             <PlanningModal
               config={{
                 title: "Plan Detail",

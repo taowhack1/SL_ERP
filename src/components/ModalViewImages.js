@@ -15,6 +15,7 @@ const ModalViewImages = (
     onClose,
     dataSource = [],
     field = { name: "name", path: "path" },
+    fileServer,
   } = props;
   console.log("modal dataSource", props);
   return (
@@ -40,9 +41,7 @@ const ModalViewImages = (
                   className="pointer"
                   onClick={() =>
                     window.open(
-                      `${process.env.REACT_APP_FILE_PATH}${
-                        obj[field.path] || TempImages
-                      }`,
+                      `${fileServer}${obj[field.path] || TempImages}`,
                       "_blank"
                     )
                   }
@@ -50,9 +49,7 @@ const ModalViewImages = (
                     <img
                       alt={obj[field.name] || "images"}
                       title={obj[field.name] || "images"}
-                      src={`${process.env.REACT_APP_FILE_PATH}${
-                        obj[field.path] || TempImages
-                      }`}
+                      src={`${fileServer}${obj[field.path] || TempImages}`}
                       width={150}
                       height={150}
                     />

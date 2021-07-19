@@ -128,7 +128,7 @@ const columns = ({ onPrint }) => [
     dataIndex: "id",
     align: "center",
     width: "5%",
-    render: (record) =>
+    render: (val, record) =>
       record.npr_additional_batch_size !== null && (
         <div className="text-center">
           <PrinterTwoTone
@@ -229,10 +229,11 @@ const ModalRDRequestSample = ({
     }
   };
 
-  const onPrint = ({ npr_additional_batch_size = 0 }) =>
+  const onPrint = ({ npr_additional_batch_size = 0 }) => {
     window.open(
       `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula.aspx?npr_formula_no=${npr_formula_no}&sample_qty=${npr_additional_batch_size}`
     );
+  };
 
   useEffect(() => {
     setLoading(true);

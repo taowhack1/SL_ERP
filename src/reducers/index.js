@@ -43,15 +43,3 @@ export const rootReducer = (state, action) => {
 
   return appReducer(state, action);
 };
-// export default combineReducers({
-//   auth: authReducer,
-//   systemConfig: systemConfigReducer,
-//   salary: salaryReducer,
-//   inventory: inventoryReducer,
-//   sales: salesReducer,
-//   purchase: purchaseReducer,
-//   qa: QAReducer,
-//   hrm: hrmReducer,
-//   log: comments,
-//   accounting: AccountingReducer,
-// });

@@ -197,7 +197,11 @@ const NPRComponentsTabView = () => {
     );
   };
   const modalConfig = useMemo(
-    () => ({ ...modal, onClose: onCloseModal }),
+    () => ({
+      ...modal,
+      onClose: onCloseModal,
+      fileServer: process.env.REACT_APP_ONLINE_PATH,
+    }),
     [modal, onCloseModal]
   );
   const { tg_trans_status_id: trans_id } = state;

@@ -387,7 +387,7 @@ export const rawData = {
       {
         id: "11502101-2021-07-01",
         title: "A 2021-07-01",
-        resourceId: "11502203", //เครื่อง
+        resourceId: "11502101", //เครื่อง
         shift_job_id: 1,
         sort: 0,
         start: "2021-07-01", // วัน
@@ -399,7 +399,7 @@ export const rawData = {
       },
       {
         id: "A-11502212-20210404",
-        resourceId: "11502203", //เครื่อง
+        resourceId: "11502101", //เครื่อง
         start: "2021-07-01",
         title: "กะเช้า",
         shift_job_id: 1,
@@ -428,7 +428,7 @@ export const rawData = {
       },
       {
         id: "B-11502212-20210404",
-        resourceId: "11502203", //เครื่อง
+        resourceId: "11502101", //เครื่อง
         start: "2021-07-01",
         allDay: true,
         title: "กะกลางคืน",
@@ -453,6 +453,48 @@ export const rawData = {
               so_no: "SO202103004",
               plan_job_worker: 1,
               plan_job_actual_time: null,
+            },
+          ],
+        },
+      },
+    ],
+    plan2: [
+      {
+        id: "A-11502212-20210404",
+        resourceId: "11502101", //เครื่อง
+        start: "2021-07-01", //วันที่เริ่ม
+        title: "", //ปล่อยว่าง
+        color: "white",
+        extends: {
+          //ใช้คีย์นี้เท่านั้น
+          job_detail: [
+            {
+              id: 0,
+              plan_job_no: "PLN2021040002",
+              plan_job_plan_time: "01:00:00",
+              plan_job_worker: 1,
+              shift_id: 1,
+            },
+            {
+              id: 1,
+              plan_job_no: "PLN2021040002",
+              plan_job_plan_time: "03:00:00",
+              plan_job_worker: 2,
+              shift_id: 2,
+            },
+            {
+              id: 2,
+              plan_job_no: "PLN2021040002",
+              plan_job_plan_time: "02:00:00",
+              plan_job_worker: 2,
+              shift_id: 1,
+            },
+            {
+              id: 3,
+              plan_job_no: "PLN2021040003",
+              plan_job_plan_time: "02:00:00",
+              plan_job_worker: 2,
+              shift_id: 2,
             },
           ],
         },
