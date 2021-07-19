@@ -1,3 +1,5 @@
+/** @format */
+
 import { UserOutlined } from "@ant-design/icons";
 import { Card, message } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
@@ -41,6 +43,7 @@ const Worker = ({ employeeList }) => {
     tsFunction("SELECT_WORKER", select);
   }, [select]);
   console.log("select list", select, select.length);
+
   return (
     <>
       {employeeList?.map((emp) => (
@@ -51,20 +54,18 @@ const Worker = ({ employeeList }) => {
               : "worker-card"
           }
           key={emp.employee_no}
-          onClick={() => onSelect(emp.employee_no, emp.employee_no_name)}
-        >
+          onClick={() => onSelect(emp.employee_no, emp.employee_no_name)}>
           <Card
             cover={
               <img
-                alt="example"
+                alt='employee_image'
                 height={120}
                 src={
-                  emp.employee_image ||
+                  `${process.env.REACT_APP_SERVER}${emp.employee_image}` ||
                   require("../../../../../../image/unnamed.png")
                 }
               />
-            }
-          >
+            }>
             <Meta title={`[ ${emp.employee_no} ]`}></Meta>
             <Meta title={emp.employee_name_eng}></Meta>
           </Card>

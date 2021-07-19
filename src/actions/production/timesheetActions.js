@@ -1,3 +1,5 @@
+/** @format */
+
 import { message } from "antd";
 import axios from "axios";
 import { sortData } from "../../include/js/function_main";
@@ -317,27 +319,98 @@ const updateTimesheet = (data, time_sheet_id, update_time_sheet_type_id) => {
   }
 };
 
+// const updateTimesheetLog = (data) => {
+//   try {
+//     const { time_sheet_log_detail, fields } = data;
+//     console.log("data", data);
+//     console.log("fields_save", fields);
+//     fields.forEach((field, index) => {
+//       if (!field.time_sheet_log_id)
+//         return { success: false, data: {}, message: "Missing id" };
+//       const saveData = [
+//         {
+//           time_sheet_id: field.time_sheet_id,
+//           time_sheet_log_qty: time_sheet_log_detail[index].time_sheet_log_qty,
+//           time_sheet_log_remark: field.time_sheet_log_remark,
+//           commit: 1,
+//         },
+//       ];
+//       console.log("saveData", saveData);
+//       return axios
+//         .put(
+//           `${apiTimesheetLog}/${field.time_sheet_log_id}`,
+//           saveData,
+//           header_config
+//         )
+//         .then((resp) => {
+//           if (resp.status === 200) {
+//             console.log("resp.data", resp.data);
+//             return { success: true, data: resp.data, message: "Success" };
+//           } else {
+//             return { success: false, data: {}, message: resp };
+//           }
+//         })
+//         .catch((error) => {
+//           console.error(error);
+//           if (error?.response) {
+//             console.error(error.response);
+//           }
+//           return { success: false, data: [], message: error };
+//         });
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return { success: false, data: {}, message: error };
+//   }
+// };
+
 const updateTimesheetLog = (data) => {
   try {
-    const { time_sheet_log_id: id } = data;
-    if (!id) return { success: false, data: {}, message: "Missing id" };
-    return axios
-      .put(`${apiTimesheetLog}/${id}`, header_config)
-      .then((resp) => {
-        if (resp.status === 200) {
-          console.log("resp.data", resp.data);
-          return { success: true, data: resp.data, message: "Success" };
-        } else {
-          return { success: false, data: {}, message: resp };
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        if (error?.response) {
-          console.error(error.response);
-        }
-        return { success: false, data: [], message: error };
+    const { time_sheet_log_detail, fields } = data;
+    console.log("data", data);
+    console.log("fields_save", fields);
+    if (fields.length) {
+      fields.forEach((field, index) => {
+        if (!field.time_sheet_log_id)
+          return { success: false, data: {}, message: "Missing id" };
+        const saveData = [
+          {
+            time_sheet_id: field.time_sheet_id,
+            time_sheet_log_qty: time_sheet_log_detail[index].time_sheet_log_qty,
+            time_sheet_log_remark: field.time_sheet_log_remark,
+            commit: 1,
+          },
+        ];
+        console.log("saveData", saveData);
+        return axios
+          .put(
+            `${apiTimesheetLog}/${field.time_sheet_log_id}`,
+            saveData,
+            header_config
+          )
+          .then((resp) => {
+            if (resp.status === 200) {
+              console.log("resp.data", resp.data);
+              return { success: true, data: resp.data, message: "Success" };
+            } else {
+              return { success: false, data: {}, message: resp };
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            if (error?.response) {
+              console.error(error.response);
+            }
+            return { success: false, data: [], message: error };
+          });
       });
+    } else {
+      return {
+        success: true,
+        data: fields,
+        message: "Not have any data to update.",
+      };
+    }
   } catch (error) {
     console.log(error);
     return { success: false, data: {}, message: error };

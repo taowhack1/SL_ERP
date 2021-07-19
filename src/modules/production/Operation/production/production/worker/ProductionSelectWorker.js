@@ -1,3 +1,5 @@
+/** @format */
+
 import { Card } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useContext, useEffect, useRef } from "react";
@@ -33,10 +35,9 @@ const ProductionSelectWorker = () => {
       <Card>
         <Worker employeeList={empList} />
       </Card>
-      <div className="select-emp-label">
+      <div className='select-emp-label'>
         <Text
-          strong
-        >{`Selected : ${form.worker.length} / ${form.plan.plan_job_plan_worker}`}</Text>
+          strong>{`Selected : ${form.worker.length} / ${form.plan.plan_job_plan_worker}`}</Text>
       </div>
     </div>
   );
