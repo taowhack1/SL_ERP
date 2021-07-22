@@ -9,7 +9,12 @@ import Detail from "./Sales_Order_Detail";
 import ModalRemark from "../../components/Modal_Remark";
 import { get_log_by_id } from "../../actions/comment&log";
 import Authorize from "../system/Authorize";
-import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import {
+  BorderOutlined,
+  CheckSquareOutlined,
+  EditTwoTone,
+  PrinterTwoTone,
+} from "@ant-design/icons";
 
 const { Text } = Typography;
 const SaleOrderView = (props) => {
@@ -81,14 +86,40 @@ const SaleOrderView = (props) => {
     ],
     action: [
       {
-        name: "Print",
+        name: (
+          <Text>
+            <PrinterTwoTone className="mr-1" /> Print
+          </Text>
+        ),
         link: `${process.env.REACT_APP_REPORT_SERVER}/report_so.aspx?so_no=${
           data_head && data_head.so_no
         }`,
       },
       data_head &&
+        data_head.button_recall && {
+          name: (
+            <Text>
+              <EditTwoTone className="mr-1" /> ขอแก้ไขข้อมูล
+            </Text>
+          ),
+          link: `#`,
+          callBack: () => {
+            const app_detail = {
+              process_status_id: 7,
+              user_name: auth.user_name,
+              process_id: data_head.process_id,
+              process_member_remark: `มีการร้องขอแก้ไขข้อมูลเพิ่มเติม จาก ${auth.employee_no_name_eng}`,
+            };
+            dispatch(so_actions(app_detail, data_head.qn_id));
+          },
+        },
+      data_head &&
         data_head.button_cancel && {
-          name: "Cancel",
+          name: (
+            <div className="text-center">
+              <Text className="error">Cancel</Text>
+            </div>
+          ),
           cancel: true,
           link: ``,
         },

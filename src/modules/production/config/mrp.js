@@ -644,7 +644,7 @@ export const mrpRoutingColumns = ({
         <CustomLabel label="Cost Center" require readOnly={readOnly} />
       </div>
     ),
-    dataIndex: "machine_cost_center_description",
+    dataIndex: "machine_id",
 
     align: "left",
     render: (val, record) =>

@@ -11,7 +11,7 @@ import { get_quotation_by_id, qn_actions } from "../../../../actions/sales";
 import { get_log_by_id } from "../../../../actions/comment&log";
 import Authorize from "../../../system/Authorize";
 import { useParams } from "react-router";
-import { PrinterTwoTone } from "@ant-design/icons";
+import { EditTwoTone, PrinterTwoTone } from "@ant-design/icons";
 
 const { Text } = Typography;
 
@@ -92,7 +92,7 @@ const SalesQNView = (props) => {
       {
         name: (
           <Text>
-            <PrinterTwoTone /> Print
+            <PrinterTwoTone className="mr-1" /> Print
           </Text>
         ),
         link: `${
@@ -102,7 +102,7 @@ const SalesQNView = (props) => {
       {
         name: (
           <Text>
-            <PrinterTwoTone /> Print (Include Total)
+            <PrinterTwoTone className="mr-1" /> Print (Include Total)
           </Text>
         ),
         link: `${
@@ -110,8 +110,30 @@ const SalesQNView = (props) => {
         }/report_quotation.aspx?qn_no=${data_head && data_head.qn_no}&price=1`,
       },
       data_head &&
+        data_head.button_recall && {
+          name: (
+            <Text>
+              <EditTwoTone className="mr-1" /> ขอแก้ไขข้อมูล
+            </Text>
+          ),
+          link: `#`,
+          callBack: () => {
+            const app_detail = {
+              process_status_id: 7,
+              user_name: auth.user_name,
+              process_id: data_head.process_id,
+              process_member_remark: `มีการร้องขอแก้ไขข้อมูลเพิ่มเติม จาก ${auth.employee_no_name_eng}`,
+            };
+            dispatch(qn_actions(app_detail, data_head.qn_id));
+          },
+        },
+      data_head &&
         data_head.button_cancel && {
-          name: "Cancel",
+          name: (
+            <div className="text-center">
+              <Text className="error">Cancel</Text>
+            </div>
+          ),
           cancel: true,
           link: ``,
         },

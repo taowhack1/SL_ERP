@@ -7,16 +7,17 @@ const Comments = (props) => {
   const getActionColor = (id) => {
     switch (id) {
       case "1":
-        return "#FECD2D";
+        return "#C0B385";
       case "2":
-        return "#FE9727";
+        return "#E07436";
+      case "3":
+        return "#FF0505";
       case "4":
-        return "#50D968";
+      // return "#50D968";
       case "5":
         return "#1078FC";
       case "6":
         return "red";
-
       default:
         break;
     }

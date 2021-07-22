@@ -502,6 +502,7 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
+    case "Approve":
     case "Complete":
       return (
         <Tag
