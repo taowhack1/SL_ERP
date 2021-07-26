@@ -1,5 +1,3 @@
-/** @format */
-
 import { Button, InputNumber, Popconfirm } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useContext, useRef } from "react";
@@ -12,17 +10,14 @@ import { updateTimesheetLog } from "../../../../../../actions/production/timeshe
 
 const TimesheetTableLogEdit = ({ setStatus }) => {
   const btnSubmit = useRef(null);
-  const { form } = useContext(ProductionContext);
   const { start: timesheet } = useSelector(
     (state) => state.production.timesheet
   );
   const { time_sheet_log_detail } = timesheet;
   const {
-    register,
     handleSubmit,
     control,
     formState: { errors },
-    setValue,
   } = useForm({
     defaultValues: timesheet,
   });
@@ -57,7 +52,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
   console.log("errors", errors);
   return (
     <>
-      <div className='full-width mt-2 pd-left-1 pd-right-1'>
+      <div className="full-width mt-2 pd-left-1 pd-right-1">
         <form onSubmit={handleSubmit(onSubmit)}>
           <CustomTable
             columns={[
@@ -79,7 +74,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 align: "center",
                 ellipsis: true,
                 render: (value) => {
-                  return <Text className='text-value'>{value || "-"}</Text>;
+                  return <Text className="text-value">{value || "-"}</Text>;
                 },
               },
               {
@@ -89,10 +84,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 align: "center",
                 ellipsis: true,
                 render: (value) => {
-                  return (
-                    <Text className='text-value'>{value || "-"}</Text>
-                    // <Text className="text-value">{value ? value.split(" ")[1] : "-"}</Text>
-                  );
+                  return <Text className="text-value">{value || "-"}</Text>;
                 },
               },
               {
@@ -103,7 +95,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 ellipsis: true,
                 render: (value, record) => {
                   return (
-                    <Text className='text-value'>
+                    <Text className="text-value">
                       {record.time_sheet_log_date_to ? value : "-"}
                     </Text>
                   );
@@ -111,7 +103,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
               },
               {
                 title: (
-                  <div className='text-center'>
+                  <div className="text-center">
                     <Text>Total Qty.</Text>
                   </div>
                 ),
@@ -122,7 +114,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 render: (value, record) => {
                   return (
                     <Controller
-                      render={({ field: { value, onChange, onBlur } }) => {
+                      render={({ field: { value, onChange } }) => {
                         console.log("value", value);
                         return (
                           <InputNumber
@@ -130,7 +122,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                             min={0}
                             step={1}
                             size={"small"}
-                            className='full-width'
+                            className="full-width"
                             value={value || 0}
                             onChange={onChange}
                           />
@@ -145,7 +137,7 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
               },
               {
                 title: (
-                  <div className='text-center'>
+                  <div className="text-center">
                     <Text>Remark</Text>
                   </div>
                 ),
@@ -154,12 +146,12 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
                 align: "left",
                 ellipsis: true,
                 render: (value) => {
-                  return <Text className='text-value'>{value || "-"}</Text>;
+                  return <Text className="text-value">{value || "-"}</Text>;
                 },
               },
             ]}
             dataSource={fields}
-            rowKey='ids'
+            rowKey="ids"
             rowClassName={(row, index) =>
               index % 2 === 0 ? "row-hl row-table-detail" : "row-table-detail"
             }
@@ -168,35 +160,38 @@ const TimesheetTableLogEdit = ({ setStatus }) => {
             size={"small"}
           />
           <div
-            className='full-width mt-2 flex-space'
-            style={{ padding: "0px 20%" }}>
+            className="full-width mt-2 flex-space"
+            style={{ padding: "0px 20%" }}
+          >
             <Popconfirm
-              title='Are you sure to save change?'
-              // visible={visible}
+              title="Are you sure to save change?"
               onConfirm={handleOk}
               okButtonProps={{ loading: confirmLoading }}
-              onCancel={handleCancel}>
+              onCancel={handleCancel}
+            >
               <Button
                 block
                 className={"timesheet-btn primary"}
-                //   onClick={() => setStatus(0)}
-                htmlType='submit'
-                id='submit-ts-log'>
+                htmlType="submit"
+                id="submit-ts-log"
+              >
                 Save Change
               </Button>
             </Popconfirm>
             <Popconfirm
-              title='Are you sure to discard change?'
+              title="Are you sure to discard change?"
               onConfirm={() => setStatus(0)}
-              onCancel={() => console.log("cancel")}>
+              onCancel={() => console.log("cancel")}
+            >
               <Button block className={"timesheet-btn"}>
                 Discard
               </Button>
             </Popconfirm>
             <input
-              type='hidden'
+              type="hidden"
               ref={btnSubmit}
-              onClick={handleSubmit(onSubmit)}></input>
+              onClick={handleSubmit(onSubmit)}
+            ></input>
           </div>
         </form>
       </div>

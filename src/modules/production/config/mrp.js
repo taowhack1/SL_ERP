@@ -15,9 +15,13 @@ import React from "react";
 import Text from "antd/lib/typography/Text";
 import {
   Button,
+  Col,
   DatePicker,
+  Divider,
   InputNumber,
   Popconfirm,
+  Popover,
+  Row,
   Tag,
   TimePicker,
 } from "antd";
@@ -266,13 +270,71 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
     width: "8%",
     ellipsis: true,
     render: (value, record, index) => {
+      const {
+        wait_issue,
+        // wait_mrp_issue,
+        // wait_mrp_pr,
+        tg_item_qty,
+        wait_po,
+        wait_pr,
+        wait_qc,
+        wait_receive,
+      } = record;
       return (
         <>
-          {warningTextValue(
-            value,
-            4,
-            value < record.mrp_detail_qty_issue ? true : false
-          )}
+          <Popover
+            content={
+              <>
+                <div className="mb-1 border-bottom">
+                  <Text strong>Stock - Reserve = Available Qty</Text>
+                </div>
+
+                <div className="d-flex flex-space">
+                  <Text strong className="mr-1">
+                    Stock on hand :
+                  </Text>
+                  <Text>{convertDigit(tg_item_qty, 4)}</Text>
+                </div>
+                <div className="d-flex flex-space">
+                  <Text strong className="mr-1">
+                    Reserve :
+                  </Text>
+                  <Text>{convertDigit(wait_issue, 4)}</Text>
+                </div>
+                <div className="d-flex flex-space">
+                  <Text strong className="mr-1">
+                    PO :
+                  </Text>
+                  <Text>{convertDigit(wait_po, 4)}</Text>
+                </div>
+                <div className="d-flex flex-space">
+                  <Text strong className="mr-1">
+                    PR :
+                  </Text>
+                  <Text>{convertDigit(wait_pr, 4)}</Text>
+                </div>
+                <div className="d-flex flex-space">
+                  <Text strong className="mr-1">
+                    QC :
+                  </Text>
+                  <Text>{convertDigit(wait_qc, 4)}</Text>
+                </div>
+                <div className="d-flex flex-space">
+                  <Text strong className="mr-1">
+                    GR :
+                  </Text>
+                  <Text>{convertDigit(wait_receive, 4)}</Text>
+                </div>
+              </>
+            }
+            title="Available Quantity"
+          >
+            {warningTextValue(
+              value,
+              4,
+              value < record.mrp_detail_qty_issue ? true : false
+            )}
+          </Popover>
           {/* {record.item_id && (
             <FileSearchOutlined
               className='button-icon'
@@ -649,7 +711,9 @@ export const mrpRoutingColumns = ({
     align: "left",
     render: (val, record) =>
       readOnly ? (
-        <Text className="text-value">{val}</Text>
+        <Text className="text-value">
+          {record.machine_cost_center_description}
+        </Text>
       ) : (
         <CustomSelect
           allowClear

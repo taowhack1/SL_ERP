@@ -213,8 +213,7 @@ const SalesQNView = (props) => {
           <Col span={8}>
             <h2>
               <strong>
-                {data_head && data_head.qn_no ? "Edit" : "Create"} Quotations #
-                {data_head && data_head.qn_no}
+                Quotations #{data_head && data_head.qn_no}
                 {data_head.tg_trans_status_id === 3 && (
                   <Text strong type="danger">
                     #{data_head.trans_status_name}

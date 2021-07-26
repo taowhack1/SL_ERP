@@ -65,7 +65,7 @@ export const item_fields = {
   item_control_id: 1,
   item_control_name: "None",
   item_effective_date: null,
-  item_pre_run_no: ["-", "--", "SRL", "A", "------"],
+  item_pre_run_no: ["C", "-", "--", "SRL", "A", "------"],
   customer_id: 1,
   customer_no_name: "[ CUS0001 ] Siri Laboratories Co., Ltd.",
   item_qa_lead_time_day: 0,
@@ -76,6 +76,7 @@ export const item_fields = {
   item_loss_percent_qty: 0,
   item_box_qty: 0,
   commit: 1,
+  item_type_id: 1,
   qa_spec: [],
   pu_vendor: [],
 };

@@ -1,6 +1,18 @@
 import numeral from "numeral";
 export const stock_on_hand_columns = [
   {
+    title: "No.",
+    dataIndex: "id",
+    key: "item_id",
+    width: "5%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.item_id - b.item_id,
+      multiple: 2,
+    },
+    render: (val) => val + 1,
+  },
+  {
     title: "Item Code",
     dataIndex: "item_no",
     key: "item_no",

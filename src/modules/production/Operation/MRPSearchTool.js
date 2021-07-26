@@ -44,7 +44,6 @@ const MRPSearchTool = ({ onChangeSeach }) => {
     console.log("Search", state);
     onChangeSeach(state);
   }, [state]);
-  console.log("item_list", item_list);
   return (
     <>
       <div className="search-table">

@@ -1,16 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Row, Col, Typography, message, Button } from "antd";
+import { Row, Col, Typography, message } from "antd";
 import MainLayout from "../../../components/MainLayout";
 import Comments from "../../../components/Comments";
 import { get_log_by_id } from "../../../actions/comment&log";
 import Authorize from "../../system/Authorize";
-
 import MRPTabPanel from "./MRPTabPanel";
-import {
-  getMRPByID,
-  mrp_actions,
-} from "../../../actions/production/mrpActions";
+import { getMRPByID } from "../../../actions/production/mrpActions";
 import MRPHead from "./MRPHead";
 import { sortData } from "../../../include/js/function_main";
 import { MRPContext } from "../../../include/js/context";
@@ -18,9 +14,7 @@ import ModalRemark from "../../../components/Modal_Remark";
 import { updateProcessStatus } from "../../../actions/inventory";
 import MainLayoutLoading from "../../../components/MainLayoutLoading";
 import DetailLoading from "../../../components/DetailLoading";
-import { BrowserRouter, Link, useHistory, useParams } from "react-router-dom";
-import { SecurityScanTwoTone } from "@ant-design/icons";
-// import WorkCenterDetail from "./WorkCenterDetail";
+import { useHistory, useParams } from "react-router-dom";
 const { Text } = Typography;
 
 const MRPView = (props) => {
@@ -34,9 +28,6 @@ const MRPView = (props) => {
   const auth = useSelector((state) => state.auth.authData);
   const current_project = useSelector((state) => state.auth.currentProject);
   const dataComments = useSelector((state) => state.log.comment_log);
-  // const { data_head, data_material } = useSelector(
-  //   (state) => state.production.operations.mrp.mrp
-  // );
   const [state, setState] = useState({
     data_head: null,
     data_material: null,
@@ -47,11 +38,9 @@ const MRPView = (props) => {
     visible: false,
     loading: false,
   });
-  const flow =
-    // state?.data_flow_process &&
-    state?.data_flow_process?.map((step) => {
-      return step.all_group_in_node;
-    });
+  const flow = state?.data_flow_process?.map((step) => {
+    return step.all_group_in_node;
+  });
 
   const config = {
     projectId: current_project && current_project.project_id,
@@ -83,11 +72,6 @@ const MRPView = (props) => {
     back: "/production/operations/mrp",
     discard: "/production/operations/mrp",
     action: [
-      // state?.button_cancel && {
-      //   name: "Cancel",
-      //   cancel: true,
-      //   link: ``,
-      // },
       {
         name: "Production",
         callBack: () =>
@@ -121,7 +105,6 @@ const MRPView = (props) => {
   const changeProcessStatus = (process_status_id, remark) => {
     if (process_status_id === 6) {
       if (remark.trim() === "") {
-        // alert("Plase write remark");
         message.warning("Please write remark", 4);
         return false;
       }
@@ -136,17 +119,15 @@ const MRPView = (props) => {
       process_member_remark: remark,
     };
     updateProcessStatus(statusDetail).then((res) => {
-      console.log(res);
       setLoading(true);
     });
-    // setLoading(true);
   };
 
   useEffect(() => {
     const getData = async (id, user_name) =>
       await getMRPByID(id, user_name).then((res) => {
-        console.log(res);
         const resData = res[0]?.value?.data[0];
+        console.log("getMRPByID", resData);
         const data = {
           ...resData,
           rm_detail:
@@ -169,7 +150,6 @@ const MRPView = (props) => {
           },
         };
 
-        // console.log(data);
         setState(data);
         dispatch(get_log_by_id(data?.process_id));
         setLoading(false);
@@ -184,7 +164,6 @@ const MRPView = (props) => {
     };
   }, [loading, id]);
 
-  console.log(state);
   return (
     <MRPContext.Provider value={headContextValue}>
       {loading ? (

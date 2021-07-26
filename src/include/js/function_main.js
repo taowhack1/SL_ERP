@@ -298,14 +298,18 @@ export const get_pre_run_no = (prev, index, value) => {
   console.log("get_pre_run_no", prev);
   if ((index !== null || index !== undefined) && prev.length) {
     let copy_run_no = prev;
-    if (index === 0) {
-      copy_run_no[1] = "--";
+    // if (index === 0) {
+    //   copy_run_no[1] = "-";
+    //   copy_run_no[2] = "--";
+    // }
+    if (index === 1) {
+      copy_run_no[2] = "--";
     }
-    if (index === 0 && value > 5) {
+    if (index === 1 && value > 5) {
       copy_run_no[index] = value;
-      copy_run_no[2] = "";
       copy_run_no[3] = "";
-      copy_run_no[4] = "----";
+      copy_run_no[4] = "";
+      copy_run_no[5] = "----";
     } else {
       copy_run_no[index] = value;
     }

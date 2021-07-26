@@ -39,10 +39,58 @@ const TabItemDetail = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   let disabled_field = data_head.item_id ? 1 : 0;
+  console.log("data_head", data_head);
   return (
     <>
       <Row>
         <Col span={12} className={"col-border-right"}>
+          <Row className="col-2 row-margin-vertical">
+            <Col span={6}>
+              <CustomLabel label={"Code Type :"} require readOnly={readOnly} />
+            </Col>
+            <Col span={16}>
+              {readOnly ? (
+                <Text className="text-view">
+                  {data_head.item_type_no_name
+                    ? data_head.item_type_no_name
+                    : "-"}
+                </Text>
+              ) : (
+                <CustomSelect
+                  disabled={disabled_field}
+                  showSearch
+                  placeholder={"Code type"}
+                  name="item_type_id"
+                  field_id="item_type_id"
+                  field_name="item_type_no_name"
+                  value={data_head.item_type_id}
+                  data={master_data.item_code_type}
+                  onChange={(data, option) => {
+                    data !== undefined
+                      ? upDateFormValue({
+                          item_type_id: data,
+                          item_type_no_name: option.title,
+                          item_pre_run_no: get_pre_run_no(
+                            data_head.item_pre_run_no,
+                            0,
+                            option.data.item_type_run_no
+                          ),
+                        })
+                      : upDateFormValue({
+                          item_type_id: null,
+                          item_type_no_name: null,
+                          item_pre_run_no: get_pre_run_no(
+                            data_head.item_pre_run_no,
+                            0,
+                            "-"
+                          ),
+                        });
+                  }}
+                />
+              )}
+            </Col>
+            <Col span={2}></Col>
+          </Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={6}>
               <CustomLabel label={"Item type :"} require readOnly={readOnly} />
@@ -72,7 +120,7 @@ const TabItemDetail = ({
                           category_name: null,
                           item_pre_run_no: get_pre_run_no(
                             data_head.item_pre_run_no,
-                            0,
+                            1,
                             option.data.type_run_no
                           ),
                         })
@@ -83,7 +131,7 @@ const TabItemDetail = ({
                           category_name: null,
                           item_pre_run_no: get_pre_run_no(
                             data_head.item_pre_run_no,
-                            0,
+                            1,
                             "-"
                           ),
                         });
@@ -244,7 +292,7 @@ const TabItemDetail = ({
                           item_customer_run_no: option.data.customer_name_short,
                           item_pre_run_no: get_pre_run_no(
                             data_head.item_pre_run_no,
-                            2,
+                            3,
                             option.data.customer_name_short
                           ),
                         })
@@ -254,7 +302,7 @@ const TabItemDetail = ({
                           item_customer_run_no: null,
                           item_pre_run_no: get_pre_run_no(
                             data_head.item_pre_run_no,
-                            2,
+                            3,
                             "---"
                           ),
                         });
@@ -298,7 +346,7 @@ const TabItemDetail = ({
                             option.data.identify_benefit_no_name,
                           item_pre_run_no: get_pre_run_no(
                             data_head.item_pre_run_no,
-                            3,
+                            4,
                             option.data.identify_benefit_run_no
                           ),
                         })
@@ -307,7 +355,7 @@ const TabItemDetail = ({
                           identify_benefit_no_name: null,
                           item_pre_run_no: get_pre_run_no(
                             data_head.item_pre_run_no,
-                            3,
+                            4,
                             "-"
                           ),
                         });
@@ -401,7 +449,7 @@ const TabItemDetail = ({
                           category_name: option.data.category_name,
                           item_pre_run_no: get_pre_run_no(
                             data_head.item_pre_run_no,
-                            1,
+                            2,
                             option.data.category_run_no
                           ),
                         })
@@ -410,7 +458,7 @@ const TabItemDetail = ({
                           category_name: null,
                           item_pre_run_no: get_pre_run_no(
                             data_head.item_pre_run_no,
-                            1,
+                            2,
                             "--"
                           ),
                         });

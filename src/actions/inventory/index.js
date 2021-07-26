@@ -33,6 +33,8 @@ import { message } from "antd";
 import { sortData } from "../../include/js/function_main";
 const GET_SAMPLE_ITEMS = "GET_SAMPLE_ITEMS";
 const apiSampleItem = `/sales/item_sample`;
+const apiGetItemCodeType = `/list/item_type`;
+
 const getItemType = () => {
   console.log("getItemType");
   return axios
@@ -45,6 +47,33 @@ const getUOM = () => {
     .get(`${api_get_item_uom}`, header_config)
     .catch((error) => console.error(error));
 };
+
+const getItemCodeType = () => {
+  try {
+    return axios
+      .get(`${apiGetItemCodeType}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+          // dispatch({type:GET_ITEM_CODE_TYPE,payload:resp.data});
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+
 const getMasterDataItem = (user, setLoading, auth) => async (dispatch) => {
   try {
     const user_name = user ?? "";
@@ -72,6 +101,7 @@ const getMasterDataItem = (user, setLoading, auth) => async (dispatch) => {
       get_item_control,
       get_item,
       get_shelf,
+      getItemCodeType(),
     ])
       .then((res) => {
         console.log("GET MASTER ITEMS", res);
@@ -83,6 +113,7 @@ const getMasterDataItem = (user, setLoading, auth) => async (dispatch) => {
           item_control: res[4].value.data[0] ?? [],
           item_list: res[5].value.data ?? [],
           shelf: res[6].value.data[0] ?? [],
+          item_code_type: res[7].value.data ?? [],
         };
         dispatch({ type: GET_MASTER_DATA_ITEM, payload: master_data });
         setLoading && setLoading(false);
@@ -125,7 +156,7 @@ const get_lot_batch_by_item_id_shelf = (item_id) => async (dispatch) => {
 
 const get_report_stock = () => (dispatch) => {
   axios.get(get_stock_on_hand, header_config).then((res) => {
-    dispatch({ type: GET_REPORT_STOCK, payload: res.data[0] });
+    dispatch({ type: GET_REPORT_STOCK, payload: sortData(res.data[0]) });
   });
 };
 

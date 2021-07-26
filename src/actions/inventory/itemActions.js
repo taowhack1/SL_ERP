@@ -60,20 +60,6 @@ const convertFileField = (file) => {
   return file_temp;
 };
 
-// const createItemVendor = (item_id, data_detail) => {
-//   console.log("createItemVendor");
-//   //check authorize
-
-//   console.log(dataCreate);
-//   return (
-//     dataCreate.length &&
-//     axios
-//       .post(`${api_item_vendor}/${item_id}`, dataCreate, header_config)
-//       .then((res) => {
-//         console.log("CREATE VENDOR");
-//       })
-//   );
-// };
 const saveItemVendor = (item_id, data_detail, user_name) => {
   console.log("updateItemVendor", data_detail);
   //check authorize

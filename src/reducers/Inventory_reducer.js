@@ -67,6 +67,7 @@ const initialState = {
     shelf: [],
     item_part: [],
     sampleItems: [],
+    item_code_type: [],
   },
   configurations: {
     type: [],

@@ -1,22 +1,9 @@
 import React, { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  Input,
-  Tabs,
-  Typography,
-  message,
-  DatePicker,
-  Radio,
-  Checkbox,
-  Space,
-} from "antd";
+import { Row, Col, Input, Tabs, Typography, message, Checkbox } from "antd";
 import MainLayout from "../../../../components/MainLayout";
 import moment from "moment";
-// import Detail from "./Issue_Detail";
 import Comments from "../../../../components/Comments";
-import CustomSelect from "../../../../components/CustomSelect";
 import { get_log_by_id, reset_comments } from "../../../../actions/comment&log";
 
 import { machine_fields, machine_require_fields } from "./config";
@@ -29,7 +16,6 @@ import {
   createMachine,
   updateMachine,
 } from "../../../../actions/production/machineActions";
-import { mainReducer } from "../../../../include/reducer";
 import MachineTabDetail from "./MachineTabDetail";
 import MachineTabCost from "./MachineTabCost";
 import { reducer } from "../../../qualityAssurance/reducers";
@@ -37,7 +23,6 @@ const { Text } = Typography;
 const { TextArea } = Input;
 
 const initialStateHead = machine_fields;
-// const initialStateDetail = [issue_detail_fields];
 
 const MachineCreate = (props) => {
   const readOnly = false;

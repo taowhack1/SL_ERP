@@ -367,43 +367,58 @@ const updateTimesheet = (data, time_sheet_id, update_time_sheet_type_id) => {
 const updateTimesheetLog = (data) => {
   try {
     const { time_sheet_log_detail, fields } = data;
-    console.log("data", data);
-    console.log("fields_save", fields);
     if (fields.length) {
-      fields.forEach((field, index) => {
-        if (!field.time_sheet_log_id)
-          return { success: false, data: {}, message: "Missing id" };
-        const saveData = [
-          {
-            time_sheet_id: field.time_sheet_id,
-            time_sheet_log_qty: time_sheet_log_detail[index].time_sheet_log_qty,
-            time_sheet_log_remark: field.time_sheet_log_remark,
-            commit: 1,
-          },
-        ];
-        console.log("saveData", saveData);
-        return axios
-          .put(
-            `${apiTimesheetLog}/${field.time_sheet_log_id}`,
-            saveData,
-            header_config
-          )
-          .then((resp) => {
-            if (resp.status === 200) {
-              console.log("resp.data", resp.data);
-              return { success: true, data: resp.data, message: "Success" };
-            } else {
-              return { success: false, data: {}, message: resp };
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            if (error?.response) {
-              console.error(error.response);
-            }
-            return { success: false, data: [], message: error };
-          });
-      });
+      return Promise.allSettled(
+        fields.forEach((field, index) => {
+          if (!field.time_sheet_log_id)
+            return { success: false, data: {}, message: "Missing id" };
+          const saveData = [
+            {
+              time_sheet_id: field.time_sheet_id,
+              time_sheet_log_qty:
+                time_sheet_log_detail[index].time_sheet_log_qty,
+              time_sheet_log_remark: field.time_sheet_log_remark,
+              commit: 1,
+            },
+          ];
+          console.log("saveData", saveData);
+          return axios
+            .put(
+              `${apiTimesheetLog}/${field.time_sheet_log_id}`,
+              saveData,
+              header_config
+            )
+            .then((resp) => {
+              if (resp.status === 200) {
+                console.log("resp.data", resp.data);
+                return { success: true, data: resp.data, message: "Success" };
+              } else {
+                return { success: false, data: {}, message: resp };
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              if (error?.response) {
+                console.error(error.response);
+              }
+              return { success: false, data: [], message: error };
+            });
+        })
+      )
+        .then((respSet) => {
+          return {
+            success: true,
+            data: respSet.data,
+            message: "All set finished",
+          };
+        })
+        .catch((error) => {
+          console.error(error);
+          if (error?.response) {
+            console.error(error.response);
+          }
+          return { success: false, data: [], message: error };
+        });
     } else {
       return {
         success: true,
@@ -429,7 +444,6 @@ export {
   UPDATE_TIMESHEET,
   RESET_TIMESHEET,
   CLOSE_TIMESHEET,
-  // GET_TIMESHEET_MACHINE,
   getMachinePlan,
   getTimesheetScanRMList,
   getBarcodeDetail,
@@ -437,5 +451,4 @@ export {
   updateTimesheet,
   resetTimesheet,
   updateTimesheetLog,
-  // getTimesheetMachine,
 };

@@ -1,14 +1,11 @@
-import { Button } from "antd";
-import React, { useContext } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 
 import CustomTable from "../../../../../../components/CustomTable";
-import { ProductionContext } from "../../../../../../include/js/context";
 
 import { detailColumns } from "./timeConfig";
 
-const TimesheetTableLog = ({ status, setStatus, showConfirmEditQty }) => {
-  const { form } = useContext(ProductionContext);
+const TimesheetTableLog = ({ status }) => {
   const { start: timesheet } = useSelector(
     (state) => state.production.timesheet
   );

@@ -97,7 +97,7 @@ const ItemCreate = (props) => {
 
   useEffect(() => {
     dispatch(getMasterDataItem(auth.user_name));
-    dispatch(getAllWorkCenter());
+    // dispatch(getAllWorkCenter());
     dispatch(get_all_vendor());
   }, []);
 

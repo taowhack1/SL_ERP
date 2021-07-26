@@ -35,9 +35,9 @@ export const getAllMRP = (user_name) => async (dispatch) => {
     })
     .catch((error) => console.log(error));
 };
-export const getMRPByID = (id, user_name, redirect) => {
+export const getMRPByID = async (id, user_name, redirect) => {
   console.log("getMRPByID");
-  return Promise.allSettled([
+  return await Promise.allSettled([
     getMRPHead(id, user_name),
     // getMRPMaterial(id),
   ]).catch((err) => {

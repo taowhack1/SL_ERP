@@ -17,9 +17,7 @@ import { useHistory } from "react-router-dom";
 import MRPTabPanel from "./MRPTabPanel";
 import {
   mrpFields,
-  mrpPKDetailFields,
   mrpRequireFields,
-  mrpRMDetailFields,
   mrpRoutingRequireFields,
 } from "../config/mrp";
 import {
@@ -31,7 +29,6 @@ import {
   getSOReference,
   updateMRP,
 } from "../../../actions/production/mrpActions";
-import ReducerClass from "../../../include/js/ReducerClass";
 import MRPHead from "./MRPHead";
 import {
   sortData,
@@ -44,7 +41,7 @@ import MainLayoutLoading from "../../../components/MainLayoutLoading";
 import DetailLoading from "../../../components/DetailLoading";
 import { mainReducer } from "../../../include/reducer";
 import { CalculatorOutlined } from "@ant-design/icons";
-// import WorkCenterDetail from "./WorkCenterDetail";
+
 const { Text } = Typography;
 const initialState = {
   ...mrpFields,
@@ -108,7 +105,6 @@ const MRPCreate = (props) => {
       so_detail_id,
       calRPM,
     } = state;
-    console.log("useEffect change so_id", state);
     const getMaterial = async () => {
       setLoading({
         ...loading,
@@ -124,7 +120,6 @@ const MRPCreate = (props) => {
         so_detail_id
       )
         .then((res) => {
-          console.log("materialDetail", res);
           const materialDetail = res.data[0];
           stateDispatch({
             type: "SET_DATA_OBJECT",
@@ -262,8 +257,6 @@ const MRPCreate = (props) => {
         mrpRoutingDetail,
         mrpRoutingRequireFields
       );
-      console.log(validate);
-
       if (validate.validate) {
         if (!validateRouting.validate) {
           message.error({
@@ -306,7 +299,6 @@ const MRPCreate = (props) => {
           ],
           // data_material: sortData(state.rm_detail.concat(state.pk_detail)),
         };
-        console.log(saveData);
         state.mrp_id
           ? updateMRP(state.mrp_id, saveData, auth.user_name, redirect_to_view)
           : createMRP(saveData, auth.user_name, redirect_to_view);
@@ -351,8 +343,7 @@ const MRPCreate = (props) => {
       so_detail_id: state.so_detail_id,
     };
   }, [readOnly, state, detailLoading]);
-
-  console.log("MRPCreate", state);
+  console.log("MRPCreate state : ", state);
   return (
     <MRPContext.Provider value={headContextValue}>
       {fullPageLoading ? (

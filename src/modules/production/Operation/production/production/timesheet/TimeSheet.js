@@ -45,7 +45,6 @@ const { confirm, warning } = Modal;
 
 const TimeSheet = (props) => {
   const dispatch = useDispatch();
-  const history = useHistory();
   const { form } = useContext(ProductionContext);
   const { start: timesheet, machine } = useSelector(
     (state) => state.production.timesheet
@@ -103,15 +102,15 @@ const TimeSheet = (props) => {
           <>
             {type === "setup" ? (
               <>
-                <div className='mt-1'>
-                  <label htmlFor='time_sheet_log_qty'>
+                <div className="mt-1">
+                  <label htmlFor="time_sheet_log_qty">
                     <b>Remark</b>
                   </label>
                   <Input
                     minLength={5}
-                    name='time_sheet_log_remark'
-                    className='full-width'
-                    id='time_sheet_log_remark'
+                    name="time_sheet_log_remark"
+                    className="full-width"
+                    id="time_sheet_log_remark"
                   />
                 </div>
               </>
@@ -119,16 +118,16 @@ const TimeSheet = (props) => {
               <>
                 {machine.machine_process_qty ? (
                   <div>
-                    <label htmlFor='time_sheet_log_qty'>
+                    <label htmlFor="time_sheet_log_qty">
                       <b>Input Quantity</b>
                     </label>
                     <InputNumber
                       {...getNumberFormat(3)}
                       min={0}
                       step={1}
-                      name='time_sheet_log_qty'
-                      className='full-width'
-                      id='time_sheet_log_qty'
+                      name="time_sheet_log_qty"
+                      className="full-width"
+                      id="time_sheet_log_qty"
                     />
                   </div>
                 ) : (
@@ -139,15 +138,15 @@ const TimeSheet = (props) => {
               </>
             ) : type === "clean" ? (
               <>
-                <div className='mt-1'>
-                  <label htmlFor='time_sheet_log_qty'>
+                <div className="mt-1">
+                  <label htmlFor="time_sheet_log_qty">
                     <b>Remark</b>
                   </label>
                   <Input
                     minLength={5}
-                    name='time_sheet_log_remark'
-                    className='full-width'
-                    id='time_sheet_log_remark'
+                    name="time_sheet_log_remark"
+                    className="full-width"
+                    id="time_sheet_log_remark"
                   />
                 </div>
               </>
@@ -155,16 +154,16 @@ const TimeSheet = (props) => {
               <>
                 {machine.machine_process_qty ? (
                   <div>
-                    <label htmlFor='time_sheet_log_qty'>
+                    <label htmlFor="time_sheet_log_qty">
                       <b>Input Quantity</b>
                     </label>
                     <InputNumber
                       {...getNumberFormat(3)}
                       min={0}
                       step={1}
-                      name='time_sheet_log_qty'
-                      className='full-width'
-                      id='time_sheet_log_qty'
+                      name="time_sheet_log_qty"
+                      className="full-width"
+                      id="time_sheet_log_qty"
                     />
                   </div>
                 ) : (
@@ -173,15 +172,15 @@ const TimeSheet = (props) => {
                   </Text>
                 )}
                 {type === "issue" && (
-                  <div className='mt-1'>
-                    <label htmlFor='time_sheet_log_qty'>
+                  <div className="mt-1">
+                    <label htmlFor="time_sheet_log_qty">
                       <b>Issue Remark</b>
                     </label>
                     <Input
                       minLength={5}
-                      name='time_sheet_log_remark'
-                      className='full-width'
-                      id='time_sheet_log_remark'
+                      name="time_sheet_log_remark"
+                      className="full-width"
+                      id="time_sheet_log_remark"
                     />
                   </div>
                 )}
@@ -382,7 +381,7 @@ const TimeSheet = (props) => {
     <div className={"pd-left-1 pd-right-1"}>
       {timesheet.time_sheet_type_id === 4 ? (
         <>
-          <div className='exit-label'>
+          <div className="exit-label">
             <Button onClick={() => window.location.reload()}>
               <ExportOutlined /> Exit
             </Button>
@@ -392,7 +391,7 @@ const TimeSheet = (props) => {
         <></>
       )}
       <Row>
-        <Col span={15} className='col-border-right' style={{ height: "90vh" }}>
+        <Col span={15} className="col-border-right" style={{ height: "90vh" }}>
           <TimeSheetInfo
             status={status}
             setStatus={setStatus}
@@ -404,8 +403,8 @@ const TimeSheet = (props) => {
           ) : (
             <>
               <TimesheetTableLog status={status} setStatus={setStatus} />
-              <div className='full-width mt-2' style={{ padding: "0px 20%" }}>
-                <div className='flex-space'>
+              <div className="full-width mt-2" style={{ padding: "0px 20%" }}>
+                <div className="flex-space">
                   <Button
                     block
                     onClick={confirmCloseJob}
@@ -414,9 +413,8 @@ const TimeSheet = (props) => {
                         ? "primary timesheet-btn"
                         : "timesheet-btn"
                     }
-                    disabled={
-                      timesheet.time_sheet_type_id === 3 ? false : true
-                    }>
+                    disabled={timesheet.time_sheet_type_id === 3 ? false : true}
+                  >
                     Close Job
                   </Button>
                   {/* <Button
@@ -432,33 +430,33 @@ const TimeSheet = (props) => {
           )}
         </Col>
         <Col span={9}>
-          <div className='timer-container-status'>
+          <div className="timer-container-status">
             <Col span={6} offset={1}>
               <Text style={{ fontSize: 40 }}>Status :</Text>
             </Col>
 
-            <Col span={16} className='text-value'>
+            <Col span={16} className="text-value">
               {timesheet.time_sheet_type_id &&
               timesheet.time_sheet_type_id === 2 ? (
                 <>
                   <PlayCircleTwoTone
                     style={{ fontSize: 40 }}
-                    twoToneColor='#52c41a'
+                    twoToneColor="#52c41a"
                   />
                 </>
               ) : timesheet.time_sheet_type_id === 3 ? (
                 <PauseCircleTwoTone
                   style={{ fontSize: 40 }}
-                  twoToneColor='#ff0000'
+                  twoToneColor="#ff0000"
                 />
               ) : timesheet.time_sheet_type_id === 4 ? (
                 <CheckCircleTwoTone
                   style={{ fontSize: 40 }}
-                  twoToneColor='#52c41a'
+                  twoToneColor="#52c41a"
                 />
               ) : null}
 
-              <Text strong className='pe-4' style={{ fontSize: 40 }}>
+              <Text strong className="pe-4" style={{ fontSize: 40 }}>
                 {}
                 {stepBtn === "setup"
                   ? timesheet.time_sheet_type_id === 3
@@ -473,8 +471,8 @@ const TimeSheet = (props) => {
               </Text>
             </Col>
           </div>
-          <div className='timer-container'>
-            <div className='stopwatch'>
+          <div className="timer-container">
+            <div className="stopwatch">
               <Display time={timeValue} />
               <Btn {...btnConfig} />
             </div>

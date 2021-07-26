@@ -134,6 +134,7 @@ const SalesQN = (props) => {
   }, []);
 
   const dataTable = useSelector((state) => state.sales.qn.qn_list);
+  const [state, setState] = useState(dataTable || []);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -167,6 +168,21 @@ const SalesQN = (props) => {
     onCancel: () => {
       console.log("Cancel");
     },
+    onSearch: (text) =>
+      setState(
+        dataTable.filter(
+          (obj) =>
+            obj.qn_no?.toUpperCase()?.indexOf(text?.toUpperCase()) > -1 ||
+            obj.qn_created?.toUpperCase()?.indexOf(text?.toUpperCase()) > -1 ||
+            obj.customer_no_name?.toUpperCase()?.indexOf(text?.toUpperCase()) >
+              -1 ||
+            obj.qn_description?.toUpperCase()?.indexOf(text?.toUpperCase()) >
+              -1 ||
+            obj.qn_created_by_no_name
+              ?.toUpperCase()
+              ?.indexOf(text?.toUpperCase()) > -1
+        )
+      ),
   };
 
   const modalConfig = React.useMemo(
@@ -184,7 +200,7 @@ const SalesQN = (props) => {
           <Col span={24}>
             <Table
               columns={quotationColumns({ onOpenSO })}
-              dataSource={dataTable}
+              dataSource={state}
               onChange={onChange}
               rowKey="qn_id"
               size="small"

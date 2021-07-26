@@ -131,7 +131,10 @@ const SaleOrderView = (props) => {
     },
     create: "",
     edit: {
-      data: { data_head: data_head, data_detail: data_detail },
+      data: {
+        data_head: data_head,
+        data_detail: data_detail,
+      },
       path: data_head && "/sales/orders/edit/" + data_head.so_id,
     },
     discard: "/sales/orders",
@@ -214,10 +217,6 @@ const SaleOrderView = (props) => {
           </Col>
         </Row>
 
-        {/* Address & Information */}
-        {/* <Row className="col-2 row-margin-vertical">
-          
-        </Row> */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>Delivery Date :</Text>

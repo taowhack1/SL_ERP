@@ -16,6 +16,7 @@ const StockMove = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
+  const [pageSize, setPageSize] = useState(15);
   const [rowClick, setRowClick] = useState(false);
   const [loading, setLoading] = useState(false);
   const [itemDetail, setItemDetail] = useState({
@@ -104,12 +105,13 @@ const StockMove = (props) => {
     ],
     visible: false,
   });
-  const onChange = (pagination, filters, sorter, extra) => {
+  const onChange = ({ pageSize }, filters, sorter, extra) => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 1200);
-    console.log("params", pagination, filters, sorter, extra);
+    setPageSize(pageSize);
+    console.log("params", filters, sorter, extra);
   };
   const stock_on_hand = useSelector(
     (state) => state.inventory.report.stock_on_hand
@@ -145,10 +147,12 @@ const StockMove = (props) => {
         : setState(stock_on_hand);
     },
   };
+
   useEffect(() => {
     setLoading(true);
     dispatch(get_report_stock());
   }, []);
+
   useEffect(() => {
     setState(stock_on_hand);
     setLoading(false);
@@ -165,7 +169,7 @@ const StockMove = (props) => {
               dataSource={state}
               onChange={onChange}
               rowKey={"item_id"}
-              pagination={{ pageSize: 15 }}
+              pagination={{ pageSize }}
               size="small"
               onRow={(record, rowIndex) => {
                 return {

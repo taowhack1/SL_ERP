@@ -195,6 +195,7 @@ const ItemView = (props) => {
       dispatch(item_actions(app_detail, data_head.item_id));
     },
   };
+
   const ContextValue = useMemo(() => {
     return {
       readOnly,
@@ -212,6 +213,7 @@ const ItemView = (props) => {
       }) ?? [itemVendorDocumentFields],
     };
   }, [readOnly, data_file, formulaPercent]);
+
   return (
     <ItemContext.Provider value={ContextValue}>
       <FileContext.Provider value={{ data_file }}>

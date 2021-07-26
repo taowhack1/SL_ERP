@@ -1,9 +1,7 @@
-/** @format */
-
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
-import { Row, Col, Table, Button, Tabs, Modal } from "antd";
+import { Row, Col, Table, Tabs, Modal } from "antd";
 import MainLayout from "../../../components/MainLayout";
 
 import $ from "jquery";
@@ -16,7 +14,7 @@ import {
   workOrderMonitorRM,
 } from "../config/mrp";
 import MRPSearchTool from "./MRPSearchTool";
-import { getAllMRP, getMRPByID } from "../../../actions/production/mrpActions";
+import { getAllMRP } from "../../../actions/production/mrpActions";
 import { reset_comments } from "../../../actions/comment&log";
 import Search from "../../../components/Search";
 import { getAllItems } from "../../../actions/inventory/itemActions";
@@ -151,7 +149,7 @@ const MRPMain = (props) => {
               bordered
               size="small"
               rowKey="mrp_id"
-              onRow={(record, rowIndex) => {
+              onRow={(record) => {
                 return {
                   onClick: (e) => {
                     if (e.target.localName == "td") {
