@@ -11,12 +11,14 @@ export const DeliveryOrderContext = React.createContext();
 const DeliveryOrderForm = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { id } = useParams();
+  const { action, id } = useParams();
   const [state, setState] = useState({});
-  const [method, setMethod] = useState(id === "new" ? id : "view");
+  const [method, setMethod] = useState(action === "create" ? action : "view");
   const { user_name, department_id } = useSelector(
     (state) => state.auth.authData
   );
+  const { so_detail, so_head } = useSelector((state) => state.sales.so);
+  console.log("so_detail", so_detail, "so_head", so_head);
   const layoutConfig = useMemo(
     () => ({
       projectId: 7,
@@ -45,6 +47,7 @@ const DeliveryOrderForm = () => {
     }),
     [state, method]
   );
+  console.log("action", action, "id", id);
   return (
     <>
       <MainLayout {...layoutConfig}>

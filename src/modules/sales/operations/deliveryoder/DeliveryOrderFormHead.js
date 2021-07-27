@@ -19,7 +19,7 @@ const DeliveryOrderFormHead = () => {
         style={{ borderBottom: "1px solid #c0c0c0" }}>
         <h1>Delivery Order</h1>
       </div>
-      {method == "new" ? (
+      {method == "create" ? (
         <>
           <div className='form-section'>
             <Row className='mt-2 col-2' gutter={24}>
@@ -53,7 +53,7 @@ const DeliveryOrderFormHead = () => {
                     />
                   </Col>
                 </Row>
-                <Row className='col-2 mt-1 mb-1'>
+                {/* <Row className='col-2 mt-1 mb-1'>
                   <Col span={6}>
                     <Text strong>Sender :</Text>
                   </Col>
@@ -63,7 +63,7 @@ const DeliveryOrderFormHead = () => {
                       placeholder={"Enter Sender"}
                     />
                   </Col>
-                </Row>
+                </Row> */}
               </Col>
               <Col span={12}>
                 <Row className='col-2 mt-1 mb-1'>

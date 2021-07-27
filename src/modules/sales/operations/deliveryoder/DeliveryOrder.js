@@ -10,18 +10,31 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import Search from "../../../../components/Search";
+import { get_so_by_id, get_so_list } from "../../../../actions/sales";
 const columnsSo = [
   {
     title: "No.",
     align: "center",
     dataIndex: "id",
     width: "5%",
-    render: (val) => val + 1,
+    render: (val, record, index) => index + 1,
   },
   {
     title: "SO No.",
+    align: "center",
+    dataIndex: "so_no",
+    width: "15%",
+  },
+  {
+    title: "Vendor.",
     align: "left",
-    dataIndex: "so",
+    dataIndex: "",
+    width: "15%",
+  },
+  {
+    title: "Qty.",
+    align: "left",
+    dataIndex: "",
     width: "15%",
   },
   {
@@ -102,16 +115,17 @@ const DeliveryOrder = () => {
   const keepLog = useKeepLogs();
   const history = useHistory();
   const dispatch = useDispatch();
-  const { branch_id } = useSelector((state) => state.auth.authData);
+  const { branch_id, user_name } = useSelector((state) => state.auth.authData);
   const { operations, loading } = useSelector((state) => state.sales);
   const list = operations.npr.list;
   const [state, setState] = useState(list);
-  //   useEffect(() => {
-  //     dispatch(getNPRList(branch_id));
-  //   }, []);
   useEffect(() => {
-    setState(list);
-  }, [list]);
+    dispatch(get_so_list(user_name));
+  }, []);
+  // useEffect(() => {
+  //   setState(list);
+  // }, [list]);
+  const { so_list, qn_ref } = useSelector((state) => state.sales.so);
   const layoutConfig = {
     projectId: 7,
     title: "SALES",
@@ -119,7 +133,7 @@ const DeliveryOrder = () => {
     show: true,
     breadcrumb: ["Sales", "NPR", "Delivery Order"],
     search: false,
-    create: "/sales/operation/do/new",
+    create: "/sales/operation/do/create/new",
     buttonAction: ["Create"],
     discard: "",
     onSearch: (w) => {
@@ -148,6 +162,17 @@ const DeliveryOrder = () => {
       );
     },
   };
+  const createDo = (record) => {
+    dispatch(get_so_by_id(record.so_id, user_name));
+    history.push("/sales/operation/do/create/" + record.id, record);
+  };
+
+  const viewDo = (record) => {
+    dispatch(get_so_by_id(record.so_id, user_name));
+    history.push("/sales/operation/do/view/" + record.id, record);
+  };
+
+  console.log("so_list", so_list);
   return (
     <>
       <MainLayout {...layoutConfig}>
@@ -172,15 +197,11 @@ const DeliveryOrder = () => {
                   pagination={{
                     pageSize: 15,
                   }}
-                  //   onRow={(record) => ({
-                  //     onClick: (e) => {
-                  //       viewRecord(record);
-                  //       keepLog.keep_log_action(
-                  //         "View Estimate NPR : ",
-                  //         record.npr_no
-                  //       );
-                  //     },
-                  //   })}
+                  onRow={(record) => ({
+                    onClick: (e) => {
+                      viewDo(record);
+                    },
+                  })}
                 />
               </Col>
               <Col span={6} pull={18}>
@@ -189,13 +210,18 @@ const DeliveryOrder = () => {
                 </Col>
                 <Table
                   size={"small"}
-                  rowKey={"id"}
+                  rowKey={"so_id"}
                   columns={columnsSo}
                   bordered
-                  dataSource={dataSo}
+                  dataSource={so_list}
                   pagination={{
                     pageSize: 15,
                   }}
+                  onRow={(record) => ({
+                    onClick: (e) => {
+                      createDo(record);
+                    },
+                  })}
                 />
               </Col>
             </Row>
