@@ -1,4 +1,3 @@
-/** @format */
 import {
   Button,
   Col,
@@ -6,8 +5,6 @@ import {
   InputNumber,
   message,
   Row,
-  Space,
-  Tabs,
   Typography,
 } from "antd";
 import React, { useEffect, useReducer, useState } from "react";
@@ -15,7 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import CustomSelect from "../../../../components/CustomSelect";
 import MainLayout from "../../../../components/MainLayout";
-import { reducer } from "../../../qualityAssurance/reducers";
 import Authorize from "../../../system/Authorize";
 import {
   routingDetailColumns,
@@ -24,33 +20,25 @@ import {
   routingHeadFileds,
   routingHeadRequireFileds,
 } from "./config";
-import RoutingTabDetail from "./RoutingTabDetail";
 import moment from "moment";
-import RoutingTabpane from "./RoutingTabDetail";
 import {
   convertTimeToNumber,
   validateFormDetail,
   validateFormHead,
 } from "../../../../include/js/function_main";
-import { getAllItems } from "../../../../actions/inventory/itemActions";
 import { getAllMachine } from "../../../../actions/production/machineActions";
 import {
   createRouting,
   getFgItem,
   updateRouting,
 } from "../../../../actions/production/routingAction";
-import {
-  CalculatorOutlined,
-  CheckOutlined,
-  LineChartOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { CalculatorOutlined, LoadingOutlined } from "@ant-design/icons";
 import CustomLabel from "../../../../components/CustomLabel";
 import MainLayoutLoading from "../../../../components/MainLayoutLoading";
 import DetailLoading from "../../../../components/DetailLoading";
 import { mainReducer } from "../../../../include/reducer";
 import RoutingDetail from "./RoutingDetail";
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const numberFormat = {
   precision: 0,
   formatter: (value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","),
@@ -66,9 +54,9 @@ const RoutingCreate = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const authorize = Authorize();
+  authorize.check_authorize();
   const data =
     props.location && props.location.state ? props.location.state : 0;
-  const initialStateDetail = [routingDetailFileds];
   const initialStateHead = routingHeadFileds;
   const [sumPeriod, setsumPeriod] = useState(0);
   const [state, stateDispatch] = useReducer(mainReducer, initialStateHead);
@@ -82,7 +70,6 @@ const RoutingCreate = (props) => {
   const auth = useSelector((state) => state.auth.authData);
   useEffect(() => {
     const prepareData = new Promise(async (resolve, reject) => {
-      dispatch(getAllItems(auth.user_name));
       dispatch(getAllMachine());
       dispatch(getFgItem());
       stateDispatch({

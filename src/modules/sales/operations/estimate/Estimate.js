@@ -34,6 +34,13 @@ const columns = [
   {
     title: "วันที่สร้าง NPR",
     align: "center",
+    dataIndex: "npr_created",
+    width: "10%",
+    className: "tb-col-sm",
+  },
+  {
+    title: "วันที่ต้องการตัวอย่าง",
+    align: "center",
     dataIndex: "npr_request_date",
     width: "10%",
     className: "tb-col-sm",

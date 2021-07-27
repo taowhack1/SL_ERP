@@ -207,6 +207,7 @@ export const item_require_fields = [
   "type_id",
   "category_id",
   "item_control_id",
+  "item_type_id",
 ];
 export const item_vendor_require_fields = [
   "vendor_id",

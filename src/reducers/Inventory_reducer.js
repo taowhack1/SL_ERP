@@ -45,7 +45,7 @@ import {
   GET_RETURN_LIST_REQUEST,
   GET_RETURN_LIST_SUCCESS,
 } from "../actions/inventory/operation/return/returnActions";
-import { GET_SAMPLE_ITEMS } from "../actions/inventory";
+import { CLEAR_STATE_ITEM, GET_SAMPLE_ITEMS } from "../actions/inventory";
 const initialState = {
   loading: false,
   item: {
@@ -130,6 +130,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         master_data: { ...state.master_data, item_list: action.payload },
+      };
+    case CLEAR_STATE_ITEM:
+      return {
+        ...state,
+        master_data: { ...state.master_data, item_list: [] },
       };
     case GET_SAMPLE_ITEMS:
       return {

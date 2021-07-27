@@ -1,6 +1,7 @@
 /** @format */
 
 import { UPDATE_FILTER } from "../actions/sales";
+import { CUSTOMER_SEARCH } from "../actions/sales/customerActions";
 import {
   GET_NPR_ITEM_LIST,
   GET_NPR_LIST,
@@ -45,6 +46,10 @@ const inititalState = {
     },
   },
   customer: {
+    search: {
+      keyword: null,
+      page: 1,
+    },
     customer_list: [],
     customer: {},
     customer: {
@@ -125,6 +130,19 @@ export default (state = inititalState, action) => {
         master_data: {
           ...state.master_data,
           smd: action.payload,
+        },
+      };
+
+    case CUSTOMER_SEARCH:
+      return {
+        ...state,
+        loading: false,
+        customer: {
+          ...state.customer,
+          search: {
+            ...state.customer.search,
+            ...action.payload,
+          },
         },
       };
     case RESET_ALL_SALES:

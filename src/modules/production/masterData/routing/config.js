@@ -136,11 +136,13 @@ export const routingDetailColumns = ({
         <CustomLabel label="Cost Center" require readOnly />
       </div>
     ),
-    dataIndex: "machine_cost_center_description",
+    dataIndex: "machine_id",
     align: "left",
     render: (val, record) =>
       readOnly ? (
-        <Text className="text-value">{val}</Text>
+        <Text className="text-value">
+          {record?.machine_cost_center_description}
+        </Text>
       ) : (
         <CustomSelect
           allowClear

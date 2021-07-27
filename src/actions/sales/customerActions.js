@@ -6,6 +6,8 @@ import { api_customer, api_customer_file } from "../../include/js/api";
 import { GET_ALL_CUSTOMER, GET_CUSTOMER_BY_ID } from "../types";
 import { message } from "antd";
 
+const CUSTOMER_SEARCH = "CUSTOMER_SEARCH";
+
 export const get_customer_list = () => (dispatch) => {
   axios.get(api_customer, header_config).then((res) => {
     console.log("get_customer_list");
@@ -163,3 +165,8 @@ export const saveFile = (customer_id, data_file, redirect) => (dispatch) => {
       });
   }
 };
+
+const searchCustomer = (payload) => (dispatch) =>
+  dispatch({ type: CUSTOMER_SEARCH, payload: payload });
+
+export { CUSTOMER_SEARCH, searchCustomer };

@@ -6,6 +6,7 @@ import MainLayout from "../../../../components/MainLayout";
 import {
   get_customer_by_id,
   get_customer_list,
+  searchCustomer,
 } from "../../../../actions/sales/customerActions";
 import $ from "jquery";
 import { get_customer_payment_term_list } from "../../../../actions/accounting";
@@ -18,17 +19,40 @@ const Customer = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
-  const [rowClick, setRowClick] = useState(false);
-  // const [dataTable, setDataTable] = useState([...customerData]);
-  const customers = useSelector((state) => state.sales.customer.customer_list);
+
+  const {
+    customer_list: customers,
+    search: { keyword },
+  } = useSelector((state) => state.sales.customer);
+
+  const [state, setState] = useState(customers || []);
+
   useEffect(() => {
     dispatch(get_customer_list());
     dispatch(get_customer_payment_term_list());
   }, []);
+
+  useEffect(() => {
+    setState(
+      keyword
+        ? customers.filter(
+            (obj) =>
+              obj.customer_no_name?.toUpperCase()?.indexOf(keyword) >= 0 ||
+              obj.customer_phone?.toUpperCase()?.indexOf(keyword) >= 0 ||
+              obj.customer_mobile?.toUpperCase()?.indexOf(keyword) >= 0 ||
+              obj.customer_email?.toUpperCase()?.indexOf(keyword) >= 0 ||
+              obj.customer_tax_no?.toUpperCase()?.indexOf(keyword) >= 0
+          )
+        : customers
+    );
+  }, [keyword, customers]);
+
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
+
   const current_project = useSelector((state) => state.auth.currentProject);
+
   const config = {
     projectId: current_project && current_project.project_id,
     title: current_project && current_project.project_name,
@@ -42,10 +66,16 @@ const Customer = (props) => {
     onCancel: () => {
       console.log("Cancel");
     },
+    onSearch: (text) => {
+      const searchText = text?.toUpperCase();
+      dispatch(searchCustomer({ keyword: searchText }));
+    },
   };
+
   const redirect_to_view = (id) => {
     history.push("/sales/config/customers/view/" + (id ? id : "new"));
   };
+
   return (
     <div>
       <MainLayout {...config}>
@@ -53,15 +83,14 @@ const Customer = (props) => {
           <Col span={24}>
             <Table
               columns={customer_columns}
-              dataSource={customers}
+              dataSource={state}
               onChange={onChange}
               size="small"
               rowKey={"customer_id"}
               rowClassName="row-pointer"
-              onRow={(record, rowIndex) => {
+              onRow={(record) => {
                 return {
                   onClick: (e) => {
-                    setRowClick(true);
                     $(e.target)
                       .closest("tbody")
                       .find("tr")
@@ -71,10 +100,6 @@ const Customer = (props) => {
                     dispatch(
                       get_customer_by_id(record.customer_id, redirect_to_view)
                     );
-                    // props.history.push({
-                    //   pathname:
-                    //     "/sales/config/customers/view/" + record.customer_id,
-                    // });
                   },
                 };
               }}

@@ -105,6 +105,8 @@ const MRPCreate = (props) => {
       so_detail_id,
       calRPM,
     } = state;
+
+    console.log("getRPMDetail state", state);
     const getMaterial = async () => {
       setLoading({
         ...loading,
@@ -121,6 +123,7 @@ const MRPCreate = (props) => {
       )
         .then((res) => {
           const materialDetail = res.data[0];
+          console.log("getRPMDetail materialDetail", materialDetail);
           stateDispatch({
             type: "SET_DATA_OBJECT",
             payload: materialDetail

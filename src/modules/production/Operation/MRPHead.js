@@ -50,7 +50,6 @@ const MRPHead = () => {
   useEffect(() => {
     !readOnly &&
       mainState.calRPM &&
-      // setTimeout(() => calBtn.current.click(), [1500]);
       message.warning({
         key: "notify1",
         content: (
@@ -67,6 +66,7 @@ const MRPHead = () => {
       });
   }, [mainState?.calRPM]);
 
+  console.log("mainState @@", mainState);
   return (
     <>
       <Row className="col-2">
@@ -107,7 +107,6 @@ const MRPHead = () => {
                   </Text>
                 </Col>
                 <Col span={16}>
-                  {/* data_so_ref */}
                   {readOnly ? (
                     <Text className="text-value">
                       {mainState.so_no_description}
@@ -116,7 +115,6 @@ const MRPHead = () => {
                     <CustomSelect
                       allowClear
                       showSearch
-                      // size={"small"}
                       disabled={detailLoading}
                       placeholder={"SO Document"}
                       name="so_id"
@@ -152,22 +150,17 @@ const MRPHead = () => {
                 </Col>
                 <Col span={16}>
                   {readOnly ? (
-                    <div className="col-wrap ">
-                      {/* <Text className="text-value text-left"> */}
-                      {mainState.item_no_name}
-                      {/* </Text> */}
-                    </div>
+                    <div className="col-wrap ">{mainState.item_no_name}</div>
                   ) : (
                     <CustomSelect
                       allowClear
                       showSearch
-                      // size={"small"}
                       disabled={detailLoading || !mainState.so_id}
                       placeholder={"FG Item"}
                       name="item_id"
                       field_id="so_detail_id"
                       field_name="item_no_name"
-                      value={mainState.item_no_name}
+                      value={mainState.so_detail_id}
                       data={mainState.so_detail ?? []}
                       onChange={(data, option) => {
                         data !== undefined
@@ -227,7 +220,6 @@ const MRPHead = () => {
                       disabled={detailLoading || !mainState.item_id}
                       placeholder={"Qty. to produce"}
                       name={"mrp_qty_produce"}
-                      defaultValue={0}
                       className="full-width"
                       value={mainState.mrp_qty_produce}
                       onChange={(data) => {

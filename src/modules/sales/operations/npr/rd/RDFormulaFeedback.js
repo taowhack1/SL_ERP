@@ -32,7 +32,7 @@ const columns = [
     title: "Remark",
     dataIndex: "npr_satisfaction_detail_remark",
     align: "left",
-    ellipsis: true,
+    ellipsis: false,
     render: (val) => val || "-",
   },
 ];

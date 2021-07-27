@@ -29,7 +29,7 @@ const apiNPRUpdatePIC = `/sales/npr/update`;
 const apiNPRRequestSample = `/sales/npr_additional`;
 
 const apiUpdateNPRStatus = `/sales/npr/status`;
-
+const apiUpdateNPRFormulaCost = `/sales/npr_formula/cost`;
 const getNPRItemList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   try {
@@ -720,6 +720,36 @@ const updateNPRStatus = (data, alert) => {
     return { success: false, data: null };
   }
 };
+const updateNPRFormulaCost = (npr_formula_id, alert) => {
+  console.log("updateNPRFormulaCost");
+  try {
+    return axios
+      .put(`${apiUpdateNPRFormulaCost}/${npr_formula_id}&0`, header_config)
+      .then((res) => {
+        console.log("PUT res", res);
+        if (res.status === 200) {
+          alert && message.success("Update Successfully..");
+          return { success: true, data: res.data };
+        } else {
+          message.error(errorText.getData);
+          return { success: false, data: null };
+        }
+      })
+      .catch((error) => {
+        if (!error.response) {
+          message.error(errorText.network);
+        } else {
+          message.error(errorText.formValid);
+        }
+        return { success: false, data: null, error: error.response };
+      });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: null };
+  }
+};
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,
@@ -745,4 +775,5 @@ export {
   getNPRRequestSample,
   saveSampleRequest,
   updateNPRStatus,
+  updateNPRFormulaCost,
 };

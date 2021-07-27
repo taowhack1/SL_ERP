@@ -32,6 +32,13 @@ const columns = ({ onOpen }) => [
   {
     title: "วันที่สร้าง NPR",
     align: "center",
+    dataIndex: "npr_created",
+    width: "10%",
+    className: "tb-col-sm",
+  },
+  {
+    title: "วันที่ต้องการตัวอย่าง",
+    align: "center",
     dataIndex: "npr_request_date",
     width: "10%",
     className: "tb-col-sm",
@@ -100,7 +107,6 @@ const columns = ({ onOpen }) => [
         className: "tb-col-sm",
         render: (val) => <Text style={{ color: "blue" }}>{val || "-"}</Text>,
       },
-
       {
         title: "วันที่ส่งตัวอย่าง",
         align: "center",
@@ -126,7 +132,6 @@ const columns = ({ onOpen }) => [
     width: "10%",
     className: "tb-col-sm",
     render: (val, record) =>
-      // record.add_trans_id !== null && (
       record.rd_tg_trans_status_id === 4 ? (
         [2, 3].includes(record.add_trans_id) ? (
           <Badge count={[2, 3].includes(record.add_trans_id) ? 1 : 0}>
@@ -144,7 +149,6 @@ const columns = ({ onOpen }) => [
       ) : (
         "-"
       ),
-    // ),
   },
 ];
 

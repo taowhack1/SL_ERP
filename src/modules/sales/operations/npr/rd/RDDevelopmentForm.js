@@ -5,19 +5,17 @@ import { NPRFormContext } from "../NPRViewById";
 import {
   updateNPRRDStatus,
   saveNPRFormula,
-  saveNPRFormulaRemark,
+  updateNPRFormulaCost,
 } from "../../../../../actions/sales/nprActions";
 import RDDevelopmentTabs from "./RDDevelopmentTabs";
-import { useHistory } from "react-router";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomSelect from "../../../../../components/CustomSelect";
 import { useForm, FormProvider } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { SET_LOADING } from "../../../../../actions/types";
 import { formEdit, formView } from "../../../../../include/js/formType";
 import useKeepLogs from "../../../../logs/useKeepLogs";
 import Authorize from "../../../../system/Authorize";
 import moment from "moment";
+import { SyncOutlined } from "@ant-design/icons";
 
 const initialStateFormula = {
   id: 0,
@@ -55,13 +53,12 @@ const RDDevelopmentForm = ({
   authorize.check_authorize();
   const [formMethod, setFormMethod] = useState(formView);
   const [disabledBatchUpdate, setDisabledBatchUpdate] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { tg_trans_status_id } = data;
-  console.log(data, "data");
   const {
     id,
     user_name,
     department_id,
-    department,
     state: mainState,
   } = useContext(NPRFormContext);
 
@@ -226,7 +223,20 @@ const RDDevelopmentForm = ({
         npr_formula_detail: sortData(data),
       }));
     };
-
+    const updateFormulaCost = async (npr_formula_id) => {
+      setLoading(true);
+      console.log("updateFormulaCost ........ START");
+      const hide = message.loading("Please wait. Action in progress...", 0);
+      const resp = await updateNPRFormulaCost(npr_formula_id, true);
+      console.log("updateFormulaCost ........ END", resp);
+      if (resp.success) {
+        setFormula(resp.data);
+        console.log("updateFormulaCost ........ SETFORMULA", resp);
+      }
+      setLoading(false);
+      setTimeout(hide, 0);
+    };
+    console.log("Re-Render npr_formula");
     return {
       onChangeHead,
       onChangeFormula,
@@ -234,6 +244,7 @@ const RDDevelopmentForm = ({
       onDeleteRowFormula,
       state: data,
       setFormula,
+      updateFormulaCost,
     };
   }, [state.npr_formula_detail, data, setState]);
   const rdDevQA = useMemo(() => {
@@ -288,7 +299,7 @@ const RDDevelopmentForm = ({
   );
 
   const onPrintFormula = (batchSize) => {
-    keepLog.keep_log_action("Print Formula : ", state.npr_formula_no);
+    // keepLog.keep_log_action("Print Formula : ", state.npr_formula_no);
     window.open(
       `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula.aspx?npr_formula_no=${state.npr_formula_no}&sample_qty=${batchSize}`,
       false
@@ -296,12 +307,13 @@ const RDDevelopmentForm = ({
   };
 
   const onPrintLabel = () => {
-    keepLog.keep_log_action("Edit Formula Label : ", state.npr_formula_no);
+    // keepLog.keep_log_action("Edit Formula Label : ", state.npr_formula_no);
     window.open(
       `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula_qr_code.aspx?npr_formula_no=${state.npr_formula_no}`,
       false
     );
   };
+
   const readOnly = formMethod === formView;
   const formContextValue = useMemo(
     () => ({

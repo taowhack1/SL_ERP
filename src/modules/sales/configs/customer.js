@@ -67,24 +67,34 @@ export const customer_fields = {
 
 export const customer_columns = [
   {
+    title: "Code",
+    dataIndex: "customer_no",
+    key: "customer_no",
+    width: "10%",
+    align: "center",
+  },
+  {
     title: "Name",
     dataIndex: "customer_name",
     key: "customer_name",
     width: "30%",
+    ellipsis: true,
     align: "left",
   },
   {
     title: "Phone",
     dataIndex: "customer_phone",
     key: "customer_phone",
-    width: "15%",
+    width: "10%",
+    ellipsis: true,
     align: "left",
   },
   {
     title: "Mobile",
     dataIndex: "customer_mobile",
     key: "customer_mobile",
-    width: "15%",
+    width: "10%",
+    ellipsis: true,
     align: "left",
   },
   {
@@ -92,6 +102,7 @@ export const customer_columns = [
     dataIndex: "customer_email",
     key: "customer_email",
     width: "20%",
+    ellipsis: true,
     align: "left",
   },
   {
@@ -99,6 +110,7 @@ export const customer_columns = [
     dataIndex: "customer_tax_no",
     key: "customer_tax_no",
     width: "20%",
+    ellipsis: true,
     align: "left",
   },
 ];

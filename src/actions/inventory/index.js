@@ -32,6 +32,7 @@ import {
 import { message } from "antd";
 import { sortData } from "../../include/js/function_main";
 const GET_SAMPLE_ITEMS = "GET_SAMPLE_ITEMS";
+const CLEAR_STATE_ITEM = "CLEAR_STATE_ITEM";
 const apiSampleItem = `/sales/item_sample`;
 const apiGetItemCodeType = `/list/item_type`;
 
@@ -232,6 +233,9 @@ const getSampleItemById = (id = null) => {
   }
 };
 
+const clearStateItems = () => (dispatch) =>
+  dispatch({ type: CLEAR_STATE_ITEM });
+
 export {
   getItemType,
   getUOM,
@@ -244,6 +248,8 @@ export {
   updateProcessStatus,
   getSampleItems,
   getSampleItemById,
+  clearStateItems,
   apiSampleItem,
   GET_SAMPLE_ITEMS,
+  CLEAR_STATE_ITEM,
 };

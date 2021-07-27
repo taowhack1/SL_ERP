@@ -220,7 +220,7 @@ const RDPIC = () => {
                     <CustomLabel
                       label="Due Date :"
                       require
-                      readOnly={state.trans_id > 6 ? false : false}
+                      readOnly={state.trans_id > 6 ? true : false}
                     />
                   </Col>
                   <Col span={16}>

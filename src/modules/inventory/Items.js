@@ -12,7 +12,7 @@ import { item_show_columns } from "./config/item";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 import SearchTable from "../../components/SearchTable";
-import { getMasterDataItem } from "../../actions/inventory";
+import { clearStateItems, getMasterDataItem } from "../../actions/inventory";
 const Items = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
@@ -26,6 +26,7 @@ const Items = (props) => {
   useEffect(() => {
     // dispatch(getAllItems(auth.user_name));
     dispatch(getMasterDataItem(auth.user_name, setLoading, false));
+    return () => dispatch(clearStateItems());
   }, []);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);

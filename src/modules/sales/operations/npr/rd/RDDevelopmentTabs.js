@@ -24,7 +24,11 @@ const RDDevelopmentTabs = ({
         </Tabs.TabPane>
         <Tabs.TabPane tab={"Formula"} key={2}>
           <RDFormulaProcedure useFormValue={useFormValue} />
-          <RDFormula data={npr_formula_detail} {...rdDevFormula} />
+          <RDFormula
+            data={npr_formula_detail}
+            {...rdDevFormula}
+            npr_formula_id={npr_formula_id}
+          />
         </Tabs.TabPane>
 
         <Tabs.TabPane tab={"QA"} key={3}>

@@ -1,5 +1,9 @@
-import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
-import { Input, InputNumber, Popconfirm } from "antd";
+import {
+  DeleteTwoTone,
+  EllipsisOutlined,
+  SyncOutlined,
+} from "@ant-design/icons";
+import { Button, Input, InputNumber, message, Popconfirm } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useFormContext } from "react-hook-form";
@@ -171,9 +175,12 @@ const RDFormula = ({
   onAddRowFormula,
   onDeleteRowFormula,
   setFormula,
+  updateFormulaCost,
+  npr_formula_id,
+  loading,
 }) => {
   const { itemList } = useSelector((state) => state.sales.operations.npr);
-  const { loading } = useSelector((state) => state.sales);
+  // const { loading } = useSelector((state) => state.sales);
   const { readOnly } = useFormContext();
 
   console.log("RDFormula", data);
@@ -184,6 +191,31 @@ const RDFormula = ({
           <DetailLoading />
         ) : (
           <>
+            <div className="d-flex mb-1 flex-end">
+              {npr_formula_id && (
+                <Button
+                  icon={
+                    <SyncOutlined
+                      style={{
+                        color: "#27ED00",
+                        // fontSize: "22px",
+                        fontWeight: "900",
+                      }}
+                      title="อัปเดตราคาวัตถุดิบปัจจุบัน"
+                    />
+                  }
+                  onClick={() =>
+                    !loading
+                      ? updateFormulaCost(npr_formula_id)
+                      : message.warning(
+                          "Please wait until last update complete."
+                        )
+                  }
+                >
+                  Update
+                </Button>
+              )}
+            </div>
             <AntdTableDragable
               pagination={{ pageSize: 999 }}
               rowClassName="row-table-detail"

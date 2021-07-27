@@ -30,6 +30,7 @@ import WorkOrderHead from "./WorkOrderHead";
 import { sortData, validateFormHead } from "../../../include/js/function_main";
 import { WOContext } from "../../../include/js/context";
 import moment from "moment";
+import { clearStateItems } from "../../../actions/inventory";
 // import WorkCenterDetail from "./WorkCenterDetail";
 const { Text } = Typography;
 
@@ -62,7 +63,6 @@ const WorkOrderCreate = (props) => {
   const dataComments = useSelector((state) => state.log.comment_log);
 
   useEffect(() => {
-    dispatch(getAllItems());
     dispatch(getSOReference());
 
     headReducer.setDataObject({
@@ -228,8 +228,8 @@ const WorkOrderCreate = (props) => {
   return (
     <WOContext.Provider value={headContextValue}>
       <MainLayout {...config}>
-        <div id='form'>
-          <Row className='col-2'>
+        <div id="form">
+          <Row className="col-2">
             <Col span={8}>
               <h2>
                 <strong>
@@ -243,7 +243,7 @@ const WorkOrderCreate = (props) => {
               <Text strong>Create Date :</Text>
             </Col>
             <Col span={2} style={{ textAlign: "right" }}>
-              <Text className='text-view'>
+              <Text className="text-view">
                 {headReducer.data.wo_created ?? moment().format("DD/MM/YYYY")}
               </Text>
             </Col>
