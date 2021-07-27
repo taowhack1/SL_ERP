@@ -19,8 +19,8 @@ import {
 import { sortData } from "../../../../include/js/function_main";
 const DeliveryOrderFormDetail = () => {
   const so_data = [
-    { id: 1, label: "SO21030001(mockup)", value: "	SO21030001" },
-    { id: 1, label: "SO21030002(mockup)", value: "	SO21030002" },
+    { id: 1, label: "SO21030001(mockup)", value: "SO21030001" },
+    { id: 1, label: "SO21030002(mockup)", value: "SO21030002" },
   ];
   const so_detail_data = [
     {
@@ -210,6 +210,7 @@ const DeliveryOrderFormDetail = () => {
               showSearch
               size={"small"}
               data={so_data}
+              defaultValue={"SO21030001"}
               className='full-width'
               field_name='label'
               field_id='value'
