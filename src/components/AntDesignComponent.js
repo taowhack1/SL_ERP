@@ -1,5 +1,12 @@
 import React from "react";
-import { DatePicker, Input, InputNumber, Radio, Select } from "antd";
+import {
+  DatePicker,
+  Input,
+  InputNumber,
+  Radio,
+  Select,
+  TimePicker,
+} from "antd";
 import TextArea from "antd/lib/input/TextArea";
 const { Option } = Select;
 const InputField = ({ fieldProps }) => {
@@ -45,6 +52,8 @@ const radioField = (options, { onChange, value }) => {
     </Radio.Group>
   );
 };
+
+const TimePickerField = ({ fieldProps }) => <TimePicker {...fieldProps} />;
 export {
   InputField,
   SelectField,
@@ -52,4 +61,5 @@ export {
   TextAreaField,
   radioField,
   InputNumberField,
+  TimePickerField,
 };

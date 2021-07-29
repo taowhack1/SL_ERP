@@ -1,0 +1,146 @@
+import { SearchOutlined } from "@ant-design/icons";
+import { Table } from "antd";
+import React from "react";
+const columns = [
+  {
+    title: (
+      <div className="text-center">
+        <b>ลำดับ</b>
+      </div>
+    ),
+    dataIndex: "id",
+    width: "5%",
+    ellipsis: true,
+    align: "center",
+    className: "tb-col-sm",
+    render: (val) => val + 1,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>DR No.</b>
+      </div>
+    ),
+    dataIndex: "dr_no",
+    width: "10%",
+    ellipsis: false,
+    align: "center",
+    className: "tb-col-sm",
+    render: (val) => val,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>SO No.</b>
+      </div>
+    ),
+    dataIndex: "so_no",
+    width: "10%",
+    ellipsis: true,
+    align: "center",
+    className: "tb-col-sm",
+    render: (val) => val,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>วันที่ต้องถึงลูกค้า</b>
+      </div>
+    ),
+    dataIndex: "dr_delivery_date",
+    width: "15%",
+    ellipsis: false,
+    align: "center",
+    className: "tb-col-sm",
+    render: (val) => val,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>ชื่อลูกค้า</b>
+      </div>
+    ),
+    dataIndex: "customer_no_name",
+    width: "15%",
+    ellipsis: true,
+    align: "left",
+    className: "tb-col-sm",
+    render: (val) => val,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>สถานที่ส่ง</b>
+      </div>
+    ),
+    dataIndex: "dr_location_delivery",
+    ellipsis: true,
+    align: "left",
+    className: "tb-col-sm",
+    render: (val) => val,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>สถานะ</b>
+      </div>
+    ),
+    dataIndex: "dr_status_name",
+    width: "10%",
+    ellipsis: true,
+    align: "center",
+    className: "tb-col-sm",
+    render: (val) => val,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>เพิ่มเติม</b>
+      </div>
+    ),
+    dataIndex: "dr_id",
+    width: "5%",
+    ellipsis: true,
+    align: "center",
+    className: "tb-col-sm",
+    render: (val) => <SearchOutlined className="button-icon" />,
+  },
+];
+
+const DRList = ({ loading, data = [] }) => {
+  console.log("DRList", data);
+  return (
+    <>
+      <Table
+        loading={loading}
+        columns={columns}
+        dataSource={data}
+        rowKey={"id"}
+        size="small"
+        bordered
+        pagination={{ pageSize: 25 }}
+        rowClassName="row-pointer"
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: (e) => {
+              // setRowClick(true);
+              // $(e.target)
+              //   .closest("tbody")
+              //   .find("tr")
+              //   .removeClass("selected-row");
+              // $(e.target).closest("tr").addClass("selected-row");
+              // keepLog.keep_log_action(record.so_no);
+              // dispatch(get_so_by_id(record.so_id, auth.user_name));
+              // props.history.push({
+              //   pathname: "/sales/orders/view/" + record.so_id,
+              //   state: record,
+              // });
+            },
+          };
+        }}
+      />
+    </>
+  );
+};
+
+export default React.memo(DRList);

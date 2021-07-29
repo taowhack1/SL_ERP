@@ -44,6 +44,20 @@ const inititalState = {
       itemList: [],
       list: [],
     },
+    dr: {
+      search: {
+        keyword: null,
+        page: 1,
+        status: 1,
+      },
+    },
+    do: {
+      search: {
+        keyword: null,
+        page: 1,
+        status: 1,
+      },
+    },
   },
   customer: {
     search: {

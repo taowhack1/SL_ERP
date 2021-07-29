@@ -23,41 +23,7 @@ const initialState = {
   npr_estimate_description: null,
   tg_trans_status_id: 1,
   tg_trans_close_id: 1,
-  npr_estimate_detail: [
-    // {
-    //   id: null,
-    //   npr_estimate_detail_active: 1,
-    //   npr_id: null,
-    //   npr_formula_id: null,
-    //   npr_product_cost_detail_id: null,
-    //   npr_product_cost_detail_batch_size: 0,
-    //   npr_product_cost_detail_fg_qty: 0,
-    //   tg_npr_estimate_detail_total_amount: 0,
-    //   npr_estimate_detail_sub: [
-    //     {
-    //       npr_estimate_type_id: 1,
-    //       npr_estimate_detail_sub_amount: 0,
-    //       npr_estimate_detail_sub_waste_percent_qty: 0,
-    //       npr_estimate_detail_sub_mark_up_percent_qty: 0,
-    //       npr_estimate_detail_sub_total_amount: 0,
-    //     },
-    //     {
-    //       npr_estimate_type_id: 2,
-    //       npr_estimate_detail_sub_amount: 0,
-    //       npr_estimate_detail_sub_waste_percent_qty: 0,
-    //       npr_estimate_detail_sub_mark_up_percent_qty: 0,
-    //       npr_estimate_detail_sub_total_amount: 0,
-    //     },
-    //     {
-    //       npr_estimate_type_id: 3,
-    //       npr_estimate_detail_sub_amount: 0,
-    //       npr_estimate_detail_sub_waste_percent_qty: 0,
-    //       npr_estimate_detail_sub_mark_up_percent_qty: 0,
-    //       npr_estimate_detail_sub_total_amount: 0,
-    //     },
-    //   ],
-    // },
-  ],
+  npr_estimate_detail: [],
   npr_estimate_calculate: [],
 };
 const EstimateForm = () => {
@@ -69,16 +35,17 @@ const EstimateForm = () => {
   const { user_name, department_id } = useSelector(
     (state) => state.auth.authData
   );
+
   const [modal, setModal] = useState({
     visible: false,
     loading: false,
     estimateData: null,
   });
+
   useEffect(() => {
     const getData = async (id) => {
       const resp = await getNPRByID(id);
       const respEstimate = await getNPREstimate(id);
-      console.log("respEstimate", respEstimate.data);
       if (resp.success) {
         setState(resp.data);
       }

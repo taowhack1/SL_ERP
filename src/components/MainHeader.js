@@ -84,7 +84,7 @@ const MainHead = (props) => {
           <Row>
             <Col span={24}>
               {process.env.REACT_APP_API_SERVER ===
-              `http://192.168.5.222:3009/api` ? (
+              process.env.REACT_APP_API_TEST ? (
                 <>
                   <Text className="server-status status-dev" strong>
                     <DatabaseOutlined /> Development
