@@ -14,12 +14,11 @@ const DeliveryRouter = () => {
       <Route exact path={`${path}/view/:id`}>
         <DeliveryOrderFormView />
       </Route>
-      <Route path={`${path}/create/:dr_id`}>
-        <DeliveryOrderForm />
-      </Route>
       <Route path={`${path}/edit/:id`}>
         <DeliveryOrderForm />
       </Route>
+      <Route path={`${path}/create/`} component={DeliveryOrderForm} />
+
       <Route path={path}>
         <DeliveryOrder />
       </Route>

@@ -1,22 +1,13 @@
 import { DeleteOutlined, EllipsisOutlined } from "@ant-design/icons";
-import { message, Tabs } from "antd";
+import { Tabs } from "antd";
 import Text from "antd/lib/typography/Text";
-import React, { useContext, useEffect, useState } from "react";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-import { getFormDR } from "../../../../../actions/sales/doActions";
-import {
-  InputField,
-  InputNumberField,
-  SelectField,
-} from "../../../../../components/AntDesignComponent";
+import React, { useContext } from "react";
+
 import CustomSelect from "../../../../../components/CustomSelect";
 import CustomTable from "../../../../../components/CustomTable";
-import { AppContext, DOContext } from "../../../../../include/js/context";
+import { DOContext } from "../../../../../include/js/context";
 import { sortData } from "../../../../../include/js/function_main";
-import {
-  convertDigit,
-  getNumberFormat,
-} from "../../../../../include/js/main_config";
+import { convertDigit } from "../../../../../include/js/main_config";
 const columns = ({ readOnly, onChange, drList, onDelete }) => [
   {
     title: (

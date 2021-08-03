@@ -36,9 +36,6 @@ const Form = ({
     auth: { user_name, employee_no_name_eng },
   } = useContext(AppContext);
 
-  console.log("Form fields", fields);
-  console.log("errors", errors);
-  console.log("readOnly", readOnly);
   return (
     <>
       {fields.map((obj, index) => (
@@ -168,39 +165,47 @@ const Form = ({
                   )}
                 </Col>
               </Row>
-              <div
-                className="mt-2 pt-1"
-                style={{ borderTop: "1px solid #c0c0c0" }}
-              >
-                <Row className="col-2 mt-1 mb-1">
-                  <Col span={8}>
-                    <CustomLabel label="Cancel :" readOnly={readOnly} />
-                  </Col>
-                  <Col span={16}>
-                    {readOnly ? (
-                      <Text className="pre-wrap error" strong>
-                        {obj?.tg_trans_status_id === 3 ? "Canceled" : ""}
-                      </Text>
-                    ) : (
-                      <Controller
-                        name={`dr.${index}.tg_trans_status_id`}
-                        control={control}
-                        render={({ field: { value } }) => (
-                          <Checkbox
-                            checked={value === 3 ? true : false}
-                            onChange={(e) => {
-                              e.target.checked
-                                ? setValue(`dr.${index}.tg_trans_status_id`, 3)
-                                : setValue(`dr.${index}.tg_trans_status_id`, 1);
-                            }}
-                            defaultChecked={false}
-                          />
-                        )}
-                      />
-                    )}
-                  </Col>
-                </Row>
-              </div>
+              {obj?.dr_id && (
+                <div
+                  className="mt-2 pt-1"
+                  style={{ borderTop: "1px solid #c0c0c0" }}
+                >
+                  <Row className="col-2 mt-1 mb-1">
+                    <Col span={8}>
+                      <CustomLabel label="Cancel :" readOnly={readOnly} />
+                    </Col>
+                    <Col span={16}>
+                      {readOnly ? (
+                        <Text className="pre-wrap error" strong>
+                          {obj?.tg_trans_status_id === 3 ? "Canceled" : ""}
+                        </Text>
+                      ) : (
+                        <Controller
+                          name={`dr.${index}.tg_trans_status_id`}
+                          control={control}
+                          render={({ field: { value } }) => (
+                            <Checkbox
+                              checked={value === 3 ? true : false}
+                              onChange={(e) => {
+                                e.target.checked
+                                  ? setValue(
+                                      `dr.${index}.tg_trans_status_id`,
+                                      3
+                                    )
+                                  : setValue(
+                                      `dr.${index}.tg_trans_status_id`,
+                                      1
+                                    );
+                              }}
+                              defaultChecked={false}
+                            />
+                          )}
+                        />
+                      )}
+                    </Col>
+                  </Row>
+                </div>
+              )}
             </Col>
             <Col span={12}>
               <Row className="col-2 mt-1 mb-1">

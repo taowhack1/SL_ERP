@@ -71,14 +71,6 @@ const Comments = (props) => {
               )
             );
           })}
-        {/* <Form.Item>
-          <Input.TextArea rows={4} />
-        </Form.Item>
-        <Form.Item>
-          <Button htmlType="submit" className="primary">
-            Add Comment
-          </Button>
-        </Form.Item> */}
       </div>
     </>
   );

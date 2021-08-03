@@ -29,7 +29,7 @@ const TabPanel = ({
   weightDetailDispatch,
 }) => {
   const { department_id } = useSelector((state) => state.auth.authData);
-  // 10 = MIS , 11 = RD , 13 = PU , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE
+  // 10 = MIS , 11 = RD , 13 = PU , 18 = SA , 20 = PD , 24 = WH , 25 = PLN, 90 = EXECUTIVE
   const { type_id } = data_head;
   const callback = (key) => {};
   const master_data = useSelector((state) => state.inventory.master_data);
@@ -97,7 +97,7 @@ const TabPanel = ({
         {type_id !== undefined &&
           type_id &&
           type_id === 3 &&
-          [1, 10, 11, 90].includes(department_id) && (
+          [1, 10, 11, 90, 25].includes(department_id) && (
             <Tabs.TabPane
               tab={
                 <CustomLabel
@@ -155,8 +155,7 @@ const TabPanel = ({
         {type_id !== undefined &&
           type_id &&
           [4, 5].includes(type_id) &&
-          [1, 10, 11, 18, 90].includes(department_id) && (
-            // [1, 10, 11, 18].includes(department_id) && (
+          [1, 10, 11, 18, 90, 25].includes(department_id) && (
             <Tabs.TabPane
               tab={
                 <CustomLabel label={"Packaging"} require readOnly={readOnly} />

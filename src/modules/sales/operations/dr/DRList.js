@@ -3,6 +3,7 @@ import { Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useDispatch } from "react-redux";
+import { getStatusByName } from "../../../../include/js/function_main";
 import useKeepLogs from "../../../logs/useKeepLogs";
 const columns = [
   {
@@ -95,7 +96,7 @@ const columns = [
     ellipsis: true,
     align: "center",
     className: "tb-col-sm",
-    render: (val) => val,
+    render: (val) => getStatusByName(val),
   },
   {
     title: (

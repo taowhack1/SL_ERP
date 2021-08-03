@@ -12,11 +12,12 @@ import { useHistory } from "react-router";
 import Search from "../../../../components/Search";
 import { getDO, getDRRefList } from "../../../../actions/sales/doActions";
 import { EllipsisOutlined, SearchOutlined } from "@ant-design/icons";
+import { getStatusByName } from "../../../../include/js/function_main";
 const columnsDR = [
   {
     title: (
       <div className="text-center">
-        <Text strong>Delivery Request ( DR )</Text>
+        <Text strong>ใบร้องขอให้ส่งของ ( DR )</Text>
       </div>
     ),
     className: "col-sm bg-tb-secondary",
@@ -37,14 +38,14 @@ const columnsDR = [
         // width: "15%",
       },
       {
-        title: "Customer No.",
+        title: "รหัสลูกค้า",
         align: "center",
         dataIndex: "customer_no",
         className: "col-sm",
         // width: "15%",
       },
       {
-        title: "Due Date",
+        title: "วัน/เวลา ที่ต้องถึงลูกค้า",
         align: "center",
         className: "col-sm",
         // width: "15%",
@@ -57,7 +58,7 @@ const columnsDo = [
   {
     title: (
       <div className="text-center">
-        <Text strong>Delivery Order ( DO )</Text>
+        <Text strong>ใบส่งของ ( DO )</Text>
       </div>
     ),
     className: "col-sm bg-tb-primary",
@@ -80,7 +81,7 @@ const columnsDo = [
           </div>
         ),
         width: "10%",
-        dataIndex: "dr_no",
+        dataIndex: "do_no",
         className: "col-sm",
         align: "center",
         render: (val) => val || "-",
@@ -88,38 +89,38 @@ const columnsDo = [
       {
         title: (
           <div className="text-center">
-            <Text strong>Customer</Text>
+            <Text strong>ชื่อลูกค้า</Text>
           </div>
         ),
         // width: "10%",
         dataIndex: "customer_no_name",
         className: "col-sm",
-        align: "center",
+        align: "left",
         render: (val) => val || "-",
       },
       {
         title: (
           <div className="text-center">
-            <Text strong>Due Date</Text>
+            <Text strong>วัน/เวลา ที่ออกรถ</Text>
           </div>
         ),
         // width: "10%",
         dataIndex: "do_delivery_date",
         className: "col-sm",
         align: "center",
-        render: (val) => val || "-",
+        render: (_, row) => `${row.do_delivery_date} ${row.do_delivery_time}`,
       },
       {
         title: (
           <div className="text-center">
-            <Text strong>Status</Text>
+            <Text strong>สถานะ</Text>
           </div>
         ),
         width: "10%",
-        dataIndex: "tg_trans_status_id",
+        dataIndex: "trans_status_name",
         className: "col-sm",
         align: "center",
-        render: (val) => val || "-",
+        render: (val) => getStatusByName(val),
       },
       {
         title: (
@@ -168,7 +169,7 @@ const DeliveryOrder = () => {
     show: true,
     breadcrumb: ["Sales", "Operation", "Delivery Order"],
     search: false,
-    create: "/sales/operation/do/create/new",
+    create: "/sales/operation/do/create/",
     buttonAction: ["Create"],
     discard: "",
     onSearch: (w) => {
@@ -176,10 +177,11 @@ const DeliveryOrder = () => {
     },
   };
 
-  const createDo = (dr_id) => {
+  const createDo = (record) => {
     // dispatch(get_so_by_id(record.so_id, user_name));
+    const { dr_id, customer_id } = record;
     if (!dr_id) return false;
-    history.push("/sales/operation/do/create/" + dr_id);
+    history.push("/sales/operation/do/create/", { dr_id, customer_id });
   };
 
   const viewDo = (id) => {
@@ -210,7 +212,7 @@ const DeliveryOrder = () => {
                   }}
                   onRow={(record) => ({
                     onClick: (e) => {
-                      createDo(record.dr_id);
+                      createDo(record);
                     },
                   })}
                 />

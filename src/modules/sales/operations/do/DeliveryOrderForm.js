@@ -7,11 +7,15 @@ import { useHistory, useParams } from "react-router-dom";
 import {
   getDO,
   getDRCustomers,
+  getFormDR,
   saveDO,
 } from "../../../../actions/sales/doActions";
 import MainLayout from "../../../../components/MainLayout";
 import { AppContext, DOContext } from "../../../../include/js/context";
-import { validateFormHead } from "../../../../include/js/function_main";
+import {
+  sortData,
+  validateFormHead,
+} from "../../../../include/js/function_main";
 import Form from "./form/Form";
 const initialState = {
   do_id: null,
@@ -43,18 +47,23 @@ const initialState = {
     },
   ],
 };
-const DeliveryOrderForm = () => {
+const DeliveryOrderForm = (props) => {
   const history = useHistory();
-  const { id, dr_id } = useParams();
+  const { id } = useParams();
+  const { dr_id, customer_id: lo_customer_id } = props?.location?.state || {
+    dr_id: null,
+    lo_customer_id: null,
+  };
   const [config, setConfig] = useState({
     readOnly: false,
     loading: false,
   });
   const [selectData, setSelectData] = useState({
     customers: [],
+    drList: [],
   });
   const [stateDO, setStateDO] = useState(initialState);
-
+  const { customer_id, do_id } = stateDO;
   const setLoading = (bool) =>
     setConfig((prev) => ({ ...prev, loading: bool }));
 
@@ -77,17 +86,17 @@ const DeliveryOrderForm = () => {
       search: false,
       create: "",
       buttonAction: ["Save", "Discard"],
-      action: [],
+
       discard: "/sales/operation/do",
       save: "function",
       onSave: async () => {
         setLoading(true);
-        console.log("save ", stateDO);
         const validateHead = validateFormHead(stateDO, [
           "customer_id",
           "do_location_delivery",
+          "do_delivery_date",
+          "do_delivery_time",
         ]);
-        console.log("validateHead", validateHead);
         if (validateHead.validate) {
           const saveData = { ...stateDO, commit: 1, user_name };
 
@@ -121,16 +130,21 @@ const DeliveryOrderForm = () => {
     // get data 1st time.
     const getData = async (user_name, id) => {
       const resp = await getDO(user_name, id);
-      console.log("get do by id ", resp.data);
-      resp.success && setStateDO(resp.data);
+      if (resp.success) {
+        setStateDO(resp.data);
+      }
     };
 
     const getCustomers = async () => {
       const resp = await getDRCustomers();
-      setSelectData((prev) => ({
-        ...prev,
-        customers: resp.success && resp.data,
-      }));
+      if (resp.success) {
+        setSelectData((prev) => ({
+          ...prev,
+          customers: resp.success && resp.data,
+        }));
+        lo_customer_id &&
+          setStateDO((prev) => ({ ...prev, customer_id: lo_customer_id }));
+      }
     };
     !config.readOnly && getCustomers();
 
@@ -141,7 +155,33 @@ const DeliveryOrderForm = () => {
       // คลิก Create เฉยๆ
       setStateDO(initialState);
     }
-  }, [user_name, id, dr_id]);
+  }, [user_name, id]);
+
+  useEffect(() => {
+    const getDRList = async (customer_id, do_id) => {
+      const resp = await getFormDR({ customer_id, do_id });
+      message.info("Get list of Delivery Request success.");
+      if (resp.success) {
+        setSelectData((prev) => ({ ...prev, drList: sortData(resp.data) }));
+        if (dr_id) {
+          const selectedDR = {
+            ...resp.data.find((obj) => obj.dr_id === dr_id),
+            id: 0,
+          };
+          dr_id &&
+            setStateDO((prev) => ({
+              ...prev,
+              do_location_delivery: selectedDR.do_location_delivery,
+              do_detail: [selectedDR],
+            }));
+        }
+      }
+    };
+    !config.readOnly && customer_id
+      ? getDRList(customer_id, do_id)
+      : setSelectData((prev) => ({ ...prev, drList: [] }));
+  }, [customer_id, do_id]);
+
   return (
     <>
       <MainLayout {...layoutConfig}>

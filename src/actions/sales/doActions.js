@@ -169,16 +169,4 @@ const saveDO = (data) => {
   }
 };
 
-const do_actions = (data, do_id) => (dispatch) => {
-  console.log("so_actions");
-  data.commit = 1;
-  // data = {process_status_id : '3', user_name : '2563003', process_id : '30', commit : 1}
-  axios
-    .put(`${api_approve}/${data.process_id}`, data, header_config)
-    .then((res) => {
-      console.log(res);
-      dispatch(get_so_by_id(do_id, data.user_name));
-    });
-};
-
-export { getDRRefList, getDO, getFormDR, getDRCustomers, saveDO, do_actions };
+export { getDRRefList, getDO, getFormDR, getDRCustomers, saveDO };

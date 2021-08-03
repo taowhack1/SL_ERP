@@ -35,7 +35,8 @@ const initialState = {
   commit: 1,
 };
 let readOnly = false;
-const DRForm = ({ visible, onClose, dr_id }) => {
+const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
+  console.log("PROPS : ", visible, onClose, dr_id, so_detail_id);
   const {
     auth: { user_name },
   } = useContext(AppContext);
@@ -44,35 +45,7 @@ const DRForm = ({ visible, onClose, dr_id }) => {
   const [data, setData] = useState({
     dr_type: [],
   });
-  const onSubmit = async (data) => {
-    setLoading(true);
-    const hide = message.loading("Action in progress....", 0);
-    const resp = await saveDR(data.dr);
-    setTimeout(hide, 0);
-    if (resp.success) {
-      if (resp.success) {
-        await Swal.fire({
-          title: "Save Successfully!",
-          icon: "success",
-          showCancelButton: true,
-          confirmButtonText: `Back to Home`,
-          cancelButtonText: `Stay here`,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            onClose();
-          }
-        });
-      }
-    } else {
-      message.success({
-        content: `Error ! ${resp.message}`,
-        duration: 6,
-        key: "save",
-      });
-    }
 
-    setLoading(false);
-  };
   const formMethod = useForm({
     defaultValues: {
       dr: [initialState],
@@ -83,6 +56,38 @@ const DRForm = ({ visible, onClose, dr_id }) => {
     name: "dr",
     control: formMethod.control,
   });
+
+  const onSubmit = async (data) => {
+    setLoading(true);
+    const hide = message.loading("Action in progress....", 0);
+    const resp = await saveDR(data.dr);
+    setTimeout(hide, 0);
+    if (resp.success) {
+      console.log("resp.data", resp.data);
+      await Swal.fire({
+        title: "Save Successfully!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: `Back to Home`,
+        cancelButtonText: `Stay here`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          onClose();
+        } else {
+          readOnly = resp.data[0].tg_trans_status_id === 3;
+          formMethod.reset({ dr: resp.data });
+        }
+      });
+    } else {
+      message.success({
+        content: `Error ! ${resp.message}`,
+        duration: 6,
+        key: "save",
+      });
+    }
+
+    setLoading(false);
+  };
 
   const formConfig = React.useMemo(
     () => ({
@@ -107,14 +112,42 @@ const DRForm = ({ visible, onClose, dr_id }) => {
   useEffect(() => {
     const getSOData = async () => {
       const resp = await getDRSODetail();
+      readOnly = false;
       if (resp.success) {
-        setSOData(resp.data);
+        if (so_detail_id) {
+          const {
+            so_id,
+            tg_so_detail_qty_delivery,
+            so_detail_delivery_date,
+            dr_location_delivery,
+            so_no_description,
+            customer_id,
+          } = resp.data.find((obj) => obj.so_detail_id === so_detail_id);
+          formMethod.reset({
+            dr: [
+              {
+                ...initialState,
+                so_id,
+                so_detail_id,
+                dr_qty: tg_so_detail_qty_delivery,
+                dr_delivery_date: so_detail_delivery_date,
+                dr_location_delivery,
+                so_no_description,
+                customer_id,
+                user_name,
+                commit: 1,
+              },
+            ],
+          });
+        }
+        !so_detail_id && setSOData(resp.data);
       }
     };
     const getDRData = async () => {
       const resp = await getDR(dr_id);
       if (resp.success) {
         readOnly = resp.data[0].tg_trans_status_id === 3;
+
         formMethod.reset({
           dr: resp.data.map((obj) => ({ ...obj, commit: 1, user_name })),
         });
@@ -123,7 +156,7 @@ const DRForm = ({ visible, onClose, dr_id }) => {
       }
     };
     !dr_id ? getSOData() : getDRData();
-  }, [dr_id]);
+  }, [dr_id, so_detail_id]);
 
   useEffect(() => {
     formMethod.reset({

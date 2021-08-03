@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table, Space, Radio, Button, Tag } from "antd";
+import { Row, Col, Table, Space, Radio, Button, Tag, Popconfirm } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
 import { useDispatch, useSelector } from "react-redux";
@@ -226,17 +226,29 @@ const SaleOrder = (props) => {
 
     setLoading(false);
   }, [filter, so_list]);
+
   const [modal, setModal] = useState({
     visible: false,
     dr_id: null,
+    so_detail_id: null,
   });
-  const onClose = useCallback(
-    () => setModal((prev) => ({ ...prev, visible: false, dr_id: null })),
-    [setModal]
-  );
+  const onClose = useCallback(() => {
+    setModal((prev) => ({
+      ...prev,
+      visible: false,
+      dr_id: null,
+      so_detail_id: null,
+    }));
+    dispatch(get_so_list(auth.user_name));
+  }, [setModal]);
   const onOpen = useCallback(
-    (dr_id) =>
-      setModal((prev) => ({ ...prev, visible: true, dr_id: dr_id || null })),
+    (so_detail_id) =>
+      setModal((prev) => ({
+        ...prev,
+        visible: true,
+        dr_id: null,
+        so_detail_id,
+      })),
     [setModal]
   );
   const modalConfig = React.useMemo(
@@ -248,7 +260,7 @@ const SaleOrder = (props) => {
   );
 
   const expandedRowRender = (record, index) => {
-    const columns = [
+    const columns = ({ openDR }) => [
       {
         title: "No.",
         dataIndex: "id",
@@ -334,21 +346,30 @@ const SaleOrder = (props) => {
             <EllipsisOutlined />
           </div>
         ),
-        dataIndex: "so_detail_delivery_date",
+        dataIndex: "so_detail_id",
         align: "center",
         width: "8%",
         className: "tb-col-sm",
-        render: (val, row) => (
-          <Tag size="small" color="warning" className="cursor">
-            Open DR
-          </Tag>
-        ),
+        render: (val, row) =>
+          row?.button_create_dr ? (
+            <Popconfirm
+              title="Do you want do create Delivery Request ?."
+              onConfirm={() => openDR(val)}
+              className="cursor"
+            >
+              <Button size="small" className="primary">
+                Open DR
+              </Button>
+            </Popconfirm>
+          ) : (
+            ""
+          ),
       },
     ];
     return (
       <>
         <CustomTable
-          columns={columns}
+          columns={columns({ openDR: onOpen })}
           dataSource={record.so_detail}
           bordered
           rowKey={"so_detail_id"}
@@ -373,7 +394,7 @@ const SaleOrder = (props) => {
               size="small"
               bordered
               rowClassName="row-pointer"
-              expandable={{ expandedRowRender }}
+              // expandable={{ expandedRowRender }}
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
@@ -383,18 +404,18 @@ const SaleOrder = (props) => {
                     //   keepLog.keep_log_action(`Click ${record.dr_no}`);
                     // }
 
-                    // setRowClick(true);
-                    // $(e.target)
-                    //   .closest("tbody")
-                    //   .find("tr")
-                    //   .removeClass("selected-row");
-                    // $(e.target).closest("tr").addClass("selected-row");
-                    // keepLog.keep_log_action(record.so_no);
-                    // dispatch(get_so_by_id(record.so_id, auth.user_name));
-                    // props.history.push({
-                    //   pathname: "/sales/orders/view/" + record.so_id,
-                    //   state: record,
-                    // });
+                    setRowClick(true);
+                    $(e.target)
+                      .closest("tbody")
+                      .find("tr")
+                      .removeClass("selected-row");
+                    $(e.target).closest("tr").addClass("selected-row");
+                    keepLog.keep_log_action(record.so_no);
+                    dispatch(get_so_by_id(record.so_id, auth.user_name));
+                    props.history.push({
+                      pathname: "/sales/orders/view/" + record.so_id,
+                      state: record,
+                    });
                   },
                 };
               }}

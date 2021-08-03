@@ -1,7 +1,6 @@
 import { Col, DatePicker, Row, TimePicker } from "antd";
 import Text from "antd/lib/typography/Text";
-import React, { useContext, useEffect, useState } from "react";
-import { getDRCustomers } from "../../../../../actions/sales/doActions";
+import React, { useContext } from "react";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomSelect from "../../../../../components/CustomSelect";
 import TextArea from "antd/lib/input/TextArea";
@@ -28,22 +27,26 @@ const Head = () => {
     do_remark,
   } = stateDO;
 
-  console.log("Head Render...");
   return (
     <>
+      {tg_trans_status_id === 3 && (
+        <div className="text-center under-line">
+          <h1 className="error">
+            <b>ใบส่งของนี้ถูกยกเลิกแล้ว</b>
+          </h1>
+        </div>
+      )}
       <Row className="col-2 row-margin-vertical" gutter={[24, 8]}>
         <Col span={12}>
           {do_id && (
-            <>
-              <Row className="col-2 row-margin-vertical">
-                <Col span={8}>
-                  <CustomLabel label="DO No. :" require readOnly={readOnly} />
-                </Col>
-                <Col span={16}>
-                  <Text className="pre-wrap">{do_no}</Text>
-                </Col>
-              </Row>
-            </>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={8}>
+                <CustomLabel label="DO No. :" require readOnly={readOnly} />
+              </Col>
+              <Col span={16}>
+                <Text className="pre-wrap">{do_no}</Text>
+              </Col>
+            </Row>
           )}
           <Row className="col-2 row-margin-vertical">
             <Col span={8}>
@@ -136,6 +139,7 @@ const Head = () => {
               ) : (
                 <>
                   <TimePicker
+                    name="do_delivery_time"
                     placeholder={"ชั่วโมง : นาที"}
                     format={"HH:mm"}
                     className="w-100"
@@ -186,7 +190,7 @@ const Head = () => {
         <Col span={12}>
           <Row className="col-2 row-margin-vertical">
             <Col span={8}>
-              <CustomLabel label="หมายเหตุ :" require readOnly={readOnly} />
+              <CustomLabel label="หมายเหตุ :" readOnly={readOnly} />
             </Col>
             <Col span={16}>
               {readOnly ? (

@@ -34,8 +34,8 @@ export const get_quotation_list = (user_name) => (dispatch) => {
   });
 };
 
-export const get_so_list = (user_name) => (dispatch) => {
-  axios.get(`${api_so}/all/${user_name}`, header_config).then((res) => {
+export const get_so_list = (user_name) => async (dispatch) => {
+  await axios.get(`${api_so}/all/${user_name}`, header_config).then((res) => {
     console.log(res);
     dispatch({
       type: GET_SO_LIST,

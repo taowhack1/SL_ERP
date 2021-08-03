@@ -1,9 +1,11 @@
 import { message } from "antd";
+import Text from "antd/lib/typography/Text";
 import React, { useContext, useEffect, useState } from "react";
 import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
+import { approveFunction } from "../../../../actions";
 import { get_log_by_id } from "../../../../actions/comment&log";
 import { do_actions, getDO, saveDO } from "../../../../actions/sales/doActions";
 import Comments from "../../../../components/Comments";
@@ -43,6 +45,7 @@ const initialState = {
   ],
 };
 const DeliveryOrderFormView = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const { id } = useParams();
   const [config, setConfig] = useState({
@@ -57,6 +60,11 @@ const DeliveryOrderFormView = () => {
     loading: false,
   });
 
+  const [selectData] = useState({
+    customers: [],
+    drList: [],
+  });
+
   const setLoading = (bool) =>
     setConfig((prev) => ({ ...prev, loading: bool }));
 
@@ -65,27 +73,25 @@ const DeliveryOrderFormView = () => {
   } = useContext(AppContext);
 
   useEffect(() => {
-    console.log("get log");
     stateDO &&
       stateDO.process_id &&
       dispatch(get_log_by_id(stateDO.process_id));
   }, [stateDO]);
 
-  const changeProcessStatus = (process_status_id) => {
+  const changeProcessStatus = async () => {
     if (remark.trim() === "") {
       alert("Plase write remark");
       return false;
     }
+    setLoading(true);
     setOpenRemarkModal({ visible: false, loading: false });
-    const app_detail = {
-      //6 = reject
-      process_status_id: process_status_id,
-      user_name: user_name,
+    const resp = await approveFunction({
+      status: 6,
+      user_name,
       process_id: stateDO.process_id,
-      process_member_remark: remark,
-    };
-    message.success({ content: "Reject", key: "validate", duration: 1 });
-    dispatch(do_actions(app_detail, stateDO.so_id));
+      remark,
+    });
+    setLoading(false);
   };
 
   const flow =
@@ -116,52 +122,66 @@ const DeliveryOrderFormView = () => {
         stateDO && stateDO.button_reject && "Reject",
         "Back",
       ],
-      edit: `/sales/operation/do/edit/${id}`,
+      edit: () => history.push(`/sales/operation/do/edit/${id}`),
       back: `/sales/operation/do`,
-      action: [],
+      action: [
+        stateDO &&
+          stateDO.button_cancel && {
+            name: (
+              <div className="text-center">
+                <Text className="error">Cancel</Text>
+              </div>
+            ),
+            cancel: true,
+            link: ``,
+          },
+      ],
       step: {
         current: stateDO.node_stay - 1,
         step: flow,
         process_complete: stateDO.process_complete,
       },
-      onApprove: (e) => {
+      onApprove: async (e) => {
         //e.preventDefault();
-        console.log("Approve");
-        const app_detail = {
-          process_status_id: 5,
-          user_name: user_name,
+        setLoading(true);
+        const resp = await approveFunction({
+          status: 5,
+          user_name,
           process_id: stateDO.process_id,
-          process_member_remark: remark,
-        };
-        dispatch(do_actions(app_detail, stateDO.so_id));
+          remark,
+        });
+        setLoading(false);
       },
-      onConfirm: () => {
-        console.log("Confirm");
-        const app_detail = {
-          process_status_id: 2,
-          user_name: user_name,
+      onConfirm: async () => {
+        setLoading(true);
+
+        const resp = await approveFunction({
+          status: 2,
+          user_name,
           process_id: stateDO.process_id,
-        };
-        dispatch(do_actions(app_detail, stateDO.so_id));
+          remark,
+        });
+        setLoading(false);
       },
-      onReject: () => {
-        console.log("Reject");
+      onReject: async () => {
         setOpenRemarkModal({
           visible: true,
           loading: false,
         });
       },
-      onCancel: () => {
-        console.log("Cancel");
-        const app_detail = {
-          process_status_id: 3,
-          user_name: user_name,
+      onCancel: async () => {
+        setLoading(true);
+
+        const resp = await approveFunction({
+          status: 3,
+          user_name,
           process_id: stateDO.process_id,
-        };
-        dispatch(do_actions(app_detail, stateDO.so_id));
+          remark,
+        });
+        setLoading(false);
       },
     }),
-    [config, setConfig, stateDO]
+    [config, setConfig, stateDO, id]
   );
 
   const formConfig = useMemo(
@@ -170,6 +190,7 @@ const DeliveryOrderFormView = () => {
       stateDO,
       setStateDO,
       user_name,
+      selectData,
     }),
     [config, stateDO, setStateDO, user_name]
   );
@@ -178,13 +199,12 @@ const DeliveryOrderFormView = () => {
     // get data 1st time.
     const getData = async (user_name, id) => {
       const resp = await getDO(user_name, id);
-      console.log("get do by id ", resp.data);
       resp.success && setStateDO(resp.data);
     };
-    !["new", null, undefined].includes(id)
+    config.loading === false && !["new", null, undefined].includes(id)
       ? getData(user_name, id)
       : setStateDO(initialState);
-  }, [user_name, id]);
+  }, [user_name, id, config.loading]);
 
   return (
     <>

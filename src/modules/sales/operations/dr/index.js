@@ -29,6 +29,7 @@ const DeliveryRequisition = (props) => {
   const [modal, setModal] = useState({
     visible: false,
     dr_id: null,
+    so_detail_id: null,
   });
   useEffect(() => {
     const getData = async () => {
@@ -49,6 +50,7 @@ const DeliveryRequisition = (props) => {
         ...prev,
         visible: false,
         dr_id: null,
+        so_detail_id: null,
       })),
     [setModal]
   );
