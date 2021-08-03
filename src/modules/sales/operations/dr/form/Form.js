@@ -1,4 +1,4 @@
-import { Col, Row } from "antd";
+import { Checkbox, Col, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useContext } from "react";
 import moment from "moment";
@@ -8,36 +8,53 @@ import { Controller } from "react-hook-form";
 import {
   DatePickerField,
   InputField,
+  InputNumberField,
   radioField,
   SelectField,
   TextAreaField,
   TimePickerField,
 } from "../../../../../components/AntDesignComponent";
 import { AppContext } from "../../../../../include/js/context";
+import {
+  convertDigit,
+  getNumberFormat,
+} from "../../../../../include/js/main_config";
+import { getDRType } from "../../../../../actions/sales/drActions";
 const Form = ({
   formArray: { fields },
-  form: { control, register },
+  form: {
+    control,
+    register,
+    setValue,
+    formState: { errors },
+  },
   readOnly,
   soData,
+  data: { dr_type },
 }) => {
   const {
     auth: { user_name, employee_no_name_eng },
   } = useContext(AppContext);
+
   console.log("Form fields", fields);
+  console.log("errors", errors);
+  console.log("readOnly", readOnly);
   return (
     <>
       {fields.map((obj, index) => (
         <div className="form-group" key={index}>
           <div className="d-none">
             <input {...register(`dr.${index}.po_no`)} />
+            <input {...register(`dr.${index}.customer_id`)} />
             <input {...register(`dr.${index}.dr_id`)} />
+            <input {...register(`dr.${index}.so_id`)} />
             <input {...register(`dr.${index}.dr_actived`)} />
             <input {...register(`dr.${index}.tg_trans_status_id`)} />
             <input {...register(`dr.${index}.tg_trans_close_id`)} />
             <input {...register(`dr.${index}.commit`)} />
           </div>
           <Row gutter={[24, 8]} className="col-2 row-margin-vertical">
-            <Col span={12}>
+            <Col span={12} className="col-border-right">
               <Row className="col-2 mt-1 mb-1">
                 <Col span={8}>
                   <Text strong>DR No. :</Text>
@@ -59,6 +76,7 @@ const Form = ({
                         fieldProps: {
                           placeholder: "Contact name",
                           className: "d-none",
+                          disabled: obj?.tg_trans_status_id === 3,
                           ...field,
                         },
                       })
@@ -75,26 +93,28 @@ const Form = ({
                   <Text strong>Delivery Type :</Text>
                 </Col>
                 <Col span={16}>
-                  <Controller
-                    name={`dr.${index}.dr_type_id`}
-                    control={control}
-                    render={({ field }) =>
-                      radioField(
-                        [
-                          {
-                            id: 1,
-                            title: "ส่งงาน",
-                          },
-                          {
-                            id: 2,
-                            title: "รับคืน",
-                          },
-                        ],
-                        field
-                      )
-                    }
-                    defaultValue={obj?.dr_type_id}
-                  />
+                  {readOnly ? (
+                    <Text>{obj?.dr_type_name}</Text>
+                  ) : (
+                    <>
+                      <Controller
+                        name={`dr.${index}.dr_type_id`}
+                        control={control}
+                        render={({ field }) =>
+                          radioField(dr_type, field, {
+                            fieldId: "dr_type_id",
+                            fieldName: "dr_type_name",
+                            disabled: obj?.tg_trans_status_id === 3,
+                          })
+                        }
+                        defaultValue={obj?.dr_type_id}
+                        rules={{ required: true }}
+                      />
+                      {errors.dr && errors?.dr[index]?.dr_type_id && (
+                        <Text className="error">This field is required.</Text>
+                      )}
+                    </>
+                  )}
                 </Col>
               </Row>
               <Row className="col-2 mt-1 mb-1">
@@ -102,19 +122,24 @@ const Form = ({
                   <Text strong>Contact No. :</Text>
                 </Col>
                 <Col span={16}>
-                  <Controller
-                    name={`dr.${index}.dr_phone`}
-                    control={control}
-                    render={({ field }) =>
-                      InputField({
-                        fieldProps: {
-                          placeholder: "Phone No.",
-                          className: "w-100",
-                          ...field,
-                        },
-                      })
-                    }
-                  />
+                  {readOnly ? (
+                    <Text>{obj?.dr_phone_no}</Text>
+                  ) : (
+                    <Controller
+                      name={`dr.${index}.dr_phone_no`}
+                      control={control}
+                      render={({ field }) =>
+                        InputField({
+                          fieldProps: {
+                            placeholder: "Phone No.",
+                            className: "w-100",
+                            disabled: obj?.tg_trans_status_id === 3,
+                            ...field,
+                          },
+                        })
+                      }
+                    />
+                  )}
                 </Col>
               </Row>
               <Row className="col-2 mt-1 mb-1">
@@ -122,22 +147,60 @@ const Form = ({
                   <Text strong>Remark :</Text>
                 </Col>
                 <Col span={16}>
-                  <Controller
-                    name={`dr.${index}.dr_remark`}
-                    control={control}
-                    render={({ field }) =>
-                      TextAreaField({
-                        fieldProps: {
-                          placeholder: "Remark",
-                          className: "w-100",
-                          rows: 4,
-                          ...field,
-                        },
-                      })
-                    }
-                  />
+                  {readOnly ? (
+                    <Text className="pre-wrap">{obj?.dr_remark}</Text>
+                  ) : (
+                    <Controller
+                      name={`dr.${index}.dr_remark`}
+                      control={control}
+                      render={({ field }) =>
+                        TextAreaField({
+                          fieldProps: {
+                            placeholder: "Remark",
+                            className: "w-100",
+                            rows: 4,
+                            disabled: obj?.tg_trans_status_id === 3,
+                            ...field,
+                          },
+                        })
+                      }
+                    />
+                  )}
                 </Col>
               </Row>
+              <div
+                className="mt-2 pt-1"
+                style={{ borderTop: "1px solid #c0c0c0" }}
+              >
+                <Row className="col-2 mt-1 mb-1">
+                  <Col span={8}>
+                    <CustomLabel label="Cancel :" readOnly={readOnly} />
+                  </Col>
+                  <Col span={16}>
+                    {readOnly ? (
+                      <Text className="pre-wrap error" strong>
+                        {obj?.tg_trans_status_id === 3 ? "Canceled" : ""}
+                      </Text>
+                    ) : (
+                      <Controller
+                        name={`dr.${index}.tg_trans_status_id`}
+                        control={control}
+                        render={({ field: { value } }) => (
+                          <Checkbox
+                            checked={value === 3 ? true : false}
+                            onChange={(e) => {
+                              e.target.checked
+                                ? setValue(`dr.${index}.tg_trans_status_id`, 3)
+                                : setValue(`dr.${index}.tg_trans_status_id`, 1);
+                            }}
+                            defaultChecked={false}
+                          />
+                        )}
+                      />
+                    )}
+                  </Col>
+                </Row>
+              </div>
             </Col>
             <Col span={12}>
               <Row className="col-2 mt-1 mb-1">
@@ -149,23 +212,64 @@ const Form = ({
                   />
                 </Col>
                 <Col span={16}>
-                  <Controller
-                    name={`dr.${index}.so_detail_id`}
-                    control={control}
-                    render={({ field }) =>
-                      SelectField({
-                        fieldProps: {
-                          placeholder: "Select Item",
-                          allowClear: true,
-                          showSearch: true,
-                          ...field,
-                        },
-                        dataSource: soData,
-                        fieldId: "so_detail_id",
-                        fieldName: "item_no_name",
-                      })
-                    }
-                  />
+                  {readOnly ? (
+                    <Text className="pre-wrap">{obj?.item_no_name}</Text>
+                  ) : (
+                    <>
+                      <Controller
+                        name={`dr.${index}.so_detail_id`}
+                        control={control}
+                        render={({ field: { onChange, value } }) =>
+                          SelectField({
+                            fieldProps: {
+                              placeholder: "Select Item",
+                              allowClear: true,
+                              showSearch: true,
+                              value,
+                              disabled: obj?.tg_trans_status_id === 3,
+                              onChange: (val, row) => {
+                                console.log("row", row);
+                                onChange(val);
+                                setValue(
+                                  `dr.${index}.so_id`,
+
+                                  row?.obj?.so_id
+                                );
+                                setValue(
+                                  `dr.${index}.dr_qty`,
+
+                                  row?.obj?.tg_so_detail_qty_delivery
+                                );
+                                setValue(
+                                  `dr.${index}.dr_delivery_date`,
+                                  row?.obj?.so_detail_delivery_date
+                                );
+                                setValue(
+                                  `dr.${index}.dr_location_delivery`,
+                                  row?.obj?.dr_location_delivery
+                                );
+                                setValue(
+                                  `dr.${index}.so_no_description`,
+                                  row?.obj?.so_no_description
+                                );
+                                setValue(
+                                  `dr.${index}.customer_id`,
+                                  row?.obj?.customer_id
+                                );
+                              },
+                            },
+                            dataSource: soData,
+                            fieldId: "so_detail_id",
+                            fieldName: "so_no_item_qty_uom",
+                          })
+                        }
+                        rules={{ required: true }}
+                      />
+                      {errors.dr && errors?.dr[index]?.so_detail_id && (
+                        <Text className="error">This field is required.</Text>
+                      )}
+                    </>
+                  )}
                 </Col>
               </Row>
               <Row className="col-2 mt-1 mb-1">
@@ -176,7 +280,27 @@ const Form = ({
                     require={true}
                   />
                 </Col>
-                <Col span={16}>{<Text>{obj?.so_no || "-"}</Text>}</Col>
+                <Col span={16}>
+                  {readOnly ? (
+                    <Text className="pre-wrap">{obj?.so_no_description}</Text>
+                  ) : (
+                    <Controller
+                      name={`dr.${index}.so_no_description`}
+                      control={control}
+                      render={({ field }) =>
+                        InputField({
+                          fieldProps: {
+                            placeholder: "Phone No.",
+                            className: "w-100 disabled-input",
+                            disabled: true,
+                            ...field,
+                          },
+                        })
+                      }
+                    />
+                  )}
+                  {/* {<Text>{obj?.so_no_description || "-"}</Text>} */}
+                </Col>
               </Row>
               <Row className="col-2 mt-1 mb-1">
                 <Col span={8}>
@@ -195,24 +319,35 @@ const Form = ({
                   />
                 </Col>
                 <Col span={16}>
-                  <Controller
-                    name={`dr.${index}.dr_qty`}
-                    control={control}
-                    render={({ field }) =>
-                      SelectField({
-                        fieldProps: {
-                          placeholder: "Select Item",
-                          allowClear: true,
-                          showSearch: true,
-                          className: "w-50 mr-2",
-                          ...field,
-                        },
-                        dataSource: [],
-                        fieldId: "dr_qty",
-                        fieldName: "so_no",
-                      })
-                    }
-                  />
+                  {readOnly ? (
+                    <Text className="pre-wrap pd-right-2">
+                      {convertDigit(obj?.dr_qty, 3)}
+                    </Text>
+                  ) : (
+                    <>
+                      <Controller
+                        name={`dr.${index}.dr_qty`}
+                        control={control}
+                        render={({ field }) =>
+                          InputNumberField({
+                            fieldProps: {
+                              placeholder: "Delivery Qty.",
+                              className: "w-50 mr-2",
+                              min: 0,
+                              disabled: obj?.tg_trans_status_id === 3,
+                              ...getNumberFormat(3),
+                              ...field,
+                            },
+                          })
+                        }
+                        rules={{ required: true }}
+                      />
+
+                      {errors.dr && errors?.dr[index]?.dr_qty && (
+                        <Text className="error">This field is required.</Text>
+                      )}
+                    </>
+                  )}
                   <Text strong>{obj?.uom_no || "Unit"}</Text>
                 </Col>
               </Row>
@@ -225,36 +360,73 @@ const Form = ({
                   />
                 </Col>
                 <Col span={9}>
-                  <Controller
-                    name={`dr.${index}.dr_delivery_date`}
-                    control={control}
-                    render={({ field }) =>
-                      DatePickerField({
-                        fieldProps: {
-                          placeholder: "วัน / เดือน / ปี",
-                          format: "DD/MM/YYYY",
-                          className: "w-100",
-                          ...field,
-                        },
-                      })
-                    }
-                  />
+                  {readOnly ? (
+                    <Text className="pre-wrap pd-right-2">
+                      {obj?.dr_delivery_date}
+                    </Text>
+                  ) : (
+                    <>
+                      <Controller
+                        name={`dr.${index}.dr_delivery_date`}
+                        control={control}
+                        render={({ field: { value, onChange } }) =>
+                          DatePickerField({
+                            fieldProps: {
+                              placeholder: "วัน / เดือน / ปี",
+                              format: "DD/MM/YYYY",
+                              className: "w-100",
+                              disabled: obj?.tg_trans_status_id === 3,
+                              value: value ? moment(value, "DD/MM/YYYY") : null,
+                              onChange: (val) =>
+                                val
+                                  ? onChange(moment(val).format("DD/MM/YYYY"))
+                                  : null,
+                            },
+                          })
+                        }
+                        rules={{ required: true }}
+                      />
+                      {errors.dr && errors?.dr[index]?.dr_delivery_date && (
+                        <Text className="error">This field is required.</Text>
+                      )}
+                    </>
+                  )}
                 </Col>
                 <Col span={7}>
-                  <Controller
-                    name={`dr.${index}.dr_delivery_time`}
-                    control={control}
-                    render={({ field }) =>
-                      TimePickerField({
-                        fieldProps: {
-                          placeholder: "ชั่วโมง : นาที",
-                          format: "HH:mm",
-                          className: "w-100",
-                          ...field,
-                        },
-                      })
-                    }
-                  />
+                  {readOnly ? (
+                    <>
+                      <Text strong>เวลา : </Text>
+                      <Text className="pre-wrap">{obj?.dr_delivery_time}</Text>
+                    </>
+                  ) : (
+                    <>
+                      <Controller
+                        name={`dr.${index}.dr_delivery_time`}
+                        control={control}
+                        render={({ field: { value, onChange } }) =>
+                          TimePickerField({
+                            fieldProps: {
+                              placeholder: "ชั่วโมง : นาที",
+                              format: "HH:mm",
+                              className: "w-100",
+                              disabled: obj?.tg_trans_status_id === 3,
+                              value: value ? moment(value, "HH:mm:ss") : null,
+                              onChange: (val) =>
+                                val
+                                  ? onChange(moment(val).format("HH:mm:ss"))
+                                  : null,
+                            },
+                          })
+                        }
+                        defaultValue={"08:00:00"}
+                        rules={{ required: true }}
+                      />
+
+                      {errors.dr && errors?.dr[index]?.dr_delivery_time && (
+                        <Text className="error">This field is required.</Text>
+                      )}
+                    </>
+                  )}
                 </Col>
               </Row>
               <Row className="col-2 mt-1 mb-1">
@@ -266,20 +438,33 @@ const Form = ({
                   />
                 </Col>
                 <Col span={16}>
-                  <Controller
-                    name={`dr.${index}.dr_location_delivery`}
-                    control={control}
-                    render={({ field }) =>
-                      TextAreaField({
-                        fieldProps: {
-                          placeholder: "Delivery Location",
-                          className: "w-100",
-                          rows: 4,
-                          ...field,
-                        },
-                      })
-                    }
-                  />
+                  {readOnly ? (
+                    <Text className="pre-wrap">
+                      {obj?.dr_location_delivery}
+                    </Text>
+                  ) : (
+                    <>
+                      <Controller
+                        name={`dr.${index}.dr_location_delivery`}
+                        control={control}
+                        render={({ field }) =>
+                          TextAreaField({
+                            fieldProps: {
+                              placeholder: "Delivery Location",
+                              className: "w-100",
+                              rows: 4,
+                              disabled: obj?.tg_trans_status_id === 3,
+                              ...field,
+                            },
+                          })
+                        }
+                        rules={{ required: true }}
+                      />
+                      {errors.dr && errors?.dr[index]?.dr_location_delivery && (
+                        <Text className="error">This field is required.</Text>
+                      )}
+                    </>
+                  )}
                 </Col>
               </Row>
             </Col>

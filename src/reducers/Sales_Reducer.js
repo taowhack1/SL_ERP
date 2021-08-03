@@ -2,6 +2,7 @@
 
 import { UPDATE_FILTER } from "../actions/sales";
 import { CUSTOMER_SEARCH } from "../actions/sales/customerActions";
+import { SEARCH_DR } from "../actions/sales/drActions";
 import {
   GET_NPR_ITEM_LIST,
   GET_NPR_LIST,
@@ -21,6 +22,7 @@ import {
   GET_SO_BY_ID,
   SET_LOADING,
 } from "../actions/types";
+import dr from "../modules/sales/operations/dr";
 
 const inititalState = {
   loading: false,
@@ -156,6 +158,20 @@ export default (state = inititalState, action) => {
           search: {
             ...state.customer.search,
             ...action.payload,
+          },
+        },
+      };
+    case SEARCH_DR:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          dr: {
+            ...state.operations.dr,
+            search: {
+              ...state.operations.dr.search,
+              ...action.payload,
+            },
           },
         },
       };

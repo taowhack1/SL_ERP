@@ -1,6 +1,9 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { Table } from "antd";
+import Text from "antd/lib/typography/Text";
 import React from "react";
+import { useDispatch } from "react-redux";
+import useKeepLogs from "../../../logs/useKeepLogs";
 const columns = [
   {
     title: (
@@ -35,7 +38,7 @@ const columns = [
       </div>
     ),
     dataIndex: "so_no",
-    width: "10%",
+    width: "8%",
     ellipsis: true,
     align: "center",
     className: "tb-col-sm",
@@ -52,7 +55,9 @@ const columns = [
     ellipsis: false,
     align: "center",
     className: "tb-col-sm",
-    render: (val) => val,
+    render: (val, record) => (
+      <Text>{`${record.dr_delivery_date} - ${record.dr_delivery_time}`}</Text>
+    ),
   },
   {
     title: (
@@ -85,7 +90,7 @@ const columns = [
         <b>สถานะ</b>
       </div>
     ),
-    dataIndex: "dr_status_name",
+    dataIndex: "trans_status_name",
     width: "10%",
     ellipsis: true,
     align: "center",
@@ -107,8 +112,8 @@ const columns = [
   },
 ];
 
-const DRList = ({ loading, data = [] }) => {
-  console.log("DRList", data);
+const DRList = ({ loading, data = [], viewData }) => {
+  const keepLog = useKeepLogs();
   return (
     <>
       <Table
@@ -129,7 +134,10 @@ const DRList = ({ loading, data = [] }) => {
               //   .find("tr")
               //   .removeClass("selected-row");
               // $(e.target).closest("tr").addClass("selected-row");
-              // keepLog.keep_log_action(record.so_no);
+              if (["path", "svg", "P"].includes(e.target.tagName)) {
+                viewData(record.dr_id);
+                keepLog.keep_log_action(`Click ${record.dr_no}`);
+              }
               // dispatch(get_so_by_id(record.so_id, auth.user_name));
               // props.history.push({
               //   pathname: "/sales/orders/view/" + record.so_id,

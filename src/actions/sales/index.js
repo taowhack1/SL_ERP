@@ -39,7 +39,7 @@ export const get_so_list = (user_name) => (dispatch) => {
     console.log(res);
     dispatch({
       type: GET_SO_LIST,
-      payload: res.data[0],
+      payload: res.data,
     });
   });
 };

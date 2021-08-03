@@ -36,17 +36,24 @@ const DatePickerField = ({ fieldProps }) => {
   return <DatePicker {...fieldProps} />;
 };
 
-const radioField = (options, { onChange, value }) => {
+const radioField = (
+  options,
+  { onChange, value },
+  fieldProps = { fieldId: "id", fieldName: "title", disabled: false }
+) => {
+  console.log("radio options", options);
+  const { fieldId = "id", fieldName = "title", disabled } = fieldProps;
   return (
     <Radio.Group value={value} onChange={(e) => onChange(e.target.value)}>
       {options.length > 0 &&
         options.map((obj, index) => (
           <Radio
             style={{ display: "block", height: 30, lineHeight: "30px" }}
-            value={obj.id}
+            value={obj[fieldId]}
             key={index}
+            disabled={disabled}
           >
-            {obj.title}
+            {obj[fieldName]}
           </Radio>
         ))}
     </Radio.Group>

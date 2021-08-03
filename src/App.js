@@ -115,9 +115,7 @@ import CompareFormulaMain from "./modules/sales/reporting/compareFormula";
 import NPRRoute from "./modules/sales/operations/npr/NPRRoute";
 import Estimate from "./modules/sales/operations/estimate/Estimate";
 import EstimateForm from "./modules/sales/operations/estimate/EstimateForm";
-import DeliveryOrder from "./modules/sales/operations/deliveryoder/DeliveryOrder";
-import DeliveryOrderForm from "./modules/sales/operations/deliveryoder/DeliveryOrderForm";
-import DeliveryRouter from "./modules/sales/operations/deliveryoder/DeliveryRouter";
+import DeliveryRouter from "./modules/sales/operations/do/DeliveryRouter";
 const initialContext = {
   log_detail: log_detail,
   authorize: {

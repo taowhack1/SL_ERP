@@ -11,3 +11,4 @@ export const TabOrderContext = React.createContext();
 export const TabContext = React.createContext();
 export const PageContext = React.createContext();
 export const ProductionContext = React.createContext();
+export const DOContext = React.createContext();
