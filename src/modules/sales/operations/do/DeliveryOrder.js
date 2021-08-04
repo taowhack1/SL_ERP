@@ -13,6 +13,7 @@ import Search from "../../../../components/Search";
 import { getDO, getDRRefList } from "../../../../actions/sales/doActions";
 import { EllipsisOutlined, SearchOutlined } from "@ant-design/icons";
 import { getStatusByName } from "../../../../include/js/function_main";
+import Authorize from "../../../system/Authorize";
 const columnsDR = [
   {
     title: (
@@ -142,7 +143,8 @@ const columnsDo = [
 const DeliveryOrder = () => {
   const keepLog = useKeepLogs();
   const history = useHistory();
-  const dispatch = useDispatch();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const { user_name } = useSelector((state) => state.auth.authData);
   const { loading } = useSelector((state) => state.sales);
   const [stateDR, setStateDR] = useState([]);
@@ -181,6 +183,7 @@ const DeliveryOrder = () => {
     // dispatch(get_so_by_id(record.so_id, user_name));
     const { dr_id, customer_id } = record;
     if (!dr_id) return false;
+    keepLog.keep_log_action(`Click Create DO Form DR ID : ${dr_id}`);
     history.push("/sales/operation/do/create/", { dr_id, customer_id });
   };
 

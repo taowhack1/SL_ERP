@@ -16,6 +16,8 @@ import {
   sortData,
   validateFormHead,
 } from "../../../../include/js/function_main";
+import useKeepLogs from "../../../logs/useKeepLogs";
+import Authorize from "../../../system/Authorize";
 import Form from "./form/Form";
 const initialState = {
   do_id: null,
@@ -48,7 +50,11 @@ const initialState = {
   ],
 };
 const DeliveryOrderForm = (props) => {
+  const keepLog = useKeepLogs();
   const history = useHistory();
+  const authorize = Authorize();
+  authorize.check_authorize();
+
   const { id } = useParams();
   const { dr_id, customer_id: lo_customer_id } = props?.location?.state || {
     dr_id: null,
@@ -90,6 +96,7 @@ const DeliveryOrderForm = (props) => {
       discard: "/sales/operation/do",
       save: "function",
       onSave: async () => {
+        keepLog.keep_log_action("Click Save DO");
         setLoading(true);
         const validateHead = validateFormHead(stateDO, [
           "customer_id",
@@ -102,8 +109,11 @@ const DeliveryOrderForm = (props) => {
 
           const resp = await saveDO(saveData);
           if (resp.success) {
+            keepLog.keep_log_action("Save DO Success");
             message.success("Save Success.");
             history.push(`/sales/operation/do/view/${resp.data.do_id}`);
+          } else {
+            keepLog.keep_log_action("Save DO Fail");
           }
         } else {
           message.warning("Plase fill your form completely.");

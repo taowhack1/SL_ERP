@@ -2,6 +2,8 @@ import { Button, message } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import React, { useContext, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 import { reset } from "redux-form";
 import Swal from "sweetalert2";
 import {
@@ -11,6 +13,8 @@ import {
   saveDR,
 } from "../../../../../actions/sales/drActions";
 import { AppContext } from "../../../../../include/js/context";
+import useKeepLogs from "../../../../logs/useKeepLogs";
+import Authorize from "../../../../system/Authorize";
 import Form from "./Form";
 
 const initialState = {
@@ -36,7 +40,9 @@ const initialState = {
 };
 let readOnly = false;
 const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
-  console.log("PROPS : ", visible, onClose, dr_id, so_detail_id);
+  const keepLog = useKeepLogs();
+  const authorize = Authorize();
+  authorize.check_authorize();
   const {
     auth: { user_name },
   } = useContext(AppContext);
@@ -58,6 +64,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
   });
 
   const onSubmit = async (data) => {
+    keepLog.keep_log_action(`Click Save DR`);
     setLoading(true);
     const hide = message.loading("Action in progress....", 0);
     const resp = await saveDR(data.dr);
@@ -71,6 +78,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
         confirmButtonText: `Back to Home`,
         cancelButtonText: `Stay here`,
       }).then((result) => {
+        keepLog.keep_log_action(`Save DR Success`);
         if (result.isConfirmed) {
           onClose();
         } else {
@@ -79,6 +87,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
         }
       });
     } else {
+      keepLog.keep_log_action(`Save DR Error`);
       message.success({
         content: `Error ! ${resp.message}`,
         duration: 6,

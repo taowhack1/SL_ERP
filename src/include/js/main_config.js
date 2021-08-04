@@ -11,7 +11,7 @@ const header_config = {
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 4 * 1000, //2*1000ms
+  timeout: 20 * 1000, //2*1000ms
 };
 const header_config_form = {
   headers: {

@@ -93,7 +93,7 @@ export const get_so_by_id = (id, user_name) => async (dispatch) => {
 
 export const get_sale_master_data = () => (dispatch) => {
   let master = {};
-  axios
+  return axios
     .get(api_get_select_list_customers, header_config)
     .then((res) => {
       master.customers = res.data[0];
@@ -340,10 +340,10 @@ const getNPRtoQN = () => {
     return { success: false, data: {}, message: error };
   }
 };
-const getSalesType = () => {
+const getSalesType = async () => {
   console.log("getSalesType");
   try {
-    return axios
+    return await axios
       .get(`${apiSalesType}`, header_config)
       .then((resp) => {
         if (resp.status === 200) {

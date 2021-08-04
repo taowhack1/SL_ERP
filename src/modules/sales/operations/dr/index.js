@@ -44,16 +44,15 @@ const DeliveryRequisition = (props) => {
     !modal.visible && getData();
   }, [modal.visible]);
 
-  const onClose = useCallback(
-    () =>
-      setModal((prev) => ({
-        ...prev,
-        visible: false,
-        dr_id: null,
-        so_detail_id: null,
-      })),
-    [setModal]
-  );
+  const onClose = useCallback(() => {
+    setModal((prev) => ({
+      ...prev,
+      visible: false,
+      dr_id: null,
+      so_detail_id: null,
+    }));
+    keepLog.keep_log_action("Close Modal DR");
+  }, [setModal]);
   const [loading, setLoading] = useState(false);
 
   const config = React.useMemo(

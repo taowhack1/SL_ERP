@@ -129,21 +129,10 @@ const DRList = ({ loading, data = [], viewData }) => {
         onRow={(record, rowIndex) => {
           return {
             onClick: (e) => {
-              // setRowClick(true);
-              // $(e.target)
-              //   .closest("tbody")
-              //   .find("tr")
-              //   .removeClass("selected-row");
-              // $(e.target).closest("tr").addClass("selected-row");
               if (["path", "svg", "P"].includes(e.target.tagName)) {
                 viewData(record.dr_id);
                 keepLog.keep_log_action(`Click ${record.dr_no}`);
               }
-              // dispatch(get_so_by_id(record.so_id, auth.user_name));
-              // props.history.push({
-              //   pathname: "/sales/orders/view/" + record.so_id,
-              //   state: record,
-              // });
             },
           };
         }}

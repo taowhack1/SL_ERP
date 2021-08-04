@@ -514,8 +514,6 @@ const SaleOrderCreate = (props) => {
             />
           </Col>
           <Col span={2}></Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
               <span className="require">* </span>Description :
@@ -533,6 +531,27 @@ const SaleOrderCreate = (props) => {
               }
               value={data_head.so_description}
               placeholder="Description"
+            />
+          </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong className="pd-left-1">
+              PO No. :
+            </Text>
+          </Col>
+
+          <Col span={8}>
+            <Input
+              name="so_customer_po_no"
+              onChange={(e) =>
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: { so_customer_po_no: e.target.value },
+                })
+              }
+              value={data_head.so_customer_po_no}
+              placeholder="PO No."
             />
           </Col>
           <Col span={2}></Col>

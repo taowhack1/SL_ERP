@@ -94,7 +94,7 @@ const getMasterDataItem = (user, setLoading, auth) => async (dispatch) => {
     );
     const get_shelf = axios.get(api_shelf, header_config);
     const get_item_control = axios.get(api_get_item_control, header_config);
-    Promise.allSettled([
+    await Promise.allSettled([
       get_type,
       get_categoty,
       get_uom,

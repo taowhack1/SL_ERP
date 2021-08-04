@@ -138,11 +138,16 @@ const SaleOrder = (props) => {
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   useEffect(() => {
-    dispatch(get_sale_master_data());
-    dispatch(reset_comments());
-    dispatch(get_quotation_list(auth.user_name));
-    dispatch(get_so_list(auth.user_name));
-    dispatch(getMasterDataItem());
+    setLoading(true);
+    const getData = async () => {
+      await dispatch(get_sale_master_data());
+      await dispatch(reset_comments());
+      await dispatch(get_quotation_list(auth.user_name));
+      await dispatch(get_so_list(auth.user_name));
+      await dispatch(getMasterDataItem());
+      setLoading(false);
+    };
+    getData();
   }, []);
 
   const { so_list, qn_ref } = useSelector((state) => state.sales.so);
@@ -171,6 +176,7 @@ const SaleOrder = (props) => {
     },
     onSearch: (value) => {
       console.log(value);
+
       dispatch(updateSOFilter({ keyword: value }));
     },
     searchBar: (
@@ -239,7 +245,9 @@ const SaleOrder = (props) => {
       dr_id: null,
       so_detail_id: null,
     }));
+    setLoading(true);
     dispatch(get_so_list(auth.user_name));
+    setLoading(false);
   }, [setModal]);
   const onOpen = useCallback(
     (so_detail_id) =>
@@ -340,31 +348,31 @@ const SaleOrder = (props) => {
         className: "tb-col-sm",
         render: (val, row) => val,
       },
-      {
-        title: (
-          <div className="text-center">
-            <EllipsisOutlined />
-          </div>
-        ),
-        dataIndex: "so_detail_id",
-        align: "center",
-        width: "8%",
-        className: "tb-col-sm",
-        render: (val, row) =>
-          row?.button_create_dr ? (
-            <Popconfirm
-              title="Do you want do create Delivery Request ?."
-              onConfirm={() => openDR(val)}
-              className="cursor"
-            >
-              <Button size="small" className="primary">
-                Open DR
-              </Button>
-            </Popconfirm>
-          ) : (
-            ""
-          ),
-      },
+      // {
+      //   title: (
+      //     <div className="text-center">
+      //       <EllipsisOutlined />
+      //     </div>
+      //   ),
+      //   dataIndex: "so_detail_id",
+      //   align: "center",
+      //   width: "8%",
+      //   className: "tb-col-sm",
+      //   render: (val, row) =>
+      //     row?.button_create_dr ? (
+      //       <Popconfirm
+      //         title="Do you want do create Delivery Request ?."
+      //         onConfirm={() => openDR(val)}
+      //         className="cursor"
+      //       >
+      //         <Button size="small" className="primary">
+      //           Open DR
+      //         </Button>
+      //       </Popconfirm>
+      //     ) : (
+      //       ""
+      //     ),
+      // },
     ];
     return (
       <>
@@ -394,7 +402,7 @@ const SaleOrder = (props) => {
               size="small"
               bordered
               rowClassName="row-pointer"
-              // expandable={{ expandedRowRender }}
+              expandable={{ expandedRowRender }}
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

@@ -287,6 +287,14 @@ const SaleOrderView = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
+            <Text strong>PO No. :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Text className="text-view">{data_head.so_customer_po_no}</Text>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}>
             <Text strong>Description :</Text>
           </Col>
 
