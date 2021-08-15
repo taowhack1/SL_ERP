@@ -107,7 +107,7 @@ const FormLeft = (props) => {
                     row.data.machine_cost_center_description,
                 })
               }
-              value={machine_id}
+              value={machine_id || null}
             />
           </Col>
         </Row>
@@ -126,7 +126,7 @@ const FormLeft = (props) => {
               placeholder={"Plan Date"}
               className="full-width"
               format={"DD/MM/YYYY"}
-              value={plan_job_date ? moment(plan_job_date, "DD/MM/YYYY") : ""}
+              value={plan_job_date ? moment(plan_job_date, "DD/MM/YYYY") : null}
               allowClear={false}
               onChange={(val) =>
                 onChange({
@@ -143,7 +143,11 @@ const FormLeft = (props) => {
               placeholder={"Hour:minute"}
               className="full-width"
               format={"HH:mm"}
-              value={moment(plan_job_plan_time, "HH:mm:ss")}
+              value={
+                plan_job_plan_time
+                  ? moment(plan_job_plan_time, "HH:mm:ss")
+                  : null
+              }
               onChange={(val) =>
                 onChange({ plan_job_plan_time: moment(val).format("HH:mm:ss") })
               }
@@ -161,7 +165,7 @@ const FormLeft = (props) => {
               placeholder={"Amount of worker"}
               className="full-width"
               min={0}
-              value={plan_job_plan_worker}
+              value={plan_job_plan_worker || 0}
               onChange={(val) => onChange({ plan_job_plan_worker: val })}
             />
           </Col>

@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table, Space, Radio, Button, Tag, Popconfirm } from "antd";
+import { Row, Col, Table, Space, Radio, Button, Popconfirm } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getSalesOrder,
   get_quotation_list,
   get_sale_master_data,
   get_so_by_id,
   get_so_list,
-  reset_so,
   updateSOFilter,
 } from "../../actions/sales";
 import { reset_comments } from "../../actions/comment&log";
@@ -19,7 +19,7 @@ import useKeepLogs from "../logs/useKeepLogs";
 import Text from "antd/lib/typography/Text";
 import DRForm from "./operations/dr/form/DRForm";
 import { convertDigit } from "../../include/js/main_config";
-import { getSelfStepStatus } from "../../include/js/function_main";
+import { getSelfStepStatus, sortData } from "../../include/js/function_main";
 import CustomTable from "../../components/CustomTable";
 import { EllipsisOutlined } from "@ant-design/icons";
 
@@ -127,7 +127,9 @@ const so_columns = ({ onOpen }) => [
     },
   },
 ];
-
+const keepData = {
+  so: [],
+};
 const SaleOrder = (props) => {
   const keepLog = useKeepLogs();
   const authorize = Authorize();
@@ -137,21 +139,28 @@ const SaleOrder = (props) => {
   const { filter } = useSelector((state) => state.sales.so);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
-  useEffect(() => {
+  const getSOList = async () => {
     setLoading(true);
-    const getData = async () => {
-      await dispatch(get_sale_master_data());
-      await dispatch(reset_comments());
-      await dispatch(get_quotation_list(auth.user_name));
-      await dispatch(get_so_list(auth.user_name));
-      await dispatch(getMasterDataItem());
-      setLoading(false);
+    const resp = await getSalesOrder(auth.user_name);
+    if (resp.success) {
+      keepData.so = sortData(resp.data);
+      setState(sortData(resp.data));
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    dispatch(get_sale_master_data());
+    dispatch(reset_comments());
+    dispatch(get_quotation_list(auth.user_name));
+    dispatch(getMasterDataItem());
+    getSOList();
+    return () => {
+      keepData.so = [];
     };
-    getData();
   }, []);
 
-  const { so_list, qn_ref } = useSelector((state) => state.sales.so);
-  const [state, setState] = useState(so_list);
+  const { qn_ref } = useSelector((state) => state.sales.so);
+  const [state, setState] = useState(keepData.so);
   const [loading, setLoading] = useState(true);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
@@ -212,32 +221,38 @@ const SaleOrder = (props) => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    let filterData =
-      filter.salesType === 3
-        ? so_list
-        : so_list?.filter((obj) => obj.so_type_id === filter.salesType);
-    filterData = !filter.keyword
-      ? filterData
-      : filterData?.filter(
-          (obj) =>
-            obj?.so_no?.indexOf(filter.keyword) >= 0 ||
-            obj?.qn_no?.indexOf(filter.keyword) >= 0 ||
-            obj?.customer_no_name?.indexOf(filter.keyword) >= 0 ||
-            obj?.so_created_by_no_name?.indexOf(filter.keyword) >= 0 ||
-            obj?.so_created?.indexOf(filter.keyword) >= 0 ||
-            obj?.so_description?.indexOf(filter.keyword) >= 0
-        );
-    setState(filterData);
-
-    setLoading(false);
-  }, [filter, so_list]);
+    // SEARCH , FILTER
+    const filterData = () => {
+      console.log("SEARCHING...");
+      setLoading(true);
+      let filterData =
+        filter.salesType === 3
+          ? keepData.so
+          : keepData.so?.filter((obj) => obj.so_type_id === filter.salesType);
+      filterData = !filter.keyword
+        ? filterData
+        : filterData?.filter(
+            (obj) =>
+              obj?.so_no?.indexOf(filter.keyword) >= 0 ||
+              obj?.qn_no?.indexOf(filter.keyword) >= 0 ||
+              obj?.customer_no_name?.indexOf(filter.keyword) >= 0 ||
+              obj?.so_created_by_no_name?.indexOf(filter.keyword) >= 0 ||
+              obj?.so_created?.indexOf(filter.keyword) >= 0 ||
+              obj?.so_description?.indexOf(filter.keyword) >= 0
+          );
+      setState(filterData);
+      setLoading(false);
+    };
+    keepData.so.length && filterData();
+  }, [filter, keepData.so]);
 
   const [modal, setModal] = useState({
     visible: false,
     dr_id: null,
     so_detail_id: null,
   });
+
+  // Modal Delivery Request
   const onClose = useCallback(() => {
     setModal((prev) => ({
       ...prev,
@@ -245,10 +260,9 @@ const SaleOrder = (props) => {
       dr_id: null,
       so_detail_id: null,
     }));
-    setLoading(true);
-    dispatch(get_so_list(auth.user_name));
-    setLoading(false);
-  }, [setModal]);
+    getSOList();
+  }, [setModal, getSOList]);
+
   const onOpen = useCallback(
     (so_detail_id) =>
       setModal((prev) => ({
@@ -259,6 +273,7 @@ const SaleOrder = (props) => {
       })),
     [setModal]
   );
+
   const modalConfig = React.useMemo(
     () => ({
       ...modal,
@@ -267,6 +282,7 @@ const SaleOrder = (props) => {
     [modal.visible, onClose]
   );
 
+  // Sales Order Detail Table
   const expandedRowRender = (record, index) => {
     const columns = ({ openDR }) => [
       {
@@ -308,7 +324,7 @@ const SaleOrder = (props) => {
         ),
         dataIndex: "uom_no",
         align: "left",
-        width: "10%",
+        width: "7%",
         className: "tb-col-sm",
         render: (val, row) => val,
       },
@@ -339,6 +355,18 @@ const SaleOrder = (props) => {
       {
         title: (
           <div className="text-center">
+            <Text>ยอดค้างส่ง</Text>
+          </div>
+        ),
+        dataIndex: "tg_so_detail_qty_balance",
+        align: "right",
+        width: "10%",
+        className: "tb-col-sm",
+        render: (val, row) => convertDigit(val || 0, 2),
+      },
+      {
+        title: (
+          <div className="text-center">
             <Text>Delivery Date</Text>
           </div>
         ),
@@ -348,31 +376,43 @@ const SaleOrder = (props) => {
         className: "tb-col-sm",
         render: (val, row) => val,
       },
-      // {
-      //   title: (
-      //     <div className="text-center">
-      //       <EllipsisOutlined />
-      //     </div>
-      //   ),
-      //   dataIndex: "so_detail_id",
-      //   align: "center",
-      //   width: "8%",
-      //   className: "tb-col-sm",
-      //   render: (val, row) =>
-      //     row?.button_create_dr ? (
-      //       <Popconfirm
-      //         title="Do you want do create Delivery Request ?."
-      //         onConfirm={() => openDR(val)}
-      //         className="cursor"
-      //       >
-      //         <Button size="small" className="primary">
-      //           Open DR
-      //         </Button>
-      //       </Popconfirm>
-      //     ) : (
-      //       ""
-      //     ),
-      // },
+      {
+        title: (
+          <div className="text-center">
+            <Text>Delivery Status</Text>
+          </div>
+        ),
+        dataIndex: "delivery_trans_status_name",
+        align: "center",
+        width: "15%",
+        className: "tb-col-sm",
+        render: (val, row) => val,
+      },
+      {
+        title: (
+          <div className="text-center">
+            <EllipsisOutlined />
+          </div>
+        ),
+        dataIndex: "so_detail_id",
+        align: "center",
+        width: "8%",
+        className: "tb-col-sm",
+        render: (val, row) =>
+          row?.button_create_dr ? (
+            <Popconfirm
+              title="Do you want do create Delivery Request ?."
+              onConfirm={() => openDR(val)}
+              className="cursor"
+            >
+              <Button size="small" className="primary">
+                Open DR
+              </Button>
+            </Popconfirm>
+          ) : (
+            ""
+          ),
+      },
     ];
     return (
       <>
@@ -387,7 +427,8 @@ const SaleOrder = (props) => {
       </>
     );
   };
-
+  console.log("state : ", state);
+  console.log("loading", loading);
   return (
     <div>
       <MainLayout {...config}>

@@ -5,7 +5,7 @@ import {
   EllipsisOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Row } from "antd";
+import { Button, Col, Input, Row } from "antd";
 import React, { useEffect } from "react";
 import {
   addressColumns,
@@ -70,7 +70,7 @@ const CustomerAddressTab = ({
                   <Col span={1} className="text-center">
                     {key + 1}
                   </Col>
-                  <Col span={6} className="text-left">
+                  <Col span={3} className="text-left">
                     <CustomSelect
                       data={addressData}
                       style={{ width: "100%" }}
@@ -90,7 +90,7 @@ const CustomerAddressTab = ({
                       }}
                     />
                   </Col>
-                  <Col span={16} className="text-left">
+                  <Col span={9} className="text-left">
                     <TextArea
                       name="customer_detail_address"
                       autoSize={{ minRows: 1, maxRows: 2 }}
@@ -102,6 +102,30 @@ const CustomerAddressTab = ({
                         });
                       }}
                     ></TextArea>
+                  </Col>
+                  <Col span={6} className="text-left">
+                    <Input
+                      name="customer_detail_name"
+                      placeholder="Contact Name"
+                      value={line.customer_detail_name}
+                      onChange={(e) => {
+                        onChangeValue(line.id, {
+                          customer_detail_name: e.target.value,
+                        });
+                      }}
+                    />
+                  </Col>
+                  <Col span={4} className="text-left">
+                    <Input
+                      name="customer_detail_mobile"
+                      placeholder="Contact Phone No."
+                      value={line.customer_detail_mobile}
+                      onChange={(e) => {
+                        onChangeValue(line.id, {
+                          customer_detail_mobile: e.target.value,
+                        });
+                      }}
+                    />
                   </Col>
                   {/* <Col span={4} className="text-center">
                     <Switch
@@ -147,12 +171,22 @@ const CustomerAddressTab = ({
                   <Col span={1} className="text-center">
                     {key + 1}
                   </Col>
-                  <Col span={6} className="text-left">
-                    <Text>{line.address_type_name}</Text>
+                  <Col span={3} className="text-left">
+                    <Text>{line?.address_type_name}</Text>
                   </Col>
-                  <Col span={16} className="text-left">
+                  <Col span={9} className="text-left">
                     <Text className="pre-wrap">
-                      {line.customer_detail_address}
+                      {line?.customer_detail_address}
+                    </Text>
+                  </Col>
+                  <Col span={6} className="text-left">
+                    <Text className="pre-wrap">
+                      {line?.customer_detail_name}
+                    </Text>
+                  </Col>
+                  <Col span={4} className="text-left">
+                    <Text className="pre-wrap">
+                      {line?.customer_detail_mobile}
                     </Text>
                   </Col>
                   {/* <Col span={4} className="text-center">

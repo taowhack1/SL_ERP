@@ -1,4 +1,4 @@
-import { Col, DatePicker, Row, TimePicker } from "antd";
+import { Col, DatePicker, Input, Row, TimePicker } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useContext } from "react";
 import CustomLabel from "../../../../../components/CustomLabel";
@@ -21,6 +21,7 @@ const Head = () => {
     customer_no_name,
     customer_id,
     do_location_delivery,
+    do_car_registration,
     tg_trans_status_id,
     do_delivery_date,
     do_delivery_time,
@@ -162,6 +163,28 @@ const Head = () => {
           </Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={8}>
+              <CustomLabel label="ทะเบียนรถ :" require readOnly={readOnly} />
+            </Col>
+            <Col span={16}>
+              {readOnly ? (
+                <Text className="pre-wrap">{do_car_registration}</Text>
+              ) : (
+                <>
+                  <Input
+                    name="do_car_registration"
+                    placeholder="ทะเบียนรถ ตัวอย่าง. กก 9999 , ขข 8888"
+                    rows={4}
+                    value={do_car_registration}
+                    onChange={(e) =>
+                      onChange({ do_car_registration: e.target.value })
+                    }
+                  />
+                </>
+              )}
+            </Col>
+          </Row>
+          <Row className="col-2 row-margin-vertical">
+            <Col span={8}>
               <CustomLabel
                 label="สถานที่จัดส่ง :"
                 require
@@ -199,7 +222,7 @@ const Head = () => {
                 <>
                   <TextArea
                     name="do_remark"
-                    placeholder="Delivery Location"
+                    placeholder="Remark"
                     rows={4}
                     value={do_remark}
                     onChange={(e) => onChange({ do_remark: e.target.value })}

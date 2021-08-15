@@ -1,6 +1,7 @@
 import {
   getRefStatus,
   getSelfStepStatus,
+  getStatusByName,
 } from "../../../include/js/function_main";
 import { convertDigit } from "../../../include/js/main_config";
 
@@ -67,7 +68,7 @@ export const issue_columns = [
     },
     ellipsis: true,
     render: (value, record, index) => {
-      return getSelfStepStatus(record);
+      return getStatusByName(value);
     },
   },
   {
@@ -82,7 +83,7 @@ export const issue_columns = [
     },
     ellipsis: true,
     render: (value, record, index) => {
-      return getRefStatus(record);
+      return getStatusByName(value);
     },
   },
 ];

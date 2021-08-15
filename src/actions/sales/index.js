@@ -26,6 +26,7 @@ import { message } from "antd";
 import { sortData } from "../../include/js/function_main";
 const apiNPRListToQN = `/sales/npr/ref/qn`;
 const apiSalesType = `/list/so_type`;
+const apiCloseSO = `/sales/so/status`;
 const UPDATE_FILTER = "UPDATE_FILTER";
 
 export const get_quotation_list = (user_name) => (dispatch) => {
@@ -43,6 +44,32 @@ export const get_so_list = (user_name) => async (dispatch) => {
     });
   });
 };
+
+const getSalesOrder = (user_name) => {
+  try {
+    return axios
+      .get(`${api_so}/all/${user_name}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+
 export const get_qn_open_so = () => (dispatch) => {
   axios.get(api_get_qn_open_so, header_config).then((res) => {
     dispatch({
@@ -378,4 +405,68 @@ const updateSOFilter = (payload) => (dispatch) => {
   }
 };
 
-export { getNPRtoQN, getSalesType, updateSOFilter, UPDATE_FILTER };
+const closeSO = (so_id, data) => {
+  try {
+    if (!so_id || !data)
+      return { success: false, data: {}, message: "Missing so_id" };
+    return axios
+      .put(`${apiCloseSO}/${so_id}`, data, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: {}, message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
+
+const getCustomerAddress = (customer_id) => {
+  const apiGetCustomerAddr = `/sales/customer`;
+  try {
+    if (!customer_id)
+      return { success: false, data: [], message: "Missing customer_id" };
+    return axios
+      .get(`${apiGetCustomerAddr}/${customer_id}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("getCustomerAddress resp.data", resp.data);
+          const addr = resp?.data[0]?.customer_detail || [];
+          return { success: true, data: sortData(addr), message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+
+export {
+  getNPRtoQN,
+  getSalesType,
+  updateSOFilter,
+  UPDATE_FILTER,
+  getSalesOrder,
+  closeSO,
+  getCustomerAddress,
+};

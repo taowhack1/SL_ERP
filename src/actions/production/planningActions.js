@@ -7,6 +7,7 @@ import { header_config } from "../../include/js/main_config";
 
 const apiPlanCalendar = `/production/plan_job/calendar`;
 const apiAllPlanByMRPID = `/production/plan_job/all`;
+const apigetAllPlanByJobOrderID = `/production/plan_job/job_order`;
 const apiSavePlanJob = `/production/plan_job`;
 const getPlanningCalendarData = () => (dispatch) => {
   axios
@@ -40,7 +41,7 @@ const getOtherPlanRef = (mrp_id) => {
         if (error?.response) {
           console.error(error.response);
         }
-        return { success: false, data: [], message: error };
+        return { success: false, data: {}, message: error };
       });
   } catch (error) {
     console.log(error);
@@ -86,4 +87,35 @@ const savePlanJob = (data) => {
   }
 };
 
-export { getPlanningCalendarData, getOtherPlanRef, savePlanJob };
+const getPlanByJobOrderID = (id) => {
+  try {
+    if (!id) return { success: false, data: [], message: "Missing ID." };
+    return axios
+      .get(`${apigetAllPlanByJobOrderID}/${id}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+
+export {
+  getPlanningCalendarData,
+  getOtherPlanRef,
+  savePlanJob,
+  getPlanByJobOrderID,
+};

@@ -116,6 +116,7 @@ import NPRRoute from "./modules/sales/operations/npr/NPRRoute";
 import Estimate from "./modules/sales/operations/estimate/Estimate";
 import EstimateForm from "./modules/sales/operations/estimate/EstimateForm";
 import DeliveryRouter from "./modules/sales/operations/do/DeliveryRouter";
+import JobOrderRoute from "./modules/production/Operation/jobOrder/JobOrderRoute";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -549,6 +550,9 @@ const App = (props) => {
             />
             {/* </PageLayout> */}
 
+            <Route path="/production/operations/job_order">
+              <JobOrderRoute />
+            </Route>
             {/* PRODUCTION MASTER DATA */}
             <Route exact path="/production/work_center">
               <WorkCenter />

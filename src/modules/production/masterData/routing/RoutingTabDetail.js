@@ -39,15 +39,6 @@ const RoutingTabDetail = ({
       },
     });
   };
-  // const onChangeValue = (rowId, data) => {
-  //   detailDispatch({
-  //     type: "CHANGE_DETAIL_VALUE",
-  //     payload: {
-  //       id: rowId,
-  //       data: data,
-  //     },
-  //   });
-  // };
   const onChangeValue = (rowId, data) => {
     console.log("onChange", routing_type_id, rowId, data);
     if (triggerHead) {

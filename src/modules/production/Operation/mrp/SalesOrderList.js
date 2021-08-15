@@ -127,7 +127,7 @@ const SalesOrderList = () => {
           dataSource={sortData(soList)}
           expandable={{ expandedRowRender }}
           loading={false}
-          rowKey={"so_id"}
+          rowKey={"id"}
           size="small"
           rowClassName="row-pointer"
           pagination={{ pageSize: 15 }}

@@ -41,6 +41,7 @@ import MainLayoutLoading from "../../../components/MainLayoutLoading";
 import DetailLoading from "../../../components/DetailLoading";
 import { mainReducer } from "../../../include/reducer";
 import { CalculatorOutlined } from "@ant-design/icons";
+import { getAllMachine } from "../../../actions/production/machineActions";
 
 const { Text } = Typography;
 const initialState = {
@@ -77,6 +78,7 @@ const MRPCreate = (props) => {
     });
     dispatch(getAllItems());
     dispatch(getSOReference());
+    dispatch(getAllMachine());
     stateDispatch({
       type: "SET_DATA_OBJECT",
       payload: data

@@ -73,7 +73,7 @@ const PRView = (props) => {
     ],
     search: false,
     buttonAction: [
-      data_head.button_edit && "Edit",
+      "Edit",
       data_head.button_confirm && "Confirm",
       data_head.button_approve && "Approve",
       data_head.button_reject && "Reject",

@@ -19,7 +19,6 @@ import {
   convertDigit,
   getNumberFormat,
 } from "../../../../../include/js/main_config";
-import { getDRType } from "../../../../../actions/sales/drActions";
 const Form = ({
   formArray: { fields },
   form: {
@@ -27,15 +26,18 @@ const Form = ({
     register,
     setValue,
     formState: { errors },
+    watch,
   },
   readOnly,
   soData,
-  data: { dr_type },
+  data: { dr_type, customerLocation },
+  getCustomerLocation,
 }) => {
   const {
     auth: { user_name, employee_no_name_eng },
   } = useContext(AppContext);
-
+  const { so_detail_id } = watch("dr.0");
+  console.log("watch so_detail_id", so_detail_id);
   return (
     <>
       {fields.map((obj, index) => (
@@ -50,6 +52,16 @@ const Form = ({
             <input {...register(`dr.${index}.tg_trans_close_id`)} />
             <input {...register(`dr.${index}.commit`)} />
           </div>
+          {readOnly && (
+            <div className="under-line text-center pb-1">
+              {obj.tg_trans_status_id === 3 ? (
+                <h2 className="error">เอกสารนี้ถูกยกเลิก</h2>
+              ) : (
+                <h2 className="success">กำลังดำเนินการส่งของ</h2>
+              )}
+            </div>
+          )}
+
           <Row gutter={[24, 8]} className="col-2 row-margin-vertical">
             <Col span={12} className="col-border-right">
               <Row className="col-2 mt-1 mb-1">
@@ -114,7 +126,7 @@ const Form = ({
                   )}
                 </Col>
               </Row>
-              <Row className="col-2 mt-1 mb-1">
+              {/* <Row className="col-2 mt-1 mb-1">
                 <Col span={8}>
                   <Text strong>Contact No. :</Text>
                 </Col>
@@ -138,7 +150,7 @@ const Form = ({
                     />
                   )}
                 </Col>
-              </Row>
+              </Row> */}
               <Row className="col-2 mt-1 mb-1">
                 <Col span={8}>
                   <Text strong>Remark :</Text>
@@ -165,7 +177,7 @@ const Form = ({
                   )}
                 </Col>
               </Row>
-              {obj?.dr_id && (
+              {obj?.dr_id && !readOnly && (
                 <div
                   className="mt-2 pt-1"
                   style={{ borderTop: "1px solid #c0c0c0" }}
@@ -175,33 +187,21 @@ const Form = ({
                       <CustomLabel label="Cancel :" readOnly={readOnly} />
                     </Col>
                     <Col span={16}>
-                      {readOnly ? (
-                        <Text className="pre-wrap error" strong>
-                          {obj?.tg_trans_status_id === 3 ? "Canceled" : ""}
-                        </Text>
-                      ) : (
-                        <Controller
-                          name={`dr.${index}.tg_trans_status_id`}
-                          control={control}
-                          render={({ field: { value } }) => (
-                            <Checkbox
-                              checked={value === 3 ? true : false}
-                              onChange={(e) => {
-                                e.target.checked
-                                  ? setValue(
-                                      `dr.${index}.tg_trans_status_id`,
-                                      3
-                                    )
-                                  : setValue(
-                                      `dr.${index}.tg_trans_status_id`,
-                                      1
-                                    );
-                              }}
-                              defaultChecked={false}
-                            />
-                          )}
-                        />
-                      )}
+                      <Controller
+                        name={`dr.${index}.tg_trans_status_id`}
+                        control={control}
+                        render={({ field: { value } }) => (
+                          <Checkbox
+                            checked={value === 3 ? true : false}
+                            onChange={(e) => {
+                              e.target.checked
+                                ? setValue(`dr.${index}.tg_trans_status_id`, 3)
+                                : setValue(`dr.${index}.tg_trans_status_id`, 1);
+                            }}
+                            defaultChecked={false}
+                          />
+                        )}
+                      />
                     </Col>
                   </Row>
                 </div>
@@ -218,58 +218,70 @@ const Form = ({
                 </Col>
                 <Col span={16}>
                   {readOnly ? (
-                    <Text className="pre-wrap">{obj?.item_no_name}</Text>
+                    <Text className="pre-wrap">{obj?.so_no_item_qty_uom}</Text>
                   ) : (
                     <>
-                      <Controller
-                        name={`dr.${index}.so_detail_id`}
-                        control={control}
-                        render={({ field: { onChange, value } }) =>
-                          SelectField({
-                            fieldProps: {
-                              placeholder: "Select Item",
-                              allowClear: true,
-                              showSearch: true,
-                              value,
-                              disabled: obj?.tg_trans_status_id === 3,
-                              onChange: (val, row) => {
-                                console.log("row", row);
-                                onChange(val);
-                                setValue(
-                                  `dr.${index}.so_id`,
+                      {obj?.tg_trans_status_id === 3 || obj?.dr_id ? (
+                        <>
+                          <Text className="pre-wrap">
+                            {obj?.so_no_item_qty_uom}
+                          </Text>
+                          <input
+                            {...register(`dr.${index}.so_detail_id`)}
+                            className="d-none"
+                          />
+                        </>
+                      ) : (
+                        <Controller
+                          name={`dr.${index}.so_detail_id`}
+                          control={control}
+                          render={({ field: { onChange, value } }) =>
+                            SelectField({
+                              fieldProps: {
+                                placeholder: "Select Item",
+                                allowClear: true,
+                                showSearch: true,
+                                value,
+                                onChange: (val, row) => {
+                                  console.log("row", row);
+                                  onChange(val);
+                                  setValue(
+                                    `dr.${index}.so_id`,
 
-                                  row?.obj?.so_id
-                                );
-                                setValue(
-                                  `dr.${index}.dr_qty`,
+                                    row?.obj?.so_id
+                                  );
+                                  setValue(
+                                    `dr.${index}.dr_qty`,
 
-                                  row?.obj?.tg_so_detail_qty_delivery
-                                );
-                                setValue(
-                                  `dr.${index}.dr_delivery_date`,
-                                  row?.obj?.so_detail_delivery_date
-                                );
-                                setValue(
-                                  `dr.${index}.dr_location_delivery`,
-                                  row?.obj?.dr_location_delivery
-                                );
-                                setValue(
-                                  `dr.${index}.so_no_description`,
-                                  row?.obj?.so_no_description
-                                );
-                                setValue(
-                                  `dr.${index}.customer_id`,
-                                  row?.obj?.customer_id
-                                );
+                                    row?.obj?.tg_so_detail_qty_delivery
+                                  );
+                                  setValue(
+                                    `dr.${index}.dr_delivery_date`,
+                                    row?.obj?.so_detail_delivery_date
+                                  );
+                                  setValue(
+                                    `dr.${index}.dr_location_delivery`,
+                                    row?.obj?.dr_location_delivery
+                                  );
+                                  setValue(
+                                    `dr.${index}.so_no_description`,
+                                    row?.obj?.so_no_description
+                                  );
+                                  setValue(
+                                    `dr.${index}.customer_id`,
+                                    row?.obj?.customer_id
+                                  );
+                                  getCustomerLocation(row?.obj?.customer_id);
+                                },
                               },
-                            },
-                            dataSource: soData,
-                            fieldId: "so_detail_id",
-                            fieldName: "so_no_item_qty_uom",
-                          })
-                        }
-                        rules={{ required: true }}
-                      />
+                              dataSource: soData,
+                              fieldId: "so_detail_id",
+                              fieldName: "so_no_item_qty_uom",
+                            })
+                          }
+                          rules={{ required: true }}
+                        />
+                      )}
                       {errors.dr && errors?.dr[index]?.so_detail_id && (
                         <Text className="error">This field is required.</Text>
                       )}
@@ -437,6 +449,72 @@ const Form = ({
               <Row className="col-2 mt-1 mb-1">
                 <Col span={8}>
                   <CustomLabel
+                    label="สถานที่จัดส่ง :"
+                    readOnly={readOnly}
+                    require={true}
+                  />
+                </Col>
+                <Col span={16}>
+                  {readOnly ? (
+                    <Text className="pre-wrap">
+                      {obj?.customer_detail_address}
+                    </Text>
+                  ) : (
+                    <>
+                      <Controller
+                        name={`dr.${index}.customer_detail_id`}
+                        control={control}
+                        render={({ field: { onChange, value } }) =>
+                          SelectField({
+                            fieldProps: {
+                              placeholder: "เลือกสถานที่จัดส่ง",
+                              allowClear: true,
+                              showSearch: true,
+                              value,
+                              disabled:
+                                obj?.tg_trans_status_id === 3 || !so_detail_id,
+                              onChange: (val, row) => {
+                                onChange(val);
+                                setValue(
+                                  `dr.${index}.customer_detail_address`,
+                                  row?.obj?.customer_detail_address
+                                );
+                              },
+                            },
+                            dataSource: customerLocation,
+                            fieldId: "customer_detail_id",
+                            fieldName: "customer_detail_address",
+                          })
+                        }
+                        rules={{ required: true }}
+                      />
+                      {errors.dr && errors?.dr[index]?.customer_detail_id && (
+                        <Text className="error">This field is required.</Text>
+                      )}
+                      {/* {!readOnly && obj?.customer_detail_id && ( */}
+                      <Controller
+                        name={`dr.${index}.customer_detail_address`}
+                        control={control}
+                        render={({ field }) =>
+                          TextAreaField({
+                            fieldProps: {
+                              placeholder: "ข้อมูลสถานที่จัดส่ง",
+                              className: "w-100 disabled-input",
+                              rows: 4,
+                              disabled: true,
+                              ...field,
+                            },
+                          })
+                        }
+                      />
+                      {/* )} */}
+                    </>
+                  )}
+                </Col>
+              </Row>
+              {/* <Row className="col-2 mt-1 mb-1">
+                <Col span={8}>
+                  <CustomLabel
                     label={"สถานที่ส่ง :"}
                     readOnly={readOnly}
                     require={true}
@@ -471,7 +549,7 @@ const Form = ({
                     </>
                   )}
                 </Col>
-              </Row>
+              </Row> */}
             </Col>
           </Row>
         </div>

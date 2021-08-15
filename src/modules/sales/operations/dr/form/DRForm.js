@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { reset } from "redux-form";
 import Swal from "sweetalert2";
+import { getCustomerAddress } from "../../../../../actions/sales";
 import {
   getDR,
   getDRSODetail,
@@ -32,6 +33,8 @@ const initialState = {
   so_id: null,
   so_detail_id: null,
   customer_id: null,
+  customer_detail_id: null,
+  customer_detail_address: null,
   dr_type_id: 1,
   dr_actived: 1,
   tg_trans_status_id: 4,
@@ -50,6 +53,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
   const [soData, setSOData] = useState([]);
   const [data, setData] = useState({
     dr_type: [],
+    customerLocation: [],
   });
 
   const formMethod = useForm({
@@ -67,6 +71,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
     keepLog.keep_log_action(`Click Save DR`);
     setLoading(true);
     const hide = message.loading("Action in progress....", 0);
+    console.log("saveData", data);
     const resp = await saveDR(data.dr);
     setTimeout(hide, 0);
     if (resp.success) {
@@ -83,7 +88,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
           onClose();
         } else {
           readOnly = resp.data[0].tg_trans_status_id === 3;
-          formMethod.reset({ dr: resp.data });
+          formMethod.reset({ dr: [resp.data[0]] });
         }
       });
     } else {
@@ -98,6 +103,12 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
     setLoading(false);
   };
 
+  const getCustomerLocation = async (customer_id) => {
+    console.log("Get Location");
+    const respCus = await getCustomerAddress(customer_id);
+    setData((prev) => ({ ...prev, customerLocation: respCus.data }));
+  };
+
   const formConfig = React.useMemo(
     () => ({
       form: formMethod,
@@ -105,6 +116,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
       readOnly,
       soData,
       data,
+      getCustomerLocation,
     }),
     [formArray, formMethod, dr_id, soData, data, readOnly]
   );
@@ -124,6 +136,16 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
       readOnly = false;
       if (resp.success) {
         if (so_detail_id) {
+          // FIND SO DETAIL FORM LIST BY USER CLICK FROM LIST
+          const findData = resp?.data?.find(
+            (obj) => obj.so_detail_id === so_detail_id
+          );
+          if (!findData) {
+            message.error(
+              "Can't get any data from the server. Try agin later."
+            );
+            return false;
+          }
           const {
             so_id,
             tg_so_detail_qty_delivery,
@@ -131,7 +153,10 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
             dr_location_delivery,
             so_no_description,
             customer_id,
-          } = resp.data.find((obj) => obj.so_detail_id === so_detail_id);
+          } = findData;
+          // GET CUSTOMER ADDRESS
+          getCustomerLocation(customer_id);
+          // RESET FORM DATA
           formMethod.reset({
             dr: [
               {
@@ -149,14 +174,19 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
             ],
           });
         }
+        // IF COME FORM CREATE BUTTON DO THIS FUNCTION
         !so_detail_id && setSOData(resp.data);
       }
     };
     const getDRData = async () => {
       const resp = await getDR(dr_id);
       if (resp.success) {
-        readOnly = resp.data[0].tg_trans_status_id === 3;
-
+        // CHECK DR STAUS IF TRUE = DISABLED EDITING
+        readOnly =
+          resp.data[0].tg_trans_status_id === 3 ||
+          resp.data[0].button_cancel === 0;
+        // GET CUSTOMER ADDRESS
+        getCustomerLocation(resp.data[0]?.customer_id);
         formMethod.reset({
           dr: resp.data.map((obj) => ({ ...obj, commit: 1, user_name })),
         });

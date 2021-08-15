@@ -487,6 +487,7 @@ export const getStatusByName = (statusName, callBack) => {
       );
     case "Pending":
     case "Develop":
+    case "Available":
       return (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}

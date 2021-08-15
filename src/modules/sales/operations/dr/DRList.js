@@ -26,7 +26,7 @@ const columns = [
       </div>
     ),
     dataIndex: "dr_no",
-    width: "10%",
+    width: "8%",
     ellipsis: false,
     align: "center",
     className: "tb-col-sm",
@@ -48,11 +48,23 @@ const columns = [
   {
     title: (
       <div className="text-center">
+        <b>Item</b>
+      </div>
+    ),
+    dataIndex: "item_no_name",
+    ellipsis: true,
+    align: "left",
+    className: "tb-col-sm",
+    render: (val) => val,
+  },
+  {
+    title: (
+      <div className="text-center">
         <b>วันที่ต้องถึงลูกค้า</b>
       </div>
     ),
     dataIndex: "dr_delivery_date",
-    width: "15%",
+    width: "12%",
     ellipsis: false,
     align: "center",
     className: "tb-col-sm",
@@ -79,7 +91,7 @@ const columns = [
         <b>สถานที่ส่ง</b>
       </div>
     ),
-    dataIndex: "dr_location_delivery",
+    dataIndex: "customer_detail_address",
     ellipsis: true,
     align: "left",
     className: "tb-col-sm",
@@ -92,7 +104,7 @@ const columns = [
       </div>
     ),
     dataIndex: "trans_status_name",
-    width: "10%",
+    width: "8%",
     ellipsis: true,
     align: "center",
     className: "tb-col-sm",
@@ -101,7 +113,7 @@ const columns = [
   {
     title: (
       <div className="text-center">
-        <b>เพิ่มเติม</b>
+        <b>ดูข้อมูล</b>
       </div>
     ),
     dataIndex: "dr_id",

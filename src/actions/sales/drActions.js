@@ -98,7 +98,7 @@ const getDRSODetail = () => {
       .get(`${apiGetSODetailRef}/0`, header_config)
       .then((resp) => {
         if (resp.status === 200) {
-          console.log("resp.data", resp.data);
+          console.log("getDRSODetail", resp.data);
           return { success: true, data: resp.data, message: "Success" };
         } else {
           return { success: false, data: [], message: resp };

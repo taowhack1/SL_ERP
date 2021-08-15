@@ -811,6 +811,14 @@ div.ant-tabs-tab > div {
   background-color: #d0d0ef !important;
   padding: 2px 5px !important;
 }
+.table-detail.sub-table-detail {
+  margin: 5px 0px 10px 0px;
+}
+.table-detail.sub-table-detail .row-table-detail:last-child > td {
+  border-bottom: 1px solid #d0d0ef !important;
+  box-shadow: 0px 1px 1px 0px #d0d0ef;
+}
+
 tr.row-table-detail > td {
   /* background-color: khaki; */
   padding: 2px 5px !important;

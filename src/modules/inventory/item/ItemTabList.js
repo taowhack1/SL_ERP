@@ -97,7 +97,7 @@ const TabPanel = ({
         {type_id !== undefined &&
           type_id &&
           type_id === 3 &&
-          [1, 10, 11, 90, 25].includes(department_id) && (
+          [1, 10, 11, 90, 20].includes(department_id) && (
             <Tabs.TabPane
               tab={
                 <CustomLabel
@@ -155,7 +155,7 @@ const TabPanel = ({
         {type_id !== undefined &&
           type_id &&
           [4, 5].includes(type_id) &&
-          [1, 10, 11, 18, 90, 25].includes(department_id) && (
+          [1, 10, 11, 18, 90, 20].includes(department_id) && (
             <Tabs.TabPane
               tab={
                 <CustomLabel label={"Packaging"} require readOnly={readOnly} />

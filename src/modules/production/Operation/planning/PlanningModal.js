@@ -17,11 +17,10 @@ import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import {
   getOtherPlanRef,
+  getPlanByJobOrderID,
   getPlanningCalendarData,
   savePlanJob,
 } from "../../../../actions/production/planningActions";
-import CustomLabel from "../../../../components/CustomLabel";
-import CustomSelect from "../../../../components/CustomSelect";
 import { AppContext } from "../../../../include/js/context";
 import FormLeft from "./modal/FormLeft";
 import FormRight from "./modal/FormRight";
@@ -32,23 +31,38 @@ const PlanningModal = (props) => {
   const {
     auth: { user_name, department_id },
   } = useContext(AppContext);
-  const [selectedPlan, setSelectedPlan] = useState(data);
+  const [selectedPlan, setSelectedPlan] = useState({});
   const [otherPlan, setOtherPlan] = useState([]);
   const [conditions, setConditions] = useState({
     loading: false,
     isUpdate: false,
   });
-  const jobDetail = data;
+  let jobDetail = data;
+  console.log("jobDetail", data);
   useEffect(() => {
-    const getData = async (mrp_id) => {
+    const getDataFormMRP = async (mrp_id) => {
       const resp = await getOtherPlanRef(mrp_id);
       if (resp.success) {
         setOtherPlan(resp.data);
       }
     };
-    setSelectedPlan(data);
-    getData(data.mrp_id);
-  }, [data.plan_job_id]);
+    const getDataFormJobOrder = async ({ job_order_id }) => {
+      const resp = await getPlanByJobOrderID(job_order_id);
+      console.log("resp.data", resp.data);
+      if (resp.success) {
+        setOtherPlan(resp.data);
+      }
+    };
+
+    if (data?.isFormJobOrder) {
+      getDataFormJobOrder(data);
+    } else {
+      if (data?.plan_job_id) {
+        setSelectedPlan(data);
+        getDataFormMRP(data.mrp_id);
+      }
+    }
+  }, [data]);
 
   const formLeftConfig = useMemo(
     () => ({
@@ -64,7 +78,7 @@ const PlanningModal = (props) => {
   );
   const formRightConfig = useMemo(
     () => ({
-      plan_job_id: selectedPlan.plan_job_id,
+      plan_job_id: selectedPlan?.plan_job_id,
       otherPlan,
       jobDetail,
       setSelectedPlan,
@@ -73,7 +87,7 @@ const PlanningModal = (props) => {
       setConditions,
     }),
     [
-      selectedPlan.plan_job_id,
+      selectedPlan?.plan_job_id,
       otherPlan,
       jobDetail,
       setSelectedPlan,
@@ -137,7 +151,6 @@ const PlanningModal = (props) => {
               <Button>{"Discard"}</Button>
             </Popconfirm>
           ),
-
           <Button
             loading={conditions.loading}
             className={conditions.isUpdate ? "" : "primary"}

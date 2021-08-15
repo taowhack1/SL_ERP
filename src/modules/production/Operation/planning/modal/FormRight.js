@@ -78,7 +78,13 @@ const FormRight = (props) => {
   const {
     plan_job_id,
     otherPlan,
-    jobDetail: { mrp_no, so_no, item_no_name, item_no_name_ref },
+    jobDetail: {
+      mrp_no,
+      job_order_no,
+      job_order_description,
+      item_no_name,
+      item_no_name_ref,
+    },
     setSelectedPlan,
     setOtherPlan,
     conditions: { loading, isUpdate },
@@ -112,9 +118,15 @@ const FormRight = (props) => {
         </div>
         <Row className="col-2 ">
           <Col span={5}>
-            <CustomLabel readOnly={false} label={"S/O No. :"} />
+            <CustomLabel readOnly={false} label={"Job No. :"} />
           </Col>
-          <Col span={19}>{so_no || "-"}</Col>
+          <Col span={19}>{job_order_no || "-"}</Col>
+        </Row>
+        <Row className="col-2 ">
+          <Col span={5}>
+            <CustomLabel readOnly={false} label={"Job Description:"} />
+          </Col>
+          <Col span={19}>{job_order_description || "-"}</Col>
         </Row>
         <Row className="col-2 ">
           <Col span={5}>
@@ -122,18 +134,19 @@ const FormRight = (props) => {
           </Col>
           <Col span={19}>{mrp_no || "-"}</Col>
         </Row>
+
         <Row className="col-2 ">
           <Col span={5}>
-            <CustomLabel readOnly={false} label={"FG Code. :"} />
+            <CustomLabel readOnly={false} label={"Item :"} />
           </Col>
           <Col span={19}>{item_no_name || "-"}</Col>
         </Row>
-        <Row className="col-2 ">
+        {/* <Row className="col-2 ">
           <Col span={5}>
             <CustomLabel readOnly={false} label={"Bulk Code. :"} />
           </Col>
           <Col span={19}>{item_no_name_ref || "-"}</Col>
-        </Row>
+        </Row> */}
         <div className="title-bar mt-3">
           <h3>
             <b>Reference Cost Center</b>

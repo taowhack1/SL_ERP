@@ -4,7 +4,7 @@ import MainLayout from "../../components/MainLayout";
 import Comments from "../../components/Comments";
 import TotalFooter from "../../components/TotalFooter";
 import { useDispatch, useSelector } from "react-redux";
-import { so_actions } from "../../actions/sales";
+import { closeSO, get_so_by_id, so_actions } from "../../actions/sales";
 import Detail from "./Sales_Order_Detail";
 import ModalRemark from "../../components/Modal_Remark";
 import { get_log_by_id } from "../../actions/comment&log";
@@ -13,11 +13,14 @@ import {
   BorderOutlined,
   CheckSquareOutlined,
   EditTwoTone,
+  FileDoneOutlined,
   PrinterTwoTone,
 } from "@ant-design/icons";
+import useKeepLogs from "../logs/useKeepLogs";
 
 const { Text } = Typography;
 const SaleOrderView = (props) => {
+  const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -110,7 +113,35 @@ const SaleOrderView = (props) => {
               process_id: data_head.process_id,
               process_member_remark: `มีการร้องขอแก้ไขข้อมูลเพิ่มเติม จาก ${auth.employee_no_name_eng}`,
             };
+            keepLog.keep_log_action(
+              `Click ขอแก้ไขข้อมูล SO : ${data_head?.so_no}`
+            );
             dispatch(so_actions(app_detail, data_head.qn_id));
+          },
+        },
+      data_head?.tg_trans_status_id === 4 &&
+        data_head?.tg_trans_close_id !== 3 && {
+          name: (
+            <Text>
+              <FileDoneOutlined className="mr-1 complete" /> ปิดจ้อบ
+            </Text>
+          ),
+          link: `#`,
+          callBack: async () => {
+            const eventData = [
+              {
+                user_name: auth?.user_name,
+                tg_trans_close_id: 3,
+                so_remark: `ปิดจ้อบ S/O : ${data_head?.so_no}`,
+                commit: 1,
+              },
+            ];
+            keepLog.keep_log_action(`Click Close Job SO : ${data_head?.so_no}`);
+            const resp = await closeSO(data_head?.so_id, eventData);
+            if (resp.success) {
+              message.success("Close Job Success.", 4);
+              dispatch(get_so_by_id(data_head?.so_id, auth?.user_name));
+            }
           },
         },
       data_head &&
@@ -203,6 +234,11 @@ const SaleOrderView = (props) => {
                 {data_head.tg_trans_status_id === 3 && (
                   <Text strong type="danger">
                     #{data_head.trans_status_name}
+                  </Text>
+                )}
+                {data_head?.tg_trans_close_id === 3 && (
+                  <Text strong className="complete">
+                    {`#Complete`}
                   </Text>
                 )}
               </strong>

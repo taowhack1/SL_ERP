@@ -9,12 +9,6 @@ import {
 import { header_config } from "../../include/js/main_config";
 import { GET_ALL_MRP, GET_MRP_SO_REF, GET_MRP_BY_ID } from "../types";
 
-const updateMRPMaterial = (id, data_material) => {
-  return axios.post(`${api_mrp_detail}/${id}`, data_material, header_config);
-};
-const getMRPMaterial = (id) => {
-  return axios.get(`${api_mrp_detail}/${id}`, header_config);
-};
 const getMRPHead = (id, user_name) =>
   axios.get(`${api_mrp}/${id}&${user_name}`, header_config);
 

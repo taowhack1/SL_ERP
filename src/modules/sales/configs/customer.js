@@ -184,14 +184,26 @@ export const addressColumns = [
   {
     id: 1,
     name: "Address Category",
-    size: 6,
+    size: 3,
     require: true,
   },
   {
     id: 2,
     name: "Address Detail",
-    size: 16,
+    size: 9,
     require: true,
+  },
+  {
+    id: 3,
+    name: "Contact Name.",
+    size: 6,
+    require: false,
+  },
+  {
+    id: 4,
+    name: "Contact Phone No.",
+    size: 4,
+    require: false,
   },
 ];
 export const CustomerDetailFileds = {

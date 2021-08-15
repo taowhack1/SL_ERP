@@ -7,12 +7,15 @@ import { Table, Col, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import Search from "../../../../components/Search";
 import { getDO, getDRRefList } from "../../../../actions/sales/doActions";
 import { EllipsisOutlined, SearchOutlined } from "@ant-design/icons";
-import { getStatusByName } from "../../../../include/js/function_main";
+import {
+  getStatusByName,
+  sortData,
+} from "../../../../include/js/function_main";
 import Authorize from "../../../system/Authorize";
 const columnsDR = [
   {
@@ -35,6 +38,13 @@ const columnsDR = [
         title: "DR No.",
         align: "center",
         dataIndex: "dr_no",
+        className: "col-sm",
+        // width: "15%",
+      },
+      {
+        title: "Item Code.",
+        align: "left",
+        dataIndex: "item_no",
         className: "col-sm",
         // width: "15%",
       },
@@ -73,7 +83,12 @@ const columnsDo = [
         width: "5%",
         className: "col-sm",
         align: "center",
-        render: (_, row, index) => index + 1,
+        sorter: {
+          compare: (a, b) => a.do_id - b.do_id,
+          multiple: 2,
+        },
+        dataIndex: "id",
+        render: (val, row, index) => val + 1,
       },
       {
         title: (
@@ -85,6 +100,10 @@ const columnsDo = [
         dataIndex: "do_no",
         className: "col-sm",
         align: "center",
+        sorter: {
+          compare: (a, b) => a.do_id - b.do_id,
+          multiple: 2,
+        },
         render: (val) => val || "-",
       },
       {
@@ -97,6 +116,20 @@ const columnsDo = [
         dataIndex: "customer_no_name",
         className: "col-sm",
         align: "left",
+        ellipsis: true,
+        render: (val) => val || "-",
+      },
+      {
+        title: (
+          <div className="text-center">
+            <Text strong>สถานที่ส่ง</Text>
+          </div>
+        ),
+        // width: "10%",
+        dataIndex: "customer_detail_address",
+        className: "col-sm",
+        align: "left",
+        ellipsis: true,
         render: (val) => val || "-",
       },
       {
@@ -105,7 +138,7 @@ const columnsDo = [
             <Text strong>วัน/เวลา ที่ออกรถ</Text>
           </div>
         ),
-        // width: "10%",
+        width: "15%",
         dataIndex: "do_delivery_date",
         className: "col-sm",
         align: "center",
@@ -140,6 +173,10 @@ const columnsDo = [
     ],
   },
 ];
+let keepData = {
+  dr: [],
+  do: [],
+};
 const DeliveryOrder = () => {
   const keepLog = useKeepLogs();
   const history = useHistory();
@@ -153,12 +190,14 @@ const DeliveryOrder = () => {
     const getDataDR = async () => {
       const resp = await getDRRefList();
       console.log("DR List", resp.data);
-      resp.success && setStateDR(resp.data);
+      resp.success && setStateDR(sortData(resp.data));
+      keepData.dr = sortData(resp.data);
     };
     const getDOList = async () => {
       const resp = await getDO(user_name);
       console.log("DO List", resp.data);
-      resp.success && setStateDO(resp.data);
+      resp.success && setStateDO(sortData(resp.data));
+      keepData.do = sortData(resp.data);
     };
     getDataDR();
     getDOList();
@@ -180,7 +219,6 @@ const DeliveryOrder = () => {
   };
 
   const createDo = (record) => {
-    // dispatch(get_so_by_id(record.so_id, user_name));
     const { dr_id, customer_id } = record;
     if (!dr_id) return false;
     keepLog.keep_log_action(`Click Create DO Form DR ID : ${dr_id}`);
@@ -188,8 +226,37 @@ const DeliveryOrder = () => {
   };
 
   const viewDo = (id) => {
-    // dispatch(get_so_by_id(record.so_id, user_name));
     history.push("/sales/operation/do/view/" + id);
+  };
+
+  const onSearch = (type = null, keyword) => {
+    const key = keyword.toUpperCase();
+    switch (true) {
+      case type === "dr":
+        setStateDR(
+          keepData.dr.filter(
+            (obj) =>
+              obj?.dr_no?.toUpperCase().indexOf(key) >= 0 ||
+              obj?.customer_no?.indexOf(key) >= 0 ||
+              obj?.dr_delivery_date?.indexOf(key) >= 0
+          )
+        );
+        break;
+      case type === "do":
+        setStateDO(
+          keepData.do.filter(
+            (obj) =>
+              obj?.do_no?.toUpperCase().indexOf(key) >= 0 ||
+              obj?.customer_no_name?.indexOf(key) >= 0 ||
+              obj?.do_delivery_date?.indexOf(key) >= 0
+          )
+        );
+        break;
+
+      default:
+        console.log("case default");
+        break;
+    }
   };
 
   return (
@@ -202,7 +269,10 @@ const DeliveryOrder = () => {
             <Row gutter={[8, 16]}>
               <Col span={8}>
                 <Col span={24} align="right">
-                  <Search className="top-search" style={{ width: "50%" }} />
+                  <Search
+                    className="top-search w-50"
+                    onSearch={(val) => onSearch("dr", val)}
+                  />
                 </Col>
                 <Table
                   size={"small"}
@@ -222,7 +292,11 @@ const DeliveryOrder = () => {
               </Col>
               <Col span={16}>
                 <Col span={24} align="right">
-                  <Search className="top-search" style={{ width: "20%" }} />
+                  <Search
+                    className="top-search"
+                    style={{ width: "20%" }}
+                    onSearch={(val) => onSearch("do", val)}
+                  />
                 </Col>
                 <Table
                   size={"small"}

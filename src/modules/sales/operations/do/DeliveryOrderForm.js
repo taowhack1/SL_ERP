@@ -1,8 +1,6 @@
 import { message } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { useMemo } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import {
   getDO,
@@ -36,6 +34,7 @@ const initialState = {
   do_delivery_date: null,
   do_return_date: null,
   do_return_time: null,
+  do_car_registration: null,
   do_detail: [
     {
       id: 0,
@@ -137,7 +136,7 @@ const DeliveryOrderForm = (props) => {
   );
 
   useEffect(() => {
-    // get data 1st time.
+    // CREATE OR EDIT GET DATA
     const getData = async (user_name, id) => {
       const resp = await getDO(user_name, id);
       if (resp.success) {
@@ -156,6 +155,7 @@ const DeliveryOrderForm = (props) => {
           setStateDO((prev) => ({ ...prev, customer_id: lo_customer_id }));
       }
     };
+
     !config.readOnly && getCustomers();
 
     if (!["new", null, undefined].includes(id)) {
@@ -168,9 +168,12 @@ const DeliveryOrderForm = (props) => {
   }, [user_name, id]);
 
   useEffect(() => {
+    // GET DR LIST WHEN CHANGE CUSTOMER
     const getDRList = async (customer_id, do_id) => {
+      console.log("getDRList");
       const resp = await getFormDR({ customer_id, do_id });
-      message.info("Get list of Delivery Request success.");
+      console.log("resp", resp);
+      message.info("Get list of Delivery Request success.", resp);
       if (resp.success) {
         setSelectData((prev) => ({ ...prev, drList: sortData(resp.data) }));
         if (dr_id) {
@@ -178,6 +181,12 @@ const DeliveryOrderForm = (props) => {
             ...resp.data.find((obj) => obj.dr_id === dr_id),
             id: 0,
           };
+          const {
+            do_location_delivery,
+            customer_detail_address,
+            customer_detail_name,
+            customer_detail_phone,
+          } = selectData || {};
           dr_id &&
             setStateDO((prev) => ({
               ...prev,
@@ -187,6 +196,7 @@ const DeliveryOrderForm = (props) => {
         }
       }
     };
+    console.log("config", config, customer_id);
     !config.readOnly && customer_id
       ? getDRList(customer_id, do_id)
       : setSelectData((prev) => ({ ...prev, drList: [] }));

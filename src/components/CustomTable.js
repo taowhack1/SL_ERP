@@ -56,7 +56,7 @@ const CustomTable = (props) => {
         dataSource={dataSource}
         onChange={onChange}
         bordered
-        size='small'
+        size="small"
         rowKey={rowKey}
         pagination={pagination !== undefined ? pagination : state.pagination}
         summary={props.summary ?? null}
@@ -68,15 +68,16 @@ const CustomTable = (props) => {
                 <>
                   {footer}
                   {!readOnly && (
-                    <div className='mt-1'>
+                    <div className="mt-1">
                       <Button
                         disabled={disabledAddRow ?? false}
-                        type='dashed'
+                        type="dashed"
                         onClick={() => {
                           onAdd();
                           focusLastPage && focusOnLast();
                         }}
-                        block>
+                        block
+                      >
                         <PlusOutlined /> Add a line
                       </Button>
                     </div>
