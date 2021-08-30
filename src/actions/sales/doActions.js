@@ -73,11 +73,11 @@ const getDO = (user_name, id) => {
   }
 };
 
-const getFormDR = ({ customer_id = 0, dr_id = 0, do_id = 0 }) => {
+const getFormDR = ({ customer_detail_id = 0, dr_id = 0, do_id = 0 }) => {
   try {
     return axios
       .get(
-        `${apiDRList}/${customer_id || 0}&${dr_id || 0}&${do_id || 0}`,
+        `${apiDRList}/${customer_detail_id || 0}&${dr_id || 0}&${do_id || 0}`,
         header_config
       )
       .then((resp) => {

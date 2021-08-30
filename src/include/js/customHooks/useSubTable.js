@@ -8,23 +8,30 @@ const initialState = {
   dataSource: {},
 };
 // Ref. doc. https://codesandbox.io/s/naughty-wescoff-w1jhd?file=/index.js
-const useSubTable = ({
-  columns = mockColumns,
-  fetchDataFunction = getMockData,
-  rowKey = "id",
-  dataKey,
-}) => {
+// How To Use.
+// expandable={{ expandedRowRender }}
+// onExpand={handleExpand}
+
+const useSubTable = (props) => {
+  console.log("useSubTable props", props);
+  const {
+    columns = mockColumns,
+    fetchDataFunction = getMockData,
+    rowKey = "id",
+    dataKey,
+    setExpandId = () => console.log("setExpandId"),
+  } = props || {};
   const [state, setState] = useState(initialState);
   const setLoading = (bool = false, id) =>
     setState((prev) => ({ ...prev, loading: { ...prev.loading, [id]: bool } }));
 
-  const getData = async (id) => {
+  const getData = async (id, params = null) => {
+    console.log("useSubTable params", params);
     const isInList = state?.dataSource[id];
     if (!isInList) {
       setLoading(true, id);
-      const resp = await fetchDataFunction(id);
-      console.log("useSubTable Fetch data : ", resp);
-
+      const resp = await fetchDataFunction(params);
+      console.log("useSubTable get", resp);
       resp.success &&
         setState((prev) => ({
           ...prev,
@@ -41,11 +48,12 @@ const useSubTable = ({
   const expandedRowRender = (row) => {
     const data = state.dataSource[row[rowKey]];
     const loading = state.loading[row[rowKey]];
+    console.log("expanded", data, state);
     return (
       <CustomTable
         bordered
         rowKey="id"
-        className="table-detail sub-table-detail"
+        className="table-detail sub-table-detail w-100"
         rowClassName="row-table-detail"
         columns={columns()}
         pagination={false}
@@ -55,8 +63,8 @@ const useSubTable = ({
     );
   };
 
-  const handleExpand = (expanded = false, record) => {
-    expanded && getData(record[rowKey]);
+  const handleExpand = (expanded = false, record, params) => {
+    expanded && getData(record[rowKey], params);
   };
 
   return {

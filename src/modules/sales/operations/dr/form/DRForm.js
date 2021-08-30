@@ -71,11 +71,9 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
     keepLog.keep_log_action(`Click Save DR`);
     setLoading(true);
     const hide = message.loading("Action in progress....", 0);
-    console.log("saveData", data);
     const resp = await saveDR(data.dr);
     setTimeout(hide, 0);
     if (resp.success) {
-      console.log("resp.data", resp.data);
       await Swal.fire({
         title: "Save Successfully!",
         icon: "success",
@@ -104,7 +102,6 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
   };
 
   const getCustomerLocation = async (customer_id) => {
-    console.log("Get Location");
     const respCus = await getCustomerAddress(customer_id);
     setData((prev) => ({ ...prev, customerLocation: respCus.data }));
   };
@@ -203,6 +200,13 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
     });
   }, [dr_id]);
 
+  const onCloseModal = () => {
+    formMethod.reset({
+      dr: [initialState],
+    });
+    onClose();
+  };
+
   const onError = (errors, e) => console.log(errors, e);
   return (
     <>
@@ -215,7 +219,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
           readOnly ? (
             <Button
               className="primary"
-              onClick={onClose}
+              onClick={onCloseModal}
               key="discard"
               loading={loading}
             >
@@ -223,7 +227,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
             </Button>
           ) : (
             [
-              <Button onClick={onClose} key="discard" loading={loading}>
+              <Button onClick={onCloseModal} key="discard" loading={loading}>
                 Discard
               </Button>,
               <Button
@@ -238,7 +242,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
             ]
           )
         }
-        onCancel={onClose}
+        onCancel={onCloseModal}
         onOk={onSubmit}
       >
         <form onSubmit={formMethod.handleSubmit(onSubmit, onError)}>

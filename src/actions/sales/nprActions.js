@@ -10,6 +10,7 @@ const GET_NPR_LIST = "GET_NPR_LIST";
 const GET_NPR_ITEM_LIST = "GET_NPR_ITEM_LIST";
 const GET_NPR_SMD_MASTER_DATA = "GET_NPR_SMD_MASTER_DATA";
 const apiNPR = `/sales/npr`;
+// const apiNPR = `/sales/npr_rd`;
 const apiNPRItems = `/list/item/npr`;
 const apiNPRRD = `/sales/npr_rd`;
 const apiGetNPRFormula = `/sales/npr_formula/npr`;
@@ -56,19 +57,20 @@ const getNPRItemList = () => (dispatch) => {
     dispatch({ type: SET_LOADING, payload: false });
   }
 };
-const getNPRList = (branch_id) => (dispatch) => {
+const getNPRList = () => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   try {
     axios
-      .get(`${apiNPR}`, header_config)
+      .get(`${apiNPRRD}`, header_config)
       .then((res) => {
+        console.log("res.data", res.data);
         if (res.data) {
-          const data = res.data.filter((obj) =>
-            branch_id === 3
-              ? obj.branch_id === branch_id && obj.npr_rd_type_id === 2
-              : obj
-          );
-          dispatch({ type: GET_NPR_LIST, payload: sortData(data) });
+          // const data = res.data.filter((obj) =>
+          //   branch_id === 3
+          //     ? obj.branch_id === branch_id && obj.npr_rd_type_id === 2
+          //     : obj
+          // );
+          dispatch({ type: GET_NPR_LIST, payload: sortData(res.data) });
         } else {
           message.error(errorText.getData);
         }

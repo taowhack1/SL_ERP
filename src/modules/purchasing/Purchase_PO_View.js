@@ -31,7 +31,7 @@ const PurchaseOrderCreate = (props) => {
   const [tab, setTab] = useState("1");
   const data_head = useSelector((state) => state.purchase.po.po_head);
   const data_detail = useSelector((state) => state.purchase.po.po_detail);
-
+  console.log("data_head", data_head, data_detail);
   useEffect(() => {
     data_head.process_id && dispatch(get_log_by_id(data_head.process_id));
   }, [data_head]);
@@ -161,7 +161,6 @@ const PurchaseOrderCreate = (props) => {
   return (
     <MainLayout {...config}>
       <div id="form">
-        {/* Head */}
         <Row className="col-2">
           <Col span={8}>
             <h2>
@@ -189,7 +188,6 @@ const PurchaseOrderCreate = (props) => {
             <Text className="text-view">{data_head.po_no}</Text>
           </h3>
         </Row>
-        {/* Head */}
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>PR Ref. :</Text>
@@ -227,7 +225,6 @@ const PurchaseOrderCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          {/* 5 */}
           <Col span={3}>
             <Text strong>Vendor :</Text>
           </Col>
@@ -246,7 +243,6 @@ const PurchaseOrderCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          {/* 7 */}
           <Col span={3}>
             <Text strong>Payment Terms :</Text>
           </Col>

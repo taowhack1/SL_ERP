@@ -36,8 +36,7 @@ const Form = ({
   const {
     auth: { user_name, employee_no_name_eng },
   } = useContext(AppContext);
-  const { so_detail_id } = watch("dr.0");
-  console.log("watch so_detail_id", so_detail_id);
+  const { so_detail_id, customer_detail_name } = watch("dr.0");
   return (
     <>
       {fields.map((obj, index) => (
@@ -243,7 +242,6 @@ const Form = ({
                                 showSearch: true,
                                 value,
                                 onChange: (val, row) => {
-                                  console.log("row", row);
                                   onChange(val);
                                   setValue(
                                     `dr.${index}.so_id`,
@@ -270,6 +268,22 @@ const Form = ({
                                   setValue(
                                     `dr.${index}.customer_id`,
                                     row?.obj?.customer_id
+                                  );
+                                  setValue(
+                                    `dr.${index}.customer_detail_id`,
+                                    null
+                                  );
+                                  setValue(
+                                    `dr.${index}.customer_detail_address`,
+                                    null
+                                  );
+                                  setValue(
+                                    `dr.${index}.customer_detail_name`,
+                                    null
+                                  );
+                                  setValue(
+                                    `dr.${index}.customer_detail_phone`,
+                                    null
                                   );
                                   getCustomerLocation(row?.obj?.customer_id);
                                 },
@@ -477,7 +491,15 @@ const Form = ({
                                 onChange(val);
                                 setValue(
                                   `dr.${index}.customer_detail_address`,
-                                  row?.obj?.customer_detail_address
+                                  row?.obj?.customer_detail_address || "-"
+                                );
+                                setValue(
+                                  `dr.${index}.customer_detail_name`,
+                                  row?.obj?.customer_detail_name || "-"
+                                );
+                                setValue(
+                                  `dr.${index}.customer_detail_phone`,
+                                  row?.obj?.customer_detail_phone || "-"
                                 );
                               },
                             },
@@ -510,6 +532,46 @@ const Form = ({
                       {/* )} */}
                     </>
                   )}
+                </Col>
+              </Row>
+              <Row className="col-2 mt-1 mb-1">
+                <Col span={6}>
+                  <CustomLabel label={"ชื่อผู้ติดต่อ :"} readOnly={readOnly} />
+                </Col>
+                <Col span={18}>
+                  {readOnly ? (
+                    <Text className="pre-wrap">
+                      {obj?.customer_detail_name}
+                    </Text>
+                  ) : (
+                    <input
+                      {...register(`dr.${index}.customer_detail_name`)}
+                      defaultValue={obj?.customer_detail_name}
+                      className="disabled-input"
+                      readOnly={true}
+                    />
+                  )}
+                </Col>
+              </Row>
+              <Row className="col-2 mt-1 mb-1">
+                <Col span={6}>
+                  <CustomLabel label={"เบอร์โทร :"} readOnly={readOnly} />
+                </Col>
+                <Col span={18}>
+                  <Text className="pre-wrap">
+                    {readOnly ? (
+                      <Text className="pre-wrap">
+                        {obj?.customer_detail_phone}
+                      </Text>
+                    ) : (
+                      <input
+                        {...register(`dr.${index}.customer_detail_phone`)}
+                        defaultValue={obj?.customer_detail_phone}
+                        className="disabled-input"
+                        readOnly={true}
+                      />
+                    )}
+                  </Text>
                 </Col>
               </Row>
               {/* <Row className="col-2 mt-1 mb-1">

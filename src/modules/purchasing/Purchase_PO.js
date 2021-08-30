@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table } from "antd";
+import { Row, Col, Table, Button } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { po_list_columns } from "./config/po";
 import {
@@ -9,14 +9,15 @@ import {
   reset_po_data,
   get_po_by_id,
   get_open_po_list,
+  filterPO,
 } from "../../actions/purchase/PO_Actions";
 import { reset_comments } from "../../actions/comment&log";
 import $ from "jquery";
-import { getMasterDataItem } from "../../actions/inventory";
-import { get_vendor_payment_term_list } from "../../actions/accounting";
 
 import useKeepLogs from "../logs/useKeepLogs";
 import Authorize from "../system/Authorize";
+import PRList from "./operations/po/PRList";
+import { sortData } from "../../include/js/function_main";
 const PurchaseOrders = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
@@ -30,7 +31,7 @@ const PurchaseOrders = (props) => {
 
   useEffect(() => {
     dispatch(get_po_list(auth.user_name));
-    dispatch(get_open_po_list());
+    // dispatch(get_open_po_list());
     dispatch(reset_po_data());
     return () => {
       dispatch(reset_comments());
@@ -38,15 +39,37 @@ const PurchaseOrders = (props) => {
     };
   }, [dispatch]);
 
-  const { po_list, pr_ref } = useSelector((state) => state.purchase.po);
+  const { po_list, filter } = useSelector((state) => state.purchase.po);
+  const { pageSize, page, keyword, vendor_id } = filter || {};
   useEffect(() => {
-    setData(po_list);
+    setData(sortData(po_list));
     return () => setData([]);
   }, [po_list]);
-  const [data, setData] = useState(po_list);
+  useEffect(() => {
+    // setLoading(true);
+    // setTimeout(() => {
+    //   const search_data = sortData(
+    //     po_list?.filter(
+    //       (po) =>
+    //         po?.po_no?.indexOf(value) >= 0 ||
+    //         po?.vendor_no_name?.indexOf(value) >= 0 ||
+    //         po?.po_created_by_no_name?.indexOf(value) >= 0 ||
+    //         po?.po_created?.indexOf(value) >= 0 ||
+    //         po?.po_description?.indexOf(value) >= 0
+    //     )
+    //   );
+    //   console.log("search_data", search_data);
+    //   setData(search_data);
+    //   setLoading(false);
+    // }, 1200);
+  }, [filter]);
+
+  const [data, setData] = useState(sortData(po_list));
 
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
+    const { current, pageSize } = pagination;
+    console.log("pagination", pagination);
+    dispatch(filterPO({ page: current, pageSize }));
   };
 
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -62,40 +85,44 @@ const PurchaseOrders = (props) => {
     edit: {},
     disabledEditBtn: !rowClick,
     discard: "/purchase/po",
-    badgeCount: pr_ref.length,
+    // badgeCount: pr_ref.length,
     onCancel: () => {
       console.log("Cancel");
     },
     onSearch: (value) => {
       console.log(value);
-      setLoading(true);
-      setTimeout(() => {
-        const search_data = po_list?.filter(
-          (po) =>
-            po?.po_no?.indexOf(value) >= 0 ||
-            po?.vendor_no_name?.indexOf(value) >= 0 ||
-            po?.po_created_by_no_name?.indexOf(value) >= 0 ||
-            po?.po_created?.indexOf(value) >= 0 ||
-            po?.po_description?.indexOf(value) >= 0
-        );
-        setData(search_data);
-        setLoading(false);
-      }, 1200);
+      dispatch(filterPO({ keyword: value.toUpperCase() }));
     },
+    searchBar: (
+      <Button
+        className="primary"
+        onClick={() =>
+          dispatch(
+            filterPO({ page: 1, pageSize: 1, keyword: null, vendor_id: null })
+          )
+        }
+      >
+        Clear Filter
+      </Button>
+    ),
   };
-  console.log("po list", data);
   return (
     <div>
       <MainLayout {...config}>
-        <Row>
-          <Col span={24}>
+        <Row gutter={24}>
+          <Col span={6}>
+            <PRList />
+          </Col>
+          <Col span={18}>
             <Table
+              style={{ marginTop: 60 }}
               columns={po_list_columns}
               dataSource={data}
               rowKey={"po_id"}
               loading={loading}
               onChange={onChange}
               size="small"
+              pagination={{ pageSize, current: page }}
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

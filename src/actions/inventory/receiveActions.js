@@ -18,6 +18,9 @@ import {
 } from "../../include/js/api";
 import { message } from "antd";
 
+const FILTER_REPORT_GR = "FILTER_REPORT_GR";
+const CLEAR_FILTER_REPORT_GR = "CLEAR_FILTER_REPORT_GR";
+
 export const get_receive_list = (user_name) => async (dispatch) => {
   return await axios
     .get(`${api_receive}/all/${user_name}`, header_config)
@@ -162,6 +165,7 @@ export const create_receive =
         .then(async (res) => {
           console.log("INSERT_HEAD", res);
           if (res.data[0][0]) {
+            console.log("res", res);
             const receive_id = res.data[0][0].receive_id;
             await axios
               .post(
@@ -179,9 +183,6 @@ export const create_receive =
                     data_sub_detail.push(sub);
                   });
                 });
-
-                console.log("data_sub_detail", data_sub_detail);
-                console.log("INSERT_DETAIL", res);
 
                 axios
                   .post(
@@ -302,4 +303,17 @@ export const receive_actions = async (data, receive_id, setReload) => {
     data.process_id &&
     (await axios.put(`${api_approve}/${data.process_id}`, data, header_config))
   );
+};
+
+const filterReportGR = (data) => (dispatch) =>
+  dispatch({ type: FILTER_REPORT_GR, payload: data });
+const clearFilterReportGR = () => (dispatch) => {
+  dispatch({ type: CLEAR_FILTER_REPORT_GR });
+};
+
+export {
+  FILTER_REPORT_GR,
+  CLEAR_FILTER_REPORT_GR,
+  filterReportGR,
+  clearFilterReportGR,
 };

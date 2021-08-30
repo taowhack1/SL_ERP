@@ -19,13 +19,15 @@ const Head = () => {
     do_id,
     do_no,
     customer_no_name,
-    customer_id,
+    customer_detail_id,
     do_location_delivery,
     do_car_registration,
     tg_trans_status_id,
     do_delivery_date,
     do_delivery_time,
     do_remark,
+    customer_detail_name,
+    customer_detail_phone,
   } = stateDO;
 
   return (
@@ -58,18 +60,24 @@ const Head = () => {
                 <Text className="pre-wrap">{customer_no_name}</Text>
               ) : (
                 <CustomSelect
-                  name="customer_id"
-                  field_id="customer_id"
+                  name="customer_detail_id"
+                  field_id="customer_detail_id"
                   field_name="customer_no_name"
                   placeholder="Select Customer"
                   allowClear
                   showSearch
-                  value={customer_id}
+                  value={customer_detail_id}
                   data={customers}
                   onChange={(val, row) =>
                     val !== undefined
                       ? onChange({
-                          customer_id: val,
+                          customer_id: row?.data?.customer_id,
+                          customer_detail_id: val,
+                          do_location_delivery:
+                            row?.data?.customer_detail_address,
+                          customer_detail_name: row?.data?.customer_detail_name,
+                          customer_detail_phone:
+                            row?.data?.customer_detail_phone,
                           do_detail: [
                             {
                               id: 0,
@@ -83,6 +91,10 @@ const Head = () => {
                         })
                       : onChange({
                           customer_id: null,
+                          customer_detail_id: null,
+                          do_location_delivery: null,
+                          customer_detail_name: null,
+                          customer_detail_phone: null,
                           do_detail: [
                             {
                               id: 0,
@@ -185,6 +197,30 @@ const Head = () => {
           </Row>
           <Row className="col-2 row-margin-vertical">
             <Col span={8}>
+              <CustomLabel label="หมายเหตุ :" readOnly={readOnly} />
+            </Col>
+            <Col span={16}>
+              {readOnly ? (
+                <Text className="pre-wrap">{do_remark}</Text>
+              ) : (
+                <>
+                  <TextArea
+                    name="do_remark"
+                    placeholder="Remark"
+                    rows={4}
+                    value={do_remark}
+                    onChange={(e) => onChange({ do_remark: e.target.value })}
+                  />
+                </>
+              )}
+            </Col>
+          </Row>
+        </Col>
+        <Col span={12}>
+          {/* โลเคชั่น */}
+
+          <Row className="col-2 row-margin-vertical">
+            <Col span={6}>
               <CustomLabel
                 label="สถานที่จัดส่ง :"
                 require
@@ -209,26 +245,20 @@ const Head = () => {
               )}
             </Col>
           </Row>
-        </Col>
-        <Col span={12}>
-          <Row className="col-2 row-margin-vertical">
-            <Col span={8}>
-              <CustomLabel label="หมายเหตุ :" readOnly={readOnly} />
+          <Row className="col-2 mt-1 mb-1" gutter={8}>
+            <Col span={6}>
+              <CustomLabel label="ติดต่อ :" readOnly={readOnly} />
             </Col>
-            <Col span={16}>
-              {readOnly ? (
-                <Text className="pre-wrap">{do_remark}</Text>
-              ) : (
-                <>
-                  <TextArea
-                    name="do_remark"
-                    placeholder="Remark"
-                    rows={4}
-                    value={do_remark}
-                    onChange={(e) => onChange({ do_remark: e.target.value })}
-                  />
-                </>
-              )}
+            <Col span={18}>
+              <Text className="pre-wrap">{customer_detail_name || "-"}</Text>
+            </Col>
+          </Row>
+          <Row className="col-2 mt-1 mb-1" gutter={8}>
+            <Col span={6}>
+              <CustomLabel label="โทร :" readOnly={readOnly} />
+            </Col>
+            <Col span={18}>
+              <Text className="pre-wrap">{customer_detail_phone || "-"}</Text>
             </Col>
           </Row>
         </Col>

@@ -33,7 +33,6 @@ const DeliveryRequisition = (props) => {
   });
   useEffect(() => {
     const getData = async () => {
-      console.log("Fetch Data...");
       const resp = await getDR();
       if (resp.success) {
         setList(sortData(resp.data));
@@ -52,7 +51,7 @@ const DeliveryRequisition = (props) => {
       so_detail_id: null,
     }));
     keepLog.keep_log_action("Close Modal DR");
-  }, [setModal]);
+  }, [setModal, modal]);
   const [loading, setLoading] = useState(false);
 
   const config = React.useMemo(

@@ -1,5 +1,7 @@
 /** @format */
 
+import { SEARCH_PO } from "../actions/purchase/PO_Actions";
+import { SEARCH_PR } from "../actions/purchase/PR_Actions";
 import {
   GET_ALL_PR,
   GET_ALL_PO,
@@ -33,12 +35,24 @@ const initialState = {
     pr_list: [],
     pr_head: {},
     pr_detail: [],
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 20,
+      vendor_id: null,
+    },
   },
   po: {
     pr_ref: [],
     po_list: [],
     po_head: {},
     po_detail: [],
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 1,
+      vendor_id: null,
+    },
   },
   vendor: {
     vendor_list: [],
@@ -185,6 +199,29 @@ export default (state = initialState, action) => {
           ...state.po,
           po_head: {},
           po_detail: [],
+        },
+      };
+
+    case SEARCH_PO:
+      return {
+        ...state,
+        po: {
+          ...state.po,
+          filter: {
+            ...state.po.filter,
+            ...action.payload,
+          },
+        },
+      };
+    case SEARCH_PR:
+      return {
+        ...state,
+        pr: {
+          ...state.pr,
+          filter: {
+            ...state.pr.filter,
+            ...action.payload,
+          },
         },
       };
     default:

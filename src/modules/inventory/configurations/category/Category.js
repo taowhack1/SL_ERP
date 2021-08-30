@@ -13,6 +13,7 @@ import {
   getConfigurationCategory,
   getConfigurationCategoryById,
 } from "../../../../actions/inventory/configurations/category/categoryAction";
+import { getConfigurationItemType } from "../../../../actions/inventory/configurations/type/typeItemAction";
 const Category = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
@@ -28,14 +29,15 @@ const Category = (props) => {
   const [data, setData] = useState(category);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
+    dispatch(getConfigurationItemType());
     dispatch(getConfigurationCategory());
   }, []);
   useEffect(() => {
-    const setStateData = () => {
-      setData(category);
-    };
-    setStateData();
+    setData(category);
   }, [category.length]);
+  useEffect(() => {
+    setDataType(type);
+  }, [type.length]);
 
   const onSearch = (value, search) => {
     console.log(value);
@@ -89,7 +91,7 @@ const Category = (props) => {
         dataSource={sortData(result)}
         rowKey={"category_id"}
         pagination={{ pageSize: 10 }}
-        size='small'
+        size="small"
         onRow={(record, rowIndex) => {
           return {
             onClick: (e) => {
@@ -122,7 +124,7 @@ const Category = (props) => {
           columns={itemShowColumns}
           dataSource={sortData(dataType)}
           bordered
-          size='small'
+          size="small"
           pagination={{ pageSize: 20 }}
           rowKey={"type_id"}
           expandable={{ expandedRowRender }}

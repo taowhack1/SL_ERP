@@ -19,69 +19,83 @@ export const po_require_fields_detail = [
 
 export const po_list_columns = [
   {
-    title: "PO No",
-    dataIndex: "po_no",
-    key: 1,
-    width: "10%",
-    align: "left",
-  },
-  {
-    title: "PR Ref.",
-    dataIndex: "pr_no",
-    key: 2,
-    width: "10%",
-    align: "left",
-  },
-  {
-    title: "PO Date",
-    dataIndex: "po_created",
-    key: 3,
-    width: "10%",
-    align: "center",
-  },
-  {
-    title: "Due Date",
-    dataIndex: "tg_po_due_date",
-    key: 4,
-    width: "10%",
-    align: "center",
-  },
-  {
-    title: "Vendor",
-    dataIndex: "vendor_no_name",
-    key: 5,
-    width: "20%",
-    align: "left",
-    ellipsis: true,
-  },
-  {
-    title: "Purchase User",
-    dataIndex: "po_created_by_no_name",
-    key: 6,
-    width: "15%",
-    align: "left",
-    ellipsis: true,
-  },
-  {
-    title: "Description",
-    dataIndex: "po_description",
-    key: 7,
-    width: "18%",
-    align: "left",
-    ellipsis: true,
-  },
-  {
-    title: "Status",
-    dataIndex: "trans_status_name",
-    key: 8,
-    width: "7%",
-    align: "center",
-    ellipsis: true,
-    render: (value, record, index) => {
-      return record && getSelfStepStatus(record ? record : []);
-      // console.log("PO record", record);
-      // return getSelfStepStatus(record);
-    },
+    title: "Purchase Order",
+    className: "tb-col-sm bg-tb-primary",
+    children: [
+      {
+        title: "No.",
+        dataIndex: "id",
+        key: 0,
+        width: "5%",
+        align: "center",
+        render: (val) => val + 1,
+      },
+      {
+        title: "PO No",
+        dataIndex: "po_no",
+        key: 1,
+        width: "10%",
+        align: "left",
+      },
+      {
+        title: "PR Ref.",
+        dataIndex: "pr_no",
+        key: 2,
+        width: "10%",
+        align: "left",
+      },
+      {
+        title: "PO Date",
+        dataIndex: "po_created",
+        key: 3,
+        width: "10%",
+        align: "center",
+      },
+      // {
+      //   title: "Due Date",
+      //   dataIndex: "tg_po_due_date",
+      //   key: 4,
+      //   width: "10%",
+      //   align: "center",
+      // },
+      {
+        title: "Vendor",
+        dataIndex: "vendor_no_name",
+        key: 5,
+        width: "20%",
+        align: "left",
+        ellipsis: true,
+      },
+      {
+        title: "Purchase",
+        dataIndex: "po_created_by_no_name",
+        key: 6,
+        width: "15%",
+        align: "left",
+        ellipsis: true,
+      },
+      {
+        title: "Description",
+        dataIndex: "po_description",
+        key: 7,
+        width: "18%",
+        align: "left",
+        ellipsis: true,
+      },
+      {
+        title: "Status",
+        dataIndex: "trans_status_name",
+        key: 8,
+        width: "10%",
+        align: "center",
+        ellipsis: true,
+        render: (value, record, index) => {
+          return record && getSelfStepStatus(record ? record : []);
+          // console.log("PO record", record);
+          // return getSelfStepStatus(record);
+        },
+      },
+    ],
   },
 ];
 

@@ -11,7 +11,7 @@ import numeral from "numeral";
 import Text from "antd/lib/typography/Text";
 import { convertDigit } from "./main_config";
 
-export const sortData = (arrObject, fieldId) => {
+export const sortData = (arrObject, fieldId, startIndex = 0) => {
   if (!Array.isArray(arrObject)) return [];
   let copyData = arrObject;
   let temp = [];
@@ -19,7 +19,7 @@ export const sortData = (arrObject, fieldId) => {
     copyData.map((obj, key) => {
       return temp.push({
         ...obj,
-        [fieldId || "id"]: key,
+        [fieldId || "id"]: startIndex++,
         commit: 1,
         data_id: obj?.data_id ?? key,
       });
@@ -474,8 +474,8 @@ export const getPageButton = (action, obj) => {
 };
 
 export const getStatusByName = (statusName, callBack) => {
-  switch (statusName) {
-    case "Draft":
+  switch (true) {
+    case statusName === "Draft":
       return (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
@@ -485,9 +485,10 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
-    case "Pending":
-    case "Develop":
-    case "Available":
+    case statusName === "Pending":
+    case statusName === "Pending DO":
+    case statusName === "Develop":
+    case statusName === "Available":
       return (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
@@ -497,7 +498,8 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
-    case "In-Process":
+    case statusName === "In-Process":
+    case statusName === "Transports":
       return (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
@@ -507,8 +509,9 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
-    case "Approve":
-    case "Complete":
+    case statusName === "Approve":
+    case statusName === "Complete":
+    case statusName === "Completed":
       return (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
@@ -518,11 +521,13 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
-    case "Pending Accept":
-    case "Pending R&D":
-    case "Pending Satisfaction":
+    case statusName === "Pending Accept":
+    case statusName === "Pending R&D":
+    case statusName === "Pending Satisfaction":
+    case statusName?.search("Invoice") > -1:
       return (
         <Tag
+          // icon={<SyncOutlined spin />}
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
           color="warning"
@@ -530,9 +535,10 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
-    case "In-Process R&D":
+    case statusName === "In-Process R&D":
       return (
         <Tag
+          // icon={<SyncOutlined spin />}
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
           color="magenta"
@@ -540,7 +546,7 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
-    case "Cancel":
+    case statusName === "Cancel":
       return (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}

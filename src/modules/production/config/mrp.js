@@ -1,38 +1,19 @@
 /** @format */
 
 import {
-  getRefStatus,
   getSelfStepStatus,
   warningTextValue,
 } from "../../../include/js/function_main";
-import {
-  convertDigit,
-  getNumberFormat,
-  numberFormat,
-} from "../../../include/js/main_config";
+import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 import React from "react";
 
 import Text from "antd/lib/typography/Text";
+import { DatePicker, InputNumber, Popconfirm, Popover, TimePicker } from "antd";
 import {
-  Button,
-  Col,
-  DatePicker,
-  Divider,
-  InputNumber,
-  Popconfirm,
-  Popover,
-  Row,
-  Tag,
-  TimePicker,
-} from "antd";
-import {
-  CheckCircleOutlined,
   CheckCircleTwoTone,
   DeleteTwoTone,
   EllipsisOutlined,
-  FileSearchOutlined,
   SyncOutlined,
-  ZoomInOutlined,
 } from "@ant-design/icons";
 import CustomLabel from "../../../components/CustomLabel";
 import moment from "moment";
@@ -212,6 +193,7 @@ export const mrpRequireFields = [
   "mrp_bulk_produce_date",
   "mrp_fg_produce_date",
 ];
+
 export const mrpRoutingRequireFields = [
   "machine_id",
   "mrp_routing_plan_date",
@@ -286,26 +268,16 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
             content={
               <>
                 <div className="mb-1 border-bottom">
-                  <Text strong>Stock - Reserve = Available Qty</Text>
+                  <Text strong>
+                    วิธีคิด : (On hand + PR + PO + GR + QC) - Reserve
+                  </Text>
                 </div>
 
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
-                    Stock on hand :
+                    On hand :
                   </Text>
                   <Text>{convertDigit(tg_item_qty, 4)}</Text>
-                </div>
-                <div className="d-flex flex-space">
-                  <Text strong className="mr-1">
-                    Reserve :
-                  </Text>
-                  <Text>{convertDigit(wait_issue, 4)}</Text>
-                </div>
-                <div className="d-flex flex-space">
-                  <Text strong className="mr-1">
-                    PO :
-                  </Text>
-                  <Text>{convertDigit(wait_po, 4)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
@@ -315,15 +287,27 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
-                    QC :
+                    PO :
                   </Text>
-                  <Text>{convertDigit(wait_qc, 4)}</Text>
+                  <Text>{convertDigit(wait_po, 4)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
                     GR :
                   </Text>
                   <Text>{convertDigit(wait_receive, 4)}</Text>
+                </div>
+                <div className="d-flex flex-space">
+                  <Text strong className="mr-1">
+                    QC :
+                  </Text>
+                  <Text>{convertDigit(wait_qc, 4)}</Text>
+                </div>
+                <div className="d-flex flex-space">
+                  <Text strong className="mr-1">
+                    Reserve :
+                  </Text>
+                  <Text>{convertDigit(wait_issue, 4)}</Text>
                 </div>
               </>
             }

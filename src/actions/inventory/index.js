@@ -33,9 +33,12 @@ import { message } from "antd";
 import { sortData } from "../../include/js/function_main";
 const GET_SAMPLE_ITEMS = "GET_SAMPLE_ITEMS";
 const CLEAR_STATE_ITEM = "CLEAR_STATE_ITEM";
+const FILTER_STOCK_ON_HAND = "FILTER_STOCK_ON_HAND";
+const CLEAR_FILTER_STOCK_ON_HAND = "CLEAR_FILTER_STOCK_ON_HAND";
 const apiSampleItem = `/sales/item_sample`;
 const apiGetItemCodeType = `/list/item_type`;
-
+const apiGetSubReportStockOnHand = `/inventory/stock/history`;
+const apiGetBulkFG = `/list/item/mrp/sample`;
 const getItemType = () => {
   console.log("getItemType");
   return axios
@@ -161,6 +164,75 @@ const get_report_stock = () => (dispatch) => {
   });
 };
 
+const getReportStockOnHand = (user_name) => {
+  try {
+    return axios
+      .get(`${get_stock_on_hand}/${user_name}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          return {
+            success: true,
+            data: sortData(resp.data[0]),
+            message: "Success",
+          };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+const getSubReportStockOnHand = ({
+  user_name = "",
+  item_id = 1,
+  startDate = "01-01-2021",
+  endDate = "31-12-2021",
+}) => {
+  console.log(
+    "getSubReportStockOnHand",
+    `${apiGetSubReportStockOnHand}/${user_name}&${item_id}&${startDate}&${endDate}`
+  );
+  if (!user_name)
+    return { success: false, data: {}, message: "Missing user_name" };
+  try {
+    return axios
+      .get(
+        `${apiGetSubReportStockOnHand}/${user_name}&${item_id}&${startDate}&${endDate}`,
+        header_config
+      )
+      .then((resp) => {
+        if (resp.status === 200) {
+          return {
+            success: true,
+            data: resp.data,
+            message: "Success",
+          };
+        } else {
+          return { success: false, data: {}, message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: {}, message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
+
 const getItemCategoryList = () => (dispatch) => {
   axios.get(api_get_item_category, header_config).then((res) => {
     console.log(res);
@@ -236,6 +308,12 @@ const getSampleItemById = (id = null) => {
 const clearStateItems = () => (dispatch) =>
   dispatch({ type: CLEAR_STATE_ITEM });
 
+const filterStockOnHand = (data) => (dispatch) =>
+  dispatch({ type: FILTER_STOCK_ON_HAND, payload: data });
+const clearFilterStockOnHand = () => (dispatch) => {
+  message.success("Clear filter");
+  dispatch({ type: CLEAR_FILTER_STOCK_ON_HAND });
+};
 export {
   getItemType,
   getUOM,
@@ -252,4 +330,11 @@ export {
   apiSampleItem,
   GET_SAMPLE_ITEMS,
   CLEAR_STATE_ITEM,
+  FILTER_STOCK_ON_HAND,
+  CLEAR_FILTER_STOCK_ON_HAND,
+  filterStockOnHand,
+  getReportStockOnHand,
+  clearFilterStockOnHand,
+  getSubReportStockOnHand,
+  apiGetBulkFG,
 };

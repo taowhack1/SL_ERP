@@ -316,7 +316,7 @@ function TopContent(props) {
             {props.action && (
               <Dropdown overlay={menuAction()} trigger={["click"]}>
                 <Button type="text">
-                  Actions <CaretDownOutlined />
+                  {props?.actionTitle || "Actions"} <CaretDownOutlined />
                 </Button>
               </Dropdown>
             )}

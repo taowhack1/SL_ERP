@@ -8,7 +8,7 @@ import {
 } from "../../include/js/api";
 import { header_config } from "../../include/js/main_config";
 import { GET_ALL_MRP, GET_MRP_SO_REF, GET_MRP_BY_ID } from "../types";
-
+const apiMRPTest = `/production/mrp/calculate/sample`;
 const getMRPHead = (id, user_name) =>
   axios.get(`${api_mrp}/${id}&${user_name}`, header_config);
 
@@ -148,3 +148,32 @@ export const mrp_actions = (data, mrp_id) => (dispatch) => {
         duration: 4,
       });
 };
+
+const getMRPTest = (item_id, qty_batch, due_date) => {
+  try {
+    if (!item_id && !qty_batch && !due_date)
+      return { success: false, data: {}, message: "Missing Params" };
+    return axios
+      .get(`${apiMRPTest}/${item_id}&${qty_batch}&${due_date}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: {}, message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
+
+export { getMRPTest };

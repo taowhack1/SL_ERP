@@ -11,13 +11,13 @@ const header_config = {
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 200 * 1000, //2*1000ms
+  timeout: 30 * 1000, //2*1000ms = 2 วิ
 };
 const header_config_form = {
   headers: {
     "Content-Type": "multipart/form-data",
   },
-  timeout: 200 * 1000, //2*1000ms
+  timeout: 30 * 1000, //2*1000ms
 };
 // export const numberFormat = {
 //   precision: 6,

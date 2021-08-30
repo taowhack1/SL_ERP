@@ -22,6 +22,7 @@ import {
   create_po,
   reset_po_data,
   updatePODueDate,
+  get_open_po_list,
 } from "../../actions/purchase/PO_Actions";
 import { reducer } from "./reducers";
 import axios from "axios";
@@ -81,6 +82,7 @@ const PurchaseOrderCreate = (props) => {
     });
 
   useEffect(() => {
+    dispatch(get_open_po_list());
     dispatch(get_all_vendor());
     dispatch(get_vendor_payment_term_list());
     dispatch(getMasterDataItem());

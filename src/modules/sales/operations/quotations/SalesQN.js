@@ -3,7 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../../../components/MainLayout";
-import { get_quotation_list, reset_qn } from "../../../../actions/sales";
+import {
+  getQNList,
+  get_quotation_list,
+  reset_qn,
+} from "../../../../actions/sales";
 import { reset_comments } from "../../../../actions/comment&log";
 import { getMasterDataItem } from "../../../../actions/inventory";
 import Authorize from "../../../system/Authorize";
@@ -135,6 +139,22 @@ const SalesQN = (props) => {
 
   const dataTable = useSelector((state) => state.sales.qn.qn_list);
   const [state, setState] = useState(dataTable || []);
+  const [loading, setLoading] = useState(false);
+
+  const getData = async (user_name) => {
+    setLoading(true);
+    const resp = await getQNList(user_name);
+    if (resp.success) {
+      setState(resp.data);
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    getData(auth.user_name);
+    return () => {
+      setState([]);
+    };
+  }, [auth.user_name]);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -201,6 +221,7 @@ const SalesQN = (props) => {
             <Table
               columns={quotationColumns({ onOpenSO })}
               dataSource={state}
+              loading={loading}
               onChange={onChange}
               rowKey="qn_id"
               size="small"

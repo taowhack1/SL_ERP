@@ -1,4 +1,5 @@
-import { Table } from "antd";
+import { ExportOutlined } from "@ant-design/icons";
+import { Button, Space, Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -122,6 +123,33 @@ const SalesOrderList = () => {
   return (
     <>
       <div className="form-section">
+        <div className="d-flex flex-end mb-1">
+          <Space size={16}>
+            <Button
+              icon={<ExportOutlined />}
+              onClick={() =>
+                window.open(
+                  `${process.env.REACT_APP_REPORT_SERVER}/report_so_production_list.aspx`,
+                  "_blank"
+                )
+              }
+            >
+              Export PDF
+            </Button>
+            <Button
+              icon={<ExportOutlined />}
+              className="primary"
+              onClick={() =>
+                window.open(
+                  `${process.env.REACT_APP_REPORT_SERVER}/report_so_production_list.aspx?excel=true`,
+                  "_blank"
+                )
+              }
+            >
+              Export Excel
+            </Button>
+          </Space>
+        </div>
         <Table
           columns={columns}
           dataSource={sortData(soList)}

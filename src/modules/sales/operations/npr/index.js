@@ -1,5 +1,7 @@
 /** @format */
 
+import { Radio, Space } from "antd";
+import Text from "antd/lib/typography/Text";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getRDEmp } from "../../../../actions/hrm";
@@ -11,26 +13,16 @@ import NPRTable from "./NPRTable";
 
 const NPRList = () => {
   const dispatch = useDispatch();
-  const { branch_id, department_id } = useSelector(
-    (state) => state.auth.authData
-  );
   const { operations, loading } = useSelector((state) => state.sales);
   const list = operations.npr.list;
   const [state, setState] = useState(list);
   useEffect(() => {
     dispatch(getRDEmp());
-    dispatch(getNPRList(branch_id));
+    dispatch(getNPRList());
   }, []);
   useEffect(() => {
-    setState(
-      sortData(
-        list?.filter(
-          (obj) =>
-            obj.tg_trans_status_id !== 1 &&
-            (department_id === 1 || obj.rd_type_branch_id === branch_id)
-        )
-      )
-    );
+    console.log("list", list);
+    setState(sortData(list));
   }, [list]);
   const layoutConfig = {
     projectId: 7,
@@ -53,27 +45,71 @@ const NPRList = () => {
       setState(
         list.filter(
           (obj) =>
-            ((department_id === 1 || obj.rd_type_branch_id === branch_id) &&
-              obj.npr_no?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_product_name &&
-              obj.npr_product_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_customer_name &&
-              obj.npr_customer_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_created_by_name &&
-              obj.npr_created_by_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_responsed_required_by_name &&
-              obj.npr_responsed_required_by_name
+            // (department_id === 1 || obj?.rd_type_branch_id === branch_id) &&
+
+            obj?.npr_no?.toUpperCase()?.indexOf(text) >= 0 ||
+            (obj?.npr_product_name &&
+              obj?.npr_product_name?.toUpperCase()?.indexOf(text) >= 0) ||
+            (obj?.npr_customer_name &&
+              obj?.npr_customer_name?.toUpperCase()?.indexOf(text) >= 0) ||
+            (obj?.npr_created_by_name &&
+              obj?.npr_created_by_name?.toUpperCase()?.indexOf(text) >= 0) ||
+            (obj?.npr_responsed_required_by_name &&
+              obj?.npr_responsed_required_by_name
                 ?.toUpperCase()
                 ?.indexOf(text) >= 0) ||
-            (obj.npr_request_date &&
-              obj.npr_request_date?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.trans_status &&
-              obj.trans_status?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_responsed_by &&
-              obj.npr_responsed_by?.toUpperCase()?.indexOf(text) >= 0)
+            (obj?.npr_request_date &&
+              obj?.npr_request_date?.toUpperCase()?.indexOf(text) >= 0) ||
+            (obj?.trans_status &&
+              obj?.trans_status?.toUpperCase()?.indexOf(text) >= 0) ||
+            (obj?.npr_responsed_by &&
+              obj?.npr_responsed_by?.toUpperCase()?.indexOf(text) >= 0)
         )
       );
     },
+    searchBar: (
+      <Space size={18}>
+        <div>
+          <Text strong>Type of NPR :</Text>
+        </div>
+        <Radio.Group
+          options={[
+            {
+              label: "ALL",
+              value: 0,
+            },
+            {
+              label: "NPR",
+              value: 1,
+            },
+            {
+              label: "NPRm",
+              value: 3,
+            },
+          ]}
+          onChange={(e) => {
+            const nprType = e.target.value;
+            switch (nprType) {
+              case 0:
+                setState(list);
+                break;
+              case 1:
+                setState(list.filter((obj) => obj.branch_id === 1));
+                break;
+              case 3:
+                setState(list.filter((obj) => obj.branch_id === 3));
+                break;
+              default:
+                setState(list);
+                break;
+            }
+          }}
+          optionType="button"
+          buttonStyle="solid"
+          defaultValue={0}
+        />
+      </Space>
+    ),
   };
   console.log("List", state);
   return (

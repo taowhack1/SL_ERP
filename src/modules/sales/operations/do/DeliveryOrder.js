@@ -219,10 +219,10 @@ const DeliveryOrder = () => {
   };
 
   const createDo = (record) => {
-    const { dr_id, customer_id } = record;
+    const { dr_id, customer_detail_id } = record;
     if (!dr_id) return false;
     keepLog.keep_log_action(`Click Create DO Form DR ID : ${dr_id}`);
-    history.push("/sales/operation/do/create/", { dr_id, customer_id });
+    history.push("/sales/operation/do/create/", { dr_id, customer_detail_id });
   };
 
   const viewDo = (id) => {

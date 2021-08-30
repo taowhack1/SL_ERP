@@ -117,6 +117,8 @@ import Estimate from "./modules/sales/operations/estimate/Estimate";
 import EstimateForm from "./modules/sales/operations/estimate/EstimateForm";
 import DeliveryRouter from "./modules/sales/operations/do/DeliveryRouter";
 import JobOrderRoute from "./modules/production/Operation/jobOrder/JobOrderRoute";
+import GRReport from "./modules/inventory/reporting/gr";
+import MRPTest from "./modules/production/Operation/mrp-test";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -347,6 +349,9 @@ const App = (props) => {
             <Route exact path="/inventory/stock_card">
               <StockCard />
             </Route>
+            <Route exact path="/inventory/reporting/gr">
+              <GRReport />
+            </Route>
             {/* PURCHASE */}
             <Route exact path="/purchase">
               <Purchase />
@@ -522,6 +527,9 @@ const App = (props) => {
             </Route>
             <Route exact path="/production/operations/mrp/create">
               <MRPCreate />
+            </Route>
+            <Route exact path="/production/operations/mrp-test">
+              <MRPTest />
             </Route>
             {/* PETCH ADD */}
             <Route exact path="/production/operations/workorder/">

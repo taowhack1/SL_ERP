@@ -36,7 +36,7 @@ export const stock_on_hand_columns = [
     title: "Type",
     dataIndex: "type_name",
     key: "type_name",
-    width: "10%",
+    width: "8%",
     align: "left",
     sorter: {
       compare: (a, b) => a.type_id - b.type_id,
@@ -48,7 +48,7 @@ export const stock_on_hand_columns = [
     title: "On Hand",
     dataIndex: "on_hand",
     key: "on_hand",
-    width: "10%",
+    width: "8%",
     align: "right",
     sorter: {
       compare: (a, b) => a.on_hand - b.on_hand,
@@ -61,7 +61,7 @@ export const stock_on_hand_columns = [
     title: "Reserve",
     dataIndex: "wait_issue",
     key: "wait_issue",
-    width: "10%",
+    width: "8%",
     align: "right",
     sorter: {
       compare: (a, b) => a.wait_issue - b.wait_issue,
@@ -74,7 +74,7 @@ export const stock_on_hand_columns = [
     title: "Available",
     dataIndex: "on_available",
     key: "on_available",
-    width: "10%",
+    width: "8%",
     align: "right",
     sorter: {
       compare: (a, b) => a.on_available - b.on_available,
@@ -87,7 +87,7 @@ export const stock_on_hand_columns = [
     title: "On PO",
     dataIndex: "wait_receive",
     key: "wait_receive",
-    width: "10%",
+    width: "8%",
     align: "right",
     sorter: {
       compare: (a, b) => a.wait_receive - b.wait_receive,
@@ -100,7 +100,7 @@ export const stock_on_hand_columns = [
     title: "Total Available",
     dataIndex: "balance_after_issue",
     key: "balance_after_issue",
-    width: "10%",
+    width: "8%",
     align: "right",
     sorter: {
       compare: (a, b) => a.balance_after_issue - b.balance_after_issue,
@@ -113,13 +113,26 @@ export const stock_on_hand_columns = [
     title: "Qty on QC",
     dataIndex: "wait_qc",
     key: "wait_qc",
-    width: "10%",
+    width: "8%",
     align: "right",
     sorter: {
       compare: (a, b) => a.wait_qc - b.wait_qc,
       multiple: 3,
     },
     ellipsis: true,
+    render: (value) => numeral(value).format("0,0.0000"),
+  },
+  {
+    title: "Cost",
+    dataIndex: "item_cost",
+    key: "item_cost",
+    width: "8%",
+    align: "right",
+    sorter: {
+      compare: (a, b) => a.item_cost - b.item_cost,
+      multiple: 3,
+    },
+    ellipsis: false,
     render: (value) => numeral(value).format("0,0.0000"),
   },
   // {

@@ -34,6 +34,32 @@ export const get_quotation_list = (user_name) => (dispatch) => {
     dispatch({ type: SET_QN_LIST, payload: res.data[0] });
   });
 };
+const getQNList = (user_name) => {
+  try {
+    if (!user_name)
+      return { success: false, data: [], message: "Missing user_name" };
+    return axios
+      .get(`${api_quo_list}/all/${user_name}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data[0], message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
 
 export const get_so_list = (user_name) => async (dispatch) => {
   await axios.get(`${api_so}/all/${user_name}`, header_config).then((res) => {
@@ -46,12 +72,14 @@ export const get_so_list = (user_name) => async (dispatch) => {
 };
 
 const getSalesOrder = (user_name) => {
+  console.log("getSalesOrder @@", `${api_so}/all/${user_name}`);
   try {
     return axios
       .get(`${api_so}/all/${user_name}`, header_config)
       .then((resp) => {
+        console.log("getSalesOrder then", resp);
         if (resp.status === 200) {
-          console.log("resp.data", resp.data);
+          console.log("getSalesOrder resp.data", resp.data);
           return { success: true, data: resp.data, message: "Success" };
         } else {
           return { success: false, data: [], message: resp };
@@ -61,6 +89,7 @@ const getSalesOrder = (user_name) => {
         console.error(error);
         if (error?.response) {
           console.error(error.response);
+          return { success: false, data: [], message: error };
         }
         return { success: false, data: [], message: error };
       });
@@ -469,4 +498,5 @@ export {
   getSalesOrder,
   closeSO,
   getCustomerAddress,
+  getQNList,
 };

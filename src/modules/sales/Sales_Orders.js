@@ -41,11 +41,19 @@ const so_columns = ({ onOpen }) => [
     dataIndex: "qn_no",
     key: "qn_no",
     width: "10%",
-    align: "left",
+    align: "center",
     sorter: {
       compare: (a, b) => a.qn_id - b.qn_id,
       multiple: 3,
     },
+    render: (value) => value || "-",
+  },
+  {
+    title: "PO No.",
+    dataIndex: "so_customer_po_no",
+    key: "so_customer_po_no",
+    width: "10%",
+    align: "center",
     render: (value) => value || "-",
   },
   {
@@ -161,7 +169,7 @@ const SaleOrder = (props) => {
 
   const { qn_ref } = useSelector((state) => state.sales.so);
   const [state, setState] = useState(keepData.so);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -223,7 +231,6 @@ const SaleOrder = (props) => {
   useEffect(() => {
     // SEARCH , FILTER
     const filterData = () => {
-      console.log("SEARCHING...");
       setLoading(true);
       let filterData =
         filter.salesType === 3
@@ -312,7 +319,7 @@ const SaleOrder = (props) => {
         ),
         dataIndex: "so_detail_qty",
         align: "right",
-        width: "10%",
+        width: "8%",
         className: "tb-col-sm",
         render: (val, row) => convertDigit(val || 0, 2),
       },
@@ -324,7 +331,7 @@ const SaleOrder = (props) => {
         ),
         dataIndex: "uom_no",
         align: "left",
-        width: "7%",
+        width: "6%",
         className: "tb-col-sm",
         render: (val, row) => val,
       },
@@ -336,7 +343,7 @@ const SaleOrder = (props) => {
         ),
         dataIndex: "so_detail_price",
         align: "right",
-        width: "10%",
+        width: "8%",
         className: "tb-col-sm",
         render: (val, row) => convertDigit(val || 0, 2),
       },
@@ -348,7 +355,7 @@ const SaleOrder = (props) => {
         ),
         dataIndex: "so_detail_total_price",
         align: "right",
-        width: "10%",
+        width: "8%",
         className: "tb-col-sm",
         render: (val, row) => convertDigit(val || 0, 2),
       },
@@ -358,9 +365,9 @@ const SaleOrder = (props) => {
             <Text>ยอดค้างส่ง</Text>
           </div>
         ),
-        dataIndex: "tg_so_detail_qty_balance",
+        dataIndex: "tg_so_detail_qty_delivery",
         align: "right",
-        width: "10%",
+        width: "8%",
         className: "tb-col-sm",
         render: (val, row) => convertDigit(val || 0, 2),
       },
@@ -427,8 +434,6 @@ const SaleOrder = (props) => {
       </>
     );
   };
-  console.log("state : ", state);
-  console.log("loading", loading);
   return (
     <div>
       <MainLayout {...config}>
@@ -447,12 +452,6 @@ const SaleOrder = (props) => {
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
-                    console.log("element ", e.target);
-                    // if (["path", "svg", "P"].includes(e.target.tagName)) {
-                    //   viewData(record.dr_id);
-                    //   keepLog.keep_log_action(`Click ${record.dr_no}`);
-                    // }
-
                     setRowClick(true);
                     $(e.target)
                       .closest("tbody")
@@ -460,7 +459,7 @@ const SaleOrder = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     keepLog.keep_log_action(record.so_no);
-                    dispatch(get_so_by_id(record.so_id, auth.user_name));
+
                     props.history.push({
                       pathname: "/sales/orders/view/" + record.so_id,
                       state: record,

@@ -51,7 +51,6 @@ const SalesQNView = (props) => {
       dispatch(get_log_by_id(data_head.process_id));
   }, [data_head]);
 
-  const current_project = useSelector((state) => state.auth.currentProject);
   const changeProcessStatus = (process_status_id) => {
     if (remark.trim() === "") {
       alert("Plase write remark");
@@ -110,7 +109,8 @@ const SalesQNView = (props) => {
         }/report_quotation.aspx?qn_no=${data_head && data_head.qn_no}&price=1`,
       },
       data_head &&
-        data_head.button_recall && {
+        data_head.button_recall &&
+        data_head.tg_trans_status_id === 4 && {
           name: (
             <Text>
               <EditTwoTone className="mr-1" /> ขอแก้ไขข้อมูล

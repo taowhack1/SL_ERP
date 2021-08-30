@@ -1,3 +1,4 @@
+import { PrinterTwoTone } from "@ant-design/icons";
 import { message } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useContext, useEffect, useState } from "react";
@@ -125,6 +126,15 @@ const DeliveryOrderFormView = () => {
       edit: () => history.push(`/sales/operation/do/edit/${id}`),
       back: `/sales/operation/do`,
       action: [
+        {
+          name: (
+            <div className="text-center">
+              <PrinterTwoTone className="pd-right-1" />
+              <Text>Print</Text>
+            </div>
+          ),
+          link: `${process.env.REACT_APP_REPORT_SERVER}/report_do.aspx?do_no=${stateDO?.do_no}`,
+        },
         stateDO &&
           stateDO.button_cancel && {
             name: (

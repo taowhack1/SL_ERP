@@ -1,175 +1,291 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table, Tabs } from "antd";
+import { Row, Col, Table, Space, Button, Tabs } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
-import { get_report_stock } from "../../actions/inventory";
+import {
+  clearFilterStockOnHand,
+  filterStockOnHand,
+  getReportStockOnHand,
+  getSubReportStockOnHand,
+} from "../../actions/inventory";
 import { stock_on_hand_columns } from "./config/report";
 import Authorize from "../system/Authorize";
-import Modal from "antd/lib/modal/Modal";
+import CustomSelect from "../../components/CustomSelect";
+import Text from "antd/lib/typography/Text";
+import useSubTable from "../../include/js/customHooks/useSubTable";
+import {
+  ClearOutlined,
+  DownloadOutlined,
+  EllipsisOutlined,
+  ExportOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { sortData } from "../../include/js/function_main";
 import CustomTable from "../../components/CustomTable";
 import { convertDigit } from "../../include/js/main_config";
-import Text from "antd/lib/typography/Text";
-
-const StockMove = (props) => {
+import { AppContext } from "../../include/js/context";
+let stockDataSource = [];
+const Stock = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
-  const [pageSize, setPageSize] = useState(15);
+  const { expandedRowRender, handleExpand } = useSubTable({
+    columns,
+    fetchDataFunction: getSubReportStockOnHand,
+    rowKey: "id",
+    dataKey: "stock_history",
+  });
+  const {
+    auth: { user_name },
+  } = useContext(AppContext);
   const [rowClick, setRowClick] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [itemDetail, setItemDetail] = useState({
-    item_id: null,
-    item_name: null,
-    item_no_name: null,
-    issue_list: [
-      {
-        id: 0,
-        issue_id: 1,
-        issue_no_description: "TEST ISSUE 01",
-        issue_detail_qty: 20.5,
-        uom_no_name: "kg [ Kilogram ]",
-        issue_due_date: "20/01/2021",
-      },
-      {
-        id: 1,
-        issue_id: 2,
-        issue_no_description: "TEST ISSUE 06",
-        issue_detail_qty: 3.5,
-        uom_no_name: "kg [ Kilogram ]",
-        issue_due_date: "23/01/2021",
-      },
-    ],
-    po_list: [
-      {
-        id: 0,
-        po_id: 0,
-        po_no_description: "TEST PO 01",
-        po_detail_qty: 100,
-        uom_no_name: "kg [ Kilogram ]",
-        po_due_date: "02/02/2021",
-      },
-    ],
-    history_list: [
-      {
-        id: 0,
-        transfer_date: "15/01/2021",
-        transfer_type: "Receive",
-        transfer_from: "Vendor Location",
-        transfer_to: "Location 01",
-        transfer_qty: 10.5,
-        available_qty: 28.521,
-        uom_no: "kg",
-      },
-      {
-        id: 1,
-        transfer_date: "16/01/2021",
-        transfer_type: "Issue",
-        transfer_from: "Location 01",
-        transfer_to: "Location 02",
-        transfer_qty: 25,
-        available_qty: 3.521,
-        uom_no: "kg",
-      },
-      {
-        id: 2,
-        transfer_date: "22/01/2021",
-        transfer_type: "Receive",
-        transfer_from: "Vendor Location",
-        transfer_to: "Location 01",
-        transfer_qty: 85,
-        available_qty: 88.521,
-        uom_no: "kg",
-      },
-      {
-        id: 3,
-        transfer_date: "23/01/2021",
-        transfer_type: "Issue",
-        transfer_from: "Location 01",
-        transfer_to: "Production Location",
-        transfer_qty: 20,
-        available_qty: 68.521,
-        uom_no: "kg",
-      },
-      {
-        id: 4,
-        transfer_date: "31/01/2021",
-        transfer_type: "Issue",
-        transfer_from: "Location 01",
-        transfer_to: "Production Location",
-        transfer_qty: 30.521,
-        available_qty: 38,
-        uom_no: "kg",
-      },
-    ],
-    visible: false,
-  });
+
   const onChange = ({ pageSize }, filters, sorter, extra) => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1200);
-    setPageSize(pageSize);
-    console.log("params", filters, sorter, extra);
+    console.log("onChange pageSize", pageSize);
+    dispatch(filterStockOnHand({ pageSize }));
   };
-  const stock_on_hand = useSelector(
+
+  const { filter } = useSelector(
     (state) => state.inventory.report.stock_on_hand
   );
-  const [state, setState] = useState(stock_on_hand);
-  const current_project = useSelector((state) => state.auth.currentProject);
-  const config = {
-    projectId: current_project && current_project.project_id,
-    title: current_project && current_project.project_name,
-    home: current_project && current_project.project_url,
-    show: true,
-    breadcrumb: ["Home", "Stock on hand"],
-    search: true,
-    create: "",
-    buttonAction: [],
-    edit: {
-      data: {},
-      path: "",
-    },
-    disabledEditBtn: !rowClick,
-    discard: "/inventory",
-    onCancel: () => {
-      console.log("Cancel");
-    },
-    onSearch: (searchText) => {
-      console.log(searchText);
-      searchText
-        ? setState(
-            stock_on_hand.filter(
-              (item) => item.item_no_name.indexOf(searchText) >= 0
+  const { keyword, page, pageSize, itemType, codeType, expandedId } =
+    filter || {};
+
+  const [state, setState] = useState([]);
+
+  const config = useMemo(
+    () => ({
+      projectId: 3,
+      title: "INVENTORY",
+      home: "/inventory",
+      show: true,
+      breadcrumb: ["Home", "Stock on hand"],
+      search: true,
+      create: "",
+      buttonAction: [],
+      edit: {
+        data: {},
+        path: "",
+      },
+      disabledEditBtn: !rowClick,
+      discard: "/inventory",
+      onCancel: () => {
+        console.log("Cancel");
+      },
+      onSearch: (keyword) => {
+        dispatch(filterStockOnHand({ keyword: keyword?.toUpperCase() }));
+      },
+      searchValue: keyword,
+      searchBar: (
+        <Space size={18}>
+          <Space size={18}>
+            <div>
+              <Text strong>Item Type :</Text>
+            </div>
+            <CustomSelect
+              data={[
+                {
+                  title: "All",
+                  type_id: 0,
+                },
+                {
+                  title: "Raw Material",
+                  type_id: 1,
+                },
+                {
+                  title: "Packaging",
+                  type_id: 2,
+                },
+                {
+                  title: "Bulk",
+                  type_id: 3,
+                },
+                {
+                  title: "Finish Good",
+                  type_id: 4,
+                },
+              ]}
+              placeholder={"Select Item Type"}
+              field_id="type_id"
+              field_name="title"
+              value={itemType}
+              defaultValue={itemType}
+              className="text-center"
+              onChange={(id, row) =>
+                dispatch(filterStockOnHand({ itemType: id }))
+              }
+              style={{ width: 125 }}
+            />
+          </Space>
+        </Space>
+      ),
+    }),
+    [filter]
+  );
+
+  const getDataSoruce = async (user_name) => {
+    setLoading(true);
+    const resp = await getReportStockOnHand(user_name);
+    setTimeout(() => {
+      if (resp.success) {
+        stockDataSource = resp.data;
+        let filterData = keyword
+          ? resp?.data?.filter(
+              (item) => item?.item_no_name.indexOf(keyword) >= 0
             )
-          )
-        : setState(stock_on_hand);
-    },
+          : resp.data;
+        setState(filterData);
+      }
+      setLoading(false);
+    }, 1200);
   };
 
   useEffect(() => {
-    setLoading(true);
-    dispatch(get_report_stock());
-  }, []);
+    getDataSoruce(user_name);
+  }, [user_name]);
 
   useEffect(() => {
-    setState(stock_on_hand);
-    setLoading(false);
-  }, [stock_on_hand]);
-  console.log(itemDetail);
+    // SEARCH
+    if (stockDataSource?.length) {
+      setLoading(true);
+      console.log(
+        `filter [ keyword:${keyword} , itemType:${itemType} , expandedId:${expandedId} ]`
+      );
+      let filterData = stockDataSource;
+      const filterKeyword = (keyword = null) => {
+        filterData = keyword
+          ? stockDataSource?.filter(
+              (item) => item?.item_no_name.indexOf(keyword) >= 0
+            )
+          : stockDataSource;
+      };
+      const filterType = (type_id = 0) => {
+        switch (type_id) {
+          case 0:
+            filterData = filterData;
+            break;
+          default:
+            filterData = filterData?.filter((obj) => obj.type_id === type_id);
+            break;
+        }
+      };
+      const expandedRow = (expandedId = []) => {
+        filterData = filterData?.map((obj) =>
+          expandedId.includes(obj.item_id)
+            ? { ...obj, expanded: true }
+            : { ...obj, expanded: false }
+        );
+      };
+      filterKeyword(keyword);
+      filterType(itemType);
+      expandedRow(expandedId);
+      setState(sortData(filterData));
+      setLoading(false);
+    }
+  }, [filter, stockDataSource]);
+  console.log("stock on hand");
+  const expandedRowRender2 = (row) => {
+    return (
+      <div
+        className="ml-4 drop-shadow"
+        style={{
+          padding: "4px 4px 0px 4px",
+          marginBottom: "20px",
+          backgroundColor: "#FFFFFF",
+        }}
+      >
+        <Tabs
+          size="small"
+          type="card"
+          // tabBarExtraContent={
+          //   <div className="d-flex flex-end">
+          //     <Button icon={<DownloadOutlined />}>Export Excel</Button>
+          //   </div>
+          // }
+        >
+          <Tabs.TabPane tab={"Stock"} key="1">
+            {/* <h1>
+              รายละเอียดสต็อก No. , Lot , Batch , MFG , EXP , Qty , UOM ,Status
+              ,ราคาซื้อ (ใช้งานได้/QC/ของเสีย)
+            </h1> */}
+            {expandedRowRender(row)}
+          </Tabs.TabPane>
+          {/* <Tabs.TabPane tab={"Reserved"} key="2">
+            <h1>
+              รายละเเอียดแสดงใบเบิก No. , เลขที่ใบเบิก ,Job,วันที่จอง
+              ,วันที่ต้องการของ, จำนวน , จ่ายแล้วเท่าไหร่ , UOM ,
+            </h1>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab={"Purchase Order"} key="3">
+            <h1>
+              รายละเอียด No. , เลขที่ PO , วันที่เปิดซื้อ , ดีล , จำนวน , UOM
+            </h1>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab={"History"} key="4">
+            <h1>
+              รายละเอียดประวัติการเคลื่อนไหวของไอเทม No. ,วันที่ , Doc No. ,
+              Lot/Batch , Form , To , +/- Qty , Available Qty ,
+            </h1>
+          </Tabs.TabPane> */}
+        </Tabs>
+      </div>
+    );
+  };
   return (
     <div>
       <MainLayout {...config} pageLoad={loading}>
         <Row>
           <Col span={24}>
+            <div className="d-flex flex-end w-100 mt-1 mb-1">
+              <Space size={16}>
+                <Button
+                  type="dashed"
+                  size="small"
+                  icon={<ClearOutlined />}
+                  className="button-icon"
+                  onClick={() => dispatch(clearFilterStockOnHand())}
+                >
+                  Clear Search
+                </Button>
+                <div>
+                  <Text
+                    strong
+                    className="pd-right-1"
+                  >{`Search Result : `}</Text>
+                  <Text strong className="pd-right-1" style={{ color: "blue" }}>
+                    {state?.length || "-"}
+                  </Text>
+                  <Text strong>Items</Text>
+                </div>
+              </Space>
+            </div>
             <Table
+              bordered
               loading={loading}
               columns={stock_on_hand_columns}
               dataSource={state}
               onChange={onChange}
               rowKey={"item_id"}
-              pagination={{ pageSize }}
+              expandable={{ expandedRowRender: expandedRowRender2 }}
+              // expandable={{ expandedRowRender }}
+              onExpand={(expanded, row) => {
+                // console.log("onExpand", a, b, c);
+                handleExpand(expanded, row, {
+                  user_name,
+                  item_id: row.item_id,
+                  startDate: "01-01-2021",
+                  endDate: "31-12-2022",
+                });
+              }}
+              // onExpand={handleExpand}
+              pagination={{
+                pageSize,
+                pageSizeOptions: [15, 30, 50, 100],
+                showSizeChanger: true,
+              }}
               size="small"
               onRow={(record, rowIndex) => {
                 return {
@@ -180,11 +296,6 @@ const StockMove = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    setItemDetail({
-                      ...itemDetail,
-                      ...record,
-                      visible: true,
-                    });
                   },
                 };
               }}
@@ -192,212 +303,146 @@ const StockMove = (props) => {
           </Col>
         </Row>
       </MainLayout>
-      <Modal
-        visible={itemDetail.visible}
-        title={`${itemDetail.item_no_name}`}
-        footer={null}
-        width={800}
-        onOk={() => console.log("ok")}
-        onCancel={() => setItemDetail({ ...itemDetail, visible: false })}
-      >
-        <Tabs onChange={() => console.log("tab change")} type="card">
-          <Tabs.TabPane tab="On Reserved" key="1">
-            <CustomTable
-              rowKey="id"
-              rowClassName={"row-table-detail"}
-              pageSize={10}
-              columns={[
-                {
-                  id: 0,
-                  title: "No.",
-                  render: (value, record) => record.id + 1,
-                  width: "7%",
-                  align: "center",
-                },
-                {
-                  id: 1,
-                  title: "Due date",
-                  dataIndex: "issue_due_date",
-                  align: "center",
-                  width: "13%",
-                },
-                {
-                  id: 2,
-                  title: "Description",
-                  dataIndex: "issue_no_description",
-                  // width: "50%",
-                },
-                {
-                  id: 3,
-                  title: "Quantity",
-                  dataIndex: "issue_detail_qty",
-                  width: "15%",
-                  align: "right",
-                  render: (value) => convertDigit(value, 4),
-                },
-                {
-                  id: 4,
-                  title: "UOM",
-                  dataIndex: "uom_no_name",
-                  width: "20%",
-                  align: "left",
-                },
-              ]}
-              dataSource={itemDetail.issue_list}
-              readOnly={true}
-              summary={(pageData) => {
-                let total = pageData.reduce(
-                  (total, obj) => total + obj.issue_detail_qty,
-                  0
-                );
-                return (
-                  <>
-                    <Table.Summary.Row className="row-table-detail row-summary">
-                      <Table.Summary.Cell colSpan={2}></Table.Summary.Cell>
-                      <Table.Summary.Cell>
-                        <Text strong>Total</Text>{" "}
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell className="text-right">
-                        <Text strong>{convertDigit(total, 4)}</Text>
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell className="text-left">
-                        <Text strong>
-                          {pageData.length && pageData[0].uom_no_name}
-                        </Text>
-                      </Table.Summary.Cell>
-                    </Table.Summary.Row>
-                  </>
-                );
-              }}
-            />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Purchase Order" key="2">
-            <CustomTable
-              rowKey="id"
-              rowClassName={"row-table-detail"}
-              pageSize={10}
-              columns={[
-                {
-                  id: 0,
-                  title: "No.",
-                  render: (value, record) => record.id + 1,
-                  width: "7%",
-                  align: "center",
-                },
-                {
-                  id: 1,
-                  title: "Due date",
-                  dataIndex: "po_due_date",
-                  align: "center",
-                  width: "13%",
-                },
-                {
-                  id: 2,
-                  title: "Description",
-                  dataIndex: "po_no_description",
-                  // width: "50%",
-                },
-                {
-                  id: 3,
-                  title: "Quantity",
-                  dataIndex: "po_detail_qty",
-                  width: "15%",
-                  align: "right",
-                  render: (value) => convertDigit(value, 4),
-                },
-                {
-                  id: 4,
-                  title: "UOM",
-                  dataIndex: "uom_no_name",
-                  width: "20%",
-                  align: "left",
-                },
-              ]}
-              dataSource={itemDetail.po_list}
-              readOnly={true}
-              summary={(pageData) => {
-                let total = pageData.reduce(
-                  (total, obj) => total + obj.po_detail_qty,
-                  0
-                );
-                return (
-                  <>
-                    <Table.Summary.Row className="row-table-detail row-summary">
-                      <Table.Summary.Cell colSpan={2}></Table.Summary.Cell>
-                      {/* <Table.Summary.Cell></Table.Summary.Cell> */}
-                      <Table.Summary.Cell>
-                        <Text strong>Total</Text>{" "}
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell className="text-right">
-                        <Text strong>{convertDigit(total, 4)}</Text>
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell className="text-left">
-                        <Text strong>
-                          {pageData.length && pageData[0].uom_no_name}
-                        </Text>
-                      </Table.Summary.Cell>
-                    </Table.Summary.Row>
-                  </>
-                );
-              }}
-            />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="History" key="3">
-            <CustomTable
-              rowKey="id"
-              rowClassName={"row-table-detail"}
-              pageSize={10}
-              columns={[
-                {
-                  title: "Date",
-                  dataIndex: "transfer_date",
-                  align: "center",
-                  width: "13%",
-                },
-                {
-                  title: "Type",
-                  dataIndex: "transfer_type",
-                  width: "10%",
-                },
-                {
-                  title: "Form",
-                  dataIndex: "transfer_from",
-                },
-                {
-                  title: "To",
-                  dataIndex: "transfer_to",
-                },
-                {
-                  title: "Quantity",
-                  dataIndex: "transfer_qty",
-                  width: "10%",
-                  align: "right",
-                  render: (value) => convertDigit(value, 4),
-                },
-                {
-                  // id: 3,
-                  title: "Available",
-                  dataIndex: "available_qty",
-                  width: "10%",
-                  align: "right",
-                  render: (value) => convertDigit(value, 4),
-                },
-                {
-                  // id: 4,
-                  title: "UOM",
-                  dataIndex: "uom_no",
-                  width: "10%",
-                  align: "left",
-                },
-              ]}
-              dataSource={itemDetail.history_list}
-              readOnly={true}
-            />
-          </Tabs.TabPane>
-        </Tabs>
-      </Modal>
     </div>
   );
 };
 
-export default withRouter(StockMove);
+export default withRouter(Stock);
+
+const columns = () => [
+  {
+    title: (
+      <div className="text-center">
+        <b>No.</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "id",
+    render: (val) => val + 1,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Lot No.</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    // width: "10%",
+    dataIndex: "stock_lot_no",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Batch No.</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    // width: "10%",
+    dataIndex: "stock_batch",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>MFG</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "stock_mfg_date",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>EXP</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "stock_exp_date",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Price</b>
+      </div>
+    ),
+    align: "right",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "stock_unit_price",
+    render: (val) => convertDigit(val, 4) || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Qty.</b>
+      </div>
+    ),
+    align: "right",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "tg_stock_qty_balance",
+    render: (val) => convertDigit(val, 6) || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>UOM</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "uom_no",
+    render: (val) => val || "-",
+  },
+];
+//No. , Lot , Batch , MFG , EXP , Qty , UOM ,Status ,ราคาซื้อ (ใช้งานได้/QC/ของเสีย)
+const mockData = [
+  {
+    id: 0,
+    doc_id: 1,
+    lot_no: "LOT001",
+    batch_no: "202108010001",
+    mfg: "01/01/2021",
+    exp: "31/12/2021",
+    qty: 123,
+    uom: "kg",
+    status: "On QC",
+    price: 1050,
+  },
+  {
+    id: 1,
+    doc_id: 2,
+    lot_no: "LOT002",
+    batch_no: "202108010022",
+    mfg: "15/02/2021",
+    exp: "15/02/2022",
+    qty: 800,
+    uom: "kg",
+    status: "Usable",
+    price: 980,
+  },
+  {
+    id: 2,
+    doc_id: 2,
+    lot_no: "LOT054",
+    batch_no: "202108010035",
+    mfg: "31/08/2021",
+    exp: "31/08/2022",
+    qty: 125,
+    uom: "kg",
+    status: "Reject",
+    price: 1050,
+  },
+];

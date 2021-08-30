@@ -45,7 +45,16 @@ import {
   GET_RETURN_LIST_REQUEST,
   GET_RETURN_LIST_SUCCESS,
 } from "../actions/inventory/operation/return/returnActions";
-import { CLEAR_STATE_ITEM, GET_SAMPLE_ITEMS } from "../actions/inventory";
+import {
+  CLEAR_FILTER_STOCK_ON_HAND,
+  CLEAR_STATE_ITEM,
+  FILTER_STOCK_ON_HAND,
+  GET_SAMPLE_ITEMS,
+} from "../actions/inventory";
+import {
+  CLEAR_FILTER_REPORT_GR,
+  FILTER_REPORT_GR,
+} from "../actions/inventory/receiveActions";
 const initialState = {
   loading: false,
   item: {
@@ -103,7 +112,24 @@ const initialState = {
     disburse_sub_detail: [],
   },
   report: {
-    stock_on_hand: [],
+    stock_on_hand: {
+      filter: {
+        keyword: null,
+        page: 1,
+        pageSize: 15,
+        itemType: 0,
+        codeType: 0,
+        expandedId: [],
+      },
+      dataSource: [],
+    },
+    gr: {
+      filter: {
+        itemType: 0,
+        startDate: null,
+        endDate: null,
+      },
+    },
   },
   operations: {
     productionReceive: {
@@ -350,7 +376,68 @@ export default (state = initialState, action) => {
     case GET_REPORT_STOCK:
       return {
         ...state,
-        report: { ...state.report, stock_on_hand: action.payload },
+        report: {
+          ...state.report,
+          stock_on_hand: {
+            ...state.report.stock_on_hand,
+            dataSource: action.payload,
+          },
+        },
+      };
+    // ค้นหาข้อมูลหน้า /stock_on_hand
+    case FILTER_STOCK_ON_HAND:
+      return {
+        ...state,
+        report: {
+          ...state.report,
+          stock_on_hand: {
+            ...state.report.stock_on_hand,
+            filter: {
+              ...state.report.stock_on_hand.filter,
+              ...action.payload,
+            },
+          },
+        },
+      };
+    // ล้างค่าการค้นหาทั้งหมดของหน้า /stock_on_hand
+    case CLEAR_FILTER_STOCK_ON_HAND:
+      return {
+        ...state,
+        report: {
+          ...state.report,
+          stock_on_hand: {
+            ...state.report.stock_on_hand,
+            filter: initialState.report.stock_on_hand.filter,
+          },
+        },
+      };
+
+    // ค้นหาข้อมูลหน้า /gr
+    case FILTER_REPORT_GR:
+      return {
+        ...state,
+        report: {
+          ...state.report,
+          gr: {
+            ...state.report.gr,
+            filter: {
+              ...state.report.gr.filter,
+              ...action.payload,
+            },
+          },
+        },
+      };
+    // ล้างค่าการค้นหาทั้งหมดของหน้า /gr
+    case CLEAR_FILTER_REPORT_GR:
+      return {
+        ...state,
+        report: {
+          ...state.report,
+          gr: {
+            ...state.report.gr,
+            filter: initialState.report.gr.filter,
+          },
+        },
       };
 
     //ISSUE RETURN

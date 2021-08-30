@@ -117,12 +117,12 @@ const CustomerAddressTab = ({
                   </Col>
                   <Col span={4} className="text-left">
                     <Input
-                      name="customer_detail_mobile"
+                      name="customer_detail_phone"
                       placeholder="Contact Phone No."
-                      value={line.customer_detail_mobile}
+                      value={line.customer_detail_phone}
                       onChange={(e) => {
                         onChangeValue(line.id, {
-                          customer_detail_mobile: e.target.value,
+                          customer_detail_phone: e.target.value,
                         });
                       }}
                     />
@@ -186,7 +186,7 @@ const CustomerAddressTab = ({
                   </Col>
                   <Col span={4} className="text-left">
                     <Text className="pre-wrap">
-                      {line?.customer_detail_mobile}
+                      {line?.customer_detail_phone}
                     </Text>
                   </Col>
                   {/* <Col span={4} className="text-center">

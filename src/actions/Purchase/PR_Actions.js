@@ -14,6 +14,7 @@ import axios from "axios";
 import { sortData } from "../../include/js/function_main";
 import { message } from "antd";
 
+const SEARCH_PR = "SEARCH_PR";
 const header_config = {
   headers: {
     "Content-Type": "application/json",
@@ -31,86 +32,80 @@ export const get_pr_list = (user_name) => (dispatch) => {
       });
     });
 };
-export const update_pr = (
-  pr_id,
-  user_name,
-  data_head,
-  data_detail,
-  redirect
-) => (dispatch) => {
-  console.log(1, "start", data_head, data_detail);
-  try {
-    axios
-      .put(`${api_purchase}/pr/${pr_id}`, data_head, header_config)
-      .then(async (res) => {
-        console.log(2, "clear detail");
-        axios
-          .post(
-            `${api_purchase}/pr_detail/${pr_id}`,
-            data_detail,
-            header_config
-          )
-          .then(() => {
-            console.log(3, "get head and detail");
-            dispatch(get_pr_by_id(pr_id, user_name));
-            console.log(4, "done..");
-            message.success({
-              content: "PR Updated.",
-              key: "validate",
-              duration: 2,
+export const update_pr =
+  (pr_id, user_name, data_head, data_detail, redirect) => (dispatch) => {
+    console.log(1, "start", data_head, data_detail);
+    try {
+      axios
+        .put(`${api_purchase}/pr/${pr_id}`, data_head, header_config)
+        .then(async (res) => {
+          console.log(2, "clear detail");
+          axios
+            .post(
+              `${api_purchase}/pr_detail/${pr_id}`,
+              data_detail,
+              header_config
+            )
+            .then(() => {
+              console.log(3, "get head and detail");
+              dispatch(get_pr_by_id(pr_id, user_name));
+              console.log(4, "done..");
+              message.success({
+                content: "PR Updated.",
+                key: "validate",
+                duration: 2,
+              });
+              redirect();
             });
-            redirect();
-          });
+        });
+    } catch (error) {
+      console.log(error);
+      message.error({
+        content: "Somethings went wrong. \n" + error,
+        key: "validate",
+        duration: 2,
       });
-  } catch (error) {
-    console.log(error);
-    message.error({
-      content: "Somethings went wrong. \n" + error,
-      key: "validate",
-      duration: 2,
-    });
-  }
-};
+    }
+  };
 
-export const create_pr = (user_name, data_head, data_detail, redirect) => (
-  dispatch
-) => {
-  console.log(data_head);
-  try {
-    axios
-      .post(`${api_purchase}/pr`, data_head, header_config)
-      .then(async (res) => {
-        console.log(2, "clear detail");
-        console.log("data_detail", data_detail);
-        const pr_id = res.data[0][0].pr_id;
-        axios
-          .post(
-            `${api_purchase}/pr_detail/${pr_id}`,
-            data_detail,
-            header_config
-          )
-          .then(() => {
-            console.log(3, "get head and detail");
-            dispatch(get_pr_by_id(pr_id, user_name));
-            console.log(4, "done..");
-            return_response(true, "Create PR Succesful.");
-            message.success({
-              content: "PR Created.",
-              key: "validate",
-              duration: 2,
+export const create_pr =
+  (user_name, data_head, data_detail, redirect) => (dispatch) => {
+    console.log(data_head);
+    try {
+      axios
+        .post(`${api_purchase}/pr`, data_head, header_config)
+        .then(async (res) => {
+          console.log(2, "clear detail");
+          console.log("data_detail", data_detail);
+          const pr_id = res.data[0][0].pr_id;
+          axios
+            .post(
+              `${api_purchase}/pr_detail/${pr_id}`,
+              data_detail,
+              header_config
+            )
+            .then(() => {
+              console.log(3, "get head and detail");
+              dispatch(get_pr_by_id(pr_id, user_name));
+              console.log(4, "done..");
+              return_response(true, "Create PR Succesful.");
+              message.success({
+                content: "PR Created.",
+                key: "validate",
+                duration: 2,
+              });
+              redirect();
             });
-            redirect();
-          });
-      })
-      .catch((error) => {
-        console.log(error);
-        return_response(true, error);
-      });
-  } catch (error) {
-    console.log(error);
-    return_response(true, error);
-  }
-};
+        })
+        .catch((error) => {
+          console.log(error);
+          return_response(true, error);
+        });
+    } catch (error) {
+      console.log(error);
+      return_response(true, error);
+    }
+  };
 export const get_pr_by_id = (pr_id, user_name) => async (dispatch) => {
   console.log("get_pr_by_id");
 
@@ -207,3 +202,8 @@ export const return_response = (status, message) => {
   };
   return return_data;
 };
+
+const filterPR = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_PR, payload: data });
+
+export { filterPR, SEARCH_PR };

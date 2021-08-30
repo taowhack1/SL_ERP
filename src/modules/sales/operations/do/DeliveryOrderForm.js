@@ -55,10 +55,12 @@ const DeliveryOrderForm = (props) => {
   authorize.check_authorize();
 
   const { id } = useParams();
-  const { dr_id, customer_id: lo_customer_id } = props?.location?.state || {
+  const { dr_id, customer_detail_id: lo_customer_detail_id } = props?.location
+    ?.state || {
     dr_id: null,
-    lo_customer_id: null,
+    lo_customer_detail_id: null,
   };
+  console.log("props location", props?.location);
   const [config, setConfig] = useState({
     readOnly: false,
     loading: false,
@@ -68,7 +70,7 @@ const DeliveryOrderForm = (props) => {
     drList: [],
   });
   const [stateDO, setStateDO] = useState(initialState);
-  const { customer_id, do_id } = stateDO;
+  const { customer_detail_id, do_id } = stateDO;
   const setLoading = (bool) =>
     setConfig((prev) => ({ ...prev, loading: bool }));
 
@@ -151,8 +153,11 @@ const DeliveryOrderForm = (props) => {
           ...prev,
           customers: resp.success && resp.data,
         }));
-        lo_customer_id &&
-          setStateDO((prev) => ({ ...prev, customer_id: lo_customer_id }));
+        lo_customer_detail_id &&
+          setStateDO((prev) => ({
+            ...prev,
+            customer_detail_id: lo_customer_detail_id,
+          }));
       }
     };
 
@@ -169,10 +174,8 @@ const DeliveryOrderForm = (props) => {
 
   useEffect(() => {
     // GET DR LIST WHEN CHANGE CUSTOMER
-    const getDRList = async (customer_id, do_id) => {
-      console.log("getDRList");
-      const resp = await getFormDR({ customer_id, do_id });
-      console.log("resp", resp);
+    const getDRList = async (customer_detail_id, do_id) => {
+      const resp = await getFormDR({ customer_detail_id, do_id });
       message.info("Get list of Delivery Request success.", resp);
       if (resp.success) {
         setSelectData((prev) => ({ ...prev, drList: sortData(resp.data) }));
@@ -181,27 +184,30 @@ const DeliveryOrderForm = (props) => {
             ...resp.data.find((obj) => obj.dr_id === dr_id),
             id: 0,
           };
+          console.log("selectedDR", selectedDR);
           const {
-            do_location_delivery,
             customer_detail_address,
             customer_detail_name,
             customer_detail_phone,
-          } = selectData || {};
+          } = selectedDR;
           dr_id &&
             setStateDO((prev) => ({
               ...prev,
-              do_location_delivery: selectedDR.do_location_delivery,
+              do_location_delivery: customer_detail_address,
+              customer_detail_name: customer_detail_name,
+              customer_detail_phone: customer_detail_phone,
               do_detail: [selectedDR],
             }));
         }
       }
     };
-    console.log("config", config, customer_id);
-    !config.readOnly && customer_id
-      ? getDRList(customer_id, do_id)
+    console.log("config", config, customer_detail_id);
+    !config.readOnly && customer_detail_id
+      ? getDRList(customer_detail_id, do_id)
       : setSelectData((prev) => ({ ...prev, drList: [] }));
-  }, [customer_id, do_id]);
-
+  }, [customer_detail_id, do_id]);
+  console.log("stateDO", stateDO);
+  console.log("selectData", selectData);
   return (
     <>
       <MainLayout {...layoutConfig}>
