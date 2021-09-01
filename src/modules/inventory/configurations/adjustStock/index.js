@@ -209,7 +209,7 @@ const AdjustStock = () => {
         </Space>
       ),
     }),
-    [filter]
+    [keyword, setModal, filter]
   );
   console.log("Adjust Stock", modal);
   const expandedRowRender2 = (row) => {
@@ -229,6 +229,23 @@ const AdjustStock = () => {
       </div>
     );
   };
+  const viewData = (dr_id) =>
+    setModal((prev) => ({ ...prev, dr_id, visible: true }));
+  const listConfig = React.useMemo(
+    () => ({
+      loading,
+      data: state,
+      viewData,
+    }),
+    [loading, state, viewData]
+  );
+  const modalConfig = React.useMemo(
+    () => ({
+      ...modal,
+      onClose,
+    }),
+    [modal.visible, onClose]
+  );
   return (
     <div>
       <MainLayout {...config} pageLoad={loading}>
