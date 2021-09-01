@@ -8,7 +8,7 @@ import { warningTextValue } from "../../../../include/js/function_main";
 import { convertDigit } from "../../../../include/js/main_config";
 
 const MRPTestDetail = (props) => {
-  const { item_id, qty_batch, due_date } = props;
+  const { item_id, qty_batch, due_date, onCalculate, stateDetail } = props;
   const checkDisabledBtn = () => {
     let disabled = true;
     disabled = item_id ? false : true;
@@ -18,24 +18,24 @@ const MRPTestDetail = (props) => {
   };
   const disabledCalBtn = checkDisabledBtn();
 
-  const [state, setState] = useState({
-    data: {},
-    loading: false,
-  });
-  const onCalculate = async () => {
-    setState((prev) => ({ ...prev, loading: true }));
-    const resp = await getMRPTest(item_id, qty_batch, due_date);
-    if (resp.success) {
-      setState((prev) => ({ ...prev, loading: false, data: resp.data[0] }));
-    } else {
-      message.error(resp.message);
-      setState((prev) => ({ ...prev, loading: false }));
-    }
-  };
+  // const [state, setState] = useState({
+  //   data: {},
+  //   loading: false,
+  // });
+  // const onCalculate = async () => {
+  //   setState((prev) => ({ ...prev, loading: true }));
+  //   const resp = await getMRPTest(item_id, qty_batch, due_date);
+  //   if (resp.success) {
+  //     setState((prev) => ({ ...prev, loading: false, data: resp.data[0] }));
+  //   } else {
+  //     message.error(resp.message);
+  //     setState((prev) => ({ ...prev, loading: false }));
+  //   }
+  // };
   const {
     data: { item_formula, item_packaging },
     loading,
-  } = state;
+  } = stateDetail;
   return (
     <>
       <Tabs
@@ -53,7 +53,7 @@ const MRPTestDetail = (props) => {
           </>
         }
       >
-        <Tabs.TabPane tab="Raw Material" key="1">
+        <Tabs.TabPane tab="Bulk" key="1">
           <CustomTable
             bordered
             rowKey="id"
@@ -64,7 +64,7 @@ const MRPTestDetail = (props) => {
             pageSize={999}
           />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Packaging" key="2">
+        <Tabs.TabPane tab="FG Spec." key="2">
           <CustomTable
             bordered
             rowKey="id"

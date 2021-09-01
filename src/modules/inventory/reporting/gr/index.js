@@ -1,5 +1,5 @@
 import { ClearOutlined, DownloadOutlined } from "@ant-design/icons";
-import { Button, DatePicker, message, Space, Table } from "antd";
+import { Button, DatePicker, Space, Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect, useMemo } from "react";
 import CustomSelect from "../../../../components/CustomSelect";
@@ -11,12 +11,11 @@ import { filterReportGR } from "../../../../actions/inventory/receiveActions";
 import { useFetch } from "../../../../include/js/customHooks";
 const { RangePicker } = DatePicker;
 
-let backupData = [];
 const GRReport = () => {
   const dispatch = useDispatch();
   const { filter } = useSelector((state) => state?.inventory?.report?.gr || {});
   const { itemType, startDate, endDate } = filter;
-  const { data, loading, error } = useFetch(
+  const { data, loading } = useFetch(
     `/reports/receive/0&${itemType}&${startDate}&${endDate}`
   );
   const onFilter = (keyValue) => dispatch(filterReportGR(keyValue));

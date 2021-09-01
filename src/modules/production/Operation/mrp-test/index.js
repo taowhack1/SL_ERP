@@ -1,14 +1,20 @@
-import { Col, DatePicker, InputNumber, Row, Spin } from "antd";
+import { Col, DatePicker, InputNumber, message, Row, Spin } from "antd";
+import Text from "antd/lib/typography/Text";
 import moment from "moment";
 import React, { useMemo, useState } from "react";
 import { apiGetBulkFG } from "../../../../actions/inventory";
+import { getMRPTest } from "../../../../actions/production/mrpActions";
 import CustomLabel from "../../../../components/CustomLabel";
 import CustomSelect from "../../../../components/CustomSelect";
 import MainLayout from "../../../../components/MainLayout";
 import { useFetch } from "../../../../include/js/customHooks";
-import { getNumberFormat } from "../../../../include/js/main_config";
+import {
+  convertDigit,
+  getNumberFormat,
+} from "../../../../include/js/main_config";
 import MRPTestDetail from "./MRPTestDetail";
 
+const referenceDetail = {};
 const MRPTest = () => {
   const { data: itemList, loading, error } = useFetch(apiGetBulkFG);
   const [state, setState] = useState({
@@ -17,7 +23,31 @@ const MRPTest = () => {
     qty_batch: 0,
   });
   const { item_id, due_date, qty_batch } = state;
+
+  const [stateDetail, setStateDetail] = useState({
+    data: {},
+    loading: false,
+  });
+  const { item_id_ref, item_no_name_ref, mrp_qty_produce_ref, uom_no_ref } =
+    stateDetail?.data || {};
+
   const onChange = (data) => setState((prev) => ({ ...prev, ...data }));
+
+  const onCalculate = async () => {
+    setStateDetail((prev) => ({ ...prev, loading: true }));
+    const resp = await getMRPTest(item_id, qty_batch, due_date);
+    if (resp.success) {
+      setStateDetail((prev) => ({
+        ...prev,
+        loading: false,
+        data: resp.data[0],
+      }));
+    } else {
+      message.error(resp.message);
+      setStateDetail((prev) => ({ ...prev, loading: false }));
+    }
+  };
+
   const layoutConfig = useMemo(
     () => ({
       projectId: 10, // project ID from DB
@@ -46,6 +76,15 @@ const MRPTest = () => {
     []
   );
 
+  const detailValue = useMemo(
+    () => ({
+      ...state,
+      stateDetail,
+      onCalculate,
+    }),
+    [state, stateDetail]
+  );
+
   return (
     <MainLayout {...layoutConfig}>
       <div id="form">
@@ -68,10 +107,14 @@ const MRPTest = () => {
                     field_id="item_id"
                     field_name="item_no_name"
                     value={item_id}
-                    onChange={(val) => {
+                    onChange={(val, row) => {
                       val
                         ? onChange({ item_id: val, qty_batch: 0 })
                         : onChange({ item_id: null, qty_batch: 0 });
+                      setStateDetail({
+                        data: {},
+                        loading: false,
+                      });
                     }}
                   />
                 </Spin>
@@ -116,15 +159,36 @@ const MRPTest = () => {
             </Row>
           </Col>
           <Col span={12}>
-            <Row className="col-2 mt-1 mb-1">
-              <Col span={6}></Col>
-              <Col span={18}></Col>
-            </Row>
+            {item_id_ref && (
+              <>
+                <Row className="col-2 mt-1 mb-1">
+                  <Col span={6}>
+                    <CustomLabel readOnly={false} label={"Bulk Item :"} />
+                  </Col>
+                  <Col span={18}>
+                    <Text className="pre-wrap">{item_no_name_ref || "-"}</Text>
+                  </Col>
+                </Row>
+                <Row className="col-2 mt-1 mb-1">
+                  <Col span={6}>
+                    <CustomLabel readOnly={false} label={"Bulk Qty. :"} />
+                  </Col>
+                  <Col span={18}>
+                    <Text className="text-value pre-wrap">
+                      {convertDigit(mrp_qty_produce_ref, 6) || "-"}
+                    </Text>
+                    <Text className="pd-left-3" strong>
+                      {uom_no_ref || "-"}
+                    </Text>
+                  </Col>
+                </Row>
+              </>
+            )}
           </Col>
         </Row>
         <Row className="col-2 mt-1 mb-1">
           <Col span={24}>
-            <MRPTestDetail {...state} />
+            <MRPTestDetail {...detailValue} />
           </Col>
         </Row>
       </div>
