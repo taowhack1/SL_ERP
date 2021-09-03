@@ -409,7 +409,10 @@ const DisburseDetail = ({
         <Row className="row-tab-margin-lg">
           <Col span={24}>
             <SubDetail
-              disburse_detail_id={temp_detail && temp_detail.disburse_detail_id}
+              limit_qty={temp_detail?.tg_disburse_detail_qty_balance || 0}
+              disburse_detail_id={
+                temp_detail && temp_detail?.disburse_detail_id
+              }
               readOnly={readOnly}
               temp_sub_detail={temp_sub_detail}
               tempSubDetailDispatch={tempSubDetailDispatch}

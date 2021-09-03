@@ -20,6 +20,7 @@ import { convertDigit, numberFormat } from "../../../../include/js/main_config";
 const { Text } = Typography;
 
 const SubDetail = ({
+  limit_qty,
   readOnly,
   disburse_detail_id,
   data_detail,
@@ -91,10 +92,6 @@ const SubDetail = ({
       }
     }
   };
-  console.log("sub detail page 2", temp_sub_detail);
-  console.log("data_detail", data_detail);
-  console.log("location_shelf_list", location_shelf_list);
-  console.log("lot_batch_list", lot_batch_list);
   return (
     <>
       {/* Column Header */}
@@ -193,8 +190,7 @@ const SubDetail = ({
                             stock_exp_date: option.data.stock_exp_date,
                             tg_stock_qty_balance:
                               option.data.tg_stock_qty_balance,
-                            disburse_detail_sub_qty:
-                              option.data.tg_stock_qty_balance,
+                            disburse_detail_sub_qty: 0,
                           })
                         : onChangeValue(line.id, {
                             stock_id: null,
@@ -214,8 +210,8 @@ const SubDetail = ({
                     {...numberFormat}
                     placeholder={"Quantity Done"}
                     min={0.0}
-                    max={line.tg_stock_qty_balance}
-                    step={0.001}
+                    max={limit_qty}
+                    step={0.000001}
                     size="small"
                     name="disburse_detail_sub_qty"
                     className={"full-width"}
@@ -254,9 +250,8 @@ const SubDetail = ({
                     }
                     onChange={(data) => {
                       onChangeValue(line.id, {
-                        disburse_detail_sub_disburse_date: data.format(
-                          "DD/MM/YYYY"
-                        ),
+                        disburse_detail_sub_disburse_date:
+                          data.format("DD/MM/YYYY"),
                       });
                     }}
                   />

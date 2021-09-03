@@ -148,9 +148,7 @@ export const columns = ({ readOnly = false, onChange }) => [
             content={
               <>
                 <div className="mb-1 border-bottom">
-                  <Text strong>
-                    วิธีคิด : (On hand + PR + PO + GR + QC) - Reserve
-                  </Text>
+                  <Text strong>วิธีคิด : (On hand + QC) - Reserve</Text>
                 </div>
 
                 <div className="d-flex flex-space">
@@ -240,86 +238,86 @@ export const columns = ({ readOnly = false, onChange }) => [
       return <Text className="text-value ">{value ?? "-"}</Text>;
     },
   },
-  {
-    title: (
-      <div className="text-center" title="Purchase request qauntity.">
-        PR Qty.
-      </div>
-    ),
-    dataIndex: "mrp_detail_qty_pr",
-    key: "mrp_detail_qty_pr",
-    require: true,
-    align: "right",
-    width: "10%",
-    render: (value, record, index) => convertDigit(value, 4) ?? "-",
-  },
-  {
-    title: (
-      <div className="text-center" title="Minimum order quantity">
-        MOQ.
-      </div>
-    ),
-    dataIndex: "item_vendor_moq",
-    key: "item_vendor_moq",
-    align: "right",
-    require: true,
-    width: "8%",
-    render: (value, record, index) => {
-      return <Text className="text-value ">{convertDigit(value, 4)}</Text>;
-    },
-  },
-  {
-    title: (
-      <div className="text-center" title="Purchase unit of measure">
-        PUR. UOM.
-      </div>
-    ),
-    dataIndex: "item_vendor_uom_no",
-    key: "item_vendor_uom_no",
-    align: "center",
-    require: true,
-    width: "8%",
-    render: (value, record, index) => {
-      return <Text className="text-value ">{value ?? "-"}</Text>;
-    },
-  },
-  {
-    title: (
-      <div className="text-center" title="Lead time">
-        L/T (days)
-      </div>
-    ),
-    dataIndex: "mrp_detail_pr_lead_time_day",
-    align: "center",
-    width: "7%",
-    render: (value, record, index) => {
-      return value;
-    },
-  },
-  {
-    title: (
-      <div className="text-center" title="Suggestion Date">
-        Sugg. Date
-      </div>
-    ),
-    dataIndex: "mrp_detail_suggestion_date",
-    align: "center",
-    width: "9%",
-    render: (value, record, index) => {
-      return <Text className="text-value">{value}</Text>;
-    },
-  },
-  {
-    title: (
-      <div className="text-center" title="Incomming Date">
-        Inc. Date
-      </div>
-    ),
-    dataIndex: "mrp_detail_incoming_date",
-    align: "center",
-    width: "9%",
-    render: (value, record, index) => {
-      return <Text className="text-value">{value}</Text>;
-    },
-  },
+  // {
+  //   title: (
+  //     <div className="text-center" title="Purchase request qauntity.">
+  //       PR Qty.
+  //     </div>
+  //   ),
+  //   dataIndex: "mrp_detail_qty_pr",
+  //   key: "mrp_detail_qty_pr",
+  //   require: true,
+  //   align: "right",
+  //   width: "10%",
+  //   render: (value, record, index) => convertDigit(value, 4) ?? "-",
+  // },
+  // {
+  //   title: (
+  //     <div className="text-center" title="Minimum order quantity">
+  //       MOQ.
+  //     </div>
+  //   ),
+  //   dataIndex: "item_vendor_moq",
+  //   key: "item_vendor_moq",
+  //   align: "right",
+  //   require: true,
+  //   width: "8%",
+  //   render: (value, record, index) => {
+  //     return <Text className="text-value ">{convertDigit(value, 4)}</Text>;
+  //   },
+  // },
+  // {
+  //   title: (
+  //     <div className="text-center" title="Purchase unit of measure">
+  //       PUR. UOM.
+  //     </div>
+  //   ),
+  //   dataIndex: "item_vendor_uom_no",
+  //   key: "item_vendor_uom_no",
+  //   align: "center",
+  //   require: true,
+  //   width: "8%",
+  //   render: (value, record, index) => {
+  //     return <Text className="text-value ">{value ?? "-"}</Text>;
+  //   },
+  // },
+  // {
+  //   title: (
+  //     <div className="text-center" title="Lead time">
+  //       L/T (days)
+  //     </div>
+  //   ),
+  //   dataIndex: "mrp_detail_pr_lead_time_day",
+  //   align: "center",
+  //   width: "7%",
+  //   render: (value, record, index) => {
+  //     return value;
+  //   },
+  // },
+  // {
+  //   title: (
+  //     <div className="text-center" title="Suggestion Date">
+  //       Sugg. Date
+  //     </div>
+  //   ),
+  //   dataIndex: "mrp_detail_suggestion_date",
+  //   align: "center",
+  //   width: "9%",
+  //   render: (value, record, index) => {
+  //     return <Text className="text-value">{value}</Text>;
+  //   },
+  // },
+  // {
+  //   title: (
+  //     <div className="text-center" title="Incomming Date">
+  //       Inc. Date
+  //     </div>
+  //   ),
+  //   dataIndex: "mrp_detail_incoming_date",
+  //   align: "center",
+  //   width: "9%",
+  //   render: (value, record, index) => {
+  //     return <Text className="text-value">{value}</Text>;
+  //   },
+  // },
 ];

@@ -11,7 +11,11 @@ import { issue_actions } from "../../actions/inventory/issueActions";
 import ModalRemark from "../../components/Modal_Remark";
 import Authorize from "../system/Authorize";
 import CustomLabel from "../../components/CustomLabel";
-import { FileSearchOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  EditTwoTone,
+  FileSearchOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import IssueViewJobDetail from "./operations/issue/IssueViewJobDetail";
 const { Text } = Typography;
 const { Panel } = Collapse;
@@ -92,6 +96,25 @@ const Issue_View = (props) => {
           name: "Cancel",
           cancel: true,
           link: ``,
+        },
+      data_head &&
+        data_head.button_recall &&
+        data_head.tg_trans_status_id === 4 && {
+          name: (
+            <Text>
+              <EditTwoTone className="mr-1" /> ขอแก้ไขข้อมูล
+            </Text>
+          ),
+          link: `#`,
+          callBack: () => {
+            const app_detail = {
+              process_status_id: 7,
+              user_name: auth.user_name,
+              process_id: data_head.process_id,
+              process_member_remark: `มีการร้องขอแก้ไขข้อมูลเพิ่มเติม จาก ${auth.employee_no_name_eng}`,
+            };
+            dispatch(issue_actions(app_detail, data_head.issue_id));
+          },
         },
     ],
     step: {
