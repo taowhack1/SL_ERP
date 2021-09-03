@@ -35,6 +35,7 @@ import CustomTable from "../../../../components/CustomTable";
 import { convertDigit } from "../../../../include/js/main_config";
 import { AppContext } from "../../../../include/js/context";
 import useKeepLogs from "../../../logs/useKeepLogs";
+import AdjustStockForm from "./form/AdjustStockForm";
 let stockDataSource = [];
 const AdjustStock = () => {
   const authorize = Authorize();
@@ -229,8 +230,8 @@ const AdjustStock = () => {
       </div>
     );
   };
-  const viewData = (dr_id) =>
-    setModal((prev) => ({ ...prev, dr_id, visible: true }));
+  const viewData = (item_id) =>
+    setModal((prev) => ({ ...prev, item_id, visible: true }));
   const listConfig = React.useMemo(
     () => ({
       loading,
@@ -302,6 +303,7 @@ const AdjustStock = () => {
                   onClick: (e) => {
                     if (["path", "svg", "P"].includes(e.target.tagName)) {
                       console.log("e.target.tagName", e.target.tagName);
+                      viewData();
                     }
                     setRowClick(true);
                     $(e.target)
@@ -316,6 +318,7 @@ const AdjustStock = () => {
           </Col>
         </Row>
       </MainLayout>
+      <AdjustStockForm {...modalConfig} />
     </div>
   );
 };
