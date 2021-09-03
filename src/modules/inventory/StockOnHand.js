@@ -270,9 +270,7 @@ const Stock = (props) => {
               onChange={onChange}
               rowKey={"item_id"}
               expandable={{ expandedRowRender: expandedRowRender2 }}
-              // expandable={{ expandedRowRender }}
               onExpand={(expanded, row) => {
-                // console.log("onExpand", a, b, c);
                 handleExpand(expanded, row, {
                   user_name,
                   item_id: row.item_id,
@@ -280,7 +278,6 @@ const Stock = (props) => {
                   endDate: "31-12-2022",
                 });
               }}
-              // onExpand={handleExpand}
               pagination={{
                 pageSize,
                 pageSizeOptions: [15, 30, 50, 100],

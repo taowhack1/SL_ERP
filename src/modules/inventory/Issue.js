@@ -28,7 +28,6 @@ const Issue = (props) => {
   };
   useEffect(() => {
     dispatch(get_issue_list(auth.user_name));
-    dispatch(getMasterDataItem());
   }, []);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {

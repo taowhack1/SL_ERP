@@ -13,25 +13,25 @@ const initialState = {
 // onExpand={handleExpand}
 
 const useSubTable = (props) => {
-  console.log("useSubTable props", props);
   const {
     columns = mockColumns,
     fetchDataFunction = getMockData,
     rowKey = "id",
     dataKey,
-    setExpandId = () => console.log("setExpandId"),
+    // setExpandId = () => console.log("setExpandId"),
   } = props || {};
+
   const [state, setState] = useState(initialState);
+
   const setLoading = (bool = false, id) =>
     setState((prev) => ({ ...prev, loading: { ...prev.loading, [id]: bool } }));
 
   const getData = async (id, params = null) => {
-    console.log("useSubTable params", params);
     const isInList = state?.dataSource[id];
     if (!isInList) {
       setLoading(true, id);
       const resp = await fetchDataFunction(params);
-      console.log("useSubTable get", resp);
+      console.log("useSubTable", resp);
       resp.success &&
         setState((prev) => ({
           ...prev,
@@ -48,7 +48,6 @@ const useSubTable = (props) => {
   const expandedRowRender = (row) => {
     const data = state.dataSource[row[rowKey]];
     const loading = state.loading[row[rowKey]];
-    console.log("expanded", data, state);
     return (
       <CustomTable
         bordered

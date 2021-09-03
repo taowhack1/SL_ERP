@@ -55,8 +55,11 @@ const DeliveryOrderForm = (props) => {
   authorize.check_authorize();
 
   const { id } = useParams();
-  const { dr_id, customer_detail_id: lo_customer_detail_id } = props?.location
-    ?.state || {
+  const {
+    dr_id,
+    customer_detail_id: lo_customer_detail_id,
+    customer_id,
+  } = props?.location?.state || {
     dr_id: null,
     lo_customer_detail_id: null,
   };
@@ -99,6 +102,7 @@ const DeliveryOrderForm = (props) => {
       onSave: async () => {
         keepLog.keep_log_action("Click Save DO");
         setLoading(true);
+        console.log("Check State DO", stateDO);
         const validateHead = validateFormHead(stateDO, [
           "customer_id",
           "do_location_delivery",
@@ -153,10 +157,14 @@ const DeliveryOrderForm = (props) => {
           ...prev,
           customers: resp.success && resp.data,
         }));
+        const findSelectCustomer = resp?.data?.find(
+          (obj) => obj.customer_detail_id === lo_customer_detail_id
+        );
         lo_customer_detail_id &&
           setStateDO((prev) => ({
             ...prev,
             customer_detail_id: lo_customer_detail_id,
+            customer_id: findSelectCustomer?.customer_id,
           }));
       }
     };

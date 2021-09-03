@@ -41,34 +41,42 @@ const PurchaseOrders = (props) => {
 
   const { po_list, filter } = useSelector((state) => state.purchase.po);
   const { pageSize, page, keyword, vendor_id } = filter || {};
+
+  const getSearchData = (keyword) => {
+    const search_data = sortData(
+      keyword
+        ? po_list?.filter(
+            (po) =>
+              po?.po_no?.indexOf(keyword) >= 0 ||
+              po?.vendor_no_name?.indexOf(keyword) >= 0 ||
+              po?.po_created_by_no_name?.indexOf(keyword) >= 0 ||
+              po?.po_created?.indexOf(keyword) >= 0 ||
+              po?.po_description?.indexOf(keyword) >= 0
+          )
+        : po_list
+    );
+
+    return sortData(search_data);
+  };
   useEffect(() => {
-    setData(sortData(po_list));
+    console.log("Filter Keyword");
+    setLoading(true);
+    const respSearch = getSearchData(keyword);
+    setData(respSearch);
+    setLoading(false);
+  }, [keyword]);
+
+  useEffect(() => {
+    console.log("useEffect set po_list");
+    const respSearch = getSearchData(keyword);
+    setData(respSearch);
     return () => setData([]);
   }, [po_list]);
-  useEffect(() => {
-    // setLoading(true);
-    // setTimeout(() => {
-    //   const search_data = sortData(
-    //     po_list?.filter(
-    //       (po) =>
-    //         po?.po_no?.indexOf(value) >= 0 ||
-    //         po?.vendor_no_name?.indexOf(value) >= 0 ||
-    //         po?.po_created_by_no_name?.indexOf(value) >= 0 ||
-    //         po?.po_created?.indexOf(value) >= 0 ||
-    //         po?.po_description?.indexOf(value) >= 0
-    //     )
-    //   );
-    //   console.log("search_data", search_data);
-    //   setData(search_data);
-    //   setLoading(false);
-    // }, 1200);
-  }, [filter]);
 
-  const [data, setData] = useState(sortData(po_list));
+  const [data, setData] = useState([]);
 
-  const onChange = (pagination, filters, sorter, extra) => {
+  const onChange = (pagination) => {
     const { current, pageSize } = pagination;
-    console.log("pagination", pagination);
     dispatch(filterPO({ page: current, pageSize }));
   };
 
@@ -90,15 +98,15 @@ const PurchaseOrders = (props) => {
       console.log("Cancel");
     },
     onSearch: (value) => {
-      console.log(value);
       dispatch(filterPO({ keyword: value.toUpperCase() }));
     },
+    searchValue: keyword || null,
     searchBar: (
       <Button
         className="primary"
         onClick={() =>
           dispatch(
-            filterPO({ page: 1, pageSize: 1, keyword: null, vendor_id: null })
+            filterPO({ page: 1, pageSize: 20, keyword: null, vendor_id: null })
           )
         }
       >
@@ -122,7 +130,11 @@ const PurchaseOrders = (props) => {
               loading={loading}
               onChange={onChange}
               size="small"
-              pagination={{ pageSize, current: page }}
+              pagination={{
+                pageSize,
+                current: page,
+                pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
+              }}
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

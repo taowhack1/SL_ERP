@@ -11,7 +11,6 @@ import {
   api_approve,
   api_get_po_detail,
   api_get_pr_detail_ref,
-  api_get_pr_open_po,
   api_purchase_get_all_po,
   api_po_detail,
 } from "../../include/js/api";
@@ -22,6 +21,7 @@ import { message } from "antd";
 const apiUpdateFlow = `/approve/process`;
 const apiListPRForPO = `/list/pr`;
 const SEARCH_PO = "SEARCH_PO";
+
 export const get_open_po_list = () => (dispatch) => {
   axios.get(apiListPRForPO, header_config).then((res) => {
     dispatch({

@@ -25,6 +25,7 @@ import { useHistory } from "react-router-dom";
 import CustomLabel from "../../components/CustomLabel";
 import { mainReducer } from "../../include/reducer";
 import { SearchOutlined } from "@ant-design/icons";
+import { getMasterDataItem } from "../../actions/inventory";
 const { Text } = Typography;
 const { TextArea } = Input;
 const { Panel } = Collapse;
@@ -131,6 +132,7 @@ const IssueCreate = (props) => {
   };
 
   useEffect(() => {
+    dispatch(getMasterDataItem());
     headDispatch({
       type: "SET_HEAD",
       payload: data.data_head

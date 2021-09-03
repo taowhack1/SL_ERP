@@ -365,7 +365,7 @@ const TabItemDetail = ({
             </Col>
             <Col span={2}></Col>
           </Row>
-          {data_head.type_id === 3 && (
+          {[1, 2, 3, 4].includes(data_head.type_id) && (
             <Row className="col-2 row-margin-vertical">
               <Col span={6}>
                 <CustomLabel label={"Effective Date :"} readOnly={readOnly} />

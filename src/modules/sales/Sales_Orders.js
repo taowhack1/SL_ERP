@@ -147,6 +147,7 @@ const SaleOrder = (props) => {
   const { filter } = useSelector((state) => state.sales.so);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
+
   const getSOList = async () => {
     setLoading(true);
     const resp = await getSalesOrder(auth.user_name);
@@ -156,6 +157,7 @@ const SaleOrder = (props) => {
     }
     setLoading(false);
   };
+
   useEffect(() => {
     dispatch(get_sale_master_data());
     dispatch(reset_comments());
@@ -168,8 +170,10 @@ const SaleOrder = (props) => {
   }, []);
 
   const { qn_ref } = useSelector((state) => state.sales.so);
+
   const [state, setState] = useState(keepData.so);
   const [loading, setLoading] = useState(false);
+
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };

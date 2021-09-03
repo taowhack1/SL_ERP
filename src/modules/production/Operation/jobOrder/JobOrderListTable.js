@@ -45,9 +45,6 @@ const JobOrderListTable = (props) => {
         }}
       >
         <Tabs>
-          {/* <Tabs.TabPane tab="Plan" key="1">
-            {expandedRowRender(row)}
-          </Tabs.TabPane> */}
           <Tabs.TabPane tab="Bulk - Job Order" key="1">
             <CustomTable
               columns={subJobOrderColumns({ viewJobOrder })}
@@ -60,9 +57,6 @@ const JobOrderListTable = (props) => {
           </Tabs.TabPane>
         </Tabs>
         <Tabs className="mt-2">
-          {/* <Tabs.TabPane tab="Plan" key="1">
-            {expandedRowRender(row)}
-          </Tabs.TabPane> */}
           <Tabs.TabPane tab="FG - Job Order" key="2">
             <CustomTable
               columns={subJobOrderColumns({ viewJobOrder })}
@@ -112,18 +106,6 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     sorter: (a, b) => a.id - b.id,
     render: (val) => val,
   },
-  // {
-  //   title: (
-  //     <div className="text-center">
-  //       <b>Job No.</b>
-  //     </div>
-  //   ),
-  //   align: "center",
-  //   className: "col-sm",
-  //   width: "10%",
-  //   dataIndex: "job_order_no",
-  //   render: (val) => val || "-",
-  // },
   {
     title: (
       <div className="text-center">
@@ -170,24 +152,9 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     ),
     align: "left",
     className: "col-sm",
-    // width: "10%",
     dataIndex: "description",
     render: (val) => val || "-",
   },
-  // {
-  //   title: (
-  //     <div className="text-center">
-  //       <b>Job Type</b>
-  //     </div>
-  //   ),
-  //   align: "center",
-  //   className: "col-sm",
-  //   width: "10%",
-  //   dataIndex: "job_order_type_name",
-  //   sorter: (a, b) => a.job_order_type_id - b.job_order_type_id,
-  //   render: (val) => val || "-",
-  // },
-
   {
     title: (
       <div className="text-center">
@@ -222,7 +189,6 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     className: "col-sm",
     width: "8%",
     dataIndex: "trans_status_name",
-    // sorter: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
     render: (val) => (val && getStatusByName(val)) || "-",
   },
   {
@@ -235,13 +201,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     className: "col-sm",
     width: "5%",
     dataIndex: "job_order_id",
-    render: (_, record) => (
-      // <SearchOutlined
-      //   className="button-icon"
-      //   onClick={() => viewJobOrder(record)}
-      // />
-      <EditTwoTone onClick={() => editJobOrder(record)} />
-    ),
+    render: (_, record) => <EditTwoTone onClick={() => editJobOrder(record)} />,
   },
 ];
 
@@ -253,10 +213,8 @@ const subJobOrderColumns = () => [
       </div>
     ),
     align: "center",
-    // className: "col-sm",
     width: "5%",
     dataIndex: "id",
-    // sorter: (a, b) => a.id - b.id,
     render: (val) => val,
   },
   {
@@ -266,7 +224,6 @@ const subJobOrderColumns = () => [
       </div>
     ),
     align: "center",
-    // className: "col-sm",
     width: "10%",
     dataIndex: "job_order_no",
     render: (val) => val || "-",
@@ -278,8 +235,6 @@ const subJobOrderColumns = () => [
       </div>
     ),
     align: "left",
-    // className: "col-sm",
-    // width: "10%",
     dataIndex: "job_order_description",
     render: (val) => val || "-",
   },
@@ -290,7 +245,6 @@ const subJobOrderColumns = () => [
       </div>
     ),
     align: "right",
-    // className: "col-sm",
     width: "10%",
     dataIndex: "job_order_qty",
     render: (val) => (val && convertDigit(val, 4)) || "-",
@@ -302,8 +256,6 @@ const subJobOrderColumns = () => [
       </div>
     ),
     align: "center",
-    // className: "col-sm",
-    // width: "10%",
     dataIndex: "uom_no",
     render: (val) => val || "-",
   },
@@ -314,8 +266,6 @@ const subJobOrderColumns = () => [
       </div>
     ),
     align: "center",
-    // className: "col-sm",
-    // width: "10%",
     dataIndex: "job_order_type_name",
     render: (val) => val || "-",
   },
@@ -368,17 +318,6 @@ const mockDataJobBulk = [
     job_order_qty: 300,
     uom_no: "kg",
   },
-  // {
-  //   id: 4,
-  //   job_order_no: "BP2100001-004",
-  //   job_order_description: "C311SMTA000100-100.000000 kg",
-  //   job_order_type_name: "Job Bulk",
-  //   job_order_type_id: 3,
-  //   tg_job_order_start_date: "-",
-  //   trans_status_name: "-",
-  //   job_order_qty: 100,
-  //   uom_no: "kg",
-  // },
 ];
 const mockDataJobFG = [
   {
