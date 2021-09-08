@@ -294,15 +294,15 @@ export const Adjust_stock_columns = [
     ellipsis: false,
     render: (value) => numeral(value).format("0,0.0000"),
   },
-  {
-    title: "Adjust",
-    dataIndex: "",
-    key: "",
-    width: "8%",
-    align: "center",
-    ellipsis: false,
-    render: () => {
-      return <EditTwoTone />;
-    },
-  },
+  // {
+  //   title: "Action",
+  //   dataIndex: "",
+  //   key: "",
+  //   width: "8%",
+  //   align: "center",
+  //   ellipsis: false,
+  //   render: () => {
+  //     return <EditTwoTone />;
+  //   },
+  // },
 ];

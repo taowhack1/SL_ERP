@@ -22,12 +22,14 @@ import { Adjust_stock_columns } from "../../config/report";
 import Authorize from "../../../system/Authorize";
 import CustomSelect from "../../../../components/CustomSelect";
 import Text from "antd/lib/typography/Text";
-import useSubTable from "../../../../include/js/customHooks/useSubTable";
+import useSubTableEdit from "../../../../include/js/customHooks/useSubTableEdit";
 import {
   ClearOutlined,
   DownloadOutlined,
+  EditTwoTone,
   EllipsisOutlined,
   ExportOutlined,
+  PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { sortData } from "../../../../include/js/function_main";
@@ -37,12 +39,13 @@ import { AppContext } from "../../../../include/js/context";
 import useKeepLogs from "../../../logs/useKeepLogs";
 import AdjustStockForm from "./form/AdjustStockForm";
 let stockDataSource = [];
+let item_no_name = "";
 const AdjustStock = () => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
   const keepLog = useKeepLogs();
-  const { expandedRowRender, handleExpand } = useSubTable({
+  const { expandedRowRender, handleExpand } = useSubTableEdit({
     columns,
     fetchDataFunction: getSubReportStockOnHand,
     rowKey: "id",
@@ -68,8 +71,8 @@ const AdjustStock = () => {
   const [state, setState] = useState([]);
   const [modal, setModal] = useState({
     visible: false,
-    item_id: null,
-    item_detail_id: null,
+    rowData: null,
+    item_no_name: null,
   });
 
   const getDataSoruce = async (user_name) => {
@@ -137,8 +140,8 @@ const AdjustStock = () => {
     setModal((prev) => ({
       ...prev,
       visible: false,
-      item_id: null,
-      item_detail_id: null,
+      rowData: null,
+      item_no_name: null,
     }));
     keepLog.keep_log_action("Close Modal AdjustStock");
   }, [setModal, modal]);
@@ -212,8 +215,9 @@ const AdjustStock = () => {
     }),
     [keyword, setModal, filter]
   );
-  console.log("Adjust Stock", modal);
+
   const expandedRowRender2 = (row) => {
+    item_no_name = row?.item_no_name;
     return (
       <div
         className='ml-4 drop-shadow'
@@ -222,16 +226,25 @@ const AdjustStock = () => {
           marginBottom: "20px",
           backgroundColor: "#FFFFFF",
         }}>
-        <Tabs size='small' type='card'>
-          <Tabs.TabPane tab={"Stock"} key='1'>
-            {expandedRowRender(row)}
-          </Tabs.TabPane>
-        </Tabs>
+        <Button
+          icon={<PlusOutlined />}
+          type='primary'
+          onClick={() => viewData(row)}>
+          Add
+        </Button>
+        {expandedRowRender(row, viewData)}
       </div>
     );
   };
-  const viewData = (item_id) =>
-    setModal((prev) => ({ ...prev, item_id, visible: true }));
+  const viewData = (data) => {
+    setModal((prev) => ({
+      ...prev,
+      visible: true,
+      rowData: data,
+      item_no_name: item_no_name,
+    }));
+  };
+
   const listConfig = React.useMemo(
     () => ({
       loading,
@@ -301,10 +314,7 @@ const AdjustStock = () => {
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
-                    if (["path", "svg", "P"].includes(e.target.tagName)) {
-                      console.log("e.target.tagName", e.target.tagName);
-                      viewData();
-                    }
+                    console.log(e);
                     setRowClick(true);
                     $(e.target)
                       .closest("tbody")
@@ -325,7 +335,7 @@ const AdjustStock = () => {
 
 export default withRouter(AdjustStock);
 
-const columns = () => [
+const columns = (viewData) => [
   {
     title: (
       <div className='text-center'>
@@ -421,5 +431,20 @@ const columns = () => [
     width: "10%",
     dataIndex: "uom_no",
     render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>Adjust</b>
+      </div>
+    ),
+    dataIndex: "",
+    key: "",
+    width: "8%",
+    align: "center",
+    ellipsis: false,
+    render: (val, record) => {
+      return <EditTwoTone onClick={(e) => viewData(record)} />;
+    },
   },
 ];
