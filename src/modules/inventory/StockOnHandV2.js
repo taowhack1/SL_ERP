@@ -245,11 +245,16 @@ const Stock = (props) => {
             {expandedRowRender(row)}
           </Tabs.TabPane>
           <Tabs.TabPane tab={"Reserved"} key='2'>
-            <h1></h1>
+            {/* <h1>
+              รายละเเอียดแสดงใบเบิก No. , เลขที่ใบเบิก ,Job,วันที่จอง
+              ,วันที่ต้องการของ, จำนวน , จ่ายแล้วเท่าไหร่ , UOM ,
+            </h1> */}
             {reserved_historyrender(row)}
           </Tabs.TabPane>
           <Tabs.TabPane tab={"Purchase Order"} key='3'>
-            <h1></h1>
+            {/* <h1>
+              รายละเอียด No. , เลขที่ PO , วันที่เปิดซื้อ , ดีล , จำนวน , UOM
+            </h1> */}
             {po_historyrender(row)}
           </Tabs.TabPane>
           <Tabs.TabPane tab={"History"} key='4'>
