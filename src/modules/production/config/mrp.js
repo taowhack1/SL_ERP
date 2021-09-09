@@ -19,7 +19,7 @@ import CustomLabel from "../../../components/CustomLabel";
 import moment from "moment";
 import CustomSelect from "../../../components/CustomSelect";
 
-export const mrp_columns = (showModal) => [
+export const mrp_columns = () => [
   {
     title: "MRP Code",
     dataIndex: "mrp_no",
@@ -159,11 +159,12 @@ export const mrpFields = {
   mrp_updated: null,
   mrp_updated_by: null,
   so_id: null,
+  so_detail_id: null,
   branch_id: null,
   item_id: null,
   process_id: null,
-  tg_trans_status_id: null,
-  tg_trans_close_id: null,
+  tg_trans_status_id: 1,
+  tg_trans_close_id: 1,
   mrp_mfd_bulk_lead_time_day: 5,
   mrp_mfd_fg_lead_time_day: 0,
   mrp_pr_date: null,
@@ -379,7 +380,7 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
     align: "right",
     width: "10%",
     render: (value, record, index) => {
-      if (readOnly) {
+      if (readOnly || record?.type_id === 3) {
         return (
           <Text className="text-value text-right">
             {convertDigit(value, 4) ?? "-"}

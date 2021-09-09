@@ -58,7 +58,12 @@ const Receive = (props) => {
       setLoading(true);
       setTimeout(() => {
         const search_data = receive_list.filter(
-          (receive) => receive.receive_no_description.indexOf(value) >= 0
+          (receive) =>
+            receive?.receive_no_description.indexOf(value) >= 0 ||
+            receive?.receive_created?.indexOf(value) >= 0 ||
+            receive?.payment_term_name?.indexOf(value) >= 0 ||
+            receive?.vendor_no_name?.indexOf(value) >= 0 ||
+            receive?.receive_created_by_no_name?.indexOf(value) >= 0
         );
         setData(search_data);
         setLoading(false);

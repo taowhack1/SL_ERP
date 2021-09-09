@@ -73,6 +73,7 @@ const RoutingTabDetail = ({
           onChangeValue,
           machineList,
         })}
+        pageSize={999}
         dataSource={dataDetail}
         onAdd={!readOnly && addLine}
       />

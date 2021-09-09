@@ -174,10 +174,6 @@ const SaleOrder = (props) => {
   const [state, setState] = useState(keepData.so);
   const [loading, setLoading] = useState(false);
 
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
-
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -447,7 +443,6 @@ const SaleOrder = (props) => {
               loading={loading}
               columns={so_columns({ onOpen })}
               dataSource={state}
-              onChange={onChange}
               rowKey={"so_id"}
               size="small"
               bordered

@@ -50,7 +50,7 @@ const initialState = {
     filter: {
       keyword: null,
       page: 1,
-      pageSize: 1,
+      pageSize: 20,
       vendor_id: null,
     },
   },

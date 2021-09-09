@@ -98,7 +98,7 @@ const PurchaseOrders = (props) => {
       console.log("Cancel");
     },
     onSearch: (value) => {
-      dispatch(filterPO({ keyword: value.toUpperCase() }));
+      dispatch(filterPO({ keyword: value }));
     },
     searchValue: keyword || null,
     searchBar: (

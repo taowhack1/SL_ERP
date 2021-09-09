@@ -72,11 +72,21 @@ const MRPView = (props) => {
     back: "/production/operations/mrp",
     discard: "/production/operations/mrp",
     action: [
-      {
-        name: "Production",
-        callBack: () =>
-          history.push("/production/operations/production", state),
-      },
+      // {
+      //   name: "Production",
+      //   callBack: () =>
+      //     history.push("/production/operations/production", state),
+      // },
+      state &&
+        state?.button_cancel && {
+          name: (
+            <div className="text-center">
+              <Text className="error">Cancel</Text>
+            </div>
+          ),
+          cancel: true,
+          link: ``,
+        },
     ],
     edit: {
       data: state,

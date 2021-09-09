@@ -808,14 +808,15 @@ export const getFGMaterialList = async (
   qty_to_produce,
   mrp_qty_percent_spare_rm,
   mrp_qty_percent_spare_pk,
-  so_detail_id
+  so_detail_id,
+  mrp_qty_produce_ref_used
 ) => {
   console.log(
     "getFGMaterialList",
-    `${api_get_fg_material}/${so_id}&${so_detail_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}`
+    `${api_get_fg_material}/${so_id}&${so_detail_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}&${mrp_qty_produce_ref_used}`
   );
   return await axios.get(
-    `${api_get_fg_material}/${so_id}&${so_detail_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}`
+    `${api_get_fg_material}/${so_id}&${so_detail_id}&${item_id}&${qty_to_produce}&${mrp_qty_percent_spare_rm}&${mrp_qty_percent_spare_pk}&${mrp_qty_produce_ref_used}`
   );
 };
 

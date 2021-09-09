@@ -1,76 +1,39 @@
-import {
-  EditTwoTone,
-  EllipsisOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { Button, Table, Tabs } from "antd";
+import { EditTwoTone, EllipsisOutlined } from "@ant-design/icons";
+import { message, Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useHistory } from "react-router";
-import { getJobOrderData } from "../../../../actions/production/jobOrderActions";
-import { getPlanByJobOrderID } from "../../../../actions/production/planningActions";
-import CustomTable from "../../../../components/CustomTable";
-import useSubTable from "../../../../include/js/customHooks/useSubTable";
+import { useFetch, useSubTableFetch } from "../../../../include/js/customHooks";
 import { getStatusByName } from "../../../../include/js/function_main";
 import { convertDigit } from "../../../../include/js/main_config";
-import PlanningModal from "../planning/PlanningModal";
 
+const fetchUrl = `/production/job_order/mrp`;
 const JobOrderListTable = (props) => {
-  const history = useHistory();
   const {
-    dataSource = [],
-    loading = false,
     modal: { openModal },
   } = props;
-  // const { handleExpand, expandedRowRender } = useSubTable({
-  //   columns: subColumns,
-  //   fetchDataFunction: getPlanByJobOrderID,
-  //   rowKey: "job_order_id",
-  // });
+
+  const { data, loading, error } = useFetch(`${fetchUrl}/0`);
+
+  const { expandedRowRender, handleExpand } = useSubTableFetch({
+    columns: () => subJobOrderColumns,
+    url: fetchUrl,
+    rowKey: "id",
+    dataKey: "job_order",
+  });
+
+  error && message.error(error, 6);
+
+  const history = useHistory();
+
   const viewJobOrder = (row) => {
     openModal({ ...row, isFormJobOrder: true });
   };
+
   const editJobOrder = (row) => {
-    history.push(`/production/operations/job_order/${row.job_order_id}`, row);
+    history.push(`/production/operations/job_order/${row?.mrp_id}`);
   };
-  const onExpand = (row) => {
-    return (
-      <div
-        className="ml-4 drop-shadow"
-        style={{
-          padding: "4px 20px 0px 4px",
-          marginBottom: "20px",
-          backgroundColor: "#FFFFFF",
-          paddingBottom: "20px",
-        }}
-      >
-        <Tabs>
-          <Tabs.TabPane tab="Bulk - Job Order" key="1">
-            <CustomTable
-              columns={subJobOrderColumns({ viewJobOrder })}
-              dataSource={mockDataJobBulk}
-              rowKey="id"
-              rowClassName="w-100 row-table-detail"
-              size="small"
-              pagination={false}
-            />
-          </Tabs.TabPane>
-        </Tabs>
-        <Tabs className="mt-2">
-          <Tabs.TabPane tab="FG - Job Order" key="2">
-            <CustomTable
-              columns={subJobOrderColumns({ viewJobOrder })}
-              dataSource={mockDataJobFG}
-              rowKey="id"
-              rowClassName="w-100 row-table-detail"
-              size="small"
-              pagination={false}
-            />
-          </Tabs.TabPane>
-        </Tabs>
-      </div>
-    );
-  };
+
   return (
     <>
       <Table
@@ -78,13 +41,13 @@ const JobOrderListTable = (props) => {
         rowKey="id"
         size="small"
         rowClassName="row-table-detail"
-        expandable={{ expandedRowRender: onExpand }}
-        // onExpand={(expanded, row) =>
-        //   handleExpand(expanded, row, row.job_order_id)
-        // }
+        expandable={{ expandedRowRender }}
+        onExpand={(expanded, row) =>
+          handleExpand(expanded, row, `/${row?.mrp_id}`, 0)
+        }
         loading={loading}
         columns={columns({ viewJobOrder, editJobOrder })}
-        dataSource={mockDataJob}
+        dataSource={data}
       />
     </>
   );
@@ -109,25 +72,13 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
   {
     title: (
       <div className="text-center">
-        <b>Job Bulk No.</b>
+        <b>Job No.</b>
       </div>
     ),
     align: "center",
     className: "col-sm",
     width: "8%",
-    dataIndex: "job_order_bulk_no",
-    render: (val) => val || "-",
-  },
-  {
-    title: (
-      <div className="text-center">
-        <b>Job FG No.</b>
-      </div>
-    ),
-    align: "center",
-    className: "col-sm",
-    width: "8%",
-    dataIndex: "job_order_fg_no",
+    dataIndex: "mrp_so_running_no",
     render: (val) => val || "-",
   },
   {
@@ -143,16 +94,28 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     sorter: (a, b) => a.mrp_id - b.mrp_id,
     render: (val) => val || "-",
   },
-
   {
     title: (
       <div className="text-center">
-        <b>Job Name</b>
+        <b>Description</b>
       </div>
     ),
     align: "left",
     className: "col-sm",
-    dataIndex: "description",
+    ellipsis: true,
+    dataIndex: "mrp_description",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Bulk Code</b>
+      </div>
+    ),
+    align: "center",
+    className: "col-sm",
+    width: "10%",
+    dataIndex: "item_no_ref",
     render: (val) => val || "-",
   },
   {
@@ -164,8 +127,22 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     align: "right",
     className: "col-sm",
     width: "10%",
-    dataIndex: "bulk_qty",
-    render: (val) => <Text>{`${convertDigit(val, 4)} Kg.`}</Text>,
+    dataIndex: "mrp_qty_produce_ref",
+    render: (val, { uom_no_ref }) => (
+      <Text>{`${convertDigit(val, 4)} ${uom_no_ref || "-"}`}</Text>
+    ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>FG Code</b>
+      </div>
+    ),
+    align: "center",
+    className: "col-sm",
+    width: "10%",
+    dataIndex: "item_no_ref",
+    render: (val) => val || "-",
   },
   {
     title: (
@@ -176,8 +153,10 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     align: "right",
     className: "col-sm",
     width: "10%",
-    dataIndex: "fg_qty",
-    render: (val) => <Text>{`${convertDigit(val, 4)} pcs.`}</Text>,
+    dataIndex: "mrp_qty_produce",
+    render: (val, { uom_no }) => (
+      <Text>{`${convertDigit(val, 4)} ${uom_no || "-"}`}</Text>
+    ),
   },
   {
     title: (
@@ -205,7 +184,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
   },
 ];
 
-const subJobOrderColumns = () => [
+const subJobOrderColumns = [
   {
     title: (
       <div className="text-center">
@@ -226,6 +205,16 @@ const subJobOrderColumns = () => [
     align: "center",
     width: "10%",
     dataIndex: "job_order_no",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Item Code</b>
+      </div>
+    ),
+    align: "center",
+    dataIndex: "item_no",
     render: (val) => val || "-",
   },
   {
@@ -266,7 +255,7 @@ const subJobOrderColumns = () => [
       </div>
     ),
     align: "center",
-    dataIndex: "job_order_type_name",
+    dataIndex: "routing_detail_type_name",
     render: (val) => val || "-",
   },
   {
@@ -281,66 +270,5 @@ const subJobOrderColumns = () => [
     dataIndex: "trans_status_name",
     // sorter: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
     render: (val) => (val && getStatusByName(val)) || "-",
-  },
-];
-
-const mockDataJobBulk = [
-  {
-    id: 1,
-    job_order_no: "BP2100001-001",
-    job_order_description: "C311SMTA000100-300.000000 kg",
-    job_order_type_name: "Job Bulk",
-    job_order_type_id: 3,
-    tg_job_order_start_date: "-",
-    trans_status_name: "-",
-    job_order_qty: 300,
-    uom_no: "kg",
-  },
-  {
-    id: 2,
-    job_order_no: "BP2100001-002",
-    job_order_description: "C311SMTA000100-300.000000 kg",
-    job_order_type_name: "Job Bulk",
-    job_order_type_id: 3,
-    tg_job_order_start_date: "-",
-    trans_status_name: "-",
-    job_order_qty: 300,
-    uom_no: "kg",
-  },
-  {
-    id: 3,
-    job_order_no: "BP2100001-003",
-    job_order_description: "C311SMTA000100-300.000000 kg",
-    job_order_type_name: "Job Bulk",
-    job_order_type_id: 3,
-    tg_job_order_start_date: "-",
-    trans_status_name: "-",
-    job_order_qty: 300,
-    uom_no: "kg",
-  },
-];
-const mockDataJobFG = [
-  {
-    id: 1,
-    job_order_no: "FP2100001-001",
-    job_order_description: "C411SMTA000100-300.000000 pcs",
-    job_order_type_name: "Job FG",
-    job_order_type_id: 4,
-    tg_job_order_start_date: "-",
-    trans_status_name: "-",
-    job_order_qty: 300,
-    uom_no: "pcs",
-  },
-];
-
-const mockDataJob = [
-  {
-    id: 1,
-    job_order_fg_no: "FP2100001",
-    job_order_bulk_no: "BP2100001",
-    mrp_no: "MRP202108001",
-    description: "AT-MRP202108002-0000121-C411SMTA000100-300.000000 pcs",
-    fg_qty: 300,
-    bulk_qty: 1000,
   },
 ];

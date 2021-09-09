@@ -1,5 +1,6 @@
 import { message } from "antd";
 import axios from "axios";
+import moment from "moment";
 import {
   api_approve,
   api_mrp,
@@ -149,12 +150,24 @@ export const mrp_actions = (data, mrp_id) => (dispatch) => {
       });
 };
 
-const getMRPTest = (item_id, qty_batch, due_date) => {
+const getMRPTest = ({
+  item_id,
+  qty_batch,
+  due_date = moment().format("DD-MM-YYYY"),
+  include_bulk_on_stock = 0,
+}) => {
   try {
     if (!item_id && !qty_batch && !due_date)
       return { success: false, data: {}, message: "Missing Params" };
+    console.log(
+      "API Params",
+      `${apiMRPTest}/${item_id}&${qty_batch}&${due_date}&${include_bulk_on_stock}`
+    );
     return axios
-      .get(`${apiMRPTest}/${item_id}&${qty_batch}&${due_date}`, header_config)
+      .get(
+        `${apiMRPTest}/${item_id}&${qty_batch}&${due_date}&${include_bulk_on_stock}`,
+        header_config
+      )
       .then((resp) => {
         if (resp.status === 200) {
           console.log("resp.data", resp.data);

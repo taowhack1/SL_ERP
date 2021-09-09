@@ -339,7 +339,7 @@ export const receiveDetailWithNoPOColumns = (
         />
       ) : (
         <div className="text-value" title={value}>
-          <Text>{value ?? "-"}</Text>
+          <Text>{value || "-"}</Text>
         </div>
       ),
   },
@@ -356,7 +356,7 @@ export const receiveDetailWithNoPOColumns = (
     ellipsis: true,
     render: (value, record) =>
       readOnly ? (
-        <Text className="text-value">{value}</Text>
+        <Text className="text-value">{convertDigit(value || 0, 4)}</Text>
       ) : (
         <div
           className={
@@ -673,10 +673,10 @@ export const receiveSubDetailColumns = (
     ellipsis: true,
     render: (value, record, key) =>
       readOnly ? (
-        <Text className="text-value">{value}</Text>
+        <Text className="text-value">{convertDigit(value, 4)}</Text>
       ) : (
         <InputNumber
-          {...getNumberFormat(3)}
+          {...getNumberFormat(4)}
           placeholder={"Qty Done"}
           min={0.0}
           step={0.001}

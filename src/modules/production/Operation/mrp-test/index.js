@@ -1,6 +1,5 @@
-import { Col, DatePicker, InputNumber, message, Row, Spin } from "antd";
+import { Checkbox, Col, InputNumber, message, Row, Spin } from "antd";
 import Text from "antd/lib/typography/Text";
-import moment from "moment";
 import React, { useMemo, useState } from "react";
 import { apiGetBulkFG } from "../../../../actions/inventory";
 import { getMRPTest } from "../../../../actions/production/mrpActions";
@@ -13,29 +12,47 @@ import {
   getNumberFormat,
 } from "../../../../include/js/main_config";
 import MRPTestDetail from "./MRPTestDetail";
-
-const referenceDetail = {};
-const MRPTest = () => {
-  const { data: itemList, loading, error } = useFetch(apiGetBulkFG);
-  const [state, setState] = useState({
+const initialState = {
+  main: {
     item_id: null,
-    due_date: null,
     qty_batch: 0,
-  });
-  const { item_id, due_date, qty_batch } = state;
-
-  const [stateDetail, setStateDetail] = useState({
+    include_bulk_on_stock: 0,
+  },
+  detail: {
     data: {},
     loading: false,
-  });
-  const { item_id_ref, item_no_name_ref, mrp_qty_produce_ref, uom_no_ref } =
-    stateDetail?.data || {};
+  },
+};
+const MRPTest = () => {
+  const { data: itemList, loading, error } = useFetch(apiGetBulkFG);
+  const [state, setState] = useState(initialState.main);
+  const { item_id, qty_batch, include_bulk_on_stock } = state;
+
+  const [stateDetail, setStateDetail] = useState(initialState.detail);
+  const {
+    data: {
+      item_id_ref,
+      item_no_name_ref,
+      mrp_qty_produce_ref,
+      uom_no_ref,
+      uom_no,
+      mrp_qty_produce_ref_stock,
+      mrp_qty_produce_ref_before,
+    },
+    loading: detailLoading,
+  } = stateDetail || {};
 
   const onChange = (data) => setState((prev) => ({ ...prev, ...data }));
-
+  const resetDetail = () => {
+    setStateDetail(initialState.detail);
+  };
   const onCalculate = async () => {
     setStateDetail((prev) => ({ ...prev, loading: true }));
-    const resp = await getMRPTest(item_id, qty_batch, due_date);
+    const resp = await getMRPTest({
+      item_id,
+      qty_batch,
+      include_bulk_on_stock,
+    });
     if (resp.success) {
       setStateDetail((prev) => ({
         ...prev,
@@ -98,7 +115,7 @@ const MRPTest = () => {
                 <CustomLabel require readOnly={false} label={"Item :"} />
               </Col>
               <Col span={18}>
-                <Spin spinning={loading}>
+                <Spin spinning={loading || detailLoading}>
                   <CustomSelect
                     allowClear
                     showSearch
@@ -109,12 +126,17 @@ const MRPTest = () => {
                     value={item_id}
                     onChange={(val, row) => {
                       val
-                        ? onChange({ item_id: val, qty_batch: 0 })
-                        : onChange({ item_id: null, qty_batch: 0 });
-                      setStateDetail({
-                        data: {},
-                        loading: false,
-                      });
+                        ? onChange({
+                            item_id: val,
+                            qty_batch: 0,
+                            include_bulk_on_stock: 0,
+                          })
+                        : onChange({
+                            item_id: null,
+                            qty_batch: 0,
+                            include_bulk_on_stock: 0,
+                          });
+                      resetDetail();
                     }}
                   />
                 </Spin>
@@ -129,32 +151,85 @@ const MRPTest = () => {
                 />
               </Col>
               <Col span={18}>
-                <InputNumber
-                  {...getNumberFormat(4)}
-                  min={0}
-                  className="w-50"
-                  placeholder={"FG Qty. / Bulk Batch Size"}
-                  value={qty_batch}
-                  onChange={(val) => onChange({ qty_batch: val })}
-                />
+                <Spin spinning={loading || detailLoading}>
+                  <InputNumber
+                    {...getNumberFormat(4)}
+                    min={0}
+                    className="w-50"
+                    placeholder={"FG Qty. / Bulk Batch Size"}
+                    value={qty_batch}
+                    onChange={(val) => {
+                      onChange({ qty_batch: val });
+                      resetDetail();
+                    }}
+                  />
+                </Spin>
               </Col>
             </Row>
-            <Row className="col-2 mt-1 mb-1" gutter={8}>
-              <Col span={6}>
-                <CustomLabel require readOnly={false} label={"Due Date :"} />
+            <Row className="col-2 row-margin-vertical">
+              <Col span={16} className={"text-value"} offset={6}>
+                <>
+                  <Spin spinning={loading || detailLoading}>
+                    <Checkbox
+                      onChange={(e) => {
+                        onChange({
+                          include_bulk_on_stock: e.target.checked ? 1 : 0,
+                        });
+                        resetDetail();
+                      }}
+                      checked={include_bulk_on_stock}
+                    />
+                    <Text strong className="ml-2">
+                      Include bulk on stock
+                    </Text>
+                  </Spin>
+                </>
               </Col>
-              <Col span={18}>
-                <DatePicker
-                  className="w-50"
-                  placeholder="Due Date"
-                  format="DD/MM/YYYY"
-                  value={due_date ? moment(due_date, "DD-MM-YYYY") : null}
-                  onChange={(val) =>
-                    onChange({
-                      due_date: val ? moment(val).format("DD-MM-YYYY") : null,
-                    })
-                  }
+            </Row>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={7}>
+                <CustomLabel
+                  label={`Bulk For FG. ( ${uom_no_ref || uom_no || " - "} ) :`}
+                  require
+                  readOnly={false}
                 />
+              </Col>
+              <Col span={15} className={"text-right"}>
+                <Text className="text-value pd-right-2">
+                  {convertDigit(mrp_qty_produce_ref_before, 4)}
+                </Text>
+              </Col>
+            </Row>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={7}>
+                <CustomLabel
+                  label={`Use Bulk On Stock. ( ${
+                    uom_no_ref || uom_no || " - "
+                  } ) :`}
+                  require
+                  readOnly={false}
+                />
+              </Col>
+              <Col span={15} className={"text-right"}>
+                <Text className="text-value pd-right-2">
+                  {convertDigit(mrp_qty_produce_ref_stock, 4)}
+                </Text>
+              </Col>
+            </Row>
+            <Row className="col-2 row-margin-vertical">
+              <Col span={7}>
+                <CustomLabel
+                  label={`Bulk Production. ( ${
+                    uom_no_ref || uom_no || " - "
+                  } ) :`}
+                  require
+                  readOnly={false}
+                />
+              </Col>
+              <Col span={15} className={"text-right"}>
+                <Text className="text-value pd-right-2">
+                  {convertDigit(mrp_qty_produce_ref, 4)}
+                </Text>
               </Col>
             </Row>
           </Col>

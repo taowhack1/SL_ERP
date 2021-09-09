@@ -353,6 +353,7 @@ export const qn_actions = (data, qn_id) => (dispatch) => {
       dispatch(get_quotation_by_id(qn_id, data.user_name));
     });
 };
+
 export const so_actions = (data, so_id) => (dispatch) => {
   console.log("so_actions");
   data.commit = 1;

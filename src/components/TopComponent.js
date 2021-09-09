@@ -198,10 +198,10 @@ function TopContent(props) {
               {props.buttonAction.includes("Save") &&
                 (props.save === "function" || props.save === "table_loading" ? (
                   <Button
-                    className="primary"
+                    className={!props?.disabledSaveBtn ? "primary" : ""}
                     onClick={onSave}
                     loading={btnLoading}
-                    disabled={btnLoading}
+                    disabled={btnLoading || props?.disabledSaveBtn}
                   >
                     Save
                   </Button>

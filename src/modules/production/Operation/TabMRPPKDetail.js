@@ -40,7 +40,7 @@ const TabMRPPKDetail = () => {
             ? "row-table-detail "
             : "row-table-detail require";
         }}
-        pageSize={10}
+        pageSize={999}
         focusLastPage={true}
         columns={mrpDetailColumns({ readOnly, onChange })}
         dataSource={mainState.pk_detail}

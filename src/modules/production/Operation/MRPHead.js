@@ -8,6 +8,8 @@ import {
   DatePicker,
   message,
   Spin,
+  Checkbox,
+  Button,
 } from "antd";
 import CustomSelect from "../../../components/CustomSelect";
 import { useSelector } from "react-redux";
@@ -129,11 +131,16 @@ const MRPHead = () => {
                               so_no_description: option.data.so_no_description,
                               so_detail: option.data.so_detail,
                               item_id: null,
+                              so_detail_id: null,
                               item_no_name: null,
                               mrp_delivery_date: null,
                               mrp_qty_produce: 0,
                               uom_id: null,
                               uom_no: null,
+                              mrp_qty_produce_ref: 0,
+                              mrp_qty_produce_ref_used: 0, //ไม่ใช้ Bulk ในสต็อก
+                              mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
+                              mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
                             })
                           : Reset();
                       }}
@@ -145,7 +152,7 @@ const MRPHead = () => {
                 <Col span={6}>
                   <Text strong>
                     {!readOnly && <span className="require">* </span>}
-                    FG Item :
+                    Item :
                   </Text>
                 </Col>
                 <Col span={16}>
@@ -156,7 +163,7 @@ const MRPHead = () => {
                       allowClear
                       showSearch
                       disabled={detailLoading || !mainState.so_id}
-                      placeholder={"FG Item"}
+                      placeholder={"Item"}
                       name="item_id"
                       field_id="so_detail_id"
                       field_name="item_no_name"
@@ -187,6 +194,10 @@ const MRPHead = () => {
                               uom_id: null,
                               uom_no: null,
                               calRPM: false,
+                              mrp_qty_produce_ref: 0,
+                              mrp_qty_produce_ref_used: 0, //ไม่ใช้ Bulk ในสต็อก
+                              mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
+                              mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
                               rm_detail: [],
                               pk_detail: [],
                             });
@@ -200,8 +211,8 @@ const MRPHead = () => {
                   <CustomLabel
                     label={
                       mainState?.uom_no
-                        ? `FG Qty. ( ${mainState?.uom_no} ) :`
-                        : "FG Qty. :"
+                        ? `Qty. ( ${mainState?.uom_no} ) :`
+                        : "Qty. :"
                     }
                     require
                     readOnly={readOnly}
@@ -234,43 +245,109 @@ const MRPHead = () => {
                     />
                   )}
                 </Col>
-                <Col span={2}>
-                  <div className="pd-left-2">
-                    {!readOnly ? (
-                      detailLoading ? (
-                        <LoadingOutlined className="button-icon" />
-                      ) : mainState.calRPM ? (
-                        <CalculatorOutlined
-                          ref={calBtn}
-                          onClick={getRPMDetail}
-                          className="button-icon"
-                          style={{ fontSize: 27, marginTop: 2 }}
-                        />
-                      ) : (
-                        mainState.item_id && (
-                          <CheckOutlined
-                            style={{ color: "#5CFF05", marginTop: 5 }}
-                          />
-                        )
-                      )
-                    ) : null}
-                  </div>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={16} className={"text-value"} offset={6}>
+                  {readOnly ? (
+                    <Text className="require">
+                      {mainState?.mrp_qty_produce_ref_used
+                        ? "* Include bulk on stock"
+                        : "* Not include bulk on stock"}
+                    </Text>
+                  ) : (
+                    <>
+                      <Checkbox
+                        onChange={(e) => {
+                          onChange({
+                            ...mainState,
+                            mrp_qty_produce_ref_used: e.target.checked ? 1 : 0,
+                            calRPM: true,
+                          });
+                        }}
+                        checked={mainState.mrp_qty_produce_ref_used}
+                      />
+                      <Text strong className="ml-2">
+                        Include bulk on stock
+                      </Text>
+                    </>
+                  )}
                 </Col>
               </Row>
               <Row className="col-2 row-margin-vertical">
-                <Col span={6}>
+                <Col span={16} offset={6}>
+                  {!readOnly && (
+                    <Button
+                      disabled={!mainState.calRPM}
+                      loading={detailLoading}
+                      block
+                      className={mainState.calRPM ? "primary mt-2" : "mt-2"}
+                      icon={<CalculatorOutlined />}
+                      ref={calBtn}
+                      onClick={getRPMDetail}
+                    >
+                      Calculate
+                    </Button>
+                  )}
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={7}>
                   <CustomLabel
-                    label={
-                      mainState?.uom_no_ref
-                        ? `Bulk Qty. ( ${mainState?.uom_no_ref} ) :`
-                        : "Bulk Qty. :"
-                    }
+                    label={`Bulk For FG. ( ${
+                      mainState?.uom_no_ref || mainState?.uom_no || " - "
+                    } ) :`}
                     require
                     readOnly={readOnly}
                   />
                 </Col>
                 <Col
-                  span={16}
+                  span={15}
+                  className={readOnly ? "text-left" : "text-right"}
+                >
+                  {detailLoading ? (
+                    <Spin spinning />
+                  ) : (
+                    <Text className="text-value pd-right-2">
+                      {convertDigit(mainState?.mrp_qty_produce_ref_before, 4)}
+                    </Text>
+                  )}
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={7}>
+                  <CustomLabel
+                    label={`Use Bulk On Stock. ( ${
+                      mainState?.uom_no_ref || mainState?.uom_no || " - "
+                    } ) :`}
+                    require
+                    readOnly={readOnly}
+                  />
+                </Col>
+                <Col
+                  span={15}
+                  className={readOnly ? "text-left" : "text-right"}
+                >
+                  {detailLoading ? (
+                    <Spin spinning />
+                  ) : (
+                    <Text className="text-value pd-right-2">
+                      {convertDigit(mainState?.mrp_qty_produce_ref_stock, 4)}
+                    </Text>
+                  )}
+                </Col>
+              </Row>
+              <Row className="col-2 row-margin-vertical">
+                <Col span={7}>
+                  <CustomLabel
+                    label={`Bulk Production. ( ${
+                      mainState?.uom_no_ref || mainState?.uom_no || " - "
+                    } ) :`}
+                    require
+                    readOnly={readOnly}
+                  />
+                </Col>
+                <Col
+                  span={15}
                   className={readOnly ? "text-left" : "text-right"}
                 >
                   {detailLoading ? (
@@ -399,7 +476,7 @@ const MRPHead = () => {
                             RM :
                           </Text>
                           <Text className="text-left">
-                            {mainState.mrp_pr_rm_lead_time_day}
+                            {mainState.mrp_pr_rm_lead_time_day || "-"}
                           </Text>
                           <Text className="text-left pd-left-2" strong>
                             days
@@ -410,7 +487,7 @@ const MRPHead = () => {
                             PK :
                           </Text>
                           <Text className="text-left pd-left-1">
-                            {mainState.mrp_pr_pk_lead_time_day}
+                            {mainState.mrp_pr_pk_lead_time_day || "-"}
                           </Text>
                           <Text className="text-left pd-left-2" strong>
                             days

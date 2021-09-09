@@ -18,7 +18,7 @@ const MRPTabPanel = () => {
             tab={
               <span className="tab_pane">
                 {!readOnly && <span className="require">* </span>}
-                {"Raw Material"}
+                {"Bulk Spec."}
               </span>
             }
             key={"1"}
@@ -29,7 +29,7 @@ const MRPTabPanel = () => {
             tab={
               <span className="tab_pane">
                 {!readOnly && <span className="require">* </span>}
-                {"Packaging"}
+                {"FG Spec."}
               </span>
             }
             key={"2"}

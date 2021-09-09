@@ -1,164 +1,83 @@
 import { ExportOutlined } from "@ant-design/icons";
-import { Button, Space, Table } from "antd";
+import { Button, message, Table } from "antd";
 import Text from "antd/lib/typography/Text";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getSOReference } from "../../../../actions/production/mrpActions";
-import { sortData } from "../../../../include/js/function_main";
+import React, { useEffect, useState } from "react";
 import { convertDigit } from "../../../../include/js/main_config";
-const columns = [
-  {
-    title: "No.",
-    width: "5%",
-    align: "center",
-    dataIndex: "id",
-    render: (val) => val + 1,
-    ellipsis: false,
-  },
-  {
-    title: "SO No.",
-    dataIndex: "so_no",
-    key: "so_no",
-    width: "15%",
-    align: "center",
-    ellipsis: false,
-  },
-  {
-    title: "Customer",
-    dataIndex: "customer_name",
-    key: "customer_name",
-    align: "left",
-    ellipsis: true,
-  },
-  {
-    title: "Salesperson",
-    dataIndex: "so_created_by_name",
-    key: "so_created_by_name",
-    width: "20%",
-    align: "left",
-    ellipsis: true,
-  },
-  {
-    title: "Order Date",
-    dataIndex: "so_order_date",
-    key: "so_order_date",
-    width: "15%",
-    align: "center",
-    ellipsis: false,
-  },
-  {
-    title: "Delivery Date",
-    dataIndex: "tg_so_delivery_date",
-    key: "tg_so_delivery_date",
-    width: "15%",
-    align: "center",
-    ellipsis: false,
-  },
-];
-const subColumns = [
-  {
-    title: (
-      <div className="text-center">
-        <Text>Item</Text>
-      </div>
-    ),
-    align: "left",
-    dataIndex: "item_no_name",
-    ellipsis: true,
-  },
-  {
-    title: (
-      <div className="text-center">
-        <Text>Qty.</Text>
-      </div>
-    ),
-    width: "15%",
-    align: "right",
-    dataIndex: "tg_so_detail_qty_balance",
-    ellipsis: true,
-    render: (val) => convertDigit(val, 4),
-  },
-  {
-    title: (
-      <div className="text-center">
-        <Text>UOM</Text>
-      </div>
-    ),
-    width: "10%",
-    align: "center",
-    dataIndex: "uom_no",
-    ellipsis: true,
-  },
-  {
-    title: (
-      <div className="text-center">
-        <Text>Delivery Date</Text>
-      </div>
-    ),
-    width: "15%",
-    align: "center",
-    dataIndex: "so_detail_delivery_date",
-    ellipsis: true,
-  },
-];
+import { useFetch } from "../../../../include/js/customHooks";
+import CustomSelect from "../../../../components/CustomSelect";
+
+const fetchUrl = `/reports/mrp/so_list`;
 const SalesOrderList = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getSOReference());
-  }, []);
-  const { data_so_ref: soList } = useSelector(
-    (state) => state.production.operations.mrp.mrp
+  const [state, setState] = useState({
+    data: [],
+    filter: {
+      trans_status_id: 0,
+    },
+  });
+
+  const { data, loading, errors } = useFetch(
+    `${fetchUrl}/${state.filter.trans_status_id}`
   );
-  const expandedRowRender = (record) => {
-    return (
-      <Table
-        bordered
-        columns={subColumns}
-        rowKey={"so_detail_id"}
-        dataSource={record.so_detail}
-        pagination={false}
-      />
-    );
+
+  useEffect(() => {
+    console.log("useEffect");
+    errors && message.error("Can't get any data from the server.");
+  }, [errors]);
+
+  const onChangeFilter = (data) => {
+    setState((prev) => ({ ...prev, filter: { ...prev.filter, ...data } }));
   };
+
   return (
     <>
       <div className="form-section">
-        <div className="d-flex flex-end mb-1">
-          <Space size={16}>
-            <Button
-              icon={<ExportOutlined />}
-              onClick={() =>
-                window.open(
-                  `${process.env.REACT_APP_REPORT_SERVER}/report_so_production_list.aspx`,
-                  "_blank"
-                )
-              }
-            >
-              Export PDF
-            </Button>
-            <Button
-              icon={<ExportOutlined />}
-              className="primary"
-              onClick={() =>
-                window.open(
-                  `${process.env.REACT_APP_REPORT_SERVER}/report_so_production_list.aspx?excel=true`,
-                  "_blank"
-                )
-              }
-            >
-              Export Excel
-            </Button>
-          </Space>
+        <div className="d-flex flex-end mb-1 w-100">
+          <Text strong>Filter Status : </Text>
+          <div style={{ width: "150px", marginLeft: 10 }}>
+            <CustomSelect
+              placeholder={"Status"}
+              data={filterStatus}
+              field_id={"trans_status_id"}
+              field_name={"trans_status_name"}
+              onChange={(val) => onChangeFilter({ trans_status_id: val || 0 })}
+              value={state.filter.trans_status_id}
+            />
+          </div>
+          <Button
+            className="ml-4"
+            key="export-pdf"
+            icon={<ExportOutlined />}
+            onClick={() =>
+              window.open(
+                `${process.env.REACT_APP_REPORT_SERVER}/report_so_production_list.aspx?trans_status_id=${state.filter.trans_status_id}`,
+                "_blank"
+              )
+            }
+          >
+            Export PDF
+          </Button>
+          <Button
+            key="export-excel"
+            icon={<ExportOutlined />}
+            className="ml-2 primary"
+            onClick={() =>
+              window.open(
+                `${process.env.REACT_APP_REPORT_SERVER}/report_so_production_list.aspx?excel=true&trans_status_id=${state.filter.trans_status_id}`,
+                "_blank"
+              )
+            }
+          >
+            Export Excel
+          </Button>
         </div>
         <Table
           columns={columns}
-          dataSource={sortData(soList)}
-          expandable={{ expandedRowRender }}
-          loading={false}
-          rowKey={"so_id"}
+          dataSource={data}
+          bordered
+          loading={loading}
+          rowKey={"so_detail_id"}
           size="small"
           rowClassName="row-pointer"
-          pagination={{ pageSize: 15 }}
           onRow={(record, rowIndex) => ({
             onClick: () => console.log(record),
           })}
@@ -169,3 +88,157 @@ const SalesOrderList = () => {
 };
 
 export default React.memo(SalesOrderList);
+
+const columns = [
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"No."}</Text>
+      </div>
+    ),
+    width: "5%",
+    align: "center",
+    dataIndex: "id",
+    ellipsis: false,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"SO No."}</Text>
+      </div>
+    ),
+    dataIndex: "so_no",
+    key: "so_no",
+    width: "7%",
+    align: "center",
+    ellipsis: false,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"Issued Date"}</Text>
+      </div>
+    ),
+    dataIndex: "so_created",
+    key: "so_created",
+    width: "10%",
+    align: "center",
+    ellipsis: false,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"Item"}</Text>
+      </div>
+    ),
+    dataIndex: "item_no_name",
+    key: "item_no_name",
+    // width: "15%",
+    align: "left",
+    ellipsis: true,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"Qty"}</Text>
+      </div>
+    ),
+    dataIndex: "so_detail_qty",
+    key: "so_detail_qty",
+    width: "10%",
+    align: "right",
+    ellipsis: true,
+    render: (val) => convertDigit(val, 2),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"MRP Qty."}</Text>
+      </div>
+    ),
+    dataIndex: "mrp_track",
+    key: "mrp_track",
+    width: "13%",
+    align: "left",
+    ellipsis: true,
+    render: (val) => val,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"UOM"}</Text>
+      </div>
+    ),
+    dataIndex: "uom_no",
+    key: "uom_no",
+    width: "5%",
+    align: "left",
+    ellipsis: true,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"Customer"}</Text>
+      </div>
+    ),
+    dataIndex: "customer_name",
+    key: "customer_name",
+    align: "left",
+    ellipsis: true,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"Delivery"}</Text>
+      </div>
+    ),
+    dataIndex: "so_detail_delivery_date",
+    key: "so_detail_delivery_date",
+    width: "10%",
+    align: "center",
+    ellipsis: true,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text strong>{"Status"}</Text>
+      </div>
+    ),
+    dataIndex: "trans_status_name",
+    key: "trans_status_name",
+    width: "10%",
+    align: "center",
+    ellipsis: true,
+  },
+];
+
+const filterStatus = [
+  {
+    trans_status_id: 0,
+    trans_status_name: "All",
+  },
+  {
+    trans_status_id: 1,
+    trans_status_name: "Draft",
+  },
+  {
+    trans_status_id: 2,
+    trans_status_name: "Pending Approve S/O",
+  },
+  {
+    trans_status_id: 3,
+    trans_status_name: "Cancel",
+  },
+  {
+    trans_status_id: 4,
+    trans_status_name: "Pending MRP",
+  },
+  {
+    trans_status_id: 5,
+    trans_status_name: "MRP",
+  },
+  {
+    trans_status_id: 6,
+    trans_status_name: "Completed",
+  },
+];

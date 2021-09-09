@@ -8,30 +8,14 @@ import { warningTextValue } from "../../../../include/js/function_main";
 import { convertDigit } from "../../../../include/js/main_config";
 
 const MRPTestDetail = (props) => {
-  const { item_id, qty_batch, due_date, onCalculate, stateDetail } = props;
+  const { item_id, qty_batch, onCalculate, stateDetail } = props;
   const checkDisabledBtn = () => {
     let disabled = true;
     disabled = item_id ? false : true;
     disabled = qty_batch ? false : true;
-    disabled = due_date ? false : true;
     return disabled;
   };
   const disabledCalBtn = checkDisabledBtn();
-
-  // const [state, setState] = useState({
-  //   data: {},
-  //   loading: false,
-  // });
-  // const onCalculate = async () => {
-  //   setState((prev) => ({ ...prev, loading: true }));
-  //   const resp = await getMRPTest(item_id, qty_batch, due_date);
-  //   if (resp.success) {
-  //     setState((prev) => ({ ...prev, loading: false, data: resp.data[0] }));
-  //   } else {
-  //     message.error(resp.message);
-  //     setState((prev) => ({ ...prev, loading: false }));
-  //   }
-  // };
   const {
     data: { item_formula, item_packaging },
     loading,
@@ -53,7 +37,7 @@ const MRPTestDetail = (props) => {
           </>
         }
       >
-        <Tabs.TabPane tab="Bulk" key="1">
+        <Tabs.TabPane tab="Bulk Spec." key="1">
           <CustomTable
             bordered
             rowKey="id"

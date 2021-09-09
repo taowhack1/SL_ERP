@@ -18,7 +18,7 @@ const MRPViewSalesOrderList = () => {
         width={"80%"}
         destroyOnClose
         footer={[
-          <Button className="primary" onClick={closeModal}>
+          <Button key="close-modal" className="primary" onClick={closeModal}>
             Close
           </Button>,
         ]}

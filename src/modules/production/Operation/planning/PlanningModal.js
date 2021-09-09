@@ -38,7 +38,6 @@ const PlanningModal = (props) => {
     isUpdate: false,
   });
   let jobDetail = data;
-  console.log("jobDetail", data);
   useEffect(() => {
     const getDataFormMRP = async (mrp_id) => {
       const resp = await getOtherPlanRef(mrp_id);
@@ -48,7 +47,6 @@ const PlanningModal = (props) => {
     };
     const getDataFormJobOrder = async ({ job_order_id }) => {
       const resp = await getPlanByJobOrderID(job_order_id);
-      console.log("resp.data", resp.data);
       if (resp.success) {
         setOtherPlan(resp.data);
       }
@@ -98,7 +96,6 @@ const PlanningModal = (props) => {
   );
 
   const onSave = async () => {
-    console.log("otherPlan", otherPlan);
     setConditions((prev) => ({ ...prev, loading: true }));
     const resp = await savePlanJob(otherPlan);
     if (resp.success) {
@@ -126,7 +123,6 @@ const PlanningModal = (props) => {
     }
     setConditions((prev) => ({ ...prev, loading: false }));
   };
-  console.log("otherPlan", otherPlan);
   return (
     <>
       <Modal

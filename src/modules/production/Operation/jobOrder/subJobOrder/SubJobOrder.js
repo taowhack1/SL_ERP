@@ -1,30 +1,24 @@
-import {
-  EllipsisOutlined,
-  PrinterOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { PrinterOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Col, Divider, Row, Table, Tabs } from "antd";
-import Modal from "antd/lib/modal/Modal";
-import Text from "antd/lib/typography/Text";
 import React, { useMemo, useState } from "react";
+import { useParams } from "react-router";
 import CustomLabel from "../../../../../components/CustomLabel";
-import CustomTable from "../../../../../components/CustomTable";
 import MainLayout from "../../../../../components/MainLayout";
-import Search from "../../../../../components/Search";
-import useSubTable from "../../../../../include/js/customHooks/useSubTable";
+import { useFetch } from "../../../../../include/js/customHooks";
 import { getStatusByName } from "../../../../../include/js/function_main";
 import { convertDigit } from "../../../../../include/js/main_config";
 import ModalCreateNewJobOrder from "./ModalCreateNewJobOrder";
-
+const apiGetJobByMRPId = `/production/job_order/mrp`;
 const SubJobOrder = (props) => {
-  const data = props?.location?.state;
+  const { id } = useParams();
+  const { data, loading, error } = useFetch(`${apiGetJobByMRPId}/${id}`);
+  const { job_order } = data ? data[0] : {};
   const [modal, setModal] = useState({
     visible: false,
   });
-  console.log("data", data);
+
   const {
     job_order_no,
-    item_no_name,
     description,
     job_order_updated,
     job_order_fg_no,
@@ -35,20 +29,6 @@ const SubJobOrder = (props) => {
     item_no_name_bulk,
     item_no_name_fg,
   } = mockDataJob[0];
-
-  const expandedRowRender = (row) => {
-    return (
-      <CustomTable
-        columns={[]}
-        dataSource={[]}
-        size="small"
-        className="drop-shadow w-90"
-        rowClassName="row-table-detail "
-        rowKey="id"
-        bordered
-      />
-    );
-  };
 
   const onOpen = () => setModal((prev) => ({ ...prev, visible: true }));
   const onClose = () => setModal((prev) => ({ ...prev, visible: false }));
@@ -149,22 +129,13 @@ const SubJobOrder = (props) => {
         <Divider />
         <Tabs>
           <Tabs.TabPane tab="Job Order ย่อย">
-            <div className="d-flex flex-space w-100 mb-1">
-              {/* <div>
-                <Button className="primary" onClick={onOpen}>
-                  แบ่ง Job เพิ่ม
-                </Button>
-              </div> */}
-              {/* <div>
-                <Search placeholder="Search" />
-              </div> */}
-            </div>
             <Table
               columns={subJobOrderColumns({
                 title: "Bulk - Job Order ( 900.0000 / 1,000.0000 Kg.)",
                 className: "col-sm bg-tb-primary",
               })}
-              dataSource={mockDataJobBulk}
+              dataSource={job_order}
+              loading={loading}
               size="small"
               // expandable={{ expandedRowRender }}
               className="mb-3"
@@ -178,7 +149,7 @@ const SubJobOrder = (props) => {
                     style={{ float: "right" }}
                     onClick={onOpen}
                   >
-                    แบ่งจ้อบ
+                    แบ่ง Job
                   </Button>
                 </div>
               )}
@@ -309,8 +280,8 @@ const subJobOrderColumns = ({ title, className }) => [
         align: "center",
         className: "col-sm",
         width: "10%",
-        dataIndex: "tg_job_order_start_date",
-        render: (val) => <Button type="dashed">Confirm</Button>,
+        dataIndex: "button_confirm",
+        render: (val) => (val ? <Button type="dashed">Confirm</Button> : "-"),
       },
       {
         title: (
@@ -321,7 +292,7 @@ const subJobOrderColumns = ({ title, className }) => [
         align: "center",
         className: "col-sm",
         width: "10%",
-        dataIndex: "tg_job_order_start_date",
+        dataIndex: "",
         render: (val) => (
           <div>
             <SearchOutlined className="button-icon" />

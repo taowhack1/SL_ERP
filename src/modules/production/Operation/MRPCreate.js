@@ -46,6 +46,10 @@ import { getAllMachine } from "../../../actions/production/machineActions";
 const { Text } = Typography;
 const initialState = {
   ...mrpFields,
+  mrp_qty_produce_ref: 0, // bulk production
+  mrp_qty_produce_ref_used: 0, //ไม่ใช้ Bulk ในสต็อก
+  mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
+  mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
   rm_detail: [],
   pk_detail: [],
   calRPM: false,
@@ -106,6 +110,7 @@ const MRPCreate = (props) => {
       mrp_qty_percent_spare_pk,
       so_detail_id,
       calRPM,
+      mrp_qty_produce_ref_used,
     } = state;
 
     console.log("getRPMDetail state", state);
@@ -121,7 +126,8 @@ const MRPCreate = (props) => {
         mrp_qty_produce,
         mrp_qty_percent_spare_rm,
         mrp_qty_percent_spare_pk,
-        so_detail_id
+        so_detail_id,
+        mrp_qty_produce_ref_used
       )
         .then((res) => {
           const materialDetail = res.data[0];
@@ -210,6 +216,7 @@ const MRPCreate = (props) => {
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
+    disabledSaveBtn: state?.calRPM,
     step: {
       current: state && state.node_stay - 1,
       step: flow,

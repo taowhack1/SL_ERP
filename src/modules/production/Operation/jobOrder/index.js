@@ -6,48 +6,46 @@ import MainLayout from "../../../../components/MainLayout";
 import JobOrderListTable from "./JobOrderListTable";
 import { sortData } from "../../../../include/js/function_main";
 import PlanningModal from "../planning/PlanningModal";
-let dataSource = [];
+// let dataSource = [];
 const JobOrderMain = () => {
-  const [state, setState] = useState({
-    loading: false,
-    dataSource: [],
-  });
-  const setLoading = (bool = false) =>
-    setState((prev) => ({ ...prev, loading: bool }));
+  // const [state, setState] = useState({
+  //   loading: false,
+  //   dataSource: [],
+  // });
+
+  // const setLoading = (bool = false) =>
+  //   setState((prev) => ({ ...prev, loading: bool }));
 
   const [modal, setModal] = useState({
     visible: false,
     data: {},
   });
 
-  useEffect(() => {
-    const getData = async () => {
-      setLoading(true);
-      const resp = await getJobOrderData();
-      if (resp.success) {
-        dataSource = resp.data;
-        setState((prev) => ({
-          ...prev,
-          dataSource: sortData(resp.data),
-          loading: false,
-        }));
-      } else {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     setLoading(true);
+  //     const resp = await getJobOrderData();
+  //     if (resp.success) {
+  //       dataSource = resp.data;
+  //       setState((prev) => ({
+  //         ...prev,
+  //         dataSource: sortData(resp.data),
+  //         loading: false,
+  //       }));
+  //     } else {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    !modal.visible && getData();
+  //   !modal.visible && getData();
 
-    return () => {
-      dataSource = [];
-    };
-  }, [modal.visible]);
-
-  // Open Modal
+  //   return () => {
+  //     dataSource = [];
+  //   };
+  // }, [modal.visible]);
 
   const openModal = useCallback(
     (plan) => {
-      console.log("plan", plan);
       setModal({ ...modal, visible: true, data: plan });
     },
     [modal, setModal]
@@ -72,6 +70,7 @@ const JobOrderMain = () => {
     },
     [setModal]
   );
+
   const layoutConfig = useMemo(
     () => ({
       projectId: 10, // project ID from DB
@@ -133,7 +132,6 @@ const JobOrderMain = () => {
 
   const listConfig = useMemo(
     () => ({
-      ...state,
       modal: {
         visible: modal?.visible,
         openModal,
@@ -141,10 +139,9 @@ const JobOrderMain = () => {
         saveModal,
       },
     }),
-    [state, modal, openModal, closeModal, saveModal]
+    [modal, openModal, closeModal, saveModal]
   );
 
-  console.log("state", state);
   return (
     <MainLayout {...layoutConfig}>
       <JobOrderListTable {...listConfig} />

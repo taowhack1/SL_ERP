@@ -207,13 +207,13 @@ const Stock = (props) => {
           // }
         >
           <Tabs.TabPane tab={"Stock"} key="1">
-            {/* <h1>
+            <h1>
               รายละเอียดสต็อก No. , Lot , Batch , MFG , EXP , Qty , UOM ,Status
               ,ราคาซื้อ (ใช้งานได้/QC/ของเสีย)
-            </h1> */}
+            </h1>
             {expandedRowRender(row)}
           </Tabs.TabPane>
-          {/* <Tabs.TabPane tab={"Reserved"} key="2">
+          <Tabs.TabPane tab={"Reserved"} key="2">
             <h1>
               รายละเเอียดแสดงใบเบิก No. , เลขที่ใบเบิก ,Job,วันที่จอง
               ,วันที่ต้องการของ, จำนวน , จ่ายแล้วเท่าไหร่ , UOM ,
@@ -229,7 +229,7 @@ const Stock = (props) => {
               รายละเอียดประวัติการเคลื่อนไหวของไอเทม No. ,วันที่ , Doc No. ,
               Lot/Batch , Form , To , +/- Qty , Available Qty ,
             </h1>
-          </Tabs.TabPane> */}
+          </Tabs.TabPane>
         </Tabs>
       </div>
     );
