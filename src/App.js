@@ -8,7 +8,8 @@ import { AppContext, Context } from "./include/js/context";
 import Dashboard from "./modules/dashboard/Dashboard";
 import Login from "./modules/system/Login";
 import ChangePassword from "./modules/system/Change_Password";
-import Settings from "./modules/settings/Settings";
+//import Settings from "./modules/settings/Settings";
+import Settings from "./modules/settings/SettingsHome";
 
 import QualityAssurance from "./modules/qualityAssurance/Quality_Assurance";
 import QCReceive from "./modules/qualityAssurance/QC_Receive";
@@ -120,6 +121,8 @@ import JobOrderRoute from "./modules/production/Operation/jobOrder/JobOrderRoute
 import GRReport from "./modules/inventory/reporting/gr";
 import MRPTest from "./modules/production/Operation/mrp-test";
 import AdjustStock from "./modules/inventory/configurations/adjustStock";
+import LineRouter from "./modules/settings/Line/LineRouter";
+
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -165,7 +168,7 @@ const App = (props) => {
             <Route exact path='/'>
               <Dashboard />
             </Route>
-            <Route exact path='/settings'>
+            <Route exact path='/setting'>
               <Settings />
             </Route>
             {/* INVENTORY */}
@@ -617,7 +620,10 @@ const App = (props) => {
               path='/production/routing/edit/:id'
               component={RoutingCreate}
             />
-
+            {/* Line notify /setting/notifications/line */}
+            <Route path='/setting/notifications/line'>
+              <LineRouter />
+            </Route>
             <Route>
               <NotFound />
             </Route>
