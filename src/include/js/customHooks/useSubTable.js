@@ -58,7 +58,7 @@ const useSubTable = (props) => {
         className='table-detail sub-table-detail w-100'
         rowClassName='row-table-detail'
         columns={columns()}
-        pagination={false}
+        pagination={10}
         loading={loading}
         dataSource={data}
       />

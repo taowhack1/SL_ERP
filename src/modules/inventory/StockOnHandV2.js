@@ -238,10 +238,10 @@ const Stock = (props) => {
           // }
         >
           <Tabs.TabPane tab={"Stock"} key='1'>
-            <h1>
-              {/* รายละเอียดสต็อก No. , Lot , Batch , MFG , EXP , Qty , UOM ,Status
-              ,ราคาซื้อ (ใช้งานได้/QC/ของเสีย) V2 */}
-            </h1>
+            {/* <h1>
+              รายละเอียดสต็อก No. , Lot , Batch , MFG , EXP , Qty , UOM ,Status
+              ,ราคาซื้อ (ใช้งานได้/QC/ของเสีย) V2
+            </h1> */}
             {expandedRowRender(row)}
           </Tabs.TabPane>
           <Tabs.TabPane tab={"Reserved"} key='2'>
@@ -258,10 +258,10 @@ const Stock = (props) => {
             {po_historyrender(row)}
           </Tabs.TabPane>
           <Tabs.TabPane tab={"History"} key='4'>
-            <h1>
-              {/* รายละเอียดประวัติการเคลื่อนไหวของไอเทม No. ,วันที่ , Doc No. ,
-              Lot/Batch , Form , To , +/- Qty , Available Qty , */}
-            </h1>
+            {/* <h1>
+              รายละเอียดประวัติการเคลื่อนไหวของไอเทม No. ,วันที่ , Doc No. ,
+              Lot/Batch , Form , To , +/- Qty , Available Qty ,
+            </h1> */}
             {movement_historyrender(row)}
           </Tabs.TabPane>
         </Tabs>
@@ -471,7 +471,7 @@ const columns_stock = () => [
   {
     title: (
       <div className='text-center'>
-        <b>ราคาซื้อขาย</b>
+        <b>Price</b>
       </div>
     ),
     align: "center",
@@ -498,12 +498,24 @@ const columns_movement = () => [
   {
     title: (
       <div className='text-center'>
+        <b>Trans No.</b>
+      </div>
+    ),
+    align: "left",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "trans_no",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className='text-center'>
         <b>Date</b>
       </div>
     ),
     align: "center",
     className: "tb-col-sm",
-    // width: "10%",
+    width: "10%",
     dataIndex: "document_date",
     render: (val) => val || "-",
   },
@@ -515,7 +527,7 @@ const columns_movement = () => [
     ),
     align: "center",
     className: "tb-col-sm",
-    // width: "10%",
+    width: "10%",
     dataIndex: "document_no",
     render: (val) => val || "-",
   },
@@ -534,50 +546,66 @@ const columns_movement = () => [
   {
     title: (
       <div className='text-center'>
-        <b>Shelf</b>
+        <b>Location</b>
       </div>
     ),
-    align: "center",
+    align: "left",
     className: "tb-col-sm",
-    width: "10%",
+    width: "ๅจ%",
     dataIndex: "shelf_name",
     render: (val) => val || "-",
   },
-  // {
-  //   title: (
-  //     <div className='text-center'>
-  //       <b>To</b>
-  //     </div>
-  //   ),
-  //   align: "right",
-  //   className: "tb-col-sm",
-  //   width: "10%",
-  //   dataIndex: "",
-  //   render: (val) => convertDigit(val, 4) || "-",
-  // },
   {
     title: (
       <div className='text-center'>
-        <b>+ / - Qty.</b>
+        <b>Receive</b>
       </div>
     ),
     align: "right",
     className: "tb-col-sm",
     width: "10%",
-    dataIndex: "",
-    render: (val) => convertDigit(val, 6) || "-",
+    dataIndex: "stock_receive_qty",
+    render: (val) => convertDigit(val, 4) || "-",
   },
   {
     title: (
       <div className='text-center'>
-        <b>Available Qty</b>
+        <b>Reject</b>
       </div>
     ),
-    align: "center",
+    align: "right",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "stock_reject_qty",
+    render: (val) => convertDigit(val, 4) || "-",
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>On Hand</b>
+      </div>
+    ),
+    align: "right",
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "stock_pass_qty",
-    render: (val) => val || "-",
+    render: (val) => convertDigit(val, 4) || "-",
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>Disburse</b>
+      </div>
+    ),
+    align: "right",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "stock_disburse_qty",
+    render: (val) => {
+      return (
+        <div style={{ marginRight: 5 }}>{convertDigit(val, 4) || "-"}</div>
+      );
+    },
   },
 ];
 
@@ -597,12 +625,12 @@ const columns_reserved = () => [
   {
     title: (
       <div className='text-center'>
-        <b>Document No</b>
+        <b>Document No.</b>
       </div>
     ),
     align: "center",
     className: "tb-col-sm",
-    // width: "10%",
+    width: "10%",
     dataIndex: "document_no",
     render: (val) => val || "-",
   },
@@ -612,7 +640,7 @@ const columns_reserved = () => [
         <b>Description</b>
       </div>
     ),
-    align: "center",
+    align: "left",
     className: "tb-col-sm",
     // width: "10%",
     dataIndex: "document_description",
@@ -621,7 +649,7 @@ const columns_reserved = () => [
   {
     title: (
       <div className='text-center'>
-        <b>วันที่จอง</b>
+        <b>Reserved Date</b>
       </div>
     ),
     align: "center",
@@ -633,7 +661,7 @@ const columns_reserved = () => [
   {
     title: (
       <div className='text-center'>
-        <b>วันที่ต้องการของ</b>
+        <b>Due Date</b>
       </div>
     ),
     align: "center",
@@ -657,7 +685,7 @@ const columns_reserved = () => [
   {
     title: (
       <div className='text-center'>
-        <b>จ่ายแล้วเท่าไหร่</b>
+        <b>Disburse Qty.</b>
       </div>
     ),
     align: "right",
@@ -695,24 +723,24 @@ const columns_purchaseorder = () => [
   {
     title: (
       <div className='text-center'>
-        <b>Po No.</b>
+        <b>PO No.</b>
       </div>
     ),
     align: "center",
     className: "tb-col-sm",
-    // width: "10%",
+    width: "10%",
     dataIndex: "document_no",
     render: (val) => val || "-",
   },
   {
     title: (
       <div className='text-center'>
-        <b>Po Create</b>
+        <b>PO Create</b>
       </div>
     ),
     align: "center",
     className: "tb-col-sm",
-    // width: "10%",
+    width: "10%",
     dataIndex: "document_date",
     render: (val) => val || "-",
   },
@@ -731,10 +759,10 @@ const columns_purchaseorder = () => [
   {
     title: (
       <div className='text-center'>
-        <b>Qty</b>
+        <b>Qty.</b>
       </div>
     ),
-    align: "center",
+    align: "right",
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_qty",
