@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 export const AppContext = React.createContext();
 export const Context = React.createContext();
@@ -12,3 +14,4 @@ export const TabContext = React.createContext();
 export const PageContext = React.createContext();
 export const ProductionContext = React.createContext();
 export const DOContext = React.createContext();
+export const LineContext = React.createContext();
