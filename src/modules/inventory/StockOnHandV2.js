@@ -358,7 +358,10 @@ const Stock = (props) => {
 };
 
 export default withRouter(Stock);
-
+let qty = 0;
+let temp = 0;
+let qty_out = 0;
+let renderCountt = 0;
 const columns_stock = () => [
   {
     title: (
@@ -468,18 +471,6 @@ const columns_stock = () => [
     dataIndex: "",
     render: (val) => val || "-",
   },
-  {
-    title: (
-      <div className='text-center'>
-        <b>Price</b>
-      </div>
-    ),
-    align: "center",
-    className: "tb-col-sm",
-    width: "10%",
-    dataIndex: "",
-    render: (val) => val || "-",
-  },
 ];
 
 const columns_movement = () => [
@@ -501,7 +492,7 @@ const columns_movement = () => [
         <b>Trans No.</b>
       </div>
     ),
-    align: "left",
+    align: "center",
     className: "tb-col-sm",
     width: "5%",
     dataIndex: "trans_no",
@@ -539,9 +530,9 @@ const columns_movement = () => [
     ),
     align: "center",
     className: "tb-col-sm",
-    width: "10%",
-    dataIndex: "stock_batch",
-    render: (val) => val || "-",
+    width: "15%",
+    dataIndex: "stock_lot_no",
+    render: (val, record) => val + "/" + record.stock_batch || "-",
   },
   {
     title: (
@@ -551,61 +542,90 @@ const columns_movement = () => [
     ),
     align: "left",
     className: "tb-col-sm",
-    width: "ๅจ%",
+    width: "10%",
     dataIndex: "shelf_name",
     render: (val) => val || "-",
   },
   {
     title: (
       <div className='text-center'>
-        <b>Receive</b>
+        <b>Qty.</b>
       </div>
     ),
-    align: "right",
-    className: "tb-col-sm",
-    width: "10%",
-    dataIndex: "stock_receive_qty",
-    render: (val) => convertDigit(val, 4) || "-",
+    children: [
+      {
+        title: (
+          <div className='text-center'>
+            <b>+ Qty.</b>
+          </div>
+        ),
+        dataIndex: "stock_in_qty",
+        key: "stock_in_qty",
+        width: "10%",
+        align: "right",
+        render: (val) => convertDigit(val, 6) || "-",
+      },
+      {
+        title: (
+          <div className='text-center'>
+            <b>- Qty.</b>
+          </div>
+        ),
+        dataIndex: "stock_out_qty",
+        key: "stock_out_qty,",
+        width: "10%",
+        align: "right",
+        render: (val) => convertDigit(val, 6) || "-",
+      },
+    ],
   },
   {
     title: (
       <div className='text-center'>
-        <b>Reject</b>
+        <b>Available Qty.</b>
       </div>
     ),
     align: "right",
     className: "tb-col-sm",
     width: "10%",
-    dataIndex: "stock_reject_qty",
-    render: (val) => convertDigit(val, 4) || "-",
-  },
-  {
-    title: (
-      <div className='text-center'>
-        <b>On Hand</b>
-      </div>
-    ),
-    align: "right",
-    className: "tb-col-sm",
-    width: "10%",
-    dataIndex: "stock_pass_qty",
-    render: (val) => convertDigit(val, 4) || "-",
-  },
-  {
-    title: (
-      <div className='text-center'>
-        <b>Disburse</b>
-      </div>
-    ),
-    align: "right",
-    className: "tb-col-sm",
-    width: "10%",
-    dataIndex: "stock_disburse_qty",
-    render: (val) => {
+    dataIndex: "",
+    render: (val, record) => {
+      // renderCountt++;
+      // const sumAvailable = (record) => {
+      //   renderCountt++;
+      //   qty += record.stock_in_qty;
+      //   qty_out += record.stock_out_qty;
+      //   if (renderCountt <= 3) {
+      //     temp = qty - qty_out;
+      //     return console.log(
+      //       `record ${record.trans_id}`,
+      //       record,
+      //       "renderCountt",
+      //       renderCountt,
+      //       qty,
+      //       qty_out,
+      //       qty - qty_out
+      //     );
+      //   }
+      // };
       return (
-        <div style={{ marginRight: 5 }}>{convertDigit(val, 4) || "-"}</div>
+        <div style={{ marginRight: 5 }}>
+          {/* {convertDigit(sumAvailable(record), 6)} */ record.item_id}
+        </div>
       );
     },
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>UOM</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "uom_no",
+    render: (val) => val || "-",
   },
 ];
 
@@ -766,7 +786,7 @@ const columns_purchaseorder = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_qty",
-    render: (val) => val || "-",
+    render: (val) => convertDigit(val, 6) || "-",
   },
   {
     title: (
