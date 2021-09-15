@@ -247,6 +247,7 @@ const RDDevelopmentForm = ({
       updateFormulaCost,
     };
   }, [state.npr_formula_detail, data, setState]);
+
   const rdDevQA = useMemo(() => {
     const onChangeHead = (data) =>
       setState((prev) => ({ ...prev, ...data, commit: 1 }));

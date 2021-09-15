@@ -33,7 +33,7 @@ const JobOrderListTable = (props) => {
   const editJobOrder = (row) => {
     history.push(`/production/operations/job_order/${row?.mrp_id}`);
   };
-
+  console.log("Job Order Table", data);
   return (
     <>
       <Table
@@ -121,16 +121,15 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
   {
     title: (
       <div className="text-center">
-        <b>Batch Size</b>
+        <b>Bulk Qty.</b>
       </div>
     ),
     align: "right",
     className: "col-sm",
     width: "10%",
     dataIndex: "mrp_qty_produce_ref",
-    render: (val, { uom_no_ref }) => (
-      <Text>{`${convertDigit(val, 4)} ${uom_no_ref || "-"}`}</Text>
-    ),
+    render: (val, { uom_no_ref }) =>
+      val ? <Text>{`${convertDigit(val, 4)} ${uom_no_ref || "-"}`}</Text> : "-",
   },
   {
     title: (
@@ -141,7 +140,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     align: "center",
     className: "col-sm",
     width: "10%",
-    dataIndex: "item_no_ref",
+    dataIndex: "item_no",
     render: (val) => val || "-",
   },
   {
@@ -154,9 +153,8 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     className: "col-sm",
     width: "10%",
     dataIndex: "mrp_qty_produce",
-    render: (val, { uom_no }) => (
-      <Text>{`${convertDigit(val, 4)} ${uom_no || "-"}`}</Text>
-    ),
+    render: (val, { uom_no }) =>
+      val ? <Text>{`${convertDigit(val, 4)} ${uom_no || "-"}`}</Text> : "-",
   },
   {
     title: (

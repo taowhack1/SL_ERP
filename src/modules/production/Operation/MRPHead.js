@@ -138,7 +138,7 @@ const MRPHead = () => {
                               uom_id: null,
                               uom_no: null,
                               mrp_qty_produce_ref: 0,
-                              mrp_qty_produce_ref_used: 0, //ไม่ใช้ Bulk ในสต็อก
+                              mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
                               mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
                               mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
                             })
@@ -195,7 +195,7 @@ const MRPHead = () => {
                               uom_no: null,
                               calRPM: false,
                               mrp_qty_produce_ref: 0,
-                              mrp_qty_produce_ref_used: 0, //ไม่ใช้ Bulk ในสต็อก
+                              mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
                               mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
                               mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
                               rm_detail: [],
@@ -291,7 +291,7 @@ const MRPHead = () => {
                 </Col>
               </Row>
               <Row className="col-2 row-margin-vertical">
-                <Col span={7}>
+                <Col span={8}>
                   <CustomLabel
                     label={`Bulk For FG. ( ${
                       mainState?.uom_no_ref || mainState?.uom_no || " - "
@@ -301,7 +301,7 @@ const MRPHead = () => {
                   />
                 </Col>
                 <Col
-                  span={15}
+                  span={14}
                   className={readOnly ? "text-left" : "text-right"}
                 >
                   {detailLoading ? (
@@ -314,7 +314,7 @@ const MRPHead = () => {
                 </Col>
               </Row>
               <Row className="col-2 row-margin-vertical">
-                <Col span={7}>
+                <Col span={8}>
                   <CustomLabel
                     label={`Use Bulk On Stock. ( ${
                       mainState?.uom_no_ref || mainState?.uom_no || " - "
@@ -324,7 +324,7 @@ const MRPHead = () => {
                   />
                 </Col>
                 <Col
-                  span={15}
+                  span={14}
                   className={readOnly ? "text-left" : "text-right"}
                 >
                   {detailLoading ? (
@@ -337,7 +337,7 @@ const MRPHead = () => {
                 </Col>
               </Row>
               <Row className="col-2 row-margin-vertical">
-                <Col span={7}>
+                <Col span={8}>
                   <CustomLabel
                     label={`Bulk Production. ( ${
                       mainState?.uom_no_ref || mainState?.uom_no || " - "
@@ -347,7 +347,7 @@ const MRPHead = () => {
                   />
                 </Col>
                 <Col
-                  span={15}
+                  span={14}
                   className={readOnly ? "text-left" : "text-right"}
                 >
                   {detailLoading ? (

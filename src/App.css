@@ -894,6 +894,12 @@ div.flex-space {
   justify-content: space-between;
   align-items: center;
 }
+div.ft {
+  align-items: flex-start !important;
+}
+div.fbt {
+  align-items: flex-end !important;
+}
 .font-xl .font-25 {
   font-size: 25px;
 }
@@ -991,6 +997,9 @@ div.fc-datagrid-cell-cushion.fc-scrollgrid-sync-inner {
 }
 .arrow {
   cursor: context-menu !important;
+}
+.disabled {
+  cursor: not-allowed;
 }
 div.cc-tag {
   position: absolute;

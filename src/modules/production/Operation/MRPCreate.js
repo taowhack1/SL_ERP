@@ -47,7 +47,7 @@ const { Text } = Typography;
 const initialState = {
   ...mrpFields,
   mrp_qty_produce_ref: 0, // bulk production
-  mrp_qty_produce_ref_used: 0, //ไม่ใช้ Bulk ในสต็อก
+  mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
   mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
   mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
   rm_detail: [],

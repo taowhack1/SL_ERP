@@ -292,6 +292,9 @@ const saveNPRFormulaRemark = (npr_formula_id = null, data) => {
 
 const getNPRAllRevisionFormula = (npr_running_id = null) => {
   try {
+    console.log(
+      `getNPRAllRevisionFormula : ${apiNPRAllRevisionFormula}/${npr_running_id}`
+    );
     if (!npr_running_id)
       return { success: false, data: null, message: "Missing npr_running_id " };
     return axios

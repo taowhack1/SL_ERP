@@ -19,11 +19,13 @@ const useFetch = (url) => {
     setLoading("Loading...");
     setData(null);
     setError(null);
+    console.log("url", url);
     const source = axios.CancelToken.source();
     url &&
       axios
         .get(url, { cancelToken: source.token })
         .then((res) => {
+          console.log(`useFetch ${url} then`, res);
           setLoading(false);
           res.data && setData(res.data);
         })

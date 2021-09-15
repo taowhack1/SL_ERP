@@ -49,4 +49,34 @@ const approveFunction = async ({
   }
 };
 
-export { approveFunction };
+const getDataFunction = (url = null, params = "") => {
+  try {
+    if (!url) return { success: false, data: [], message: "Missing Url" };
+    console.info(
+      "getDataFunction : ",
+      `${process.env.REACT_APP_API_SERVER}${url}${params}`
+    );
+    return axios
+      .get(`${url}${params}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+
+export { approveFunction, getDataFunction };

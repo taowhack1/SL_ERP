@@ -283,6 +283,7 @@ const RoutingCreate = (props) => {
                         data !== null && data !== undefined
                           ? upDateFormValue({
                               item_id: data,
+                              type_id: option?.data?.type_id,
                               item_no_name_ref:
                                 option.data.item_bulk[0]?.item_no_name_ref,
                               item_id_ref:
@@ -290,6 +291,7 @@ const RoutingCreate = (props) => {
                             })
                           : upDateFormValue({
                               item_id: null,
+                              type_id: null,
                               item_no_name_ref: null,
                               item_id_ref: null,
                             });

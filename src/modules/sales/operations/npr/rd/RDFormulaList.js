@@ -116,9 +116,9 @@ const RDFormulaList = () => {
       const getNPRFormulaRef = async (npr_running_id) => {
         const resp2 = await getNPRAllRevisionFormula(npr_running_id);
         if (resp2.success) {
-          console.log("getNPRFormulaRef", resp2);
           setRefFormula(sortDataWithoutCommit(resp2.data));
         }
+        console.log("getNPRFormulaRef", resp2);
       };
       getNPRFormulaRef(npr_running_id);
     };
