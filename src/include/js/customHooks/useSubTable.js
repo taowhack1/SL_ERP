@@ -47,7 +47,16 @@ const useSubTable = (props) => {
       setLoading(false, id);
     }
   };
-
+  const movement_history = (data) => {
+    let total = 0;
+    return data?.map((obj, index) => {
+      total = total + (obj.stock_in_qty - obj.stock_out_qty);
+      return {
+        ...obj,
+        available: total,
+      };
+    });
+  };
   const expandedRowRender = (row) => {
     const data = state.dataSource[row[rowKey]];
     const loading = state.loading[row[rowKey]];
@@ -60,7 +69,9 @@ const useSubTable = (props) => {
         columns={columns()}
         pagination={10}
         loading={loading}
-        dataSource={data}
+        dataSource={
+          dataKey === "movement_history" ? movement_history(data) : data
+        }
       />
     );
   };

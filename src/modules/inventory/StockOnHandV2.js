@@ -1,6 +1,12 @@
 /** @format */
 
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table, Space, Button, Tabs } from "antd";
@@ -29,7 +35,29 @@ import CustomTable from "../../components/CustomTable";
 import { convertDigit } from "../../include/js/main_config";
 import { AppContext } from "../../include/js/context";
 let stockDataSource = [];
+let qty = 0;
+let temp = 0;
+let qty_out = 0;
+let renderCountt = 0;
+let after_row = 0;
+let temp_id = 0;
+let in_qty = 0;
+let out_qty = 0;
+let pass = 0;
 const Stock = (props) => {
+  const available = useCallback((record) => {
+    //   let total = 0;
+    // console.log(
+    //   array.map((obj, index) => {
+    //     total = total + (obj.in - obj.out);
+    //     return {
+    //       ...obj,
+    //       available: total,
+    //     };
+    //   })
+    // );
+  }, []);
+
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -63,7 +91,7 @@ const Stock = (props) => {
     expandedRowRender: movement_historyrender,
     handleExpand: movement_historyhandle,
   } = useSubTable({
-    columns: columns_movement,
+    columns: () => columns_movement(available),
     fetchDataFunction: getSubReportStockOnHand,
     rowKey: "item_id",
     dataKey: "movement_history",
@@ -358,10 +386,6 @@ const Stock = (props) => {
 };
 
 export default withRouter(Stock);
-let qty = 0;
-let temp = 0;
-let qty_out = 0;
-let renderCountt = 0;
 const columns_stock = () => [
   {
     title: (
@@ -472,8 +496,7 @@ const columns_stock = () => [
     render: (val) => val || "-",
   },
 ];
-
-const columns_movement = () => [
+const columns_movement = (available) => [
   {
     title: (
       <div className='text-center'>
@@ -588,32 +611,9 @@ const columns_movement = () => [
     align: "right",
     className: "tb-col-sm",
     width: "10%",
-    dataIndex: "",
-    render: (val, record) => {
-      // renderCountt++;
-      // const sumAvailable = (record) => {
-      //   renderCountt++;
-      //   qty += record.stock_in_qty;
-      //   qty_out += record.stock_out_qty;
-      //   if (renderCountt <= 3) {
-      //     temp = qty - qty_out;
-      //     return console.log(
-      //       `record ${record.trans_id}`,
-      //       record,
-      //       "renderCountt",
-      //       renderCountt,
-      //       qty,
-      //       qty_out,
-      //       qty - qty_out
-      //     );
-      //   }
-      // };
-      return (
-        <div style={{ marginRight: 5 }}>
-          {/* {convertDigit(sumAvailable(record), 6)} */ record.item_id}
-        </div>
-      );
-    },
+    dataIndex: "available",
+    key: "available",
+    render: (val, record) => convertDigit(val, 6) || "-",
   },
   {
     title: (
