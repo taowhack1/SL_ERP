@@ -1,3 +1,5 @@
+/** @format */
+
 import { EllipsisOutlined, SearchOutlined } from "@ant-design/icons";
 import React from "react";
 import { useState } from "react";
@@ -45,20 +47,31 @@ const useSubTable = (props) => {
       setLoading(false, id);
     }
   };
-
+  const movement_history = (data) => {
+    let total = 0;
+    return data?.map((obj, index) => {
+      total = total + (obj.stock_in_qty - obj.stock_out_qty);
+      return {
+        ...obj,
+        available: total,
+      };
+    });
+  };
   const expandedRowRender = (row) => {
     const data = state.dataSource[row[rowKey]];
     const loading = state.loading[row[rowKey]];
     return (
       <CustomTable
         bordered
-        rowKey="id"
-        className="table-detail sub-table-detail w-100"
-        rowClassName="row-table-detail"
+        rowKey='id'
+        className='table-detail sub-table-detail w-100'
+        rowClassName='row-table-detail'
         columns={columns()}
-        pagination={false}
+        pagination={10}
         loading={loading}
-        dataSource={data}
+        dataSource={
+          dataKey === "movement_history" ? movement_history(data) : data
+        }
       />
     );
   };
@@ -78,7 +91,7 @@ export default useSubTable;
 const mockColumns = () => [
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <b>No.</b>
       </div>
     ),
@@ -90,7 +103,7 @@ const mockColumns = () => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <b>Document No.</b>
       </div>
     ),
@@ -102,7 +115,7 @@ const mockColumns = () => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <b>Reference No.</b>
       </div>
     ),
@@ -114,7 +127,7 @@ const mockColumns = () => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <b>Name</b>
       </div>
     ),
@@ -126,7 +139,7 @@ const mockColumns = () => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <b>Date</b>
       </div>
     ),
@@ -138,7 +151,7 @@ const mockColumns = () => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <b>Status</b>
       </div>
     ),
@@ -150,7 +163,7 @@ const mockColumns = () => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <EllipsisOutlined />
       </div>
     ),
@@ -158,7 +171,7 @@ const mockColumns = () => [
     className: "tb-col-sm",
     width: "5%",
     dataIndex: "doc_id",
-    render: (val) => <SearchOutlined className="button-icon" />,
+    render: (val) => <SearchOutlined className='button-icon' />,
   },
 ];
 
