@@ -60,7 +60,7 @@ const useSubTable = (props) => {
   const expandedRowRender = (row) => {
     const data = state.dataSource[row[rowKey]];
     const loading = state.loading[row[rowKey]];
-    console.log("movement_history(data)", movement_history(data));
+
     return (
       <CustomTable
         bordered
