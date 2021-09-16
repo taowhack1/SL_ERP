@@ -53,13 +53,14 @@ const useSubTable = (props) => {
       total = total + (obj.stock_in_qty - obj.stock_out_qty);
       return {
         ...obj,
-        available: total,
+        available: parseFloat(total).toFixed(6),
       };
     });
   };
   const expandedRowRender = (row) => {
     const data = state.dataSource[row[rowKey]];
     const loading = state.loading[row[rowKey]];
+    console.log("movement_history(data)", movement_history(data));
     return (
       <CustomTable
         bordered

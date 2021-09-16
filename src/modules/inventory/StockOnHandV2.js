@@ -613,7 +613,7 @@ const columns_movement = (available) => [
     width: "10%",
     dataIndex: "available",
     key: "available",
-    render: (val, record) => convertDigit(val, 6) || "-",
+    render: (val, record) => val || "-",
   },
   {
     title: (
