@@ -1,3 +1,5 @@
+/** @format */
+
 import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
 import { InputNumber, Popconfirm, TimePicker } from "antd";
 import Text from "antd/lib/typography/Text";
@@ -132,15 +134,15 @@ export const routingDetailColumns = ({
   },
   {
     title: (
-      <div className="text-center">
-        <CustomLabel label="Cost Center" require readOnly />
+      <div className='text-center'>
+        <CustomLabel label='Work Center' require readOnly />
       </div>
     ),
     dataIndex: "machine_id",
     align: "left",
     render: (val, record) =>
       readOnly ? (
-        <Text className="text-value">
+        <Text className='text-value'>
           {record?.machine_cost_center_description}
         </Text>
       ) : (
@@ -148,11 +150,11 @@ export const routingDetailColumns = ({
           allowClear
           showSearch
           data={machineList}
-          field_id="machine_id"
-          field_name="machine_cost_center_description"
-          name="machine_id"
-          placeholder="Select Cost Center"
-          size="small"
+          field_id='machine_id'
+          field_name='machine_cost_center_description'
+          name='machine_id'
+          placeholder='Select Cost Center'
+          size='small'
           value={val}
           onChange={(data, option) => {
             data && data
@@ -168,8 +170,8 @@ export const routingDetailColumns = ({
   },
   {
     title: (
-      <div className="text-center">
-        <CustomLabel label="Man" require readOnly />
+      <div className='text-center'>
+        <CustomLabel label='Man' require readOnly />
       </div>
     ),
     width: "15%",
@@ -177,14 +179,14 @@ export const routingDetailColumns = ({
     align: "right",
     render: (val, record) =>
       readOnly ? (
-        <Text className="text-value">{val}</Text>
+        <Text className='text-value'>{val}</Text>
       ) : (
         <InputNumber
-          name="routing_detail_worker"
+          name='routing_detail_worker'
           style={{ width: "100%" }}
-          placeholder="Man"
+          placeholder='Man'
           min={0}
-          size="small"
+          size='small'
           onChange={(data) => {
             onChangeValue(record.id, {
               routing_detail_worker: Math.round(data),
@@ -196,8 +198,8 @@ export const routingDetailColumns = ({
   },
   {
     title: (
-      <div className="text-center">
-        <CustomLabel label="Period" require readOnly />
+      <div className='text-center'>
+        <CustomLabel label='Period' require readOnly />
       </div>
     ),
     width: "15%",
@@ -205,15 +207,15 @@ export const routingDetailColumns = ({
     align: "right",
     render: (val, record) =>
       readOnly ? (
-        <Text className="text-value">{val}</Text>
+        <Text className='text-value'>{val}</Text>
       ) : (
         <TimePicker
-          size="small"
+          size='small'
           format={"HH:mm"}
           showNow={false}
           name={"routing_detail_lead_time"}
           className={"full-width"}
-          placeholder="Hour : Minute"
+          placeholder='Hour : Minute'
           required
           value={val ? moment(val, "HH:mm:ss") : ""}
           onChange={(data) => {
@@ -243,10 +245,9 @@ export const routingDetailColumns = ({
             onConfirm={() => {
               onDelete(record.id);
             }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
+            title='Are you sure you want to delete this row？'
+            okText='Yes'
+            cancelText='No'>
             <DeleteTwoTone />
           </Popconfirm>
         );
@@ -258,6 +259,7 @@ export const routingHeadFileds = {
   item_id: null,
   item_id_ref: null,
   branch_id: null,
+  routing_type_id: 1,
   routing_working_time_min: null,
   routing_working_time_hour: null,
   routing_working_time_day: null,
