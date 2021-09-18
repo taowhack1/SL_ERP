@@ -80,6 +80,7 @@ const AdjustStock = () => {
     const resp = await getReportStockOnHand(user_name);
     setTimeout(() => {
       if (resp.success) {
+        console.log("stockDataSource :>> ", resp.data);
         stockDataSource = resp.data;
         let filterData = keyword
           ? resp?.data?.filter(
@@ -260,6 +261,7 @@ const AdjustStock = () => {
     }),
     [modal.visible, onClose]
   );
+  console.log("state :>> ", state);
   return (
     <div>
       <MainLayout {...config} pageLoad={loading}>
