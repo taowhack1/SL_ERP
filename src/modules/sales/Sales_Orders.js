@@ -19,7 +19,11 @@ import useKeepLogs from "../logs/useKeepLogs";
 import Text from "antd/lib/typography/Text";
 import DRForm from "./operations/dr/form/DRForm";
 import { convertDigit } from "../../include/js/main_config";
-import { getSelfStepStatus, sortData } from "../../include/js/function_main";
+import {
+  getSelfStepStatus,
+  getStatusByName,
+  sortData,
+} from "../../include/js/function_main";
 import CustomTable from "../../components/CustomTable";
 import { EllipsisOutlined } from "@ant-design/icons";
 
@@ -129,7 +133,7 @@ const so_columns = ({ onOpen }) => [
           className="cursor"
           onClick={() => onOpen()}
         >
-          {getSelfStepStatus(record)}
+          {getStatusByName(record.trans_status_name)}
         </div>
       );
     },

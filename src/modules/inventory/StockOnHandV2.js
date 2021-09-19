@@ -1,12 +1,4 @@
-/** @format */
-
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table, Space, Button, Tabs } from "antd";
@@ -23,41 +15,13 @@ import Authorize from "../system/Authorize";
 import CustomSelect from "../../components/CustomSelect";
 import Text from "antd/lib/typography/Text";
 import useSubTable from "../../include/js/customHooks/useSubTable";
-import {
-  ClearOutlined,
-  DownloadOutlined,
-  EllipsisOutlined,
-  ExportOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { ClearOutlined } from "@ant-design/icons";
 import { sortData } from "../../include/js/function_main";
-import CustomTable from "../../components/CustomTable";
 import { convertDigit } from "../../include/js/main_config";
 import { AppContext } from "../../include/js/context";
 let stockDataSource = [];
-let qty = 0;
-let temp = 0;
-let qty_out = 0;
-let renderCountt = 0;
-let after_row = 0;
-let temp_id = 0;
-let in_qty = 0;
-let out_qty = 0;
 let pass = 0;
 const Stock = (props) => {
-  const available = useCallback((record) => {
-    //   let total = 0;
-    // console.log(
-    //   array.map((obj, index) => {
-    //     total = total + (obj.in - obj.out);
-    //     return {
-    //       ...obj,
-    //       available: total,
-    //     };
-    //   })
-    // );
-  }, []);
-
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
@@ -91,7 +55,7 @@ const Stock = (props) => {
     expandedRowRender: movement_historyrender,
     handleExpand: movement_historyhandle,
   } = useSubTable({
-    columns: () => columns_movement(available),
+    columns: columns_movement,
     fetchDataFunction: getSubReportStockOnHand,
     rowKey: "item_id",
     dataKey: "movement_history",
@@ -169,11 +133,11 @@ const Stock = (props) => {
                 },
               ]}
               placeholder={"Select Item Type"}
-              field_id='type_id'
-              field_name='title'
+              field_id="type_id"
+              field_name="title"
               value={itemType}
               defaultValue={itemType}
-              className='text-center'
+              className="text-center"
               onChange={(id, row) =>
                 dispatch(filterStockOnHand({ itemType: id }))
               }
@@ -250,46 +214,24 @@ const Stock = (props) => {
   const expandedRowRender2 = (row) => {
     return (
       <div
-        className='ml-4 drop-shadow'
+        className="ml-4 drop-shadow"
         style={{
           padding: "4px 4px 0px 4px",
           marginBottom: "20px",
           backgroundColor: "#FFFFFF",
-        }}>
-        <Tabs
-          size='small'
-          type='card'
-          // tabBarExtraContent={
-          //   <div className="d-flex flex-end">
-          //     <Button icon={<DownloadOutlined />}>Export Excel</Button>
-          //   </div>
-          // }
-        >
-          <Tabs.TabPane tab={"Stock"} key='1'>
-            {/* <h1>
-              รายละเอียดสต็อก No. , Lot , Batch , MFG , EXP , Qty , UOM ,Status
-              ,ราคาซื้อ (ใช้งานได้/QC/ของเสีย) V2
-            </h1> */}
+        }}
+      >
+        <Tabs size="small" type="card">
+          <Tabs.TabPane tab={"Stock"} key="1">
             {expandedRowRender(row)}
           </Tabs.TabPane>
-          <Tabs.TabPane tab={"Reserved"} key='2'>
-            {/* <h1>
-              รายละเเอียดแสดงใบเบิก No. , เลขที่ใบเบิก ,Job,วันที่จอง
-              ,วันที่ต้องการของ, จำนวน , จ่ายแล้วเท่าไหร่ , UOM ,
-            </h1> */}
+          <Tabs.TabPane tab={"Reserved"} key="2">
             {reserved_historyrender(row)}
           </Tabs.TabPane>
-          <Tabs.TabPane tab={"Purchase Order"} key='3'>
-            {/* <h1>
-              รายละเอียด No. , เลขที่ PO , วันที่เปิดซื้อ , ดีล , จำนวน , UOM
-            </h1> */}
+          <Tabs.TabPane tab={"Purchase Order"} key="3">
             {po_historyrender(row)}
           </Tabs.TabPane>
-          <Tabs.TabPane tab={"History"} key='4'>
-            {/* <h1>
-              รายละเอียดประวัติการเคลื่อนไหวของไอเทม No. ,วันที่ , Doc No. ,
-              Lot/Batch , Form , To , +/- Qty , Available Qty ,
-            </h1> */}
+          <Tabs.TabPane tab={"History"} key="4">
             {movement_historyrender(row)}
           </Tabs.TabPane>
         </Tabs>
@@ -327,21 +269,23 @@ const Stock = (props) => {
       <MainLayout {...config} pageLoad={loading}>
         <Row>
           <Col span={24}>
-            <div className='d-flex flex-end w-100 mt-1 mb-1'>
+            <div className="d-flex flex-end w-100 mt-1 mb-1">
               <Space size={16}>
                 <Button
-                  type='dashed'
-                  size='small'
+                  type="dashed"
+                  size="small"
                   icon={<ClearOutlined />}
-                  className='button-icon'
-                  onClick={() => dispatch(clearFilterStockOnHand())}>
+                  className="button-icon"
+                  onClick={() => dispatch(clearFilterStockOnHand())}
+                >
                   Clear Search
                 </Button>
                 <div>
                   <Text
                     strong
-                    className='pd-right-1'>{`Search Result : `}</Text>
-                  <Text strong className='pd-right-1' style={{ color: "blue" }}>
+                    className="pd-right-1"
+                  >{`Search Result : `}</Text>
+                  <Text strong className="pd-right-1" style={{ color: "blue" }}>
                     {state?.length || "-"}
                   </Text>
                   <Text strong>Items</Text>
@@ -364,7 +308,7 @@ const Stock = (props) => {
                 pageSizeOptions: [15, 30, 50, 100],
                 showSizeChanger: true,
               }}
-              size='small'
+              size="small"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
@@ -389,7 +333,7 @@ export default withRouter(Stock);
 const columns_stock = () => [
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>No.</b>
       </div>
     ),
@@ -401,7 +345,7 @@ const columns_stock = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Lot No.</b>
       </div>
     ),
@@ -413,7 +357,7 @@ const columns_stock = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Batch No.</b>
       </div>
     ),
@@ -425,7 +369,7 @@ const columns_stock = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>MFG</b>
       </div>
     ),
@@ -437,7 +381,7 @@ const columns_stock = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>EXP</b>
       </div>
     ),
@@ -449,7 +393,7 @@ const columns_stock = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Price</b>
       </div>
     ),
@@ -461,7 +405,7 @@ const columns_stock = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Qty.</b>
       </div>
     ),
@@ -473,7 +417,7 @@ const columns_stock = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>UOM</b>
       </div>
     ),
@@ -485,7 +429,7 @@ const columns_stock = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Status</b>
       </div>
     ),
@@ -496,10 +440,10 @@ const columns_stock = () => [
     render: (val) => val || "-",
   },
 ];
-const columns_movement = (available) => [
+const columns_movement = () => [
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>No.</b>
       </div>
     ),
@@ -511,7 +455,7 @@ const columns_movement = (available) => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Trans No.</b>
       </div>
     ),
@@ -523,7 +467,7 @@ const columns_movement = (available) => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Date</b>
       </div>
     ),
@@ -535,7 +479,7 @@ const columns_movement = (available) => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Document No.</b>
       </div>
     ),
@@ -547,7 +491,7 @@ const columns_movement = (available) => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Lot/Batch</b>
       </div>
     ),
@@ -559,7 +503,7 @@ const columns_movement = (available) => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Location</b>
       </div>
     ),
@@ -567,19 +511,20 @@ const columns_movement = (available) => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "shelf_name",
+    ellipsis: true,
     render: (val) => val || "-",
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Qty.</b>
       </div>
     ),
     children: [
       {
         title: (
-          <div className='text-center'>
-            <b>+ Qty.</b>
+          <div className="text-center">
+            <b>+</b>
           </div>
         ),
         dataIndex: "stock_in_qty",
@@ -590,8 +535,8 @@ const columns_movement = (available) => [
       },
       {
         title: (
-          <div className='text-center'>
-            <b>- Qty.</b>
+          <div className="text-center">
+            <b>-</b>
           </div>
         ),
         dataIndex: "stock_out_qty",
@@ -604,8 +549,8 @@ const columns_movement = (available) => [
   },
   {
     title: (
-      <div className='text-center'>
-        <b>Available Qty.</b>
+      <div className="text-center">
+        <b>On Hand Qty.</b>
       </div>
     ),
     align: "right",
@@ -617,7 +562,7 @@ const columns_movement = (available) => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>UOM</b>
       </div>
     ),
@@ -632,7 +577,7 @@ const columns_movement = (available) => [
 const columns_reserved = () => [
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>No.</b>
       </div>
     ),
@@ -644,7 +589,7 @@ const columns_reserved = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Document No.</b>
       </div>
     ),
@@ -656,19 +601,19 @@ const columns_reserved = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Description</b>
       </div>
     ),
     align: "left",
     className: "tb-col-sm",
-    // width: "10%",
     dataIndex: "document_description",
+    ellipsis: true,
     render: (val) => val || "-",
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Reserved Date</b>
       </div>
     ),
@@ -680,7 +625,7 @@ const columns_reserved = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Due Date</b>
       </div>
     ),
@@ -692,7 +637,7 @@ const columns_reserved = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Qty</b>
       </div>
     ),
@@ -704,7 +649,7 @@ const columns_reserved = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Disburse Qty.</b>
       </div>
     ),
@@ -716,7 +661,7 @@ const columns_reserved = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>UOM</b>
       </div>
     ),
@@ -730,7 +675,7 @@ const columns_reserved = () => [
 const columns_purchaseorder = () => [
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>No.</b>
       </div>
     ),
@@ -742,7 +687,7 @@ const columns_purchaseorder = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>PO No.</b>
       </div>
     ),
@@ -754,7 +699,19 @@ const columns_purchaseorder = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
+        <b>Description</b>
+      </div>
+    ),
+    align: "left",
+    className: "tb-col-sm",
+    dataIndex: "document_description",
+    ellipsis: true,
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
         <b>PO Create</b>
       </div>
     ),
@@ -766,7 +723,7 @@ const columns_purchaseorder = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Due Date</b>
       </div>
     ),
@@ -778,7 +735,7 @@ const columns_purchaseorder = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Qty.</b>
       </div>
     ),
@@ -790,7 +747,7 @@ const columns_purchaseorder = () => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>UOM</b>
       </div>
     ),
@@ -799,44 +756,5 @@ const columns_purchaseorder = () => [
     width: "10%",
     dataIndex: "uom_no",
     render: (val) => val || "-",
-  },
-];
-//No. , Lot , Batch , MFG , EXP , Qty , UOM ,Status ,ราคาซื้อ (ใช้งานได้/QC/ของเสีย)
-const mockData = [
-  {
-    id: 0,
-    doc_id: 1,
-    lot_no: "LOT001",
-    batch_no: "202108010001",
-    mfg: "01/01/2021",
-    exp: "31/12/2021",
-    qty: 123,
-    uom: "kg",
-    status: "On QC",
-    price: 1050,
-  },
-  {
-    id: 1,
-    doc_id: 2,
-    lot_no: "LOT002",
-    batch_no: "202108010022",
-    mfg: "15/02/2021",
-    exp: "15/02/2022",
-    qty: 800,
-    uom: "kg",
-    status: "Usable",
-    price: 980,
-  },
-  {
-    id: 2,
-    doc_id: 2,
-    lot_no: "LOT054",
-    batch_no: "202108010035",
-    mfg: "31/08/2021",
-    exp: "31/08/2022",
-    qty: 125,
-    uom: "kg",
-    status: "Reject",
-    price: 1050,
   },
 ];

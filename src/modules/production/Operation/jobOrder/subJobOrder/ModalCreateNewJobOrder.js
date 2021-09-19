@@ -22,6 +22,7 @@ import {
 } from "../../../../../actions/production/jobOrderActions";
 import { AppContext } from "../../../../../include/js/context";
 import { PrinterTwoTone } from "@ant-design/icons";
+import JobOrderRouting from "./JobOrderRouting";
 const apiJobOrder = `/production/job_order`;
 const initialState = {
   mrp_id: null,
@@ -264,7 +265,7 @@ const ModalCreateNewJobOrder = ({
                         Confirm
                       </Button>
                     )}
-                    {button_completed === 1 && (
+                    {/* {button_completed === 1 && (
                       <Button
                         type="primary"
                         onClick={() =>
@@ -278,7 +279,7 @@ const ModalCreateNewJobOrder = ({
                       >
                         จบงาน
                       </Button>
-                    )}
+                    )} */}
                     {button_recall === 1 && (
                       <Button
                         danger
@@ -513,6 +514,7 @@ const ModalCreateNewJobOrder = ({
           Hiden Submit
         </button>
       </form>
+      {/* <JobOrderRouting /> */}
     </Modal>
   );
 };

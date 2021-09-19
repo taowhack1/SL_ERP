@@ -16,7 +16,7 @@ const initialState = {
   main: {
     item_id: null,
     qty_batch: 0,
-    include_bulk_on_stock: 0,
+    include_bulk_on_stock: 1,
   },
   detail: {
     data: {},

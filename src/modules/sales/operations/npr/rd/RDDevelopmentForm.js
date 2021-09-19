@@ -363,23 +363,21 @@ const RDDevelopmentForm = ({
                   Print QR Code
                 </Button>
               </div>
-              {
-                // (!status.disabledEdit && tg_trans_status_id !== 4) ||
-                tg_trans_status_id !== 4 && (
-                  <Button
-                    className={"primary"}
-                    size="small"
-                    loading={false}
-                    onClick={() => {
-                      tg_trans_status_id !== 4
-                        ? setFormMethod(formEdit)
-                        : setDisabledBatchUpdate(false);
-                    }}
-                  >
-                    Edit
-                  </Button>
-                )
-              }
+              {!status.disabledEdit && (
+                // status.tg_trans_status_id !== 4 && (
+                <Button
+                  className={"primary"}
+                  size="small"
+                  loading={false}
+                  onClick={() => {
+                    tg_trans_status_id !== 4
+                      ? setFormMethod(formEdit)
+                      : setDisabledBatchUpdate(false);
+                  }}
+                >
+                  Edit
+                </Button>
+              )}
             </div>
           ) : (
             <div className="form-section-head d-flex flex-end mb-1 mt-3">

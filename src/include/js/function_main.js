@@ -489,6 +489,7 @@ export const getStatusByName = (statusName, callBack) => {
     case statusName === "Pending DO":
     case statusName === "Develop":
     case statusName === "Available":
+    case statusName === "Confirm":
       return (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
@@ -499,7 +500,6 @@ export const getStatusByName = (statusName, callBack) => {
         </Tag>
       );
     case statusName === "In-Process":
-    case statusName === "Transports":
       return (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
@@ -509,14 +509,32 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
+    case statusName?.search("Transports") > -1:
+      return (
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="cyan"
+        >
+          {statusName}
+        </Tag>
+      );
     case statusName === "Approve":
-    case statusName === "Complete":
-    case statusName === "Completed":
       return (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
           color="success"
+        >
+          {statusName}
+        </Tag>
+      );
+    case statusName?.search("Complete") > -1:
+      return (
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="#87d068"
         >
           {statusName}
         </Tag>
@@ -536,12 +554,13 @@ export const getStatusByName = (statusName, callBack) => {
         </Tag>
       );
     case statusName === "In-Process R&D":
+    case statusName?.search("Open DR") > -1:
       return (
         <Tag
           // icon={<SyncOutlined spin />}
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color="magenta"
+          color="#108ee9"
         >
           {statusName}
         </Tag>

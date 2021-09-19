@@ -68,6 +68,13 @@ export const initialState = {
       jobs: [],
       plan: [],
     },
+    jobOrder: {
+      filter: {
+        keyword: null,
+        status: 1,
+        pageSize: 20,
+      },
+    },
   },
   routing: {
     routing: {},
@@ -252,6 +259,32 @@ export default (state = initialState, action) => {
         },
         loading: false,
       };
+
+    // case FILTER_JOB_ORDER:
+    //   return {
+    //     ...state,
+    //     operations: {
+    //       ...state?.operations,
+    //       jobOrder: {
+    //         ...state?.operations?.jobOrder,
+    //         filter: {
+    //           ...state?.operations?.jobOrder?.filter,
+    //           ...action.payload,
+    //         },
+    //       },
+    //     },
+    //   };
+    // case CLEAR_FILTER_JOB_ORDER:
+    //   return {
+    //     ...state,
+    //     operations: {
+    //       ...state?.operations,
+    //       jobOrder: {
+    //         ...state?.operations?.jobOrder,
+    //         filter: initialState?.operations?.jobOrder,
+    //       },
+    //     },
+    //   };
     default:
       return state;
   }

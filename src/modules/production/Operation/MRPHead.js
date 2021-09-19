@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Row,
   Col,
@@ -20,11 +20,18 @@ import moment from "moment";
 import {
   CalculatorOutlined,
   CheckOutlined,
+  CloseOutlined,
+  EditTwoTone,
   LoadingOutlined,
 } from "@ant-design/icons";
 const { Text } = Typography;
 
 const MRPHead = () => {
+  const [config, setConfig] = useState({
+    editBulk: false,
+    disabledEditBulk: true,
+  });
+  const { editBulk, disabledEditBulk } = config;
   const SOList = useSelector(
     (mainState) => mainState.production.operations.mrp.mrp.data_so_ref
   );
@@ -37,6 +44,8 @@ const MRPHead = () => {
     initialState,
     readOnly,
   } = useContext(MRPContext);
+
+  const onChangeConfig = (data) => setConfig((prev) => ({ ...prev, ...data }));
   const onChange = (data) => {
     console.log("onChange Data", data);
     // setState({ ...mainState, ...data });
@@ -50,25 +59,28 @@ const MRPHead = () => {
   };
 
   useEffect(() => {
-    !readOnly &&
+    if (!readOnly) {
       mainState.calRPM &&
-      message.warning({
-        key: "notify1",
-        content: (
-          <span>
-            Click
-            <CalculatorOutlined
-              className="button-icon pd-left-1 pd-right-1"
-              style={{ fontSize: 20 }}
-            />
-            icon to calculate RPM.
-          </span>
-        ),
-        duration: 6,
-      });
+        message.warning({
+          key: "notify1",
+          content: (
+            <span>
+              Click
+              <CalculatorOutlined
+                className="button-icon pd-left-1 pd-right-1"
+                style={{ fontSize: 20 }}
+              />
+              icon to calculate RPM.
+            </span>
+          ),
+          duration: 6,
+        });
+      !mainState.calRPM && onChangeConfig({ disabledEditBulk: false });
+    }
   }, [mainState?.calRPM]);
 
   console.log("mainState @@", mainState);
+  console.log("config", config);
   return (
     <>
       <Row className="col-2">
@@ -102,13 +114,13 @@ const MRPHead = () => {
           <Row className="col-2 mt-2" gutter={[32, 0]}>
             <Col span={12} className="col-border-right">
               <Row className="col-2 row-margin-vertical">
-                <Col span={6}>
+                <Col span={8}>
                   <Text strong>
                     {!readOnly && <span className="require">* </span>}
                     SO Document :
                   </Text>
                 </Col>
-                <Col span={16}>
+                <Col span={14}>
                   {readOnly ? (
                     <Text className="text-value">
                       {mainState.so_no_description}
@@ -141,6 +153,7 @@ const MRPHead = () => {
                               mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
                               mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
                               mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
+                              item_qty_produce_bulk_request: 0,
                             })
                           : Reset();
                       }}
@@ -149,13 +162,13 @@ const MRPHead = () => {
                 </Col>
               </Row>
               <Row className="col-2 row-margin-vertical">
-                <Col span={6}>
+                <Col span={8}>
                   <Text strong>
                     {!readOnly && <span className="require">* </span>}
                     Item :
                   </Text>
                 </Col>
-                <Col span={16}>
+                <Col span={14}>
                   {readOnly ? (
                     <div className="col-wrap ">{mainState.item_no_name}</div>
                   ) : (
@@ -198,6 +211,7 @@ const MRPHead = () => {
                               mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
                               mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
                               mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
+                              item_qty_produce_bulk_request: 0,
                               rm_detail: [],
                               pk_detail: [],
                             });
@@ -207,7 +221,7 @@ const MRPHead = () => {
                 </Col>
               </Row>
               <Row className="col-2 row-margin-vertical">
-                <Col span={6}>
+                <Col span={8}>
                   <CustomLabel
                     label={
                       mainState?.uom_no
@@ -218,7 +232,7 @@ const MRPHead = () => {
                     readOnly={readOnly}
                   />
                 </Col>
-                <Col span={16} className={"text-value"}>
+                <Col span={14} className={"text-value"}>
                   {readOnly ? (
                     <Text className="text-value">
                       {convertDigit(mainState.mrp_qty_produce, 4)}
@@ -237,6 +251,7 @@ const MRPHead = () => {
                         onChange({
                           ...mainState,
                           mrp_qty_produce: data,
+                          item_qty_produce_bulk_request: 0,
                           calRPM: true,
                           rm_detail: [],
                           pk_detail: [],
@@ -247,7 +262,7 @@ const MRPHead = () => {
                 </Col>
               </Row>
               <Row className="col-2 row-margin-vertical">
-                <Col span={16} className={"text-value"} offset={6}>
+                <Col span={14} className={"text-value"} offset={8}>
                   {readOnly ? (
                     <Text className="require">
                       {mainState?.mrp_qty_produce_ref_used
@@ -261,6 +276,7 @@ const MRPHead = () => {
                           onChange({
                             ...mainState,
                             mrp_qty_produce_ref_used: e.target.checked ? 1 : 0,
+                            item_qty_produce_bulk_request: 0,
                             calRPM: true,
                           });
                         }}
@@ -274,7 +290,7 @@ const MRPHead = () => {
                 </Col>
               </Row>
               <Row className="col-2 row-margin-vertical">
-                <Col span={16} offset={6}>
+                <Col span={14} offset={8}>
                   {!readOnly && (
                     <Button
                       disabled={!mainState.calRPM}
@@ -350,15 +366,108 @@ const MRPHead = () => {
                   span={14}
                   className={readOnly ? "text-left" : "text-right"}
                 >
+                  {/* {editBulk ? (
+                    <div className="w-100">
+                      <InputNumber
+                        {...getNumberFormat(4)}
+                        min={0}
+                        step={1}
+                        disabled={detailLoading || !mainState.item_id}
+                        placeholder={"Qty. to produce"}
+                        name={"item_qty_produce_bulk_request"}
+                        className="w-90"
+                        value={mainState.item_qty_produce_bulk_request}
+                        onChange={(data) => {
+                          onChange({
+                            ...mainState,
+                            item_qty_produce_bulk_request: data,
+                            calRPM: true,
+                            rm_detail: [],
+                            pk_detail: [],
+                          });
+                        }}
+                      />
+                      <CloseOutlined
+                        className="button-icon"
+                        onClick={() => onChangeConfig({ editBulk: false })}
+                      />
+                    </div>
+                  ) : (
+                    <div> */}
                   {detailLoading ? (
                     <Spin spinning />
-                  ) : (
+                  ) : readOnly ? (
                     <Text className="text-value pd-right-2">
                       {convertDigit(mainState.mrp_qty_produce_ref, 4)}
                     </Text>
+                  ) : (
+                    <InputNumber
+                      {...getNumberFormat(4)}
+                      min={0}
+                      step={1}
+                      disabled={detailLoading || !mainState.item_id}
+                      placeholder={"Qty. to produce"}
+                      name={"item_qty_produce_bulk_request"}
+                      className="w-100"
+                      value={
+                        mainState.item_qty_produce_bulk_request ||
+                        mainState.mrp_qty_produce_ref
+                      }
+                      onChange={(data) => {
+                        onChange({
+                          ...mainState,
+                          item_qty_produce_bulk_request: data,
+                          calRPM: true,
+                          rm_detail: [],
+                          pk_detail: [],
+                        });
+                      }}
+                    />
                   )}
+                  {/* {!disabledEditBulk && (
+                    <EditTwoTone
+                      className="button-icon"
+                      onClick={() => onChangeConfig({ editBulk: true })}
+                    />
+                  )} */}
+                  {/* </div>
+                  )} */}
                 </Col>
               </Row>
+              {/* <Row className="col-2 row-margin-vertical">
+                <Col span={14} offset={8}>
+                  <InputNumber
+                    {...getNumberFormat(4)}
+                    min={0}
+                    step={1}
+                    disabled={detailLoading || !mainState.item_id}
+                    placeholder={"Qty. to produce"}
+                    name={"item_qty_produce_bulk_request"}
+                    className="w-100"
+                    value={
+                      mainState.item_qty_produce_bulk_request ||
+                      mainState.mrp_qty_produce_ref
+                    }
+                    onChange={(data) => {
+                      onChange({
+                        ...mainState,
+                        item_qty_produce_bulk_request: data,
+                        calRPM: true,
+                        rm_detail: [],
+                        pk_detail: [],
+                      });
+                    }}
+                  />
+                  <Button
+                    block
+                    onClick={getRPMDetail}
+                    className="mt-2"
+                    type="primary"
+                  >
+                    คำนวณใหม่
+                  </Button>
+                </Col>
+              </Row> */}
             </Col>
             <Col span={12}>
               <Row className="col-2 row-margin-vertical">

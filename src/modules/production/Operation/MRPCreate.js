@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Typography, message } from "antd";
 import MainLayout from "../../../components/MainLayout";
 import Comments from "../../../components/Comments";
-
 import { get_log_by_id } from "../../../actions/comment&log";
 import Authorize from "../../system/Authorize";
 import { useHistory } from "react-router-dom";
@@ -50,6 +49,7 @@ const initialState = {
   mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
   mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
   mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
+  item_qty_produce_bulk_request: 0, //ยอด Bulk แบบกำหนดเองให้คำนวณ RM ใหม่
   rm_detail: [],
   pk_detail: [],
   calRPM: false,
@@ -106,11 +106,10 @@ const MRPCreate = (props) => {
       so_id,
       item_id,
       mrp_qty_produce,
-      mrp_qty_percent_spare_rm,
-      mrp_qty_percent_spare_pk,
       so_detail_id,
       calRPM,
       mrp_qty_produce_ref_used,
+      item_qty_produce_bulk_request = 0,
     } = state;
 
     console.log("getRPMDetail state", state);
@@ -119,15 +118,13 @@ const MRPCreate = (props) => {
         ...loading,
         detailLoading: true,
       });
-
       await getFGMaterialList(
         so_id,
         item_id,
         mrp_qty_produce,
-        mrp_qty_percent_spare_rm,
-        mrp_qty_percent_spare_pk,
         so_detail_id,
-        mrp_qty_produce_ref_used
+        mrp_qty_produce_ref_used,
+        item_qty_produce_bulk_request
       )
         .then((res) => {
           const materialDetail = res.data[0];

@@ -91,9 +91,7 @@ const Form = ({
                     }
                     defaultValue={user_name}
                   />
-                  <Text>
-                    {obj?.dr_created_by_no_name || employee_no_name_eng}
-                  </Text>
+                  <Text>{obj?.dr_created_by_no_name || "-"}</Text>
                 </Col>
               </Row>
               <Row className="col-2 mt-1 mb-1">

@@ -177,6 +177,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
     };
     const getDRData = async () => {
       const resp = await getDR(dr_id);
+      console.log("resp getDR", resp);
       if (resp.success) {
         // CHECK DR STAUS IF TRUE = DISABLED EDITING
         readOnly =
