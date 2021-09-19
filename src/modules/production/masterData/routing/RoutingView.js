@@ -171,12 +171,12 @@ const RoutingView = () => {
             </Row>
           </Col>
         </Row>
-        <RoutingDetail
+        {/* <RoutingDetail
           state={routing}
           readOnly={readOnly}
           detailField={"routing_detail"}
           columns={routingDetailColumns}
-        />
+        /> */}
       </div>
     </MainLayout>
   );

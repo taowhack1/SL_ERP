@@ -25,13 +25,32 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 const { Text } = Typography;
-
+const resetValue = {
+  so_detail_id: null,
+  item_id: null,
+  item_no_name: null,
+  mrp_delivery_date: null,
+  mrp_qty_produce: 0,
+  uom_id: null,
+  uom_no: null,
+  calRPM: false,
+  mrp_qty_produce_ref: 0,
+  mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
+  mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
+  mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
+  item_qty_produce_bulk_request: 0,
+  mrp_pr_rm_lead_time_day: null,
+  mrp_pr_pk_lead_time_day: null,
+  mrp_bulk_produce_date: null,
+  mrp_fg_produce_date: null,
+  rm_detail: [],
+  pk_detail: [],
+};
 const MRPHead = () => {
   const [config, setConfig] = useState({
     editBulk: false,
     disabledEditBulk: true,
   });
-  const { editBulk, disabledEditBulk } = config;
   const SOList = useSelector(
     (mainState) => mainState.production.operations.mrp.mrp.data_so_ref
   );
@@ -139,21 +158,22 @@ const MRPHead = () => {
                       onChange={async (data, option) => {
                         data !== undefined
                           ? onChange({
+                              ...resetValue,
                               so_id: option.data.so_id,
                               so_no_description: option.data.so_no_description,
                               so_detail: option.data.so_detail,
-                              item_id: null,
-                              so_detail_id: null,
-                              item_no_name: null,
-                              mrp_delivery_date: null,
-                              mrp_qty_produce: 0,
-                              uom_id: null,
-                              uom_no: null,
-                              mrp_qty_produce_ref: 0,
-                              mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
-                              mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
-                              mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
-                              item_qty_produce_bulk_request: 0,
+                              // item_id: null,
+                              // so_detail_id: null,
+                              // item_no_name: null,
+                              // mrp_delivery_date: null,
+                              // mrp_qty_produce: 0,
+                              // uom_id: null,
+                              // uom_no: null,
+                              // mrp_qty_produce_ref: 0,
+                              // mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
+                              // mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
+                              // mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
+                              // item_qty_produce_bulk_request: 0,
                             })
                           : Reset();
                       }}
@@ -183,8 +203,10 @@ const MRPHead = () => {
                       value={mainState.so_detail_id}
                       data={mainState.so_detail ?? []}
                       onChange={(data, option) => {
+                        console.log("select data", option?.data);
                         data !== undefined
                           ? onChange({
+                              ...resetValue,
                               so_detail_id: option.data.so_detail_id,
                               item_id: option.data.item_id,
                               item_no_name: option.data.item_no_name,
@@ -192,28 +214,35 @@ const MRPHead = () => {
                                 option.data.so_detail_delivery_date,
                               mrp_qty_produce:
                                 option.data.tg_so_detail_qty_balance,
+                              // mrp_qty_produce_ref: 0,
+                              // mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
+                              // mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
+                              // mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
+                              // item_qty_produce_bulk_request: 0,
                               uom_id: option.data.uom_id,
                               uom_no: option.data.uom_no,
                               calRPM: true,
-                              rm_detail: [],
-                              pk_detail: [],
+                              // rm_detail: [],
+                              // pk_detail: [],
                             })
                           : onChange({
-                              so_detail_id: null,
-                              item_id: null,
-                              item_no_name: null,
-                              mrp_delivery_date: null,
-                              mrp_qty_produce: 0,
-                              uom_id: null,
-                              uom_no: null,
-                              calRPM: false,
-                              mrp_qty_produce_ref: 0,
-                              mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
-                              mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
-                              mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
-                              item_qty_produce_bulk_request: 0,
-                              rm_detail: [],
-                              pk_detail: [],
+                              ...resetValue,
+
+                              // so_detail_id: null,
+                              // item_id: null,
+                              // item_no_name: null,
+                              // mrp_delivery_date: null,
+                              // mrp_qty_produce: 0,
+                              // uom_id: null,
+                              // uom_no: null,
+                              // calRPM: false,
+                              // mrp_qty_produce_ref: 0,
+                              // mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
+                              // mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
+                              // mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
+                              // item_qty_produce_bulk_request: 0,
+                              // rm_detail: [],
+                              // pk_detail: [],
                             });
                       }}
                     />
@@ -249,12 +278,21 @@ const MRPHead = () => {
                       value={mainState.mrp_qty_produce}
                       onChange={(data) => {
                         onChange({
+                          ...resetValue,
                           ...mainState,
                           mrp_qty_produce: data,
+                          mrp_qty_produce_ref: 0,
+                          // mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
+                          mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
+                          mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
                           item_qty_produce_bulk_request: 0,
-                          calRPM: true,
+                          mrp_pr_rm_lead_time_day: null,
+                          mrp_pr_pk_lead_time_day: null,
+                          mrp_bulk_produce_date: null,
+                          mrp_fg_produce_date: null,
                           rm_detail: [],
                           pk_detail: [],
+                          calRPM: true,
                         });
                       }}
                     />
@@ -274,9 +312,19 @@ const MRPHead = () => {
                       <Checkbox
                         onChange={(e) => {
                           onChange({
+                            ...resetValue,
                             ...mainState,
                             mrp_qty_produce_ref_used: e.target.checked ? 1 : 0,
+                            mrp_qty_produce_ref: 0,
+                            mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
+                            mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
                             item_qty_produce_bulk_request: 0,
+                            mrp_pr_rm_lead_time_day: null,
+                            mrp_pr_pk_lead_time_day: null,
+                            mrp_bulk_produce_date: null,
+                            mrp_fg_produce_date: null,
+                            // item_qty_produce_bulk_request: 0,
+                            // mrp_qty_produce_ref:0,
                             calRPM: true,
                           });
                         }}
@@ -306,29 +354,32 @@ const MRPHead = () => {
                   )}
                 </Col>
               </Row>
-              <Row className="col-2 row-margin-vertical">
-                <Col span={8}>
-                  <CustomLabel
-                    label={`Bulk For FG. ( ${
-                      mainState?.uom_no_ref || mainState?.uom_no || " - "
-                    } ) :`}
-                    require
-                    readOnly={readOnly}
-                  />
-                </Col>
-                <Col
-                  span={14}
-                  className={readOnly ? "text-left" : "text-right"}
-                >
-                  {detailLoading ? (
-                    <Spin spinning />
-                  ) : (
-                    <Text className="text-value pd-right-2">
-                      {convertDigit(mainState?.mrp_qty_produce_ref_before, 4)}
-                    </Text>
-                  )}
-                </Col>
-              </Row>
+              {mainState.type_id !== 3 && (
+                <Row className="col-2 row-margin-vertical">
+                  <Col span={8}>
+                    <CustomLabel
+                      label={`Bulk For FG. ( ${
+                        mainState?.uom_no_ref || mainState?.uom_no || " - "
+                      } ) :`}
+                      require
+                      readOnly={readOnly}
+                    />
+                  </Col>
+                  <Col
+                    span={14}
+                    className={readOnly ? "text-left" : "text-right"}
+                  >
+                    {detailLoading ? (
+                      <Spin spinning />
+                    ) : (
+                      <Text className="text-value pd-right-2">
+                        {convertDigit(mainState?.mrp_qty_produce_ref_before, 4)}
+                      </Text>
+                    )}
+                  </Col>
+                </Row>
+              )}
+
               <Row className="col-2 row-margin-vertical">
                 <Col span={8}>
                   <CustomLabel
@@ -366,37 +417,9 @@ const MRPHead = () => {
                   span={14}
                   className={readOnly ? "text-left" : "text-right"}
                 >
-                  {/* {editBulk ? (
-                    <div className="w-100">
-                      <InputNumber
-                        {...getNumberFormat(4)}
-                        min={0}
-                        step={1}
-                        disabled={detailLoading || !mainState.item_id}
-                        placeholder={"Qty. to produce"}
-                        name={"item_qty_produce_bulk_request"}
-                        className="w-90"
-                        value={mainState.item_qty_produce_bulk_request}
-                        onChange={(data) => {
-                          onChange({
-                            ...mainState,
-                            item_qty_produce_bulk_request: data,
-                            calRPM: true,
-                            rm_detail: [],
-                            pk_detail: [],
-                          });
-                        }}
-                      />
-                      <CloseOutlined
-                        className="button-icon"
-                        onClick={() => onChangeConfig({ editBulk: false })}
-                      />
-                    </div>
-                  ) : (
-                    <div> */}
                   {detailLoading ? (
                     <Spin spinning />
-                  ) : readOnly ? (
+                  ) : readOnly || mainState.type_id === 3 ? (
                     <Text className="text-value pd-right-2">
                       {convertDigit(mainState.mrp_qty_produce_ref, 4)}
                     </Text>
@@ -405,7 +428,11 @@ const MRPHead = () => {
                       {...getNumberFormat(4)}
                       min={0}
                       step={1}
-                      disabled={detailLoading || !mainState.item_id}
+                      disabled={
+                        detailLoading ||
+                        !mainState.item_id ||
+                        !mainState.mrp_qty_produce_ref_before
+                      }
                       placeholder={"Qty. to produce"}
                       name={"item_qty_produce_bulk_request"}
                       className="w-100"
@@ -417,6 +444,10 @@ const MRPHead = () => {
                         onChange({
                           ...mainState,
                           item_qty_produce_bulk_request: data,
+                          mrp_pr_rm_lead_time_day: null,
+                          mrp_pr_pk_lead_time_day: null,
+                          mrp_bulk_produce_date: null,
+                          mrp_fg_produce_date: null,
                           calRPM: true,
                           rm_detail: [],
                           pk_detail: [],
@@ -424,50 +455,8 @@ const MRPHead = () => {
                       }}
                     />
                   )}
-                  {/* {!disabledEditBulk && (
-                    <EditTwoTone
-                      className="button-icon"
-                      onClick={() => onChangeConfig({ editBulk: true })}
-                    />
-                  )} */}
-                  {/* </div>
-                  )} */}
                 </Col>
               </Row>
-              {/* <Row className="col-2 row-margin-vertical">
-                <Col span={14} offset={8}>
-                  <InputNumber
-                    {...getNumberFormat(4)}
-                    min={0}
-                    step={1}
-                    disabled={detailLoading || !mainState.item_id}
-                    placeholder={"Qty. to produce"}
-                    name={"item_qty_produce_bulk_request"}
-                    className="w-100"
-                    value={
-                      mainState.item_qty_produce_bulk_request ||
-                      mainState.mrp_qty_produce_ref
-                    }
-                    onChange={(data) => {
-                      onChange({
-                        ...mainState,
-                        item_qty_produce_bulk_request: data,
-                        calRPM: true,
-                        rm_detail: [],
-                        pk_detail: [],
-                      });
-                    }}
-                  />
-                  <Button
-                    block
-                    onClick={getRPMDetail}
-                    className="mt-2"
-                    type="primary"
-                  >
-                    คำนวณใหม่
-                  </Button>
-                </Col>
-              </Row> */}
             </Col>
             <Col span={12}>
               <Row className="col-2 row-margin-vertical">

@@ -9,79 +9,6 @@ import CustomSelect from "../../../../components/CustomSelect";
 import { getNumberFormat } from "../../../../include/js/main_config";
 import moment from "moment";
 
-/** @format */
-export const mainColumns = [
-  {
-    id: 1,
-    title: "No.",
-    dataIndex: "id",
-    width: "3%",
-    align: "center",
-    render: (value, record, index) => {
-      return index + 1;
-    },
-  },
-  {
-    id: 2,
-    title: "Routing Code",
-    dataIndex: "routing_no",
-    width: "7%",
-    align: "left",
-  },
-  {
-    id: 3,
-    title: "FG Item",
-    dataIndex: "item_no_name",
-    align: "left",
-  },
-  {
-    id: 4,
-    title: "Description",
-    dataIndex: "routing_remark",
-    width: "10%",
-    align: "left",
-  },
-  {
-    id: 6,
-    title: "Batch Size",
-    dataIndex: "routing_batch_size",
-    width: "10%",
-    align: "center",
-    render: (value, record, index) => {
-      return `${value} kg`;
-    },
-  },
-  {
-    id: 6,
-    title: "Fill wt",
-    dataIndex: "routing_fill_weight",
-    width: "10%",
-    align: "center",
-    render: (value, record, index) => {
-      return `${value} kg/pcs`;
-    },
-  },
-  {
-    id: 6,
-    title: "Capacity",
-    dataIndex: "routing_capacity_min",
-    width: "10%",
-    align: "center",
-    render: (value, record, index) => {
-      return `${value} pcs/min`;
-    },
-  },
-  {
-    id: 5,
-    title: "Working Time",
-    dataIndex: "routing_working_time_hour",
-    width: "10%",
-    align: "center",
-    render: (value, record, index) => {
-      return `${value} hour`;
-    },
-  },
-];
 export const Columns = [
   {
     id: 1,
@@ -134,15 +61,15 @@ export const routingDetailColumns = ({
   },
   {
     title: (
-      <div className='text-center'>
-        <CustomLabel label='Work Center' require readOnly />
+      <div className="text-center">
+        <CustomLabel label="Work Center" require readOnly />
       </div>
     ),
     dataIndex: "machine_id",
     align: "left",
     render: (val, record) =>
       readOnly ? (
-        <Text className='text-value'>
+        <Text className="text-value">
           {record?.machine_cost_center_description}
         </Text>
       ) : (
@@ -150,11 +77,11 @@ export const routingDetailColumns = ({
           allowClear
           showSearch
           data={machineList}
-          field_id='machine_id'
-          field_name='machine_cost_center_description'
-          name='machine_id'
-          placeholder='Select Cost Center'
-          size='small'
+          field_id="machine_id"
+          field_name="machine_cost_center_description"
+          name="machine_id"
+          placeholder="Select Cost Center"
+          size="small"
           value={val}
           onChange={(data, option) => {
             data && data
@@ -170,8 +97,8 @@ export const routingDetailColumns = ({
   },
   {
     title: (
-      <div className='text-center'>
-        <CustomLabel label='Man' require readOnly />
+      <div className="text-center">
+        <CustomLabel label="Man" require readOnly />
       </div>
     ),
     width: "15%",
@@ -179,14 +106,14 @@ export const routingDetailColumns = ({
     align: "right",
     render: (val, record) =>
       readOnly ? (
-        <Text className='text-value'>{val}</Text>
+        <Text className="text-value">{val}</Text>
       ) : (
         <InputNumber
-          name='routing_detail_worker'
+          name="routing_detail_worker"
           style={{ width: "100%" }}
-          placeholder='Man'
+          placeholder="Man"
           min={0}
-          size='small'
+          size="small"
           onChange={(data) => {
             onChangeValue(record.id, {
               routing_detail_worker: Math.round(data),
@@ -198,8 +125,8 @@ export const routingDetailColumns = ({
   },
   {
     title: (
-      <div className='text-center'>
-        <CustomLabel label='Period' require readOnly />
+      <div className="text-center">
+        <CustomLabel label="Period" require readOnly />
       </div>
     ),
     width: "15%",
@@ -207,15 +134,15 @@ export const routingDetailColumns = ({
     align: "right",
     render: (val, record) =>
       readOnly ? (
-        <Text className='text-value'>{val}</Text>
+        <Text className="text-value">{val}</Text>
       ) : (
         <TimePicker
-          size='small'
+          size="small"
           format={"HH:mm"}
           showNow={false}
           name={"routing_detail_lead_time"}
           className={"full-width"}
-          placeholder='Hour : Minute'
+          placeholder="Hour : Minute"
           required
           value={val ? moment(val, "HH:mm:ss") : ""}
           onChange={(data) => {
@@ -245,9 +172,10 @@ export const routingDetailColumns = ({
             onConfirm={() => {
               onDelete(record.id);
             }}
-            title='Are you sure you want to delete this row？'
-            okText='Yes'
-            cancelText='No'>
+            title="Are you sure you want to delete this row？"
+            okText="Yes"
+            cancelText="No"
+          >
             <DeleteTwoTone />
           </Popconfirm>
         );
@@ -259,7 +187,7 @@ export const routingHeadFileds = {
   item_id: null,
   item_id_ref: null,
   branch_id: null,
-  routing_type_id: 1,
+  routing_type_id: null,
   routing_working_time_min: null,
   routing_working_time_hour: null,
   routing_working_time_day: null,
@@ -285,16 +213,17 @@ export const routingDetailFileds = {
 };
 export const routingHeadRequireFileds = [
   "item_id",
-  "item_id_ref",
-  "routing_working_time_min",
-  "routing_working_time_hour",
-  "routing_working_time_day",
+  // "item_id_ref",
+  // "routing_working_time_min",
+  // "routing_working_time_hour",
+  // "routing_working_time_day",
   "routing_batch_size",
-  "routing_pack_size",
-  "routing_fill_weight",
-  "routing_capacity_min",
-  "routing_worker_hour",
+  // "routing_pack_size",
+  // "routing_fill_weight",
+  // "routing_capacity_min",
+  // "routing_worker_hour",
   "routing_remark",
+  "routing_type_id",
 ];
 export const routingDetailRequireFileds = [
   "machine_id",

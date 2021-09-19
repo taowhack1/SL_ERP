@@ -63,7 +63,6 @@ const MRPCreate = (props) => {
   const dispatch = useDispatch();
   authorize.check_authorize();
   const auth = useSelector((state) => state.auth.authData);
-  const current_project = useSelector((state) => state.auth.currentProject);
   const dataComments = useSelector((state) => state.log.comment_log);
   const calBtn = useRef();
 
@@ -200,9 +199,9 @@ const MRPCreate = (props) => {
     });
 
   const config = {
-    projectId: current_project && current_project.project_id,
-    title: current_project && current_project.project_name,
-    home: current_project && current_project.project_url,
+    projectId: 10,
+    title: "PRODUCTION",
+    home: "/production",
     show: true,
     breadcrumb: [
       "Home",

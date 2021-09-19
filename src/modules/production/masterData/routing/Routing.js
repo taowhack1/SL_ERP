@@ -11,62 +11,52 @@ import {
   getRoutingAll,
   getRoutingByID,
 } from "../../../../actions/production/routingAction";
+import { EllipsisOutlined, SearchOutlined } from "@ant-design/icons";
+import { useFetch } from "../../../../include/js/customHooks";
+import { sortData } from "../../../../include/js/function_main";
+import { convertDigit } from "../../../../include/js/main_config";
 const { Title, Text } = Typography;
+const apiGetRouting = `/production/routing`;
 const Routing = (props) => {
   const history = useHistory();
-  const dispatch = useDispatch();
-  const [rowClick, setRowClick] = useState(false);
-  const RoutingList = useSelector(
-    (state) => state.production.routing.routingList
-  );
-  const current_project = useSelector((state) => state.auth.currentProject);
+  const { data, error, loading } = useFetch(apiGetRouting);
+  const [state, setState] = useState([]);
+  useEffect(() => {
+    data?.length && setState(sortData(data[0]));
+  }, [data]);
   const config = {
-    projectId: current_project && current_project.project_id,
-    title: current_project && current_project.project_name,
-    home: current_project && current_project.project_url,
+    projectId: 10,
+    title: "PRODUCTION",
+    home: "/production",
     show: true,
     breadcrumb: ["Home", "Routing"],
     search: false,
     create: "/production/routing/create",
-    // buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     buttonAction: ["Create"],
     edit: {},
-    //disabledEditBtn: !rowClick,
     discard: "/production/routing",
     onCancel: () => {
       console.log("Cancel");
     },
   };
-  useEffect(() => {
-    dispatch(getRoutingAll());
-  }, []);
-  const redirect_to_view = (id) => {
-    history.push("/production/routing/view/" + (id ? id : "new"));
+
+  const viewRouting = (id) => {
+    if (!id) return false;
+    history.push(`/production/routing/${id}`);
   };
-  console.log("RoutingList", RoutingList);
+  console.log("RoutingList", data);
   return (
     <MainLayout {...config}>
       <Row>
         <Col span={24}>
           <Table
-            dataSource={RoutingList}
-            columns={mainColumns}
+            bordered
+            dataSource={state}
+            loading={loading}
+            columns={columns({ viewRouting })}
             rowKey={"routing_id"}
             size={"small"}
-            pagination={{ pageSize: 20 }}
-            onRow={(record, rowIndex) => {
-              return {
-                onClick: (e) => {
-                  setRowClick(true);
-                  $(e.target)
-                    .closest("tbody")
-                    .find("tr")
-                    .removeClass("selected-row");
-                  $(e.target).closest("tr").addClass("selected-row");
-                  dispatch(getRoutingByID(record.routing_id, redirect_to_view));
-                },
-              };
-            }}
+            // pagination={{ pageSize: 20 }}
           />
         </Col>
       </Row>
@@ -75,3 +65,105 @@ const Routing = (props) => {
 };
 
 export default withRouter(Routing);
+
+const columns = ({ viewRouting }) => [
+  {
+    title: (
+      <div className="text-center">
+        <b>No.</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "id",
+    render: (val) => val + 1,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Routing No.</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "routing_no",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Item</b>
+      </div>
+    ),
+    align: "left",
+    className: "tb-col-sm",
+    dataIndex: "item_no_name",
+    ellipsis: true,
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Description</b>
+      </div>
+    ),
+    align: "left",
+    className: "tb-col-sm",
+    // width: "10%",
+    dataIndex: "routing_description",
+    ellipsis: true,
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Man</b>
+      </div>
+    ),
+    align: "right",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "routing_worker",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Qty. / Batch Size</b>
+      </div>
+    ),
+    align: "right",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "routing_qty",
+    render: (val) => convertDigit(val || 0, 4),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>UOM</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "uom_no",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <EllipsisOutlined />
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "routing_id",
+    render: (id) => (
+      <SearchOutlined className="button-icon" onClick={() => viewRouting(id)} />
+    ),
+  },
+];

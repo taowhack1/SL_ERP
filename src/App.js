@@ -98,7 +98,7 @@ import WorkOrderCreate1 from "./modules/production/Operation/workorder/WorkOrder
 
 import ReturnRoutes from "./modules/inventory/operations/return/ReturnRoutes";
 import Routing from "./modules/production/masterData/routing/Routing";
-import RoutingCreate from "./modules/production/masterData/routing/RoutingCreate";
+import RoutingForm from "./modules/production/masterData/routing/RoutingForm";
 import RoutingView from "./modules/production/masterData/routing/RoutingView";
 import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
 import StockCard from "./modules/inventory/reporting/stockCard/StockCard";
@@ -606,17 +606,12 @@ const App = (props) => {
             <Route
               exact
               path="/production/routing/create"
-              component={RoutingCreate}
+              component={RoutingForm}
             />
             <Route
               exact
-              path="/production/routing/view/:id"
-              component={RoutingView}
-            />
-            <Route
-              exact
-              path="/production/routing/edit/:id"
-              component={RoutingCreate}
+              path="/production/routing/:id"
+              component={RoutingForm}
             />
 
             <Route>

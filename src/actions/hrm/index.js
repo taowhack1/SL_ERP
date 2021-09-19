@@ -20,6 +20,7 @@ import { message } from "antd";
 
 const apiGetPurchaseEmp = `/hrm/employees/purchase`;
 const GET_PU_EMP = "GET_PU_EMP";
+const apiGetShift = `/list/shift_job`;
 const get_select_dep = () => (dispatch) => {
   try {
     axios.post(api_query, query_select_dep, header_config).then((res) =>
@@ -165,4 +166,5 @@ export {
   getRDEmp,
   GET_PU_EMP,
   getPUEmp,
+  apiGetShift,
 };
