@@ -239,8 +239,8 @@ const RoutingCreate = (props) => {
         </MainLayoutLoading>
       ) : (
         <MainLayout {...config}>
-          <div id="form">
-            <Row className="col-2">
+          <div id='form'>
+            <Row className='col-2'>
               <Col span={8}>
                 <h2>
                   <strong>Create Routing</strong>
@@ -251,20 +251,20 @@ const RoutingCreate = (props) => {
                 <Text strong>Create Date :</Text>
               </Col>
               <Col span={2} style={{ textAlign: "right" }}>
-                <Text className="text-view">{state.routing_created}</Text>
+                <Text className='text-view'>{state.routing_created}</Text>
               </Col>
             </Row>
-            <Row className="col-2 row-tab-margin">
+            <Row className='col-2 row-tab-margin'>
               <Col span={24} style={{ marginBottom: 8 }}>
                 <CustomLabel
-                  label="Description :"
+                  label='Description :'
                   require
                   readOnly={readOnly}
                 />
                 <Input
-                  name="routing_remark"
-                  placeholder="Description"
-                  className="full-width mt-1"
+                  name='routing_remark'
+                  placeholder='Description'
+                  className='full-width mt-1'
                   onChange={(e) => {
                     upDateFormValue({ routing_remark: e.target.value });
                   }}
@@ -272,12 +272,12 @@ const RoutingCreate = (props) => {
                 />
               </Col>
             </Row>
-            <Row className="col-2 mt-2" gutter={[32, 0]}>
+            <Row className='col-2 mt-2' gutter={[32, 0]}>
               {/* left */}
-              <Col span={12} className="col-border-right">
-                <Row className="col-2 row-margin-vertical">
+              <Col span={12} className='col-border-right'>
+                <Row className='col-2 row-margin-vertical'>
                   <Col span={8}>
-                    <CustomLabel label="Item :" require readOnly={readOnly} />
+                    <CustomLabel label='Item :' require readOnly={readOnly} />
                   </Col>
                   <Col span={15}>
                     <CustomSelect
@@ -285,9 +285,9 @@ const RoutingCreate = (props) => {
                       showSearch
                       value={state.item_id}
                       data={itemList}
-                      field_id="item_id"
-                      field_name="item_no_name"
-                      name="item_id"
+                      field_id='item_id'
+                      field_name='item_no_name'
+                      name='item_id'
                       placeholder={
                         state.routing_type_id === 1 ? "Bulk Item" : "FG Item"
                       }
@@ -296,6 +296,7 @@ const RoutingCreate = (props) => {
                         data !== null && data !== undefined
                           ? upDateFormValue({
                               item_id: data,
+
                               item_no_name_ref:
                                 option.data.item_bulk[0]?.item_no_name_ref,
                               item_id_ref:
@@ -303,7 +304,6 @@ const RoutingCreate = (props) => {
                             })
                           : upDateFormValue({
                               item_id: null,
-                              type_id: null,
                               item_no_name_ref: null,
                               item_id_ref: null,
                             });
@@ -311,10 +311,10 @@ const RoutingCreate = (props) => {
                     />
                   </Col>
                 </Row>
-                <Row className="col-2 row-margin-vertical">
+                <Row className='col-2 row-margin-vertical'>
                   <Col span={8}>
                     <CustomLabel
-                      label="Routing Type :"
+                      label='Routing Type :'
                       require
                       readOnly={readOnly}
                     />
@@ -325,9 +325,9 @@ const RoutingCreate = (props) => {
                       showSearch
                       value={state.routing_type_id}
                       data={routingType_mockup}
-                      field_id="routing_type_id"
-                      field_name="routing_type_no_name"
-                      name="routing_type_id"
+                      field_id='routing_type_id'
+                      field_name='routing_type_no_name'
+                      name='routing_type_id'
                       placeholder={"Routing Type"}
                       onChange={(data, option) => {
                         console.log(option);
@@ -342,10 +342,111 @@ const RoutingCreate = (props) => {
                     />
                   </Col>
                 </Row>
+                {/* <Row className="col-2 row-margin-vertical">
+                  <Col span={8}>
+                    <CustomLabel
+                      label="Bulk Item :"
+                      require
+                      readOnly={readOnly}
+                    />
+                  </Col>
+                  <Col span={15} className="text-value">
+                    <Text title={state.item_no_name_ref}>
+                      {state.item_no_name_ref ?? "-"}
+                    </Text>
+                  </Col>
+                </Row> */}
+                {/* <Row className="col-2 row-margin-vertical">
+                  <Col span={8}>
+                    <CustomLabel
+                      label="Working time (Min) :"
+                      require
+                      readOnly={readOnly}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <div className={"total-number-modal text-value text-right"}>
+                      {loading.isUpdatePeriod ? (
+                        <LoadingOutlined className="button-icon pd-right-2" />
+                      ) : (
+                        <Text className="text-value pd-right-2">
+                          {state.routing_working_time_min || "-"}
+                        </Text>
+                      )}
+                    </div>
+                  </Col>
+                  <Col span={8}>
+                    <div className="pd-left-2">
+                      {loading.isUpdatePeriod ? (
+                        <LoadingOutlined className="button-icon" />
+                      ) : loading.calculate ? (
+                        <Button type="text" onClick={sumPeriodFN}>
+                          <CalculatorOutlined
+                            // ref={calBtn}
+
+                            className="button-icon"
+                            style={{
+                              fontSize: 22,
+                            }}
+                          />
+                        </Button>
+                      ) : (
+                        <Button type="text" disabled>
+                          <CalculatorOutlined
+                            style={{
+                              color: "#ccc",
+                              fontSize: 22,
+                            }}
+                          />
+                        </Button>
+                      )}
+                    </div>
+                  </Col>
+                </Row> */}
+                {/* <Row className="col-2 row-margin-vertical">
+                  <Col span={8}>
+                    <CustomLabel
+                      label="Working time (Hour) :"
+                      require
+                      readOnly={readOnly}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <div className={"total-number-modal text-value text-right"}>
+                      {loading.isUpdatePeriod ? (
+                        <LoadingOutlined className="button-icon pd-right-2" />
+                      ) : (
+                        <Text className="text-value pd-right-2">
+                          {state.routing_working_time_hour || "-"}
+                        </Text>
+                      )}
+                    </div>
+                  </Col>
+                </Row> */}
+                {/* <Row className="col-2 row-margin-vertical">
+                  <Col span={8}>
+                    <CustomLabel
+                      label="Working time (Day) :"
+                      require
+                      readOnly={readOnly}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <div className={"total-number-modal text-value text-right"}>
+                      {loading.isUpdatePeriod ? (
+                        <LoadingOutlined className="button-icon pd-right-2" />
+                      ) : (
+                        <Text className="text-value pd-right-2">
+                          {state.routing_working_time_day || "-"}
+                        </Text>
+                      )}
+                    </div>
+                  </Col>
+                </Row> */}
               </Col>
               {/* right */}
               <Col span={12}>
-                <Row className="col-2 row-margin-vertical">
+                <Row className='col-2 row-margin-vertical'>
                   <Col span={8}>
                     <CustomLabel
                       label={
@@ -362,7 +463,7 @@ const RoutingCreate = (props) => {
                       {...numberFormat}
                       value={state.routing_batch_size}
                       className={"full-width"}
-                      name="routing_batch_size"
+                      name='routing_batch_size'
                       placeholder={
                         state.routing_type_id === 1 ? "Batch size" : "UOM"
                       }
@@ -372,6 +473,90 @@ const RoutingCreate = (props) => {
                     />
                   </Col>
                 </Row>
+                {/* <Row className="col-2 row-margin-vertical">
+                  <Col span={8}>
+                    <CustomLabel
+                      label="Fill wt (kg/pcs) :"
+                      require
+                      readOnly={readOnly}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <InputNumber
+                      {...numberFormat3}
+                      value={state.routing_fill_weight}
+                      className={"full-width"}
+                      name={"routing_fill_weight"}
+                      placeholder={"Fill wt"}
+                      onChange={(e) =>
+                        upDateFormValue({ routing_fill_weight: e })
+                      }
+                    />
+                  </Col>
+                </Row> */}
+                {/* <Row className="col-2 row-margin-vertical">
+                  <Col span={8}>
+                    <CustomLabel
+                      label="Pack Size :"
+                      require
+                      readOnly={readOnly}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <InputNumber
+                      {...numberFormat}
+                      value={state.routing_pack_size}
+                      name={"routing_pack_size"}
+                      placeholder={"Pack Size"}
+                      className={"full-width"}
+                      onChange={(e) =>
+                        upDateFormValue({ routing_pack_size: e })
+                      }
+                    />
+                  </Col>
+                </Row> */}
+                {/* <Row className="col-2 row-margin-vertical">
+                  <Col span={8}>
+                    <CustomLabel
+                      label="Capacity (pcs/min) :"
+                      require
+                      readOnly={readOnly}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <InputNumber
+                      {...numberFormat}
+                      value={state.routing_capacity_min}
+                      className={"full-width"}
+                      name="routing_capacity_min"
+                      placeholder={"Capacity"}
+                      onChange={(e) =>
+                        upDateFormValue({ routing_capacity_min: e })
+                      }
+                    />
+                  </Col>
+                </Row> */}
+                {/* <Row className="col-2 row-margin-vertical">
+                  <Col span={8}>
+                    <CustomLabel
+                      label="Man / hr :"
+                      require
+                      readOnly={readOnly}
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <InputNumber
+                      {...numberFormat}
+                      value={state.routing_worker_hour}
+                      className={"full-width"}
+                      name="routing_worker_hour"
+                      placeholder={"Man / hr"}
+                      onChange={(e) =>
+                        upDateFormValue({ routing_worker_hour: e })
+                      }
+                    />
+                  </Col>
+                </Row> */}
               </Col>
             </Row>
             <RoutingDetail
@@ -382,6 +567,44 @@ const RoutingCreate = (props) => {
               detailField={"routing_detail"}
               columns={routingDetailColumns}
             />
+            {/* <Row className="col-2 row-tab-margin-l">
+              <Col span={24}>
+                <Tabs defaultActiveKey="1">
+                  <Tabs.TabPane
+                    tab={
+                      <span>
+                        <span className="require">* </span>
+                        Bulk
+                      </span>
+                    }
+                    key="1"
+                  >
+                    <RoutingTabDetail
+                      dataDetail={state.routing_detail.bulk}
+                      routing_type_id={1}
+                      readOnly={readOnly}
+                      stateDispatch={stateDispatch}
+                    />
+                  </Tabs.TabPane>
+                  <Tabs.TabPane
+                    tab={
+                      <span>
+                        <span className="require">* </span>
+                        FG
+                      </span>
+                    }
+                    key="2"
+                  >
+                    <RoutingTabDetail
+                      dataDetail={state.routing_detail.fg}
+                      routing_type_id={2}
+                      readOnly={readOnly}
+                      stateDispatch={stateDispatch}
+                    />
+                  </Tabs.TabPane>
+                </Tabs>
+              </Col>
+            </Row> */}
           </div>
         </MainLayout>
       )}

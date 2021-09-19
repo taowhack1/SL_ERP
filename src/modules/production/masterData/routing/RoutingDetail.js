@@ -1,3 +1,5 @@
+/** @format */
+
 import { CalculatorOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button, Col, Row, Tabs } from "antd";
 import Text from "antd/lib/typography/Text";
@@ -18,39 +20,51 @@ const RoutingDetail = ({
 }) => {
   return (
     <>
-      <Row className="col-2 ">
+      <Row className='col-2 '>
         <Col span={24}>
-          <Tabs defaultActiveKey="1">
-            <Tabs.TabPane
-              tab={<CustomLabel readOnly={readOnly} require label={"Bulk"} />}
-              key="1"
-            >
-              <RoutingTabDetail
-                dataDetail={state[detailField].bulk}
-                routing_type_id={1}
-                readOnly={readOnly}
-                stateDispatch={stateDispatch}
-                detailField={detailField}
-                columns={columns}
-                triggerHead={triggerHead}
-              />
-            </Tabs.TabPane>
-            <Tabs.TabPane
-              tab={<CustomLabel readOnly={readOnly} require label={"FG"} />}
-              key="2"
-            >
-              <RoutingTabDetail
-                dataDetail={state[detailField].fg}
-                routing_type_id={2}
-                readOnly={readOnly}
-                stateDispatch={stateDispatch}
-                detailField={detailField}
-                columns={columns}
-                triggerHead={triggerHead}
-              />
-            </Tabs.TabPane>
-            {children}
-          </Tabs>
+          {state.routing_type_id === 2 ? (
+            <>
+              {" "}
+              <Tabs defaultActiveKey='1'>
+                <Tabs.TabPane
+                  tab={<CustomLabel readOnly={readOnly} require label={"FG"} />}
+                  key='1'>
+                  <RoutingTabDetail
+                    dataDetail={state[detailField].fg}
+                    routing_type_id={2}
+                    readOnly={readOnly}
+                    stateDispatch={stateDispatch}
+                    detailField={detailField}
+                    columns={columns}
+                    triggerHead={triggerHead}
+                  />
+                </Tabs.TabPane>
+                {children}
+              </Tabs>
+            </>
+          ) : (
+            <>
+              {" "}
+              <Tabs defaultActiveKey='1'>
+                <Tabs.TabPane
+                  tab={
+                    <CustomLabel readOnly={readOnly} require label={"Bulk"} />
+                  }
+                  key='1'>
+                  <RoutingTabDetail
+                    dataDetail={state[detailField].bulk}
+                    routing_type_id={1}
+                    readOnly={readOnly}
+                    stateDispatch={stateDispatch}
+                    detailField={detailField}
+                    columns={columns}
+                    triggerHead={triggerHead}
+                  />
+                </Tabs.TabPane>
+                {children}
+              </Tabs>
+            </>
+          )}
         </Col>
       </Row>
     </>

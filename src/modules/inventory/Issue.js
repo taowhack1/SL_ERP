@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -26,6 +28,9 @@ const Issue = (props) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
+
+  const getSearchData = (keyword) => {};
+
   useEffect(() => {
     dispatch(get_issue_list(auth.user_name));
   }, []);
@@ -45,15 +50,15 @@ const Issue = (props) => {
       console.log("Cancel");
     },
     onSearch: (value) => {
-      console.log(value);
-      setLoading(true);
-      setTimeout(() => {
-        const search_data = issue_list.filter(
-          (issue) => issue.issue_no_description.indexOf(value) >= 0
-        );
-        setData(search_data);
-        setLoading(false);
-      }, 1200);
+      // console.log(value);
+      // setLoading(true);
+      // setTimeout(() => {
+      //   const search_data = issue_list.filter(
+      //     (issue) => issue.issue_no_description.indexOf(value) >= 0
+      //   );
+      //   setData(search_data);
+      //   setLoading(false);
+      // }, 1200);
     },
   };
   useEffect(() => {
@@ -70,7 +75,7 @@ const Issue = (props) => {
               loading={loading}
               onChange={onChange}
               rowKey={"issue_id"}
-              size="small"
+              size='small'
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
