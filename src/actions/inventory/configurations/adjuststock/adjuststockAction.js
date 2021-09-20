@@ -1,10 +1,11 @@
 /** @format */
 
 import axios from "axios";
-import { header_config } from "../../include/js/main_config";
+import { header_config } from "../../../../include/js/main_config";
 const apiAdjustStock = "/inventory/stock/";
 
 const saveAdjustStock = (data) => {
+  console.log("datasaveAdjustStock :>> ", data);
   try {
     return axios
       .post(`${apiAdjustStock}`, data)
@@ -19,3 +20,5 @@ const saveAdjustStock = (data) => {
       .catch((err) => {});
   } catch {}
 };
+
+export { saveAdjustStock };

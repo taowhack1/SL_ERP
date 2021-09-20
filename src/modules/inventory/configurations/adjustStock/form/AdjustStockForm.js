@@ -4,6 +4,7 @@ import { Button, Col, Row } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import React, { useContext, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { saveAdjustStock } from "../../../../../actions/inventory/configurations/adjuststock/adjuststockAction";
 import { AppContext } from "../../../../../include/js/context";
 import useKeepLogs from "../../../../logs/useKeepLogs";
 import Authorize from "../../../../system/Authorize";
@@ -31,7 +32,7 @@ const initialState = {
   uom_no: null,
 };
 let readOnly = false;
-const AdjustStockForm = ({ visible, onClose, rowData, item_no_name }) => {
+const AdjustStockForm = ({ visible, onClose, rowData, item_no_name, type }) => {
   const dataMain = rowData;
   console.log("dataMain", dataMain);
   const keepLog = useKeepLogs();
@@ -65,6 +66,7 @@ const AdjustStockForm = ({ visible, onClose, rowData, item_no_name }) => {
       formArray,
       readOnly,
       itemData,
+      type,
     }),
     [formArray, formMethod, itemData, readOnly]
   );
@@ -75,6 +77,24 @@ const AdjustStockForm = ({ visible, onClose, rowData, item_no_name }) => {
     });
   }, [dataMain]);
   const onSubmit = async (data) => {
+    const saveData = [
+      {
+        stock_id: data.stock_id,
+        item_id: data.item_id,
+        user_name: user_name,
+        stock_lot_no: data.stock_lot_no,
+        stock_batch: data.stock_batch,
+        stock_detail_qty_inbound: data.stock_detail_qty_inbound,
+        stock_detail_qty_outbound: data.stock_detail_qty_outbound,
+        stock_remark: type == "+ Qty." ? "adjust_add" : "adjust_minus",
+        stock_mfg_date: data.stock_mfg_date,
+        stock_exp_date: data.stock_exp_date,
+        stock_unit_price: data.stock_unit_price,
+        commit: 1,
+      },
+    ];
+    const response = await saveAdjustStock(saveData);
+
     console.log("submit", data);
     onClose();
   };

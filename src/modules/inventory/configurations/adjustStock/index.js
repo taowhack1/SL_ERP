@@ -237,12 +237,13 @@ const AdjustStock = () => {
       </div>
     );
   };
-  const viewData = (data) => {
+  const viewData = (data, type) => {
     setModal((prev) => ({
       ...prev,
       visible: true,
       rowData: data,
       item_no_name: item_no_name,
+      type,
     }));
   };
 
@@ -262,6 +263,7 @@ const AdjustStock = () => {
     [modal.visible, onClose]
   );
   console.log("state :>> ", state);
+  console.log("modal :>> ", modal);
   return (
     <div>
       <MainLayout {...config} pageLoad={loading}>
@@ -410,6 +412,50 @@ const columns = (viewData) => [
     dataIndex: "stock_unit_price",
     render: (val) => convertDigit(val, 4) || "-",
   },
+
+  // {
+  //   title: (
+  //     <div className='text-center'>
+  //       <b>In Qty.</b>
+  //     </div>
+  //   ),
+
+  //   align: "right",
+  //   className: "tb-col-sm",
+  //   width: "10%",
+  //   dataIndex: "tg_stock_qty_inbound",
+  //   render: (val, record) => {
+  //     return (
+  //       <>
+  //         <div>
+  //           {convertDigit(val, 6) || "-"}{" "}
+  //           <EditTwoTone onClick={(e) => viewData(record, "In Qty.")} />
+  //         </div>
+  //       </>
+  //     );
+  //   },
+  // },
+  // {
+  //   title: (
+  //     <div className='text-center'>
+  //       <b>Out Qty.</b>
+  //     </div>
+  //   ),
+  //   align: "right",
+  //   className: "tb-col-sm",
+  //   width: "10%",
+  //   dataIndex: "tg_stock_qty_outbound",
+  //   render: (val, record) => {
+  //     return (
+  //       <>
+  //         <div>
+  //           {convertDigit(val, 6) || "-"}{" "}
+  //           <EditTwoTone onClick={(e) => viewData(record, "Out Qty.")} />
+  //         </div>
+  //       </>
+  //     );
+  //   },
+  // },
   {
     title: (
       <div className='text-center'>
@@ -440,13 +486,35 @@ const columns = (viewData) => [
         <b>Adjust</b>
       </div>
     ),
+    children: [
+      {
+        title: "+ Qty.",
+        dataIndex: "street",
+        key: "street",
+        width: "5%",
+        align: "center",
+        render: (val, record) => {
+          return <EditTwoTone onClick={(e) => viewData(record, "+ Qty.")} />;
+        },
+      },
+      {
+        title: "- Qty.",
+        dataIndex: "street",
+        key: "street",
+        width: "5%",
+        align: "center",
+        render: (val, record) => {
+          return <EditTwoTone onClick={(e) => viewData(record, "- Qty.")} />;
+        },
+      },
+    ],
     dataIndex: "",
     key: "",
     width: "8%",
     align: "center",
     ellipsis: false,
-    render: (val, record) => {
-      return <EditTwoTone onClick={(e) => viewData(record)} />;
-    },
+    // render: (val, record) => {
+    //   return <EditTwoTone onClick={(e) => viewData(record)} />;
+    // },
   },
 ];
