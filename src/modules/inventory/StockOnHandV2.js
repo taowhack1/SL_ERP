@@ -763,7 +763,7 @@ const columns_purchaseReq = () => [
   {
     title: (
       <div className='text-center'>
-        <b>PO No.</b>
+        <b>PR No.</b>
       </div>
     ),
     align: "center",
@@ -775,7 +775,7 @@ const columns_purchaseReq = () => [
   {
     title: (
       <div className='text-center'>
-        <b>PO Create</b>
+        <b>PR Create</b>
       </div>
     ),
     align: "center",
