@@ -76,7 +76,15 @@ const Stock = (props) => {
     rowKey: "item_id",
     dataKey: "issue_history",
   });
-
+  const {
+    expandedRowRender: pr_historyrender,
+    handleExpand: pr_historyhandle,
+  } = useSubTable({
+    columns: columns_purchaseReq,
+    fetchDataFunction: getSubReportStockOnHand,
+    rowKey: "item_id",
+    dataKey: "pr_history",
+  });
   const {
     expandedRowRender: po_historyrender,
     handleExpand: po_historyhandle,
@@ -279,13 +287,19 @@ const Stock = (props) => {
             </h1> */}
             {reserved_historyrender(row)}
           </Tabs.TabPane>
-          <Tabs.TabPane tab={"Purchase Order"} key='3'>
+          <Tabs.TabPane tab={"Purchase Requisition"} key='3'>
+            {/* <h1>
+              รายละเอียด No. , เลขที่ PO , วันที่เปิดซื้อ , ดีล , จำนวน , UOM
+            </h1> */}
+            {pr_historyrender(row)}
+          </Tabs.TabPane>
+          <Tabs.TabPane tab={"Purchase Order"} key='4'>
             {/* <h1>
               รายละเอียด No. , เลขที่ PO , วันที่เปิดซื้อ , ดีล , จำนวน , UOM
             </h1> */}
             {po_historyrender(row)}
           </Tabs.TabPane>
-          <Tabs.TabPane tab={"History"} key='4'>
+          <Tabs.TabPane tab={"History"} key='5'>
             {/* <h1>
               รายละเอียดประวัติการเคลื่อนไหวของไอเทม No. ,วันที่ , Doc No. ,
               Lot/Batch , Form , To , +/- Qty , Available Qty ,
@@ -316,6 +330,12 @@ const Stock = (props) => {
       endDate: "31-12-2022",
     });
     po_historyhandle(expanded, row, {
+      user_name,
+      item_id: row.item_id,
+      startDate: "01-01-2021",
+      endDate: "31-12-2022",
+    });
+    pr_historyhandle(expanded, row, {
       user_name,
       item_id: row.item_id,
       startDate: "01-01-2021",
@@ -712,6 +732,80 @@ const columns_reserved = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "tg_issue_detail_qty_balance",
+    render: (val) => convertDigit(val, 6) || "-",
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>UOM</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "uom_no",
+    render: (val) => val || "-",
+  },
+];
+const columns_purchaseReq = () => [
+  {
+    title: (
+      <div className='text-center'>
+        <b>No.</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "id",
+    render: (val) => val + 1,
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>PO No.</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "document_no",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>PO Create</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "document_date",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>Due Date</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "document_due_date",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>Qty.</b>
+      </div>
+    ),
+    align: "right",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "document_qty",
     render: (val) => convertDigit(val, 6) || "-",
   },
   {
