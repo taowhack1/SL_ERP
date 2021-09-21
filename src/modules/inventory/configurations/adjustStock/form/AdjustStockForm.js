@@ -1,9 +1,10 @@
 /** @format */
 
-import { Button, Col, Row } from "antd";
+import { Button, Col, message, Row } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import React, { useContext, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 import { saveAdjustStock } from "../../../../../actions/inventory/configurations/adjuststock/adjuststockAction";
 import { AppContext } from "../../../../../include/js/context";
 import useKeepLogs from "../../../../logs/useKeepLogs";
@@ -32,7 +33,14 @@ const initialState = {
   uom_no: null,
 };
 let readOnly = false;
-const AdjustStockForm = ({ visible, onClose, rowData, item_no_name, type }) => {
+const AdjustStockForm = ({
+  visible,
+  onClose,
+  rowData,
+  item_no_name,
+  type,
+  handleExpand2,
+}) => {
   const dataMain = rowData;
   console.log("dataMain", dataMain);
   const keepLog = useKeepLogs();
@@ -93,10 +101,37 @@ const AdjustStockForm = ({ visible, onClose, rowData, item_no_name, type }) => {
         commit: 1,
       },
     ];
+    const hide = message.loading("Action in progress....", 0);
     const response = await saveAdjustStock(saveData);
-
+    setTimeout(hide, 0);
+    if (response.success) {
+      console.log("response :>> ", { ...response.data[0] });
+      await Swal.fire({
+        type: "success",
+        title: "Save Successfully!",
+        icon: "success",
+        showCancelButton: false,
+        confirmButtonText: `OK`,
+        allowOutsideClick: false,
+      }).then((result) => {
+        keepLog.keep_log_action(`Save Stock Success`);
+        if (result.isConfirmed) {
+          onClose();
+          handleExpand2(data);
+        } else {
+          formMethod.reset({ ...response.data[0] });
+        }
+      });
+    } else {
+      keepLog.keep_log_action(`Save Stock Error`);
+      message.success({
+        content: `Error ! ${response.message}`,
+        duration: 6,
+        key: "save",
+      });
+    }
     console.log("submit", data);
-    onClose();
+    //onClose();
   };
   const onError = (errors, e) => console.log(errors, e);
   console.log("itemData", itemData);

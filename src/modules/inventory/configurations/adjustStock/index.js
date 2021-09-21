@@ -45,7 +45,7 @@ const AdjustStock = () => {
   authorize.check_authorize();
   const dispatch = useDispatch();
   const keepLog = useKeepLogs();
-  const { expandedRowRender, handleExpand } = useSubTableEdit({
+  const { expandedRowRender, handleExpand, fetchData } = useSubTableEdit({
     columns,
     fetchDataFunction: getSubReportStockOnHand,
     rowKey: "id",
@@ -237,6 +237,16 @@ const AdjustStock = () => {
       </div>
     );
   };
+  const handleExpand2 = (row) => {
+    console.log("row :>> ", row);
+    fetchData(row, {
+      user_name,
+      item_id: row.item_id,
+      startDate: "01-01-2021",
+      endDate: "31-12-2022",
+    });
+  };
+
   const viewData = (data, type) => {
     setModal((prev) => ({
       ...prev,
@@ -244,6 +254,7 @@ const AdjustStock = () => {
       rowData: data,
       item_no_name: item_no_name,
       type,
+      handleExpand2,
     }));
   };
 
@@ -298,9 +309,8 @@ const AdjustStock = () => {
               onChange={onChange}
               rowKey={"item_id"}
               expandable={{ expandedRowRender: expandedRowRender2 }}
-              // expandable={{ expandedRowRender }}
               onExpand={(expanded, row) => {
-                // console.log("onExpand", a, b, c);
+                //handleExpand2(expanded, row);
                 handleExpand(expanded, row, {
                   user_name,
                   item_id: row.item_id,
@@ -308,7 +318,6 @@ const AdjustStock = () => {
                   endDate: "31-12-2022",
                 });
               }}
-              // onExpand={handleExpand}
               pagination={{
                 pageSize,
                 pageSizeOptions: [15, 30, 50, 100],
