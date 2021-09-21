@@ -120,6 +120,7 @@ import JobOrderRoute from "./modules/production/Operation/jobOrder/JobOrderRoute
 import GRReport from "./modules/inventory/reporting/gr";
 import MRPTest from "./modules/production/Operation/mrp-test";
 import StockOnHandV2 from "./modules/inventory/StockOnHandV2";
+import AdjustStock from "./modules/inventory/configurations/adjustStock";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -352,6 +353,9 @@ const App = (props) => {
             </Route>
             <Route exact path='/inventory/reporting/gr'>
               <GRReport />
+            </Route>
+            <Route exact path='/inventory/configurations/adjuststock'>
+              <AdjustStock />
             </Route>
             {/* PURCHASE */}
             <Route exact path='/purchase'>
