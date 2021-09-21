@@ -1,9 +1,12 @@
+/** @format */
+
 import React, { useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MainLayout from "../../components/MainLayout";
 import Authorize from "../system/Authorize";
 import { PageContext } from "../../include/js/context";
+import DashboardsIndex from "./Dashboards";
 
 const Production = (props) => {
   const authorize = Authorize();
@@ -33,6 +36,7 @@ const Production = (props) => {
     <div>
       <MainLayout {...config}>
         <h1>Home</h1>
+        <DashboardsIndex />
       </MainLayout>
     </div>
   );
