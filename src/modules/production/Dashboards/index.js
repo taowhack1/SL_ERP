@@ -8,21 +8,21 @@ const DashboardsIndex = () => {
       {
         name: "PRODUCT A",
         data: [
-          8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
           1, 1, 1, 1, 1, 1, 1, 1, 1,
         ],
       },
       {
         name: "PRODUCT B",
         data: [
-          8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
           1, 1, 1, 1, 1, 1, 1, 1, 1,
         ],
       },
       {
         name: "PRODUCT C",
         data: [
-          8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
           1, 1, 1, 1, 1, 1, 1, 1, 1,
         ],
       },
@@ -46,6 +46,22 @@ const DashboardsIndex = () => {
           },
         },
       ],
+
+      yaxis: {
+        show: true,
+        showAlways: true,
+        max: 24,
+        tickAmount: 4,
+        forceNiceScale: true,
+        labels: {
+          minWidth: 0,
+          maxWidth: 160,
+          show: true,
+          formatter: (value) => {
+            return [8, 12, 20, 24].includes(value) ? value : " ";
+          },
+        },
+      },
       grid: {
         show: true,
         borderColor: "#90A4AE",
@@ -56,11 +72,7 @@ const DashboardsIndex = () => {
             show: false,
           },
         },
-        yaxis: {
-          lines: {
-            show: true,
-          },
-        },
+
         row: {
           colors: undefined,
           opacity: 0.5,
@@ -111,7 +123,6 @@ const DashboardsIndex = () => {
           "31",
         ],
       },
-      yaxis: { min: 0, max: 24, tickAmount: 24 },
       fill: {
         opacity: 1,
       },
