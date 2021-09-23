@@ -102,6 +102,7 @@ import RoutingCreate from "./modules/production/masterData/routing/RoutingCreate
 import RoutingView from "./modules/production/masterData/routing/RoutingView";
 import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
 import StockCard from "./modules/inventory/reporting/stockCard/StockCard";
+import StockValue from "./modules/inventory/reporting/stockValue/StockValue";
 import TimeSheet from "./modules/production/Operation/production/production/timesheet/TimeSheet";
 import ProductionSelectMachine from "./modules/production/Operation/production/production/costCenter/ProductionSelectMachine";
 import ProductionMain from "./modules/production/Operation/production/ProductionMain";
@@ -350,6 +351,9 @@ const App = (props) => {
             </Route>
             <Route exact path='/inventory/stock_card'>
               <StockCard />
+            </Route>
+            <Route exact path='/inventory/stock_value'>
+              <StockValue />
             </Route>
             <Route exact path='/inventory/reporting/gr'>
               <GRReport />

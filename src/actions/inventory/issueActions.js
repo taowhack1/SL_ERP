@@ -1,7 +1,15 @@
+/** @format */
+
 import axios from "axios";
 import { header_config } from "../../include/js/main_config";
 import { api_approve, api_issue, api_issue_detail } from "../../include/js/api";
-import { GET_ISSUE_LIST, RESET_ISSUE, GET_ISSUE_BY_ID } from "../types";
+import {
+  GET_ISSUE_LIST,
+  RESET_ISSUE,
+  GET_ISSUE_BY_ID,
+  SEARCH_ISSUE,
+  RESET_ISSUE_DATA,
+} from "../types";
 import { message } from "antd";
 
 export const get_issue_list = (user_name) => (dispatch) => {
@@ -41,99 +49,99 @@ export const get_issue_by_id = (issue_id, user_name) => async (dispatch) => {
   }
 };
 
-export const create_issue = (
-  user_name,
-  data_head,
-  data_detail,
-  redirect
-) => async (dispatch) => {
-  try {
-    if (data_head && data_detail) {
-      console.log("Create issue", data_head, data_detail);
-      await axios
-        .post(api_issue, data_head, header_config)
-        .then(async (res) => {
-          const issue_id = res.data[0][0].issue_id;
-          console.log("INSERT_HEAD", res);
+export const create_issue =
+  (user_name, data_head, data_detail, redirect) => async (dispatch) => {
+    try {
+      if (data_head && data_detail) {
+        console.log("Create issue", data_head, data_detail);
+        await axios
+          .post(api_issue, data_head, header_config)
+          .then(async (res) => {
+            const issue_id = res.data[0][0].issue_id;
+            console.log("INSERT_HEAD", res);
 
-          await axios
-            .post(`${api_issue_detail}/${issue_id}`, data_detail, header_config)
-            .then(async (res) => {
-              console.log("INSERT_DETAIL", res);
-              await dispatch(get_issue_by_id(issue_id, user_name));
-              message.success({
-                content: "Issue Created.",
-                key: "validate",
-                duration: 2,
+            await axios
+              .post(
+                `${api_issue_detail}/${issue_id}`,
+                data_detail,
+                header_config
+              )
+              .then(async (res) => {
+                console.log("INSERT_DETAIL", res);
+                await dispatch(get_issue_by_id(issue_id, user_name));
+                message.success({
+                  content: "Issue Created.",
+                  key: "validate",
+                  duration: 2,
+                });
+                await redirect(issue_id);
               });
-              await redirect(issue_id);
+          })
+          .catch((error) => {
+            console.log(error);
+            message.error({
+              content: "Somethings went wrong. \n" + error,
+              key: "validate",
+              duration: 2,
             });
-        })
-        .catch((error) => {
-          console.log(error);
-          message.error({
-            content: "Somethings went wrong. \n" + error,
-            key: "validate",
-            duration: 2,
           });
-        });
+      }
+    } catch (error) {
+      console.log(error);
+      message.error({
+        content: "Somethings went wrong. \n" + error,
+        key: "validate",
+        duration: 2,
+      });
     }
-  } catch (error) {
-    console.log(error);
-    message.error({
-      content: "Somethings went wrong. \n" + error,
-      key: "validate",
-      duration: 2,
-    });
-  }
-};
+  };
 
-export const update_issue = (
-  issue_id,
-  user_name,
-  data_head,
-  data_detail,
-  redirect
-) => async (dispatch) => {
-  try {
-    if (data_head && data_detail) {
-      console.log("Create issue", data_head, data_detail);
-      await axios
-        .put(`${api_issue}/${issue_id}`, data_head, header_config)
-        .then(async (res) => {
-          console.log("UPDATE_ISSUE", res);
+export const update_issue =
+  (issue_id, user_name, data_head, data_detail, redirect) =>
+  async (dispatch) => {
+    try {
+      if (data_head && data_detail) {
+        console.log("Create issue", data_head, data_detail);
+        await axios
+          .put(`${api_issue}/${issue_id}`, data_head, header_config)
+          .then(async (res) => {
+            console.log("UPDATE_ISSUE", res);
 
-          await axios
-            .post(`${api_issue_detail}/${issue_id}`, data_detail, header_config)
-            .then(async (res) => {
-              console.log("Update_DETAIL", res);
-              await dispatch(get_issue_by_id(issue_id, user_name));
-              message.success({
-                content: "Issue Updated.",
-                key: "validate",
-                duration: 2,
+            await axios
+              .post(
+                `${api_issue_detail}/${issue_id}`,
+                data_detail,
+                header_config
+              )
+              .then(async (res) => {
+                console.log("Update_DETAIL", res);
+                await dispatch(get_issue_by_id(issue_id, user_name));
+                message.success({
+                  content: "Issue Updated.",
+                  key: "validate",
+                  duration: 2,
+                });
+                await redirect(issue_id);
               });
-              await redirect(issue_id);
+          })
+          .catch((error) => {
+            console.log(error);
+            message.error({
+              content: "Somethings went wrong.\n" + error,
+              key: "validate",
+              duration: 2,
             });
-        })
-        .catch((error) => {
-          console.log(error);
-          message.error({
-            content: "Somethings went wrong.\n" + error,
-            key: "validate",
-            duration: 2,
           });
-        });
+      }
+    } catch (error) {
+      console.log(error);
+      message.error({
+        content: "Somethings went wrong. \n" + error,
+        key: "validate",
+        duration: 2,
+      });
     }
-  } catch (error) {
-    console.log(error);
-    message.error({
-      content: "Somethings went wrong. \n" + error,
-      key: "validate",
-      duration: 2,
-    });
-  }
-};
+  };
 
 export const issue_actions = (data, issue_id) => async (dispatch) => {
   console.log("issue_actions");
@@ -150,4 +158,16 @@ export const issue_actions = (data, issue_id) => async (dispatch) => {
 
 export const reset_issue = () => (dispatch) => {
   dispatch({ type: RESET_ISSUE });
+};
+
+export const filterIssue = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_ISSUE, payload: data });
+export const reset_issue_data = () => (dispatch) => {
+  try {
+    dispatch({
+      type: RESET_ISSUE_DATA,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
