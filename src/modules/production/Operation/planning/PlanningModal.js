@@ -18,7 +18,6 @@ import Swal from "sweetalert2";
 import {
   getOtherPlanRef,
   getPlanByJobOrderID,
-  getPlanningCalendarData,
   savePlanJob,
 } from "../../../../actions/production/planningActions";
 import { AppContext } from "../../../../include/js/context";
@@ -26,7 +25,6 @@ import FormLeft from "./modal/FormLeft";
 import FormRight from "./modal/FormRight";
 
 const PlanningModal = (props) => {
-  const dispatch = useDispatch();
   const { data, config } = props;
   const {
     auth: { user_name, department_id },
@@ -100,7 +98,7 @@ const PlanningModal = (props) => {
     const resp = await savePlanJob(otherPlan);
     if (resp.success) {
       if (resp.success) {
-        dispatch(getPlanningCalendarData());
+        // do get all machine
 
         await Swal.fire({
           title: "Update Successfully!",
@@ -112,7 +110,6 @@ const PlanningModal = (props) => {
         }).then((result) => {
           if (result.isConfirmed) {
             config.closeModal();
-          } else {
           }
         });
 
@@ -160,14 +157,14 @@ const PlanningModal = (props) => {
         destroyOnClose
         {...config}
       >
-        <div className="flex-container" style={{ minHeight: "50vh" }}>
-          <div style={{ width: "35%" }}>
-            <FormLeft {...formLeftConfig} />
-          </div>
-          <div style={{ width: "65%" }}>
+        <FormLeft {...formLeftConfig} />
+        {/* <div className="flex-container" style={{ minHeight: "50vh" }}>
+          <div>
+          </div> */}
+        {/* <div style={{ width: "65%" }}>
             <FormRight {...formRightConfig} />
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
       </Modal>
     </>
   );

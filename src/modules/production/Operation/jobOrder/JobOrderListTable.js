@@ -129,7 +129,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     width: "10%",
     dataIndex: "mrp_qty_produce_ref",
     render: (val, { uom_no_ref }) =>
-      val ? <Text>{`${convertDigit(val, 4)} ${uom_no_ref || "-"}`}</Text> : "-",
+      val ? <Text>{`${convertDigit(val, 6)} ${uom_no_ref || "-"}`}</Text> : "-",
   },
   {
     title: (
@@ -154,7 +154,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     width: "10%",
     dataIndex: "mrp_qty_produce",
     render: (val, { uom_no }) =>
-      val ? <Text>{`${convertDigit(val, 4)} ${uom_no || "-"}`}</Text> : "-",
+      val ? <Text>{`${convertDigit(val, 6)} ${uom_no || "-"}`}</Text> : "-",
   },
   {
     title: (
@@ -212,6 +212,7 @@ const subJobOrderColumns = [
       </div>
     ),
     align: "center",
+    width: "10%",
     dataIndex: "item_no",
     render: (val) => val || "-",
   },
@@ -223,6 +224,7 @@ const subJobOrderColumns = [
     ),
     align: "left",
     dataIndex: "job_order_description",
+    ellipsis: true,
     render: (val) => val || "-",
   },
   {
@@ -234,7 +236,7 @@ const subJobOrderColumns = [
     align: "right",
     width: "10%",
     dataIndex: "job_order_qty",
-    render: (val) => (val && convertDigit(val, 4)) || "-",
+    render: (val) => (val && convertDigit(val, 6)) || "-",
   },
   {
     title: (
@@ -243,6 +245,7 @@ const subJobOrderColumns = [
       </div>
     ),
     align: "center",
+    width: "5%",
     dataIndex: "uom_no",
     render: (val) => val || "-",
   },
@@ -253,6 +256,7 @@ const subJobOrderColumns = [
       </div>
     ),
     align: "center",
+    width: "10%",
     dataIndex: "routing_detail_type_name",
     render: (val) => val || "-",
   },

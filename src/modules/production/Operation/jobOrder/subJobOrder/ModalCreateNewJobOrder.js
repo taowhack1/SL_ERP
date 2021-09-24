@@ -13,17 +13,14 @@ import {
   DatePickerField,
   InputField,
   InputNumberField,
-  TextAreaField,
 } from "../../../../../components/AntDesignComponent";
 import moment from "moment";
 import {
   jobOrderUpdateStatus,
-  saveJubOrder,
+  saveJobOrder,
 } from "../../../../../actions/production/jobOrderActions";
 import { AppContext } from "../../../../../include/js/context";
 import { PrinterTwoTone } from "@ant-design/icons";
-import JobOrderRouting from "./JobOrderRouting";
-import RoutingDetail from "../../../masterData/routing/RoutingDetail";
 import JobRouting from "./jobOrderRoutingDetail";
 const apiJobOrder = `/production/job_order`;
 const initialState = {
@@ -52,7 +49,7 @@ const formConfig = {
   job_order: {},
   jobUpdate: false,
 };
-
+let temp_job_order_id = null;
 const ModalCreateNewJobOrder = ({
   visible = true,
   job_order_id = null,
@@ -76,12 +73,10 @@ const ModalCreateNewJobOrder = ({
     job_order_description,
     job_order_qty,
     job_order_plan_date,
-    job_order_remark,
     button_edit,
     button_confirm,
     button_recall,
     button_cancel,
-    button_completed,
     tg_trans_status_id,
     job_order_no,
   } = formConfig?.job_order || {};
@@ -99,6 +94,7 @@ const ModalCreateNewJobOrder = ({
   const getJobData = async (job_order_id) => {
     setConfig((prev) => ({ ...prev, loading: true }));
     if (job_order_id) {
+      temp_job_order_id = job_order_id;
       const resp = await getDataFunction(apiJobOrder, `/${job_order_id}`);
       if (resp.success) {
         reset({ ...resp.data[0], routing_detail_type_id });
@@ -167,7 +163,7 @@ const ModalCreateNewJobOrder = ({
   };
 
   const onSubmit = async (data) => {
-    setConfig((prev) => ({ ...prev, loading: true }));
+    // setConfig((prev) => ({ ...prev, loading: true }));
     const saveData = [
       {
         ...data,
@@ -183,24 +179,24 @@ const ModalCreateNewJobOrder = ({
         })),
       },
     ];
-    console.log("saveData", saveData);
-    // const resp = await saveJubOrder(saveData);
-    // if (resp.success) {
-    //   const { job_order_id } = resp.data.length ? resp.data[0] : {};
-    //   console.log("resp onSubmit", resp);
-    //   message.success("Save Success.", 4);
-    //   formConfig.jobUpdate = true;
-    //   getJobData(job_order_id);
-    //   setConfig((prev) => ({
-    //     ...prev,
-    //     loading: false,
-    //     isUpdate: true,
-    //     readOnly: true,
-    //   }));
-    // } else {
-    //   message.success(resp.message, 6);
-    setConfig((prev) => ({ ...prev, loading: false }));
-    // }
+
+    const resp = await saveJobOrder(saveData);
+    if (resp.success) {
+      const { job_order_id } = resp.data.length ? resp.data[0] : {};
+      console.log("resp onSubmit", resp);
+      message.success("Save Success.", 4);
+      formConfig.jobUpdate = true;
+      getJobData(job_order_id);
+      setConfig((prev) => ({
+        ...prev,
+        loading: false,
+        isUpdate: true,
+        readOnly: true,
+      }));
+    } else {
+      message.success(resp.message, 6);
+      setConfig((prev) => ({ ...prev, loading: false }));
+    }
   };
 
   const onError = (error) => console.log(error);
@@ -213,6 +209,7 @@ const ModalCreateNewJobOrder = ({
       formConfig.job_order = {};
       formConfig.jobUpdate && fetchData();
       formConfig.jobUpdate = false;
+      temp_job_order_id = null;
     };
   }, [job_order_id, visible]);
 
@@ -497,37 +494,11 @@ const ModalCreateNewJobOrder = ({
             </Row>
           </Col>
         </Row>
-        <JobRouting {...formMethods} readOnly={readOnly} />
-        {/* <JobOrderRouting /> */}
-        {/* <Row className="col-2 mt-1 mb-1" gutter={8}>
-          <Col span={6}>
-            <CustomLabel label="หมายเหตุ :" readOnly={readOnly} />
-          </Col>
-          <Col span={18}>
-            {readOnly ? (
-              <Text className="text-value pre-wrap">
-                {job_order_remark || "-"}
-              </Text>
-            ) : (
-              <Controller
-                render={({ field: { onChange, value } }) =>
-                  TextAreaField({
-                    fieldProps: {
-                      placeholder: "หมายเหตุ",
-                      className: "w-100",
-                      disabled: loading,
-                      onChange: (e) => onChange(e.target.value),
-                      value: value,
-                    },
-                  })
-                }
-                name="job_order_remark"
-                control={control}
-                rules={{ required: false }}
-              />
-            )}
-          </Col>
-        </Row> */}
+        <JobRouting
+          {...formMethods}
+          readOnly={readOnly}
+          temp_job_order_id={temp_job_order_id}
+        />
         <button type="submit" className="d-none" id="submit-btn">
           Hiden Submit
         </button>

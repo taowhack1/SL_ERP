@@ -98,6 +98,9 @@
 .ant-table.ant-table-small .ant-table-tbody > tr > td {
   padding: 6px 6px;
 }
+.ant-divider-horizontal.divider-sm {
+  margin: 16px 0 !important;
+}
 /* .ant-tabs .ant-row {
   border: none !important;
 }
@@ -267,7 +270,7 @@ button.primary:hover {
 }
 
 #form {
-  width: 80%;
+  width: 85%;
   min-height: 350px;
   margin: 0 auto;
   padding: 20px;
@@ -1270,4 +1273,15 @@ tr.drop-over-upward td {
 .drop-shadow {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
     rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+.fav-icons {
+  color: #e5e5e5;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.fav-icons:hover {
+  color: #ffdf3d;
+}
+.fav-icons-selected {
+  color: #ffdf3d;
 }

@@ -1,5 +1,10 @@
 /** @format */
 
+import moment from "moment";
+import {
+  CLEAR_FILTER_PANNING_CALENDAR,
+  FILTER_PANNING_CALENDAR,
+} from "../actions/production/planningActions";
 import {
   CLOSE_TIMESHEET,
   GET_MACHINE_PLAN,
@@ -67,6 +72,12 @@ export const initialState = {
       costCenter: [],
       jobs: [],
       plan: [],
+      filter: {
+        keyword: null,
+        month: moment().format("M"),
+        year: moment().format("YYYY"),
+        favoriteWorkCenter: [],
+      },
     },
     jobOrder: {
       filter: {
@@ -207,6 +218,31 @@ export default (state = initialState, action) => {
             ...state.operations.planning,
             loading: false,
             ...action.payload,
+          },
+        },
+      };
+    case FILTER_PANNING_CALENDAR:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          planning: {
+            ...state.operations.planning,
+            filter: {
+              ...state.operations.planning.filter,
+              ...action.payload,
+            },
+          },
+        },
+      };
+    case CLEAR_FILTER_PANNING_CALENDAR:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          planning: {
+            ...state.operations.planning,
+            filter: initialState.operations.planning.filter,
           },
         },
       };

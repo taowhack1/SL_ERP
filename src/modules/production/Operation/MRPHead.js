@@ -17,13 +17,7 @@ import { MRPContext } from "../../../include/js/context";
 import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 import CustomLabel from "../../../components/CustomLabel";
 import moment from "moment";
-import {
-  CalculatorOutlined,
-  CheckOutlined,
-  CloseOutlined,
-  EditTwoTone,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { CalculatorOutlined } from "@ant-design/icons";
 const { Text } = Typography;
 const resetValue = {
   so_detail_id: null,
@@ -141,7 +135,7 @@ const MRPHead = () => {
                 </Col>
                 <Col span={14}>
                   {readOnly ? (
-                    <Text className="text-value">
+                    <Text className="pre-wrap">
                       {mainState.so_no_description}
                     </Text>
                   ) : (
@@ -190,7 +184,7 @@ const MRPHead = () => {
                 </Col>
                 <Col span={14}>
                   {readOnly ? (
-                    <div className="col-wrap ">{mainState.item_no_name}</div>
+                    <Text className="pre-wrap">{mainState.item_no_name}</Text>
                   ) : (
                     <CustomSelect
                       allowClear
@@ -264,11 +258,11 @@ const MRPHead = () => {
                 <Col span={14} className={"text-value"}>
                   {readOnly ? (
                     <Text className="text-value">
-                      {convertDigit(mainState.mrp_qty_produce, 4)}
+                      {convertDigit(mainState.mrp_qty_produce, 6)}
                     </Text>
                   ) : (
                     <InputNumber
-                      {...getNumberFormat(4)}
+                      {...getNumberFormat(6)}
                       min={0}
                       step={1}
                       disabled={detailLoading || !mainState.item_id}
@@ -373,7 +367,7 @@ const MRPHead = () => {
                       <Spin spinning />
                     ) : (
                       <Text className="text-value pd-right-2">
-                        {convertDigit(mainState?.mrp_qty_produce_ref_before, 4)}
+                        {convertDigit(mainState?.mrp_qty_produce_ref_before, 6)}
                       </Text>
                     )}
                   </Col>
@@ -398,7 +392,7 @@ const MRPHead = () => {
                     <Spin spinning />
                   ) : (
                     <Text className="text-value pd-right-2">
-                      {convertDigit(mainState?.mrp_qty_produce_ref_stock, 4)}
+                      {convertDigit(mainState?.mrp_qty_produce_ref_stock, 6)}
                     </Text>
                   )}
                 </Col>
@@ -421,11 +415,11 @@ const MRPHead = () => {
                     <Spin spinning />
                   ) : readOnly || mainState.type_id === 3 ? (
                     <Text className="text-value pd-right-2">
-                      {convertDigit(mainState.mrp_qty_produce_ref, 4)}
+                      {convertDigit(mainState.mrp_qty_produce_ref, 6)}
                     </Text>
                   ) : (
                     <InputNumber
-                      {...getNumberFormat(4)}
+                      {...getNumberFormat(6)}
                       min={0}
                       step={1}
                       disabled={

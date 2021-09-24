@@ -1,21 +1,12 @@
-/** @format */
-
-import { Col, Row, Table, Typography } from "antd";
+import { Col, Row, Table } from "antd";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
 import MainLayout from "../../../../components/MainLayout";
-import { mainColumns, mockupData } from "./config";
-import $ from "jquery";
-import {
-  getRoutingAll,
-  getRoutingByID,
-} from "../../../../actions/production/routingAction";
 import { EllipsisOutlined, SearchOutlined } from "@ant-design/icons";
 import { useFetch } from "../../../../include/js/customHooks";
 import { sortData } from "../../../../include/js/function_main";
 import { convertDigit } from "../../../../include/js/main_config";
-const { Title, Text } = Typography;
+
 const apiGetRouting = `/production/routing`;
 const Routing = (props) => {
   const history = useHistory();
@@ -56,7 +47,6 @@ const Routing = (props) => {
             columns={columns({ viewRouting })}
             rowKey={"routing_id"}
             size={"small"}
-            // pagination={{ pageSize: 20 }}
           />
         </Col>
       </Row>

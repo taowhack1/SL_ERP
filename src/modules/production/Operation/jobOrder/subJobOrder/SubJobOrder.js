@@ -18,15 +18,12 @@ const initialStateModal = {
 const apiGetJobByMRPId = `/production/job_order/mrp`;
 const SubJobOrder = (props) => {
   const { id } = useParams();
-  console.log("api", `${apiGetJobByMRPId}/${id}`);
   const { data, loading, fetchData } = useFetch(`${apiGetJobByMRPId}/${id}`);
-  console.log("mainData", data);
   const {
     job_order,
     bulk_job_order_no,
     fg_job_order_no,
     item_no,
-    item_name,
     item_no_ref,
     mrp_id,
     mrp_no,
@@ -73,7 +70,6 @@ const SubJobOrder = (props) => {
   const onClose = (isUpdate = false) => {
     console.log("onClose", isUpdate);
     setModal((prev) => ({ ...prev, ...initialStateModal }));
-    // fetchData();
   };
   const viewJob = ({ job_order_id, routing_detail_type_id }) =>
     setModal((prev) => ({
@@ -161,13 +157,13 @@ const SubJobOrder = (props) => {
           <Col span={9}>
             <Row className="col-2 mt-1 mb-1" gutter={8}>
               <Col span={6}>
-                <CustomLabel readOnly={false} label="Job Bulk No :" />
+                <CustomLabel readOnly={false} label="Job Bulk No. :" />
               </Col>
               <Col span={18}>{bulk_job_order_no || "-"}</Col>
             </Row>
             <Row className="col-2 mt-1 mb-1" gutter={8}>
               <Col span={6}>
-                <CustomLabel readOnly={false} label="Job FG No :" />
+                <CustomLabel readOnly={false} label="Job FG No. :" />
               </Col>
               <Col span={18}>{fg_job_order_no || "-"}</Col>
             </Row>
@@ -206,12 +202,20 @@ const SubJobOrder = (props) => {
           <Tabs.TabPane tab="Job Order ย่อย">
             <Table
               columns={subJobOrderColumns({
-                title: `Bulk - Job Order ( ${convertDigit(
-                  mrp_qty_produce_ref_open || 0,
-                  6
-                )} / ${convertDigit(mrp_qty_produce_ref || 0, 6)} ${
-                  uom_no_ref || uom_no || "-"
-                } )`,
+                title: (
+                  <div>
+                    {`Bulk - Job Order ( `}
+                    <span
+                      className={formConfig?.sepBulk ? "require" : "complete"}
+                    >
+                      {`${convertDigit(
+                        mrp_qty_produce_ref_open || 0,
+                        6
+                      )} / ${convertDigit(mrp_qty_produce_ref || 0, 6)}`}
+                    </span>
+                    {` ${uom_no_ref || uom_no || "-"} )`}
+                  </div>
+                ),
                 className: "col-sm bg-tb-primary",
                 onPrint,
                 viewJob,
@@ -240,12 +244,21 @@ const SubJobOrder = (props) => {
             />
             <Table
               columns={subJobOrderColumns({
-                title: `FG - Job Order ( ${convertDigit(
-                  mrp_qty_produce_open || 0,
-                  6
-                )} / ${convertDigit(mrp_qty_produce || 0, 6)} ${
-                  uom_no || "-"
-                })`,
+                title: (
+                  <div>
+                    {`FG - Job Order ( `}
+                    <span
+                      className={formConfig?.sepFG ? "require" : "complete"}
+                    >
+                      {`${convertDigit(
+                        mrp_qty_produce_open || 0,
+                        6
+                      )} / ${convertDigit(mrp_qty_produce || 0, 6)}`}
+                    </span>
+                    {` ${uom_no || "-"} )`}
+                  </div>
+                ),
+
                 className: "col-sm bg-tb-secondary",
                 onPrint,
                 viewJob,
@@ -308,7 +321,6 @@ const subJobOrderColumns = ({
         className: "col-sm",
         width: "5%",
         dataIndex: "id",
-        // sorter: (a, b) => a.id - b.id,
         render: (val) => val,
       },
       {
@@ -331,7 +343,7 @@ const subJobOrderColumns = ({
         ),
         align: "left",
         className: "col-sm",
-        // width: "10%",
+        ellipsis: true,
         dataIndex: "job_order_description",
         render: (val) => val || "-",
       },
@@ -355,7 +367,6 @@ const subJobOrderColumns = ({
         ),
         align: "center",
         className: "col-sm",
-        // width: "10%",
         dataIndex: "uom_no",
         render: (val) => val || "-",
       },
@@ -370,35 +381,8 @@ const subJobOrderColumns = ({
         className: "col-sm",
         width: "10%",
         dataIndex: "trans_status_name",
-        // sorter: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
         render: (val) => (val && getStatusByName(val)) || "-",
       },
-      // {
-      //   title: (
-      //     <div className="text-center">
-      //       <b>Action</b>
-      //     </div>
-      //   ),
-      //   align: "center",
-      //   className: "col-sm",
-      //   width: "10%",
-      //   dataIndex: "button_confirm",
-      //   render: (_, { button_confirm, button_recall, button_cancel }) => (
-      //     <Space size={18}>
-      //       {button_confirm === 1 && <Button type="primary">Confirm</Button>}
-      //       {button_recall === 1 && (
-      //         <Button type="default" danger>
-      //           Cancel Confirm
-      //         </Button>
-      //       )}
-      //       {button_cancel === 1 && (
-      //         <Button type="default" danger>
-      //           Cancel
-      //         </Button>
-      //       )}
-      //     </Space>
-      //   ),
-      // },
       {
         title: (
           <div className="text-center">
@@ -417,14 +401,10 @@ const subJobOrderColumns = ({
                 viewJob({ job_order_id: val, routing_detail_type_id })
               }
             />
-            {/* {!button_confirm ? ( */}
             <PrinterOutlined
               className="button-icon pd-left-2"
               onClick={() => onPrint(job_order_no)}
             />
-            {/* ) : (
-              <PrinterOutlined className="text-disabled pd-left-2 disabled" />
-            )} */}
           </div>
         ),
       },

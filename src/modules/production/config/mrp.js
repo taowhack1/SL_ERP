@@ -250,7 +250,7 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
     key: "mrp_detail_qty_available",
     align: "right",
     require: true,
-    width: "8%",
+    width: "10%",
     ellipsis: true,
     render: (value, record, index) => {
       const {
@@ -278,37 +278,37 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
                   <Text strong className="mr-1">
                     On hand :
                   </Text>
-                  <Text>{convertDigit(tg_item_qty, 4)}</Text>
+                  <Text>{convertDigit(tg_item_qty, 6)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
                     PR :
                   </Text>
-                  <Text>{convertDigit(wait_pr, 4)}</Text>
+                  <Text>{convertDigit(wait_pr, 6)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
                     PO :
                   </Text>
-                  <Text>{convertDigit(wait_po, 4)}</Text>
+                  <Text>{convertDigit(wait_po, 6)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
                     GR :
                   </Text>
-                  <Text>{convertDigit(wait_receive, 4)}</Text>
+                  <Text>{convertDigit(wait_receive, 6)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
                     QC :
                   </Text>
-                  <Text>{convertDigit(wait_qc, 4)}</Text>
+                  <Text>{convertDigit(wait_qc, 6)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
                     Reserve :
                   </Text>
-                  <Text>{convertDigit(wait_issue, 4)}</Text>
+                  <Text>{convertDigit(wait_issue, 6)}</Text>
                 </div>
               </>
             }
@@ -316,7 +316,7 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
           >
             {warningTextValue(
               value,
-              4,
+              6,
               value < record.mrp_detail_qty_issue ? true : false
             )}
           </Popover>
@@ -341,12 +341,12 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
     key: "mrp_detail_qty_issue",
     align: "right",
     require: true,
-    width: "8%",
+    width: "10%",
     ellipsis: true,
     render: (value, record, index) => {
       return (
         <Text className="text-value text-right">
-          {convertDigit(value, 4) ?? "-"}
+          {convertDigit(value, 6) ?? "-"}
         </Text>
       );
     },
@@ -355,14 +355,15 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
   {
     title: (
       <div className="text-center" title="Stock unit of measure">
-        Stock UOM.
+        Stock
+        <br /> UOM.
       </div>
     ),
     dataIndex: "uom_no",
     key: "uom_no",
     align: "center",
     require: true,
-    width: "8%",
+    width: "6%",
     ellipsis: true,
     render: (value, record, index) => {
       return <Text className="text-value ">{value ?? "-"}</Text>;
@@ -378,19 +379,19 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
     key: "mrp_detail_qty_pr",
     require: true,
     align: "right",
-    width: "10%",
+    width: "12%",
     render: (value, record, index) => {
       if (readOnly || record?.type_id === 3) {
         return (
           <Text className="text-value text-right">
-            {convertDigit(value, 4) ?? "-"}
+            {convertDigit(value, 6) ?? "-"}
           </Text>
         );
       } else {
         return (
           <InputNumber
             disabled={record.item_id !== null ? 0 : 1}
-            {...getNumberFormat(4)}
+            {...getNumberFormat(6)}
             placeholder={"Qty. to PR"}
             min={0}
             step={record.item_vendor_moq}
@@ -442,7 +443,7 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
     require: true,
     width: "8%",
     render: (value, record, index) => {
-      return <Text className="text-value ">{convertDigit(value, 4)}</Text>;
+      return <Text className="text-value ">{convertDigit(value, 6)}</Text>;
     },
   },
   {
@@ -455,7 +456,7 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
     key: "item_vendor_uom_no",
     align: "center",
     require: true,
-    width: "8%",
+    width: "6%",
     render: (value, record, index) => {
       return <Text className="text-value ">{value ?? "-"}</Text>;
     },
@@ -468,7 +469,7 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
     ),
     dataIndex: "mrp_detail_pr_lead_time_day",
     align: "center",
-    width: "7%",
+    width: "5%",
     render: (value, record, index) => {
       return value;
     },

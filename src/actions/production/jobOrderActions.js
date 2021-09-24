@@ -1,3 +1,4 @@
+import { message } from "antd";
 import axios from "axios";
 import { header_config } from "../../include/js/main_config";
 
@@ -46,14 +47,63 @@ const getJobOrderData = (job_order_id = null) => {
   }
 };
 
-const saveJubOrder = (data) => {
+const saveJobOrder = (data) => {
   try {
     if (!data) return { success: false, data: [], message: "Missing data" };
     return axios
       .post(`${apiJobOrder}`, data, header_config)
-      .then((resp) => {
+      .then(async (resp) => {
         if (resp.status === 200) {
           console.log("resp.data", resp.data);
+          // Save Plan
+          message.success("Save Job Order Success.");
+          console.log("Save Job Order Success.");
+          if (data[0]?.plan_job?.length) {
+            const { job_order_id, job_order_no } = resp?.data[0];
+            const savePlanJob = data[0]?.plan_job?.map((obj) => ({
+              ...obj,
+              job_order_id,
+              plan_job_description: `PLAN FROM ${job_order_no}`,
+            }));
+            console.log("saveData PlanJob", savePlanJob);
+            const respPlan = await saveJobOrderPlan(savePlanJob);
+            if (respPlan.success) {
+              console.log("respPlan", respPlan);
+              message.success("Save Plan Success.");
+              return { success: true, data: resp.data, message: "Success" };
+            } else {
+              console.log("save job order plan fail.", respPlan);
+              return { success: false, data: [], message: resp };
+            }
+          } else {
+            return { success: true, data: resp.data, message: "Success" };
+          }
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+const saveJobOrderPlan = (data) => {
+  const apiJobOrderPlan = `/production/job_order/plan_job`;
+  try {
+    if (!data) return { success: false, data: [], message: "Missing data" };
+    return axios
+      .post(`${apiJobOrderPlan}`, data, header_config)
+      .then((resp) => {
+        console.log("saveJobOrderPlan", resp);
+        if (resp.status === 200) {
+          console.log("saveJobOrderPlan resp.data", resp.data);
           return { success: true, data: resp.data, message: "Success" };
         } else {
           return { success: false, data: [], message: resp };
@@ -103,4 +153,4 @@ const searchJobOrder = (data) => (dispatch) => {
   dispatch({ type: SEARCH_JOB_ORDER, payload: data });
 };
 
-export { getJobOrderData, saveJubOrder, searchJobOrder, jobOrderUpdateStatus };
+export { getJobOrderData, saveJobOrder, searchJobOrder, jobOrderUpdateStatus };

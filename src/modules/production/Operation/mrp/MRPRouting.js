@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { MRPContext } from "../../../../include/js/context";
-import RoutingDetail from "../../masterData/routing/RoutingDetail";
+import RoutingDetail from "../../masterData/routing/mrpRouting/RoutingDetail";
 import { mrpRoutingColumns } from "../../config/mrp";
 import moment from "moment";
 

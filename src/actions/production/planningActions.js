@@ -1,27 +1,11 @@
-import { GET_PLANNING_CALENDAR_DATA } from "../types";
 import axios from "axios";
-import { api_routing_calendar } from "../../include/js/api";
-import { message } from "antd";
-import { rawData } from "../../modules/production/Operation/planning/data";
 import { header_config } from "../../include/js/main_config";
 
-const apiPlanCalendar = `/production/plan_job/calendar`;
 const apiAllPlanByMRPID = `/production/plan_job/all`;
 const apigetAllPlanByJobOrderID = `/production/plan_job/job_order`;
-const apiSavePlanJob = `/production/plan_job`;
-const getPlanningCalendarData = () => (dispatch) => {
-  axios
-    .get(`${api_routing_calendar}/0`)
-    .then(async (res) => {
-      axios.get(`${apiPlanCalendar}/0`).then((res2) => {
-        dispatch({
-          type: GET_PLANNING_CALENDAR_DATA,
-          payload: { costCenter: res.data, plan: res2.data },
-        });
-      });
-    })
-    .catch((error) => message.error(error));
-};
+const apiPlanJob = `/production/plan_job`;
+const FILTER_PANNING_CALENDAR = "FILTER_PANNING_CALENDAR";
+const CLEAR_FILTER_PANNING_CALENDAR = "CLEAR_FILTER_PANNING_CALENDAR";
 
 const getOtherPlanRef = (mrp_id) => {
   try {
@@ -56,7 +40,7 @@ const savePlanJob = (data) => {
         (obj) =>
           obj.plan_job_id &&
           axios
-            .put(`${apiSavePlanJob}/${obj.plan_job_id}`, [obj], header_config)
+            .put(`${apiPlanJob}/${obj.plan_job_id}`, [obj], header_config)
             .then((resp) => {
               if (resp.status === 200) {
                 console.log("resp.data", resp.data);
@@ -113,9 +97,74 @@ const getPlanByJobOrderID = (id) => {
   }
 };
 
+const getPlanJobById = (plan_job_id) => {
+  try {
+    if (!plan_job_id)
+      return { success: false, data: [], message: "Missing ID." };
+    return axios
+      .get(`${apiPlanJob}/${plan_job_id}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+
+const savePlanJobCalendar = (data) => {
+  try {
+    if (!data?.length) {
+      return { success: false, data: [], message: "Missing data to update." };
+    }
+    return axios
+      .put(`${apiPlanJob}`, data, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+
+const filterPlanningCalendar = (filter) => (dispatch) =>
+  dispatch({ type: FILTER_PANNING_CALENDAR, payload: filter });
+const clearPlanningCalendar = () => (dispatch) =>
+  dispatch({ type: CLEAR_FILTER_PANNING_CALENDAR });
+
 export {
-  getPlanningCalendarData,
   getOtherPlanRef,
   savePlanJob,
   getPlanByJobOrderID,
+  FILTER_PANNING_CALENDAR,
+  CLEAR_FILTER_PANNING_CALENDAR,
+  filterPlanningCalendar,
+  clearPlanningCalendar,
+  getPlanJobById,
+  savePlanJobCalendar,
 };

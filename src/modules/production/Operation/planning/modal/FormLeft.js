@@ -1,14 +1,28 @@
-import { Button, Col, DatePicker, InputNumber, Row, TimePicker } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  InputNumber,
+  Row,
+  Spin,
+  TimePicker,
+  Divider,
+} from "antd";
+import Text from "antd/lib/typography/Text";
 import moment from "moment";
 import React from "react";
 import { useSelector } from "react-redux";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomSelect from "../../../../../components/CustomSelect";
+import { useFetch } from "../../../../../include/js/customHooks";
+const apiCostCenterCalendar = `/production/plan_job/calendar/machine/0`;
 
 const FormLeft = (props) => {
-  const { costCenter } = useSelector(
-    (state) => state.production.operations.planning
-  );
+  const {
+    data: costCenter,
+    error,
+    loading: loadingFetch,
+  } = useFetch(apiCostCenterCalendar);
   const {
     selectedPlan: {
       machine_id,
@@ -80,12 +94,25 @@ const FormLeft = (props) => {
   console.log("selectedPlan", selectedPlan);
   return (
     <>
-      <div className="full-wh col-border-right" style={{ padding: "5px 20px" }}>
-        <div className="title-bar">
-          <h3>
-            <b>Selected Cost Center</b>
-          </h3>
+      <div className="full-wh" style={{ padding: "5px 20px" }}>
+        <div className="form-group-vertical">
+          <Text strong className="mb-1">
+            Job No. :
+          </Text>
+          <Text className="ml-3 pre-wrap">
+            BP-FG1230581923 ASDASD วฟยนหก่นฟรหกั้นีั้ฟก ีร้ฟหน่กฟ ่หกส่ฟหกสฟห้กส
+            +๑๒ว่นรด่กหสดกด วฟห่กส่ฟหกาส้ฟะๆเพๆาส่ิๆไกิฟหกาฟหิกร
+          </Text>
         </div>
+        <div className="form-group-vertical mt-1">
+          <Text strong className="mb-1">
+            Job No. :
+          </Text>
+          <Text strong className="ml-3 pre-wrap">
+            BP-FG1230581923
+          </Text>
+        </div>
+        <Divider className="divider-sm" />
         <Row className="col-2 row-margin-vertical">
           <Col span={24}>
             <CustomLabel label={"Cost Center :"} require />
@@ -93,22 +120,24 @@ const FormLeft = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={24}>
-            <CustomSelect
-              showSearch
-              data={costCenter}
-              field_id={"machine_id"}
-              field_name={"machine_cost_center_description"}
-              className="w-100"
-              placeholder={"Select Cost Center"}
-              onChange={(val, row) =>
-                onChange({
-                  machine_id: val,
-                  machine_cost_center_description:
-                    row.data.machine_cost_center_description,
-                })
-              }
-              value={machine_id || null}
-            />
+            <Spin spinning={loadingFetch}>
+              <CustomSelect
+                showSearch
+                data={costCenter}
+                field_id={"machine_id"}
+                field_name={"machine_cost_center_description"}
+                className="w-100"
+                placeholder={"Select Cost Center"}
+                onChange={(val, row) =>
+                  onChange({
+                    machine_id: val,
+                    machine_cost_center_description:
+                      row.data.machine_cost_center_description,
+                  })
+                }
+                value={machine_id || null}
+              />
+            </Spin>
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
@@ -170,7 +199,7 @@ const FormLeft = (props) => {
             />
           </Col>
         </Row>
-        <div className="mt-5 mb-2 text-center">
+        {/* <div className="mt-5 mb-2 text-center">
           {!isUpdate ? (
             <Button
               className="primary"
@@ -184,7 +213,7 @@ const FormLeft = (props) => {
               Calculate Plan
             </Button>
           )}
-        </div>
+        </div> */}
       </div>
     </>
   );

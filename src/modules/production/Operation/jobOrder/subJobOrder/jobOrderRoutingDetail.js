@@ -1,5 +1,9 @@
-import { DeleteTwoTone, EllipsisOutlined } from "@ant-design/icons";
-import { Spin, Tabs } from "antd";
+import {
+  DeleteOutlined,
+  DeleteTwoTone,
+  EllipsisOutlined,
+} from "@ant-design/icons";
+import { Spin, Switch, Tabs } from "antd";
 import Text from "antd/lib/typography/Text";
 import moment from "moment";
 import React from "react";
@@ -15,6 +19,7 @@ import CustomSelect from "../../../../../components/CustomSelect";
 import CustomTable from "../../../../../components/CustomTable";
 import { api_machine } from "../../../../../include/js/api";
 import { useFetch } from "../../../../../include/js/customHooks";
+import { getStatusByName } from "../../../../../include/js/function_main";
 // import { TimePickerField } from "../../../../../components/AntDesignComponent";
 
 const JobRouting = (props) => {
@@ -23,7 +28,9 @@ const JobRouting = (props) => {
     control,
     register,
     loading,
+    watch,
     formState: { errors },
+    temp_job_order_id,
   } = props;
   const { data: machine, loading: getMachineLoading } = useFetch(api_machine);
   const { data: shift, loading: getShiftLoading } = useFetch(apiGetShift);
@@ -32,30 +39,40 @@ const JobRouting = (props) => {
     name: "plan_job",
     control,
   });
+  console.log("job order plan : ", fields);
+  console.log("temp_job_order_id", temp_job_order_id);
   return (
     <div className="mt-3">
       <Tabs>
-        <Tabs.TabPane tab="Plan" key="1">
-          <CustomTable
-            rowKey="id"
-            rowClassName="row-table-detail"
-            size="small"
-            columns={columns({
-              readOnly,
-              control,
-              register,
-              remove,
-              errors,
-              loading,
-              machine,
-              getMachineLoading,
-              shift,
-              getShiftLoading,
-            })}
-            pageSize={999}
-            dataSource={fields}
-            onAdd={!readOnly ? () => append(initialState) : null}
-          />
+        <Tabs.TabPane tab="Routing" key="1">
+          {!temp_job_order_id ? (
+            <h3>
+              <span className="require">* </span>ระบบจะโหลดข้อมูล Routing
+              ให้หลังจากแบ่ง Job แล้ว
+            </h3>
+          ) : (
+            <CustomTable
+              rowKey="id"
+              rowClassName="row-table-detail"
+              size="small"
+              columns={columns({
+                readOnly,
+                control,
+                register,
+                remove,
+                errors,
+                loading,
+                machine,
+                getMachineLoading,
+                shift,
+                getShiftLoading,
+                watch,
+              })}
+              pageSize={999}
+              dataSource={fields}
+              // onAdd={!readOnly ? () => append(initialState) : null}
+            />
+          )}
         </Tabs.TabPane>
       </Tabs>
     </div>
@@ -90,6 +107,7 @@ const columns = ({
   getMachineLoading,
   shift,
   getShiftLoading,
+  watch,
 }) => [
   {
     title: (
@@ -97,13 +115,13 @@ const columns = ({
         <b>Work Center</b>
       </div>
     ),
-    align: "center",
+    align: "left",
     className: "tb-col-sm",
-    dataIndex: "left",
+    dataIndex: "machine_id",
     ellipsis: true,
     render: (val, row, index) =>
       readOnly ? (
-        val
+        <Text>{row?.machine_cost_center_description_name}</Text>
       ) : (
         <>
           <input
@@ -122,22 +140,25 @@ const columns = ({
             <Controller
               name={`plan_job.${index}.machine_id`}
               control={control}
-              render={({ field }) =>
-                SelectField({
+              render={({ field }) => {
+                const inActive = ![1, 2, 4].includes(
+                  watch(`plan_job.${index}.tg_trans_status_id`)
+                );
+                return SelectField({
                   fieldProps: {
                     placeholder: "Work Center",
                     className: "text-left w-100",
                     allowClear: true,
                     showSearch: true,
-                    disabled: loading,
+                    disabled: loading || inActive,
                     size: "small",
                     ...field,
                   },
                   dataSource: machine || [],
                   fieldId: "machine_id",
                   fieldName: "machine_cost_center_description",
-                })
-              }
+                });
+              }}
               rules={{ required: true }}
             />
           </Spin>
@@ -159,33 +180,36 @@ const columns = ({
     align: "center",
     width: "10%",
     className: "tb-col-sm",
-    dataIndex: "left",
+    dataIndex: "shift_job_id",
     ellipsis: true,
     render: (val, row, index) =>
       readOnly ? (
-        val
+        <Text>{row?.shift_job_name}</Text>
       ) : (
         <>
           <Spin spinning={getShiftLoading}>
             <Controller
               name={`plan_job.${index}.shift_job_id`}
               control={control}
-              render={({ field }) =>
-                SelectField({
+              render={({ field }) => {
+                const inActive = ![1, 2, 4].includes(
+                  watch(`plan_job.${index}.tg_trans_status_id`)
+                );
+                return SelectField({
                   fieldProps: {
                     placeholder: "เลือกกะการทำงาน",
                     className: "text-left w-100",
                     allowClear: true,
                     showSearch: true,
-                    disabled: loading,
+                    disabled: loading || inActive,
                     size: "small",
                     ...field,
                   },
                   dataSource: shift || [],
                   fieldId: "shift_job_id",
                   fieldName: "shift_job_name",
-                })
-              }
+                });
+              }}
               defaultValue={1}
               rules={{ required: true }}
             />
@@ -205,30 +229,33 @@ const columns = ({
         <b>Man</b>
       </div>
     ),
-    align: "center",
+    align: "right",
     className: "tb-col-sm",
     width: "10%",
-    dataIndex: "right",
+    dataIndex: "plan_job_plan_worker",
     render: (val, row, index) =>
       readOnly ? (
-        val
+        <Text>{row?.plan_job_plan_worker}</Text>
       ) : (
         <>
           <Controller
             name={`plan_job.${index}.plan_job_plan_worker`}
             control={control}
-            render={({ field }) =>
-              InputNumberField({
+            render={({ field }) => {
+              const inActive = ![1, 2, 4].includes(
+                watch(`plan_job.${index}.tg_trans_status_id`)
+              );
+              return InputNumberField({
                 fieldProps: {
                   placeholder: "จำนวนคน",
                   className: "w-100 text-right",
                   min: 0,
-                  disabled: loading,
+                  disabled: loading || inActive,
                   size: "small",
                   ...field,
                 },
-              })
-            }
+              });
+            }}
             rules={{ required: true }}
           />
 
@@ -249,29 +276,32 @@ const columns = ({
     align: "right",
     className: "tb-col-sm",
     width: "13%",
-    dataIndex: "ref_no",
+    dataIndex: "plan_job_plan_time",
     render: (val, row, index) =>
       readOnly ? (
-        val
+        <Text>{row?.plan_job_plan_time}</Text>
       ) : (
         <>
           <Controller
             name={`plan_job.${index}.plan_job_plan_time`}
             control={control}
-            render={({ field: { value, onChange } }) =>
-              TimePickerField({
+            render={({ field: { value, onChange } }) => {
+              const inActive = ![1, 2, 4].includes(
+                watch(`plan_job.${index}.tg_trans_status_id`)
+              );
+              return TimePickerField({
                 fieldProps: {
                   placeholder: "ชั่วโมง : นาที",
                   className: "w-100 text-right",
                   format: "HH:mm",
-                  disabled: loading,
+                  disabled: loading || inActive,
                   size: "small",
                   value: value ? moment(value, "HH:mm:ss") : null,
                   onChange: (val) =>
                     val ? onChange(moment(val).format("HH:mm:ss")) : null,
                 },
-              })
-            }
+              });
+            }}
             rules={{ required: true }}
           />
           {errors.plan_job && errors?.plan_job[index]?.plan_job_plan_time && (
@@ -288,11 +318,11 @@ const columns = ({
         <b>Plan Date</b>
       </div>
     ),
-    align: "right",
+    align: "center",
     className: "tb-col-sm",
     width: "13%",
-    dataIndex: "ref_no",
-    render: (val, row, index) =>
+    dataIndex: "plan_job_date",
+    render: (val, { tg_trans_status_id }, index) =>
       readOnly ? (
         val
       ) : (
@@ -300,20 +330,23 @@ const columns = ({
           <Controller
             name={`plan_job.${index}.plan_job_date`}
             control={control}
-            render={({ field: { value, onChange } }) =>
-              DatePickerField({
+            render={({ field: { value, onChange } }) => {
+              const inActive = ![1, 2, 4].includes(
+                watch(`plan_job.${index}.tg_trans_status_id`)
+              );
+              return DatePickerField({
                 fieldProps: {
                   placeholder: "วันที่จะทำ",
                   className: "w-100 text-center",
                   format: "DD/MM/YYYY",
-                  disabled: loading,
+                  disabled: loading || inActive,
                   size: "small",
                   value: value ? moment(value, "DD/MM/YYYY") : null,
                   onChange: (val) =>
                     val ? onChange(moment(val).format("DD/MM/YYYY")) : null,
                 },
-              })
-            }
+              });
+            }}
             rules={{ required: true }}
           />
           {errors.plan_job && errors?.plan_job[index]?.plan_job_date && (
@@ -327,17 +360,51 @@ const columns = ({
   {
     title: (
       <div className="text-center">
-        <EllipsisOutlined />
+        <Text strong>Status</Text>
       </div>
     ),
     align: "center",
     className: "tb-col-sm",
-    width: "5%",
-    dataIndex: "id",
-    render: (id, row, index) =>
-      !loading &&
-      !readOnly && (
-        <DeleteTwoTone className="button-icon" onClick={() => remove(index)} />
-      ),
+    width: "10%",
+    dataIndex: "trans_status_name",
+    render: (value, row, index) => getStatusByName(value),
   },
+  // : {
+  //     title: (
+  //       <div className="text-center">
+  //         <EllipsisOutlined />
+  //       </div>
+  //     ),
+  //     align: "center",
+  //     className: "tb-col-sm",
+  //     width: "5%",
+  //     dataIndex: "job_order_id",
+  //     render: (id, row, index) => {
+  //       // const inActive = ![1, 2, 4].includes(
+  //       //   watch(`plan_job.${index}.tg_trans_status_id`)
+  //       // );
+  //       return (
+  //         !loading &&
+  //         (row?.job_order_id ? (
+  //           <Controller
+  //             name={`plan_job.${index}.tg_trans_status_id`}
+  //             control={control}
+  //             render={({ field: { value, onChange } }) => (
+  //               <Switch
+  //                 size="small"
+  //                 checked={[1, 2, 4].includes(value)}
+  //                 rules={{ required: false }}
+  //                 onChange={(checked) => onChange(checked ? 2 : 3)}
+  //               />
+  //             )}
+  //           />
+  //         ) : (
+  //           <DeleteTwoTone
+  //             className="button-icon"
+  //             onClick={() => remove(index)}
+  //           />
+  //         ))
+  //       );
+  //     },
+  //   },
 ];

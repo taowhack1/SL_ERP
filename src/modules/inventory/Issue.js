@@ -1,12 +1,9 @@
-/** @format */
-
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
-import { getMasterDataItem } from "../../actions/inventory";
 import { issue_columns } from "./config";
 import {
   get_issue_by_id,
@@ -75,7 +72,7 @@ const Issue = (props) => {
               loading={loading}
               onChange={onChange}
               rowKey={"issue_id"}
-              size='small'
+              size="small"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
