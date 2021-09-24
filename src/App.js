@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { BrowserRouter, Switch, Route, Router } from "react-router-dom";
@@ -88,9 +86,9 @@ import TypeView from "./modules/inventory/configurations/type/TypeView";
 import Category from "./modules/inventory/configurations/category/Category";
 import CategoryCreate from "./modules/inventory/configurations/category/CategoryCreate";
 import CategoryView from "./modules/inventory/configurations/category/CategoryView";
-import UOMMain from "./modules/inventory/configurations/uom/UOMMain";
-import UOMCreate from "./modules/inventory/configurations/uom/UOMCreate";
-import UOMView from "./modules/inventory/configurations/uom/UOMView";
+import UomMain from "./modules/inventory/configurations/uom/UomMain";
+import UomCreate from "./modules/inventory/configurations/uom/UomCreate";
+import UomView from "./modules/inventory/configurations/uom/UomView";
 import Transfer from "./modules/inventory/operations/transfer/Transfer";
 import TransferCreate from "./modules/inventory/operations/transfer/TransferCreate";
 import TransferView from "./modules/inventory/operations/transfer/TransferView";
@@ -102,6 +100,7 @@ import RoutingForm from "./modules/production/masterData/routing/RoutingForm";
 import RoutingView from "./modules/production/masterData/routing/RoutingView";
 import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
 import StockCard from "./modules/inventory/reporting/stockCard/StockCard";
+import StockValue from "./modules/inventory/reporting/stockValue/StockValue";
 import TimeSheet from "./modules/production/Operation/production/production/timesheet/TimeSheet";
 import ProductionSelectMachine from "./modules/production/Operation/production/production/costCenter/ProductionSelectMachine";
 import ProductionMain from "./modules/production/Operation/production/ProductionMain";
@@ -278,10 +277,6 @@ const App = (props) => {
               path="/inventory/configurations/type/edit/:id"
               component={TypeCreate}
             />
-            <Route exact path="/inventory/configurations/adjuststock">
-              <AdjustStock />
-            </Route>
-
             {/* {category} */}
             <Route exact path="/inventory/configurations/category">
               <Category />
@@ -300,23 +295,23 @@ const App = (props) => {
               component={CategoryCreate}
             />
             <Route exact path="/inventory/configurations/uom">
-              <UOMMain />
+              <UomMain />
             </Route>
             {/* {uom} */}
             <Route
               exact
               path="/inventory/configurations/uom/create"
-              component={UOMCreate}
+              component={UomCreate}
             />
             <Route
               exact
               path="/inventory/configurations/uom/view/:id"
-              component={UOMView}
+              component={UomView}
             />
             <Route
               exact
               path="/inventory/configurations/uom/edit/:id"
-              component={UOMCreate}
+              component={UomCreate}
             />
             <exact path="/inventory/warehouse">
               <Warehouse />
@@ -355,8 +350,14 @@ const App = (props) => {
             <Route exact path="/inventory/stock_card">
               <StockCard />
             </Route>
+            <Route exact path="/inventory/stock_value">
+              <StockValue />
+            </Route>
             <Route exact path="/inventory/reporting/gr">
               <GRReport />
+            </Route>
+            <Route exact path="/inventory/configurations/adjuststock">
+              <AdjustStock />
             </Route>
             {/* PURCHASE */}
             <Route exact path="/purchase">

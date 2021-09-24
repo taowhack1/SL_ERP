@@ -31,7 +31,11 @@ export const GET_REPORT_STOCK = "GET_REPORT_STOCK";
 export const GET_ISSUE_LIST = "GET_ISSUE_LIST";
 export const RESET_ISSUE = "RESET_ISSUE";
 export const GET_ISSUE_BY_ID = "GET_ISSUE_BY_ID";
-
+export const SEARCH_ISSUE = "SEARCH_ISSUE";
+export const RESET_ISSUE_DATA = "RESET_ISSUE_DATA";
+//Inventory -> RETURN
+export const SEARCH_RETURN = "SEARCH_RETURN";
+export const RESET_RETURN_DATA = "RESET_RETURN_DATA";
 //Inventory -> DISBURSE
 export const RESET_DISBURSE = "RESET_DISBURSE";
 export const GET_DISBURSE_LIST = "GET_DISBURSE_LIST";

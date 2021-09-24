@@ -8,9 +8,14 @@ import { issue_columns } from "./config";
 import {
   get_issue_by_id,
   get_issue_list,
+  filterIssue,
+  reset_issue_data,
 } from "../../actions/inventory/issueActions";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
+import { sortData } from "../../include/js/function_main";
+import { Button } from "antd/lib/radio";
+import { reset_comments } from "../../actions/comment&log";
 const Issue = (props) => {
   const keepLog = useKeepLogs();
   const authorize = Authorize();
@@ -19,18 +24,49 @@ const Issue = (props) => {
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   const auth = useSelector((state) => state.auth.authData);
-  const issue_list = useSelector((state) => state.inventory.issue.issue_list);
+  const { issue_list, filter } = useSelector((state) => state.inventory.issue);
+  const { pageSize, page, keyword, vendor_id } = filter || {};
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(issue_list);
+  const [data, setData] = useState([]);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
+    const { current, pageSize } = pagination;
+    dispatch(filterIssue({ page: current, pageSize }));
   };
 
-  const getSearchData = (keyword) => {};
+  const getSearchData = (keyword) => {
+    const search_data = sortData(
+      keyword
+        ? issue_list?.filter(
+            (issue) =>
+              issue?.issue_no?.indexOf(keyword) >= 0 ||
+              issue?.cost_center_no_name?.indexOf(keyword) >= 0 ||
+              issue?.issue_created_by_no_name?.indexOf(keyword) >= 0 ||
+              issue?.issue_created?.indexOf(keyword) >= 0 ||
+              issue?.issue_description?.indexOf(keyword) >= 0
+          )
+        : issue_list
+    );
+
+    return sortData(search_data);
+  };
 
   useEffect(() => {
     dispatch(get_issue_list(auth.user_name));
-  }, []);
+    dispatch(reset_issue_data());
+    return () => {
+      dispatch(reset_comments());
+      setData([]);
+    };
+  }, [dispatch]);
+  useEffect(() => {
+    console.log("Filter Keyword");
+    setLoading(true);
+    const respSearch = getSearchData(keyword);
+    setData(respSearch);
+    setLoading(false);
+  }, [keyword]);
+
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -47,19 +83,32 @@ const Issue = (props) => {
       console.log("Cancel");
     },
     onSearch: (value) => {
-      // console.log(value);
-      // setLoading(true);
-      // setTimeout(() => {
-      //   const search_data = issue_list.filter(
-      //     (issue) => issue.issue_no_description.indexOf(value) >= 0
-      //   );
-      //   setData(search_data);
-      //   setLoading(false);
-      // }, 1200);
+      dispatch(filterIssue({ keyword: value }));
     },
+    searchValue: keyword || null,
+    searchBar: (
+      <Button
+        className='primary'
+        onClick={() =>
+          dispatch(
+            filterIssue({
+              page: 1,
+              pageSize: 20,
+              keyword: null,
+              issue_id: null,
+            })
+          )
+        }>
+        Clear Filter
+      </Button>
+    ),
   };
   useEffect(() => {
-    setData(issue_list);
+    console.log("useEffect set issue_list");
+    const respSearch = getSearchData(keyword);
+    setData(respSearch);
+    setLoading(false);
+    return () => setData([]);
   }, [issue_list]);
   return (
     <div>

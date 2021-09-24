@@ -1,9 +1,11 @@
 /** @format */
 
-import { Button, Col, Row } from "antd";
+import { Button, Col, message, Row } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import React, { useContext, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import Swal from "sweetalert2";
+import { saveAdjustStock } from "../../../../../actions/inventory/configurations/adjuststock/adjuststockAction";
 import { AppContext } from "../../../../../include/js/context";
 import useKeepLogs from "../../../../logs/useKeepLogs";
 import Authorize from "../../../../system/Authorize";
@@ -31,7 +33,14 @@ const initialState = {
   uom_no: null,
 };
 let readOnly = false;
-const AdjustStockForm = ({ visible, onClose, rowData, item_no_name }) => {
+const AdjustStockForm = ({
+  visible,
+  onClose,
+  rowData,
+  item_no_name,
+  type,
+  handleExpand2,
+}) => {
   const dataMain = rowData;
   console.log("dataMain", dataMain);
   const keepLog = useKeepLogs();
@@ -65,6 +74,7 @@ const AdjustStockForm = ({ visible, onClose, rowData, item_no_name }) => {
       formArray,
       readOnly,
       itemData,
+      type,
     }),
     [formArray, formMethod, itemData, readOnly]
   );
@@ -75,8 +85,53 @@ const AdjustStockForm = ({ visible, onClose, rowData, item_no_name }) => {
     });
   }, [dataMain]);
   const onSubmit = async (data) => {
+    const saveData = [
+      {
+        stock_id: data.stock_id,
+        item_id: data.item_id,
+        user_name: user_name,
+        stock_lot_no: data.stock_lot_no,
+        stock_batch: data.stock_batch,
+        stock_detail_qty_inbound: data.stock_detail_qty_inbound,
+        stock_detail_qty_outbound: data.stock_detail_qty_outbound,
+        stock_remark: type == "+ Qty." ? "adjust_add" : "adjust_minus",
+        stock_mfg_date: data.stock_mfg_date,
+        stock_exp_date: data.stock_exp_date,
+        stock_unit_price: data.stock_unit_price,
+        commit: 1,
+      },
+    ];
+    const hide = message.loading("Action in progress....", 0);
+    const response = await saveAdjustStock(saveData);
+    setTimeout(hide, 0);
+    if (response.success) {
+      console.log("response :>> ", { ...response.data[0] });
+      await Swal.fire({
+        type: "success",
+        title: "Save Successfully!",
+        icon: "success",
+        showCancelButton: false,
+        confirmButtonText: `OK`,
+        allowOutsideClick: false,
+      }).then((result) => {
+        keepLog.keep_log_action(`Save Stock Success`);
+        if (result.isConfirmed) {
+          onClose();
+          handleExpand2(data);
+        } else {
+          formMethod.reset({ ...response.data[0] });
+        }
+      });
+    } else {
+      keepLog.keep_log_action(`Save Stock Error`);
+      message.success({
+        content: `Error ! ${response.message}`,
+        duration: 6,
+        key: "save",
+      });
+    }
     console.log("submit", data);
-    onClose();
+    //onClose();
   };
   const onError = (errors, e) => console.log(errors, e);
   console.log("itemData", itemData);

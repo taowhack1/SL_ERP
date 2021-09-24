@@ -1,7 +1,10 @@
+/** @format */
+
 import { message } from "antd";
 import axios from "axios";
 import { api_return, api_return_issue_ref } from "../../../../include/js/api";
 import { header_config } from "../../../../include/js/main_config";
+import { RESET_RETURN_DATA, SEARCH_RETURN } from "../../../types";
 const GET_RETURN_ISSUE_REF_REQUEST = "GET_RETURN_ISSUE_REF_REQUEST";
 const GET_RETURN_ISSUE_REF_SUCCESS = "GET_RETURN_ISSUE_REF_SUCCESS";
 const GET_RETURN_ISSUE_REF_FAILURE = "GET_RETURN_ISSUE_REF_FAILURE";
@@ -66,6 +69,17 @@ const saveIssueReturn = (data) => {
 };
 
 const returnUpdateStatus = () => {};
+const reset_return_data = () => (dispatch) => {
+  try {
+    dispatch({
+      type: RESET_RETURN_DATA,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+const filterReturn = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_RETURN, payload: data });
 export {
   GET_RETURN_ISSUE_REF_REQUEST,
   GET_RETURN_ISSUE_REF_SUCCESS,
@@ -78,4 +92,6 @@ export {
   getIssueRefList,
   returnUpdateStatus,
   saveIssueReturn,
+  filterReturn,
+  reset_return_data,
 };

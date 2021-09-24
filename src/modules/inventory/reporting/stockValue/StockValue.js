@@ -15,7 +15,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MainLayout from "../../../../components/MainLayout";
 import Authorize from "../../../system/Authorize";
-import StockCardSearch from "./StockCardSearch";
 import CustomSelect from "../../../../components/CustomSelect";
 import { ClearOutlined, FileOutlined, SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -25,7 +24,7 @@ import { getAllItems } from "../../../../actions/inventory/itemActions";
 import { getMasterDataItem } from "../../../../actions/inventory";
 import { useHistory } from "react-router";
 import { validateFormHead } from "../../../../include/js/function_main";
-const StockCard = () => {
+const StockValue = () => {
   const { RangePicker } = DatePicker;
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -46,7 +45,7 @@ const StockCard = () => {
     title: current_project && current_project.project_name,
     home: current_project && current_project.project_url,
     show: true,
-    breadcrumb: ["Home", "Stock Card"],
+    breadcrumb: ["Home", "Stock Value"],
     search: false,
     create: "",
     buttonAction: "",
@@ -61,8 +60,8 @@ const StockCard = () => {
     item_type_all: false,
     item_category_all: false,
     item_id_all: false,
-    stock_card_date_start: null,
-    stock_card_date_end: null,
+    stock_value_year: null,
+    stock_value_month: null,
     all: false,
     eachLotBatch: false,
     LotBatch: 0,
@@ -82,15 +81,15 @@ const StockCard = () => {
       item_type_all: false,
       item_category_all: false,
       item_id_all: false,
-      stock_card_date_start: null,
-      stock_card_date_end: null,
+      stock_value_year: null,
+      stock_value_month: null,
       all: false,
       eachLotBatch: false,
       LotBatch: 0,
     });
   };
-  const FieldsRequire = ["stock_card_date_start", "stock_card_date_end"];
-  const FieldsRequire_all_check = ["stock_card_date_start"];
+  const FieldsRequire = ["stock_value_year", "stock_value_month"];
+  const FieldsRequire_all_check = ["stock_value_year", "stock_value_month"];
   useEffect(() => {
     dispatch(getMasterDataItem(auth.user_name, setLoading, false));
     dispatch(getConfigurationItemType());
@@ -102,13 +101,13 @@ const StockCard = () => {
   const dateFormat = "DD/MM/YYYY";
 
   const showReport = (formButton) => {
-    const report_stock_card = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card.aspx?`;
-    //const report_stock_card_lotbatch = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_card_lotbatch.aspx?`;
-    const value = `&item_all=${state.item_all}&item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&date_start=${state.stock_card_date_start}&date_end=${state.stock_card_date_end}`;
-    const exel = `${report_stock_card}${value}&export_excel=true&stock_card_type=2`;
-    const exel_lotbatch = `${report_stock_card}${value}&export_excel=true&stock_card_type=1`;
-    const pdf_web_view = `${report_stock_card}${value}&stock_card_type=2`;
-    const pdf_web_view_lotbatch = `${report_stock_card}${value}&stock_card_type=1`;
+    const report_stock_value = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_value.aspx?`;
+    //const report_stock_value_lotbatch = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_value_lotbatch.aspx?`;
+    const value = `&item_all=${state.item_all}&item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&stock_value_year=${state.stock_value_year}&stock_value_month=${state.stock_value_month}`;
+    const exel = `${report_stock_value}${value}&export_excel=true&stock_value_type=2`;
+    const exel_lotbatch = `${report_stock_value}${value}&export_excel=true&stock_value_type=1`;
+    const pdf_web_view = `${report_stock_value}${value}&stock_value_type=2`;
+    const pdf_web_view_lotbatch = `${report_stock_value}${value}&stock_value_type=1`;
     console.log("formButton", formButton);
     let validate = null;
     if (state.all == true) {
@@ -141,7 +140,7 @@ const StockCard = () => {
           <Col span={8}>
             <h2>
               <SearchOutlined style={{ marginRight: 10, size: "20px" }} /> Stock
-              Card Search
+              Value Search
             </h2>
           </Col>
           <Col span={12}></Col>
@@ -239,7 +238,7 @@ const StockCard = () => {
           </Col>
           <Col span={1}></Col>
         </Row>
-        <Row className='row-margin'>
+        {/* <Row className='row-margin'>
           <Col span={3}>
             <Text strong>Item category : </Text>
           </Col>
@@ -278,7 +277,7 @@ const StockCard = () => {
             </Row>
           </Col>
           <Col span={1}></Col>
-        </Row>
+        </Row> */}
         <Row className='row-margin'>
           <Col span={3}>
             <Text strong>Item code : </Text>
@@ -323,29 +322,48 @@ const StockCard = () => {
           </Col>
           <Col span={18}>
             <Row>
-              <Col span={12}>
-                <RangePicker
-                  name='stock_card_date_start'
+              <Col span={6}>
+                <DatePicker
                   required={true}
                   className='full-width'
-                  format={dateFormat}
-                  value={[
-                    state.stock_card_date_start
-                      ? moment(state.stock_card_date_start, "DD/MM/YYYY")
-                      : "",
-                    state.stock_card_date_end
-                      ? moment(state.stock_card_date_end, "DD/MM/YYYY")
-                      : "",
-                  ]}
+                  name={"stock_value_year"}
+                  picker='year'
+                  format={"YYYY"}
+                  value={
+                    state.stock_value_year
+                      ? moment(state.stock_value_year, "YYYY")
+                      : ""
+                  }
                   onChange={(data) => {
                     data
                       ? changeState({
-                          stock_card_date_start: data[0].format("DD/MM/YYYY"),
-                          stock_card_date_end: data[1].format("DD/MM/YYYY"),
+                          stock_value_year: data.format("YYYY"),
                         })
                       : changeState({
-                          stock_card_date_start: null,
-                          stock_card_date_end: null,
+                          stock_value_year: null,
+                        });
+                  }}
+                />
+              </Col>
+              <Col span={6}>
+                <DatePicker
+                  required={true}
+                  className='full-width'
+                  picker='month'
+                  format={"MM"}
+                  name={"stock_value_month"}
+                  value={
+                    state.stock_value_month
+                      ? moment(state.stock_value_month, "MM")
+                      : ""
+                  }
+                  onChange={(data) => {
+                    data
+                      ? changeState({
+                          stock_value_month: data.format("MM"),
+                        })
+                      : changeState({
+                          stock_value_month: null,
                         });
                   }}
                 />
@@ -414,4 +432,4 @@ const StockCard = () => {
   );
 };
 
-export default StockCard;
+export default StockValue;

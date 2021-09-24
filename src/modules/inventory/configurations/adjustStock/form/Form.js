@@ -23,6 +23,7 @@ const Form = ({
   },
   readOnly,
   itemData,
+  type = "+ Qty.",
 }) => {
   const {
     auth: { user_name, employee_no_name_eng },
@@ -213,7 +214,7 @@ const Form = ({
           </Row>
           <Row className='col-2 mt-1 mb-1'>
             <Col span={8}>
-              <Text strong>Qty :</Text>
+              <Text strong>{type} : </Text>
             </Col>
             <Col span={16}>
               {readOnly ? (
@@ -221,13 +222,21 @@ const Form = ({
               ) : (
                 <>
                   <Controller
-                    name='tg_stock_qty_balance'
-                    id='tg_stock_qty_balance'
+                    name={
+                      type == "+ Qty."
+                        ? "stock_detail_qty_inbound"
+                        : "stock_detail_qty_outbound"
+                    }
+                    id={
+                      type == "+ Qty."
+                        ? "stock_detail_qty_inbound"
+                        : "stock_detail_qty_outbound"
+                    }
                     control={control}
                     render={({ field }) =>
                       InputNumberField({
                         fieldProps: {
-                          placeholder: "Qty",
+                          placeholder: type,
                           className: "w-100",
                           min: 0,
                           ...getNumberFormat(3),
@@ -237,8 +246,18 @@ const Form = ({
                     }
                     rules={{ required: true }}
                   />
-                  {errors.tg_stock_qty_balance && (
-                    <Text className='error'>This field is required.</Text>
+                  {type == "+ Qty." ? (
+                    <>
+                      {errors.stock_detail_qty_inbound && (
+                        <Text className='error'>This field is required.</Text>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {errors.stock_detail_qty_outbound && (
+                        <Text className='error'>This field is required.</Text>
+                      )}
+                    </>
                   )}
                 </>
               )}

@@ -45,7 +45,7 @@ const AdjustStock = () => {
   authorize.check_authorize();
   const dispatch = useDispatch();
   const keepLog = useKeepLogs();
-  const { expandedRowRender, handleExpand } = useSubTableEdit({
+  const { expandedRowRender, handleExpand, fetchData } = useSubTableEdit({
     columns,
     fetchDataFunction: getSubReportStockOnHand,
     rowKey: "id",
@@ -237,12 +237,24 @@ const AdjustStock = () => {
       </div>
     );
   };
-  const viewData = (data) => {
+  const handleExpand2 = (row) => {
+    console.log("row :>> ", row);
+    fetchData(row, {
+      user_name,
+      item_id: row.item_id,
+      startDate: "01-01-2021",
+      endDate: "31-12-2022",
+    });
+  };
+
+  const viewData = (data, type) => {
     setModal((prev) => ({
       ...prev,
       visible: true,
       rowData: data,
       item_no_name: item_no_name,
+      type,
+      handleExpand2,
     }));
   };
 
@@ -262,6 +274,7 @@ const AdjustStock = () => {
     [modal.visible, onClose]
   );
   console.log("state :>> ", state);
+  console.log("modal :>> ", modal);
   return (
     <div>
       <MainLayout {...config} pageLoad={loading}>
@@ -296,9 +309,8 @@ const AdjustStock = () => {
               onChange={onChange}
               rowKey={"item_id"}
               expandable={{ expandedRowRender: expandedRowRender2 }}
-              // expandable={{ expandedRowRender }}
               onExpand={(expanded, row) => {
-                // console.log("onExpand", a, b, c);
+                //handleExpand2(expanded, row);
                 handleExpand(expanded, row, {
                   user_name,
                   item_id: row.item_id,
@@ -306,7 +318,6 @@ const AdjustStock = () => {
                   endDate: "31-12-2022",
                 });
               }}
-              // onExpand={handleExpand}
               pagination={{
                 pageSize,
                 pageSizeOptions: [15, 30, 50, 100],
@@ -410,6 +421,50 @@ const columns = (viewData) => [
     dataIndex: "stock_unit_price",
     render: (val) => convertDigit(val, 4) || "-",
   },
+
+  // {
+  //   title: (
+  //     <div className='text-center'>
+  //       <b>In Qty.</b>
+  //     </div>
+  //   ),
+
+  //   align: "right",
+  //   className: "tb-col-sm",
+  //   width: "10%",
+  //   dataIndex: "tg_stock_qty_inbound",
+  //   render: (val, record) => {
+  //     return (
+  //       <>
+  //         <div>
+  //           {convertDigit(val, 6) || "-"}{" "}
+  //           <EditTwoTone onClick={(e) => viewData(record, "In Qty.")} />
+  //         </div>
+  //       </>
+  //     );
+  //   },
+  // },
+  // {
+  //   title: (
+  //     <div className='text-center'>
+  //       <b>Out Qty.</b>
+  //     </div>
+  //   ),
+  //   align: "right",
+  //   className: "tb-col-sm",
+  //   width: "10%",
+  //   dataIndex: "tg_stock_qty_outbound",
+  //   render: (val, record) => {
+  //     return (
+  //       <>
+  //         <div>
+  //           {convertDigit(val, 6) || "-"}{" "}
+  //           <EditTwoTone onClick={(e) => viewData(record, "Out Qty.")} />
+  //         </div>
+  //       </>
+  //     );
+  //   },
+  // },
   {
     title: (
       <div className='text-center'>
@@ -440,13 +495,35 @@ const columns = (viewData) => [
         <b>Adjust</b>
       </div>
     ),
+    children: [
+      {
+        title: "+ Qty.",
+        dataIndex: "street",
+        key: "street",
+        width: "5%",
+        align: "center",
+        render: (val, record) => {
+          return <EditTwoTone onClick={(e) => viewData(record, "+ Qty.")} />;
+        },
+      },
+      {
+        title: "- Qty.",
+        dataIndex: "street",
+        key: "street",
+        width: "5%",
+        align: "center",
+        render: (val, record) => {
+          return <EditTwoTone onClick={(e) => viewData(record, "- Qty.")} />;
+        },
+      },
+    ],
     dataIndex: "",
     key: "",
     width: "8%",
     align: "center",
     ellipsis: false,
-    render: (val, record) => {
-      return <EditTwoTone onClick={(e) => viewData(record)} />;
-    },
+    // render: (val, record) => {
+    //   return <EditTwoTone onClick={(e) => viewData(record)} />;
+    // },
   },
 ];

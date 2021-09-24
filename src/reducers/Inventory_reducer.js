@@ -1,3 +1,5 @@
+/** @format */
+
 import { combineReducers } from "redux";
 import {
   GET_ALL_ITEMS,
@@ -35,6 +37,10 @@ import {
   RESET_PD_RECEIVE,
   GET_PD_RECEIVE_JOB_LIST,
   SET_LOADING,
+  SEARCH_ISSUE,
+  RESET_ISSUE_DATA,
+  SEARCH_RETURN,
+  RESET_RETURN_DATA,
 } from "../actions/types";
 
 import {
@@ -103,6 +109,12 @@ const initialState = {
     issue_list: [],
     issue_head: {},
     issue_detail: [],
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 20,
+      issue_id: null,
+    },
   },
   disburse: {
     issue_ref: [],
@@ -140,6 +152,12 @@ const initialState = {
       isLoading: false,
       issueRef: [],
       issueReturnList: [],
+      filter: {
+        keyword: null,
+        page: 1,
+        pageSize: 20,
+        issue_id: null,
+      },
     },
   },
 };
@@ -354,7 +372,23 @@ export default (state = initialState, action) => {
         ...state,
         issue: initialState.issue,
       };
+    case RESET_ISSUE_DATA:
+      return {
+        ...state,
+        issue: initialState.issue,
+      };
 
+    case SEARCH_ISSUE:
+      return {
+        ...state,
+        issue: {
+          ...state.issue,
+          filter: {
+            ...state.issue.filter,
+            ...action.payload,
+          },
+        },
+      };
     // DISBURSE
     case GET_DISBURSE_LIST:
       return {
@@ -502,7 +536,28 @@ export default (state = initialState, action) => {
           issueReturn: { ...state.issueReturn, isLoading: false },
         },
       };
-
+    case RESET_RETURN_DATA:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          issueReturn: { ...state.issueReturn, isLoading: false },
+        },
+      };
+    case SEARCH_RETURN:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          issueReturn: {
+            ...state.operations.issueReturn,
+            filter: {
+              ...state.operations.issueReturn.filter,
+              ...action.payload,
+            },
+          },
+        },
+      };
     default:
       return state;
   }

@@ -29,7 +29,9 @@ const useSubTable = (props) => {
 
   const getData = async (id, params = null) => {
     console.log("useSubTable params", params);
+    console.log("useSubTable state", state);
     const isInList = state?.dataSource[id];
+    console.log("useSubTable isInList", isInList);
     if (!isInList) {
       setLoading(true, id);
       const resp = await fetchDataFunction(params);
@@ -45,6 +47,21 @@ const useSubTable = (props) => {
         }));
       setLoading(false, id);
     }
+  };
+  const fetchData = async (record, params = null) => {
+    const id = record[rowKey];
+    setLoading(true, id);
+    const resp = await fetchDataFunction(params);
+    resp.success &&
+      setState((prev) => ({
+        ...prev,
+        dataSource: {
+          ...prev.dataSource,
+          [id]: sortData(dataKey ? resp.data[dataKey] : resp.data),
+        },
+        loading: false,
+      }));
+    setLoading(false, id);
   };
 
   const expandedRowRender = (row, viewData) => {
@@ -73,6 +90,7 @@ const useSubTable = (props) => {
   return {
     expandedRowRender,
     handleExpand,
+    fetchData,
   };
 };
 export default useSubTable;
