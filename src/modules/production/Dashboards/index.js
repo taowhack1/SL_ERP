@@ -20,7 +20,7 @@ const DashboardsIndex = () => {
       },
       {
         name: "holiday",
-        data: [2, 2],
+        data: [2, 1],
       },
       {
         name: "freeze",
