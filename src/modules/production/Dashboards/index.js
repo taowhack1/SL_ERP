@@ -1,38 +1,65 @@
 /** @format */
 
+import { Row } from "antd";
 import React from "react";
 import Chart from "react-apexcharts";
 const DashboardsIndex = () => {
   const state = {
     series: [
       {
-        name: "PRODUCT A",
-        data: [
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-          1, 1, 1, 1, 1, 1, 1, 1, 1,
-        ],
+        name: "Plan",
+        data: [2, 2],
       },
       {
-        name: "PRODUCT B",
-        data: [
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-          1, 1, 1, 1, 1, 1, 1, 1, 1,
-        ],
+        name: "success",
+        data: [4, 2],
       },
       {
-        name: "PRODUCT C",
-        data: [
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-          1, 1, 1, 1, 1, 1, 1, 1, 1,
-        ],
+        name: "OT",
+        data: [2, 2],
+      },
+      {
+        name: "holiday",
+        data: [2, 2],
+      },
+      {
+        name: "freeze",
+        data: [10, 10],
+      },
+      {
+        name: "success2",
+        data: [2, 2],
       },
     ],
     options: {
+      colors: [
+        "#0000FF",
+        "#2ECC71",
+        "#CC0000",
+        "#000000",
+        "#FFFFFF",
+        "#2ECC71",
+      ],
       chart: {
+        width: "20%",
         type: "bar",
         height: 350,
         stacked: true,
-        //stackType: "100%",
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: "30%",
+          endingShape: "flat",
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 0.2,
+        colors: ["#000000"],
       },
       responsive: [
         {
@@ -46,102 +73,151 @@ const DashboardsIndex = () => {
           },
         },
       ],
-
       yaxis: {
         show: true,
-        showAlways: true,
         max: 24,
-        tickAmount: 4,
-        forceNiceScale: true,
+        tickAmount: 24,
         labels: {
-          minWidth: 0,
-          maxWidth: 160,
           show: true,
           formatter: (value) => {
             return [8, 12, 20, 24].includes(value) ? value : " ";
           },
         },
       },
+      xaxis: {
+        categories: ["เครื่องจัก mixer", "เครื่องจัก Filling & Packing"],
+        Width: "20%",
+      },
       grid: {
         show: true,
-        borderColor: "#90A4AE",
-        strokeDashArray: 0,
-        position: "back",
-        xaxis: {
-          lines: {
-            show: false,
+      },
+      fill: {
+        opacity: 2,
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val;
           },
         },
-
-        row: {
-          colors: undefined,
-          opacity: 0.5,
+      },
+      legend: {
+        show: true,
+        position: "bottom",
+        horizontalAlign: "center",
+      },
+    },
+  };
+  const state2 = {
+    series: [
+      {
+        name: "Plan",
+        data: [2],
+      },
+      {
+        name: "success",
+        data: [4],
+      },
+      {
+        name: "OT",
+        data: [2],
+      },
+      {
+        name: "holiday",
+        data: [2],
+      },
+      {
+        name: "freeze",
+        data: [16],
+      },
+    ],
+    options: {
+      colors: ["#0000FF", "#2ECC71", "#CC0000", "#000000", "#FFFFFF"],
+      chart: {
+        width: "20%",
+        type: "bar",
+        height: 350,
+        stacked: true,
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: "30%",
+          endingShape: "flat",
         },
-        column: {
-          colors: undefined,
-          opacity: 0.5,
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 0.2,
+        colors: ["#000000"],
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: "bottom",
+              offsetX: -10,
+              offsetY: 0,
+            },
+          },
         },
-        padding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
+      ],
+      yaxis: {
+        show: true,
+        max: 24,
+        tickAmount: 24,
+        labels: {
+          show: true,
+          formatter: (value) => {
+            return [8, 12, 20, 24].includes(value) ? value : " ";
+          },
         },
       },
       xaxis: {
-        categories: [
-          "01",
-          "02",
-          "03",
-          "04",
-          "05",
-          "06",
-          "07",
-          "08",
-          "09",
-          "10",
-          "11",
-          "12",
-          "13",
-          "14",
-          "15",
-          "16",
-          "17",
-          "18",
-          "19",
-          "20",
-          "21",
-          "22",
-          "23",
-          "24",
-          "25",
-          "26",
-          "27",
-          "28",
-          "29",
-          "30",
-          "31",
-        ],
+        categories: ["24-09-2021"],
+        Width: "20%",
+      },
+      grid: {
+        show: true,
       },
       fill: {
-        opacity: 1,
+        opacity: 2,
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val;
+          },
+        },
       },
       legend: {
-        position: "right",
-        offsetX: 0,
-        offsetY: 50,
+        show: false,
+        position: "bottom",
+        horizontalAlign: "center",
       },
     },
   };
   return (
     <>
-      {/* <div>DashboardsIndex</div> */}
-      <Chart
-        type='bar'
-        width={800}
-        height={400}
-        series={state.series}
-        options={state.options}></Chart>
+      <Row>
+        {/* <div>DashboardsIndex</div> */}
+        <Chart
+          type='bar'
+          width={200}
+          height={381}
+          series={state2.series}
+          options={state2.options}></Chart>
+        <Chart
+          type='bar'
+          width={400}
+          height={400}
+          series={state.series}
+          options={state.options}></Chart>
+      </Row>
     </>
   );
 };

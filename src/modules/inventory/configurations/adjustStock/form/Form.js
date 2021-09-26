@@ -64,7 +64,7 @@ const Form = ({
                     }
                     name='stock_lot_no'
                     id='stock_lot_no'
-                    rules={{ required: true }}
+                    rules={{ required: false }}
                   />
                   {errors.stock_lot_no && (
                     <Text className='error'>This field is required.</Text>
@@ -96,7 +96,7 @@ const Form = ({
                         },
                       })
                     }
-                    rules={{ required: true }}
+                    rules={{ required: false }}
                   />
                   {errors.stock_batch && (
                     <Text className='error'>This field is required.</Text>
@@ -133,7 +133,7 @@ const Form = ({
                         },
                       })
                     }
-                    rules={{ required: true }}
+                    rules={{ required: false }}
                   />
                   {errors.stock_mfg_date && (
                     <Text className='error'>This field is required.</Text>
@@ -170,7 +170,7 @@ const Form = ({
                         },
                       })
                     }
-                    rules={{ required: true }}
+                    rules={{ required: false }}
                   />
                   {errors.stock_exp_date && (
                     <Text className='error'>This field is required.</Text>
@@ -203,7 +203,7 @@ const Form = ({
                         },
                       })
                     }
-                    rules={{ required: true }}
+                    rules={{ required: false }}
                   />
                   {errors.stock_unit_price && (
                     <Text className='error'>This field is required.</Text>
@@ -244,7 +244,7 @@ const Form = ({
                         },
                       })
                     }
-                    rules={{ required: true }}
+                    rules={{ required: false }}
                   />
                   {type == "+ Qty." ? (
                     <>
@@ -286,7 +286,7 @@ const Form = ({
                         },
                       })
                     }
-                    rules={{ required: true }}
+                    rules={{ required: false }}
                   />
                   {errors.uom_no && (
                     <Text className='error'>This field is required.</Text>
