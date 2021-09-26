@@ -20,7 +20,7 @@ const DashboardsIndex = () => {
       },
       {
         name: "holiday",
-        data: [2, 1],
+        data: [2, 2],
       },
       {
         name: "freeze",
@@ -29,6 +29,10 @@ const DashboardsIndex = () => {
       {
         name: "success2",
         data: [2, 2],
+      },
+      {
+        name: "freeze2",
+        data: [4, 4],
       },
     ],
     options: {
@@ -39,6 +43,7 @@ const DashboardsIndex = () => {
         "#000000",
         "#FFFFFF",
         "#2ECC71",
+        "#FFFFFF",
       ],
       chart: {
         width: "20%",
@@ -102,7 +107,7 @@ const DashboardsIndex = () => {
         },
       },
       legend: {
-        show: true,
+        show: false,
         position: "bottom",
         horizontalAlign: "center",
       },
@@ -206,17 +211,19 @@ const DashboardsIndex = () => {
       <Row>
         {/* <div>DashboardsIndex</div> */}
         <Chart
-          type='bar'
+          type="bar"
           width={200}
-          height={381}
+          height={400}
           series={state2.series}
-          options={state2.options}></Chart>
+          options={state2.options}
+        ></Chart>
         <Chart
-          type='bar'
+          type="bar"
           width={400}
           height={400}
           series={state.series}
-          options={state.options}></Chart>
+          options={state.options}
+        ></Chart>
       </Row>
     </>
   );
