@@ -35,7 +35,8 @@ const Production = (props) => {
   return (
     <div>
       <MainLayout {...config}>
-        <h3>Dashboard</h3>
+        <h3>Home</h3>
+        {/* <h3>Dashboard</h3> */}
         {/* <DashboardsIndex /> */}
       </MainLayout>
     </div>
