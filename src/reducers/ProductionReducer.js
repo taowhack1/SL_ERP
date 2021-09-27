@@ -10,6 +10,9 @@ import {
   GET_MACHINE_PLAN,
   GET_TIMESHEET_SCAN_RM_LIST,
   RESET_TIMESHEET,
+  RESET_TIMESHEET_CONTROLLER,
+  SET_TIMESHEET,
+  SET_TIMESHEET_CONTROLLER,
   START_TIMESHEET,
   UPDATE_TIMESHEET,
   // GET_TIMESHEET_MACHINE,
@@ -84,6 +87,16 @@ export const initialState = {
         keyword: null,
         status: 1,
         pageSize: 20,
+      },
+    },
+    timesheet: {
+      workCenterID: null,
+      plan_job_id: null,
+      step: 1,
+      selectedWorker: [],
+      controller: {
+        timesheetID: null,
+        on_time_sheet_type_id: null,
       },
     },
   },
@@ -256,15 +269,6 @@ export default (state = initialState, action) => {
     //       machine: action.payload,
     //     },
     //   };
-    case RESET_TIMESHEET:
-      return {
-        ...state,
-        loading: false,
-        timesheet: {
-          ...initialState.timesheet,
-          machine: state.timesheet.machine,
-        },
-      };
     case GET_MACHINE_PLAN:
       return {
         ...state,
@@ -295,7 +299,51 @@ export default (state = initialState, action) => {
         },
         loading: false,
       };
+    case SET_TIMESHEET:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          timesheet: {
+            ...state?.operations?.timesheet,
+            ...action.payload,
+          },
+        },
+      };
+    case RESET_TIMESHEET:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          timesheet: initialState.operations.timesheet,
+        },
+      };
 
+    case SET_TIMESHEET_CONTROLLER:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          timesheet: {
+            ...state?.operations?.timesheet,
+            controller: {
+              ...state?.operations?.timesheet?.controller,
+              ...action.payload,
+            },
+          },
+        },
+      };
+    case RESET_TIMESHEET_CONTROLLER:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          timesheet: {
+            ...state?.operations?.timesheet,
+            controller: initialState.operations.timesheet.controller,
+          },
+        },
+      };
     // case FILTER_JOB_ORDER:
     //   return {
     //     ...state,

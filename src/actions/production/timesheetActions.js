@@ -15,12 +15,16 @@ const apiTimesheet = `/production/time_sheet`;
 const apiTimesheetLog = `/production/time_sheet_log`;
 
 // const GET_TIMESHEET_MACHINE = "GET_TIMESHEET_MACHINE";
+const SET_TIMESHEET = "SET_TIMESHEET";
 const RESET_TIMESHEET = "RESET_TIMESHEET";
 const GET_MACHINE_PLAN = "GET_MACHINE_PLAN";
 const GET_TIMESHEET_SCAN_RM_LIST = "GET_TIMESHEET_SCAN_RM_LIST";
 const START_TIMESHEET = "START_TIMESHEET";
 const UPDATE_TIMESHEET = "UPDATE_TIMESHEET";
 const CLOSE_TIMESHEET = "CLOSE_TIMESHEET";
+
+const SET_TIMESHEET_CONTROLLER = "SET_TIMESHEET_CONTROLLER";
+const RESET_TIMESHEET_CONTROLLER = "RESET_TIMESHEET_CONTROLLER";
 
 const getMachinePlan = (machine_id) => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
@@ -432,9 +436,18 @@ const updateTimesheetLog = (data) => {
   }
 };
 
+const setTimesheet = (data) => (dispatch) =>
+  dispatch({ type: SET_TIMESHEET, payload: data });
+
 const resetTimesheet = () => (dispatch) => {
-  dispatch({ type: SET_LOADING, payload: false });
   dispatch({ type: RESET_TIMESHEET });
+};
+
+const setTimesheetCtrl = (data) => (dispatch) =>
+  dispatch({ type: SET_TIMESHEET_CONTROLLER, payload: data });
+
+const resetTimesheetCtrl = () => (dispatch) => {
+  dispatch({ type: RESET_TIMESHEET_CONTROLLER });
 };
 
 export {
@@ -442,13 +455,19 @@ export {
   GET_TIMESHEET_SCAN_RM_LIST,
   START_TIMESHEET,
   UPDATE_TIMESHEET,
+  SET_TIMESHEET,
   RESET_TIMESHEET,
   CLOSE_TIMESHEET,
+  SET_TIMESHEET_CONTROLLER,
+  RESET_TIMESHEET_CONTROLLER,
   getMachinePlan,
   getTimesheetScanRMList,
   getBarcodeDetail,
   startTimesheet,
   updateTimesheet,
+  setTimesheet,
   resetTimesheet,
   updateTimesheetLog,
+  setTimesheetCtrl,
+  resetTimesheetCtrl,
 };

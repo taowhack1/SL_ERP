@@ -52,10 +52,10 @@ import CustomerCreate from "./modules/sales/masterData/customer/Customer_Create"
 
 import Production from "./modules/production/Production";
 // Operation
-import MRPMain from "./modules/production/Operation/MRPMain";
-import MRPCreate from "./modules/production/Operation/MRPCreate";
-import MRPView from "./modules/production/Operation/MRPView";
-import Planning from "./modules/production/Operation/planning/PlanningCalendar";
+import MRPMain from "./modules/production/operations/MRPMain";
+import MRPCreate from "./modules/production/operations/MRPCreate";
+import MRPView from "./modules/production/operations/MRPView";
+import Planning from "./modules/production/operations/planning/PlanningCalendar";
 // Master Data
 import WorkCenter from "./modules/production/WorkCenter";
 import WorkCenterCreate from "./modules/production/WorkCenterCreate";
@@ -92,7 +92,7 @@ import UomView from "./modules/inventory/configurations/uom/UomView";
 import Transfer from "./modules/inventory/operations/transfer/Transfer";
 import TransferCreate from "./modules/inventory/operations/transfer/TransferCreate";
 import TransferView from "./modules/inventory/operations/transfer/TransferView";
-import WorkOrderCreate1 from "./modules/production/Operation/workorder/WorkOrderCreate";
+import WorkOrderCreate1 from "./modules/production/operations/workorder/WorkOrderCreate";
 
 import ReturnRoutes from "./modules/inventory/operations/return/ReturnRoutes";
 import Routing from "./modules/production/masterData/routing/Routing";
@@ -101,9 +101,8 @@ import RoutingView from "./modules/production/masterData/routing/RoutingView";
 import ReportQC from "./modules/qualityAssurance/reportQc/ReportQC";
 import StockCard from "./modules/inventory/reporting/stockCard/StockCard";
 import StockValue from "./modules/inventory/reporting/stockValue/StockValue";
-import TimeSheet from "./modules/production/Operation/production/production/timesheet/TimeSheet";
-import ProductionSelectMachine from "./modules/production/Operation/production/production/costCenter/ProductionSelectMachine";
-import ProductionMain from "./modules/production/Operation/production/ProductionMain";
+import ProductionSelectMachine from "./modules/production/operations/production/production/costCenter/ProductionSelectMachine";
+import ProductionMain from "./modules/production/operations/production/ProductionMain";
 import TemporaryItems from "./modules/inventory/item/temporaryItem";
 import TempItemCreate from "./modules/inventory/item/temporaryItem/TempItemCreate";
 import TempItemForm from "./modules/inventory/item/temporaryItem/TempItemForm";
@@ -115,11 +114,12 @@ import NPRRoute from "./modules/sales/operations/npr/NPRRoute";
 import Estimate from "./modules/sales/operations/estimate/Estimate";
 import EstimateForm from "./modules/sales/operations/estimate/EstimateForm";
 import DeliveryRouter from "./modules/sales/operations/do/DeliveryRouter";
-import JobOrderRoute from "./modules/production/Operation/jobOrder/JobOrderRoute";
+import JobOrderRoute from "./modules/production/operations/jobOrder/JobOrderRoute";
 import GRReport from "./modules/inventory/reporting/gr";
-import MRPTest from "./modules/production/Operation/mrp-test";
+import MRPTest from "./modules/production/operations/mrp-test";
 import StockOnHandV2 from "./modules/inventory/StockOnHandV2";
 import AdjustStock from "./modules/inventory/configurations/adjustStock";
+import TimeSheet from "./modules/production/operations/timesheet/TimeSheet";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -558,10 +558,15 @@ const App = (props) => {
               path="/production/operations/production"
               component={ProductionSelectMachine}
             />
+            {/* <Route
+              exact
+              path="/production/operations/timesheet"
+              component={TimeSheet}
+            /> */}
             <Route
               exact
               path="/production/operations/timesheet"
-              component={ProductionMain}
+              component={TimeSheet}
             />
             {/* </PageLayout> */}
 

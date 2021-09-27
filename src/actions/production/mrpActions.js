@@ -161,11 +161,11 @@ const getMRPTest = ({
       return { success: false, data: {}, message: "Missing Params" };
     console.log(
       "API Params",
-      `${apiMRPTest}/${item_id}&${qty_batch}&${due_date}&${include_bulk_on_stock}`
+      `${apiMRPTest}/${item_id}&${qty_batch}&${due_date}&${include_bulk_on_stock}&0`
     );
     return axios
       .get(
-        `${apiMRPTest}/${item_id}&${qty_batch}&${due_date}&${include_bulk_on_stock}`,
+        `${apiMRPTest}/${item_id}&${qty_batch}&${due_date}&${include_bulk_on_stock}&0`,
         header_config
       )
       .then((resp) => {

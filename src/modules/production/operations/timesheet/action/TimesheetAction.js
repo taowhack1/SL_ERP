@@ -1,37 +1,18 @@
-/** @format */
-
-import {
-  Button,
-  Col,
-  Table,
-  Modal,
-  InputNumber,
-  Divider,
-  message,
-  Input,
-} from "antd";
+import { Button, Col, Modal, InputNumber, message, Input } from "antd";
 import Text from "antd/lib/typography/Text";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { Row } from "react-flexbox-grid";
-import Btn from "./Btn";
-import Display from "./Display";
-import { detail, detailColumns, mockupdata } from "./timeConfig";
 import {
   CheckCircleTwoTone,
-  ClockCircleOutlined,
   ExclamationCircleOutlined,
   ExportOutlined,
   PauseCircleTwoTone,
   PlayCircleTwoTone,
-  SearchOutlined,
 } from "@ant-design/icons";
 import { getNumberFormat } from "../../../../../../include/js/main_config";
-import moment from "moment";
-import CustomTable from "../../../../../../components/CustomTable";
-import CustomClock from "../../../../../../components/CustomClock";
 import { ProductionContext } from "../../../../../../include/js/context";
 import { useDispatch, useSelector } from "react-redux";
-import TimeSheetInfo from "./TimeSheetInfo";
+import TimeSheetActionInfo from "./TimeSheetActionInfo";
 import {
   CLOSE_TIMESHEET,
   startTimesheet,
@@ -40,10 +21,9 @@ import {
 } from "../../../../../../actions/production/timesheetActions";
 import TimesheetTableLog from "./TimesheetTableLog";
 import TimesheetTableLogEdit from "./TimesheetTableLogEdit";
-import { useHistory } from "react-router-dom";
-const { confirm, warning } = Modal;
+const { confirm } = Modal;
 
-const TimeSheet = (props) => {
+const TimeSheetAction = (props) => {
   const dispatch = useDispatch();
   const { form } = useContext(ProductionContext);
   const { start: timesheet, machine } = useSelector(
@@ -313,6 +293,7 @@ const TimeSheet = (props) => {
       showConfirmstop,
     };
   }, [status, stepBtn, timesheet, timesheet.time_sheet_id]);
+
   const showConfirmEditQty = () => {
     confirm({
       title: "Confirm Edit Quantity",
@@ -392,7 +373,7 @@ const TimeSheet = (props) => {
       )}
       <Row>
         <Col span={15} className="col-border-right" style={{ height: "90vh" }}>
-          <TimeSheetInfo
+          <TimeSheetActionInfo
             status={status}
             setStatus={setStatus}
             stepBtn={stepBtn}
@@ -473,8 +454,8 @@ const TimeSheet = (props) => {
           </div>
           <div className="timer-container">
             <div className="stopwatch">
-              <Display time={timeValue} />
-              <Btn {...btnConfig} />
+              {/* <TimerBox time={timeValue} />
+              <TimerControl {...btnConfig} /> */}
             </div>
           </div>
         </Col>
@@ -483,4 +464,4 @@ const TimeSheet = (props) => {
   );
 };
 
-export default TimeSheet;
+export default TimeSheetAction;

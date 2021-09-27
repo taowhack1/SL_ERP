@@ -185,7 +185,7 @@ const ProductionMain = () => {
     };
     timesheet.machine?.machine_id && setInitialState();
   }, [timesheet.machine.plan_job_detail]);
-  console.log(form);
+
   return (
     <>
       <ProductionContext.Provider value={contextValue}>
@@ -201,8 +201,8 @@ const ProductionMain = () => {
                   <div className="mr-2 mt-1">
                     <ProductionJobList dataSource={mockupData} />
                   </div>
-                </Col>
-                <Col span={step.current === 0 ? 18 : 24}> */}
+                </Col> */}
+                {/* <Col span={step.current === 0 ? 18 : 24}> */}
                 <Col span={24}>
                   <div className="production-step-content">
                     {step.stepList.length > 0 && (

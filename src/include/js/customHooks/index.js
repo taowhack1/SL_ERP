@@ -7,7 +7,7 @@ import { getStatusByName, sortData } from "../function_main";
 import { message } from "antd";
 import { header_config } from "../main_config";
 
-const useFetch = (url) => {
+const useFetch = (url, missingParams = false) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
@@ -16,28 +16,34 @@ const useFetch = (url) => {
   const fetchData = () => setTrigger((prev) => !prev);
 
   useEffect(() => {
-    setLoading("Loading...");
-    setData(null);
-    setError(null);
-    console.log("url", url);
     const source = axios.CancelToken.source();
-    url &&
-      axios
-        .get(url, { cancelToken: source.token })
-        .then((res) => {
-          console.log(`useFetch ${url} then`, res);
-          setLoading(false);
-          res.data && setData(res.data);
-        })
-        .catch((err) => {
-          setLoading(false);
-          setError("Error. Can't fetch any data from the server.");
-          console.error("error", err);
-        });
+
+    if (!missingParams) {
+      setLoading("Loading...");
+      setData(null);
+      setError(null);
+      console.log("url", url);
+      url &&
+        axios
+          .get(url, { cancelToken: source.token })
+          .then((res) => {
+            console.log(`useFetch ${url} then`, res);
+            setLoading(false);
+            res.data && setData(res.data);
+          })
+          .catch((err) => {
+            setLoading(false);
+            setError("Error. Can't fetch any data from the server.");
+            console.error("error", err);
+          });
+    } else {
+      console.log("useFetch Missing Params");
+    }
+
     return () => {
       source.cancel();
     };
-  }, [url, trigger]);
+  }, [url, trigger, missingParams]);
 
   return { data, loading, error, fetchData };
 };

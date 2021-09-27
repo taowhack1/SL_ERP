@@ -2,7 +2,7 @@
 
 import React from "react";
 
-const Btn = (props) => {
+const TimerControl = (props) => {
   console.log("Btn render");
   console.log("props.stepBtn", props.stepBtn);
   return (
@@ -14,20 +14,23 @@ const Btn = (props) => {
           <div>
             <button
               disabled={props.stepBtn === "close" ? true : false}
-              className='stopwatch-btn stopwatch-btn-gre'
-              onClick={() => props.showConfirmstart("setup")}>
+              className="stopwatch-btn stopwatch-btn-gre"
+              onClick={() => props.showConfirmstart("setup")}
+            >
               Setup
             </button>
             <button
               disabled={props.stepBtn === "close" ? true : false}
-              className='stopwatch-btn stopwatch-btn-gre'
-              onClick={() => props.showConfirmstart("start")}>
+              className="stopwatch-btn stopwatch-btn-gre"
+              onClick={() => props.showConfirmstart("start")}
+            >
               Start
             </button>
             <button
               disabled={props.stepBtn === "close" ? true : false}
-              className='stopwatch-btn stopwatch-btn-gre'
-              onClick={() => props.showConfirmstart("clean")}>
+              className="stopwatch-btn stopwatch-btn-gre"
+              onClick={() => props.showConfirmstart("clean")}
+            >
               clean
             </button>
           </div>
@@ -39,15 +42,17 @@ const Btn = (props) => {
       {props.status === 1 ? ( //When Timesheet Start
         <div>
           <button
-            className='stopwatch-btn stopwatch-btn-red'
-            onClick={() => props.showConfirmstop(props.stepBtn)}>
+            className="stopwatch-btn stopwatch-btn-red"
+            onClick={() => props.showConfirmstop(props.stepBtn)}
+          >
             Stop
           </button>
           {props.stepBtn === "start" ? (
             <>
               <button
-                className='stopwatch-btn stopwatch-btn-gray'
-                onClick={() => props.showConfirmstop("issue")}>
+                className="stopwatch-btn stopwatch-btn-gray"
+                onClick={() => props.showConfirmstop("issue")}
+              >
                 Issue
               </button>
             </>
@@ -62,9 +67,10 @@ const Btn = (props) => {
       {props.status === 2 ? (
         <div>
           <button
-            className='stopwatch-btn stopwatch-btn-disabled'
+            className="stopwatch-btn stopwatch-btn-disabled"
             onClick={props.showConfirmstart}
-            disabled>
+            disabled
+          >
             Start
           </button>
         </div>
@@ -77,4 +83,4 @@ const Btn = (props) => {
   );
 };
 
-export default React.memo(Btn);
+export default React.memo(TimerControl);

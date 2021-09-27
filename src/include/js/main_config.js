@@ -55,9 +55,9 @@ const getNumberFormat = (decimalPoint = 6, symbol) => {
     parser: (value) => value.replace(/\$\s?|(,*)/g, ""),
   };
 };
-const convertDigit = (value, decimalPoint = 6) => {
+const convertDigit = (value = 0, decimalPoint = 6) => {
   const format = "0,0." + "0".repeat(decimalPoint);
-  return typeof value === "number" && numeral(value).format(format);
+  return typeof value === "number" && numeral(value || 0).format(format);
 };
 // Sv.Test
 export {
