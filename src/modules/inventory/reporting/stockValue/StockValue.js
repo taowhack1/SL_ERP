@@ -65,6 +65,8 @@ const StockValue = () => {
     all: false,
     eachLotBatch: false,
     LotBatch: 0,
+    stock_balance: false,
+    Balance: 0,
   });
   const changeState = (stateKeyValue) => {
     setState({
@@ -86,6 +88,8 @@ const StockValue = () => {
       all: false,
       eachLotBatch: false,
       LotBatch: 0,
+      stock_balance: false,
+      Balance: 0,
     });
   };
   const FieldsRequire = ["stock_value_year", "stock_value_month"];
@@ -101,13 +105,13 @@ const StockValue = () => {
   const dateFormat = "DD/MM/YYYY";
 
   const showReport = (formButton) => {
-    const report_stock_value = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_value.aspx?`;
+    const report_stock_value = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_balance.aspx?`;
     //const report_stock_value_lotbatch = `${process.env.REACT_APP_REPORT_SERVER}/report_stock_value_lotbatch.aspx?`;
-    const value = `&item_all=${state.item_all}&item_type=${state.type_id}&item_category=${state.category_id}&item_code=${state.item_id}&stock_value_year=${state.stock_value_year}&stock_value_month=${state.stock_value_month}`;
-    const exel = `${report_stock_value}${value}&export_excel=true&stock_value_type=2`;
-    const exel_lotbatch = `${report_stock_value}${value}&export_excel=true&stock_value_type=1`;
-    const pdf_web_view = `${report_stock_value}${value}&stock_value_type=2`;
-    const pdf_web_view_lotbatch = `${report_stock_value}${value}&stock_value_type=1`;
+    const value = `&item_all=${state.item_all}&type_id=${state.type_id}&item_id=${state.item_id}&year_stock=${state.stock_value_year}&month_stock=${state.stock_value_month}`;
+    const exel = `${report_stock_value}${value}&export_excel=true&stock_balance_type=2`;
+    const exel_lotbatch = `${report_stock_value}${value}&export_excel=true&stock_balance_type=1`;
+    const pdf_web_view = `${report_stock_value}${value}&stock_balance_type=2`;
+    const pdf_web_view_lotbatch = `${report_stock_value}${value}&stock_balance_type=1`;
     console.log("formButton", formButton);
     let validate = null;
     if (state.all == true) {

@@ -1,38 +1,100 @@
 /** @format */
 
+import { Col, Row, Tag } from "antd";
 import React from "react";
 import Chart from "react-apexcharts";
 const DashboardsIndex = () => {
   const state = {
     series: [
       {
-        name: "PRODUCT A",
-        data: [
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-          1, 1, 1, 1, 1, 1, 1, 1, 1,
-        ],
+        name: "Plan",
+        data: [2, 2],
       },
       {
-        name: "PRODUCT B",
-        data: [
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-          1, 1, 1, 1, 1, 1, 1, 1, 1,
-        ],
+        name: "success",
+        data: [6, 6],
       },
       {
-        name: "PRODUCT C",
-        data: [
-          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-          1, 1, 1, 1, 1, 1, 1, 1, 1,
-        ],
+        name: "OT",
+        data: [2, 2],
+      },
+      {
+        name: "holiday",
+        data: [0, 0],
+      },
+      {
+        name: "freeze",
+        data: [10, 10],
+      },
+      {
+        name: "success2",
+        data: [2, 2],
+      },
+      {
+        name: "freeze2",
+        data: [6, 6],
       },
     ],
     options: {
+      position: "front",
+      colors: [
+        "#0000FF",
+        "#2ECC71",
+        "#CC0000",
+        "#000000",
+        "#FFFFFF",
+        "#2ECC71",
+        "#FFFFFF",
+      ],
       chart: {
+        width: "20%",
         type: "bar",
         height: 350,
         stacked: true,
-        //stackType: "100%",
+        toolbar: {
+          show: false,
+        },
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: "30%",
+          endingShape: "flat",
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 0.5,
+        colors: ["#000000"],
+      },
+      annotations: {
+        position: "back",
+        yaxis: [
+          {
+            y: 8,
+
+            borderColor: "#D7D7D7",
+            strokeDashArray: 0,
+          },
+          {
+            y: 12,
+            borderColor: "#D7D7D7",
+            strokeDashArray: 0,
+          },
+          {
+            y: 20,
+            borderColor: "#D7D7D7",
+            strokeDashArray: 0,
+          },
+          {
+            y: 24,
+            borderColor: "#C3C3C3",
+            strokeDashArray: 0,
+          },
+        ],
       },
       responsive: [
         {
@@ -46,102 +108,389 @@ const DashboardsIndex = () => {
           },
         },
       ],
-
       yaxis: {
         show: true,
-        showAlways: true,
         max: 24,
-        tickAmount: 4,
-        forceNiceScale: true,
+        tickAmount: 24,
         labels: {
-          minWidth: 0,
-          maxWidth: 160,
           show: true,
           formatter: (value) => {
             return [8, 12, 20, 24].includes(value) ? value : " ";
           },
         },
       },
+      xaxis: {
+        categories: ["เครื่อง mixer", "เครื่อง Filling & Packing"],
+        Width: "20%",
+        labels: {
+          show: true,
+          rotate: -45,
+          rotateAlways: true,
+          hideOverlappingLabels: true,
+          showDuplicates: false,
+          trim: false,
+          minHeight: undefined,
+          maxHeight: 120,
+          style: {
+            //colors: [],
+            fontSize: "12px",
+            fontFamily: "Helvetica, Arial, sans-serif",
+            fontWeight: 400,
+            cssClass: "apexcharts-xaxis-label",
+          },
+          offsetX: 0,
+          offsetY: 0,
+        },
+      },
       grid: {
         show: true,
-        borderColor: "#90A4AE",
-        strokeDashArray: 0,
-        position: "back",
+        borderColor: "#000000",
         xaxis: {
           lines: {
             show: false,
           },
         },
+        yaxis: {
+          lines: {
+            show: false,
+          },
+        },
+      },
+      markers: {
+        size: 2,
+        colors: undefined,
+        strokeColors: "#fff",
+        strokeWidth: 2,
+        strokeOpacity: 0.9,
+        strokeDashArray: 0,
+        fillOpacity: 1,
+        discrete: [],
+        shape: "line",
+        radius: 2,
+        offsetX: 0,
+        offsetY: 0,
+        onClick: undefined,
+        onDblClick: undefined,
+        showNullDataPoints: true,
+        hover: {
+          size: undefined,
+          sizeOffset: 3,
+        },
+      },
+      fill: {
+        opacity: 2,
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val;
+          },
+        },
+      },
+      legend: {
+        show: false,
+        position: "bottom",
+        horizontalAlign: "center",
+      },
+    },
+  };
+  const state2 = {
+    series: [
+      {
+        name: "Plan",
+        data: [2],
+      },
+      {
+        name: "success",
+        data: [6],
+      },
+      {
+        name: "OT",
+        data: [2],
+      },
+      {
+        name: "holiday",
+        data: [0],
+      },
+      {
+        name: "freeze",
+        data: [16],
+      },
+    ],
+    options: {
+      position: "front",
+      colors: ["#0000FF", "#2ECC71", "#CC0000", "#000000", "#FFFFFF"],
+      chart: {
+        width: "20%",
+        type: "bar",
+        height: 350,
+        stacked: true,
+        toolbar: {
+          show: false,
+        },
+      },
 
-        row: {
-          colors: undefined,
-          opacity: 0.5,
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: "30%",
+          endingShape: "flat",
         },
-        column: {
-          colors: undefined,
-          opacity: 0.5,
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 0.5,
+        colors: ["#000000"],
+      },
+      annotations: {
+        position: "back",
+        yaxis: [
+          {
+            y: 8,
+            borderColor: "#D7D7D7",
+            strokeDashArray: 0,
+          },
+          {
+            y: 12,
+            borderColor: "#D7D7D7",
+            strokeDashArray: 0,
+          },
+          {
+            y: 20,
+            borderColor: "#D7D7D7",
+            strokeDashArray: 0,
+          },
+          {
+            y: 24,
+            borderColor: "#C3C3C3",
+            strokeDashArray: 0,
+          },
+        ],
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: "bottom",
+              offsetX: -10,
+              offsetY: 0,
+            },
+          },
         },
-        padding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
+      ],
+      yaxis: {
+        show: true,
+        max: 24,
+        tickAmount: 24,
+        labels: {
+          show: true,
+          formatter: (value) => {
+            return [8, 12, 20, 24].includes(value) ? value : " ";
+          },
         },
       },
       xaxis: {
-        categories: [
-          "01",
-          "02",
-          "03",
-          "04",
-          "05",
-          "06",
-          "07",
-          "08",
-          "09",
-          "10",
-          "11",
-          "12",
-          "13",
-          "14",
-          "15",
-          "16",
-          "17",
-          "18",
-          "19",
-          "20",
-          "21",
-          "22",
-          "23",
-          "24",
-          "25",
-          "26",
-          "27",
-          "28",
-          "29",
-          "30",
-          "31",
-        ],
+        categories: ["24-09-2021"],
+        Width: "20%",
+      },
+      grid: {
+        show: true,
+        borderColor: "#000000",
+        xaxis: {
+          lines: {
+            show: false,
+          },
+        },
+        yaxis: {
+          lines: {
+            show: false,
+          },
+        },
       },
       fill: {
-        opacity: 1,
+        opacity: 2,
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val;
+          },
+        },
       },
       legend: {
-        position: "right",
-        offsetX: 0,
-        offsetY: 50,
+        show: false,
+        position: "bottom",
+        horizontalAlign: "center",
+      },
+    },
+  };
+  const state3 = {
+    series: [
+      {
+        name: "Plan",
+        data: [8, 0, 8],
+      },
+      {
+        name: "success",
+        data: [0, 0, 0],
+      },
+      {
+        name: "OT",
+        data: [0, 0, 0],
+      },
+      {
+        name: "holiday",
+        data: [0, 24, 0],
+      },
+      {
+        name: "freeze",
+        data: [16, 0, 18],
+      },
+    ],
+    options: {
+      colors: ["#0000FF", "#2ECC71", "#CC0000", "#000000", "#FFFFFF"],
+      chart: {
+        width: "20%",
+        type: "bar",
+        height: 350,
+        stacked: true,
+        toolbar: {
+          show: false,
+        },
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: "30%",
+          endingShape: "flat",
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 0.2,
+        colors: ["#000000"],
+      },
+      annotations: {
+        position: "back",
+        yaxis: [
+          {
+            y: 8,
+            borderColor: "#D7D7D7",
+            strokeDashArray: 0,
+          },
+          {
+            y: 12,
+            borderColor: "#D7D7D7",
+            strokeDashArray: 0,
+          },
+          {
+            y: 20,
+            borderColor: "#D7D7D7",
+            strokeDashArray: 0,
+          },
+          {
+            y: 24,
+            borderColor: "#C3C3C3",
+            strokeDashArray: 0,
+          },
+        ],
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: "bottom",
+              offsetX: -10,
+              offsetY: 0,
+            },
+          },
+        },
+      ],
+      yaxis: {
+        show: true,
+        max: 24,
+        tickAmount: 24,
+        labels: {
+          show: true,
+          formatter: (value) => {
+            return [8, 12, 20, 24].includes(value) ? value : " ";
+          },
+        },
+      },
+      xaxis: {
+        categories: ["24", "25", "26"],
+        Width: "20%",
+      },
+      grid: {
+        show: false,
+      },
+      fill: {
+        opacity: 2,
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val;
+          },
+        },
+      },
+      legend: {
+        show: false,
+        position: "bottom",
+        horizontalAlign: "center",
       },
     },
   };
   return (
     <>
-      {/* <div>DashboardsIndex</div> */}
-      <Chart
-        type='bar'
-        width={800}
-        height={400}
-        series={state.series}
-        options={state.options}></Chart>
+      <Row gutter={[8, 16]}>
+        {/* <div>DashboardsIndex</div> */}
+        <Col span={4}>
+          <Chart
+            type='bar'
+            width={200}
+            height={400}
+            series={state2.series}
+            options={state2.options}></Chart>
+        </Col>
+        <Col>
+          <Chart
+            type='bar'
+            width={200}
+            height={400}
+            series={state.series}
+            options={state.options}></Chart>
+        </Col>
+        <Col></Col>
+      </Row>
+      <Row gutter={[8, 8]}>
+        <Col span={24} style={{ background: "#C6C6CC" }}>
+          <span style={{ marginLeft: 10 }}>Autorefresh in </span>
+          <Tag color='#0000FF' style={{ marginLeft: 100 }}>
+            plan
+          </Tag>
+          <Tag color='#2ECC71'>success</Tag>
+          <Tag color='#000000'>holiday</Tag>
+          <Tag color='#CC0000'>OT</Tag>
+          <Tag color='#FFFFFF' style={{ color: "#000000" }}>
+            freeze
+          </Tag>
+        </Col>
+        <Chart
+          type='bar'
+          width={200}
+          height={300}
+          series={state3.series}
+          options={state3.options}></Chart>
+      </Row>
     </>
   );
 };
