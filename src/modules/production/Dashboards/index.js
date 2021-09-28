@@ -3,69 +3,156 @@
 import { Col, Row, Tag } from "antd";
 import React from "react";
 import Chart from "react-apexcharts";
+// series: [
+//   {
+//     name: "Plan",
+//     data: [2, 2],
+//   },
+//   {
+//     name: "success",
+//     data: [0, 0],
+//   },
+//   {
+//     name: "OT",
+//     data: [0, 0],
+//   },
+//   {
+//     name: "holiday",
+//     data: [0, 0],
+//   },
+//   {
+//     name: "freeze",
+//     data: [22, 22],
+//   },
+//   {
+//     name: "success2",
+//     data: [0, 0],
+//   },
+//   {
+//     name: "freeze2",
+//     data: [6, 6],
+//   },
+// ],
+// colors: [
+//   "#0000FF", plan
+//   "#2ECC71", sucess
+//   "#CC0000", ot
+//   "#000000", holiday
+//   "#FFFFFF", freeze
+//   "#2ECC71",
+//   "#FFFFFF",
+// ],
+
 const data = [
   {
     id: 1,
     machine_id: 1,
-    machine_plan_time_h: 4,
+    machine_plan_time: 4,
     machine_plan_day: "24-09-2021",
-    machine_work_tiem: 4,
+    machine_work_tiem: 0,
+    machine_name: "เครื่อง mixer",
   },
   {
     id: 2,
     machine_id: 2,
-    machine_plan_time_h: 4,
+    machine_plan_time: 2,
     machine_plan_day: "24-09-2021",
-    machine_work_tiem: 4,
+    machine_work_tiem: 2,
+    machine_name: "เครื่อง Filling & Packing",
   },
 ];
+// array ใหม่ ที่ต้องได้
+// [
+//   {
+//   name: "plan"
+//   data: [mixer(จำนวนตัวเลขที่ได้), Filling((จำนวนตัวเลขที่ได้)]
+//   machine_name : ["เครื่อง mixer","เครื่อง Filling & Packing",]
+// }
+// {
+//   name: "sucess"
+//   data: [mixer(จำนวนตัวเลขที่ได้), Filling((จำนวนตัวเลขที่ได้)]
+//   machine_name : ["เครื่อง mixer","เครื่อง Filling & Packing",]
+// }
+// {
+//   name: "freeze"
+//   data: [mixer(จำนวนตัวเลขที่ได้), Filling((จำนวนตัวเลขที่ได้)]
+//   machine_name : ["เครื่อง mixer","เครื่อง Filling & Packing",]
+// }
+// ]
+const newData = [
+  {
+    name: "plan",
+    data: [4, 4],
+    machine_name: ["เครื่อง mixer", "เครื่อง Filling & Packing"],
+    colors: "#0000FF",
+  },
+  {
+    name: "sucess",
+    data: [4, 4],
+    machine_name: ["เครื่อง mixer", "เครื่อง Filling & Packing"],
+    colors: "#2ECC71",
+  },
+  {
+    name: "freeze",
+    data: [16, 16],
+    machine_name: ["เครื่อง mixer", "เครื่อง Filling & Packing"],
+    colors: "#FFFFFF",
+  },
+];
+
+//แบ่งกราฟ เป็น 12ชม เช้า   และ 12 ชมกลางคืน
+//12 ชมเช้า      8ชม ทำงานปกติ 4 ชมโอที
+//12 ชมกลางคืน   8ชม ทำงานปกติ 4 ชมโอที
+//machine.push(plan.machine_name);
 const DashboardsIndex = () => {
-  const renderGraphRight = (params) => {};
+  const renderGraphMachineRight = (params) => {
+    const findUniqueValues = (arr) => [...new Set(arr)];
+    const newArray = () => {
+      let freeze = 24;
+      return params.map((plan, index) => {
+        freeze = freeze - (plan.machine_plan_time + plan.machine_work_tiem);
+        return {
+          ...plan,
+          freeze,
+        };
+      });
+    };
+    let total = 0;
+    let machine = [];
+    let machine_name = [];
+    let data = [];
+    let name = [];
+    let plantime = [];
+    const planTime = () => {
+      let indexplanTime = 0;
+      newArray.map((plan, index) => {
+        plan.machine_plan_time > 0 && plan.machine_work_tiem == 0
+          ? plantime.push(plan.machine_plan_time)
+          : plantime.push(0);
+        indexplanTime = index + 1;
+      });
+
+      return {
+        data: plantime,
+        colors: "#0000FF",
+      };
+    };
+
+    return planTime();
+  };
   const renderGraphLeft = (params) => {};
   const renderGraphMonth = (params) => {};
-
+  console.log(
+    "newData.machine_name :>> ",
+    newData.map((color) => color.colors)
+  );
+  console.log("newData :>> ", newData);
+  console.log("renderGraphMachineRight :>> ", renderGraphMachineRight(data));
   const state = {
-    series: [
-      {
-        name: "Plan",
-        data: [2, 2],
-      },
-      {
-        name: "success",
-        data: [0, 0],
-      },
-      {
-        name: "OT",
-        data: [0, 0],
-      },
-      {
-        name: "holiday",
-        data: [0, 0],
-      },
-      {
-        name: "freeze",
-        data: [22, 22],
-      },
-      {
-        name: "success2",
-        data: [0, 0],
-      },
-      {
-        name: "freeze2",
-        data: [6, 6],
-      },
-    ],
+    series: [...newData],
     options: {
       position: "front",
-      colors: [
-        "#0000FF",
-        "#2ECC71",
-        "#CC0000",
-        "#000000",
-        "#FFFFFF",
-        "#2ECC71",
-        "#FFFFFF",
-      ],
+      colors: [...newData.map((color) => color.colors)],
       chart: {
         width: "20%",
         type: "bar",
@@ -140,7 +227,7 @@ const DashboardsIndex = () => {
         },
       },
       xaxis: {
-        categories: ["เครื่อง mixer", "เครื่อง Filling & Packing"],
+        categories: [...newData[0].machine_name],
         Width: "20%",
         labels: {
           show: true,
@@ -380,6 +467,11 @@ const DashboardsIndex = () => {
         stacked: true,
         toolbar: {
           show: false,
+        },
+        events: {
+          click: () => {
+            console.log("object :>> ");
+          },
         },
       },
       plotOptions: {
