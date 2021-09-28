@@ -3,7 +3,27 @@
 import { Col, Row, Tag } from "antd";
 import React from "react";
 import Chart from "react-apexcharts";
+const data = [
+  {
+    id: 1,
+    machine_id: 1,
+    machine_plan_time_h: 4,
+    machine_plan_day: "24-09-2021",
+    machine_work_tiem: 4,
+  },
+  {
+    id: 2,
+    machine_id: 2,
+    machine_plan_time_h: 4,
+    machine_plan_day: "24-09-2021",
+    machine_work_tiem: 4,
+  },
+];
 const DashboardsIndex = () => {
+  const renderGraphRight = (params) => {};
+  const renderGraphLeft = (params) => {};
+  const renderGraphMonth = (params) => {};
+
   const state = {
     series: [
       {
@@ -12,11 +32,11 @@ const DashboardsIndex = () => {
       },
       {
         name: "success",
-        data: [6, 6],
+        data: [0, 0],
       },
       {
         name: "OT",
-        data: [2, 2],
+        data: [0, 0],
       },
       {
         name: "holiday",
@@ -24,11 +44,11 @@ const DashboardsIndex = () => {
       },
       {
         name: "freeze",
-        data: [10, 10],
+        data: [22, 22],
       },
       {
         name: "success2",
-        data: [2, 2],
+        data: [0, 0],
       },
       {
         name: "freeze2",
@@ -202,11 +222,11 @@ const DashboardsIndex = () => {
       },
       {
         name: "success",
-        data: [6],
+        data: [0],
       },
       {
         name: "OT",
-        data: [2],
+        data: [0],
       },
       {
         name: "holiday",
@@ -214,7 +234,7 @@ const DashboardsIndex = () => {
       },
       {
         name: "freeze",
-        data: [16],
+        data: [22],
       },
     ],
     options: {
@@ -478,6 +498,7 @@ const DashboardsIndex = () => {
             plan
           </Tag>
           <Tag color='#2ECC71'>success</Tag>
+          <Tag color='#FFA500'>break</Tag>
           <Tag color='#000000'>holiday</Tag>
           <Tag color='#CC0000'>OT</Tag>
           <Tag color='#FFFFFF' style={{ color: "#000000" }}>
