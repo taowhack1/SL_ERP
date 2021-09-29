@@ -3,162 +3,156 @@
 import { Col, Row, Tag } from "antd";
 import React from "react";
 import Chart from "react-apexcharts";
+// series: [
+//   {
+//     name: "Plan",
+//     data: [2, 2],
+//   },
+//   {
+//     name: "success",
+//     data: [0, 0],
+//   },
+//   {
+//     name: "OT",
+//     data: [0, 0],
+//   },
+//   {
+//     name: "holiday",
+//     data: [0, 0],
+//   },
+//   {
+//     name: "freeze",
+//     data: [22, 22],
+//   },
+//   {
+//     name: "success2",
+//     data: [0, 0],
+//   },
+//   {
+//     name: "freeze2",
+//     data: [6, 6],
+//   },
+// ],
+// colors: [
+//   "#0000FF", plan
+//   "#2ECC71", sucess
+//   "#CC0000", ot
+//   "#000000", holiday
+//   "#FFFFFF", freeze
+//   "#2ECC71",
+//   "#FFFFFF",
+// ],
 
-const respData = [
+const data = [
   {
     id: 1,
     machine_id: 1,
-    freeze: 16,
-    machine_plan_time: 8,
+    machine_plan_time: 4,
     machine_plan_day: "24-09-2021",
-    machine_work_tiem: 2,
-    machine_work_tiem_ot: 0,
+    machine_work_tiem: 0,
     machine_name: "เครื่อง mixer",
   },
   {
     id: 2,
     machine_id: 2,
-    freeze: 18,
-    machine_plan_time: 8,
+    machine_plan_time: 2,
     machine_plan_day: "24-09-2021",
     machine_work_tiem: 2,
-    machine_work_tiem_ot: 0,
     machine_name: "เครื่อง Filling & Packing",
   },
+];
+// array ใหม่ ที่ต้องได้
+// [
+//   {
+//   name: "plan"
+//   data: [mixer(จำนวนตัวเลขที่ได้), Filling((จำนวนตัวเลขที่ได้)]
+//   machine_name : ["เครื่อง mixer","เครื่อง Filling & Packing",]
+// }
+// {
+//   name: "sucess"
+//   data: [mixer(จำนวนตัวเลขที่ได้), Filling((จำนวนตัวเลขที่ได้)]
+//   machine_name : ["เครื่อง mixer","เครื่อง Filling & Packing",]
+// }
+// {
+//   name: "freeze"
+//   data: [mixer(จำนวนตัวเลขที่ได้), Filling((จำนวนตัวเลขที่ได้)]
+//   machine_name : ["เครื่อง mixer","เครื่อง Filling & Packing",]
+// }
+// ]
+const newData = [
   {
-    id: 2,
-    machine_id: 3,
-    freeze: 18,
-    machine_plan_time: 8,
-    machine_plan_day: "24-09-2021",
-    machine_work_tiem: 6,
-    machine_work_tiem_ot: 0,
-    machine_name: "เครื่องทดสอบ",
+    name: "plan",
+    data: [4, 4],
+    machine_name: ["เครื่อง mixer", "เครื่อง Filling & Packing"],
+    colors: "#0000FF",
+  },
+  {
+    name: "sucess",
+    data: [4, 4],
+    machine_name: ["เครื่อง mixer", "เครื่อง Filling & Packing"],
+    colors: "#2ECC71",
+  },
+  {
+    name: "freeze",
+    data: [16, 16],
+    machine_name: ["เครื่อง mixer", "เครื่อง Filling & Packing"],
+    colors: "#FFFFFF",
   },
 ];
-//เช่น 5941 และ 5942
-//มีโอทีรวม 2 ชั่วโมง ของทั้งหมด 2 แท่ง เท่ากับ 8 ชั่วโมง
-//ตอนเอา โอที มาวาดในแท่งซ้าย
-//ก็ต้องเป็นสัดส่วน 2 ต่อ 8
-//แต่แท่งสูงได้แค่ 4
-//สีแดงเลยสูงแต่ 1/4
 
-//สีน้ำเงิน น่าจะแท่งละ 4 ชั่วโมง
-//จะได้เท่ากับ 8 / 16
-//แท่งซ้าย จะได้ 4/8
-
-// 8 ชม คูนจำนวนแท่ง
 //แบ่งกราฟ เป็น 12ชม เช้า   และ 12 ชมกลางคืน
 //12 ชมเช้า      8ชม ทำงานปกติ 4 ชมโอที
 //12 ชมกลางคืน   8ชม ทำงานปกติ 4 ชมโอที
 //machine.push(plan.machine_name);
 const DashboardsIndex = () => {
-  const reData = (arr) => {
+  const renderGraphMachineRight = (params) => {
     const findUniqueValues = (arr) => [...new Set(arr)];
-    let machine_name = [];
-    let plan_day = [];
-    let plan = [];
-    let ot = [];
-    let name = [];
-    let freeze = [];
+    const newArray = () => {
+      let freeze = 24;
+      return params.map((plan, index) => {
+        freeze = freeze - (plan.machine_plan_time + plan.machine_work_tiem);
+        return {
+          ...plan,
+          freeze,
+        };
+      });
+    };
     let total = 0;
-    let sucess = [];
-    let graphDay_sucess = [];
-    const test = arr.map((obj, index) => {
-      total =
-        total +
-        obj.freeze +
-        obj.machine_plan_time +
-        obj.machine_work_tiem +
-        obj.machine_work_tiem_ot;
-      machine_name.push(obj.machine_name);
-      ot.push(obj.machine_work_tiem_ot);
-      sucess.push(obj.machine_work_tiem);
-      obj.machine_work_tiem >= obj.machine_plan_time
-        ? plan.push(0)
-        : obj.machine_work_tiem <= obj.machine_plan_time
-        ? plan.push(obj.machine_plan_time - obj.machine_work_tiem)
-        : plan.push(obj.machine_plan_time);
-      freeze.push(obj.freeze);
-      plan_day.push(obj.machine_plan_day);
-      return { ...obj };
-    });
+    let machine = [];
+    let machine_name = [];
+    let data = [];
+    let name = [];
+    let plantime = [];
+    const planTime = () => {
+      let indexplanTime = 0;
+      newArray.map((plan, index) => {
+        plan.machine_plan_time > 0 && plan.machine_work_tiem == 0
+          ? plantime.push(plan.machine_plan_time)
+          : plantime.push(0);
+        indexplanTime = index + 1;
+      });
 
-    let graphDay = [
-      {
-        name: "sucess",
-        data: [
-          sucess.reduce((sum, number) => {
-            return sum + number / sucess.length;
-          }, 0),
-        ],
-        plan_day: findUniqueValues(plan_day),
-        colors: "#2ECC71",
-      },
-      {
-        name: "plan",
-        data: [
-          plan.reduce((sum, number) => {
-            return sum + number / plan.length;
-          }, 0),
-        ],
-        plan_day: findUniqueValues(plan_day),
+      return {
+        data: plantime,
         colors: "#0000FF",
-      },
-      {
-        name: "freeze",
-        data: [
-          freeze.reduce((sum, number) => {
-            return sum + number / freeze.length;
-          }, 0),
-        ],
-        plan_day: findUniqueValues(plan_day),
-        colors: "#FFFFFF",
-      },
-    ];
-    let graphMachine = [
-      {
-        name: "sucess",
-        data: sucess,
-        machine_name: machine_name,
-        colors: "#2ECC71",
-      },
-      {
-        name: "plan",
-        data: plan,
-        machine_name: machine_name,
-        colors: "#0000FF",
-      },
-      {
-        name: "ot",
-        data: ot,
-        machine_name: machine_name,
-        colors: "#CC0000",
-      },
-      {
-        name: "freeze",
-        data: freeze,
-        machine_name: machine_name,
-        colors: "#FFFFFF",
-      },
-    ];
-    return { graphMachine, graphDay };
+      };
+    };
+
+    return planTime();
   };
-  // const reDataGraphLeft = (params) => {
-  //   let callData = reData(respData);
-  //   console.log("callData :>> ", callData);
-  // };
-  // reDataGraphLeft();
-  console.log("reData :>> ", reData(respData));
-  const graphMachine = reData(respData).graphMachine;
-  const graphDay = reData(respData).graphDay;
-  console.log("graphMachine :>> ", graphMachine);
-  console.log("graphDay :>> ", graphDay);
+  const renderGraphLeft = (params) => {};
+  const renderGraphMonth = (params) => {};
+  console.log(
+    "newData.machine_name :>> ",
+    newData.map((color) => color.colors)
+  );
+  console.log("newData :>> ", newData);
+  console.log("renderGraphMachineRight :>> ", renderGraphMachineRight(data));
   const state = {
-    series: [...graphMachine],
+    series: [...newData],
     options: {
       position: "front",
-      colors: [...graphMachine.map((color) => color.colors)],
+      colors: [...newData.map((color) => color.colors)],
       chart: {
         width: "20%",
         type: "bar",
@@ -233,7 +227,7 @@ const DashboardsIndex = () => {
         },
       },
       xaxis: {
-        categories: [...graphMachine[0].machine_name],
+        categories: [...newData[0].machine_name],
         Width: "20%",
         labels: {
           show: true,
@@ -294,7 +288,6 @@ const DashboardsIndex = () => {
         opacity: 2,
       },
       tooltip: {
-        enabled: false,
         y: {
           formatter: function (val) {
             return val;
@@ -309,10 +302,31 @@ const DashboardsIndex = () => {
     },
   };
   const state2 = {
-    series: [...graphDay],
+    series: [
+      {
+        name: "Plan",
+        data: [2],
+      },
+      {
+        name: "success",
+        data: [0],
+      },
+      {
+        name: "OT",
+        data: [0],
+      },
+      {
+        name: "holiday",
+        data: [0],
+      },
+      {
+        name: "freeze",
+        data: [22],
+      },
+    ],
     options: {
       position: "front",
-      colors: [...graphDay.map((color) => color.colors)],
+      colors: ["#0000FF", "#2ECC71", "#CC0000", "#000000", "#FFFFFF"],
       chart: {
         width: "20%",
         type: "bar",
@@ -387,7 +401,7 @@ const DashboardsIndex = () => {
         },
       },
       xaxis: {
-        categories: [...graphDay[0].plan_day],
+        categories: ["24-09-2021"],
         Width: "20%",
       },
       grid: {
@@ -408,7 +422,6 @@ const DashboardsIndex = () => {
         opacity: 2,
       },
       tooltip: {
-        enabled: false,
         y: {
           formatter: function (val) {
             return val;
@@ -426,15 +439,15 @@ const DashboardsIndex = () => {
     series: [
       {
         name: "Plan",
-        data: [0, 0, 8],
+        data: [8, 0, 8],
       },
       {
         name: "success",
-        data: [8, 0, 0],
+        data: [0, 0, 0],
       },
       {
         name: "OT",
-        data: [1.33, 0, 0],
+        data: [0, 0, 0],
       },
       {
         name: "holiday",
@@ -442,7 +455,7 @@ const DashboardsIndex = () => {
       },
       {
         name: "freeze",
-        data: [14.67, 0, 18],
+        data: [16, 0, 18],
       },
     ],
     options: {
@@ -535,7 +548,6 @@ const DashboardsIndex = () => {
         opacity: 2,
       },
       tooltip: {
-        enabled: false,
         y: {
           formatter: function (val) {
             return val;
