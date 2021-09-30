@@ -3,37 +3,153 @@
 import { Col, Row, Tag } from "antd";
 import React from "react";
 import Chart from "react-apexcharts";
-
-const respData = [
+var future = new Date();
+future.setDate(future.getDate() + 30);
+console.log("future :>> ", future);
+const respData2 = [
   {
     id: 1,
     machine_id: 1,
-    freeze: 16,
-    machine_plan_time: 8,
+    freeze: 24,
+    machine_plan_time: 6,
     machine_plan_day: "24-09-2021",
-    machine_work_tiem: 2,
-    machine_work_tiem_ot: 0,
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
     machine_name: "เครื่อง mixer",
   },
   {
     id: 2,
     machine_id: 2,
-    freeze: 18,
+    freeze: 24,
     machine_plan_time: 8,
     machine_plan_day: "24-09-2021",
-    machine_work_tiem: 2,
-    machine_work_tiem_ot: 0,
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
     machine_name: "เครื่อง Filling & Packing",
   },
   {
+    id: 1,
+    machine_id: 1,
+    freeze: 24,
+    machine_plan_time: 6,
+    machine_plan_day: "25-09-2021",
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
+    machine_name: "เครื่อง mixer",
+  },
+  {
     id: 2,
-    machine_id: 3,
-    freeze: 18,
+    machine_id: 2,
+    freeze: 24,
     machine_plan_time: 8,
     machine_plan_day: "25-09-2021",
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
+    machine_name: "เครื่อง Filling & Packing",
+  },
+  {
+    id: 1,
+    machine_id: 1,
+    freeze: 24,
+    machine_plan_time: 6,
+    machine_plan_day: "26-09-2021",
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
+    machine_name: "เครื่อง mixer",
+  },
+  {
+    id: 2,
+    machine_id: 2,
+    freeze: 24,
+    machine_plan_time: 8,
+    machine_plan_day: "26-09-2021",
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
+    machine_name: "เครื่อง Filling & Packing",
+  },
+  {
+    id: 1,
+    machine_id: 1,
+    freeze: 24,
+    machine_plan_time: 6,
+    machine_plan_day: "27-09-2021",
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
+    machine_name: "เครื่อง mixer",
+  },
+  {
+    id: 2,
+    machine_id: 2,
+    freeze: 24,
+    machine_plan_time: 8,
+    machine_plan_day: "27-09-2021",
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
+    machine_name: "เครื่อง Filling & Packing",
+  },
+  {
+    id: 1,
+    machine_id: 1,
+    freeze: 24,
+    machine_plan_time: 6,
+    machine_plan_day: "28-09-2021",
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
+    machine_name: "เครื่อง mixer",
+  },
+  {
+    id: 2,
+    machine_id: 2,
+    freeze: 24,
+    machine_plan_time: 8,
+    machine_plan_day: "28-09-2021",
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
+    machine_name: "เครื่อง Filling & Packing",
+  },
+  {
+    id: 1,
+    machine_id: 1,
+    freeze: 24,
+    machine_plan_time: 6,
+    machine_plan_day: "29-09-2021",
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
+    machine_name: "เครื่อง mixer",
+  },
+  {
+    id: 2,
+    machine_id: 2,
+    freeze: 24,
+    machine_plan_time: 8,
+    machine_plan_day: "29-09-2021",
+    machine_work_tiem: 0,
+    machine_work_tiem_ot: 2,
+    machine_name: "เครื่อง Filling & Packing",
+  },
+];
+const respData = [
+  {
+    id: 1,
+    machine_id: 1,
+    freeze: 24,
+    break: 0,
+    machine_plan_time: 8,
+    machine_plan_day: "24-09-2021",
+    machine_work_tiem: 8,
+    machine_work_tiem_ot: 2,
+    machine_name: "เครื่อง mixer",
+  },
+  {
+    id: 2,
+    machine_id: 2,
+    freeze: 24,
+    break: 0,
+    machine_plan_time: 8,
+    machine_plan_day: "24-09-2021",
     machine_work_tiem: 6,
-    machine_work_tiem_ot: 0,
-    machine_name: "เครื่องทดสอบ",
+    machine_work_tiem_ot: 4,
+    machine_name: "เครื่อง Filling & Packing",
   },
 ];
 //เช่น 5941 และ 5942
@@ -55,17 +171,19 @@ const respData = [
 const DashboardsIndex = () => {
   const reData = (arr, date = "24-09-2021") => {
     const findUniqueValues = (arr) => [...new Set(arr)];
+    const isCheck8hr = (value) => value >= 8;
     let machine_name = [];
     let plan_day = [];
     let plan = [];
     let ot = [];
+    let tempOt = [];
     let name = [];
     let freeze = [];
     let total = 0;
     let sucess = [];
     let graphDay_sucess = [];
 
-    arr
+    let test = arr
       .filter((obj, index) => {
         return obj.machine_plan_day == date;
       })
@@ -85,9 +203,16 @@ const DashboardsIndex = () => {
           ? plan.push(obj.machine_plan_time - obj.machine_work_tiem)
           : plan.push(obj.machine_plan_time);
         freeze.push(obj.freeze);
-        obj.machine_plan_day == date
-          ? plan_day.push(obj.machine_plan_day)
-          : plan_day.push();
+        plan_day.push(obj.machine_plan_day);
+        obj.machine_work_tiem_ot !== 0
+          ? plan[index] + sucess[index] == 8
+            ? tempOt.push(0)
+            : tempOt.push(
+                sucess[index] == 0
+                  ? 8 - plan[index]
+                  : 8 - sucess[index] - plan[index]
+              )
+          : tempOt.push(0);
         return { ...obj };
       });
 
@@ -111,6 +236,211 @@ const DashboardsIndex = () => {
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#0000FF",
+      },
+      {
+        name: "tempOt",
+        data: [
+          tempOt.reduce((sum, number) => {
+            return sum + number / tempOt.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: [
+          ot.reduce((sum, number) => {
+            return sum + number / ot.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: [
+          freeze.reduce((sum, number) => {
+            return sum + number / freeze.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+    ];
+
+    let graphMachine = [
+      {
+        name: "sucess",
+        data: sucess,
+        machine_name: machine_name,
+        colors: "#2ECC71",
+      },
+      {
+        name: "plan",
+        data: plan,
+        machine_name: machine_name,
+        colors: "#0000FF",
+      },
+      {
+        name: "freeze",
+        data: tempOt,
+        machine_name: machine_name,
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: ot,
+        machine_name: machine_name,
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: freeze,
+        machine_name: machine_name,
+        colors: "#FFFFFF",
+      },
+    ];
+    let graphMonth = [
+      {
+        name: "sucess",
+        data: [
+          sucess.reduce((sum, number) => {
+            return sum + number / sucess.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#2ECC71",
+      },
+      {
+        name: "plan",
+        data: [
+          plan.reduce((sum, number) => {
+            return sum + number / plan.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#0000FF",
+      },
+      {
+        name: "tempOt",
+        data: [
+          tempOt.reduce((sum, number) => {
+            return sum + number / tempOt.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: [
+          ot.reduce((sum, number) => {
+            return sum + number / ot.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: [
+          freeze.reduce((sum, number) => {
+            return sum + number / freeze.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+    ];
+    return { graphMachine, graphDay, graphMonth, test, tempOt, plan, sucess };
+  };
+  const reData2 = (arr) => {
+    const findUniqueValues = (arr) => [...new Set(arr)];
+    const isCheck8hr = (value) => value >= 8;
+    let machine_name = [];
+    let plan_day = [];
+    let plan = [];
+    let ot = [];
+    let tempOt = [];
+    let name = [];
+    let freeze = [];
+    let total = 0;
+    let sucess = [];
+    let graphDay_sucess = [];
+    let date = [];
+    let test = arr.map((obj, index) => {
+      total =
+        total +
+        obj.freeze +
+        obj.machine_plan_time +
+        obj.machine_work_tiem +
+        obj.machine_work_tiem_ot;
+      machine_name.push(obj.machine_name);
+      ot.push(obj.machine_work_tiem_ot);
+      sucess.push(obj.machine_work_tiem);
+      obj.machine_work_tiem >= obj.machine_plan_time
+        ? plan.push(0)
+        : obj.machine_work_tiem <= obj.machine_plan_time
+        ? plan.push(obj.machine_plan_time - obj.machine_work_tiem)
+        : plan.push(obj.machine_plan_time);
+      freeze.push(obj.freeze);
+      plan_day.push(obj.machine_plan_day.substr(0, 2));
+      obj.machine_plan_day == obj.machine_plan_day
+        ? date.push(obj.machine_plan_day)
+        : date.push(false);
+      obj.machine_work_tiem_ot !== 0
+        ? plan[index] + sucess[index] == 8
+          ? tempOt.push(0)
+          : tempOt.push(
+              sucess[index] == 0
+                ? 8 - plan[index]
+                : 8 - sucess[index] - plan[index]
+            )
+        : tempOt.push(0);
+      return { ...obj };
+    });
+
+    let graphMonth = [
+      {
+        name: "sucess",
+        data: [
+          sucess.reduce((sum, number) => {
+            return sum + number / sucess.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#2ECC71",
+      },
+      {
+        name: "plan",
+        data: [
+          plan.reduce((sum, number) => {
+            return sum + number / plan.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#0000FF",
+      },
+      {
+        name: "freeze",
+        data: [
+          tempOt.reduce((sum, number) => {
+            return sum + number / tempOt.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: [
+          ot.reduce((sum, number) => {
+            return sum + number / ot.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#CC0000",
       },
       {
         name: "freeze",
@@ -137,6 +467,12 @@ const DashboardsIndex = () => {
         colors: "#0000FF",
       },
       {
+        name: "freeze",
+        data: tempOt,
+        machine_name: machine_name,
+        colors: "#FFFFFF",
+      },
+      {
         name: "ot",
         data: ot,
         machine_name: machine_name,
@@ -149,16 +485,19 @@ const DashboardsIndex = () => {
         colors: "#FFFFFF",
       },
     ];
-    return { graphMachine, graphDay };
+    return { graphMonth, graphMachine, sucess, plan_day, date };
   };
   // const reDataGraphLeft = (params) => {
   //   let callData = reData(respData);
   //   console.log("callData :>> ", callData);
   // };
   // reDataGraphLeft();
+  console.log("reData2 :>> ", reData2(respData2));
   console.log("reData :>> ", reData(respData));
   const graphMachine = reData(respData).graphMachine;
   const graphDay = reData(respData).graphDay;
+  const graphMonth = reData2(respData2).graphMonth;
+  //const graphMonth = reData(respData).graphMonth;
   console.log("graphMachine :>> ", graphMachine);
   console.log("graphDay :>> ", graphDay);
   const state = {
@@ -399,7 +738,7 @@ const DashboardsIndex = () => {
       },
       grid: {
         show: true,
-        borderColor: "#000000",
+        borderColor: "#B2B2B2",
         xaxis: {
           lines: {
             show: false,
@@ -407,7 +746,7 @@ const DashboardsIndex = () => {
         },
         yaxis: {
           lines: {
-            show: false,
+            show: true,
           },
         },
       },
@@ -430,30 +769,9 @@ const DashboardsIndex = () => {
     },
   };
   const state3 = {
-    series: [
-      {
-        name: "Plan",
-        data: [0, 0, 8],
-      },
-      {
-        name: "success",
-        data: [8, 0, 0],
-      },
-      {
-        name: "OT",
-        data: [1.33, 0, 0],
-      },
-      {
-        name: "holiday",
-        data: [0, 24, 0],
-      },
-      {
-        name: "freeze",
-        data: [14.67, 0, 18],
-      },
-    ],
+    series: [...reData2(respData2).graphMachine],
     options: {
-      colors: ["#0000FF", "#2ECC71", "#CC0000", "#000000", "#FFFFFF"],
+      colors: [...graphMonth.map((color) => color.colors)],
       chart: {
         width: "20%",
         type: "bar",
@@ -532,7 +850,7 @@ const DashboardsIndex = () => {
         },
       },
       xaxis: {
-        categories: ["24", "25", "26"],
+        categories: [...graphMonth[0].plan_day],
         Width: "20%",
       },
       grid: {
@@ -594,7 +912,7 @@ const DashboardsIndex = () => {
         </Col>
         <Chart
           type='bar'
-          width={200}
+          width={600}
           height={300}
           series={state3.series}
           options={state3.options}></Chart>
