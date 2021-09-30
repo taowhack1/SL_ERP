@@ -30,7 +30,7 @@ const respData = [
     machine_id: 3,
     freeze: 18,
     machine_plan_time: 8,
-    machine_plan_day: "24-09-2021",
+    machine_plan_day: "25-09-2021",
     machine_work_tiem: 6,
     machine_work_tiem_ot: 0,
     machine_name: "เครื่องทดสอบ",
@@ -53,7 +53,7 @@ const respData = [
 //12 ชมกลางคืน   8ชม ทำงานปกติ 4 ชมโอที
 //machine.push(plan.machine_name);
 const DashboardsIndex = () => {
-  const reData = (arr) => {
+  const reData = (arr, date = "24-09-2021") => {
     const findUniqueValues = (arr) => [...new Set(arr)];
     let machine_name = [];
     let plan_day = [];
@@ -64,25 +64,32 @@ const DashboardsIndex = () => {
     let total = 0;
     let sucess = [];
     let graphDay_sucess = [];
-    const test = arr.map((obj, index) => {
-      total =
-        total +
-        obj.freeze +
-        obj.machine_plan_time +
-        obj.machine_work_tiem +
-        obj.machine_work_tiem_ot;
-      machine_name.push(obj.machine_name);
-      ot.push(obj.machine_work_tiem_ot);
-      sucess.push(obj.machine_work_tiem);
-      obj.machine_work_tiem >= obj.machine_plan_time
-        ? plan.push(0)
-        : obj.machine_work_tiem <= obj.machine_plan_time
-        ? plan.push(obj.machine_plan_time - obj.machine_work_tiem)
-        : plan.push(obj.machine_plan_time);
-      freeze.push(obj.freeze);
-      plan_day.push(obj.machine_plan_day);
-      return { ...obj };
-    });
+
+    arr
+      .filter((obj, index) => {
+        return obj.machine_plan_day == date;
+      })
+      .map((obj, index) => {
+        total =
+          total +
+          obj.freeze +
+          obj.machine_plan_time +
+          obj.machine_work_tiem +
+          obj.machine_work_tiem_ot;
+        machine_name.push(obj.machine_name);
+        ot.push(obj.machine_work_tiem_ot);
+        sucess.push(obj.machine_work_tiem);
+        obj.machine_work_tiem >= obj.machine_plan_time
+          ? plan.push(0)
+          : obj.machine_work_tiem <= obj.machine_plan_time
+          ? plan.push(obj.machine_plan_time - obj.machine_work_tiem)
+          : plan.push(obj.machine_plan_time);
+        freeze.push(obj.freeze);
+        obj.machine_plan_day == date
+          ? plan_day.push(obj.machine_plan_day)
+          : plan_day.push();
+        return { ...obj };
+      });
 
     let graphDay = [
       {
