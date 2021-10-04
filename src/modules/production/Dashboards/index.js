@@ -43,9 +43,9 @@ const temp_api = [
         id: 1,
         machine_id: 1,
         freeze: 24,
-        machine_plan_time: 2,
+        machine_plan_time: 8,
         machine_plan_day: "01-09-2021",
-        machine_work_tiem: 4,
+        machine_work_tiem: 8,
         machine_work_tiem_ot: 2,
         machine_name: "เครื่อง mixer",
       },
@@ -53,9 +53,9 @@ const temp_api = [
         id: 2,
         machine_id: 2,
         freeze: 24,
-        machine_plan_time: 2,
+        machine_plan_time: 8,
         machine_plan_day: "01-09-2021",
-        machine_work_tiem: 4,
+        machine_work_tiem: 8,
         machine_work_tiem_ot: 2,
         machine_name: "เครื่อง Filling & Packing",
       },
@@ -70,7 +70,7 @@ const temp_api = [
         freeze: 24,
         machine_plan_time: 8,
         machine_plan_day: "02-09-2021",
-        machine_work_tiem: 6,
+        machine_work_tiem: 8,
         machine_work_tiem_ot: 2,
         machine_name: "เครื่อง mixer",
       },
@@ -80,7 +80,7 @@ const temp_api = [
         freeze: 24,
         machine_plan_time: 8,
         machine_plan_day: "02-09-2021",
-        machine_work_tiem: 4,
+        machine_work_tiem: 8,
         machine_work_tiem_ot: 2,
         machine_name: "เครื่อง Filling & Packing",
       },
@@ -116,7 +116,7 @@ const respData = [
     machine_id: 1,
     freeze: 24,
     break: 0,
-    machine_plan_time: 6,
+    machine_plan_time: 8,
     machine_plan_day: "24-09-2021",
     machine_work_tiem: 8,
     machine_work_tiem_ot: 2,
@@ -129,13 +129,159 @@ const respData = [
     break: 0,
     machine_plan_time: 8,
     machine_plan_day: "24-09-2021",
-    machine_work_tiem: 6,
-    machine_work_tiem_ot: 4,
+    machine_work_tiem: 8,
+    machine_work_tiem_ot: 2,
     machine_name: "เครื่อง Filling & Packing",
   },
 ];
 
 const DashboardsIndex = () => {
+  const renderbyDate = (date) => {
+    let plan = [];
+    let success = [];
+    let ot = [];
+    let tempOt = [];
+    let freeze = [];
+    let date_plan = [];
+    let machine_name = [];
+    let temp_testSum = temp_api
+      .filter((res) => res.date == date)
+      .reduce((a, c) => {
+        a.push({
+          ...c,
+          date_plan: date_plan.push(
+            c.detail
+              .filter((res) => res.machine_plan_day == date)
+              .map((res) => res.machine_plan_day)
+          ),
+          plan: c.detail
+            .filter((res) => res.machine_plan_day == date)
+            .reduce((acc, cur) => acc + cur.machine_plan_time, 0),
+          Cplan: plan.push(
+            c.detail
+              .filter((res) => res.machine_plan_day == date)
+              .map((res) =>
+                res.machine_work_tiem >= res.machine_plan_time
+                  ? 0
+                  : res.machine_work_tiem <= res.machine_plan_time
+                  ? res.machine_plan_time - res.machine_work_tiem
+                  : res.machine_plan_time
+              )
+            //.reduce((acc, cur) => acc + cur / c.detail.length, 0)
+          ),
+          Csuccess: success.push(
+            c.detail
+              .filter((res) => res.machine_plan_day == date)
+              .map((res) => res.machine_work_tiem)
+            //.reduce((acc, cur) => acc + cur.machine_work_tiem, 0)
+          ),
+          Cmachine_name: machine_name.push(
+            c.detail
+              .filter((res) => res.machine_plan_day == date)
+              .map((res) => res.machine_name)
+          ),
+        });
+        return a;
+      }, []);
+
+    let graphDay = [
+      // {
+      //   name: "sucess",
+      //   data: [
+      //     sucess.reduce((sum, number) => {
+      //       return sum + number / sucess.length;
+      //     }, 0),
+      //   ],
+      //   plan_day: findUniqueValues(plan_day),
+      //   colors: "#2ECC71",
+      // },
+      // {
+      //   name: "plan",
+      //   data: [
+      //     plan.reduce((sum, number) => {
+      //       return sum + number / plan.length;
+      //     }, 0),
+      //   ],
+      //   plan_day: findUniqueValues(plan_day),
+      //   colors: "#0000FF",
+      // },
+      // {
+      //   name: "tempOt",
+      //   data: [
+      //     tempOt.reduce((sum, number) => {
+      //       return sum + number / tempOt.length;
+      //     }, 0),
+      //   ],
+      //   plan_day: findUniqueValues(plan_day),
+      //   colors: "#FFFFFF",
+      // },
+      // {
+      //   name: "ot",
+      //   data: [
+      //     ot.reduce((sum, number) => {
+      //       return sum + number / ot.length;
+      //     }, 0),
+      //   ],
+      //   plan_day: findUniqueValues(plan_day),
+      //   colors: "#CC0000",
+      // },
+      // {
+      //   name: "freeze",
+      //   data: [
+      //     freeze.reduce((sum, number) => {
+      //       return sum + number / freeze.length;
+      //     }, 0),
+      //   ],
+      //   plan_day: findUniqueValues(plan_day),
+      //   colors: "#FFFFFF",
+      // },
+    ];
+    let graphMachine = [
+      {
+        name: "sucess",
+        data: success,
+        date_plan: date_plan,
+        colors: "#2ECC71",
+      },
+      {
+        name: "plan",
+        data: plan,
+        date_plan: date_plan,
+        colors: "#0000FF",
+      },
+      {
+        name: "freeze",
+        data: [0, 0],
+        date_plan: date_plan,
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: ot,
+        date_plan: date_plan,
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: freeze,
+        date_plan: date_plan,
+        colors: "#FFFFFF",
+      },
+    ];
+    console.log("graphDay :>> ", graphDay);
+    console.log("graphMachine :>> ", graphMachine);
+    console.log("temp_testSumRender :>> ", temp_testSum);
+    console.log("AllData :>> ", {
+      plan,
+      success,
+      ot,
+      freeze,
+      date_plan,
+      machine_name,
+    });
+    return { graphDay, graphMachine };
+  };
+
   const reData = (arr, date = "24-09-2021") => {
     const findUniqueValues = (arr) => [...new Set(arr)];
     const isCheck8hr = (value) => value >= 8;
@@ -323,97 +469,104 @@ const DashboardsIndex = () => {
     return { graphMachine, graphDay, graphMonth, test, tempOt, plan, sucess };
   };
   const tempData = (params) => {
-    let s = [];
-    let success = params.map((obj, index) => {
-      return obj.detail.map((objdetail, index) => {
-        return objdetail.machine_work_tiem;
-      });
-    });
-    let testsum = salesRecord.reduce((a, c) => {
+    let plan = [];
+    let success = [];
+    let ot = [];
+    let tempOt = [];
+    let freeze = [];
+    let date_plan = [];
+    let temp_testSum = params.reduce((a, c) => {
       a.push({
         ...c,
-        sumA: c.product
-          .filter((res) => res.name == "a")
-          .reduce((acc, cur) => acc + cur.value, 0),
-        SumB: c.product
-          .filter((res) => res.name == "b")
-          .reduce((acc, cur) => acc + cur.value, 0),
-      });
-      return a;
-    }, []);
-    let testSum = params.reduce((a, c) => {
-      a.push({
-        ...c,
+        date_plan: date_plan.push(c.date.substr(0, 10)),
         plan: c.detail
           .filter((res) => res.machine_plan_time >= 0)
           .reduce((acc, cur) => acc + cur.machine_plan_time, 0),
-        splan: s.push(
+        cplan: plan.push(
           c.detail
-            .filter((res) => res.machine_plan_time >= 0)
-            .reduce((acc, cur) => acc + cur.machine_plan_time, 0)
+            .map((res) =>
+              res.machine_work_tiem >= res.machine_plan_time
+                ? 0
+                : res.machine_work_tiem <= res.machine_plan_time
+                ? res.machine_plan_time - res.machine_work_tiem
+                : res.machine_plan_time
+            )
+            .reduce((acc, cur) => acc + cur / c.detail.length, 0)
         ),
-        sucess: c.detail
+        success: c.detail
           .filter((res) => res.machine_work_tiem >= 0)
           .reduce((acc, cur) => acc + cur.machine_work_tiem, 0),
+        csuccess: success.push(
+          c.detail
+            .filter((res) => res.machine_work_tiem >= 0)
+            .reduce(
+              (acc, cur) => acc + cur.machine_work_tiem / c.detail.length,
+              0
+            )
+        ),
+        ot: c.detail
+          .filter((res) => res.machine_work_tiem_ot >= 0)
+          .reduce(
+            (acc, cur) => acc + cur.machine_work_tiem_ot / c.detail.length,
+            0
+          ),
+        cot: ot.push(
+          c.detail
+            .filter((res) => res.machine_work_tiem_ot >= 0)
+            .reduce(
+              (acc, cur) => acc + cur.machine_work_tiem_ot / c.detail.length,
+              0
+            )
+        ),
+        ctempOt: tempOt.push(
+          c.detail.filter((res) => res.machine_work_tiem >= 0)
+          //.reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0)
+        ),
+        freeze: c.detail
+          .filter((res) => res.freeze >= 0)
+          .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0),
+        cfreeze: freeze.push(
+          c.detail
+            .filter((res) => res.freeze >= 0)
+            .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0)
+        ),
       });
       return a;
     }, []);
-    // {
-    // name: "sucess",
-    // data: [01,02,03,04,....30],
-    // machine_name: [เครื่อง1,เครื่อง2,],
-    // colors: "#2ECC71",
-    // },
-    // let DateLabel = params.map((obj, index) => {
-    //   return obj.date.substr(0, 2);
-    // });
 
-    // let DetailData = params.map((obj, index) => {
-    //   let machine_name = [];
-    //   let plan_date = [];
-    //   let sum_plan_time = [];
-    //   //loop นอก
-    //   sum_plan_time = obj.detail.map((data, index) => {
-    //     //loop ใน
-    //     sum_plan_time = sum_plan_time + data.machine_plan_time;
-    //     return data.machine_plan_time;
-    //   });
-    // });
-
-    //return { DateLabel, DetailData, };
-    let graphMachine = [
+    let graphMonth = [
       {
         name: "sucess",
-        data: testSum.sucess,
-        machine_name: "machine_name",
+        data: success,
+        date_plan: date_plan,
         colors: "#2ECC71",
       },
       {
         name: "plan",
-        data: "plan",
-        machine_name: "machine_name",
+        data: plan,
+        date_plan: date_plan,
         colors: "#0000FF",
       },
       {
         name: "freeze",
-        data: "tempOt",
-        machine_name: "machine_name",
+        data: [0, 0],
+        date_plan: date_plan,
         colors: "#FFFFFF",
       },
       {
         name: "ot",
-        data: "ot",
-        machine_name: "machine_name",
+        data: ot,
+        date_plan: date_plan,
         colors: "#CC0000",
       },
       {
         name: "freeze",
-        data: "freeze",
-        machine_name: "machine_name",
+        data: freeze,
+        date_plan: date_plan,
         colors: "#FFFFFF",
       },
     ];
-    return { graphMachine, success, testsum, testSum, s };
+    return { graphMonth, success, temp_testSum, plan, date_plan, tempOt };
   };
 
   console.log("temp_api_Fn :>> ", tempData(temp_api));
@@ -553,7 +706,7 @@ const DashboardsIndex = () => {
   const graphMachine = reData(respData).graphMachine;
   const graphDay = reData(respData).graphDay;
   const graphMonth = reData2(respData2).graphMonth;
-
+  const graph12Month = tempData(temp_api).graphMonth;
   console.log("reData2 :>> ", reData2(respData2));
   console.log("reData :>> ", reData(respData));
   console.log("temp_api_graphMachine :>> ", graphMachine);
@@ -827,9 +980,9 @@ const DashboardsIndex = () => {
     },
   };
   const state3 = {
-    series: [...reData2(respData2).graphMachine],
+    series: [...graph12Month],
     options: {
-      colors: [...graphMonth.map((color) => color.colors)],
+      colors: [...graph12Month.map((color) => color.colors)],
       chart: {
         width: "20%",
         type: "bar",
@@ -839,8 +992,17 @@ const DashboardsIndex = () => {
           show: false,
         },
         events: {
-          click: () => {
-            console.log("object :>> ");
+          click: (event, chartContext, config) => {
+            // console.log("event  :>> click", event);
+            // console.log("chartContext  :>> click", chartContext);
+            // console.log("config  :>> click", config);
+            if (event.target.localName == "tspan") {
+              renderbyDate(event.explicitOriginalTarget.textContent);
+              console.log(
+                "click_date  :>> ",
+                event.explicitOriginalTarget.textContent
+              );
+            }
           },
         },
       },
@@ -908,8 +1070,20 @@ const DashboardsIndex = () => {
         },
       },
       xaxis: {
-        categories: ["01", "02"],
+        categories: [...graph12Month[0].date_plan],
         Width: "20%",
+        title: {
+          text: "09-2021",
+          offsetX: 0,
+          offsetY: 0,
+          style: {
+            color: undefined,
+            fontSize: "12px",
+            fontFamily: "Helvetica, Arial, sans-serif",
+            fontWeight: 600,
+            cssClass: "apexcharts-xaxis-title",
+          },
+        },
       },
       grid: {
         show: false,
@@ -970,7 +1144,7 @@ const DashboardsIndex = () => {
         </Col>
         <Chart
           type='bar'
-          width={600}
+          width={200}
           height={300}
           series={state3.series}
           options={state3.options}></Chart>
