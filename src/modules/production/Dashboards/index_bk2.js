@@ -6,35 +6,6 @@ import Chart from "react-apexcharts";
 var future = new Date();
 future.setDate(future.getDate() + 30);
 console.log("future :>> ", future);
-const salesRecord = [
-  {
-    day: 1,
-    product: [
-      { name: "a", value: 5 },
-      { name: "b", value: 2 },
-      { name: "a", value: 7 },
-      { name: "b", value: 4 },
-    ],
-  },
-  {
-    day: 2,
-    product: [
-      { name: "b", value: 8 },
-      { name: "b", value: 6 },
-      { name: "a", value: 4 },
-      { name: "b", value: 1 },
-    ],
-  },
-  {
-    day: 3,
-    product: [
-      { name: "b", value: 10 },
-      { name: "b", value: 7 },
-      { name: "a", value: 9 },
-      { name: "b", value: 0 },
-    ],
-  },
-];
 const temp_api = [
   {
     date: "01-09-2021",
@@ -43,9 +14,9 @@ const temp_api = [
         id: 1,
         machine_id: 1,
         freeze: 24,
-        machine_plan_time: 2,
+        machine_plan_time: 6,
         machine_plan_day: "01-09-2021",
-        machine_work_tiem: 4,
+        machine_work_tiem: 0,
         machine_work_tiem_ot: 2,
         machine_name: "เครื่อง mixer",
       },
@@ -53,9 +24,9 @@ const temp_api = [
         id: 2,
         machine_id: 2,
         freeze: 24,
-        machine_plan_time: 2,
+        machine_plan_time: 8,
         machine_plan_day: "01-09-2021",
-        machine_work_tiem: 4,
+        machine_work_tiem: 0,
         machine_work_tiem_ot: 2,
         machine_name: "เครื่อง Filling & Packing",
       },
@@ -68,9 +39,9 @@ const temp_api = [
         id: 1,
         machine_id: 1,
         freeze: 24,
-        machine_plan_time: 8,
+        machine_plan_time: 6,
         machine_plan_day: "02-09-2021",
-        machine_work_tiem: 6,
+        machine_work_tiem: 0,
         machine_work_tiem_ot: 2,
         machine_name: "เครื่อง mixer",
       },
@@ -80,7 +51,7 @@ const temp_api = [
         freeze: 24,
         machine_plan_time: 8,
         machine_plan_day: "02-09-2021",
-        machine_work_tiem: 4,
+        machine_work_tiem: 0,
         machine_work_tiem_ot: 2,
         machine_name: "เครื่อง Filling & Packing",
       },
@@ -134,7 +105,22 @@ const respData = [
     machine_name: "เครื่อง Filling & Packing",
   },
 ];
+//เช่น 5941 และ 5942
+//มีโอทีรวม 2 ชั่วโมง ของทั้งหมด 2 แท่ง เท่ากับ 8 ชั่วโมง
+//ตอนเอา โอที มาวาดในแท่งซ้าย
+//ก็ต้องเป็นสัดส่วน 2 ต่อ 8
+//แต่แท่งสูงได้แค่ 4
+//สีแดงเลยสูงแต่ 1/4
 
+//สีน้ำเงิน น่าจะแท่งละ 4 ชั่วโมง
+//จะได้เท่ากับ 8 / 16
+//แท่งซ้าย จะได้ 4/8
+
+// 8 ชม คูนจำนวนแท่ง
+//แบ่งกราฟ เป็น 12ชม เช้า   และ 12 ชมกลางคืน
+//12 ชมเช้า      8ชม ทำงานปกติ 4 ชมโอที
+//12 ชมกลางคืน   8ชม ทำงานปกติ 4 ชมโอที
+//machine.push(plan.machine_name);
 const DashboardsIndex = () => {
   const reData = (arr, date = "24-09-2021") => {
     const findUniqueValues = (arr) => [...new Set(arr)];
@@ -322,101 +308,6 @@ const DashboardsIndex = () => {
     ];
     return { graphMachine, graphDay, graphMonth, test, tempOt, plan, sucess };
   };
-  const tempData = (params) => {
-    let s = [];
-    let success = params.map((obj, index) => {
-      return obj.detail.map((objdetail, index) => {
-        return objdetail.machine_work_tiem;
-      });
-    });
-    let testsum = salesRecord.reduce((a, c) => {
-      a.push({
-        ...c,
-        sumA: c.product
-          .filter((res) => res.name == "a")
-          .reduce((acc, cur) => acc + cur.value, 0),
-        SumB: c.product
-          .filter((res) => res.name == "b")
-          .reduce((acc, cur) => acc + cur.value, 0),
-      });
-      return a;
-    }, []);
-    let testSum = params.reduce((a, c) => {
-      a.push({
-        ...c,
-        plan: c.detail
-          .filter((res) => res.machine_plan_time >= 0)
-          .reduce((acc, cur) => acc + cur.machine_plan_time, 0),
-        splan: s.push(
-          c.detail
-            .filter((res) => res.machine_plan_time >= 0)
-            .reduce((acc, cur) => acc + cur.machine_plan_time, 0)
-        ),
-        sucess: c.detail
-          .filter((res) => res.machine_work_tiem >= 0)
-          .reduce((acc, cur) => acc + cur.machine_work_tiem, 0),
-      });
-      return a;
-    }, []);
-    // {
-    // name: "sucess",
-    // data: [01,02,03,04,....30],
-    // machine_name: [เครื่อง1,เครื่อง2,],
-    // colors: "#2ECC71",
-    // },
-    // let DateLabel = params.map((obj, index) => {
-    //   return obj.date.substr(0, 2);
-    // });
-
-    // let DetailData = params.map((obj, index) => {
-    //   let machine_name = [];
-    //   let plan_date = [];
-    //   let sum_plan_time = [];
-    //   //loop นอก
-    //   sum_plan_time = obj.detail.map((data, index) => {
-    //     //loop ใน
-    //     sum_plan_time = sum_plan_time + data.machine_plan_time;
-    //     return data.machine_plan_time;
-    //   });
-    // });
-
-    //return { DateLabel, DetailData, };
-    let graphMachine = [
-      {
-        name: "sucess",
-        data: testSum.sucess,
-        machine_name: "machine_name",
-        colors: "#2ECC71",
-      },
-      {
-        name: "plan",
-        data: "plan",
-        machine_name: "machine_name",
-        colors: "#0000FF",
-      },
-      {
-        name: "freeze",
-        data: "tempOt",
-        machine_name: "machine_name",
-        colors: "#FFFFFF",
-      },
-      {
-        name: "ot",
-        data: "ot",
-        machine_name: "machine_name",
-        colors: "#CC0000",
-      },
-      {
-        name: "freeze",
-        data: "freeze",
-        machine_name: "machine_name",
-        colors: "#FFFFFF",
-      },
-    ];
-    return { graphMachine, success, testsum, testSum, s };
-  };
-
-  console.log("temp_api_Fn :>> ", tempData(temp_api));
   const reData2 = (arr) => {
     const findUniqueValues = (arr) => [...new Set(arr)];
     const isCheck8hr = (value) => value >= 8;
@@ -549,14 +440,18 @@ const DashboardsIndex = () => {
     ];
     return { graphMonth, graphMachine, sucess, plan_day, date };
   };
-
+  // const reDataGraphLeft = (params) => {
+  //   let callData = reData(respData);
+  //   console.log("callData :>> ", callData);
+  // };
+  // reDataGraphLeft();
+  console.log("reData2 :>> ", reData2(respData2));
+  console.log("reData :>> ", reData(respData));
   const graphMachine = reData(respData).graphMachine;
   const graphDay = reData(respData).graphDay;
   const graphMonth = reData2(respData2).graphMonth;
-
-  console.log("reData2 :>> ", reData2(respData2));
-  console.log("reData :>> ", reData(respData));
-  console.log("temp_api_graphMachine :>> ", graphMachine);
+  //const graphMonth = reData(respData).graphMonth;
+  console.log("graphMachine :>> ", graphMachine);
   console.log("graphDay :>> ", graphDay);
   const state = {
     series: [...graphMachine],
@@ -908,7 +803,7 @@ const DashboardsIndex = () => {
         },
       },
       xaxis: {
-        categories: ["01", "02"],
+        categories: [...graphMonth[0].plan_day],
         Width: "20%",
       },
       grid: {
