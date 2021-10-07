@@ -1,7 +1,7 @@
 /** @format */
 
 import { Col, Row, Tag } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import Chart from "react-apexcharts";
 var future = new Date();
 future.setDate(future.getDate() + 30);
@@ -136,7 +136,7 @@ const respData = [
 ];
 
 const DashboardsIndex = () => {
-  const renderbyDate = (date) => {
+  const renderbyDate = (date = "01-09-2021") => {
     let plan = [];
     let success = [];
     let ot = [];
@@ -240,31 +240,31 @@ const DashboardsIndex = () => {
       {
         name: "sucess",
         data: success,
-        date_plan: date_plan,
+        machine_name: machine_name,
         colors: "#2ECC71",
       },
       {
         name: "plan",
         data: plan,
-        date_plan: date_plan,
+        machine_name: machine_name,
         colors: "#0000FF",
       },
       {
         name: "freeze",
         data: [0, 0],
-        date_plan: date_plan,
+        machine_name: machine_name,
         colors: "#FFFFFF",
       },
       {
         name: "ot",
         data: ot,
-        date_plan: date_plan,
+        machine_name: machine_name,
         colors: "#CC0000",
       },
       {
         name: "freeze",
         data: freeze,
-        date_plan: date_plan,
+        machine_name: machine_name,
         colors: "#FFFFFF",
       },
     ];
@@ -703,14 +703,19 @@ const DashboardsIndex = () => {
     return { graphMonth, graphMachine, sucess, plan_day, date };
   };
 
+  useEffect(() => {
+    renderbyDate();
+  }, []);
   const graphMachine = reData(respData).graphMachine;
   const graphDay = reData(respData).graphDay;
   const graphMonth = reData2(respData2).graphMonth;
   const graph12Month = tempData(temp_api).graphMonth;
+  const renderGraphMachine = renderbyDate().graphMachine;
   console.log("reData2 :>> ", reData2(respData2));
   console.log("reData :>> ", reData(respData));
   console.log("temp_api_graphMachine :>> ", graphMachine);
   console.log("graphDay :>> ", graphDay);
+  console.log("renderGraphMachine :>> ", renderGraphMachine);
   const state = {
     series: [...graphMachine],
     options: {
@@ -790,7 +795,7 @@ const DashboardsIndex = () => {
         },
       },
       xaxis: {
-        categories: [...graphMachine[0].machine_name],
+        categories: [renderGraphMachine[0].machine_name],
         Width: "20%",
         labels: {
           show: true,
