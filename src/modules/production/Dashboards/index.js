@@ -282,7 +282,7 @@ const DashboardsIndex = () => {
       machine_name,
     });
     console.log("machine_name :>> ", ...machine_name);
-    console.log("machine_name sData:>> ", sData);
+    //console.log("machine_name sData:>> ", sData);
     return { graphDay, graphMachine, machine_name };
   };
 
