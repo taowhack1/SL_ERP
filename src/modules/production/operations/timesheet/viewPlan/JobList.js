@@ -2,14 +2,12 @@ import React, { useContext } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { Input, Table } from "antd";
 import Text from "antd/lib/typography/Text";
-import { useFetch } from "../../../../../include/js/customHooks";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   resetTimesheetCtrl,
   setTimesheet,
 } from "../../../../../actions/production/timesheetActions";
 import { TimesheetContext } from "../TimeSheet";
-const apiMachineJobList = `/production/machine/plan_job`;
 const JobList = () => {
   const dispatch = useDispatch();
   const {
@@ -18,17 +16,6 @@ const JobList = () => {
     plan_job_id: selected_plan_job_id,
   } = useContext(TimesheetContext);
   const { plan_job_detail } = workCenter || {};
-  console.log("JobList", plan_job_detail, workCenter);
-  // const {
-  //   data: machineData,
-  //   error,
-  //   loading,
-  // } = useFetch(
-  //   `${apiMachineJobList}/${workCenterID}`,
-  //   workCenterID ? false : true
-  // );
-  // console.log("machineData", machineData);
-  // const { plan_job_detail } = machineData || {};
   const onSelectJob = (plan_job_id) => {
     dispatch(setTimesheet({ plan_job_id, selectedWorker: [] }));
     dispatch(resetTimesheetCtrl());
@@ -71,7 +58,13 @@ const columns = ({ onSelectJob }) => [
     align: "left",
     render: (
       value,
-      { plan_job_id, plan_job_no, plan_job_date, plan_job_plan_ready }
+      {
+        plan_job_id,
+        plan_job_no,
+        plan_job_date,
+        plan_job_plan_ready,
+        tg_trans_close_id,
+      }
     ) => {
       return (
         <div
@@ -88,7 +81,10 @@ const columns = ({ onSelectJob }) => [
           <div
             style={{
               marginRight: 20,
-              backgroundColor: plan_job_plan_ready ? "#2CDB00" : "red",
+              backgroundColor: getStatusColor({
+                plan_job_plan_ready,
+                tg_trans_close_id,
+              }),
               width: "14px",
               height: "14px",
               borderRadius: "50%",
@@ -102,3 +98,13 @@ const columns = ({ onSelectJob }) => [
     },
   },
 ];
+
+const getStatusColor = ({ tg_trans_close_id, plan_job_plan_ready }) => {
+  console.log("status color", tg_trans_close_id, plan_job_plan_ready);
+  if ([3].includes(tg_trans_close_id)) return "#2CDB00";
+  if (plan_job_plan_ready) {
+    return "#1890FF";
+  } else {
+    return "red";
+  }
+};

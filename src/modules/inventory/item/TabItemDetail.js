@@ -539,6 +539,19 @@ const TabItemDetail = ({
               )}
             </Col>
           </Row>
+          <Row className="col-2 row-margin-vertical">
+            <Col span={2}></Col>
+            <Col span={6}>
+              <CustomLabel label={"Avg. Price :"} readOnly={readOnly} />
+            </Col>
+            <Col span={16} className={"text-left"}>
+              <Text className="text-view pd-right-3">
+                {data_head.tg_item_cost_avg
+                  ? convertDigit(data_head.tg_item_cost_avg, 4)
+                  : "-"}
+              </Text>
+            </Col>
+          </Row>
 
           <Row className="col-2 row-margin-vertical">
             <Col span={2}></Col>

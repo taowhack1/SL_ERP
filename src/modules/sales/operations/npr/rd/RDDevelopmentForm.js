@@ -16,6 +16,7 @@ import useKeepLogs from "../../../../logs/useKeepLogs";
 import Authorize from "../../../../system/Authorize";
 import moment from "moment";
 import { SyncOutlined } from "@ant-design/icons";
+import Swal from "sweetalert2";
 
 const initialStateFormula = {
   id: 0,
@@ -308,11 +309,36 @@ const RDDevelopmentForm = ({
   };
 
   const onPrintLabel = () => {
+    Swal.fire({
+      title: "กรุณาระบุวันที่ MFD.",
+      text: "",
+      confirmButtonText: "ปริ้นท์",
+      cancelButtonText: "ยกเลิก",
+      showCancelButton: true,
+      inputLabel: "วันที่ MFD. :",
+      input: "text",
+      inputValue: moment().format("DD/MM/YYYY"),
+      inputAttributes: {
+        placeholder: "วัน / เดือน / ปี",
+      },
+      inputValidator: (val) => {
+        if (!val) {
+          return "กรุณาระบุวันที่ MFD";
+        } else {
+          return false;
+        }
+      },
+    }).then(({ isConfirmed, value }) => {
+      if (isConfirmed) {
+        console.log("mdf_date", value);
+        window.open(
+          `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula_qr_code.aspx?npr_formula_no=${state.npr_formula_no}&print_date=${value}`,
+          false
+        );
+      }
+    });
+
     // keepLog.keep_log_action("Edit Formula Label : ", state.npr_formula_no);
-    window.open(
-      `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula_qr_code.aspx?npr_formula_no=${state.npr_formula_no}`,
-      false
-    );
   };
 
   const readOnly = formMethod === formView;

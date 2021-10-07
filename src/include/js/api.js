@@ -18,6 +18,7 @@ export const api_qa_method = `/qa/qa_method`;
 
 //vendor
 export const api_vendor = `/purchase/vendor`;
+export const api_vendor_list = `/list/vendor`;
 export const api_vendor_group = `/list/vendor/group`;
 export const api_vendor_category = `/list/vendor/category`;
 export const api_vat_id = `/list/vat`;

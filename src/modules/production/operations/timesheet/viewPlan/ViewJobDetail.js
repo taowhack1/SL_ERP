@@ -20,11 +20,21 @@ const ViewJobDetail = () => {
     plan_job_plan_time,
     plan_job_plan_worker,
     shift_job_name,
+    tg_trans_close_id,
   } = job ? job.length && job[0] : {};
 
   return (
     <>
       <Spin spinning={loading}>
+        {[3].includes(tg_trans_close_id) && (
+          <Row className="col-2 mt-1 mb-1">
+            <Col md={24} className="text-center">
+              <h2 style={{ color: "green" }}>
+                <b>งานนี้ถูกดำเนินการเรียบร้อยแล้ว</b>
+              </h2>
+            </Col>
+          </Row>
+        )}
         <Row className="col-2 mt-1">
           <Col lg={12} sm={24} className={"col-border-right"}>
             <Row className="col-2 mt-1 mb-1">

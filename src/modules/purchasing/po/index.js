@@ -1,51 +1,52 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table, Button } from "antd";
-import MainLayout from "../../components/MainLayout";
-import { po_list_columns } from "./config/po";
+import MainLayout from "../../../components/MainLayout";
+import { po_list_columns } from "../config/po";
 import {
   get_po_list,
   reset_po_data,
   get_po_by_id,
   get_open_po_list,
   filterPO,
-} from "../../actions/purchase/PO_Actions";
-import { reset_comments } from "../../actions/comment&log";
+} from "../../../actions/purchase/PO_Actions";
+import { reset_comments } from "../../../actions/comment&log";
 import $ from "jquery";
 
-import useKeepLogs from "../logs/useKeepLogs";
-import Authorize from "../system/Authorize";
-import PRList from "./operations/po/PRList";
-import { sortData } from "../../include/js/function_main";
-const PurchaseOrders = (props) => {
+import useKeepLogs from "../../logs/useKeepLogs";
+import Authorize from "../../system/Authorize";
+import PRList from "../operations/po/PRList";
+import { sortData } from "../../../include/js/function_main";
+import { useFetch } from "../../../include/js/customHooks";
+import { AppContext } from "../../../include/js/context";
+
+const apiGetPO = `/purchase/po`;
+const PO = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const keepLog = useKeepLogs();
   const auth = useSelector((state) => state.auth.authData);
   const current_menu = useSelector((state) => state.auth.currentMenu);
   const dispatch = useDispatch();
-
+  const {
+    auth: { user_name },
+  } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [rowClick, setRowClick] = useState(false);
 
-  useEffect(() => {
-    dispatch(get_po_list(auth.user_name));
-    // dispatch(get_open_po_list());
-    dispatch(reset_po_data());
-    return () => {
-      dispatch(reset_comments());
-      setData([]);
-    };
-  }, [dispatch]);
+  const { data: poList, loading: getPOLoading } = useFetch(
+    `${apiGetPO}/${user_name}&0`,
+    !user_name
+  );
 
-  const { po_list, filter } = useSelector((state) => state.purchase.po);
-  const { pageSize, page, keyword, vendor_id } = filter || {};
+  const { filter } = useSelector((state) => state.purchase.po);
+  const { pageSize, page, keyword } = filter || {};
 
-  const getSearchData = (keyword) => {
+  const getSearchData = (data, keyword) => {
     const search_data = sortData(
       keyword
-        ? po_list?.filter(
+        ? data?.filter(
             (po) =>
               po?.po_no?.indexOf(keyword) >= 0 ||
               po?.vendor_no_name?.indexOf(keyword) >= 0 ||
@@ -53,25 +54,31 @@ const PurchaseOrders = (props) => {
               po?.po_created?.indexOf(keyword) >= 0 ||
               po?.po_description?.indexOf(keyword) >= 0
           )
-        : po_list
+        : data
     );
 
     return sortData(search_data);
   };
-  useEffect(() => {
-    console.log("Filter Keyword");
-    setLoading(true);
-    const respSearch = getSearchData(keyword);
-    setData(respSearch);
-    setLoading(false);
-  }, [keyword]);
+
+  // useEffect(() => {
+  //   if(!getPOLoading){
+  //     console.log("Filter Keyword");
+  //   setLoading(true);
+  //   const respSearch = getSearchData(keyword);
+  //   setData(respSearch);
+  //   setLoading(false);
+  //   }
+  // }, [keyword,getPOLoading]);
 
   useEffect(() => {
-    console.log("useEffect set po_list");
-    const respSearch = getSearchData(keyword);
-    setData(respSearch);
-    return () => setData([]);
-  }, [po_list]);
+    if (!getPOLoading) {
+      setLoading(true);
+      console.log("Filter Keyword");
+      const respSearch = getSearchData(poList, keyword);
+      setData(respSearch);
+      setLoading(false);
+    }
+  }, [keyword, poList, getPOLoading]);
 
   const [data, setData] = useState([]);
 
@@ -88,7 +95,7 @@ const PurchaseOrders = (props) => {
     show: true,
     breadcrumb: ["Home", "Purchase Orders"],
     search: true,
-    create: "/purchase/po/create",
+    create: "/purchase/po/new",
     buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     edit: {},
     disabledEditBtn: !rowClick,
@@ -127,7 +134,7 @@ const PurchaseOrders = (props) => {
               columns={po_list_columns}
               dataSource={data}
               rowKey={"po_id"}
-              loading={loading}
+              loading={getPOLoading || loading}
               onChange={onChange}
               size="small"
               pagination={{
@@ -147,7 +154,7 @@ const PurchaseOrders = (props) => {
                     dispatch(get_po_by_id(record.po_id, auth.user_name));
                     keepLog.keep_log_action(record.po_no);
                     props.history.push({
-                      pathname: "/purchase/po/view/" + record.po_id,
+                      pathname: "/purchase/po/" + record.po_id,
                     });
                   },
                 };
@@ -160,4 +167,4 @@ const PurchaseOrders = (props) => {
   );
 };
 
-export default withRouter(PurchaseOrders);
+export default withRouter(PO);

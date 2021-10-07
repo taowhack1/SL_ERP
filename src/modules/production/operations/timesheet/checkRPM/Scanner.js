@@ -1,58 +1,78 @@
 import { Col, Input, message, Row, Spin } from "antd";
 import Text from "antd/lib/typography/Text";
-import React, { useContext, useState } from "react";
-import { getBarcodeDetail } from "../../../../../actions/production/timesheetActions";
+import React, { useContext, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  getBarcodeDetail,
+  scanTimesheetRPMChecking,
+  setScanTimesheetRPMChecking,
+} from "../../../../../actions/production/timesheetActions";
 import CustomLabel from "../../../../../components/CustomLabel";
 import { useFetch } from "../../../../../include/js/customHooks";
+import { convertDigit } from "../../../../../include/js/main_config";
 import { TimesheetContext } from "../TimeSheet";
 const initialState = {
   item_part_no: null,
   weight_machine_net: null,
   item_no: null,
 };
-
-const Scanner = () => {
+let countFullfill = 0;
+const Scanner = ({ formulaPart = [] }) => {
+  const dispatch = useDispatch();
   // const { plan } = form;
+  const {
+    plan_job_id,
+    rpmChecking: { progress, bulkSpec },
+  } = useContext(TimesheetContext);
+
   const [barcode, setBarcode] = useState(initialState);
   const [loading, setLoading] = useState(false);
-  const getBarcodeRMDetail = async (barcode) => {
-    // const el = document.getElementById("input_barcode");
-    // setLoading(true);
-    // const resp = await getBarcodeDetail(barcode);
-    // console.log("GET RM BARCODE ", resp);
-    // if (resp.success) {
-    //   console.log(resp.data);
-    //   if (resp.data.length) {
-    //     const data = resp.data[0];
-    //     if (data.mrp_id === plan.mrp_id) {
-    //       if (
-    //         form.rmChecking.RMList.find(
-    //           (obj) => obj.weight_machine_no === data.weight_machine_no
-    //         ).isScanned
-    //       ) {
-    //         message.warning("This Barcode is used.");
-    //       } else {
-    //         message.success("Material has been filled.");
-    //         console.log("GET_BARCODE", data);
-    //         setBarcode({
-    //           item_no: data.item_no,
-    //           item_part_no: data.item_part_no,
-    //           weight_machine_net_scan: data.weight_machine_net_scan,
-    //         });
-    //         tsFunction("SCAN_BARCODE", data);
-    //       }
-    //     } else {
-    //       message.error("Error !! Job not match.");
-    //     }
-    //   } else {
-    //     message.warning("Barcode not found.");
-    //   }
-    // }
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   el.select();
-    // }, 500);
+  const [state, setState] = useState([]);
+
+  // useEffect(() => {
+  //   setState(formulaPart || []);
+  // }, [formulaPart]);
+
+  const onScanBarcode = async (weight_machine_no) => {
+    const el = document.getElementById("input_barcode");
+    setLoading(true);
+    // if (!bulkSpec.length) return message.error("Missing part of formula.");
+    const resp = await getBarcodeDetail(weight_machine_no);
+    if (resp.success) {
+      // do compare redux
+      const { weight_machine_id, weight_machine_net_scan } = resp?.data[0];
+      dispatch(
+        scanTimesheetRPMChecking(
+          bulkSpec.map((obj) =>
+            obj.weight_machine_id === weight_machine_id
+              ? {
+                  ...obj,
+                  weight_machine_net_scan,
+                  isFullfill:
+                    convertDigit(obj.weight_machine_net, 6) ===
+                    convertDigit(weight_machine_net_scan, 6),
+                }
+              : obj
+          )
+        )
+      );
+
+      message.success("Success.");
+    }
+    setLoading(false);
+    el.select();
   };
+
+  useEffect(() => {
+    const progress =
+      (bulkSpec.filter((obj) => obj?.isFullfill)?.length * 100) /
+      bulkSpec.length;
+    console.log(`progress : ${progress}`);
+    dispatch(setScanTimesheetRPMChecking({ progress }));
+    if (convertDigit(progress, 2) === 100.0) {
+      message.success("วัตถุดิบครบแล้ว", 4);
+    }
+  }, [bulkSpec, dispatch]);
   return (
     <>
       <div
@@ -87,7 +107,7 @@ const Scanner = () => {
                     style={{ backgroundColor: "#ECFFF8" }}
                     onChange={(e) =>
                       e.target.value?.length === 13 &&
-                      getBarcodeRMDetail(e.target.value)
+                      onScanBarcode(e.target.value)
                     }
                     maxLength={13}
                   />
@@ -125,7 +145,7 @@ const Scanner = () => {
                 <Col span={16} className="text-right">
                   <Spin spinning={loading}>
                     <Text className="text-value mr-2">
-                      {barcode.weight_machine_net_scan || "-"}
+                      {barcode?.weight_machine_net_scan || "-"}
                     </Text>
                   </Spin>
                 </Col>

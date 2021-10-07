@@ -9,8 +9,11 @@ import {
   CLOSE_TIMESHEET,
   GET_MACHINE_PLAN,
   GET_TIMESHEET_SCAN_RM_LIST,
+  RESET_SCAN_TIMESHEET_RPM_CHECKING,
   RESET_TIMESHEET,
   RESET_TIMESHEET_CONTROLLER,
+  SCAN_TIMESHEET_RPM_CHECKING,
+  SET_SCAN_TIMESHEET_RPM_CHECKING,
   SET_TIMESHEET,
   SET_TIMESHEET_CONTROLLER,
   START_TIMESHEET,
@@ -93,7 +96,12 @@ export const initialState = {
       workCenterID: null,
       plan_job_id: null,
       step: 1,
+      closeJob: false,
       selectedWorker: [],
+      rpmChecking: {
+        progess: 0,
+        bulkSpec: [],
+      },
       controller: {
         timesheetID: null,
         on_time_sheet_type_id: null,
@@ -341,6 +349,45 @@ export default (state = initialState, action) => {
           timesheet: {
             ...state?.operations?.timesheet,
             controller: initialState.operations.timesheet.controller,
+          },
+        },
+      };
+    case SET_SCAN_TIMESHEET_RPM_CHECKING:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          timesheet: {
+            ...state?.operations?.timesheet,
+            rpmChecking: {
+              ...state?.operations?.timesheet?.rpmChecking,
+              ...action.payload,
+            },
+          },
+        },
+      };
+    case SCAN_TIMESHEET_RPM_CHECKING:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          timesheet: {
+            ...state?.operations?.timesheet,
+            rpmChecking: {
+              ...state?.operations?.timesheet?.rpmChecking,
+              bulkSpec: action.payload,
+            },
+          },
+        },
+      };
+    case RESET_SCAN_TIMESHEET_RPM_CHECKING:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          timesheet: {
+            ...state?.operations?.timesheet,
+            rpmChecking: initialState.operations.timesheet.rpmChecking,
           },
         },
       };

@@ -9,7 +9,7 @@ import { header_config } from "../main_config";
 
 const useFetch = (url, missingParams = false) => {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [trigger, setTrigger] = useState(false);
 

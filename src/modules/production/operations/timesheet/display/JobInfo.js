@@ -1,33 +1,19 @@
-import { Button, Col, message, Row, Spin, Tag } from "antd";
+import { Button, Col, Row, Spin, Tag } from "antd";
 import Text from "antd/lib/typography/Text";
 import moment from "moment";
-import React, { useContext, useState } from "react";
-import { useDispatch } from "react-redux";
-import { setTimesheetCtrl } from "../../../../../actions/production/timesheetActions";
+import React, { useContext } from "react";
 import CustomLabel from "../../../../../components/CustomLabel";
-import { getStatusByName } from "../../../../../include/js/function_main";
 import { convertDigit } from "../../../../../include/js/main_config";
 import { TimesheetContext } from "../TimeSheet";
+import { TSCtrlContext } from "../TimesheetDisplay";
 const JobInfo = () => {
-  const dispatch = useDispatch();
   const {
     job,
     getJobLoading,
     selectedWorker,
     controller: { timesheetID, on_time_sheet_type_id },
   } = useContext(TimesheetContext);
-
-  const [loading, setLoading] = useState(false);
-
-  const onConfirmJob = ({ job_order_no }) => {
-    setLoading(true);
-    setTimeout(() => {
-      dispatch(setTimesheetCtrl({ timesheetID: 1 }));
-      message.success(`ยืนยัน Job : ${job_order_no} เสร็จสิ้น`);
-      message.info(`แผงควบคุมการทำงานสามารถใช้งานได้แล้ว.`, 6);
-      setLoading(false);
-    }, 1200);
-  };
+  const { onConfirmJob, loading, tsLog } = useContext(TSCtrlContext);
 
   const {
     job_order_no,
@@ -44,8 +30,22 @@ const JobInfo = () => {
     shift_job_name,
   } = job ? job.length && job[0] : {};
 
+  const {
+    time_sheet_no,
+    time_sheet_id,
+    tg_time_sheet_worker,
+    time_sheet_updated,
+    time_sheet_status_name,
+    tg_time_sheet_time,
+    tg_time_sheet_qty,
+    time_sheet_user_detail,
+    // time_sheet_log_detail,
+  } = tsLog?.data || {};
+
   const getTimesheetStatus = (id) => {
     switch (true) {
+      case id === 0:
+        return "ยืนยัน Job แล้ว";
       case id === 1:
         return "อยู่ระหว่างตั้งค่าเครื่อง";
       case id === 2:
@@ -62,6 +62,7 @@ const JobInfo = () => {
         return "รอดำเนินการ";
     }
   };
+  console.log("tsLog", tsLog);
   return (
     <>
       <Spin spinning={getJobLoading}>
@@ -135,7 +136,9 @@ const JobInfo = () => {
                 <CustomLabel label={"Period :"} />
               </Col>
               <Col md={16}>
-                <Text className="pre-wrap">{`${"03:15:00"} / `}</Text>
+                <Text className="pre-wrap">{`${
+                  tg_time_sheet_time || "00:00:00"
+                } / `}</Text>
                 <Text strong>{plan_job_plan_time}</Text>
               </Col>
             </Row>
@@ -144,8 +147,8 @@ const JobInfo = () => {
                 <CustomLabel label={"Worker :"} />
               </Col>
               <Col md={16}>
-                <Text className="pre-wrap">{`${selectedWorker.length} / `}</Text>
-                <Text strong>{plan_job_plan_worker}</Text>
+                <Text className="pre-wrap">{`${selectedWorker.length}`}</Text>
+                <Text strong>{` / ${plan_job_plan_worker}`}</Text>
               </Col>
             </Row>
             <Row className="col-2 mt-1 mb-1">
@@ -154,10 +157,10 @@ const JobInfo = () => {
               </Col>
               <Col md={16}>
                 <Text className="pre-wrap require">{`${convertDigit(
-                  25,
+                  tg_time_sheet_qty || 0,
                   6
-                )} / `}</Text>
-                <Text strong>{`${convertDigit(
+                )}`}</Text>
+                <Text strong>{` / ${convertDigit(
                   job_order_qty,
                   6
                 )} ${uom_no}`}</Text>

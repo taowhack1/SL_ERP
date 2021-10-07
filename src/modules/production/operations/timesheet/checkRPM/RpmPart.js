@@ -1,29 +1,40 @@
 import { CheckOutlined } from "@ant-design/icons";
-import Text from "antd/lib/typography/Text";
 import React, { useContext } from "react";
 import CustomLabel from "../../../../../components/CustomLabel";
 import CustomTable from "../../../../../components/CustomTable";
-import { useFetch } from "../../../../../include/js/customHooks";
 import { convertDigit } from "../../../../../include/js/main_config";
 import { TimesheetContext } from "../TimeSheet";
-const apiGetPartScanner = `/production/time_sheet/machine_process_scan`;
 
-const RpmPart = () => {
-  const { plan_job_id } = useContext(TimesheetContext);
+const RpmPart = (props) => {
   const {
-    data: formulaPart,
-    error,
-    loading: getPartLoading,
-  } = useFetch(
-    `${apiGetPartScanner}/${plan_job_id}`,
-    plan_job_id ? false : true
-  );
+    rpmChecking: { bulkSpec = [] },
+    getLoadingFormula,
+  } = useContext(TimesheetContext);
+
+  const compareQty = ({
+    weight_machine_net,
+    weight_machine_net_scan,
+    isFullfill,
+  }) => {
+    if (!bulkSpec.length) {
+      return <span className="require">-- ไม่พบข้อมูล --</span>;
+    } else {
+      const weight1 = convertDigit(weight_machine_net, 6);
+      const weight2 = convertDigit(weight_machine_net_scan, 6);
+
+      if (isFullfill) return <CheckOutlined style={{ color: "green" }} />;
+      if (weight1 > weight2)
+        return <span className="require">น้ำหนักยังไม่พอ</span>;
+      if (weight1 < weight2)
+        return <span className="require">น้ำหนักเกิน!</span>;
+    }
+  };
   return (
     <>
       <CustomTable
-        loading={getPartLoading}
-        columns={RPMCheckColumns()}
-        dataSource={formulaPart}
+        loading={getLoadingFormula}
+        columns={RPMCheckColumns({ bulkSpec, compareQty })}
+        dataSource={bulkSpec}
         rowKey="weight_machine_id"
         pageSize={1000}
       />
@@ -33,7 +44,7 @@ const RpmPart = () => {
 
 export default React.memo(RpmPart);
 
-const RPMCheckColumns = () => [
+const RPMCheckColumns = ({ bulkSpec, compareQty }) => [
   {
     title: "No.",
     width: "7%",
@@ -63,6 +74,16 @@ const RPMCheckColumns = () => [
   {
     title: (
       <div className="text-center">
+        <CustomLabel label="Barcode" />
+      </div>
+    ),
+    width: "15%",
+    align: "center",
+    dataIndex: "weight_machine_no",
+  },
+  {
+    title: (
+      <div className="text-center">
         <CustomLabel label="Require. Weight." />
       </div>
     ),
@@ -80,7 +101,10 @@ const RPMCheckColumns = () => [
     width: "15%",
     align: "right",
     dataIndex: "weight_machine_net_scan",
-    render: (val) => convertDigit(val || 0, 6),
+    render: (val, record, index) =>
+      bulkSpec.length
+        ? convertDigit(bulkSpec[index]?.weight_machine_net_scan || 0, 6)
+        : convertDigit(0, 6),
   },
   {
     title: "UOM",
@@ -92,13 +116,7 @@ const RPMCheckColumns = () => [
     title: "Status",
     width: "15%",
     align: "center",
-    render: (_, record) =>
-      record.weight_machine_net_scan === record.weight_machine_net ? (
-        <CheckOutlined style={{ color: "#2CDB00" }} />
-      ) : record.weight_machine_net_scan < record.weight_machine_net ? (
-        <Text className="require">จำนวนยังไม่ครบ !</Text>
-      ) : (
-        <Text className="require">จำนวนเกิน !</Text>
-      ),
+    render: (_, record, index) =>
+      compareQty(record, bulkSpec.length ? [bulkSpec[index]] : []),
   },
 ];

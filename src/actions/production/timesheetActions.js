@@ -26,6 +26,10 @@ const CLOSE_TIMESHEET = "CLOSE_TIMESHEET";
 const SET_TIMESHEET_CONTROLLER = "SET_TIMESHEET_CONTROLLER";
 const RESET_TIMESHEET_CONTROLLER = "RESET_TIMESHEET_CONTROLLER";
 
+const SET_SCAN_TIMESHEET_RPM_CHECKING = "SET_SCAN_TIMESHEET_RPM_CHECKING";
+const SCAN_TIMESHEET_RPM_CHECKING = "SCAN_TIMESHEET_RPM_CHECKING";
+const RESET_SCAN_TIMESHEET_RPM_CHECKING = "RESET_SCAN_TIMESHEET_RPM_CHECKING";
+
 const getMachinePlan = (machine_id) => (dispatch) => {
   dispatch({ type: SET_LOADING, payload: true });
   if (!machine_id) dispatch({ type: GET_MACHINE_PLAN, payload: {} });
@@ -99,13 +103,21 @@ const getTimesheetScanRMList = (plan_job_id) => {
 };
 const getBarcodeDetail = (barcode) => {
   if (!barcode) {
-    message.error("Missing Plan No. Please go back to select Plan No. first !");
+    message.error("Missing barcode.");
   }
   try {
     return axios
       .get(`${apiGetScanBarcodeDetail}/${barcode}`)
       .then((res) => {
-        return { success: true, data: res.data };
+        if (res?.data?.length) {
+          return { success: true, data: res.data };
+        } else {
+          message.warning(
+            `Invalid barcode or barcode not match to this job.`,
+            4
+          );
+          return { success: false, data: [] };
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -196,132 +208,132 @@ const startTimesheet = (data) => {
     };
   }
 };
-const updateTimesheet = (data, time_sheet_id, update_time_sheet_type_id) => {
-  if (!data) {
-    message.error("Can't Start. Please Contact Programmer.");
-  }
-  console.log(
-    "UPDATE TIMESHEET ",
-    data,
-    time_sheet_id,
-    update_time_sheet_type_id
-  );
-  // dispatch({ type: SET_LOADING, payload: true });
-  try {
-    return (
-      axios
-        .put(
-          `${apiTimesheet}/${time_sheet_id}`,
-          [{ ...data, time_sheet_type_id: update_time_sheet_type_id }],
-          header_config
-        )
-        .then((res) => {
-          console.log("UPDATED.... ", res.data);
-          if (!res.data) {
-            return { success: false };
-          } else {
-            switch (update_time_sheet_type_id) {
-              case 2:
-                message.success(`Timesheet has been started..`);
-                break;
-              case 3:
-                message.success(`Timesheet has been stopped..`);
-                break;
-              case 4:
-                message.success(`Timesheet has been finished..`);
-                break;
-              case 5:
-                message.warning(`Timesheet has been canceled..`);
-                break;
-              default:
-                break;
-            }
-            const {
-              time_sheet_id,
-              time_sheet_log_detail,
-              time_sheet_type_id,
-              time_sheet_type_name,
-              time_sheet_no,
-              tg_time_sheet_time,
-              tg_time_sheet_qty,
-            } = res.data;
-            return {
-              success: true,
-              data: {
-                ...data,
-                time_sheet_id,
-                time_sheet_log_detail: sortData(time_sheet_log_detail, "ids"),
-                time_sheet_type_id,
-                time_sheet_type_name,
-                time_sheet_no,
-                tg_time_sheet_time,
-                tg_time_sheet_qty,
-              },
-            };
-          }
-        })
-        // .then((res) => {
-        //   console.log("UPDATED.... ", res.data);
-        //   if (!res.data) {
-        //     dispatch({ type: START_TIMESHEET, payload: {} });
-        //   } else {
-        //     const {
-        //       time_sheet_id,
-        //       time_sheet_log_detail,
-        //       time_sheet_type_id,
-        //       time_sheet_type_name,
-        //       time_sheet_no,
-        //       tg_time_sheet_time,
-        //       tg_time_sheet_qty,
-        //     } = res.data;
-        //     dispatch({
-        //       type: START_TIMESHEET,
-        //       payload: {
-        //         ...data,
-        //         time_sheet_id,
-        //         time_sheet_log_detail: sortData(time_sheet_log_detail),
-        //         time_sheet_type_id,
-        //         time_sheet_type_name,
-        //         time_sheet_no,
-        //         tg_time_sheet_time,
-        //         tg_time_sheet_qty,
-        //       },
-        //     });
-        //   }
-        // })
-        .catch((error) => {
-          console.log(error);
-          // dispatch({ type: SET_LOADING, payload: false });
-          error.response &&
-            message.error(
-              `Error ${error.response.status}. Can't Start. Please Contact Programmer.`
-            );
-          !error.response &&
-            message.error(
-              `Network Error. Please check your internet conection.`
-            );
-          return {
-            success: false,
-            error: `Network Error. Please check your internet conection.`,
-          };
-        })
-    );
-  } catch (error) {
-    console.log(error);
-    // dispatch({ type: SET_LOADING, payload: false });
-    error.response &&
-      message.error(
-        `Error ${error.response.status}. Can't Start. Please Contact Programmer.`
-      );
-    !error.response &&
-      message.error(`Network Error. Please check your internet conection.`);
+// const updateTimesheet = (data, time_sheet_id, update_time_sheet_type_id) => {
+//   if (!data) {
+//     message.error("Can't Start. Please Contact Programmer.");
+//   }
+//   console.log(
+//     "UPDATE TIMESHEET ",
+//     data,
+//     time_sheet_id,
+//     update_time_sheet_type_id
+//   );
+//   // dispatch({ type: SET_LOADING, payload: true });
+//   try {
+//     return (
+//       axios
+//         .put(
+//           `${apiTimesheet}/${time_sheet_id}`,
+//           [{ ...data, time_sheet_type_id: update_time_sheet_type_id }],
+//           header_config
+//         )
+//         .then((res) => {
+//           console.log("UPDATED.... ", res.data);
+//           if (!res.data) {
+//             return { success: false };
+//           } else {
+//             switch (update_time_sheet_type_id) {
+//               case 2:
+//                 message.success(`Timesheet has been started..`);
+//                 break;
+//               case 3:
+//                 message.success(`Timesheet has been stopped..`);
+//                 break;
+//               case 4:
+//                 message.success(`Timesheet has been finished..`);
+//                 break;
+//               case 5:
+//                 message.warning(`Timesheet has been canceled..`);
+//                 break;
+//               default:
+//                 break;
+//             }
+//             const {
+//               time_sheet_id,
+//               time_sheet_log_detail,
+//               time_sheet_type_id,
+//               time_sheet_type_name,
+//               time_sheet_no,
+//               tg_time_sheet_time,
+//               tg_time_sheet_qty,
+//             } = res.data;
+//             return {
+//               success: true,
+//               data: {
+//                 ...data,
+//                 time_sheet_id,
+//                 time_sheet_log_detail: sortData(time_sheet_log_detail, "ids"),
+//                 time_sheet_type_id,
+//                 time_sheet_type_name,
+//                 time_sheet_no,
+//                 tg_time_sheet_time,
+//                 tg_time_sheet_qty,
+//               },
+//             };
+//           }
+//         })
+//         // .then((res) => {
+//         //   console.log("UPDATED.... ", res.data);
+//         //   if (!res.data) {
+//         //     dispatch({ type: START_TIMESHEET, payload: {} });
+//         //   } else {
+//         //     const {
+//         //       time_sheet_id,
+//         //       time_sheet_log_detail,
+//         //       time_sheet_type_id,
+//         //       time_sheet_type_name,
+//         //       time_sheet_no,
+//         //       tg_time_sheet_time,
+//         //       tg_time_sheet_qty,
+//         //     } = res.data;
+//         //     dispatch({
+//         //       type: START_TIMESHEET,
+//         //       payload: {
+//         //         ...data,
+//         //         time_sheet_id,
+//         //         time_sheet_log_detail: sortData(time_sheet_log_detail),
+//         //         time_sheet_type_id,
+//         //         time_sheet_type_name,
+//         //         time_sheet_no,
+//         //         tg_time_sheet_time,
+//         //         tg_time_sheet_qty,
+//         //       },
+//         //     });
+//         //   }
+//         // })
+//         .catch((error) => {
+//           console.log(error);
+//           // dispatch({ type: SET_LOADING, payload: false });
+//           error.response &&
+//             message.error(
+//               `Error ${error.response.status}. Can't Start. Please Contact Programmer.`
+//             );
+//           !error.response &&
+//             message.error(
+//               `Network Error. Please check your internet conection.`
+//             );
+//           return {
+//             success: false,
+//             error: `Network Error. Please check your internet conection.`,
+//           };
+//         })
+//     );
+//   } catch (error) {
+//     console.log(error);
+//     // dispatch({ type: SET_LOADING, payload: false });
+//     error.response &&
+//       message.error(
+//         `Error ${error.response.status}. Can't Start. Please Contact Programmer.`
+//       );
+//     !error.response &&
+//       message.error(`Network Error. Please check your internet conection.`);
 
-    return {
-      success: false,
-      error: `Network Error. Please check your internet conection.`,
-    };
-  }
-};
+//     return {
+//       success: false,
+//       error: `Network Error. Please check your internet conection.`,
+//     };
+//   }
+// };
 
 // const updateTimesheetLog = (data) => {
 //   try {
@@ -449,6 +461,61 @@ const setTimesheetCtrl = (data) => (dispatch) =>
 const resetTimesheetCtrl = () => (dispatch) => {
   dispatch({ type: RESET_TIMESHEET_CONTROLLER });
 };
+const setScanTimesheetRPMChecking = (data) => (dispatch) =>
+  dispatch({ type: SET_SCAN_TIMESHEET_RPM_CHECKING, payload: data });
+
+const resetScanTimesheetRPMChecking = () => (dispatch) => {
+  dispatch({ type: RESET_SCAN_TIMESHEET_RPM_CHECKING });
+};
+const scanTimesheetRPMChecking = (data) => (dispatch) => {
+  dispatch({ type: SCAN_TIMESHEET_RPM_CHECKING, payload: data });
+};
+
+const confirmTimesheet = (data) => {
+  return axios
+    .post(`${apiTimesheet}`, data, header_config)
+    .then((resp) => {
+      console.log("confirmTimesheet", resp);
+      if (resp.status === 200) {
+        return { success: true, data: resp?.data, message: "Confirm Success." };
+      } else {
+        return { success: false, data: {}, message: "Internal Server Error." };
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return { success: false, data: {}, message: `Error! ${error}` };
+    });
+};
+
+const updateTimesheet = (id, data) => {
+  try {
+    console.log("updateTimesheet", id, data);
+    // return { success: true, data: {}, message: "TEST" };
+    if (!id || !data)
+      return { success: false, data: {}, message: "Missing id or data" };
+    return axios
+      .put(`${apiTimesheet}/${id}`, data, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: {}, message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: {}, message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
 
 export {
   GET_MACHINE_PLAN,
@@ -460,6 +527,9 @@ export {
   CLOSE_TIMESHEET,
   SET_TIMESHEET_CONTROLLER,
   RESET_TIMESHEET_CONTROLLER,
+  SET_SCAN_TIMESHEET_RPM_CHECKING,
+  SCAN_TIMESHEET_RPM_CHECKING,
+  RESET_SCAN_TIMESHEET_RPM_CHECKING,
   getMachinePlan,
   getTimesheetScanRMList,
   getBarcodeDetail,
@@ -470,4 +540,8 @@ export {
   updateTimesheetLog,
   setTimesheetCtrl,
   resetTimesheetCtrl,
+  confirmTimesheet,
+  setScanTimesheetRPMChecking,
+  scanTimesheetRPMChecking,
+  resetScanTimesheetRPMChecking,
 };

@@ -1,6 +1,4 @@
-/** @format */
-
-import { Button, Col, Row, Divider } from "antd";
+import { Divider } from "antd";
 import React from "react";
 let timer = {
   hh: 0,
@@ -8,8 +6,7 @@ let timer = {
   ss: 0,
 };
 const TimerBox = (props) => {
-  const { hh, mm, ss } = timer;
-
+  const stopTimer = () => {};
   return (
     <div className="text-center">
       <div className="text-center">
@@ -19,12 +16,19 @@ const TimerBox = (props) => {
       </div>
       <Divider className="divider-sm" />
       <div className={"ts-timer"}>
-        <span className="hour">{hh >= 10 ? hh : "0" + hh}</span>
+        <span className="hour ts-timer-counter" id="counter-hh">
+          00
+        </span>
         <span className="timer-colon">:</span>
-        <span className="minutes">{mm >= 10 ? mm : "0" + mm}</span>
+        <span className="minutes ts-timer-counter" id="counter-mm">
+          00
+        </span>
         <span className="timer-colon">:</span>
-        <span className="seconds">{ss >= 10 ? ss : "0" + ss}</span>
+        <span className="seconds ts-timer-counter" id="counter-ss">
+          00
+        </span>
       </div>
+      <div id="timer"></div>
     </div>
   );
 };

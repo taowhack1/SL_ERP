@@ -1,25 +1,23 @@
 import { InputNumber } from "antd";
 import Text from "antd/lib/typography/Text";
-import React from "react";
+import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import CustomTable from "../../../../../components/CustomTable";
 import {
   convertDigit,
   getNumberFormat,
 } from "../../../../../include/js/main_config";
-
+import { TSCtrlContext } from "../TimesheetDisplay";
 const TableLog = ({ status }) => {
-  const { start: timesheet } = useSelector(
-    (state) => state.production.timesheet
-  );
-  const { time_sheet_log_detail } = timesheet;
+  const { tsLog } = useContext(TSCtrlContext);
+  const { time_sheet_log_detail } = tsLog?.data || {};
   return (
     <>
       <div className="full-width mt-2 pd-left-1 pd-right-1">
         <CustomTable
           columns={detailColumns(status)}
-          dataSource={mockupData}
-          rowKey="ids"
+          dataSource={time_sheet_log_detail}
+          rowKey="time_sheet_log_id"
           rowClassName={(row, index) =>
             index % 2 === 0 ? "row-hl row-table-detail" : "row-table-detail"
           }
@@ -32,50 +30,17 @@ const TableLog = ({ status }) => {
 };
 
 export default React.memo(TableLog);
-const mockupData = [
-  {
-    ids: 0,
-    time_sheet_log_date_from: "27/09/21 13:30:00",
-    time_sheet_log_date_to: "27/09/21 13:45:00",
-    time_sheet_log_time: "00:15:00",
-    time_sheet_log_qty: 0,
-    time_sheet_log_remark: "ตั้งค่าเครื่อง",
-  },
-  {
-    ids: 1,
-    time_sheet_log_date_from: "27/09/21 13:45:00",
-    time_sheet_log_date_to: "27/09/21 14:30:00",
-    time_sheet_log_time: "00:45:00",
-    time_sheet_log_qty: 25,
-    time_sheet_log_remark: "ผสม",
-  },
-  {
-    ids: 2,
-    time_sheet_log_date_from: "27/09/21 14:30:00",
-    time_sheet_log_date_to: "27/09/21 15:30:00",
-    time_sheet_log_time: "01:00:00",
-    time_sheet_log_qty: 0,
-    time_sheet_log_remark: "ถ่ายถังผสม",
-  },
-  {
-    ids: 3,
-    time_sheet_log_date_from: "27/09/21 15:30:00",
-    time_sheet_log_date_to: "27/09/21 16:45:00",
-    time_sheet_log_time: "01:15:00",
-    time_sheet_log_qty: 0,
-    time_sheet_log_remark: "ทำความสะอาด",
-  },
-];
+
 export const detailColumns = (status) => [
   {
     title: "No.",
-    dataIndex: "ids",
-    width: "5%",
-    key: "ids",
+    dataIndex: "time_sheet_log_id",
+    width: "8%",
+    key: "time_sheet_log_id",
     align: "center",
     ellipsis: true,
-    render: (value) => {
-      return <Text className={"text-value"}>{value + 1}</Text>;
+    render: (value, _, index) => {
+      return <Text className={"text-value"}>{index + 1}</Text>;
     },
   },
   {

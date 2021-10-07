@@ -1,10 +1,9 @@
 import { EditTwoTone, EllipsisOutlined } from "@ant-design/icons";
-import { message, Table } from "antd";
+import { message, Table, Tag } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { useHistory } from "react-router";
 import { useFetch, useSubTableFetch } from "../../../../include/js/customHooks";
-import { getStatusByName } from "../../../../include/js/function_main";
 import { convertDigit } from "../../../../include/js/main_config";
 
 const fetchUrl = `/production/job_order/mrp`;
@@ -54,7 +53,63 @@ const JobOrderListTable = (props) => {
 };
 
 export default React.memo(JobOrderListTable);
-
+export const getJobStatus = (
+  { trans_status_id = 1, trans_status_name = "Unkown" },
+  callBack
+) => {
+  switch (true) {
+    case trans_status_id === 1:
+      return (
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="error"
+        >
+          {trans_status_name || "-"}
+        </Tag>
+      );
+    case trans_status_id === 2:
+      return (
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="processing"
+        >
+          {trans_status_name || "-"}
+        </Tag>
+      );
+    case trans_status_id === 3:
+      return (
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="#108ee9"
+        >
+          {trans_status_name || "-"}
+        </Tag>
+      );
+    case trans_status_id === 4:
+      return (
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="#87d068"
+        >
+          {trans_status_name || "-"}
+        </Tag>
+      );
+    default:
+      return (
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color="default"
+        >
+          {trans_status_name || "-"}
+        </Tag>
+      );
+  }
+};
 const columns = ({ viewJobOrder, editJobOrder }) => [
   {
     title: (
@@ -166,7 +221,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     className: "col-sm",
     width: "8%",
     dataIndex: "trans_status_name",
-    render: (val) => (val && getStatusByName(val)) || "-",
+    render: (val, record) => getJobStatus(record),
   },
   {
     title: (
@@ -203,6 +258,17 @@ const subJobOrderColumns = [
     align: "center",
     width: "10%",
     dataIndex: "job_order_no",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Req. No.</b>
+      </div>
+    ),
+    align: "center",
+    width: "10%",
+    dataIndex: "issue_no",
     render: (val) => val || "-",
   },
   {
@@ -271,6 +337,6 @@ const subJobOrderColumns = [
     width: "10%",
     dataIndex: "trans_status_name",
     // sorter: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
-    render: (val) => (val && getStatusByName(val)) || "-",
+    render: (val, record) => getJobStatus(record),
   },
 ];

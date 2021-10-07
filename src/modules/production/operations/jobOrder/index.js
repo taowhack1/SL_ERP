@@ -60,38 +60,6 @@ const JobOrderMain = () => {
       onCancel: () => console.log("Cancel"),
       onSearch: (keyword) => console.log("Search Key", keyword),
       openModal: () => console.log("openModal"),
-      // searchBar: (
-      //   <Space size={18}>
-      //     <div>
-      //       <Text strong>Status :</Text>
-      //     </div>
-      //     <Radio.Group
-      //       options={[
-      //         {
-      //           label: "All",
-      //           value: 1,
-      //         },
-      //         {
-      //           label: "In-Process",
-      //           value: 2,
-      //         },
-      //         {
-      //           label: "Completed",
-      //           value: 3,
-      //         },
-      //         // {
-      //         //   label: "Cancel",
-      //         //   value: 4,
-      //         // },
-      //       ]}
-      //       onChange={(e) => console.log({ status: e.target.value })}
-      //       optionType="button"
-      //       buttonStyle="solid"
-      //       value={1}
-      //       defaultValue={1}
-      //     />
-      //   </Space>
-      // ),
     }),
     []
   );

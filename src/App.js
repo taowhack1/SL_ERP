@@ -31,8 +31,9 @@ import Purchase from "./modules/purchasing/Purchase";
 import PurchPR from "./modules/purchasing/Purchase_PR";
 import PurchPRCreate from "./modules/purchasing/Purchase_PR_Create";
 import PurchPRView from "./modules/purchasing/Purchase_PR_View";
-import PurchPO from "./modules/purchasing/Purchase_PO";
+import PurchPO from "./modules/purchasing/po";
 import PurchPOCreate from "./modules/purchasing/Purchase_PO_Create";
+import POFormDisplay from "./modules/purchasing/po/POFormDisplay";
 import PurchPOView from "./modules/purchasing/Purchase_PO_View";
 import Vendor from "./modules/purchasing/masterData/vendor/Vendor";
 import VendorCreate from "./modules/purchasing/masterData/vendor/Vendor_Create";
@@ -120,6 +121,7 @@ import MRPTest from "./modules/production/operations/mrp-test";
 import StockOnHandV2 from "./modules/inventory/StockOnHandV2";
 import AdjustStock from "./modules/inventory/configurations/adjustStock";
 import TimeSheet from "./modules/production/operations/timesheet/TimeSheet";
+import PORoutes from "./modules/purchasing/po/PORoutes";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -375,18 +377,21 @@ const App = (props) => {
               path="/purchase/pr/edit/:id"
               component={PurchPRCreate}
             />
-            <Route exact path="/purchase/po">
-              <PurchPO />
+            <Route path="/purchase/po">
+              <PORoutes />
             </Route>
-            <Route exact path="/purchase/po/create">
+            {/* <Route exact path="/purchase/po/create">
               <PurchPOCreate />
+            </Route>
+            <Route exact path="/purchase/po/create2">
+              <POFormDisplay />
             </Route>
             <Route
               exact
               path="/purchase/po/edit/:id"
               component={PurchPOCreate}
             />
-            <Route exact path="/purchase/po/view/:id" component={PurchPOView} />
+            <Route exact path="/purchase/po/view/:id" component={PurchPOView} /> */}
             <Route exact path="/purchase/vendor">
               <Vendor />
             </Route>

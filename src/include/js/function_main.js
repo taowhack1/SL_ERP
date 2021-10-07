@@ -485,6 +485,7 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
+    case statusName === "รอดำเนินการ":
     case statusName === "Pending":
     case statusName === "Pending DO":
     case statusName === "Develop":
@@ -499,6 +500,8 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
+
+    case statusName === "ยืนยันการผลิต":
     case statusName === "In-Process":
       return (
         <Tag
@@ -529,6 +532,7 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
+    case statusName === "ผลิตเสร็จสิ้น":
     case statusName?.search("Complete") > -1:
       return (
         <Tag
@@ -539,6 +543,7 @@ export const getStatusByName = (statusName, callBack) => {
           {statusName}
         </Tag>
       );
+    case statusName === "กำลังดำเนินการ":
     case statusName === "Pending Accept":
     case statusName === "Pending R&D":
     case statusName === "Pending Satisfaction":
