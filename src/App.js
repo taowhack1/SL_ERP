@@ -32,6 +32,7 @@ import PurchPR from "./modules/purchasing/Purchase_PR";
 import PurchPRCreate from "./modules/purchasing/Purchase_PR_Create";
 import PurchPRView from "./modules/purchasing/Purchase_PR_View";
 import PurchPO from "./modules/purchasing/po";
+import PurchaseOrders from "./modules/purchasing/Purchase_PO";
 import PurchPOCreate from "./modules/purchasing/Purchase_PO_Create";
 import POFormDisplay from "./modules/purchasing/po/POFormDisplay";
 import PurchPOView from "./modules/purchasing/Purchase_PO_View";
@@ -377,21 +378,25 @@ const App = (props) => {
               path="/purchase/pr/edit/:id"
               component={PurchPRCreate}
             />
-            <Route path="/purchase/po">
-              <PORoutes />
+            {/* <Route path="/purchase/po">
+              <Purchase />
+            </Route> */}
+            <Route exact path="/purchase/po">
+              <PurchaseOrders />
             </Route>
-            {/* <Route exact path="/purchase/po/create">
+
+            <Route exact path="/purchase/po/create">
               <PurchPOCreate />
             </Route>
-            <Route exact path="/purchase/po/create2">
+            {/* <Route exact path="/purchase/po/create2">
               <POFormDisplay />
-            </Route>
+            </Route> */}
             <Route
               exact
               path="/purchase/po/edit/:id"
               component={PurchPOCreate}
             />
-            <Route exact path="/purchase/po/view/:id" component={PurchPOView} /> */}
+            <Route exact path="/purchase/po/view/:id" component={PurchPOView} />
             <Route exact path="/purchase/vendor">
               <Vendor />
             </Route>
