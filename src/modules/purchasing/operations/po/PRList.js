@@ -1,3 +1,5 @@
+/** @format */
+
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import {
   Badge,
@@ -126,18 +128,17 @@ const PRList = () => {
         <Tabs.TabPane
           tab={
             <Badge count={pr.length}>
-              <Text strong className="pd-right-2">
+              <Text strong className='pd-right-2'>
                 PR ทั่วไป
               </Text>
             </Badge>
           }
-          key="1"
-        >
+          key='1'>
           <Table
             bordered
-            rowKey="id"
-            size="small"
-            rowClassName="row-table-detail"
+            rowKey='id'
+            size='small'
+            rowClassName='row-clickable row-table-detail'
             loading={loading}
             columns={columns({
               selectData,
@@ -147,47 +148,42 @@ const PRList = () => {
             dataSource={pr}
             footer={() => (
               <>
-                <div className="mb-1">
+                <div className='mb-1'>
                   <Text strong>
                     Selected : <span>{countSelectPROthers}</span> Item
                   </Text>
                 </div>
                 <Space level={24}>
                   <Button
-                    size="small"
+                    size='small'
                     onClick={() => clearSelected(1)}
                     disabled={!countSelectPROthers}
-                    loading={rejectLoading}
-                  >
+                    loading={rejectLoading}>
                     Clear Select
                   </Button>
                   <Popconfirm
                     onConfirm={() => onReject(1)}
-                    title="Are you sure？"
-                    icon={<QuestionCircleOutlined style={{ color: "red" }} />}
-                  >
+                    title='Are you sure？'
+                    icon={<QuestionCircleOutlined style={{ color: "red" }} />}>
                     <Button
-                      size="small"
-                      type="ghost"
+                      size='small'
+                      type='ghost'
                       danger
                       disabled={!countSelectPROthers}
-                      loading={rejectLoading}
-                    >
+                      loading={rejectLoading}>
                       Reject PR
                     </Button>
                   </Popconfirm>
                   <Popconfirm
                     onConfirm={() => onCancelPR(1)}
-                    title="Are you sure？"
-                    icon={<QuestionCircleOutlined style={{ color: "red" }} />}
-                  >
+                    title='Are you sure？'
+                    icon={<QuestionCircleOutlined style={{ color: "red" }} />}>
                     <Button
-                      size="small"
-                      type="ghost"
+                      size='small'
+                      type='ghost'
                       danger
                       disabled={!countSelectPROthers}
-                      loading={rejectLoading}
-                    >
+                      loading={rejectLoading}>
                       Cancel PR
                     </Button>
                   </Popconfirm>
@@ -199,18 +195,17 @@ const PRList = () => {
         <Tabs.TabPane
           tab={
             <Badge count={prAuto.length}>
-              <Text strong className="pd-right-2">
+              <Text strong className='pd-right-2'>
                 PR Auto
               </Text>
             </Badge>
           }
-          key="2"
-        >
+          key='2'>
           <Table
             bordered
-            rowKey="id"
-            size="small"
-            rowClassName="row-table-detail"
+            rowKey='id'
+            size='small'
+            rowClassName='row-clickable row-table-detail'
             loading={loading}
             columns={columns({
               selectData,
@@ -220,32 +215,29 @@ const PRList = () => {
             dataSource={prAuto}
             footer={() => (
               <>
-                <div className="mb-1">
+                <div className='mb-1'>
                   <Text strong>
                     Selected : <span>{countSelectPRAuto}</span> Item
                   </Text>
                 </div>
                 <Space level={24}>
                   <Button
-                    size="small"
+                    size='small'
                     onClick={() => clearSelected(2)}
                     disabled={!countSelectPRAuto}
-                    loading={rejectLoading}
-                  >
+                    loading={rejectLoading}>
                     Clear Select
                   </Button>
                   <Popconfirm
                     onConfirm={() => onCancelPR(2)}
-                    title="Are you sure？"
-                    icon={<QuestionCircleOutlined style={{ color: "red" }} />}
-                  >
+                    title='Are you sure？'
+                    icon={<QuestionCircleOutlined style={{ color: "red" }} />}>
                     <Button
-                      size="small"
-                      type="ghost"
+                      size='small'
+                      type='ghost'
                       danger
                       disabled={!countSelectPRAuto}
-                      loading={rejectLoading}
-                    >
+                      loading={rejectLoading}>
                       Cancel PR
                     </Button>
                   </Popconfirm>
@@ -272,7 +264,7 @@ const columns = ({ selectData, pr_type, title = "ใบขอซื้อ (PR)" 
     children: [
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <b>No.</b>
           </div>
         ),
@@ -284,7 +276,7 @@ const columns = ({ selectData, pr_type, title = "ใบขอซื้อ (PR)" 
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <b>Check</b>
           </div>
         ),
@@ -303,7 +295,7 @@ const columns = ({ selectData, pr_type, title = "ใบขอซื้อ (PR)" 
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <b>PR No.</b>
           </div>
         ),
@@ -311,11 +303,22 @@ const columns = ({ selectData, pr_type, title = "ใบขอซื้อ (PR)" 
         className: "tb-col-sm",
         // width: "10%",
         dataIndex: "pr_no",
-        render: (val) => val || "-",
+        render: (val) => {
+          return (
+            <div
+              onClick={(e) =>
+                window.open(
+                  `${process.env.REACT_APP_REPORT_SERVER}/report_pr.aspx?pr_no=${val}`
+                )
+              }>
+              {val || "-"}
+            </div>
+          );
+        },
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <b>Due Date</b>
           </div>
         ),
