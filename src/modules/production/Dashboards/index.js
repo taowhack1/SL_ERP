@@ -178,12 +178,14 @@ const DashboardsIndex = () => {
           Cmachine_name: machine_name.push(
             c.detail
               .filter((res) => res.machine_plan_day == date)
-              .map((res) => res.machine_name)
+              .map((res) => {
+                return res.machine_name;
+              })
           ),
         });
         return a;
       }, []);
-
+    const { machine_name2 } = machine_name;
     let graphDay = [
       // {
       //   name: "sucess",
@@ -279,7 +281,9 @@ const DashboardsIndex = () => {
       date_plan,
       machine_name,
     });
-    return { graphDay, graphMachine };
+    console.log("machine_name :>> ", ...machine_name);
+    console.log("machine_name sData:>> ", sData);
+    return { graphDay, graphMachine, machine_name };
   };
 
   const reData = (arr, date = "24-09-2021") => {
@@ -716,6 +720,7 @@ const DashboardsIndex = () => {
   console.log("temp_api_graphMachine :>> ", graphMachine);
   console.log("graphDay :>> ", graphDay);
   console.log("renderGraphMachine :>> ", renderGraphMachine);
+  console.log("graph12Month :>> ", graph12Month);
   const state = {
     series: [...graphMachine],
     options: {
@@ -795,7 +800,7 @@ const DashboardsIndex = () => {
         },
       },
       xaxis: {
-        categories: [renderGraphMachine[0].machine_name],
+        categories: graphMachine[0].machine_name,
         Width: "20%",
         labels: {
           show: true,
@@ -1135,7 +1140,7 @@ const DashboardsIndex = () => {
       </Row>
       <Row gutter={[8, 8]}>
         <Col span={24} style={{ background: "#C6C6CC" }}>
-          <span style={{ marginLeft: 10 }}>Autorefresh in </span>
+          {/* <span style={{ marginLeft: 10 }}>Autorefresh in </span> */}
           <Tag color='#0000FF' style={{ marginLeft: 100 }}>
             plan
           </Tag>
