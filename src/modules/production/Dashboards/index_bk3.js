@@ -3,6 +3,9 @@
 import { Col, Row, Tag } from "antd";
 import React, { useEffect } from "react";
 import Chart from "react-apexcharts";
+var future = new Date();
+future.setDate(future.getDate() + 30);
+console.log("future :>> ", future);
 const salesRecord = [
   {
     day: 1,
@@ -133,7 +136,157 @@ const respData = [
 ];
 
 const DashboardsIndex = () => {
-  const renderGraphMachineAndMount = (data, date = "01-09-2021") => {
+  const renderbyDate = (date = "01-09-2021") => {
+    let plan = [];
+    let success = [];
+    let ot = [];
+    let tempOt = [];
+    let freeze = [];
+    let date_plan = [];
+    let machine_name = [];
+    let temp_testSum = temp_api
+      .filter((res) => res.date == date)
+      .reduce((a, c) => {
+        a.push({
+          ...c,
+          date_plan: date_plan.push(
+            c.detail
+              .filter((res) => res.machine_plan_day == date)
+              .map((res) => res.machine_plan_day)
+          ),
+          plan: c.detail
+            .filter((res) => res.machine_plan_day == date)
+            .reduce((acc, cur) => acc + cur.machine_plan_time, 0),
+          Cplan: plan.push(
+            c.detail
+              .filter((res) => res.machine_plan_day == date)
+              .map((res) =>
+                res.machine_work_tiem >= res.machine_plan_time
+                  ? 0
+                  : res.machine_work_tiem <= res.machine_plan_time
+                  ? res.machine_plan_time - res.machine_work_tiem
+                  : res.machine_plan_time
+              )
+            //.reduce((acc, cur) => acc + cur / c.detail.length, 0)
+          ),
+          Csuccess: success.push(
+            c.detail
+              .filter((res) => res.machine_plan_day == date)
+              .map((res) => res.machine_work_tiem)
+            //.reduce((acc, cur) => acc + cur.machine_work_tiem, 0)
+          ),
+          Cmachine_name: machine_name.push(
+            c.detail
+              .filter((res) => res.machine_plan_day == date)
+              .map((res) => {
+                return res.machine_name;
+              })
+          ),
+        });
+        return a;
+      }, []);
+    const { machine_name2 } = machine_name;
+    let graphDay = [
+      // {
+      //   name: "sucess",
+      //   data: [
+      //     sucess.reduce((sum, number) => {
+      //       return sum + number / sucess.length;
+      //     }, 0),
+      //   ],
+      //   plan_day: findUniqueValues(plan_day),
+      //   colors: "#2ECC71",
+      // },
+      // {
+      //   name: "plan",
+      //   data: [
+      //     plan.reduce((sum, number) => {
+      //       return sum + number / plan.length;
+      //     }, 0),
+      //   ],
+      //   plan_day: findUniqueValues(plan_day),
+      //   colors: "#0000FF",
+      // },
+      // {
+      //   name: "tempOt",
+      //   data: [
+      //     tempOt.reduce((sum, number) => {
+      //       return sum + number / tempOt.length;
+      //     }, 0),
+      //   ],
+      //   plan_day: findUniqueValues(plan_day),
+      //   colors: "#FFFFFF",
+      // },
+      // {
+      //   name: "ot",
+      //   data: [
+      //     ot.reduce((sum, number) => {
+      //       return sum + number / ot.length;
+      //     }, 0),
+      //   ],
+      //   plan_day: findUniqueValues(plan_day),
+      //   colors: "#CC0000",
+      // },
+      // {
+      //   name: "freeze",
+      //   data: [
+      //     freeze.reduce((sum, number) => {
+      //       return sum + number / freeze.length;
+      //     }, 0),
+      //   ],
+      //   plan_day: findUniqueValues(plan_day),
+      //   colors: "#FFFFFF",
+      // },
+    ];
+    let graphMachine = [
+      {
+        name: "sucess",
+        data: success,
+        machine_name: machine_name,
+        colors: "#2ECC71",
+      },
+      {
+        name: "plan",
+        data: plan,
+        machine_name: machine_name,
+        colors: "#0000FF",
+      },
+      {
+        name: "freeze",
+        data: [0, 0],
+        machine_name: machine_name,
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: ot,
+        machine_name: machine_name,
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: freeze,
+        machine_name: machine_name,
+        colors: "#FFFFFF",
+      },
+    ];
+    console.log("graphDay :>> ", graphDay);
+    console.log("graphMachine :>> ", graphMachine);
+    console.log("temp_testSumRender :>> ", temp_testSum);
+    console.log("AllData :>> ", {
+      plan,
+      success,
+      ot,
+      freeze,
+      date_plan,
+      machine_name,
+    });
+    console.log("machine_name :>> ", ...machine_name);
+
+    return { graphDay, graphMachine, machine_name };
+  };
+
+  const reData = (arr, date = "24-09-2021") => {
     const findUniqueValues = (arr) => [...new Set(arr)];
     const isCheck8hr = (value) => value >= 8;
     let machine_name = [];
@@ -147,45 +300,38 @@ const DashboardsIndex = () => {
     let sucess = [];
     let graphDay_sucess = [];
 
-    let DataTransformer = Object.values(
-      ...data
-        .filter((obj) => obj.date == date)
-        .map((obj) => {
-          return obj.detail;
-        })
-    );
-    console.log("packVale :>> ", DataTransformer);
-    console.log("respData :>> ", respData);
-    let DataSet = DataTransformer.filter((obj, index) => {
-      return obj.machine_plan_day == date;
-    }).map((obj, index) => {
-      total =
-        total +
-        obj.freeze +
-        obj.machine_plan_time +
-        obj.machine_work_tiem +
-        obj.machine_work_tiem_ot;
-      machine_name.push(obj.machine_name);
-      ot.push(obj.machine_work_tiem_ot);
-      sucess.push(obj.machine_work_tiem);
-      obj.machine_work_tiem >= obj.machine_plan_time
-        ? plan.push(0)
-        : obj.machine_work_tiem <= obj.machine_plan_time
-        ? plan.push(obj.machine_plan_time - obj.machine_work_tiem)
-        : plan.push(obj.machine_plan_time);
-      freeze.push(obj.freeze);
-      plan_day.push(obj.machine_plan_day);
-      obj.machine_work_tiem_ot !== 0
-        ? plan[index] + sucess[index] == 8
-          ? tempOt.push(0)
-          : tempOt.push(
-              sucess[index] == 0
-                ? 8 - plan[index]
-                : 8 - sucess[index] - plan[index]
-            )
-        : tempOt.push(0);
-      return { ...obj };
-    });
+    let test = arr
+      .filter((obj, index) => {
+        return obj.machine_plan_day == date;
+      })
+      .map((obj, index) => {
+        total =
+          total +
+          obj.freeze +
+          obj.machine_plan_time +
+          obj.machine_work_tiem +
+          obj.machine_work_tiem_ot;
+        machine_name.push(obj.machine_name);
+        ot.push(obj.machine_work_tiem_ot);
+        sucess.push(obj.machine_work_tiem);
+        obj.machine_work_tiem >= obj.machine_plan_time
+          ? plan.push(0)
+          : obj.machine_work_tiem <= obj.machine_plan_time
+          ? plan.push(obj.machine_plan_time - obj.machine_work_tiem)
+          : plan.push(obj.machine_plan_time);
+        freeze.push(obj.freeze);
+        plan_day.push(obj.machine_plan_day);
+        obj.machine_work_tiem_ot !== 0
+          ? plan[index] + sucess[index] == 8
+            ? tempOt.push(0)
+            : tempOt.push(
+                sucess[index] == 0
+                  ? 8 - plan[index]
+                  : 8 - sucess[index] - plan[index]
+              )
+          : tempOt.push(0);
+        return { ...obj };
+      });
 
     let graphDay = [
       {
@@ -324,17 +470,9 @@ const DashboardsIndex = () => {
         colors: "#FFFFFF",
       },
     ];
-    return {
-      graphMachine,
-      graphDay,
-      graphMonth,
-      DataSet,
-      tempOt,
-      plan,
-      sucess,
-    };
+    return { graphMachine, graphDay, graphMonth, test, tempOt, plan, sucess };
   };
-  const renderGraph365Day = (params) => {
+  const tempData = (params) => {
     let plan = [];
     let success = [];
     let ot = [];
@@ -435,18 +573,154 @@ const DashboardsIndex = () => {
     return { graphMonth, success, temp_testSum, plan, date_plan, tempOt };
   };
 
-  const graphMachine = renderGraphMachineAndMount(temp_api).graphMachine;
-  const graphDay = renderGraphMachineAndMount(temp_api).graphDay;
-  const graph12Month = renderGraph365Day(temp_api).graphMonth;
+  console.log("temp_api_Fn :>> ", tempData(temp_api));
+  const reData2 = (arr) => {
+    const findUniqueValues = (arr) => [...new Set(arr)];
+    const isCheck8hr = (value) => value >= 8;
+    let machine_name = [];
+    let plan_day = [];
+    let plan = [];
+    let ot = [];
+    let tempOt = [];
+    let name = [];
+    let freeze = [];
+    let total = 0;
+    let sucess = [];
+    let graphDay_sucess = [];
+    let date = [];
+    let test = arr.map((obj, index) => {
+      total =
+        total +
+        obj.freeze +
+        obj.machine_plan_time +
+        obj.machine_work_tiem +
+        obj.machine_work_tiem_ot;
+      machine_name.push(obj.machine_name);
+      ot.push(obj.machine_work_tiem_ot);
+      sucess.push(obj.machine_work_tiem);
+      obj.machine_work_tiem >= obj.machine_plan_time
+        ? plan.push(0)
+        : obj.machine_work_tiem <= obj.machine_plan_time
+        ? plan.push(obj.machine_plan_time - obj.machine_work_tiem)
+        : plan.push(obj.machine_plan_time);
+      freeze.push(obj.freeze);
+      plan_day.push(obj.machine_plan_day.substr(0, 2));
+      obj.machine_plan_day == obj.machine_plan_day
+        ? date.push(obj.machine_plan_day)
+        : date.push(false);
+      obj.machine_work_tiem_ot !== 0
+        ? plan[index] + sucess[index] == 8
+          ? tempOt.push(0)
+          : tempOt.push(
+              sucess[index] == 0
+                ? 8 - plan[index]
+                : 8 - sucess[index] - plan[index]
+            )
+        : tempOt.push(0);
+      return { ...obj };
+    });
 
-  // console.log(
-  //   "detail :>> ",
-  // temp_api
-  //   .filter((obj) => obj.date == "01-09-2021")
-  //   .map((obj) => {
-  //     return obj.detail;
-  //   })
-  // );
+    let graphMonth = [
+      {
+        name: "sucess",
+        data: [
+          sucess.reduce((sum, number) => {
+            return sum + number / sucess.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#2ECC71",
+      },
+      {
+        name: "plan",
+        data: [
+          plan.reduce((sum, number) => {
+            return sum + number / plan.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#0000FF",
+      },
+      {
+        name: "freeze",
+        data: [
+          tempOt.reduce((sum, number) => {
+            return sum + number / tempOt.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: [
+          ot.reduce((sum, number) => {
+            return sum + number / ot.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: [
+          freeze.reduce((sum, number) => {
+            return sum + number / freeze.length;
+          }, 0),
+        ],
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+    ];
+    let graphMachine = [
+      {
+        name: "sucess",
+        data: sucess,
+        machine_name: machine_name,
+        colors: "#2ECC71",
+      },
+      {
+        name: "plan",
+        data: plan,
+        machine_name: machine_name,
+        colors: "#0000FF",
+      },
+      {
+        name: "freeze",
+        data: tempOt,
+        machine_name: machine_name,
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: ot,
+        machine_name: machine_name,
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: freeze,
+        machine_name: machine_name,
+        colors: "#FFFFFF",
+      },
+    ];
+    return { graphMonth, graphMachine, sucess, plan_day, date };
+  };
+
+  useEffect(() => {
+    renderbyDate();
+  }, []);
+  const graphMachine = reData(respData).graphMachine;
+  const graphDay = reData(respData).graphDay;
+  const graphMonth = reData2(respData2).graphMonth;
+  const graph12Month = tempData(temp_api).graphMonth;
+  const renderGraphMachine = renderbyDate().graphMachine;
+  console.log("reData2 :>> ", reData2(respData2));
+  console.log("reData :>> ", reData(respData));
+  console.log("temp_api_graphMachine :>> ", graphMachine);
+  console.log("graphDay :>> ", graphDay);
+  console.log("renderGraphMachine :>> ", renderGraphMachine);
+  console.log("graph12Month :>> ", graph12Month);
   const state = {
     series: [...graphMachine],
     options: {
@@ -729,7 +1003,11 @@ const DashboardsIndex = () => {
         },
         events: {
           click: (event, chartContext, config) => {
+            // console.log("event  :>> click", event);
+            // console.log("chartContext  :>> click", chartContext);
+            // console.log("config  :>> click", config);
             if (event.target.localName == "tspan") {
+              renderbyDate(event.explicitOriginalTarget.textContent);
               console.log(
                 "click_date  :>> ",
                 event.explicitOriginalTarget.textContent
