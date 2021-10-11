@@ -37,7 +37,9 @@ const useFetch = (url, missingParams = false) => {
             console.error("error", err);
           });
     } else {
-      console.log("useFetch Missing Params");
+      console.log(
+        `useFetch Missing Params  url :${url} , params :${missingParams}`
+      );
     }
 
     return () => {

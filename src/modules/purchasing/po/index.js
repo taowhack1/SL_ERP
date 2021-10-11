@@ -151,7 +151,7 @@ const PO = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    dispatch(get_po_by_id(record.po_id, auth.user_name));
+                    // dispatch(get_po_by_id(record.po_id, auth.user_name));
                     keepLog.keep_log_action(record.po_no);
                     props.history.push({
                       pathname: "/purchase/po/" + record.po_id,

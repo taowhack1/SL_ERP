@@ -1,223 +1,237 @@
-import { Col, Row, Tabs } from "antd";
-import Text from "antd/lib/typography/Text";
-import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
-import {
-  InputField,
-  SelectField,
-} from "../../../components/AntDesignComponent";
+import { Col, Input, Row, Tabs } from "antd";
+import React, { useContext, useEffect } from "react";
 import CustomLabel from "../../../components/CustomLabel";
+import CustomSelect from "../../../components/CustomSelect";
+import POFormDetail from "./POFormDetail";
+import { POContext } from "./POFormDisplay";
 import POFormResult from "./POFormResult";
-import TableItem from "./TableItem";
+import SelectPR from "./SelectPR";
 const POForm = () => {
   const {
     readOnly = false,
     step = 1,
-    control,
-    formState: { errors },
-    register,
+    poState,
     getVendor,
     getVat,
     getPaymentTerms,
-  } = useFormContext() || {};
-
+    getCurrency,
+    onChangePOState,
+  } = useContext(POContext) || {};
+  const { po_description, vendor_id, payment_term_id, currency_id, vat_id } =
+    poState || {};
   const { data: vendors = [], loading: getVendorLoading = true } =
     getVendor || {};
   const { data: vat = [], loading: getVatLoading = true } = getVat || {};
   const { data: paymentTerms = [], loading: getPaymentTermsLoading = true } =
     getPaymentTerms || {};
+  const { data: currency = [], loading: getCurrencyLoading = true } =
+    getCurrency || {};
 
+  useEffect(() => {
+    const findVendor =
+      vendors && vendors[0]?.find((obj) => obj.vendor_id === vendor_id);
+    console.log("findVendor", findVendor);
+    if (findVendor) {
+      const { vat_id, vat_no, payment_term_id, payment_term_name } =
+        findVendor || {};
+      onChangePOState({
+        vat_id,
+        vat_no,
+        payment_term_id,
+        payment_term_name,
+      });
+    }
+  }, [vendor_id]);
   return (
     <>
-      {step === 1 ? (
-        <>
-          <Row className="col-2 mt-1 mb-1" gutter={32}>
-            <Col span={12}>
-              <Row className="col-2 mt-1 mb-1" gutter={8}>
-                <Col span={6}>
-                  <CustomLabel label="Description :" require readOnly={false} />
-                </Col>
-                <Col span={18}>
-                  <>
-                    <Controller
-                      {...{
-                        name: `po_description`,
-                        control,
-                        rules: { required: true },
-                        defaultValue: null,
-                        render: ({ field }) => {
-                          return InputField({
-                            fieldProps: {
-                              className: "w-100",
-                              placeholder: "Description",
-                              ...field,
-                            },
-                          });
-                        },
-                      }}
+      <>
+        {[1, 2].includes(step) ? (
+          <>
+            <Row className="col-2 mt-1 mb-1" gutter={32}>
+              <Col span={12}>
+                <Row className="col-2 mt-1 mb-1" gutter={8}>
+                  <Col span={6}>
+                    <CustomLabel
+                      label="Description :"
+                      require
+                      readOnly={false}
                     />
-                    <br />
-                    {errors?.po_description && (
-                      <Text strong className="require">
-                        This field is required.
-                      </Text>
-                    )}
-                  </>
-                </Col>
-              </Row>
-              <Row className="col-2 mt-1 mb-1" gutter={8}>
-                <Col span={6}>
-                  <CustomLabel label="Vendor :" require readOnly={false} />
-                </Col>
-                <Col span={18}>
-                  <>
-                    <Controller
-                      {...{
-                        name: `vendor_id`,
-                        control,
-                        rules: { required: true },
-                        defaultValue: null,
-                        render: ({ field }) => {
-                          const { onChange } = field;
-                          return SelectField({
-                            fieldId: "vendor_id",
-                            fieldName: "vendor_no_name",
-                            dataSource: vendors ? vendors[0] : [],
-                            fieldProps: {
-                              disabled: getVendorLoading,
-                              className: "w-100",
-                              placeholder: "Select Vendor",
-                              showSearch: true,
-                              allowClear: true,
-                              onChange: (id, obj, index) =>
-                                onChange(id || null),
-                              ...field,
-                            },
-                          });
-                        },
-                      }}
-                    />
-                    <br />
-                    {errors?.vendor_id && (
-                      <Text strong className="require">
-                        This field is required.
-                      </Text>
-                    )}
-                  </>
-                </Col>
-              </Row>
-              <Row className="col-2 mt-1 mb-1" gutter={8}>
-                <Col span={6}>
-                  <CustomLabel label="Currency :" require readOnly={false} />
-                </Col>
-                <Col span={18}>
-                  <Text>THB</Text>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Row className="col-2 mt-1 mb-1" gutter={8}>
-                <Col span={6}>
-                  <CustomLabel label="Vat :" require readOnly={false} />
-                </Col>
-                <Col span={18}>
-                  <>
-                    <Controller
-                      {...{
-                        name: `vat_id`,
-                        control,
-                        rules: { required: true },
-                        defaultValue: null,
-                        render: ({ field }) => {
-                          const { onChange } = field;
-                          return SelectField({
-                            fieldId: "vat_id",
-                            fieldName: "vat_name",
-                            dataSource: vat ? vat[0] : [],
-                            fieldProps: {
-                              disabled: getVatLoading,
-                              className: "w-100",
-                              placeholder: "Select Vat",
-                              showSearch: true,
-                              allowClear: true,
-                              onChange: (id, obj, index) =>
-                                onChange(id || null),
-                              ...field,
-                            },
-                          });
-                        },
-                      }}
-                    />
-                    <br />
-                    {errors?.vat_id && (
-                      <Text strong className="require">
-                        This field is required.
-                      </Text>
-                    )}
-                  </>
-                </Col>
-              </Row>
+                  </Col>
+                  <Col span={18}>
+                    <>
+                      <Input
+                        {...{
+                          placeholder: "Description",
+                          className: "w-100",
+                          disabled: false,
+                          value: po_description || null,
+                          onChange: (e) =>
+                            onChangePOState({
+                              po_description: e.target.value,
+                            }),
+                        }}
+                      />
+                    </>
+                  </Col>
+                </Row>
+                <Row className="col-2 mt-1 mb-1" gutter={8}>
+                  <Col span={6}>
+                    <CustomLabel label="Vendor :" require readOnly={false} />
+                  </Col>
+                  <Col span={18}>
+                    <>
+                      <CustomSelect
+                        {...{
+                          disabled: getVendorLoading,
+                          placeholder: "Vendor",
+                          className: "w-100",
+                          field_id: "vendor_id",
+                          field_name: "vendor_no_name",
+                          allowClear: true,
+                          showSearch: true,
+                          value: vendor_id,
+                          data: vendors ? vendors[0] : [],
+                          onChange: (val, obj) =>
+                            val
+                              ? onChangePOState({
+                                  vendor_id: val,
+                                  vendor_no_name: obj?.data?.vendor_no_name,
+                                })
+                              : onChangePOState({
+                                  vendor_id: null,
+                                  vendor_no_name: null,
+                                }),
+                        }}
+                      />
+                    </>
+                  </Col>
+                </Row>
+                <Row className="col-2 mt-1 mb-1" gutter={8}>
+                  <Col span={6}>
+                    <CustomLabel label="Currency :" require readOnly={false} />
+                  </Col>
+                  <Col span={18}>
+                    <>
+                      <CustomSelect
+                        {...{
+                          disabled: true,
+                          style: { width: "30%" },
+                          placeholder: "Currency",
+                          showSearch: true,
+                          allowClear: true,
+                          field_id: "currency_id",
+                          field_name: "currency_no",
+                          value: currency_id,
+                          data: currency ? currency[0] : [],
+                          onChange: (val, obj) =>
+                            val
+                              ? onChangePOState({
+                                  currency_id: val,
+                                  currency_no: obj?.data?.currency_no,
+                                })
+                              : onChangePOState({
+                                  currency_id: null,
+                                  currency_no: null,
+                                }),
+                        }}
+                      />
+                    </>
+                  </Col>
+                </Row>
+              </Col>
+              <Col span={12}>
+                <Row className="col-2 mt-1 mb-1" gutter={8}>
+                  <Col span={6}>
+                    <CustomLabel label="Vat :" require readOnly={false} />
+                  </Col>
+                  <Col span={18}>
+                    <>
+                      <CustomSelect
+                        {...{
+                          disabled: getVatLoading,
+                          placeholder: "Vat",
+                          className: "w-100",
+                          field_id: "vat_id",
+                          field_name: "vat_name",
+                          allowClear: true,
+                          showSearch: true,
+                          value: vat_id,
+                          data: vat ? vat[0] : [],
+                          onChange: (val, obj) =>
+                            val
+                              ? onChangePOState({
+                                  vat_id: val,
+                                  vat_name: obj?.data?.vat_name,
+                                })
+                              : onChangePOState({
+                                  vat_id: null,
+                                  vat_name: null,
+                                }),
+                        }}
+                      />
+                    </>
+                  </Col>
+                </Row>
 
-              <Row className="col-2 mt-1 mb-1" gutter={8}>
-                <Col span={6}>
-                  <CustomLabel
-                    label="Payment Terms :"
-                    require
-                    readOnly={false}
-                  />
-                </Col>
-                <Col span={18}>
-                  <>
-                    <Controller
-                      {...{
-                        name: `payment_term_id`,
-                        control,
-                        rules: { required: true },
-                        defaultValue: null,
-                        render: ({ field }) => {
-                          const { onChange } = field;
-                          return SelectField({
-                            fieldId: "payment_term_id",
-                            fieldName: "payment_term_name",
-                            dataSource: paymentTerms ? paymentTerms[0] : [],
-                            fieldProps: {
-                              disabled: getPaymentTermsLoading,
-                              className: "w-100",
-                              placeholder: "Select Data",
-                              showSearch: true,
-                              allowClear: true,
-                              onChange: (id, obj, index) =>
-                                onChange(id || null),
-                              ...field,
-                            },
-                          });
-                        },
-                      }}
+                <Row className="col-2 mt-1 mb-1" gutter={8}>
+                  <Col span={6}>
+                    <CustomLabel
+                      label="Payment Terms :"
+                      require
+                      readOnly={false}
                     />
-                    <br />
-                    {errors?.payment_term_id && (
-                      <Text strong className="require">
-                        This field is required.
-                      </Text>
-                    )}
+                  </Col>
+                  <Col span={18}>
+                    <>
+                      <CustomSelect
+                        {...{
+                          disabled: getPaymentTermsLoading,
+                          placeholder: "Payment Terms",
+                          className: "w-100",
+                          field_id: "payment_term_id",
+                          field_name: "payment_term_name",
+                          allowClear: true,
+                          showSearch: true,
+                          value: payment_term_id,
+                          data: paymentTerms ? paymentTerms[0] : [],
+                          onChange: (val, obj) =>
+                            val
+                              ? onChangePOState({
+                                  payment_term_id: val,
+                                  payment_term_name:
+                                    obj?.data?.payment_term_name,
+                                })
+                              : onChangePOState({
+                                  payment_term_id: null,
+                                  payment_term_name: null,
+                                }),
+                        }}
+                      />
+                    </>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24}>
+                {step === 1 ? (
+                  <Tabs>
+                    <Tabs.TabPane tab="Select Item" key="1">
+                      <SelectPR />
+                    </Tabs.TabPane>
+                  </Tabs>
+                ) : (
+                  <>
+                    <POFormDetail />
                   </>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-              <Tabs>
-                <Tabs.TabPane tab="Detail" key="1">
-                  <TableItem />
-                </Tabs.TabPane>
-              </Tabs>
-            </Col>
-          </Row>
-        </>
-      ) : (
-        <POFormResult />
-      )}
+                )}
+              </Col>
+            </Row>
+          </>
+        ) : (
+          <POFormResult />
+        )}
+      </>
     </>
   );
 };

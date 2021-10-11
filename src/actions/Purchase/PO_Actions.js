@@ -21,7 +21,9 @@ import { message } from "antd";
 const apiUpdateFlow = `/approve/process`;
 const apiListPRForPO = `/list/pr`;
 const SEARCH_PO = "SEARCH_PO";
-
+const PERSIST_FORM_PO = "PERSIST_FORM_PO";
+const RESET_PERSIST_FORM_PO = "RESET_PERSIST_FORM_PO";
+const apiPO = `/purchase/po`;
 export const get_open_po_list = () => (dispatch) => {
   axios.get(apiListPRForPO, header_config).then((res) => {
     dispatch({
@@ -335,6 +337,59 @@ const cancelPR = (data) => {
 const filterPO = (data) => (dispatch) =>
   dispatch({ type: SEARCH_PO, payload: data });
 
+const persistFormPO = (data) => (dispatch) => {
+  dispatch({ type: PERSIST_FORM_PO, payload: data });
+};
+const resetPersistFormPO = () => (dispatch) => {
+  dispatch({ type: RESET_PERSIST_FORM_PO });
+};
+
+const savePO = (data) => {
+  try {
+    const { po_id } = data || {};
+    // return { success: true, data: data, message: "savePO" };
+    console.log("savePO data : ", [data]);
+    return !po_id
+      ? axios
+          .post(`${apiPO}`, [data], header_config)
+          .then((resp) => {
+            if (resp.status === 200) {
+              console.log("resp.data", resp.data);
+              return { success: true, data: resp.data, message: "Success" };
+            } else {
+              return { success: false, data: {}, message: resp };
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            if (error?.response) {
+              console.error(error.response);
+            }
+            return { success: false, data: [], message: error };
+          })
+      : axios
+          .put(`${apiPO}/${po_id}`, [data], header_config)
+          .then((resp) => {
+            if (resp.status === 200) {
+              console.log("resp.data", resp.data);
+              return { success: true, data: resp.data, message: "Success" };
+            } else {
+              return { success: false, data: {}, message: resp };
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            if (error?.response) {
+              console.error(error.response);
+            }
+            return { success: false, data: [], message: error };
+          });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
+
 export {
   getPRListForPO,
   rejectPR,
@@ -342,4 +397,9 @@ export {
   cancelPR,
   filterPO,
   SEARCH_PO,
+  PERSIST_FORM_PO,
+  RESET_PERSIST_FORM_PO,
+  persistFormPO,
+  resetPersistFormPO,
+  savePO,
 };

@@ -38,13 +38,6 @@ export const po_list_columns = [
         align: "left",
       },
       {
-        title: "PR Ref.",
-        dataIndex: "pr_no",
-        key: 2,
-        width: "10%",
-        align: "left",
-      },
-      {
         title: "PO Date",
         dataIndex: "po_created",
         key: 3,

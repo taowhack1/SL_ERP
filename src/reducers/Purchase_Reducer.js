@@ -1,6 +1,10 @@
 /** @format */
 
-import { SEARCH_PO } from "../actions/purchase/PO_Actions";
+import {
+  PERSIST_FORM_PO,
+  RESET_PERSIST_FORM_PO,
+  SEARCH_PO,
+} from "../actions/purchase/PO_Actions";
 import { SEARCH_PR } from "../actions/purchase/PR_Actions";
 import {
   GET_ALL_PR,
@@ -31,6 +35,11 @@ import {
 } from "../actions/types";
 import { sortData } from "../include/js/function_main";
 const initialState = {
+  operations: {
+    po: {
+      form: {},
+    },
+  },
   pr: {
     pr_list: [],
     pr_head: {},
@@ -221,6 +230,28 @@ export default (state = initialState, action) => {
           filter: {
             ...state.pr.filter,
             ...action.payload,
+          },
+        },
+      };
+    case PERSIST_FORM_PO:
+      return {
+        ...state,
+        operations: {
+          ...state?.operations,
+          po: {
+            ...state?.operations?.po,
+            form: action.payload,
+          },
+        },
+      };
+    case RESET_PERSIST_FORM_PO:
+      return {
+        ...state,
+        operations: {
+          ...state?.operations,
+          po: {
+            ...state?.operations?.po,
+            form: state?.operations?.po?.form,
           },
         },
       };

@@ -10,6 +10,8 @@ const approveFunction = async ({
   user_name = null,
   remark = null,
 }) => {
+  // require status
+  // 2 = Confirm , 3 = Cancel , 4 = Complete , 5 = Approve , 6 = Reject
   if (!status || !process_id || !user_name)
     return { success: false, message: "Error missing require fields." };
   try {

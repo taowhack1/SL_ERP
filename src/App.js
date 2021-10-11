@@ -382,11 +382,11 @@ const App = (props) => {
             </Route>
             {/* <Route exact path="/purchase/po/create">
               <PurchPOCreate />
-            </Route>
+            </Route> */}
             <Route exact path="/purchase/po/create2">
               <POFormDisplay />
             </Route>
-            <Route
+            {/* <Route
               exact
               path="/purchase/po/edit/:id"
               component={PurchPOCreate}

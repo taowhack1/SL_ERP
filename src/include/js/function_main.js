@@ -592,3 +592,47 @@ export const getStatusByName = (statusName, callBack) => {
       );
   }
 };
+
+export const groupBy = (array, key, groupKey, reduceKey2D) => {
+  const reduceObj = reduceKey2D.map((arr) => ({ [arr[0]]: 0 }));
+
+  let objReduce = {};
+
+  reduceKey2D.forEach((arr) => {
+    objReduce[arr[0]] = 0;
+    return objReduce;
+  });
+
+  console.log("reduceObj", reduceObj);
+
+  const returnData = array.reduce((resultArray, currentObj) => {
+    if (!resultArray[currentObj[key]]) {
+      resultArray[currentObj[key]] = {
+        ...currentObj,
+        ...objReduce,
+        [groupKey]: [],
+      };
+    }
+
+    resultArray[currentObj[key]][groupKey].push(currentObj);
+
+    reduceKey2D.forEach((rKey) => {
+      resultArray[currentObj[key]][rKey[0]] += currentObj[rKey[1]];
+    });
+
+    return resultArray;
+  }, {});
+
+  return Object.values(returnData);
+};
+
+export const swapObjKey = (arr, swapKey2D) => {
+  const returnData = arr.map((obj) => {
+    swapKey2D.forEach((key) => {
+      obj[key[0]] = obj[key[1]];
+    });
+    return obj;
+  });
+
+  return returnData;
+};
