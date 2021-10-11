@@ -34,6 +34,9 @@ import {
   GET_FGITEM,
   GET_ROUTING_ONE,
   GET_PLANNING_CALENDAR_DATA,
+  SEARCH_ROUTING,
+  RESET_ROUTING,
+  GET_ROUTING,
 } from "../actions/types";
 
 export const initialState = {
@@ -111,6 +114,12 @@ export const initialState = {
   routing: {
     routing: {},
     routingList: [],
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 20,
+      routing_id: null,
+    },
   },
   fg: {
     fgList: [],
@@ -126,6 +135,34 @@ export const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case SEARCH_ROUTING:
+      return {
+        ...state,
+        routing: {
+          ...state.routing,
+          filter: {
+            ...state.routing.filter,
+            ...action.payload,
+          },
+        },
+      };
+    case RESET_ROUTING:
+      return {
+        ...state,
+        routing: {
+          ...state.routing,
+          routing: {},
+          routingList: [],
+        },
+      };
+    case GET_ROUTING:
+      return {
+        ...state,
+        routing: {
+          ...state.routing,
+          routingList: action.payload,
+        },
+      };
     case GET_PRODUCTION_MASTER_DATA:
       return {
         ...state,

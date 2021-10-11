@@ -3,10 +3,17 @@ import axios from "axios";
 import React from "react";
 import { header_config } from "../../include/js/main_config";
 import { api_list_fg, api_routing } from "../../include/js/api";
-import { GET_FGITEM, GET_ROUTING_ALL, GET_ROUTING_ONE } from "../types";
+import {
+  GET_FGITEM,
+  GET_ROUTING,
+  GET_ROUTING_ALL,
+  GET_ROUTING_ONE,
+  RESET_ROUTING,
+  SEARCH_ROUTING,
+} from "../types";
 import { message } from "antd";
 import { sortData } from "../../include/js/function_main";
-
+const apiGetRouting = `/production/routing`;
 export const getRoutingAll = () => (dispatch) => {
   axios.get(api_routing, header_config).then((res) => {
     dispatch({ type: GET_ROUTING_ALL, payload: res.data[0] });
@@ -123,5 +130,23 @@ const saveRouting = (data) => {
     return { success: false, data: [], message: error };
   }
 };
+const reset_Routing = () => (dispatch) => {
+  try {
+    dispatch({
+      type: RESET_ROUTING,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+const RoutingFilter = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_ROUTING, payload: data });
 
-export { saveRouting };
+const set_filter = () => (dispatch) => {
+  axios.get(apiGetRouting, header_config).then((res) => {
+    console.log("res :>> ", res);
+    dispatch({ type: GET_ROUTING, payload: res.data[0] });
+  });
+};
+
+export { saveRouting, reset_Routing, RoutingFilter, set_filter };
