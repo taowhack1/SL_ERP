@@ -18,7 +18,7 @@ const temp_api = [
         freeze: 24,
         plan_job_plan_time: 6,
         plan_job_date: "01-09-2021",
-        tg_plan_job_actual_time_hour: 4,
+        tg_plan_job_actual_time_hour: 8,
         tg_plan_job_actual_time_ot: 2,
         machine_description: "เครื่อง mixer",
       },
@@ -27,9 +27,9 @@ const temp_api = [
         id: 2,
         machine_id: 2,
         freeze: 24,
-        plan_job_plan_time: 6,
+        plan_job_plan_time: 8,
         plan_job_date: "01-09-2021",
-        tg_plan_job_actual_time_hour: 0,
+        tg_plan_job_actual_time_hour: 8,
         tg_plan_job_actual_time_ot: 0,
         machine_description: "เครื่อง Filling & Packing",
       },
@@ -120,7 +120,7 @@ const DashboardsIndex = () => {
                 ? 8 - plan[index]
                 : 8 - sucess[index] - plan[index]
             )
-        : tempOt.push(0);
+        : tempOt.push(8 - sucess[index] - plan[index]);
       return { ...obj };
     });
     console.log("tempOt :>> ", tempOt);
@@ -560,7 +560,7 @@ const DashboardsIndex = () => {
           c.detail
             .map((res) =>
               res.tg_plan_job_actual_time_ot !== 0
-                ? res.plan_job_plan_time + res.tg_plan_job_actual_time_hour == 8
+                ? res.plan_job_plan_time + res.tg_plan_job_actual_time_hour >= 8
                   ? 0
                   : res.tg_plan_job_actual_time_hour == 0
                   ? 8 - res.plan_job_plan_time
@@ -1161,9 +1161,9 @@ const DashboardsIndex = () => {
       const resp = await getGraph360Day();
       console.log("getGraph360DayFN", resp);
       resp.success && setPlanData(sortData(resp.data));
-      renderGraphMachineAndMount(temp_api, "02-09-2021", "machine");
-      renderGraphMachineAndMount(temp_api, "02-09-2021", "day");
-      renderGraph365Day(temp_api);
+      renderGraphMachineAndMount(sortData(resp.data), "02/09/2021", "machine");
+      renderGraphMachineAndMount(sortData(resp.data), "02/09/2021", "day");
+      renderGraph365Day(sortData(resp.data));
     };
     getGraph360DayFN();
   }, []);
@@ -1184,7 +1184,7 @@ const DashboardsIndex = () => {
         <Col>
           <Chart
             type='bar'
-            width={200}
+            width={500}
             height={400}
             series={stateGraphMachine.series}
             options={stateGraphMachine.options}></Chart>
@@ -1206,8 +1206,9 @@ const DashboardsIndex = () => {
           </Tag>
         </Col>
         <Chart
+          className='scroll__container'
           type='bar'
-          width={200}
+          width={1920}
           height={300}
           series={stateGraph12Month.series}
           options={stateGraph12Month.options}></Chart>
