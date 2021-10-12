@@ -7,35 +7,6 @@ import { useSelector } from "react-redux";
 import { getGraph360Day } from "../../../actions/production/DashboardsAction";
 import { sortData } from "../../../include/js/function_main";
 import Authorize from "../../system/Authorize";
-const salesRecord = [
-  {
-    day: 1,
-    product: [
-      { name: "a", value: 5 },
-      { name: "b", value: 2 },
-      { name: "a", value: 7 },
-      { name: "b", value: 4 },
-    ],
-  },
-  {
-    day: 2,
-    product: [
-      { name: "b", value: 8 },
-      { name: "b", value: 6 },
-      { name: "a", value: 4 },
-      { name: "b", value: 1 },
-    ],
-  },
-  {
-    day: 3,
-    product: [
-      { name: "b", value: 10 },
-      { name: "b", value: 7 },
-      { name: "a", value: 9 },
-      { name: "b", value: 0 },
-    ],
-  },
-];
 const temp_api = [
   {
     date: "01-09-2021",
@@ -47,7 +18,7 @@ const temp_api = [
         freeze: 24,
         plan_job_plan_time: 6,
         plan_job_date: "01-09-2021",
-        tg_plan_job_actual_time_hour: 0,
+        tg_plan_job_actual_time_hour: 4,
         tg_plan_job_actual_time_ot: 2,
         machine_description: "เครื่อง mixer",
       },
@@ -59,7 +30,7 @@ const temp_api = [
         plan_job_plan_time: 6,
         plan_job_date: "01-09-2021",
         tg_plan_job_actual_time_hour: 0,
-        tg_plan_job_actual_time_ot: 2,
+        tg_plan_job_actual_time_ot: 0,
         machine_description: "เครื่อง Filling & Packing",
       },
     ],
@@ -92,52 +63,6 @@ const temp_api = [
     ],
   },
 ];
-const respData2 = [
-  {
-    id: 1,
-    machine_id: 1,
-    freeze: 24,
-    plan_job_plan_time: 6,
-    plan_job_date: "24-09-2021",
-    tg_plan_job_actual_time_hour: 0,
-    tg_plan_job_actual_time_ot: 2,
-    machine_description: "เครื่อง mixer",
-  },
-  {
-    id: 2,
-    machine_id: 2,
-    freeze: 24,
-    plan_job_plan_time: 8,
-    plan_job_date: "24-09-2021",
-    tg_plan_job_actual_time_hour: 0,
-    tg_plan_job_actual_time_ot: 2,
-    machine_description: "เครื่อง Filling & Packing",
-  },
-];
-const respData = [
-  {
-    id: 1,
-    machine_id: 1,
-    freeze: 24,
-    break: 0,
-    plan_job_plan_time: 8,
-    plan_job_date: "24-09-2021",
-    tg_plan_job_actual_time_hour: 8,
-    tg_plan_job_actual_time_ot: 2,
-    machine_description: "เครื่อง mixer",
-  },
-  {
-    id: 2,
-    machine_id: 2,
-    freeze: 24,
-    break: 0,
-    plan_job_plan_time: 8,
-    plan_job_date: "24-09-2021",
-    tg_plan_job_actual_time_hour: 8,
-    tg_plan_job_actual_time_ot: 2,
-    machine_description: "เครื่อง Filling & Packing",
-  },
-];
 
 const DashboardsIndex = () => {
   const authorize = Authorize();
@@ -152,11 +77,10 @@ const DashboardsIndex = () => {
     let plan = [];
     let ot = [];
     let tempOt = [];
-    let name = [];
     let freeze = [];
     let total = 0;
     let sucess = [];
-    let graphDay_sucess = [];
+
     let DataTransformer = [];
     if (data.length > 0) {
       DataTransformer = Object.values(
@@ -199,7 +123,13 @@ const DashboardsIndex = () => {
         : tempOt.push(0);
       return { ...obj };
     });
-
+    console.log("tempOt :>> ", tempOt);
+    console.log(
+      "tempOt fn :>> ",
+      tempOt.reduce((sum, number) => {
+        return sum + number / tempOt.length;
+      }, 0)
+    );
     let graphDay = [
       {
         name: "sucess",
@@ -285,58 +215,7 @@ const DashboardsIndex = () => {
         colors: "#FFFFFF",
       },
     ];
-    let graphMonth = [
-      {
-        name: "sucess",
-        data: [
-          sucess.reduce((sum, number) => {
-            return sum + number / sucess.length;
-          }, 0),
-        ],
-        plan_day: findUniqueValues(plan_day),
-        colors: "#2ECC71",
-      },
-      {
-        name: "plan",
-        data: [
-          plan.reduce((sum, number) => {
-            return sum + number / plan.length;
-          }, 0),
-        ],
-        plan_day: findUniqueValues(plan_day),
-        colors: "#0000FF",
-      },
-      {
-        name: "tempOt",
-        data: [
-          tempOt.reduce((sum, number) => {
-            return sum + number / tempOt.length;
-          }, 0),
-        ],
-        plan_day: findUniqueValues(plan_day),
-        colors: "#FFFFFF",
-      },
-      {
-        name: "ot",
-        data: [
-          ot.reduce((sum, number) => {
-            return sum + number / ot.length;
-          }, 0),
-        ],
-        plan_day: findUniqueValues(plan_day),
-        colors: "#CC0000",
-      },
-      {
-        name: "freeze",
-        data: [
-          freeze.reduce((sum, number) => {
-            return sum + number / freeze.length;
-          }, 0),
-        ],
-        plan_day: findUniqueValues(plan_day),
-        colors: "#FFFFFF",
-      },
-    ];
+
     if (type == "machine") {
       console.log("graphMachine if:>> ", graphMachine);
       // setGraphMachine({
@@ -631,7 +510,6 @@ const DashboardsIndex = () => {
     let tempOt = [];
     let freeze = [];
     let date_plan = [];
-    let total = 0;
     let temp_testSum = params.reduce((a, c) => {
       a.push({
         ...c,
@@ -872,9 +750,6 @@ const DashboardsIndex = () => {
     console.log("graphMonth FN360DAY: success>> ", success);
     console.log("graphMonth FN360DAY: plan>> ", plan);
     console.log("graphMonth FN360DAY: tempOt>> ", tempOt);
-    console.log("graphMonth FN360DAY temp_testSum :>> ", temp_testSum);
-    console.log("graphMonth FN360DAY success_plan :>> ");
-    return { graphMonth, success, temp_testSum, plan, date_plan, tempOt };
   };
   const [stateGraphMachine, setstateGraphMachine] = useState({
     series: [],
@@ -1159,13 +1034,13 @@ const DashboardsIndex = () => {
         events: {
           click: (event, chartContext, config) => {
             if (event.target.localName == "tspan") {
-              setGraphMachine(
+              setstateGraphMachine(
                 renderGraphMachineAndMount(
                   temp_api,
                   event.explicitOriginalTarget.textContent
                 ).graphMachine
               );
-              setGraphDay(
+              setstateGraphDay(
                 renderGraphMachineAndMount(
                   temp_api,
                   event.explicitOriginalTarget.textContent
@@ -1281,12 +1156,7 @@ const DashboardsIndex = () => {
   });
 
   const { user_name } = useSelector((state) => state.auth.authData);
-
-  // renderGraphMachineAndMount(temp_api, "02-09-2021").graphMachine
-  // renderGraphMachineAndMount(temp_api, "02-09-2021").graphDay
-
   useEffect(() => {
-    //setTimeout(() => {}, 500);
     const getGraph360DayFN = async () => {
       const resp = await getGraph360Day();
       console.log("getGraph360DayFN", resp);
@@ -1298,9 +1168,6 @@ const DashboardsIndex = () => {
     getGraph360DayFN();
   }, []);
   const [planData, setPlanData] = useState([]);
-  const [graphMachine, setGraphMachine] = useState([]);
-  const [graphDay, setGraphDay] = useState([]);
-  const [graph12Month, setGraph12Month] = useState([]);
 
   return (
     <>
