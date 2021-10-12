@@ -45,10 +45,10 @@ const temp_api = [
         id: 1,
         machine_id: 1,
         freeze: 24,
-        plan_job_plan_time: 0,
+        plan_job_plan_time: 6,
         plan_job_date: "01-09-2021",
         tg_plan_job_actual_time_hour: 0,
-        tg_plan_job_actual_time_ot: 0,
+        tg_plan_job_actual_time_ot: 2,
         machine_description: "เครื่อง mixer",
       },
       {
@@ -56,10 +56,10 @@ const temp_api = [
         id: 2,
         machine_id: 2,
         freeze: 24,
-        plan_job_plan_time: 0,
+        plan_job_plan_time: 6,
         plan_job_date: "01-09-2021",
         tg_plan_job_actual_time_hour: 0,
-        tg_plan_job_actual_time_ot: 0,
+        tg_plan_job_actual_time_ot: 2,
         machine_description: "เครื่อง Filling & Packing",
       },
     ],
@@ -72,7 +72,7 @@ const temp_api = [
         id: 1,
         machine_id: 1,
         freeze: 24,
-        plan_job_plan_time: 0,
+        plan_job_plan_time: 6,
         plan_job_date: "02-09-2021",
         tg_plan_job_actual_time_hour: 0,
         tg_plan_job_actual_time_ot: 0,
@@ -83,10 +83,10 @@ const temp_api = [
         id: 2,
         machine_id: 2,
         freeze: 24,
-        plan_job_plan_time: 8,
+        plan_job_plan_time: 6,
         plan_job_date: "02-09-2021",
-        tg_plan_job_actual_time_hour: 6,
-        tg_plan_job_actual_time_ot: 2,
+        tg_plan_job_actual_time_hour: 0,
+        tg_plan_job_actual_time_ot: 0,
         machine_description: "เครื่อง Filling & Packing",
       },
     ],
@@ -585,7 +585,7 @@ const DashboardsIndex = () => {
             Width: "20%",
           },
           grid: {
-            show: true,
+            show: false,
             borderColor: "#B2B2B2",
             xaxis: {
               lines: {
@@ -631,6 +631,7 @@ const DashboardsIndex = () => {
     let tempOt = [];
     let freeze = [];
     let date_plan = [];
+    let total = 0;
     let temp_testSum = params.reduce((a, c) => {
       a.push({
         ...c,
@@ -679,11 +680,16 @@ const DashboardsIndex = () => {
         ),
         ctempOt: tempOt.push(
           c.detail
-            .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
-            .map(
-              (res) => res.tg_plan_job_actual_time_hour + res.plan_job_plan_time
+            .map((res) =>
+              res.tg_plan_job_actual_time_ot !== 0
+                ? res.plan_job_plan_time + res.tg_plan_job_actual_time_hour == 8
+                  ? 0
+                  : res.tg_plan_job_actual_time_hour == 0
+                  ? 8 - res.plan_job_plan_time
+                  : 8 - res.plan_job_plan_time
+                : 8 - res.plan_job_plan_time
             )
-          //.reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0)
+            .reduce((acc, cur) => acc + cur / c.detail.length, 0)
         ),
         freeze: c.detail
           .filter((res) => res.freeze >= 0)
@@ -712,7 +718,7 @@ const DashboardsIndex = () => {
       },
       {
         name: "freeze",
-        data: [0, 4],
+        data: tempOt,
         date_plan: date_plan,
         colors: "#FFFFFF",
       },
@@ -866,6 +872,8 @@ const DashboardsIndex = () => {
     console.log("graphMonth FN360DAY: success>> ", success);
     console.log("graphMonth FN360DAY: plan>> ", plan);
     console.log("graphMonth FN360DAY: tempOt>> ", tempOt);
+    console.log("graphMonth FN360DAY temp_testSum :>> ", temp_testSum);
+    console.log("graphMonth FN360DAY success_plan :>> ");
     return { graphMonth, success, temp_testSum, plan, date_plan, tempOt };
   };
   const [stateGraphMachine, setstateGraphMachine] = useState({
@@ -1105,7 +1113,7 @@ const DashboardsIndex = () => {
         Width: "20%",
       },
       grid: {
-        show: true,
+        show: false,
         borderColor: "#B2B2B2",
         xaxis: {
           lines: {
@@ -1293,420 +1301,7 @@ const DashboardsIndex = () => {
   const [graphMachine, setGraphMachine] = useState([]);
   const [graphDay, setGraphDay] = useState([]);
   const [graph12Month, setGraph12Month] = useState([]);
-  // const graphMachine = renderGraphMachineAndMount(
-  //   temp_api,
-  //   "02-09-2021"
-  // ).graphMachine;
-  //const graphDay = renderGraphMachineAndMount(temp_api, "02-09-2021").graphDay;
-  //const graph12Month = renderGraph365Day(temp_api).graphMonth;
-  // setGraphMachine(
-  //   renderGraphMachineAndMount(planData, "02/09/2021").graphMachine
-  // );
-  // setGraphDay(renderGraphMachineAndMount(planData, "02/09/2021").graphDay);
 
-  // const state = {
-  //   series: [...graphMachine],
-  //   options: {
-  //     position: "front",
-  //     colors: [...graphMachine.map((color) => color.colors)],
-  //     chart: {
-  //       width: "20%",
-  //       type: "bar",
-  //       height: 350,
-  //       stacked: true,
-  //       toolbar: {
-  //         show: false,
-  //       },
-  //     },
-  //     plotOptions: {
-  //       bar: {
-  //         horizontal: false,
-  //         columnWidth: "30%",
-  //         endingShape: "flat",
-  //       },
-  //     },
-  //     dataLabels: {
-  //       enabled: false,
-  //     },
-  //     stroke: {
-  //       show: true,
-  //       width: 0.5,
-  //       colors: ["#000000"],
-  //     },
-  //     annotations: {
-  //       position: "back",
-  //       yaxis: [
-  //         {
-  //           y: 8,
-
-  //           borderColor: "#D7D7D7",
-  //           strokeDashArray: 0,
-  //         },
-  //         {
-  //           y: 12,
-  //           borderColor: "#D7D7D7",
-  //           strokeDashArray: 0,
-  //         },
-  //         {
-  //           y: 20,
-  //           borderColor: "#D7D7D7",
-  //           strokeDashArray: 0,
-  //         },
-  //         {
-  //           y: 24,
-  //           borderColor: "#C3C3C3",
-  //           strokeDashArray: 0,
-  //         },
-  //       ],
-  //     },
-  //     responsive: [
-  //       {
-  //         breakpoint: 480,
-  //         options: {
-  //           legend: {
-  //             position: "bottom",
-  //             offsetX: -10,
-  //             offsetY: 0,
-  //           },
-  //         },
-  //       },
-  //     ],
-  //     yaxis: {
-  //       show: true,
-  //       max: 24,
-  //       tickAmount: 24,
-  //       labels: {
-  //         show: true,
-  //         formatter: (value) => {
-  //           return [8, 12, 20, 24].includes(value) ? value : " ";
-  //         },
-  //       },
-  //     },
-  //     xaxis: {
-  //       categories: graphMachine[0]?.machine_description,
-  //       Width: "20%",
-  //       labels: {
-  //         show: true,
-  //         rotate: -45,
-  //         rotateAlways: true,
-  //         hideOverlappingLabels: true,
-  //         showDuplicates: false,
-  //         trim: false,
-  //         minHeight: undefined,
-  //         maxHeight: 120,
-  //         style: {
-  //           //colors: [],
-  //           fontSize: "12px",
-  //           fontFamily: "Helvetica, Arial, sans-serif",
-  //           fontWeight: 400,
-  //           cssClass: "apexcharts-xaxis-label",
-  //         },
-  //         offsetX: 0,
-  //         offsetY: 0,
-  //       },
-  //     },
-  //     grid: {
-  //       show: true,
-  //       borderColor: "#000000",
-  //       xaxis: {
-  //         lines: {
-  //           show: false,
-  //         },
-  //       },
-  //       yaxis: {
-  //         lines: {
-  //           show: false,
-  //         },
-  //       },
-  //     },
-  //     markers: {
-  //       size: 2,
-  //       colors: undefined,
-  //       strokeColors: "#fff",
-  //       strokeWidth: 2,
-  //       strokeOpacity: 0.9,
-  //       strokeDashArray: 0,
-  //       fillOpacity: 1,
-  //       discrete: [],
-  //       shape: "line",
-  //       radius: 2,
-  //       offsetX: 0,
-  //       offsetY: 0,
-  //       onClick: undefined,
-  //       onDblClick: undefined,
-  //       showNullDataPoints: true,
-  //       hover: {
-  //         size: undefined,
-  //         sizeOffset: 3,
-  //       },
-  //     },
-  //     fill: {
-  //       opacity: 2,
-  //     },
-  //     tooltip: {
-  //       enabled: false,
-  //       y: {
-  //         formatter: function (val) {
-  //           return val;
-  //         },
-  //       },
-  //     },
-  //     legend: {
-  //       show: false,
-  //       position: "bottom",
-  //       horizontalAlign: "center",
-  //     },
-  //   },
-  // };
-  // const state2 = {
-  //   series: [...graphDay],
-  //   options: {
-  //     position: "front",
-  //     colors: [...graphDay.map((color) => color.colors)],
-  //     chart: {
-  //       width: "20%",
-  //       type: "bar",
-  //       height: 350,
-  //       stacked: true,
-  //       toolbar: {
-  //         show: false,
-  //       },
-  //     },
-
-  //     plotOptions: {
-  //       bar: {
-  //         horizontal: false,
-  //         columnWidth: "30%",
-  //         endingShape: "flat",
-  //       },
-  //     },
-  //     dataLabels: {
-  //       enabled: false,
-  //     },
-  //     stroke: {
-  //       show: true,
-  //       width: 0.5,
-  //       colors: ["#000000"],
-  //     },
-  //     annotations: {
-  //       position: "back",
-  //       yaxis: [
-  //         {
-  //           y: 8,
-  //           borderColor: "#D7D7D7",
-  //           strokeDashArray: 0,
-  //         },
-  //         {
-  //           y: 12,
-  //           borderColor: "#D7D7D7",
-  //           strokeDashArray: 0,
-  //         },
-  //         {
-  //           y: 20,
-  //           borderColor: "#D7D7D7",
-  //           strokeDashArray: 0,
-  //         },
-  //         {
-  //           y: 24,
-  //           borderColor: "#C3C3C3",
-  //           strokeDashArray: 0,
-  //         },
-  //       ],
-  //     },
-  //     responsive: [
-  //       {
-  //         breakpoint: 480,
-  //         options: {
-  //           legend: {
-  //             position: "bottom",
-  //             offsetX: -10,
-  //             offsetY: 0,
-  //           },
-  //         },
-  //       },
-  //     ],
-  //     yaxis: {
-  //       show: true,
-  //       max: 24,
-  //       tickAmount: 24,
-  //       labels: {
-  //         show: true,
-  //         formatter: (value) => {
-  //           return [8, 12, 20, 24].includes(value) ? value : " ";
-  //         },
-  //       },
-  //     },
-  //     xaxis: {
-  //       categories: [...graphDay[0].plan_day],
-  //       Width: "20%",
-  //     },
-  //     grid: {
-  //       show: true,
-  //       borderColor: "#B2B2B2",
-  //       xaxis: {
-  //         lines: {
-  //           show: false,
-  //         },
-  //       },
-  //       yaxis: {
-  //         lines: {
-  //           show: true,
-  //         },
-  //       },
-  //     },
-  //     fill: {
-  //       opacity: 2,
-  //     },
-  //     tooltip: {
-  //       enabled: false,
-  //       y: {
-  //         formatter: function (val) {
-  //           return val;
-  //         },
-  //       },
-  //     },
-  //     legend: {
-  //       show: false,
-  //       position: "bottom",
-  //       horizontalAlign: "center",
-  //     },
-  //   },
-  // };
-  // const state3 = {
-  //   series: [...graph12Month],
-  //   options: {
-  //     colors: [...graph12Month?.map((color) => color.colors)],
-  //     chart: {
-  //       width: "20%",
-  //       type: "bar",
-  //       height: 350,
-  //       stacked: true,
-  //       toolbar: {
-  //         show: false,
-  //       },
-  //       events: {
-  //         click: (event, chartContext, config) => {
-  //           if (event.target.localName == "tspan") {
-  //             setGraphMachine(
-  //               renderGraphMachineAndMount(
-  //                 temp_api,
-  //                 event.explicitOriginalTarget.textContent
-  //               ).graphMachine
-  //             );
-  //             setGraphDay(
-  //               renderGraphMachineAndMount(
-  //                 temp_api,
-  //                 event.explicitOriginalTarget.textContent
-  //               ).graphDay
-  //             );
-  //             console.log(
-  //               "click_date  :>> ",
-  //               event.explicitOriginalTarget.textContent
-  //             );
-  //           }
-  //         },
-  //       },
-  //     },
-  //     plotOptions: {
-  //       bar: {
-  //         horizontal: false,
-  //         columnWidth: "30%",
-  //         endingShape: "flat",
-  //       },
-  //     },
-  //     dataLabels: {
-  //       enabled: false,
-  //     },
-  //     stroke: {
-  //       show: true,
-  //       width: 0.2,
-  //       colors: ["#000000"],
-  //     },
-  //     annotations: {
-  //       position: "back",
-  //       yaxis: [
-  //         {
-  //           y: 8,
-  //           borderColor: "#D7D7D7",
-  //           strokeDashArray: 0,
-  //         },
-  //         {
-  //           y: 12,
-  //           borderColor: "#D7D7D7",
-  //           strokeDashArray: 0,
-  //         },
-  //         {
-  //           y: 20,
-  //           borderColor: "#D7D7D7",
-  //           strokeDashArray: 0,
-  //         },
-  //         {
-  //           y: 24,
-  //           borderColor: "#C3C3C3",
-  //           strokeDashArray: 0,
-  //         },
-  //       ],
-  //     },
-  //     responsive: [
-  //       {
-  //         breakpoint: 480,
-  //         options: {
-  //           legend: {
-  //             position: "bottom",
-  //             offsetX: -10,
-  //             offsetY: 0,
-  //           },
-  //         },
-  //       },
-  //     ],
-  //     yaxis: {
-  //       show: true,
-  //       max: 24,
-  //       tickAmount: 24,
-  //       labels: {
-  //         show: true,
-  //         formatter: (value) => {
-  //           return [8, 12, 20, 24].includes(value) ? value : " ";
-  //         },
-  //       },
-  //     },
-  //     xaxis: {
-  //       categories: [...graph12Month[0].date_plan],
-  //       Width: "20%",
-  //       title: {
-  //         text: "09-2021",
-  //         offsetX: 0,
-  //         offsetY: 0,
-  //         style: {
-  //           color: undefined,
-  //           fontSize: "12px",
-  //           fontFamily: "Helvetica, Arial, sans-serif",
-  //           fontWeight: 600,
-  //           cssClass: "apexcharts-xaxis-title",
-  //         },
-  //       },
-  //     },
-  //     grid: {
-  //       show: false,
-  //     },
-  //     fill: {
-  //       opacity: 2,
-  //     },
-  //     tooltip: {
-  //       enabled: false,
-  //       y: {
-  //         formatter: function (val) {
-  //           return val;
-  //         },
-  //       },
-  //     },
-  //     legend: {
-  //       show: false,
-  //       position: "bottom",
-  //       horizontalAlign: "center",
-  //     },
-  //   },
-  // };
   return (
     <>
       <Row gutter={[8, 16]}>
