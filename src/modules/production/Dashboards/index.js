@@ -1205,10 +1205,11 @@ const DashboardsIndex = () => {
             freeze
           </Tag>
         </Col>
+        <Col></Col>
         <Chart
           className='scroll__container'
           type='bar'
-          width={1920}
+          width={1800}
           height={300}
           series={stateGraph12Month.series}
           options={stateGraph12Month.options}></Chart>
