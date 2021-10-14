@@ -1,12 +1,13 @@
 /** @format */
 
-import { Col, Row, Tag } from "antd";
+import { Col, DatePicker, Row, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { useSelector } from "react-redux";
 import { getGraph360Day } from "../../../actions/production/DashboardsAction";
 import { sortData } from "../../../include/js/function_main";
 import Authorize from "../../system/Authorize";
+import moment from "moment";
 const temp_api = [
   {
     date: "01-09-2021",
@@ -65,11 +66,15 @@ const temp_api = [
 ];
 
 const DashboardsIndex = () => {
+  const [date2, setDate] = useState(moment());
+  const [planData, setPlanData] = useState([]);
   const authorize = Authorize();
+  console.log("date :>> ", date2);
   authorize.check_authorize();
   const renderGraphMachineAndMount = (data, date, type) => {
     console.log("type :>> ", type);
     console.log("data renderGraphMachineAndMount:>> ", data);
+    console.log("date renderGraphMachineAndMount:>> ", date);
     const findUniqueValues = (arr) => [...new Set(arr)];
     const isCheck8hr = (value) => value >= 8;
     let machine_name = [];
@@ -82,6 +87,7 @@ const DashboardsIndex = () => {
     let sucess = [];
 
     let DataTransformer = [];
+
     if (data.length > 0) {
       DataTransformer = Object.values(
         ...data
@@ -504,6 +510,7 @@ const DashboardsIndex = () => {
     }
   };
   const renderGraph365Day = (params) => {
+    console.log("planData :>> ", planData);
     let plan = [];
     let success = [];
     let ot = [];
@@ -565,6 +572,8 @@ const DashboardsIndex = () => {
                   : res.tg_plan_job_actual_time_hour == 0
                   ? 8 - res.plan_job_plan_time
                   : 8 - res.plan_job_plan_time
+                : res.plan_job_plan_time == 0
+                ? 0
                 : 8 - res.plan_job_plan_time
             )
             .reduce((acc, cur) => acc + cur / c.detail.length, 0)
@@ -627,21 +636,12 @@ const DashboardsIndex = () => {
           },
           events: {
             click: (event, chartContext, config) => {
+              console.log(
+                "click_date  :>> ",
+                event.explicitOriginalTarget.textContent
+              );
               if (event.target.localName == "tspan") {
-                renderGraphMachineAndMount(
-                  temp_api,
-                  event.explicitOriginalTarget.textContent,
-                  "machine"
-                );
-                renderGraphMachineAndMount(
-                  temp_api,
-                  event.explicitOriginalTarget.textContent,
-                  "day"
-                );
-                console.log(
-                  "click_date  :>> ",
-                  event.explicitOriginalTarget.textContent
-                );
+                selectDate(event.explicitOriginalTarget.textContent);
               }
             },
           },
@@ -1121,7 +1121,7 @@ const DashboardsIndex = () => {
         categories: [],
         Width: "20%",
         title: {
-          text: "09-2021",
+          text: "",
           offsetX: 0,
           offsetY: 0,
           style: {
@@ -1154,21 +1154,53 @@ const DashboardsIndex = () => {
       },
     },
   });
-
   const { user_name } = useSelector((state) => state.auth.authData);
+  const getGraph360DayFN = async (date, change) => {
+    const resp = await getGraph360Day(date);
+    console.log("getGraph360DayFN", resp);
+    resp.success && setPlanData(sortData(resp.data));
+    const dateDefaults = moment().format("DD/MM/YYYY");
+    console.log("dateDefaults :>> ", dateDefaults);
+    //renderGraph365Day(sortData(resp.data));
+    if (change == true) {
+      renderGraphMachineAndMount(
+        sortData(resp.data),
+        `${dateDefaults}`,
+        "machine"
+      );
+      renderGraphMachineAndMount(sortData(resp.data), `${dateDefaults}`, "day");
+    }
+  };
   useEffect(() => {
-    const getGraph360DayFN = async () => {
-      const resp = await getGraph360Day();
-      console.log("getGraph360DayFN", resp);
-      resp.success && setPlanData(sortData(resp.data));
-      renderGraphMachineAndMount(sortData(resp.data), "02/09/2021", "machine");
-      renderGraphMachineAndMount(sortData(resp.data), "02/09/2021", "day");
-      renderGraph365Day(sortData(resp.data));
-    };
-    getGraph360DayFN();
+    getGraph360DayFN(date2, true);
   }, []);
-  const [planData, setPlanData] = useState([]);
 
+  const changeYear = (data) => {
+    console.log("data :>> ", data);
+    getGraph360DayFN(data, false);
+  };
+  const selectDate = (date) => {
+    renderGraphMachineAndMount(planData, date, "machine");
+    renderGraphMachineAndMount(planData, date, "day");
+  };
+  const renderGrap = () => {
+    let i = 0;
+    let graph = [];
+    for (i = 0; i <= 12; i++) {
+      graph.push(
+        <Chart
+          key={i}
+          type='bar'
+          width={1920}
+          height={300}
+          series={stateGraph12Month.series}
+          options={stateGraph12Month.options}></Chart>
+      );
+    }
+    return graph;
+  };
+  console.log("planData 2:>> ", planData);
+  console.log("graph :>> ", renderGrap());
   return (
     <>
       <Row gutter={[8, 16]}>
@@ -1204,15 +1236,26 @@ const DashboardsIndex = () => {
           <Tag color='#FFFFFF' style={{ color: "#000000" }}>
             freeze
           </Tag>
+          <span style={{ marginLeft: 30 }}>View in </span>
+          <DatePicker
+            picker='year'
+            defaultValue={date2}
+            format={"YYYY"}
+            onChange={(data) => {
+              data ? changeYear(data) : setDate(null);
+            }}
+          />
         </Col>
-        <Col></Col>
-        <Chart
-          className='scroll__container'
-          type='bar'
-          width={1800}
-          height={300}
-          series={stateGraph12Month.series}
-          options={stateGraph12Month.options}></Chart>
+
+        <div className='scroll__container'>
+          {renderGrap()}
+          {/* <Chart
+            type='bar'
+            width={1920}
+            height={300}
+            series={stateGraph12Month.series}
+            options={stateGraph12Month.options}></Chart> */}
+        </div>
       </Row>
     </>
   );
