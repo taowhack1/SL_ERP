@@ -1419,7 +1419,7 @@ const DashboardsIndex = () => {
             plan
           </Tag>
           <Tag color='#2ECC71'>success</Tag>
-          <Tag color='#FFA500'>break</Tag>
+          {/* <Tag color='#FFA500'>break</Tag> */}
           <Tag color='#000000'>holiday</Tag>
           <Tag color='#CC0000'>OT</Tag>
           <Tag color='#FFFFFF' style={{ color: "#000000" }}>
