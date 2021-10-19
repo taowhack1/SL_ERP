@@ -12,7 +12,12 @@ import {
 import { useFetch } from "../../../include/js/customHooks";
 import { AppContext } from "../../../include/js/context";
 import { useHistory, useParams } from "react-router";
-import { sortData, validateFormHead } from "../../../include/js/function_main";
+import {
+  sortData,
+  sumArrObj,
+  validateFormDetail,
+  validateFormHead,
+} from "../../../include/js/function_main";
 import { persistFormPO, savePO } from "../../../actions/purchase/PO_Actions";
 import { useDispatch, useSelector } from "react-redux";
 import { approveFunction } from "../../../actions";
@@ -20,6 +25,8 @@ import Swal from "sweetalert2";
 import Authorize from "../../system/Authorize";
 import { get_log_by_id, reset_comments } from "../../../actions/comment&log";
 import Comments from "../../../components/Comments";
+import moment from "moment";
+import Text from "antd/lib/typography/Text";
 export const POContext = React.createContext();
 const apiGetPOByID = `/purchase/po`;
 const POFormDisplay = () => {
@@ -42,15 +49,6 @@ const POFormDisplay = () => {
     `${apiGetPOByID}/${user_name}&${id}`,
     [null, undefined, "new"].includes(id) || !user_name
   );
-
-  console.log(
-    "po_id :",
-    id,
-    [null, undefined, "new"].includes(id) || !user_name,
-    `id : ${id} , username : ${user_name}`,
-    getPO
-  );
-
   const {
     data: po = [],
     error: getPOError,
@@ -84,13 +82,18 @@ const POFormDisplay = () => {
       const {
         pr_detail_id,
         item_id,
+        item_no_name,
         vendor_id,
         vendor_no_name,
         payment_term_id,
         payment_term_name,
       } = data || {};
 
-      const findItem = po_detail?.find((obj) => obj?.item_id === item_id);
+      // const findItem = po_detail?.find((obj) => obj?.item_id === item_id
+      //  );
+      const findItem = po_detail?.find(
+        (obj) => obj?.item_id === item_id && obj?.item_no_name === item_no_name
+      );
       let tempPODetail = po_detail;
       if (checked) {
         if (!po_detail.length) {
@@ -100,26 +103,50 @@ const POFormDisplay = () => {
             payment_term_id,
             payment_term_name,
           };
+
+          // Start. Find and use vendor master data
+          const { data: vendors, loading: getVendorLoading } = getVendor;
+          if (!getVendorLoading) {
+            const findVendor = vendors[0]?.find(
+              (obj) => obj?.vendor_id === vendor_id
+            );
+            if (findVendor) {
+              const {
+                vat_id,
+                vat_rate,
+                payment_term_id,
+                payment_term_name,
+                currency_id,
+                currency_no,
+              } = findVendor;
+              tempPO = {
+                ...tempPO,
+                vat_id,
+                vat_rate,
+                payment_term_id,
+                payment_term_name,
+                currency_id,
+                currency_no,
+              };
+            }
+          }
+          // End. Find and use vendor master data
         }
         if (findItem) {
-          tempPODetail = tempPODetail.map((detail) => {
-            console.log("check have ", detail?.item_id === item_id, [
-              ...detail?.po_detail_sub,
-              data,
-            ]);
-            const po_detail_qty = [...detail?.po_detail_sub, data].reduce(
+          tempPODetail = tempPODetail.map((obj) => {
+            const po_detail_qty = [...obj?.po_detail_sub, data].reduce(
               (prev, obj) => (prev += obj?.po_detail_qty),
               0
             );
-            return detail?.item_id === item_id
+            return obj?.item_id === item_id &&
+              obj?.item_no_name === item_no_name
               ? {
-                  ...detail,
+                  ...obj,
                   po_detail_qty,
-                  po_detail_total_price:
-                    detail?.po_detail_price * po_detail_qty,
-                  po_detail_sub: [...detail?.po_detail_sub, data],
+                  po_detail_total_price: obj?.po_detail_price * po_detail_qty,
+                  po_detail_sub: [...obj?.po_detail_sub, data],
                 }
-              : detail;
+              : obj;
           });
         } else {
           tempPODetail = [...tempPODetail, { ...data, po_detail_sub: [data] }];
@@ -128,7 +155,8 @@ const POFormDisplay = () => {
         // Checked = false && find & filter it out
 
         tempPODetail = tempPODetail?.filter((obj) => {
-          if (obj?.item_id === item_id) {
+          // if (obj?.item_id === item_id ) {
+          if (obj?.item_id === item_id && obj?.item_no_name === item_no_name) {
             if (obj?.po_detail_sub?.length === 1) {
               return false;
             } else {
@@ -140,7 +168,8 @@ const POFormDisplay = () => {
         });
 
         tempPODetail = tempPODetail?.map((obj) => {
-          if (obj?.item_id === item_id) {
+          if (obj?.item_id === item_id && obj?.item_no_name === item_no_name) {
+            // if (obj?.item_id === item_id) {
             const po_detail_sub = obj?.po_detail_sub?.filter(
               (obj) => obj?.pr_detail_id !== pr_detail_id
             );
@@ -159,10 +188,13 @@ const POFormDisplay = () => {
           }
         });
       }
+
+      const temp_po_detail = sortData(tempPODetail);
+      tempPO = { ...tempPO, po_detail: temp_po_detail };
+      tempPO = { ...tempPO, ...onCalculateTotal(tempPO) };
       return {
         ...state,
         ...tempPO,
-        po_detail: sortData(tempPODetail),
         pr_selected: tempPODetail.reduce(
           (prevArr, obj) => [...prevArr, ...obj?.po_detail_sub],
           []
@@ -272,7 +304,11 @@ const POFormDisplay = () => {
           "payment_term_id",
           "currency_id",
         ]);
-        if (validate) {
+        const { validate: validateDetail } = validateFormDetail(
+          form?.po_detail,
+          ["po_detail_due_date", "po_detail_qty", "item_id", "uom_id"]
+        );
+        if (validate && validateDetail) {
           setLoading(true);
           const resp = await savePO({
             ...form,
@@ -367,6 +403,19 @@ const POFormDisplay = () => {
     setPOState((prev) => ({ ...prev, ...data }));
   };
 
+  const onCalculateTotal = ({ po_detail, vat_rate, po_discount }) => {
+    const {
+      exclude_vat: tg_po_sum_amount,
+      vat: tg_po_vat_amount,
+      include_vat: tg_po_total_amount,
+    } = sumArrObj(po_detail, "po_detail_total_price", vat_rate, po_discount);
+    return {
+      tg_po_sum_amount,
+      tg_po_vat_amount,
+      tg_po_total_amount,
+    };
+  };
+
   const formConfig = useMemo(
     () => ({
       ...config,
@@ -411,7 +460,14 @@ const POFormDisplay = () => {
   return (
     <MainLayout {...layoutConfig()}>
       <POContext.Provider
-        value={{ poState, onAddItem, onSelect, step, ...formConfig }}
+        value={{
+          poState,
+          onAddItem,
+          onSelect,
+          onCalculateTotal,
+          step,
+          ...formConfig,
+        }}
       >
         <div id="form">
           <div className="d-flex flex-space ">
@@ -421,6 +477,11 @@ const POFormDisplay = () => {
                 <span className="require"># เอกสารนี้ถูกยกเลิกแล้ว</span>
               )}
             </h2>
+            <div>
+              <Text strong>Create Date :</Text>
+              {`${poState?.po_created}`}
+            </div>
+
             {!config?.readOnly && (
               <div>
                 {step === 1 ? (
@@ -459,6 +520,7 @@ const POFormDisplay = () => {
 
 export default POFormDisplay;
 const initialState = {
+  po_created: moment().format("DD/MM/YYYY"),
   po_description: null,
   user_name: null,
   payment_term_id: null,
@@ -466,6 +528,7 @@ const initialState = {
   currency_id: 1,
   currency_no: "THB",
   vat_id: 1,
+  vat_rate: 0.07,
   uom_convert_id: null,
   po_agreement: null,
   po_discount: 0,

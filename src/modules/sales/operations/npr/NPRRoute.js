@@ -8,6 +8,7 @@ import NPRViewById from "./NPRViewById";
 import NPRListForPD from "./pd";
 import NPRPRoductionCostForm from "./pd/NPRProductionCostForm";
 import EstimateForm from "../estimate/EstimateForm";
+import NPRRDForm from "./form/NPRRDForm";
 const NPRRoute = () => {
   const { path } = useRouteMatch();
   const test = useRouteMatch();
@@ -19,10 +20,12 @@ const NPRRoute = () => {
       </Route>
       <Route path={`${path}/:department/:id`}>
         <NPRViewById />
+        {/* <NPRRDForm /> */}
       </Route>
       <Route path={`${path}/rd`}>
         <NPRList />
       </Route>
+
       <Route path={`${path}/pu`}>
         <NPRListForPU />
       </Route>

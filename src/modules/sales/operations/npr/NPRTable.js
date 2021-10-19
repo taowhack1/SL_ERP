@@ -30,13 +30,6 @@ const columns = ({ onOpen }) => [
     className: "tb-col-sm",
   },
   {
-    title: "วันที่สร้าง NPR",
-    align: "center",
-    dataIndex: "npr_created",
-    width: "10%",
-    className: "tb-col-sm",
-  },
-  {
     title: "วันที่ต้องการตัวอย่าง",
     align: "center",
     dataIndex: "npr_request_date",
@@ -64,7 +57,20 @@ const columns = ({ onOpen }) => [
     ),
     align: "left",
     dataIndex: "npr_customer_name",
-    width: "20%",
+    width: "15%",
+    ellipsis: true,
+    className: "tb-col-sm",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <Text>Company Name</Text>
+      </div>
+    ),
+    align: "left",
+    dataIndex: "npr_company_name",
+    width: "15%",
     ellipsis: true,
     className: "tb-col-sm",
     render: (val) => val || "-",

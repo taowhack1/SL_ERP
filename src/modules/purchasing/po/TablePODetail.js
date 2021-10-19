@@ -1,10 +1,10 @@
 import React from "react";
-import { Button, DatePicker, InputNumber, message, Table } from "antd";
+import { DatePicker, InputNumber, Table } from "antd";
 import CustomTable from "../../../components/CustomTable";
 import moment from "moment";
 import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 import CustomSelect from "../../../components/CustomSelect";
-import { FormOutlined, RollbackOutlined } from "@ant-design/icons";
+import { FormOutlined } from "@ant-design/icons";
 const TablePODetail = (props) => {
   const {
     po_detail,
@@ -30,7 +30,7 @@ const TablePODetail = (props) => {
       />
     );
   };
-  console.log("TableDetail", po_detail);
+
   return (
     <>
       <Table
@@ -88,7 +88,7 @@ const poDetailColumns = ({
     className: "tb-col-sm",
     width: "13%",
     dataIndex: "po_detail_qty",
-    render: (val, { id, po_detail_price }) =>
+    render: (val, { id, po_detail_price, po_detail_discount }) =>
       readOnly ? (
         convertDigit(val, 6) || "-"
       ) : (
@@ -105,7 +105,8 @@ const poDetailColumns = ({
               onChange: (value) =>
                 onChangeValue(id, {
                   po_detail_qty: value,
-                  po_detail_total_price: value * po_detail_price,
+                  po_detail_total_price:
+                    value * po_detail_price - po_detail_discount,
                 }),
             }}
           />
@@ -194,14 +195,14 @@ const poDetailColumns = ({
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "po_detail_price",
-    render: (val, { id, po_detail_qty }) =>
+    render: (val, { id, po_detail_qty, po_detail_discount }) =>
       readOnly ? (
-        convertDigit(val, 2) || "-"
+        convertDigit(val, 4) || "-"
       ) : (
         <>
           <InputNumber
             {...{
-              ...getNumberFormat(2),
+              ...getNumberFormat(4),
               placeholder: "Unit Price",
               size: "small",
               className: "w-100",
@@ -211,7 +212,46 @@ const poDetailColumns = ({
               onChange: (value) =>
                 onChangeValue(id, {
                   po_detail_price: value,
-                  po_detail_total_price: po_detail_qty * value,
+                  po_detail_total_price:
+                    po_detail_qty * value - po_detail_discount,
+                }),
+            }}
+          />
+        </>
+      ),
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Discount</b>
+      </div>
+    ),
+    align: "right",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "po_detail_discount",
+    render: (
+      val,
+      { id, po_detail_qty, po_detail_price, po_detail_total_price }
+    ) =>
+      readOnly ? (
+        convertDigit(val, 4) || "-"
+      ) : (
+        <>
+          <InputNumber
+            {...{
+              ...getNumberFormat(4),
+              placeholder: "Discount",
+              size: "small",
+              className: "w-100",
+              min: 0,
+              disabled: false,
+              value: val || 0,
+              onChange: (value) =>
+                onChangeValue(id, {
+                  po_detail_discount: value,
+                  po_detail_total_price:
+                    po_detail_qty * po_detail_price - value,
                 }),
             }}
           />
@@ -228,40 +268,7 @@ const poDetailColumns = ({
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "po_detail_total_price",
-    render: (val) => convertDigit(val, 2) || "-",
-  },
-  {
-    title: (
-      <div className="text-center">
-        <b>Discount</b>
-      </div>
-    ),
-    align: "right",
-    className: "tb-col-sm",
-    width: "10%",
-    dataIndex: "po_detail_discount",
-    render: (val, { id }) =>
-      readOnly ? (
-        convertDigit(val, 2) || "-"
-      ) : (
-        <>
-          <InputNumber
-            {...{
-              ...getNumberFormat(2),
-              placeholder: "Discount",
-              size: "small",
-              className: "w-100",
-              min: 0,
-              disabled: false,
-              value: val || 0,
-              onChange: (value) =>
-                onChangeValue(id, {
-                  po_detail_discount: value,
-                }),
-            }}
-          />
-        </>
-      ),
+    render: (val) => convertDigit(val, 4) || "-",
   },
   {
     title: (
@@ -341,7 +348,7 @@ const poSubDetailColumns = () => [
     ),
     align: "center",
     className: "tb-col-sm",
-    width: "13%",
+    width: "10%",
     dataIndex: "pr_no",
     ellipsis: true,
     render: (val) => val || "-",
@@ -354,7 +361,7 @@ const poSubDetailColumns = () => [
     ),
     align: "right",
     className: "tb-col-sm",
-    width: "13%",
+    width: "8%",
     dataIndex: "po_detail_qty",
     render: (val) => convertDigit(val, 6) || "-",
   },
@@ -366,7 +373,7 @@ const poSubDetailColumns = () => [
     ),
     align: "center",
     className: "tb-col-sm",
-    width: "8%",
+    width: "6%",
     dataIndex: "uom_no",
     render: (val) => val || "-",
   },
@@ -378,7 +385,7 @@ const poSubDetailColumns = () => [
     ),
     align: "right",
     className: "tb-col-sm",
-    width: "12%",
+    width: "8%",
     dataIndex: "po_detail_price",
     render: (val) => convertDigit(val, 6) || "-",
   },
@@ -390,7 +397,7 @@ const poSubDetailColumns = () => [
     ),
     align: "right",
     className: "tb-col-sm",
-    width: "12%",
+    width: "8%",
     dataIndex: "po_detail_total_price",
     render: (val) => convertDigit(val, 6) || "-",
   },
@@ -402,7 +409,7 @@ const poSubDetailColumns = () => [
     ),
     align: "center",
     className: "tb-col-sm",
-    width: "12%",
+    width: "8%",
     dataIndex: "po_detail_due_date",
     render: (val) => val || "-",
   },
@@ -416,6 +423,18 @@ const poSubDetailColumns = () => [
     className: "tb-col-sm",
     // width: "10%",
     dataIndex: "pr_description",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Remark</b>
+      </div>
+    ),
+    align: "left",
+    className: "tb-col-sm",
+    // width: "10%",
+    dataIndex: "pr_detail_remark",
     render: (val) => val || "-",
   },
 ];

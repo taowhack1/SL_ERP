@@ -233,8 +233,8 @@ const poDetailColumns = ({
               field_name: "uom_no",
               allowClear: true,
               showSearch: true,
-              // disabled: getUOMLoading,
-              disabled: true,
+              disabled: getUOMLoading,
+              // disabled: true,
               data: uomList?.length ? uomList[0] : [],
               value: uom_id,
               onChange: (val, obj) =>
@@ -264,12 +264,12 @@ const poDetailColumns = ({
     dataIndex: "po_detail_price",
     render: (val, { id, po_detail_qty }) =>
       readOnly ? (
-        convertDigit(val, 2) || "-"
+        convertDigit(val, 4) || "-"
       ) : (
         <>
           <InputNumber
             {...{
-              ...getNumberFormat(2),
+              ...getNumberFormat(4),
               placeholder: "Unit Price",
               size: "small",
               className: "w-100",
@@ -296,7 +296,7 @@ const poDetailColumns = ({
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "po_detail_total_price",
-    render: (val) => convertDigit(val, 2) || "-",
+    render: (val) => convertDigit(val, 4) || "-",
   },
   {
     title: (
@@ -310,12 +310,12 @@ const poDetailColumns = ({
     dataIndex: "po_detail_discount",
     render: (val, { id }) =>
       readOnly ? (
-        convertDigit(val, 2) || "-"
+        convertDigit(val, 4) || "-"
       ) : (
         <>
           <InputNumber
             {...{
-              ...getNumberFormat(2),
+              ...getNumberFormat(4),
               placeholder: "Discount",
               size: "small",
               className: "w-100",

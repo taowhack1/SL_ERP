@@ -85,7 +85,7 @@ export const columns = ({ readOnly = false, onChange }) => [
     dataIndex: "item_no",
     key: "item_no",
     align: "center",
-    width: "11%",
+    width: "15%",
     ellipsis: true,
     render: (value, record, index) => {
       return <Text className="text-value text-left">{value ?? "-"}</Text>;

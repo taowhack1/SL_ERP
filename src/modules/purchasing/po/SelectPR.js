@@ -3,8 +3,8 @@ import { Button, Checkbox, Input, Table } from "antd";
 import Search from "../../../components/Search";
 import { useFetch } from "../../../include/js/customHooks";
 import { convertDigit } from "../../../include/js/main_config";
-import { Controller, useFormContext } from "react-hook-form";
 import { POContext } from "./POFormDisplay";
+import { ClearOutlined } from "@ant-design/icons";
 const apiGetPRItems = `/purchase/po/pr/pr_detail`;
 const initialSearch = {
   item: null,
@@ -80,6 +80,7 @@ const SelectPR = (props) => {
           style={{ float: "right" }}
           className="primary"
           onClick={clearSearch}
+          icon={<ClearOutlined />}
         >
           Clear Search
         </Button>

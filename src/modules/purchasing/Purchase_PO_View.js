@@ -13,6 +13,7 @@ import ModalRemark from "../../components/Modal_Remark";
 
 import { convertDigit } from "../../include/js/main_config";
 import Authorize from "../system/Authorize";
+import { ReloadOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 const readOnly = true;
@@ -289,9 +290,9 @@ const PurchaseOrderCreate = (props) => {
         {tab === "1" ? (
           <>
             <Row className="col-2 row-margin-vertical">
-              <Col span={15}></Col>
+              <Col span={14}></Col>
 
-              <Col span={5} className="text-number">
+              <Col span={6} className="text-number">
                 <Text strong>Extended Discount :</Text>
               </Col>
               <Col span={3} className="text-number">

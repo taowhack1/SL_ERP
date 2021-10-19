@@ -27,7 +27,7 @@ const ModalViewImages = (
         visible={visible}
         title="View Images"
         footer={[
-          <Button className="primary" onClick={onClose}>
+          <Button key="close-btn" className="primary" onClick={onClose}>
             Close
           </Button>,
         ]}

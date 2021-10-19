@@ -2,6 +2,7 @@ import { Col, Input, Row, Tabs } from "antd";
 import React, { useContext, useEffect } from "react";
 import CustomLabel from "../../../components/CustomLabel";
 import CustomSelect from "../../../components/CustomSelect";
+import TotalFooter from "../../../components/TotalFooter";
 import POFormDetail from "./POFormDetail";
 import { POContext } from "./POFormDisplay";
 import POFormResult from "./POFormResult";
@@ -114,7 +115,7 @@ const POForm = () => {
                     <>
                       <CustomSelect
                         {...{
-                          disabled: true,
+                          disabled: getCurrencyLoading,
                           style: { width: "30%" },
                           placeholder: "Currency",
                           showSearch: true,
@@ -162,10 +163,12 @@ const POForm = () => {
                               ? onChangePOState({
                                   vat_id: val,
                                   vat_name: obj?.data?.vat_name,
+                                  vat_rate: obj?.data?.vat_rate || 0,
                                 })
                               : onChangePOState({
                                   vat_id: null,
                                   vat_name: null,
+                                  vat_rate: 0,
                                 }),
                         }}
                       />

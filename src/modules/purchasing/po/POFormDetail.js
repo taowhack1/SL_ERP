@@ -1,8 +1,13 @@
-import { message, Tabs } from "antd";
+import { ReloadOutlined, SyncOutlined } from "@ant-design/icons";
+import { Col, Divider, InputNumber, message, Row, Tabs } from "antd";
+import Text from "antd/lib/typography/Text";
 import React, { useCallback, useContext } from "react";
 import Swal from "sweetalert2";
+import TotalFooter from "../../../components/TotalFooter";
 import { api_get_uom_list } from "../../../include/js/api";
 import { useFetch } from "../../../include/js/customHooks";
+import { sumArrObj } from "../../../include/js/function_main";
+import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 import POFooterSummary from "./POFooterSummary";
 import { POContext } from "./POFormDisplay";
 import TablePODetail from "./TablePODetail";
@@ -10,15 +15,21 @@ import TablePOExtendedDetail from "./TablePOExtendedDetail";
 
 const POFormDetail = () => {
   const { data: uomList, loading: getUOMLoading } = useFetch(api_get_uom_list);
-  const { readOnly, poState, onAddItem, onChangePOState } =
+  const { readOnly, poState, onAddItem, onChangePOState, onCalculateTotal } =
     useContext(POContext);
 
   console.log("POFormDetail poState", poState);
-  const { po_detail } = poState;
+  const {
+    po_detail,
+    tg_po_sum_amount,
+    tg_po_vat_amount,
+    tg_po_total_amount,
+    currency_no,
+    po_discount,
+  } = poState;
   //   const [state, setState] = useState([]);
 
   const onUseMOQ = useCallback(
-    // onClick use MOQ set data to all PR
     (id, moq = 0) => {
       onChangePOState({
         po_detail: po_detail.map((obj) => {
@@ -36,11 +47,9 @@ const POFormDetail = () => {
     },
     [po_detail]
   );
-  const onUseDefault = useCallback(
-    // onClick use default qty set data to all PR
-    (id) => {
-      console.log("onUseDefault", id);
 
+  const onUseDefault = useCallback(
+    (id) => {
       onChangePOState({
         po_detail: po_detail.map((obj) =>
           obj?.id === id
@@ -58,7 +67,6 @@ const POFormDetail = () => {
   );
 
   const onChangeRemark = (id, value) => {
-    // onChange Remark set to detail header remark
     Swal.fire({
       title: "",
       text: "",
@@ -102,24 +110,13 @@ const POFormDetail = () => {
     });
   };
 
-  console.log("po_detail", po_detail);
   const itemFromPR = po_detail?.filter((obj) => {
-    console.log(
-      "check Form PR",
-      obj?.po_detail_sub?.some((sub) => sub?.pr_detail_id)
-    );
     return obj?.po_detail_sub?.some((sub) => sub?.pr_detail_id);
   });
+
   const itemExtended = po_detail?.filter((obj) => {
-    console.log(
-      "check Entended PR",
-      !obj?.po_detail_sub?.some((sub) => sub?.pr_detail_id)
-    );
     return !obj?.po_detail_sub?.some((sub) => sub?.pr_detail_id);
   });
-
-  console.log("itemFromPR", itemFromPR);
-  console.log("itemExtended", itemExtended);
   return (
     <>
       <Tabs>
@@ -160,6 +157,45 @@ const POFormDetail = () => {
           {/* <POFooterSummary /> */}
         </Tabs.TabPane>
       </Tabs>
+      <Divider className="divider-sm" />
+      <Row className="col-2 row-margin-vertical">
+        <Col span={14}></Col>
+
+        <Col span={6} className="text-number">
+          <SyncOutlined
+            className="button-icon mr-2"
+            style={{ fontWieght: "bold" }}
+            onClick={() => onChangePOState({ ...onCalculateTotal(poState) })}
+          />
+          <Text strong>Extended Discount :</Text>
+        </Col>
+        <Col span={3} className="text-number">
+          <InputNumber
+            {...getNumberFormat(4)}
+            min={0}
+            className="w-100"
+            size="small"
+            value={po_discount}
+            onChange={(val) =>
+              onChangePOState({
+                po_discount: val,
+              })
+            }
+          />
+        </Col>
+        <Col span={1} className="text-string">
+          <Text strong> {`${currency_no || "-"}`}</Text>
+        </Col>
+      </Row>
+      {/* tg_po_sum_amount,
+      tg_po_vat_amount,
+      tg_po_total_amount */}
+      <TotalFooter
+        excludeVat={tg_po_sum_amount}
+        vat={tg_po_vat_amount}
+        includeVat={tg_po_total_amount}
+        currency={currency_no}
+      />
     </>
   );
 };

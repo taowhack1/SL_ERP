@@ -118,6 +118,12 @@ const PRList = () => {
     );
   }, [data]);
 
+  const onPrintPR = (pr_no) => {
+    window.open(
+      `${process.env.REACT_APP_REPORT_SERVER}/report_pr.aspx?pr_no=${pr_no}`
+    );
+  };
+
   const countSelectPROthers = pr?.filter((obj) => obj.checked).length;
   const countSelectPRAuto = prAuto?.filter((obj) => obj.checked).length;
   return (
@@ -143,6 +149,7 @@ const PRList = () => {
               selectData,
               pr_type: 1,
               title: "ใบขอซื้อ (PR)",
+              onPrintPR,
             })}
             dataSource={pr}
             footer={() => (
@@ -216,6 +223,7 @@ const PRList = () => {
               selectData,
               pr_type: 2,
               title: "ใบขอซื้อ (PR) Auto MRP",
+              onPrintPR,
             })}
             dataSource={prAuto}
             footer={() => (
@@ -261,7 +269,12 @@ const PRList = () => {
 
 export default React.memo(PRList);
 
-const columns = ({ selectData, pr_type, title = "ใบขอซื้อ (PR)" }) => [
+const columns = ({
+  selectData,
+  pr_type,
+  title = "ใบขอซื้อ (PR)",
+  onPrintPR,
+}) => [
   {
     title: (
       <div>
@@ -311,7 +324,11 @@ const columns = ({ selectData, pr_type, title = "ใบขอซื้อ (PR)" 
         className: "tb-col-sm",
         // width: "10%",
         dataIndex: "pr_no",
-        render: (val) => val || "-",
+        render: (val) => (
+          <Text onClick={() => onPrintPR(val)} className="button-icon" strong>
+            {val || "-"}
+          </Text>
+        ),
       },
       {
         title: (

@@ -45,7 +45,6 @@ const TotalFooter = ({ excludeVat, vat, includeVat, currency = "THB" }) => {
       </Row>
       <Row className="row-margin-vertical">
         <Col span={17} className="text-view"></Col>
-
         <Col span={3} className="text-number">
           <Text strong>Include Vat :</Text>
         </Col>
