@@ -244,9 +244,9 @@ const DashboardsIndex = () => {
         data: DataTransformer.filter((obj, index) => {
           return obj.date == date;
         }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_ot >= 4
+          return obj.tg_plan_job_actual_time_hour >= 8
             ? obj.tg_plan_job_actual_time_ot
-            : obj.tg_plan_job_actual_time_ot;
+            : 0;
         }),
         machine_description: machine_name,
         colors: "#CC0000",
@@ -267,27 +267,39 @@ const DashboardsIndex = () => {
       },
       {
         name: "freeze",
-        data: [0, 0, 0, 0, 0, 0, 0],
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? 0
+            : obj.plan_job_plan_time_hour >= 8
+            ? 0
+            : 8 - obj.plan_job_plan_time_hour;
+        }),
         machine_description: machine_name,
         colors: "#FFFFFF",
       },
       {
         name: "ot",
-        data: [0, 0, 0, 0, 0, 0, 0],
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? 0
+            : obj.tg_plan_job_actual_time_ot;
+        }),
         machine_description: machine_name,
         colors: "#CC0000",
       },
       {
         name: "freeze",
-        data: [24, 24, 24, 24, 24, 24, 24],
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.freeze;
+        }),
         machine_description: machine_name,
         colors: "#FFFFFF",
-      },
-      {
-        name: "holiday",
-        data: [0, 0, 0, 0, 0, 0, 0],
-        machine_description: machine_name,
-        colors: "#000000",
       },
     ];
     if (type == "machine") {
@@ -1454,40 +1466,42 @@ const DashboardsIndex = () => {
         {/* <div>DashboardsIndex</div> */}
         <Col span={4}>
           <Chart
-            type='bar'
+            type="bar"
             width={200}
             height={400}
             series={stateGraphDay.series}
-            options={stateGraphDay.options}></Chart>
+            options={stateGraphDay.options}
+          ></Chart>
         </Col>
         <Col>
           <Chart
-            type='bar'
+            type="bar"
             width={
               85 * stateGraphMachine?.series[0]?.machine_description?.length
             }
             height={400}
             series={stateGraphMachine.series}
-            options={stateGraphMachine.options}></Chart>
+            options={stateGraphMachine.options}
+          ></Chart>
         </Col>
         <Col></Col>
       </Row>
       <Row gutter={[8, 8]}>
         <Col span={24} style={{ background: "#C6C6CC" }}>
           {/* <span style={{ marginLeft: 10 }}>Autorefresh in </span> */}
-          <Tag color='#0000FF' style={{ marginLeft: 100 }}>
+          <Tag color="#0000FF" style={{ marginLeft: 100 }}>
             plan
           </Tag>
-          <Tag color='#2ECC71'>success</Tag>
+          <Tag color="#2ECC71">success</Tag>
           {/* <Tag color='#FFA500'>break</Tag> */}
-          <Tag color='#000000'>holiday</Tag>
-          <Tag color='#CC0000'>OT</Tag>
-          <Tag color='#FFFFFF' style={{ color: "#000000" }}>
+          <Tag color="#000000">holiday</Tag>
+          <Tag color="#CC0000">OT</Tag>
+          <Tag color="#FFFFFF" style={{ color: "#000000" }}>
             freeze
           </Tag>
           <span style={{ marginLeft: 30 }}>View in </span>
           <DatePicker
-            picker='year'
+            picker="year"
             defaultValue={date2}
             format={"YYYY"}
             onChange={(data) => {
@@ -1496,14 +1510,15 @@ const DashboardsIndex = () => {
           />
         </Col>
 
-        <div className='scroll__container'>
+        <div className="scroll__container">
           {/* {renderGrap()} */}
           <Chart
-            type='bar'
+            type="bar"
             width={60 * planData.length}
             height={300}
             series={stateGraph12Month.series}
-            options={stateGraph12Month.options}></Chart>
+            options={stateGraph12Month.options}
+          ></Chart>
         </div>
       </Row>
     </>
