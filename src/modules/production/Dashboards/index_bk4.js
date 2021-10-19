@@ -194,7 +194,7 @@ const DashboardsIndex = () => {
       },
     ];
 
-    let graphMachine2 = [
+    let graphMachine = [
       {
         name: "sucess",
         data: sucess,
@@ -226,70 +226,7 @@ const DashboardsIndex = () => {
         colors: "#FFFFFF",
       },
     ];
-    let graphMachine = [
-      {
-        name: "sucess",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= 8
-            ? 8
-            : obj.tg_plan_job_actual_time_hour;
-        }),
-        machine_description: machine_name,
-        colors: "#2ECC71",
-      },
-      {
-        name: "tempot",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_ot >= 4
-            ? obj.tg_plan_job_actual_time_ot
-            : obj.tg_plan_job_actual_time_ot;
-        }),
-        machine_description: machine_name,
-        colors: "#CC0000",
-      },
-      {
-        name: "plan",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= obj.plan_job_plan_time_hour
-            ? 0
-            : obj.tg_plan_job_actual_time_hour <= obj.plan_job_plan_time_hour
-            ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
-            : obj.plan_job_plan_time_hour;
-        }),
-        machine_description: machine_name,
-        colors: "#0000FF",
-      },
-      {
-        name: "freeze",
-        data: [0, 0, 0, 0, 0, 0, 0],
-        machine_description: machine_name,
-        colors: "#FFFFFF",
-      },
-      {
-        name: "ot",
-        data: [0, 0, 0, 0, 0, 0, 0],
-        machine_description: machine_name,
-        colors: "#CC0000",
-      },
-      {
-        name: "freeze",
-        data: [24, 24, 24, 24, 24, 24, 24],
-        machine_description: machine_name,
-        colors: "#FFFFFF",
-      },
-      {
-        name: "holiday",
-        data: [0, 0, 0, 0, 0, 0, 0],
-        machine_description: machine_name,
-        colors: "#000000",
-      },
-    ];
+
     if (type == "machine") {
       console.log("graphMachine if:>> ", graphMachine);
       // setGraphMachine({
@@ -576,7 +513,10 @@ const DashboardsIndex = () => {
       //   ...graphDay,
       // };
     }
-    console.log("graphMachine2 :>> ", graphMachine2);
+    console.log(
+      "graphMachine[0].machine_description :>> ",
+      graphMachine[0]?.machine_description
+    );
   };
 
   const renderGraph365Day = (params) => {

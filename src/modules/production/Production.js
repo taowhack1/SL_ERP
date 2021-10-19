@@ -9,24 +9,24 @@ import { PageContext } from "../../include/js/context";
 import DashboardsIndex from "./Dashboards";
 
 const Production = (props) => {
-  const authorize = Authorize();
-  authorize.check_authorize();
-
-  console.log(props.location.state);
+  //const authorize = Authorize();
+  //authorize.check_authorize();
+  // console.log("check_authorize :>> ", authorize.check_authorize());
+  //console.log(props.location.state);
   // const onChange = (pagination, filters, sorter, extra) => {
   //   console.log("params", pagination, filters, sorter, extra);
   // };
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
-    projectId: current_project && current_project.project_id,
-    title: current_project && current_project.project_name,
-    home: current_project && current_project.project_url,
+    projectId: current_project && current_project?.project_id,
+    title: current_project && current_project?.project_name,
+    home: current_project && current_project?.project_url,
     show: true,
     breadcrumb: ["Home"],
     search: true,
     create: "",
     buttonAction: [""],
-    discard: current_project.project_url,
+    discard: current_project?.project_url,
     onCancel: () => {
       console.log("Cancel");
     },
@@ -36,7 +36,6 @@ const Production = (props) => {
     <div>
       <MainLayout {...config}>
         {/* <h3>Home</h3> */}
-        {/* <h3>Dashboard</h3> */}
         <DashboardsIndex />
       </MainLayout>
     </div>
