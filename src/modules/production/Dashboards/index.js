@@ -145,9 +145,11 @@ const DashboardsIndex = () => {
       {
         name: "sucess",
         data: [
-          sucess.reduce((sum, number) => {
-            return sum + number / sucess.length;
-          }, 0),
+          parseInt(
+            sucess.reduce((sum, number) => {
+              return sum + number / sucess.length;
+            }, 0)
+          ),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#2ECC71",
@@ -155,9 +157,11 @@ const DashboardsIndex = () => {
       {
         name: "plan",
         data: [
-          plan.reduce((sum, number) => {
-            return sum + number / plan.length;
-          }, 0),
+          parseInt(
+            plan.reduce((sum, number) => {
+              return sum + number / plan.length;
+            }, 0)
+          ),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#0000FF",
@@ -165,9 +169,21 @@ const DashboardsIndex = () => {
       {
         name: "tempOt",
         data: [
-          tempOt.reduce((sum, number) => {
-            return sum + number / tempOt.length;
-          }, 0),
+          parseInt(
+            DataTransformer.filter((obj, index) => {
+              return obj.date == date;
+            })
+              .map((obj, index) => {
+                return obj.tg_plan_job_actual_time_hour >= 8
+                  ? 0
+                  : obj.plan_job_plan_time_hour >= 8
+                  ? 0
+                  : 8.0 - obj.plan_job_plan_time_hour;
+              })
+              .reduce((sum, number) => {
+                return sum + number / tempOt.length;
+              }, 0)
+          ),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#FFFFFF",
@@ -185,15 +201,92 @@ const DashboardsIndex = () => {
       {
         name: "freeze",
         data: [
-          freeze.reduce((sum, number) => {
-            return sum + number / freeze.length;
-          }, 0),
+          parseInt(
+            freeze.reduce((sum, number) => {
+              return sum + number / freeze.length;
+            }, 0)
+          ),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#FFFFFF",
       },
     ];
-
+    let graphDay2 = [
+      {
+        name: "sucess",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? 8
+            : obj.tg_plan_job_actual_time_hour;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#2ECC71",
+      },
+      {
+        name: "tempot",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? obj.tg_plan_job_actual_time_ot
+            : 0;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#CC0000",
+      },
+      {
+        name: "plan",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= obj.plan_job_plan_time_hour
+            ? 0
+            : obj.tg_plan_job_actual_time_hour <= obj.plan_job_plan_time_hour
+            ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
+            : obj.plan_job_plan_time_hour;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#0000FF",
+      },
+      {
+        name: "freeze",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? 0
+            : obj.plan_job_plan_time_hour >= 8
+            ? 0
+            : 8 - obj.plan_job_plan_time_hour;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? 0
+            : obj.tg_plan_job_actual_time_ot;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.freeze;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+    ];
     let graphMachine2 = [
       {
         name: "sucess",
@@ -226,6 +319,7 @@ const DashboardsIndex = () => {
         colors: "#FFFFFF",
       },
     ];
+
     let graphMachine = [
       {
         name: "sucess",
@@ -274,7 +368,7 @@ const DashboardsIndex = () => {
             ? 0
             : obj.plan_job_plan_time_hour >= 8
             ? 0
-            : 8 - obj.plan_job_plan_time_hour;
+            : 8.0 - obj.plan_job_plan_time_hour;
         }),
         machine_description: machine_name,
         colors: "#FFFFFF",
@@ -302,6 +396,7 @@ const DashboardsIndex = () => {
         colors: "#FFFFFF",
       },
     ];
+    console.log(`graphDay`, graphDay);
     if (type == "machine") {
       console.log("graphMachine if:>> ", graphMachine);
       // setGraphMachine({
@@ -669,24 +764,19 @@ const DashboardsIndex = () => {
                   0
                 )
             ),
+
             ctempOt: tempOt.push(
-              c.detail
-                .map((res) =>
-                  res.tg_plan_job_actual_time_ot !== 0 || null
-                    ? res.plan_job_plan_time_hour +
-                        res.tg_plan_job_actual_time_hour >=
-                      8
+              parseInt(
+                c.detail
+                  .map((res) =>
+                    res.tg_plan_job_actual_time_hour >= 8
                       ? 0
-                      : res.tg_plan_job_actual_time_hour == 0
-                      ? 8 - res.plan_job_plan_time_hour
-                      : 8 - res.plan_job_plan_time_hour
-                    : res.plan_job_plan_time_hour == 0
-                    ? 0
-                    : res.plan_job_plan_time_hour >= 8
-                    ? 0
-                    : 0
-                )
-                .reduce((acc, cur) => acc + cur / c.detail.length, 0)
+                      : res.plan_job_plan_time_hour >= 8
+                      ? 0
+                      : 8.0 - res.plan_job_plan_time_hour
+                  )
+                  .reduce((acc, cur) => acc + cur / c.detail.length, 0)
+              )
             ),
             freeze: c.detail
               .filter((res) => res.freeze >= 0)
