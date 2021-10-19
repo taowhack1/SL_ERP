@@ -1377,3 +1377,11 @@ tr.drop-over-upward td {
   padding: 15px;
   height: 105%;
 }
+.scroll__container {
+  display: flex;
+  overflow-x: auto;
+}
+
+.skin__option {
+  padding: 20px;
+}

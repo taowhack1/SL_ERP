@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { BrowserRouter, Switch, Route, Router } from "react-router-dom";
@@ -87,9 +89,9 @@ import TypeView from "./modules/inventory/configurations/type/TypeView";
 import Category from "./modules/inventory/configurations/category/Category";
 import CategoryCreate from "./modules/inventory/configurations/category/CategoryCreate";
 import CategoryView from "./modules/inventory/configurations/category/CategoryView";
-import UomMain from "./modules/inventory/configurations/uom/UomMain";
-import UomCreate from "./modules/inventory/configurations/uom/UomCreate";
-import UomView from "./modules/inventory/configurations/uom/UomView";
+import UomMain from "./modules/inventory/configurations/uom/UOMMain";
+import UomCreate from "./modules/inventory/configurations/uom/UOMCreate";
+import UomView from "./modules/inventory/configurations/uom/UOMView";
 import Transfer from "./modules/inventory/operations/transfer/Transfer";
 import TransferCreate from "./modules/inventory/operations/transfer/TransferCreate";
 import TransferView from "./modules/inventory/operations/transfer/TransferView";
@@ -388,7 +390,7 @@ const App = (props) => {
             </Route>
             {/* <Route
               exact
-              path="/purchase/po/edit/:id"
+              path='/purchase/po/edit/:id'
               component={PurchPOCreate}
             />
             <Route exact path="/purchase/po/view/:id" component={PurchPOView} /> */}

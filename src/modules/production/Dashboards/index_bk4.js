@@ -145,11 +145,9 @@ const DashboardsIndex = () => {
       {
         name: "sucess",
         data: [
-          parseInt(
-            sucess.reduce((sum, number) => {
-              return sum + number / sucess.length;
-            }, 0)
-          ),
+          sucess.reduce((sum, number) => {
+            return sum + number / sucess.length;
+          }, 0),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#2ECC71",
@@ -157,11 +155,9 @@ const DashboardsIndex = () => {
       {
         name: "plan",
         data: [
-          parseInt(
-            plan.reduce((sum, number) => {
-              return sum + number / plan.length;
-            }, 0)
-          ),
+          plan.reduce((sum, number) => {
+            return sum + number / plan.length;
+          }, 0),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#0000FF",
@@ -169,21 +165,9 @@ const DashboardsIndex = () => {
       {
         name: "tempOt",
         data: [
-          parseInt(
-            DataTransformer.filter((obj, index) => {
-              return obj.date == date;
-            })
-              .map((obj, index) => {
-                return obj.tg_plan_job_actual_time_hour >= 8
-                  ? 0
-                  : obj.plan_job_plan_time_hour >= 8
-                  ? 0
-                  : 8.0 - obj.plan_job_plan_time_hour;
-              })
-              .reduce((sum, number) => {
-                return sum + number / tempOt.length;
-              }, 0)
-          ),
+          tempOt.reduce((sum, number) => {
+            return sum + number / tempOt.length;
+          }, 0),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#FFFFFF",
@@ -201,93 +185,16 @@ const DashboardsIndex = () => {
       {
         name: "freeze",
         data: [
-          parseInt(
-            freeze.reduce((sum, number) => {
-              return sum + number / freeze.length;
-            }, 0)
-          ),
+          freeze.reduce((sum, number) => {
+            return sum + number / freeze.length;
+          }, 0),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#FFFFFF",
       },
     ];
-    let graphDay2 = [
-      {
-        name: "sucess",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= 8
-            ? 8
-            : obj.tg_plan_job_actual_time_hour;
-        }),
-        plan_day: findUniqueValues(plan_day),
-        colors: "#2ECC71",
-      },
-      {
-        name: "tempot",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= 8
-            ? obj.tg_plan_job_actual_time_ot
-            : 0;
-        }),
-        plan_day: findUniqueValues(plan_day),
-        colors: "#CC0000",
-      },
-      {
-        name: "plan",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= obj.plan_job_plan_time_hour
-            ? 0
-            : obj.tg_plan_job_actual_time_hour <= obj.plan_job_plan_time_hour
-            ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
-            : obj.plan_job_plan_time_hour;
-        }),
-        plan_day: findUniqueValues(plan_day),
-        colors: "#0000FF",
-      },
-      {
-        name: "freeze",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= 8
-            ? 0
-            : obj.plan_job_plan_time_hour >= 8
-            ? 0
-            : 8 - obj.plan_job_plan_time_hour;
-        }),
-        plan_day: findUniqueValues(plan_day),
-        colors: "#FFFFFF",
-      },
-      {
-        name: "ot",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= 8
-            ? 0
-            : obj.tg_plan_job_actual_time_ot;
-        }),
-        plan_day: findUniqueValues(plan_day),
-        colors: "#CC0000",
-      },
-      {
-        name: "freeze",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.freeze;
-        }),
-        plan_day: findUniqueValues(plan_day),
-        colors: "#FFFFFF",
-      },
-    ];
-    let graphMachine2 = [
+
+    let graphMachine = [
       {
         name: "sucess",
         data: sucess,
@@ -320,83 +227,6 @@ const DashboardsIndex = () => {
       },
     ];
 
-    let graphMachine = [
-      {
-        name: "sucess",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= 8
-            ? 8
-            : obj.tg_plan_job_actual_time_hour;
-        }),
-        machine_description: machine_name,
-        colors: "#2ECC71",
-      },
-      {
-        name: "tempot",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= 8
-            ? obj.tg_plan_job_actual_time_ot
-            : 0;
-        }),
-        machine_description: machine_name,
-        colors: "#CC0000",
-      },
-      {
-        name: "plan",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= obj.plan_job_plan_time_hour
-            ? 0
-            : obj.tg_plan_job_actual_time_hour <= obj.plan_job_plan_time_hour
-            ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
-            : obj.plan_job_plan_time_hour;
-        }),
-        machine_description: machine_name,
-        colors: "#0000FF",
-      },
-      {
-        name: "freeze",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= 8
-            ? 0
-            : obj.plan_job_plan_time_hour >= 8
-            ? 0
-            : 8.0 - obj.plan_job_plan_time_hour;
-        }),
-        machine_description: machine_name,
-        colors: "#FFFFFF",
-      },
-      {
-        name: "ot",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.tg_plan_job_actual_time_hour >= 8
-            ? 0
-            : obj.tg_plan_job_actual_time_ot;
-        }),
-        machine_description: machine_name,
-        colors: "#CC0000",
-      },
-      {
-        name: "freeze",
-        data: DataTransformer.filter((obj, index) => {
-          return obj.date == date;
-        }).map((obj, index) => {
-          return obj.freeze;
-        }),
-        machine_description: machine_name,
-        colors: "#FFFFFF",
-      },
-    ];
-    console.log(`graphDay`, graphDay);
     if (type == "machine") {
       console.log("graphMachine if:>> ", graphMachine);
       // setGraphMachine({
@@ -683,7 +513,10 @@ const DashboardsIndex = () => {
       //   ...graphDay,
       // };
     }
-    console.log("graphMachine2 :>> ", graphMachine2);
+    console.log(
+      "graphMachine[0].machine_description :>> ",
+      graphMachine[0]?.machine_description
+    );
   };
 
   const renderGraph365Day = (params) => {
@@ -764,19 +597,24 @@ const DashboardsIndex = () => {
                   0
                 )
             ),
-
             ctempOt: tempOt.push(
-              parseInt(
-                c.detail
-                  .map((res) =>
-                    res.tg_plan_job_actual_time_hour >= 8
+              c.detail
+                .map((res) =>
+                  res.tg_plan_job_actual_time_ot !== 0 || null
+                    ? res.plan_job_plan_time_hour +
+                        res.tg_plan_job_actual_time_hour >=
+                      8
                       ? 0
-                      : res.plan_job_plan_time_hour >= 8
-                      ? 0
-                      : 8.0 - res.plan_job_plan_time_hour
-                  )
-                  .reduce((acc, cur) => acc + cur / c.detail.length, 0)
-              )
+                      : res.tg_plan_job_actual_time_hour == 0
+                      ? 8 - res.plan_job_plan_time_hour
+                      : 8 - res.plan_job_plan_time_hour
+                    : res.plan_job_plan_time_hour == 0
+                    ? 0
+                    : res.plan_job_plan_time_hour >= 8
+                    ? 0
+                    : 0
+                )
+                .reduce((acc, cur) => acc + cur / c.detail.length, 0)
             ),
             freeze: c.detail
               .filter((res) => res.freeze >= 0)
@@ -1556,42 +1394,40 @@ const DashboardsIndex = () => {
         {/* <div>DashboardsIndex</div> */}
         <Col span={4}>
           <Chart
-            type="bar"
+            type='bar'
             width={200}
             height={400}
             series={stateGraphDay.series}
-            options={stateGraphDay.options}
-          ></Chart>
+            options={stateGraphDay.options}></Chart>
         </Col>
         <Col>
           <Chart
-            type="bar"
+            type='bar'
             width={
               85 * stateGraphMachine?.series[0]?.machine_description?.length
             }
             height={400}
             series={stateGraphMachine.series}
-            options={stateGraphMachine.options}
-          ></Chart>
+            options={stateGraphMachine.options}></Chart>
         </Col>
         <Col></Col>
       </Row>
       <Row gutter={[8, 8]}>
         <Col span={24} style={{ background: "#C6C6CC" }}>
           {/* <span style={{ marginLeft: 10 }}>Autorefresh in </span> */}
-          <Tag color="#0000FF" style={{ marginLeft: 100 }}>
+          <Tag color='#0000FF' style={{ marginLeft: 100 }}>
             plan
           </Tag>
-          <Tag color="#2ECC71">success</Tag>
+          <Tag color='#2ECC71'>success</Tag>
           {/* <Tag color='#FFA500'>break</Tag> */}
-          <Tag color="#000000">holiday</Tag>
-          <Tag color="#CC0000">OT</Tag>
-          <Tag color="#FFFFFF" style={{ color: "#000000" }}>
+          <Tag color='#000000'>holiday</Tag>
+          <Tag color='#CC0000'>OT</Tag>
+          <Tag color='#FFFFFF' style={{ color: "#000000" }}>
             freeze
           </Tag>
           <span style={{ marginLeft: 30 }}>View in </span>
           <DatePicker
-            picker="year"
+            picker='year'
             defaultValue={date2}
             format={"YYYY"}
             onChange={(data) => {
@@ -1600,15 +1436,14 @@ const DashboardsIndex = () => {
           />
         </Col>
 
-        <div className="scroll__container">
+        <div className='scroll__container'>
           {/* {renderGrap()} */}
           <Chart
-            type="bar"
+            type='bar'
             width={60 * planData.length}
             height={300}
             series={stateGraph12Month.series}
-            options={stateGraph12Month.options}
-          ></Chart>
+            options={stateGraph12Month.options}></Chart>
         </div>
       </Row>
     </>
