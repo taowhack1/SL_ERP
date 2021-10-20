@@ -1,7 +1,7 @@
 import React from "react";
 import ColorAndOdorTable from "./ColorAndOdorTable";
 
-const FormulaContainer = () => {
+const FormulaList = () => {
   return (
     <>
       <ColorAndOdorTable />
@@ -9,4 +9,4 @@ const FormulaContainer = () => {
   );
 };
 
-export default React.memo(FormulaContainer);
+export default React.memo(FormulaList);

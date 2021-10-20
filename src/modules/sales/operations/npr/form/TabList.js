@@ -4,6 +4,7 @@ import GeneralDetail from "./tabs/GeneralDetail";
 import CustomerAndProductGroup from "./tabs/CustomerAndProductGroup";
 import DetailOfSampleRequest from "./tabs/DetailOfSampleRequest";
 import PackagingComponents from "./tabs/PackagingComponents";
+import FormulaList from "./tabs/formula/FormulaList";
 const TabList = () => {
   return (
     <>
@@ -17,11 +18,11 @@ const TabList = () => {
         <Tabs.TabPane tab="Detail of Sample Request" key="3">
           <DetailOfSampleRequest />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Packanging Components" key="4">
+        <Tabs.TabPane tab="Packaging Components" key="4">
           <PackagingComponents />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Formula" key="5">
-          <h1>Formula</h1>
+          <FormulaList />
         </Tabs.TabPane>
       </Tabs>
     </>

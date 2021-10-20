@@ -1,6 +1,7 @@
-import { Col, Row } from "antd";
+import { Col, Row, Divider } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useContext } from "react";
+import TotalFooter from "../../../components/TotalFooter";
 import { convertDigit } from "../../../include/js/main_config";
 import { POContext } from "./POFormDisplay";
 
@@ -14,6 +15,10 @@ const POFormResult = () => {
     currency_no,
     po_detail,
     po_no,
+    po_discount,
+    tg_po_sum_amount,
+    tg_po_vat_amount,
+    tg_po_total_amount,
   } = poState || {};
   return (
     <>
@@ -178,6 +183,26 @@ const POFormResult = () => {
           </div>
         )
       )}
+      <Divider className="divider-sm" />
+      <Row className="col-2 row-margin-vertical">
+        <Col span={14}></Col>
+
+        <Col span={6} className="text-number">
+          <Text strong>Extended Discount :</Text>
+        </Col>
+        <Col span={3} className="text-number">
+          <Text>{convertDigit(po_discount, 4)}</Text>
+        </Col>
+        <Col span={1} className="text-string">
+          <Text strong> {`${currency_no || "-"}`}</Text>
+        </Col>
+      </Row>
+      <TotalFooter
+        excludeVat={tg_po_sum_amount}
+        vat={tg_po_vat_amount}
+        includeVat={tg_po_total_amount}
+        currency={currency_no}
+      />
     </>
   );
 };
