@@ -135,125 +135,55 @@ const DashboardsIndex = () => {
     console.log("machine_name :>> ", machine_name);
     console.log("sucess :>> ", sucess);
     console.log("plan :>> ", plan);
+    // console.log(
+    //   "tempOt fn :>> ",
+    //   tempOt.reduce((sum, number) => {
+    //     return sum + number / tempOt.length;
+    //   }, 0)
+    // );
     let graphDay = [
       {
         name: "sucess",
         data: [
-          parseFloat(
-            DataTransformer.filter((obj, index) => {
-              return obj.date == date;
-            })
-              .map((obj, index) => {
-                return obj.tg_plan_job_actual_time_hour /
-                  DataTransformer.length >=
-                  8
-                  ? 8
-                  : obj.tg_plan_job_actual_time_hour;
-              })
-              .reduce((sum, number) => {
-                return sum + number / DataTransformer.length;
-              }, 0)
-          ).toFixed(0),
+          parseInt(
+            sucess.reduce((sum, number) => {
+              return sum + number / sucess.length;
+            }, 0)
+          ),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#2ECC71",
       },
       {
-        name: "tempot",
-        data: [
-          parseFloat(
-            DataTransformer.filter((obj, index) => {
-              return obj.date == date;
-            })
-              .map((obj, index) => {
-                return obj.tg_plan_job_actual_time_hour /
-                  DataTransformer.length >=
-                  8
-                  ? obj.tg_plan_job_actual_time_ot
-                  : 0;
-              })
-              .reduce((sum, number) => {
-                return sum + number / DataTransformer.length;
-              }, 0)
-          ).toFixed(0),
-        ],
-        plan_day: findUniqueValues(plan_day),
-        colors: "#CC0000",
-      },
-      {
         name: "plan",
         data: [
-          parseFloat(
-            DataTransformer.filter((obj, index) => {
-              return obj.date == date;
-            })
-              .map((obj, index) => {
-                return obj.tg_plan_job_actual_time_hour /
-                  DataTransformer.length >=
-                  obj.plan_job_plan_time_hour / DataTransformer.length
-                  ? 0
-                  : obj.tg_plan_job_actual_time_hour <=
-                    obj.plan_job_plan_time_hour
-                  ? obj.plan_job_plan_time_hour -
-                    obj.tg_plan_job_actual_time_hour
-                  : obj.plan_job_plan_time_hour;
-              })
-              .reduce((sum, number) => {
-                return sum + number / DataTransformer.length;
-              }, 0)
-          ).toFixed(0),
+          parseInt(
+            plan.reduce((sum, number) => {
+              return sum + number / plan.length;
+            }, 0)
+          ),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#0000FF",
       },
       {
-        name: "freeze1",
+        name: "tempOt",
         data: [
-          parseFloat(
+          parseInt(
             DataTransformer.filter((obj, index) => {
               return obj.date == date;
-            }).map((obj, index) => {
-              return obj.tg_plan_job_actual_time_hour /
-                DataTransformer.length >=
-                8
-                ? 0
-                : obj.plan_job_plan_time_hour / DataTransformer.length >= 8
-                ? 0
-                : 8 -
-                  parseFloat(
-                    DataTransformer.filter((obj, index) => {
-                      return obj.date == date;
-                    })
-                      .map((obj, index) => {
-                        return obj.tg_plan_job_actual_time_hour /
-                          DataTransformer.length >=
-                          obj.plan_job_plan_time_hour / DataTransformer.length
-                          ? 0
-                          : obj.tg_plan_job_actual_time_hour <=
-                            obj.plan_job_plan_time_hour
-                          ? obj.plan_job_plan_time_hour -
-                            obj.tg_plan_job_actual_time_hour
-                          : obj.plan_job_plan_time_hour;
-                      })
-                      .reduce((sum, number) => {
-                        return sum + number / DataTransformer.length;
-                      }, 0) +
-                      DataTransformer.filter((obj, index) => {
-                        return obj.date == date;
-                      })
-                        .map((obj, index) => {
-                          return obj.tg_plan_job_actual_time_hour /
-                            DataTransformer.length >=
-                            8
-                            ? 8
-                            : obj.tg_plan_job_actual_time_hour;
-                        })
-                        .reduce((sum, number) => {
-                          return sum + number / DataTransformer.length;
-                        }, 0)
-                  ).toFixed(0);
             })
-          ).toFixed(0),
+              .map((obj, index) => {
+                return obj.tg_plan_job_actual_time_hour >= 8
+                  ? 0
+                  : obj.plan_job_plan_time_hour >= 8
+                  ? 0
+                  : 8.0 - obj.plan_job_plan_time_hour;
+              })
+              .reduce((sum, number) => {
+                return sum + number / tempOt.length;
+              }, 0)
+          ),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#FFFFFF",
@@ -261,44 +191,135 @@ const DashboardsIndex = () => {
       {
         name: "ot",
         data: [
-          parseFloat(
-            DataTransformer.filter((obj, index) => {
-              return obj.date == date;
-            })
-              .map((obj, index) => {
-                return obj.tg_plan_job_actual_time_hour /
-                  DataTransformer.length >=
-                  8
-                  ? 0
-                  : obj.tg_plan_job_actual_time_ot;
-              })
-              .reduce((sum, number) => {
-                return sum + number / DataTransformer.length;
-              }, 0)
-          ).toFixed(0),
+          ot.reduce((sum, number) => {
+            return sum + number / ot.length;
+          }, 0),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#CC0000",
       },
       {
-        name: "freeze2",
+        name: "freeze",
         data: [
-          parseFloat(
-            DataTransformer.filter((obj, index) => {
-              return obj.date == date;
-            })
-              .map((obj, index) => {
-                return obj.freeze;
-              })
-              .reduce((sum, number) => {
-                return sum + number / DataTransformer.length;
-              }, 0)
-          ).toFixed(0),
+          parseInt(
+            freeze.reduce((sum, number) => {
+              return sum + number / freeze.length;
+            }, 0)
+          ),
         ],
         plan_day: findUniqueValues(plan_day),
         colors: "#FFFFFF",
       },
     ];
+    let graphDay2 = [
+      {
+        name: "sucess",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? 8
+            : obj.tg_plan_job_actual_time_hour;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#2ECC71",
+      },
+      {
+        name: "tempot",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? obj.tg_plan_job_actual_time_ot
+            : 0;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#CC0000",
+      },
+      {
+        name: "plan",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= obj.plan_job_plan_time_hour
+            ? 0
+            : obj.tg_plan_job_actual_time_hour <= obj.plan_job_plan_time_hour
+            ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
+            : obj.plan_job_plan_time_hour;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#0000FF",
+      },
+      {
+        name: "freeze",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? 0
+            : obj.plan_job_plan_time_hour >= 8
+            ? 0
+            : 8 - obj.plan_job_plan_time_hour;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? 0
+            : obj.tg_plan_job_actual_time_ot;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.freeze;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+    ];
+    let graphMachine2 = [
+      {
+        name: "sucess",
+        data: sucess,
+        machine_description: machine_name,
+        colors: "#2ECC71",
+      },
+      {
+        name: "plan",
+        data: plan,
+        machine_description: machine_name,
+        colors: "#0000FF",
+      },
+      {
+        name: "freeze",
+        data: tempOt,
+        machine_description: machine_name,
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: ot,
+        machine_description: machine_name,
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: freeze,
+        machine_description: machine_name,
+        colors: "#FFFFFF",
+      },
+    ];
+
     let graphMachine = [
       {
         name: "sucess",
@@ -306,8 +327,8 @@ const DashboardsIndex = () => {
           return obj.date == date;
         }).map((obj, index) => {
           return obj.tg_plan_job_actual_time_hour >= 8
-            ? parseFloat(8).toFixed(0)
-            : parseFloat(obj.tg_plan_job_actual_time_hour).toFixed(0);
+            ? 8
+            : obj.tg_plan_job_actual_time_hour;
         }),
         machine_description: machine_name,
         colors: "#2ECC71",
@@ -318,8 +339,8 @@ const DashboardsIndex = () => {
           return obj.date == date;
         }).map((obj, index) => {
           return obj.tg_plan_job_actual_time_hour >= 8
-            ? parseFloat(obj.tg_plan_job_actual_time_ot).toFixed(0)
-            : parseFloat(0).toFixed(0);
+            ? obj.tg_plan_job_actual_time_ot
+            : 0;
         }),
         machine_description: machine_name,
         colors: "#CC0000",
@@ -330,12 +351,10 @@ const DashboardsIndex = () => {
           return obj.date == date;
         }).map((obj, index) => {
           return obj.tg_plan_job_actual_time_hour >= obj.plan_job_plan_time_hour
-            ? parseFloat(0).toFixed(0)
+            ? 0
             : obj.tg_plan_job_actual_time_hour <= obj.plan_job_plan_time_hour
-            ? parseFloat(
-                obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
-              ).toFixed(0)
-            : parseFloat(obj.plan_job_plan_time_hour).toFixed(0);
+            ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
+            : obj.plan_job_plan_time_hour;
         }),
         machine_description: machine_name,
         colors: "#0000FF",
@@ -346,10 +365,10 @@ const DashboardsIndex = () => {
           return obj.date == date;
         }).map((obj, index) => {
           return obj.tg_plan_job_actual_time_hour >= 8
-            ? parseFloat(0).toFixed(0)
+            ? 0
             : obj.plan_job_plan_time_hour >= 8
-            ? parseFloat(0).toFixed(0)
-            : parseFloat(8.0 - obj.plan_job_plan_time_hour).toFixed(0);
+            ? 0
+            : 8.0 - obj.plan_job_plan_time_hour;
         }),
         machine_description: machine_name,
         colors: "#FFFFFF",
@@ -360,8 +379,8 @@ const DashboardsIndex = () => {
           return obj.date == date;
         }).map((obj, index) => {
           return obj.tg_plan_job_actual_time_hour >= 8
-            ? parseFloat(0).toFixed(0)
-            : parseFloat(obj.tg_plan_job_actual_time_ot).toFixed(0);
+            ? 0
+            : obj.tg_plan_job_actual_time_ot;
         }),
         machine_description: machine_name,
         colors: "#CC0000",
@@ -377,18 +396,12 @@ const DashboardsIndex = () => {
         colors: "#FFFFFF",
       },
     ];
-    console.log(`test graphMachine`, graphMachine);
-    console.log(`test graphDay`, graphDay);
-    console.log(
-      "test DataTransformer :>> ",
-      DataTransformer.filter((obj, index) => {
-        return obj.date == date;
-      })
-    );
-
+    console.log(`graphDay`, graphDay);
     if (type == "machine") {
       console.log("graphMachine if:>> ", graphMachine);
-
+      // setGraphMachine({
+      //   ...graphMachine,
+      // });
       setstateGraphMachine({
         series: [...graphMachine],
         options: {
@@ -663,7 +676,14 @@ const DashboardsIndex = () => {
           },
         },
       });
+      // setGraphDay({
+      //   ...graphDay,
+      // });
+      // return {
+      //   ...graphDay,
+      // };
     }
+    console.log("graphMachine2 :>> ", graphMachine2);
   };
 
   const renderGraph365Day = (params) => {
@@ -681,57 +701,61 @@ const DashboardsIndex = () => {
     let i = 0;
     let temp_testSum = [];
     let filter = [];
+    //let graphMonth = [];
+    // for (i = 1; i <= 12; i++) {
+    //   filter.push(
+    //     params.filter(
+    //       (obj, index) => moment(obj.date, "DD/MM/YYYY").format("M") == i
+    //     )
+    //   );
+    // }
+    // for (i = 1; i <= 12; i++) {
     filter.push(
-      params.reduce((a, c) => {
-        a.push({
-          ...c,
-          date_plan: date_plan.push(c.date.substr(0, 10)),
-          plan: c.detail
-            .filter((res) => res.plan_job_plan_time_hour >= 0)
-            .reduce((acc, cur) => acc + cur.plan_job_plan_time_hour, 0),
-          cplan: plan
-            .push(
-              parseFloat(
-                c.detail
-                  .map((res) =>
-                    res.tg_plan_job_actual_time_hour >=
-                    res.plan_job_plan_time_hour
-                      ? 0
-                      : res.tg_plan_job_actual_time_hour <=
-                        res.plan_job_plan_time_hour
-                      ? res.plan_job_plan_time_hour -
-                        res.tg_plan_job_actual_time_hour
-                      : res.plan_job_plan_time_hour
-                  )
-                  .reduce((acc, cur) => acc + cur / c.detail.length, 0)
-              )
-            )
-            .toFixed(0),
-          success: c.detail
-            .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
-            .reduce((acc, cur) => acc + cur.tg_plan_job_actual_time_hour, 0),
-          csuccess: success
-            .push(
-              parseFloat(
-                c.detail
-                  .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
-                  .reduce(
-                    (acc, cur) =>
-                      acc + cur.tg_plan_job_actual_time_hour / c.detail.length,
-                    0
-                  )
-              )
-            )
-            .toFixed(0),
-          ot: c.detail
-            .filter((res) => res.tg_plan_job_actual_time_ot >= 0)
-            .reduce(
-              (acc, cur) =>
-                acc + cur.tg_plan_job_actual_time_ot / c.detail.length,
-              0
+      params
+        // .filter(
+        //   (obj, index) => moment(obj.date, "DD/MM/YYYY").format("M") == i
+        // )
+        .reduce((a, c) => {
+          a.push({
+            ...c,
+            date_plan: date_plan.push(c.date.substr(0, 10)),
+            plan: c.detail
+              .filter((res) => res.plan_job_plan_time_hour >= 0)
+              .reduce((acc, cur) => acc + cur.plan_job_plan_time_hour, 0),
+            cplan: plan.push(
+              c.detail
+                .map((res) =>
+                  res.tg_plan_job_actual_time_hour >=
+                  res.plan_job_plan_time_hour
+                    ? 0
+                    : res.tg_plan_job_actual_time_hour <=
+                      res.plan_job_plan_time_hour
+                    ? res.plan_job_plan_time_hour -
+                      res.tg_plan_job_actual_time_hour
+                    : res.plan_job_plan_time_hour
+                )
+                .reduce((acc, cur) => acc + cur / c.detail.length, 0)
             ),
-          cot: ot.push(
-            parseFloat(
+            success: c.detail
+              .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
+              .reduce((acc, cur) => acc + cur.tg_plan_job_actual_time_hour, 0),
+            csuccess: success.push(
+              c.detail
+                .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
+                .reduce(
+                  (acc, cur) =>
+                    acc + cur.tg_plan_job_actual_time_hour / c.detail.length,
+                  0
+                )
+            ),
+            ot: c.detail
+              .filter((res) => res.tg_plan_job_actual_time_ot >= 0)
+              .reduce(
+                (acc, cur) =>
+                  acc + cur.tg_plan_job_actual_time_ot / c.detail.length,
+                0
+              ),
+            cot: ot.push(
               c.detail
                 .filter((res) => res.tg_plan_job_actual_time_ot >= 0)
                 .reduce(
@@ -739,180 +763,34 @@ const DashboardsIndex = () => {
                     acc + cur.tg_plan_job_actual_time_ot / c.detail.length,
                   0
                 )
-            ).toFixed(0)
-          ),
-          ctempOt: tempOt.push(
-            parseFloat(
-              c.detail
-                .map((res) =>
-                  res.tg_plan_job_actual_time_hour >= 8
-                    ? 0
-                    : res.plan_job_plan_time_hour >= 8
-                    ? 0
-                    : 8.0 - res.plan_job_plan_time_hour
-                )
-                .reduce((acc, cur) => acc + cur / c.detail.length, 0)
-            ).toFixed(0)
-          ),
-          freeze: c.detail
-            .filter((res) => res.freeze >= 0)
-            .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0),
-          cfreeze: freeze
-            .push(
-              parseFloat(
+            ),
+
+            ctempOt: tempOt.push(
+              parseInt(
                 c.detail
-                  .filter((res) => res.freeze >= 0)
-                  .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0)
+                  .map((res) =>
+                    res.tg_plan_job_actual_time_hour >= 8
+                      ? 0
+                      : res.plan_job_plan_time_hour >= 8
+                      ? 0
+                      : 8.0 - res.plan_job_plan_time_hour
+                  )
+                  .reduce((acc, cur) => acc + cur / c.detail.length, 0)
               )
-            )
-            .toFixed(0),
-        });
-        return a;
-      }, [])
+            ),
+            freeze: c.detail
+              .filter((res) => res.freeze >= 0)
+              .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0),
+            cfreeze: freeze.push(
+              c.detail
+                .filter((res) => res.freeze >= 0)
+                .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0)
+            ),
+          });
+          return a;
+        }, [])
     );
-    console.log("tempOt graphMonth:>> ", tempOt);
     console.log("graphMonth filter :>> ", filter);
-    // let graphMonth2 = [
-    //   {
-    //     name: "sucess",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.tg_plan_job_actual_time_hour /
-    //             DataTransformer.length >=
-    //             8
-    //             ? 8
-    //             : obj.tg_plan_job_actual_time_hour;
-    //         }).reduce((sum, number) => {
-    //           return sum + number / DataTransformer.length;
-    //         }, 0)
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#2ECC71",
-    //   },
-    //   {
-    //     name: "tempot",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.tg_plan_job_actual_time_hour /
-    //             DataTransformer.length >=
-    //             8
-    //             ? obj.tg_plan_job_actual_time_ot
-    //             : 0;
-    //         }).reduce((sum, number) => {
-    //           return sum + number / DataTransformer.length;
-    //         }, 0)
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#CC0000",
-    //   },
-    //   {
-    //     name: "plan",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.tg_plan_job_actual_time_hour /
-    //             DataTransformer.length >=
-    //             obj.plan_job_plan_time_hour / DataTransformer.length
-    //             ? 0
-    //             : obj.tg_plan_job_actual_time_hour <=
-    //               obj.plan_job_plan_time_hour
-    //             ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
-    //             : obj.plan_job_plan_time_hour;
-    //         }).reduce((sum, number) => {
-    //           return sum + number / DataTransformer.length;
-    //         }, 0)
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#0000FF",
-    //   },
-    //   {
-    //     name: "freeze1",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.tg_plan_job_actual_time_hour /
-    //             DataTransformer.length >=
-    //             8
-    //             ? 0
-    //             : obj.plan_job_plan_time_hour / DataTransformer.length >= 8
-    //             ? 0
-    //             : 8 -
-    //               parseFloat(
-    //                 DataTransformer.filter((obj, index) => {
-    //                   return obj.date == date;
-    //                 })
-    //                   .map((obj, index) => {
-    //                     return obj.tg_plan_job_actual_time_hour /
-    //                       DataTransformer.length >=
-    //                       obj.plan_job_plan_time_hour / DataTransformer.length
-    //                       ? 0
-    //                       : obj.tg_plan_job_actual_time_hour <=
-    //                         obj.plan_job_plan_time_hour
-    //                       ? obj.plan_job_plan_time_hour -
-    //                         obj.tg_plan_job_actual_time_hour
-    //                       : obj.plan_job_plan_time_hour;
-    //                   })
-    //                   .reduce((sum, number) => {
-    //                     return sum + number / DataTransformer.length;
-    //                   }, 0) +
-    //                   DataTransformer.filter((obj, index) => {
-    //                     return obj.date == date;
-    //                   })
-    //                     .map((obj, index) => {
-    //                       return obj.tg_plan_job_actual_time_hour /
-    //                         DataTransformer.length >=
-    //                         8
-    //                         ? 8
-    //                         : obj.tg_plan_job_actual_time_hour;
-    //                     })
-    //                     .reduce((sum, number) => {
-    //                       return sum + number / DataTransformer.length;
-    //                     }, 0)
-    //               ).toFixed(0);
-    //         })
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#FFFFFF",
-    //   },
-    //   {
-    //     name: "ot",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.tg_plan_job_actual_time_hour /
-    //             DataTransformer.length >=
-    //             8
-    //             ? 0
-    //             : obj.tg_plan_job_actual_time_ot;
-    //         }).reduce((sum, number) => {
-    //           return sum + number / DataTransformer.length;
-    //         }, 0)
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#CC0000",
-    //   },
-    //   {
-    //     name: "freeze2",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.freeze;
-    //         }).reduce((sum, number) => {
-    //           return sum + number / DataTransformer.length;
-    //         }, 0)
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#FFFFFF",
-    //   },
-    // ];
     let graphMonth = [
       {
         name: "sucess",
@@ -946,6 +824,135 @@ const DashboardsIndex = () => {
       },
     ];
 
+    // setstateGraph12Month({
+    //   date: 1,
+    //   mountNumber: 1,
+    //   id: 1,
+    //   data: {
+    //     series: [...graphMonth],
+    //     options: {
+    //       colors: [...graphMonth?.map((color) => color.colors)],
+    //       chart: {
+    //         width: "20%",
+    //         type: "bar",
+    //         height: 350,
+    //         stacked: true,
+    //         toolbar: {
+    //           show: false,
+    //         },
+    //         events: {
+    //           click: (event, chartContext, config) => {
+    //             console.log(
+    //               "click_date  :>> ",
+    //               event.explicitOriginalTarget.textContent
+    //             );
+    //             if (event.target.localName == "tspan") {
+    //               selectDate(event.explicitOriginalTarget.textContent);
+    //             }
+    //           },
+    //         },
+    //       },
+    //       plotOptions: {
+    //         bar: {
+    //           horizontal: false,
+    //           columnWidth: "30%",
+    //           endingShape: "flat",
+    //         },
+    //       },
+    //       dataLabels: {
+    //         enabled: false,
+    //       },
+    //       stroke: {
+    //         show: true,
+    //         width: 0.2,
+    //         colors: ["#000000"],
+    //       },
+    //       annotations: {
+    //         position: "back",
+    //         yaxis: [
+    //           {
+    //             y: 8,
+    //             borderColor: "#D7D7D7",
+    //             strokeDashArray: 0,
+    //           },
+    //           {
+    //             y: 12,
+    //             borderColor: "#D7D7D7",
+    //             strokeDashArray: 0,
+    //           },
+    //           {
+    //             y: 20,
+    //             borderColor: "#D7D7D7",
+    //             strokeDashArray: 0,
+    //           },
+    //           {
+    //             y: 24,
+    //             borderColor: "#C3C3C3",
+    //             strokeDashArray: 0,
+    //           },
+    //         ],
+    //       },
+    //       responsive: [
+    //         {
+    //           breakpoint: 480,
+    //           options: {
+    //             legend: {
+    //               position: "bottom",
+    //               offsetX: -10,
+    //               offsetY: 0,
+    //             },
+    //           },
+    //         },
+    //       ],
+    //       yaxis: {
+    //         show: true,
+    //         max: 24,
+    //         tickAmount: 24,
+    //         labels: {
+    //           show: true,
+    //           formatter: (value) => {
+    //             return [8, 12, 20, 24].includes(value) ? value : " ";
+    //           },
+    //         },
+    //       },
+    //       xaxis: {
+    //         categories: [...graphMonth[0].date_plan],
+    //         Width: "20%",
+    //         title: {
+    //           text: "",
+    //           offsetX: 0,
+    //           offsetY: 0,
+    //           style: {
+    //             color: undefined,
+    //             fontSize: "12px",
+    //             fontFamily: "Helvetica, Arial, sans-serif",
+    //             fontWeight: 600,
+    //             cssClass: "apexcharts-xaxis-title",
+    //           },
+    //         },
+    //       },
+    //       grid: {
+    //         show: false,
+    //       },
+    //       fill: {
+    //         opacity: 2,
+    //       },
+    //       tooltip: {
+    //         enabled: false,
+    //         y: {
+    //           formatter: function (val) {
+    //             return val;
+    //           },
+    //         },
+    //       },
+    //       legend: {
+    //         show: false,
+    //         position: "bottom",
+    //         horizontalAlign: "center",
+    //       },
+    //     },
+    //   },
+    // });
     setstateGraph12Month({
       series: [...graphMonth],
       options: {
