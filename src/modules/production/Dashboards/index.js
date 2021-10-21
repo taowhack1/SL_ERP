@@ -672,6 +672,7 @@ const DashboardsIndex = () => {
     let success = [];
     let ot = [];
     let tempOt = [];
+    let freeze1 = [];
     let freeze = [];
     let date_plan = [];
     console.log(
@@ -681,6 +682,8 @@ const DashboardsIndex = () => {
     let i = 0;
     let temp_testSum = [];
     let filter = [];
+    let DataTransformer = [];
+
     filter.push(
       params.reduce((a, c) => {
         a.push({
@@ -741,7 +744,7 @@ const DashboardsIndex = () => {
                 )
             ).toFixed(0)
           ),
-          ctempOt: tempOt.push(
+          cfreeze1: freeze1.push(
             parseFloat(
               c.detail
                 .map((res) =>
@@ -770,149 +773,13 @@ const DashboardsIndex = () => {
         return a;
       }, [])
     );
+    console.log(
+      "graphMonth setstateGraph12Month DataTransformer :>> ",
+      DataTransformer
+    );
     console.log("tempOt graphMonth:>> ", tempOt);
     console.log("graphMonth filter :>> ", filter);
-    // let graphMonth2 = [
-    //   {
-    //     name: "sucess",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.tg_plan_job_actual_time_hour /
-    //             DataTransformer.length >=
-    //             8
-    //             ? 8
-    //             : obj.tg_plan_job_actual_time_hour;
-    //         }).reduce((sum, number) => {
-    //           return sum + number / DataTransformer.length;
-    //         }, 0)
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#2ECC71",
-    //   },
-    //   {
-    //     name: "tempot",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.tg_plan_job_actual_time_hour /
-    //             DataTransformer.length >=
-    //             8
-    //             ? obj.tg_plan_job_actual_time_ot
-    //             : 0;
-    //         }).reduce((sum, number) => {
-    //           return sum + number / DataTransformer.length;
-    //         }, 0)
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#CC0000",
-    //   },
-    //   {
-    //     name: "plan",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.tg_plan_job_actual_time_hour /
-    //             DataTransformer.length >=
-    //             obj.plan_job_plan_time_hour / DataTransformer.length
-    //             ? 0
-    //             : obj.tg_plan_job_actual_time_hour <=
-    //               obj.plan_job_plan_time_hour
-    //             ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
-    //             : obj.plan_job_plan_time_hour;
-    //         }).reduce((sum, number) => {
-    //           return sum + number / DataTransformer.length;
-    //         }, 0)
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#0000FF",
-    //   },
-    //   {
-    //     name: "freeze1",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.tg_plan_job_actual_time_hour /
-    //             DataTransformer.length >=
-    //             8
-    //             ? 0
-    //             : obj.plan_job_plan_time_hour / DataTransformer.length >= 8
-    //             ? 0
-    //             : 8 -
-    //               parseFloat(
-    //                 DataTransformer.filter((obj, index) => {
-    //                   return obj.date == date;
-    //                 })
-    //                   .map((obj, index) => {
-    //                     return obj.tg_plan_job_actual_time_hour /
-    //                       DataTransformer.length >=
-    //                       obj.plan_job_plan_time_hour / DataTransformer.length
-    //                       ? 0
-    //                       : obj.tg_plan_job_actual_time_hour <=
-    //                         obj.plan_job_plan_time_hour
-    //                       ? obj.plan_job_plan_time_hour -
-    //                         obj.tg_plan_job_actual_time_hour
-    //                       : obj.plan_job_plan_time_hour;
-    //                   })
-    //                   .reduce((sum, number) => {
-    //                     return sum + number / DataTransformer.length;
-    //                   }, 0) +
-    //                   DataTransformer.filter((obj, index) => {
-    //                     return obj.date == date;
-    //                   })
-    //                     .map((obj, index) => {
-    //                       return obj.tg_plan_job_actual_time_hour /
-    //                         DataTransformer.length >=
-    //                         8
-    //                         ? 8
-    //                         : obj.tg_plan_job_actual_time_hour;
-    //                     })
-    //                     .reduce((sum, number) => {
-    //                       return sum + number / DataTransformer.length;
-    //                     }, 0)
-    //               ).toFixed(0);
-    //         })
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#FFFFFF",
-    //   },
-    //   {
-    //     name: "ot",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.tg_plan_job_actual_time_hour /
-    //             DataTransformer.length >=
-    //             8
-    //             ? 0
-    //             : obj.tg_plan_job_actual_time_ot;
-    //         }).reduce((sum, number) => {
-    //           return sum + number / DataTransformer.length;
-    //         }, 0)
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#CC0000",
-    //   },
-    //   {
-    //     name: "freeze2",
-    //     data: [
-    //       parseFloat(
-    //         DataTransformer.map((obj, index) => {
-    //           return obj.freeze;
-    //         }).reduce((sum, number) => {
-    //           return sum + number / DataTransformer.length;
-    //         }, 0)
-    //       ).toFixed(0),
-    //     ],
-    //     plan_day: date_plan,
-    //     colors: "#FFFFFF",
-    //   },
-    // ];
+
     let graphMonth = [
       {
         name: "sucess",
@@ -921,14 +788,20 @@ const DashboardsIndex = () => {
         colors: "#2ECC71",
       },
       {
+        name: "tempot",
+        data: [],
+        date_plan: date_plan,
+        colors: "#CC0000",
+      },
+      {
         name: "plan",
         data: plan,
         date_plan: date_plan,
         colors: "#0000FF",
       },
       {
-        name: "freeze",
-        data: tempOt,
+        name: "freeze1",
+        data: freeze1,
         date_plan: date_plan,
         colors: "#FFFFFF",
       },
@@ -939,7 +812,7 @@ const DashboardsIndex = () => {
         colors: "#CC0000",
       },
       {
-        name: "freeze",
+        name: "freeze2",
         data: freeze,
         date_plan: date_plan,
         colors: "#FFFFFF",
