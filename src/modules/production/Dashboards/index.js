@@ -649,7 +649,7 @@ const DashboardsIndex = () => {
             opacity: 2,
           },
           tooltip: {
-            enabled: false,
+            enabled: true,
             y: {
               formatter: function (val) {
                 return val;
@@ -692,40 +692,37 @@ const DashboardsIndex = () => {
           plan: c.detail
             .filter((res) => res.plan_job_plan_time_hour >= 0)
             .reduce((acc, cur) => acc + cur.plan_job_plan_time_hour, 0),
-          cplan: plan
-            .push(
-              parseFloat(
-                c.detail
-                  .map((res) =>
-                    res.tg_plan_job_actual_time_hour >=
-                    res.plan_job_plan_time_hour
-                      ? 0
-                      : res.tg_plan_job_actual_time_hour <=
-                        res.plan_job_plan_time_hour
-                      ? res.plan_job_plan_time_hour -
-                        res.tg_plan_job_actual_time_hour
-                      : res.plan_job_plan_time_hour
-                  )
-                  .reduce((acc, cur) => acc + cur / c.detail.length, 0)
-              )
-            )
-            .toFixed(0),
+          cplan: plan.push(
+            parseFloat(
+              c.detail
+                .map((res) =>
+                  res.tg_plan_job_actual_time_hour >=
+                  res.plan_job_plan_time_hour
+                    ? 0
+                    : res.tg_plan_job_actual_time_hour <=
+                      res.plan_job_plan_time_hour
+                    ? res.plan_job_plan_time_hour -
+                      res.tg_plan_job_actual_time_hour
+                    : res.plan_job_plan_time_hour
+                )
+                .reduce((acc, cur) => acc + cur / c.detail.length, 0)
+            ).toFixed(0)
+          ),
           success: c.detail
             .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
             .reduce((acc, cur) => acc + cur.tg_plan_job_actual_time_hour, 0),
-          csuccess: success
-            .push(
-              parseFloat(
-                c.detail
-                  .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
-                  .reduce(
-                    (acc, cur) =>
-                      acc + cur.tg_plan_job_actual_time_hour / c.detail.length,
-                    0
-                  )
-              )
+          csuccess: success.push(
+            parseFloat(
+              c.detail
+                .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
+                .reduce(
+                  (acc, cur) =>
+                    acc + cur.tg_plan_job_actual_time_hour / c.detail.length,
+                  0
+                )
+                .toFixed(0)
             )
-            .toFixed(0),
+          ),
           ot: c.detail
             .filter((res) => res.tg_plan_job_actual_time_ot >= 0)
             .reduce(
@@ -752,11 +749,25 @@ const DashboardsIndex = () => {
                     ? 0
                     : res.plan_job_plan_time_hour >= 8
                     ? 0
-                    : 8.0 - res.plan_job_plan_time_hour
+                    : 8 - 2
                 )
                 .reduce((acc, cur) => acc + cur / c.detail.length, 0)
             ).toFixed(0)
           ),
+          freeze1: c.detail.map(
+            (res) =>
+              res.plan_job_plan_time_hour / c.detail.length +
+                res.tg_plan_job_actual_time_hour / c.detail.length >=
+              8
+                ? true
+                : res.plan_job_plan_time_hour + res.tg_plan_job_actual_time_hour
+            // res.tg_plan_job_actual_time_hour >= 8
+            //   ? 0
+            //   : res.plan_job_plan_time_hour >= 8
+            //   ? 0
+            //   : res.plan_job_plan_time_hour
+          ),
+          //.reduce((acc, cur) => acc + cur / c.detail.length, 0)
           freeze: c.detail
             .filter((res) => res.freeze >= 0)
             .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0),
@@ -777,6 +788,7 @@ const DashboardsIndex = () => {
       "graphMonth setstateGraph12Month DataTransformer :>> ",
       DataTransformer
     );
+    console.log("freeze1 :>> ", freeze1);
     console.log("tempOt graphMonth:>> ", tempOt);
     console.log("graphMonth filter :>> ", filter);
 
@@ -929,7 +941,7 @@ const DashboardsIndex = () => {
           opacity: 2,
         },
         tooltip: {
-          enabled: false,
+          enabled: true,
           y: {
             formatter: function (val) {
               return val;
