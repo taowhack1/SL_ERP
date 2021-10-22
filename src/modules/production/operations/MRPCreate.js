@@ -227,6 +227,17 @@ const MRPCreate = (props) => {
       console.log("HEAD DATA : ", state);
       console.log("RM DATA : ", state.rm_detail);
       console.log("PK DATA : ", state.pk_detail);
+      if (
+        state?.type_id === 4 &&
+        (!state?.mrp_routing?.fg?.length || !state?.mrp_routing?.bulk?.length)
+      ) {
+        message.warning("Please Check Routing. Missing Bulk or FG Routing.", 6);
+        return false;
+      }
+      if (state?.type_id === 3 && !state?.mrp_routing?.bulk?.length) {
+        message.warning("Please Check Routing. Missing Bulk Routing.", 6);
+        return false;
+      }
 
       if (
         state.rm_detail.some(
@@ -265,6 +276,8 @@ const MRPCreate = (props) => {
         mrpRoutingDetail,
         mrpRoutingRequireFields
       );
+
+      console.log("Save Data", state);
       if (validate.validate) {
         if (!validateRouting.validate) {
           message.error({

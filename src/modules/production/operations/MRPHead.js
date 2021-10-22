@@ -25,6 +25,7 @@ const resetValue = {
   item_no_name: null,
   mrp_delivery_date: null,
   mrp_qty_produce: 0,
+  type_id: null,
   uom_id: null,
   uom_no: null,
   calRPM: false,
@@ -208,35 +209,13 @@ const MRPHead = () => {
                                 option.data.so_detail_delivery_date,
                               mrp_qty_produce:
                                 option.data.tg_so_detail_qty_balance,
-                              // mrp_qty_produce_ref: 0,
-                              // mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
-                              // mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
-                              // mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
-                              // item_qty_produce_bulk_request: 0,
+                              type_id: option?.data?.type_id,
                               uom_id: option.data.uom_id,
                               uom_no: option.data.uom_no,
                               calRPM: true,
-                              // rm_detail: [],
-                              // pk_detail: [],
                             })
                           : onChange({
                               ...resetValue,
-
-                              // so_detail_id: null,
-                              // item_id: null,
-                              // item_no_name: null,
-                              // mrp_delivery_date: null,
-                              // mrp_qty_produce: 0,
-                              // uom_id: null,
-                              // uom_no: null,
-                              // calRPM: false,
-                              // mrp_qty_produce_ref: 0,
-                              // mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
-                              // mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
-                              // mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
-                              // item_qty_produce_bulk_request: 0,
-                              // rm_detail: [],
-                              // pk_detail: [],
                             });
                       }}
                     />

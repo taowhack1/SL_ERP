@@ -210,7 +210,7 @@ const SubDetail = ({
                     {...numberFormat}
                     placeholder={"Quantity Done"}
                     min={0.0}
-                    max={limit_qty}
+                    // max={limit_qty}
                     step={0.000001}
                     size="small"
                     name="disburse_detail_sub_qty"
