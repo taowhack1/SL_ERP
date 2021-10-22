@@ -21,7 +21,7 @@ const NPRRDForm = () => {
       breadcrumb: ["Sales", "NPR", "create"], // [1,2,3] = 1 / 2 / 3
       search: false, // bool show search
       searchValue: null, //search string
-      buttonAction: ["Create", "Edit", "Save"], // button
+      buttonAction: [], // button
       badgeCont: 0, //number
       step: null, // object {current:0,step:[],process_complete:bool}
       create: "", // path or "modal" and use openModal() instead

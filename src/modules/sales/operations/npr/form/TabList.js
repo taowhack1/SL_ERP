@@ -5,10 +5,11 @@ import CustomerAndProductGroup from "./tabs/CustomerAndProductGroup";
 import DetailOfSampleRequest from "./tabs/DetailOfSampleRequest";
 import PackagingComponents from "./tabs/PackagingComponents";
 import FormulaList from "./tabs/formula/FormulaList";
+import AssignPIC from "./tabs/formula/AssignPIC";
 const TabList = () => {
   return (
     <>
-      <Tabs>
+      <Tabs activeKey={"5"}>
         <Tabs.TabPane tab="General Detail" key="1">
           <GeneralDetail />
         </Tabs.TabPane>
@@ -22,7 +23,10 @@ const TabList = () => {
           <PackagingComponents />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Formula" key="5">
-          <FormulaList />
+          <div style={{ padding: "0px 30px" }}>
+            <AssignPIC />
+            <FormulaList />
+          </div>
         </Tabs.TabPane>
       </Tabs>
     </>
