@@ -5,6 +5,7 @@ import {
   CLEAR_FILTER_PANNING_CALENDAR,
   FILTER_PANNING_CALENDAR,
 } from "../actions/production/planningActions";
+import { SEARCH_ROUTING } from "../actions/production/routingAction";
 import {
   CLOSE_TIMESHEET,
   GET_MACHINE_PLAN,
@@ -217,6 +218,17 @@ export default (state = initialState, action) => {
         routing: {
           ...state.routing,
           routing: action.payload,
+        },
+      };
+    case SEARCH_ROUTING:
+      return {
+        ...state,
+        routing: {
+          ...state.routing,
+          filter: {
+            ...state.routing.filter,
+            ...action.payload,
+          },
         },
       };
     case GET_FGITEM:

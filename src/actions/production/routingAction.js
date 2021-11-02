@@ -4,9 +4,12 @@ import React from "react";
 import { header_config } from "../../include/js/main_config";
 import { api_list_fg, api_routing } from "../../include/js/api";
 import { GET_FGITEM, GET_ROUTING_ALL, GET_ROUTING_ONE } from "../types";
+
 import { message } from "antd";
 import { sortData } from "../../include/js/function_main";
-
+export const SEARCH_ROUTING = "SEARCH_ROUTING";
+export const filterRouting = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_ROUTING, payload: data });
 export const getRoutingAll = () => (dispatch) => {
   axios.get(api_routing, header_config).then((res) => {
     dispatch({ type: GET_ROUTING_ALL, payload: res.data[0] });
