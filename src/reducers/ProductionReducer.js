@@ -111,6 +111,12 @@ export const initialState = {
   routing: {
     routing: {},
     routingList: [],
+    filter: {
+      keyword: null,
+      routing_id: null,
+      page: 1,
+      pageSize: 20,
+    },
   },
   fg: {
     fgList: [],
