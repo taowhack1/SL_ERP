@@ -103,7 +103,6 @@ const JobOrderMain = () => {
     }),
     [modal, openModal, closeModal, saveModal, filter]
   );
-  console.log("keyword", keyword);
   return (
     <MainLayout {...layoutConfig}>
       <JobOrderListTable {...listConfig} />

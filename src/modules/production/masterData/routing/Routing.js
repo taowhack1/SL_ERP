@@ -21,8 +21,6 @@ const Routing = (props) => {
   const { filter } = useSelector((state) => state.production.routing);
   const { pageSize, page, keyword } = filter || {};
   const getSearchData = (data, keyword) => {
-    console.log("data getSearchData:>> ", data);
-    console.log("keyword :>> ", keyword);
     const search_data = sortData(
       keyword
         ? data?.filter(
@@ -87,7 +85,6 @@ const Routing = (props) => {
     if (!id) return false;
     history.push(`/production/routing/${id}`);
   };
-
   console.log("state RoutingList:>> ", state);
   return (
     <MainLayout {...config}>
