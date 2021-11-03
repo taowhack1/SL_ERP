@@ -1,10 +1,19 @@
-import { Radio, Space } from "antd";
+/** @format */
+
+import { Button, Radio, Space } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useCallback, useMemo, useState } from "react";
 import MainLayout from "../../../../components/MainLayout";
 import JobOrderListTable from "./JobOrderListTable";
 import PlanningModal from "../planning/PlanningModal";
+import { useDispatch, useSelector } from "react-redux";
+import { searchJobOrder } from "../../../../actions/production/jobOrderActions";
 const JobOrderMain = () => {
+  const dispatch = useDispatch();
+  const { filter } = useSelector(
+    (state) => state?.production?.operations?.jobOrder
+  );
+  const { pageSize, page, keyword } = filter || {};
   const [modal, setModal] = useState({
     visible: false,
     data: {},
@@ -44,8 +53,24 @@ const JobOrderMain = () => {
       home: "/production", // path
       show: true, // bool show sub - tool bar
       breadcrumb: ["Production", "Operations", "Job Order"], // [1,2,3] = 1 / 2 / 3
-      search: false, // bool show search
-      searchValue: null, //search string
+      search: true, // bool show search
+      searchValue: keyword || null, //search string
+      searchBar: (
+        <Button
+          className='primary'
+          onClick={() =>
+            dispatch(
+              searchJobOrder({
+                page: 1,
+                pageSize: 20,
+                keyword: null,
+                mrp_id: null,
+              })
+            )
+          }>
+          Clear Filter
+        </Button>
+      ),
       buttonAction: [], // button
       badgeCont: 0, //number
       step: null, // object {current:0,step:[],process_complete:bool}
@@ -58,10 +83,12 @@ const JobOrderMain = () => {
       onApprove: () => console.log("Approve"),
       onReject: () => console.log("Reject"),
       onCancel: () => console.log("Cancel"),
-      onSearch: (keyword) => console.log("Search Key", keyword),
+      onSearch: (keyword) => {
+        dispatch(searchJobOrder({ keyword }));
+      },
       openModal: () => console.log("openModal"),
     }),
-    []
+    [pageSize, page, keyword]
   );
 
   const listConfig = useMemo(
@@ -72,10 +99,11 @@ const JobOrderMain = () => {
         closeModal,
         saveModal,
       },
+      filter: { pageSize, page, keyword },
     }),
-    [modal, openModal, closeModal, saveModal]
+    [modal, openModal, closeModal, saveModal, filter]
   );
-
+  console.log("keyword", keyword);
   return (
     <MainLayout {...layoutConfig}>
       <JobOrderListTable {...listConfig} />

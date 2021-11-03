@@ -18,13 +18,11 @@ const Routing = (props) => {
   const { data, error, loading } = useFetch(apiGetRouting);
   const [state, setState] = useState([]);
   const [loadingrouting, setLoading] = useState(false);
-  // useEffect(() => {
-  //   data?.length && setState(sortData(data[0]));
-  // }, [data]);
   const { filter } = useSelector((state) => state.production.routing);
   const { pageSize, page, keyword } = filter || {};
   const getSearchData = (data, keyword) => {
     console.log("data getSearchData:>> ", data);
+    console.log("keyword :>> ", keyword);
     const search_data = sortData(
       keyword
         ? data?.filter(

@@ -1,6 +1,7 @@
 /** @format */
 
 import moment from "moment";
+import { SEARCH_JOB_ORDER } from "../actions/production/jobOrderActions";
 import {
   CLEAR_FILTER_PANNING_CALENDAR,
   FILTER_PANNING_CALENDAR,
@@ -89,8 +90,9 @@ export const initialState = {
     jobOrder: {
       filter: {
         keyword: null,
-        status: 1,
+        mrp_id: null,
         pageSize: 20,
+        page: 1,
       },
     },
     timesheet: {
@@ -409,20 +411,20 @@ export default (state = initialState, action) => {
           },
         },
       };
-    // case FILTER_JOB_ORDER:
-    //   return {
-    //     ...state,
-    //     operations: {
-    //       ...state?.operations,
-    //       jobOrder: {
-    //         ...state?.operations?.jobOrder,
-    //         filter: {
-    //           ...state?.operations?.jobOrder?.filter,
-    //           ...action.payload,
-    //         },
-    //       },
-    //     },
-    //   };
+    case SEARCH_JOB_ORDER:
+      return {
+        ...state,
+        operations: {
+          ...state?.operations,
+          jobOrder: {
+            ...state?.operations?.jobOrder,
+            filter: {
+              ...state?.operations?.jobOrder?.filter,
+              ...action?.payload,
+            },
+          },
+        },
+      };
     // case CLEAR_FILTER_JOB_ORDER:
     //   return {
     //     ...state,
