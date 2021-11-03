@@ -2,10 +2,11 @@
 
 import { Radio, Space } from "antd";
 import Text from "antd/lib/typography/Text";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getRDEmp } from "../../../../actions/hrm";
 import { getNPRList } from "../../../../actions/sales/nprActions";
+import ConfigColumn from "../../../../components/ConfigColumn";
 import DetailLoading from "../../../../components/DetailLoading";
 import MainLayout from "../../../../components/MainLayout";
 import { sortData } from "../../../../include/js/function_main";
@@ -16,14 +17,34 @@ const NPRList = () => {
   const { operations, loading } = useSelector((state) => state.sales);
   const list = operations.npr.list;
   const [state, setState] = useState(list);
+  const [modal, setModal] = useState({
+    visible: false,
+  });
   useEffect(() => {
     dispatch(getRDEmp());
     dispatch(getNPRList());
+    setModal((prev) => ({ ...prev, update: false }));
   }, []);
   useEffect(() => {
     console.log("list", list);
     setState(sortData(list));
   }, [list]);
+  const onClose = useCallback(() => {
+    setModal((prev) => ({
+      ...prev,
+      visible: false,
+    }));
+  }, [setModal, modal]);
+  const configView = () => setModal((prev) => ({ ...prev, visible: true }));
+  const modalConfig = React.useMemo(
+    () => ({
+      ...modal,
+      list,
+      onClose,
+      configView,
+    }),
+    [modal.visible, onClose, configView]
+  );
   const layoutConfig = {
     projectId: 7,
     title: "SALES",
@@ -37,6 +58,7 @@ const NPRList = () => {
       path: "/sales/npr/rd/1",
     },
     discard: "",
+    openConfigColomn: () => setModal((prev) => ({ ...prev, visible: true })),
     onCancel: () => {
       console.log("Cancel");
     },
@@ -104,13 +126,15 @@ const NPRList = () => {
                 break;
             }
           }}
-          optionType="button"
-          buttonStyle="solid"
+          optionType='button'
+          buttonStyle='solid'
           defaultValue={0}
         />
       </Space>
     ),
+    configColumn: <ConfigColumn {...modalConfig} />,
   };
+
   console.log("List", state);
   return (
     <>
