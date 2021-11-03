@@ -17,7 +17,7 @@ import CustomLabel from "../../../../../../../../components/CustomLabel";
 import CustomTable from "../../../../../../../../components/CustomTable";
 import { NPRFormContext } from "../../../NPRRDForm";
 
-const Formula = () => {
+const FormulaDevelopment = () => {
   const { readOnly, data } = useContext(NPRFormContext);
   const {
     handleSubmit,
@@ -65,7 +65,7 @@ const Formula = () => {
                         return TextAreaField({
                           fieldProps: {
                             className: "w-100",
-                            placeholder: "คำอธิบายผลิตภัณฑ์",
+                            placeholder: "คำอธิบายเกี่ยวกับตัวอย่าง / สูตร",
                             ...field,
                           },
                         });
@@ -170,7 +170,7 @@ const Formula = () => {
   );
 };
 
-export default React.memo(Formula);
+export default React.memo(FormulaDevelopment);
 
 const initialStateRow = {
   npr_formula_detail_id: null,

@@ -45,11 +45,6 @@ const SelectPR = (props) => {
 
   useEffect(() => {
     let searchResult = prItems;
-    // if (search?.item) {
-    //   searchResult = searchResult?.filter(
-    //     (obj) => obj?.item_no_name?.indexOf(search?.item) >= 0
-    //   );
-    // }
     if (search?.item) {
       searchResult = searchResult?.filter(
         (obj) => obj?.item_no_name?.indexOf(search?.item) >= 0

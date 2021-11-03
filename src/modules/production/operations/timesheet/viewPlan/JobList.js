@@ -20,6 +20,7 @@ const JobList = () => {
     dispatch(setTimesheet({ plan_job_id, selectedWorker: [] }));
     dispatch(resetTimesheetCtrl());
   };
+  console.log("plan_job_detail", plan_job_detail);
   return (
     <>
       <Table

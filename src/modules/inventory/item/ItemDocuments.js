@@ -72,6 +72,7 @@ const ItemDocuments = () => {
                     <Col span={13}>
                       {
                         // 1 = ADMIN , 10 = MIS , 11 = RD , 13 = PU ,17 = QC , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE
+                        // 41 = จ.ป.
                         // [1, 10, 11, 17, 20].includes(department_id) ? (
                         [1, 11, 13, 20].includes(department_id) ? (
                           <ItemFileUpload
@@ -118,7 +119,10 @@ const ItemDocuments = () => {
                     <Col span={13}>
                       {
                         // 1 = ADMIN , 10 = MIS , 11 = RD , 13 = PU ,17 = QC , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE
-                        [1, 10, 11, 13, 17, 24, 20].includes(department_id) ? (
+                        // 41 = จ.ป.
+                        [1, 10, 11, 13, 17, 24, 20, 41].includes(
+                          department_id
+                        ) ? (
                           <ItemFileUpload
                             data_file={obj?.item_vendor_detail_document}
                             updateFile={null}

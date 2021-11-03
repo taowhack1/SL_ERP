@@ -1,5 +1,3 @@
-/** @format */
-
 import React from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import NPRList from ".";
@@ -19,20 +17,18 @@ const NPRRoute = () => {
         <NPRPRoductionCostForm />
       </Route>
       <Route path={`${path}/:department/:id`}>
-        <NPRViewById />
-        {/* <NPRRDForm /> */}
+        {/* <NPRViewById /> */}
+        <NPRRDForm />
       </Route>
       <Route path={`${path}/rd`}>
         <NPRList />
       </Route>
-
       <Route path={`${path}/pu`}>
         <NPRListForPU />
       </Route>
       <Route path={`${path}/pd`}>
         <NPRListForPD />
       </Route>
-
       <Route path={path}>
         <h1>Hello NPR</h1>
       </Route>

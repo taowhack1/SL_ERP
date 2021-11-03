@@ -3,6 +3,7 @@ import React, { useMemo } from "react";
 import MainLayout from "../../../../../components/MainLayout";
 import DetailFormSales from "./DetailFormSales";
 import TabList from "./TabList";
+import { useForm } from "react-hook-form";
 import { useParams } from "react-router";
 import { useFetch } from "../../../../../include/js/customHooks";
 import { Spin } from "antd";
@@ -11,23 +12,22 @@ const apiNPR = `/sales/npr`;
 const NPRRDForm = () => {
   const { id } = useParams();
   const { data, loading } = useFetch(`${apiNPR}/${id}`);
-  console.log("data", data, loading);
   const layoutConfig = useMemo(
     () => ({
       projectId: 7, // project ID from DB
       title: "SALES", // project name
-      home: "/sales/npr", // path
+      home: "/sales", // path
       show: true, // bool show sub - tool bar
       breadcrumb: ["Sales", "NPR", "create"], // [1,2,3] = 1 / 2 / 3
       search: false, // bool show search
       searchValue: null, //search string
-      buttonAction: [], // button
+      buttonAction: ["Back"], // button
       badgeCont: 0, //number
       step: null, // object {current:0,step:[],process_complete:bool}
       create: "", // path or "modal" and use openModal() instead
       edit: "", // object {data: any , path : "string"} or function
-      discard: "", //path
-      back: "", //path
+      discard: "/sales/npr/rd", //path
+      back: "/sales/npr/rd", //path
       save: "", //path if not path use "function" and use onSave instead.
       onConfirm: () => console.log("Confirm"),
       onApprove: () => console.log("Approve"),

@@ -21,18 +21,23 @@ const AntdTableDragable = (props) => {
     footer,
     readOnly,
     editable,
+    onSwap,
   } = props;
   const moveRow = useCallback(
     (dragIndex, hoverIndex) => {
-      const dragRow = dataSource[dragIndex];
-      setState(
-        update(dataSource, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, dragRow],
-          ],
-        })
-      );
+      console.log(`Move Row form ${dragIndex} to ${hoverIndex}`);
+      if (setState) {
+        const dragRow = dataSource[dragIndex];
+        setState(
+          update(dataSource, {
+            $splice: [
+              [dragIndex, 1],
+              [hoverIndex, 0, dragRow],
+            ],
+          })
+        );
+      }
+      onSwap && onSwap({ dragIndex, hoverIndex });
     },
     [dataSource]
   );
@@ -59,7 +64,10 @@ const AntdTableDragable = (props) => {
             scroll={scroll ?? null}
             onRow={(record, index) => ({
               index,
-              moveRow,
+              moveRow: (dragIndex, hoverIndex) =>
+                dataSource?.length
+                  ? moveRow(dragIndex, hoverIndex)
+                  : console.log(dragIndex, hoverIndex),
               onClick,
             })}
             footer={() => (
