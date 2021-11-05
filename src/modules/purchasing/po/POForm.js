@@ -1,3 +1,5 @@
+/** @format */
+
 import { Col, Input, Row, Tabs } from "antd";
 import React, { useContext, useEffect } from "react";
 import CustomLabel from "../../../components/CustomLabel";
@@ -7,6 +9,7 @@ import POFormDetail from "./POFormDetail";
 import { POContext } from "./POFormDisplay";
 import POFormResult from "./POFormResult";
 import SelectPR from "./SelectPR";
+const { TextArea } = Input;
 const POForm = () => {
   const {
     readOnly = false,
@@ -18,8 +21,14 @@ const POForm = () => {
     getCurrency,
     onChangePOState,
   } = useContext(POContext) || {};
-  const { po_description, vendor_id, payment_term_id, currency_id, vat_id } =
-    poState || {};
+  const {
+    po_description,
+    vendor_id,
+    payment_term_id,
+    currency_id,
+    vat_id,
+    po_remark,
+  } = poState || {};
   const { data: vendors = [], loading: getVendorLoading = true } =
     getVendor || {};
   const { data: vat = [], loading: getVatLoading = true } = getVat || {};
@@ -40,6 +49,7 @@ const POForm = () => {
         vat_no,
         payment_term_id,
         payment_term_name,
+        po_remark,
       });
     }
   }, [vendor_id]);
@@ -48,12 +58,12 @@ const POForm = () => {
       <>
         {[1, 2].includes(step) ? (
           <>
-            <Row className="col-2 mt-1 mb-1" gutter={32}>
+            <Row className='col-2 mt-1 mb-1' gutter={32}>
               <Col span={12}>
-                <Row className="col-2 mt-1 mb-1" gutter={8}>
+                <Row className='col-2 mt-1 mb-1' gutter={8}>
                   <Col span={6}>
                     <CustomLabel
-                      label="Description :"
+                      label='Description :'
                       require
                       readOnly={false}
                     />
@@ -75,9 +85,9 @@ const POForm = () => {
                     </>
                   </Col>
                 </Row>
-                <Row className="col-2 mt-1 mb-1" gutter={8}>
+                <Row className='col-2 mt-1 mb-1' gutter={8}>
                   <Col span={6}>
-                    <CustomLabel label="Vendor :" require readOnly={false} />
+                    <CustomLabel label='Vendor :' require readOnly={false} />
                   </Col>
                   <Col span={18}>
                     <>
@@ -107,33 +117,22 @@ const POForm = () => {
                     </>
                   </Col>
                 </Row>
-                <Row className="col-2 mt-1 mb-1" gutter={8}>
+                <Row className='col-2 mt-1 mb-1' gutter={8}>
                   <Col span={6}>
-                    <CustomLabel label="Currency :" require readOnly={false} />
+                    <CustomLabel label='Note :' require readOnly={false} />
                   </Col>
                   <Col span={18}>
                     <>
-                      <CustomSelect
+                      <TextArea
                         {...{
-                          disabled: getCurrencyLoading,
-                          style: { width: "30%" },
-                          placeholder: "Currency",
-                          showSearch: true,
-                          allowClear: true,
-                          field_id: "currency_id",
-                          field_name: "currency_no",
-                          value: currency_id,
-                          data: currency ? currency[0] : [],
-                          onChange: (val, obj) =>
-                            val
-                              ? onChangePOState({
-                                  currency_id: val,
-                                  currency_no: obj?.data?.currency_no,
-                                })
-                              : onChangePOState({
-                                  currency_id: null,
-                                  currency_no: null,
-                                }),
+                          placeholder: "Note",
+                          className: "w-100",
+                          disabled: false,
+                          value: po_remark || null,
+                          onChange: (e) =>
+                            onChangePOState({
+                              po_remark: e.target.value,
+                            }),
                         }}
                       />
                     </>
@@ -141,9 +140,9 @@ const POForm = () => {
                 </Row>
               </Col>
               <Col span={12}>
-                <Row className="col-2 mt-1 mb-1" gutter={8}>
+                <Row className='col-2 mt-1 mb-1' gutter={8}>
                   <Col span={6}>
-                    <CustomLabel label="Vat :" require readOnly={false} />
+                    <CustomLabel label='Vat :' require readOnly={false} />
                   </Col>
                   <Col span={18}>
                     <>
@@ -176,10 +175,10 @@ const POForm = () => {
                   </Col>
                 </Row>
 
-                <Row className="col-2 mt-1 mb-1" gutter={8}>
+                <Row className='col-2 mt-1 mb-1' gutter={8}>
                   <Col span={6}>
                     <CustomLabel
-                      label="Payment Terms :"
+                      label='Payment Terms :'
                       require
                       readOnly={false}
                     />
@@ -213,13 +212,45 @@ const POForm = () => {
                     </>
                   </Col>
                 </Row>
+                <Row className='col-2 mt-1 mb-1' gutter={8}>
+                  <Col span={6}>
+                    <CustomLabel label='Currency :' require readOnly={false} />
+                  </Col>
+                  <Col span={18}>
+                    <>
+                      <CustomSelect
+                        {...{
+                          disabled: getCurrencyLoading,
+                          style: { width: "30%" },
+                          placeholder: "Currency",
+                          showSearch: true,
+                          allowClear: true,
+                          field_id: "currency_id",
+                          field_name: "currency_no",
+                          value: currency_id,
+                          data: currency ? currency[0] : [],
+                          onChange: (val, obj) =>
+                            val
+                              ? onChangePOState({
+                                  currency_id: val,
+                                  currency_no: obj?.data?.currency_no,
+                                })
+                              : onChangePOState({
+                                  currency_id: null,
+                                  currency_no: null,
+                                }),
+                        }}
+                      />
+                    </>
+                  </Col>
+                </Row>
               </Col>
             </Row>
             <Row>
               <Col span={24}>
                 {step === 1 ? (
                   <Tabs>
-                    <Tabs.TabPane tab="Select Item" key="1">
+                    <Tabs.TabPane tab='Select Item' key='1'>
                       <SelectPR />
                     </Tabs.TabPane>
                   </Tabs>
