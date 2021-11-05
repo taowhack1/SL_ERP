@@ -17,8 +17,8 @@ const NPRRoute = () => {
         <NPRPRoductionCostForm />
       </Route>
       <Route path={`${path}/:department/:id`}>
-        {/* <NPRViewById /> */}
-        <NPRRDForm />
+        <NPRViewById />
+        {/* <NPRRDForm /> */}
       </Route>
       <Route path={`${path}/rd`}>
         <NPRList />
