@@ -75,16 +75,24 @@ const FormulaDevelopment = () => {
   );
 
   const onExpand = (bool = false, row) => {
+    console.log("ex");
     if (bool) {
       setTabs((prev) => ({
         ...prev,
         panes: {
           ...prev?.panes,
-          [row["id"]]: row?.formula,
+          [row["npr_option_id"]]: prev?.panes[row["npr_option_id"]]
+            ? prev?.panes[row["npr_option_id"]]
+            : {
+                //แยกตาม npr_option_id ex. { 1 : { activeKey : ... , npr_formula : [] }}
+                activeKey: row?.npr_formula[row?.npr_formula?.length - 1] || 1, //activeKey = Last index formula
+                npr_formula: row?.npr_formula, //formula
+              },
         },
-        activeKey: `${
-          row?.formula[row?.formula?.length - 1]?.npr_formula_revision_no || 0
-        }`,
+        // activeKey: `${
+        //   row?.npr_formula[row?.npr_formula?.length - 1]
+        //     ?.npr_formula_revision_no || 0
+        // }`,
       }));
     }
   };
@@ -93,10 +101,12 @@ const FormulaDevelopment = () => {
     ({ row, onChange, onEdit }) => {
       {
         /*
-        panes = formula[]
+        panes = npr_formula[]
       */
       }
-      const { panes, activeKey } = tabs;
+      const { panes } = tabs;
+      const { activeKey = "1", npr_formula = [] } =
+        panes[row?.npr_option_id] || {};
       return (
         <div
           className="pd-left-1 detail-container"
@@ -109,7 +119,7 @@ const FormulaDevelopment = () => {
             <Tabs
               {...{
                 type: readOnly ? "card" : "editable-card",
-                activeKey: `${activeKey}`,
+                // activeKey: `${activeKey}`,
                 onChange,
                 onEdit: (targetKey, action) => onEdit(targetKey, action),
                 addIcon: (
@@ -121,7 +131,7 @@ const FormulaDevelopment = () => {
               }}
             >
               {/* All Formula in color & odor */}
-              {panes[row["id"]]?.map((obj, index) => (
+              {npr_formula?.map((obj, index) => (
                 <Tabs.TabPane
                   tab={`Rev.${obj?.npr_formula_revision_no}`}
                   key={`${obj?.npr_formula_revision_no}`}
@@ -219,6 +229,7 @@ const initialStateFormula = {
   npr_formula_batch_size: 300,
   npr_formula_remark: "Mockup - Remark",
   npr_formula_detail: [],
+  npr_formula_qa: [],
 };
 
 const mockData = [
@@ -244,7 +255,7 @@ const mockData = [
     npr_option_updated: "05/11/2021", //วันที่อัปเดตล่าสุด
     tg_trans_status_id: 2,
     tg_trans_close_id: 1,
-    formula: [
+    npr_formula: [
       {
         id: 1,
         npr_formula_id: 1,
@@ -253,7 +264,7 @@ const mockData = [
         npr_formula_revision_no: 0,
         npr_formula_no: "NPR018-2021-002-0",
         npr_formula_develop_by: "2563002",
-        npr_formula_description: "สูตร 1 สีแดง กลิ่นสตรอเบอร์รี่",
+        npr_formula_description: "สูตร 1 สีแดง กลิ่นสตรอเบอร์รี่ 1234",
         npr_formula_created: "20/10/2021",
         npr_formula_usage: "1. Step 1 \n 2. Step 2 \n 3. Step 3",
         npr_formula_product_code: "Mockup - Product Code",
@@ -304,15 +315,15 @@ const mockData = [
             npr_formula_qa_id: 0,
             npr_formula_qa_result: "Mockup - Result 1",
             npr_formula_qa_remark: "Mockup - Remark 1",
-            qa_subject_id: 1,
-            qa_specification_id: 1,
+            qa_subject_id: 143,
+            qa_specification_id: 302,
           },
           {
             npr_formula_qa_id: 1,
             npr_formula_qa_result: "Mockup - Result 2",
             npr_formula_qa_remark: "Mockup - Remark 2",
-            qa_subject_id: 3,
-            qa_specification_id: 2,
+            qa_subject_id: 129,
+            qa_specification_id: 399,
           },
         ],
       },
@@ -322,7 +333,7 @@ const mockData = [
     id: 2,
     npr_color_description: "Yellow",
     npr_odor_description: "Banana Ba Ba na na",
-    formula: [
+    npr_formula: [
       // {
       //   id: 1,
       //   npr_formula_revision_no: 0,

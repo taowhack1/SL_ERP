@@ -22,12 +22,13 @@ const POFormResult = () => {
     tg_po_sum_amount,
     tg_po_vat_amount,
     tg_po_total_amount,
+    vat_name,
   } = poState || {};
   return (
     <>
-      <Row className='col-2 mt-1 mb-1' gutter={16}>
+      <Row className="col-2 mt-1 mb-1" gutter={16}>
         <Col span={12}>
-          <Row className='col-2 mt-1 mb-1' gutter={8}>
+          <Row className="col-2 mt-1 mb-1" gutter={8}>
             <Col span={6}>
               <Text strong>PO No. :</Text>
             </Col>
@@ -35,7 +36,7 @@ const POFormResult = () => {
               <Text>{po_no || "-"}</Text>
             </Col>
           </Row>
-          <Row className='col-2 mt-1 mb-1' gutter={8}>
+          <Row className="col-2 mt-1 mb-1" gutter={8}>
             <Col span={6}>
               <Text strong>Description :</Text>
             </Col>
@@ -43,7 +44,7 @@ const POFormResult = () => {
               <Text>{po_description || "-"}</Text>
             </Col>
           </Row>
-          <Row className='col-2 mt-1 mb-1' gutter={8}>
+          <Row className="col-2 mt-1 mb-1" gutter={8}>
             <Col span={6}>
               <Text strong>Vendor :</Text>
             </Col>
@@ -51,7 +52,7 @@ const POFormResult = () => {
               <Text>{vendor_no_name || "-"}</Text>
             </Col>
           </Row>
-          <Row className='col-2 mt-1 mb-1' gutter={8}>
+          <Row className="col-2 mt-1 mb-1" gutter={8}>
             <Col span={6}>
               <Text strong>Note :</Text>
             </Col>
@@ -61,15 +62,15 @@ const POFormResult = () => {
           </Row>
         </Col>
         <Col span={12}>
-          <Row className='col-2 mt-1 mb-1' gutter={8}>
+          <Row className="col-2 mt-1 mb-1" gutter={8}>
             <Col span={6}>
               <Text strong>Vat :</Text>
             </Col>
             <Col span={18}>
-              <Text>{vat_no || "-"}</Text>
+              <Text>{vat_name || "-"}</Text>
             </Col>
           </Row>
-          <Row className='col-2 mt-1 mb-1' gutter={8}>
+          <Row className="col-2 mt-1 mb-1" gutter={8}>
             <Col span={6}>
               <Text strong>Payment Terms :</Text>
             </Col>
@@ -77,7 +78,7 @@ const POFormResult = () => {
               <Text>{payment_term_name || "-"}</Text>
             </Col>
           </Row>
-          <Row className='col-2 mt-1 mb-1' gutter={8}>
+          <Row className="col-2 mt-1 mb-1" gutter={8}>
             <Col span={6}>
               <Text strong>Currency :</Text>
             </Col>
@@ -88,34 +89,34 @@ const POFormResult = () => {
         </Col>
       </Row>
       {/* Columns */}
-      <Row className='mt-2 detail-table-head'>
-        <Col span={1} className='text-center col-outline'>
+      <Row className="mt-2 detail-table-head">
+        <Col span={1} className="text-center col-outline">
           <Text strong>No.</Text>
         </Col>
-        <Col span={8} className='text-center col-outline'>
-          <Text strong className='pre-warp'>
+        <Col span={8} className="text-center col-outline">
+          <Text strong className="pre-warp">
             Item Code / Description
           </Text>
         </Col>
-        <Col span={3} className='text-center col-outline'>
+        <Col span={3} className="text-center col-outline">
           <Text strong>Total Qty.</Text>
         </Col>
-        <Col span={3} className='text-center col-outline'>
+        <Col span={3} className="text-center col-outline">
           <Text strong>MOQ</Text>
         </Col>
-        <Col span={1} className='text-center col-outline'>
+        <Col span={1} className="text-center col-outline">
           <Text strong>UOM</Text>
         </Col>
-        <Col span={2} className='text-center col-outline'>
+        <Col span={2} className="text-center col-outline">
           <Text strong>Unit Price</Text>
         </Col>
-        <Col span={2} className='text-center col-outline'>
+        <Col span={2} className="text-center col-outline">
           <Text strong>Total Price</Text>
         </Col>
-        <Col span={2} className='text-center col-outline'>
+        <Col span={2} className="text-center col-outline">
           <Text strong>Discount</Text>
         </Col>
-        <Col span={2} className='text-center col-outline'>
+        <Col span={2} className="text-center col-outline">
           <Text strong>Due Date</Text>
         </Col>
       </Row>
@@ -135,7 +136,7 @@ const POFormResult = () => {
           },
           index
         ) => (
-          <div className='row-detail' key={`row-${index}`}>
+          <div className="row-detail" key={`row-${index}`}>
             <Row
               style={{
                 marginBottom: 0,
@@ -143,40 +144,41 @@ const POFormResult = () => {
                 backgroundColor: "#FCFCFC",
               }}
               gutter={2}
-              className='col-2'>
-              <Col span={1} className='text-center col-outline'>
+              className="col-2"
+            >
+              <Col span={1} className="text-center col-outline">
                 {/* No. */}
                 <Text strong>{`${index + 1}`}</Text>
               </Col>
-              <Col span={8} className='text-left col-outline'>
+              <Col span={8} className="text-left col-outline">
                 {/* Item */}
                 <Text>{`${item_no_name || "-"}`}</Text>
               </Col>
-              <Col span={3} className='text-right col-outline'>
+              <Col span={3} className="text-right col-outline">
                 {/* Total Qty. */}
                 <Text>{`${convertDigit(po_detail_qty || 0, 6)}`}</Text>
               </Col>
-              <Col span={3} className='text-right col-outline'>
+              <Col span={3} className="text-right col-outline">
                 {/* MOQ */}
                 <Text>{`${convertDigit(po_detail_vendor_moq || 0, 6)}`}</Text>
               </Col>
-              <Col span={1} className='text-center col-outline'>
+              <Col span={1} className="text-center col-outline">
                 {/* UOM */}
                 <Text>{`${uom_no || "-"}`}</Text>
               </Col>
-              <Col span={2} className='text-right col-outline'>
+              <Col span={2} className="text-right col-outline">
                 {/* Unit Price */}
                 <Text>{`${convertDigit(po_detail_price || 0, 2)}`}</Text>
               </Col>
-              <Col span={2} className='text-right col-outline'>
+              <Col span={2} className="text-right col-outline">
                 {/* Total Price */}
                 <Text>{`${convertDigit(po_detail_total_price || 0, 2)}`}</Text>
               </Col>
-              <Col span={2} className='text-right col-outline'>
+              <Col span={2} className="text-right col-outline">
                 {/* Discount */}
                 <Text>{`${convertDigit(po_detail_discount || 0, 2)}`}</Text>
               </Col>
-              <Col span={2} className='text-center col-outline'>
+              <Col span={2} className="text-center col-outline">
                 {/* Due Date */}
                 <Text>{`${po_detail_due_date || "-"}`}</Text>
               </Col>
@@ -184,8 +186,8 @@ const POFormResult = () => {
             <Row>
               <Col span={24}>
                 {/* Remark */}
-                <Text strong className='ml-2'>{`Remark : `}</Text>
-                <Text className='pre-warp'>{`${`${
+                <Text strong className="ml-2">{`Remark : `}</Text>
+                <Text className="pre-warp">{`${`${
                   po_detail_remark || "-"
                 }`}`}</Text>
               </Col>
@@ -193,17 +195,17 @@ const POFormResult = () => {
           </div>
         )
       )}
-      <Divider className='divider-sm' />
-      <Row className='col-2 row-margin-vertical'>
+      <Divider className="divider-sm" />
+      <Row className="col-2 row-margin-vertical">
         <Col span={14}></Col>
 
-        <Col span={6} className='text-number'>
+        <Col span={6} className="text-number">
           <Text strong>Extended Discount :</Text>
         </Col>
-        <Col span={3} className='text-number'>
+        <Col span={3} className="text-number">
           <Text>{convertDigit(po_discount, 4)}</Text>
         </Col>
-        <Col span={1} className='text-string'>
+        <Col span={1} className="text-string">
           <Text strong> {`${currency_no || "-"}`}</Text>
         </Col>
       </Row>

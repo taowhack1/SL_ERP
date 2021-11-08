@@ -12,29 +12,36 @@ import { getNumberFormat } from "../../../../../../../../include/js/main_config"
 import { NPRFormContext } from "../../../NPRRDForm";
 let persistFields = {};
 const GeneralDetail = (props) => {
-  const { fields } = props || {};
+  const { fields, formMethods } = props || {};
+
   const {
     register,
     control,
     reset,
     formState: { errors },
-    handleSubmit,
-  } = useForm({
-    defaultValues: initialState,
-    mode: "onBlur",
-  });
+  } = formMethods || {};
+  // const {
+  //   register,
+  //   control,
+  //   reset,
+  //   formState: { errors },
+  //   handleSubmit,
+  // } = useForm({
+  //   defaultValues: initialState,
+  //   mode: "onBlur",
+  // });
 
-  useEffect(() => {
-    reset(fields);
-    persistFields = fields;
-    return () => {
-      reset(initialState);
-      persistFields = initialState;
-    };
-  }, [fields]);
+  // useEffect(() => {
+  //   reset(fields);
+  //   persistFields = fields;
+  //   return () => {
+  //     reset(initialState);
+  //     persistFields = initialState;
+  //   };
+  // }, [fields]);
 
-  const onSubmit = (data) => console.log("submit", data);
-  const onError = (data) => console.log("Error", data);
+  // const onSubmit = (data) => console.log("submit", data);
+  // const onError = (data) => console.log("Error", data);
 
   const { readOnly } = useContext(NPRFormContext);
 
@@ -50,11 +57,12 @@ const GeneralDetail = (props) => {
   } = persistFields || {};
   return (
     <>
-      <form
+      <>
+        {/* <form
         key="form-general-detail"
         onSubmit={handleSubmit(onSubmit, onError)}
         onBlur={handleSubmit(onSubmit, onError)}
-      >
+      > */}
         <Row className="col-2 mt-1 mb-1" gutter={16}>
           <Col span={12} className="col-border-right">
             <Row className="col-2 mt-1 mb-1" gutter={8}>
@@ -285,10 +293,11 @@ const GeneralDetail = (props) => {
             )}
           </Col>
         </Row>
-        <button className="d-none" id="submit-form-general-detail">
+        {/* <button className="d-none" id="submit-form-general-detail">
           Submit
         </button>
-      </form>
+      </form> */}
+      </>
     </>
   );
 };

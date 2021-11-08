@@ -16,56 +16,58 @@ import {
   api_qa_subject_list,
 } from "../../../../../../../../include/js/api";
 let countRow = 0;
-const QA = () => {
+const QA = (props) => {
+  const { readOnly } = useContext(NPRFormContext);
   const { data: subject, loading: getSubjectLoading } = useFetch(
     `${api_qa_subject_list}/3`
   );
   const { data: spec, loading: getSpecLoading } = useFetch(
     `${api_qa_specification_list}/3`
   );
-  const { data, readOnly } = useContext(NPRFormContext);
+
   const {
     control,
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm();
-  const { fields, append, remove, swap } = useFieldArray({
-    control,
-    name: "qa_detail",
-  });
-  const onSubmit = (data) => console.log("submit", data);
-  const onError = (data) => console.log("Error", data);
-  console.log("fields", fields);
+  } = props?.formMethods || {};
 
+  const { fields, append, remove, swap } = props?.qaFields || {};
+
+  // const { fields, append, remove, swap } = useFieldArray({
+  //   control,
+  //   name: "npr_formula_qa",
+  // });
+
+  console.log("propsQA", fields);
   return (
     <>
-      <form key="form-qa" onSubmit={handleSubmit(onSubmit, onError)}>
-        <AntdTableDragable
-          {...{
-            pagination: false,
-            rowclassName: "row-table-detail",
-            columns: columns({
-              readOnly,
-              control,
-              remove,
-              errors,
-              subject,
-              getSubjectLoading,
-              spec,
-              getSpecLoading,
-            }),
-            dataSource: fields,
-            rowKey: "id",
-            onSwap: ({ dragIndex, hoverIndex }) => swap(dragIndex, hoverIndex),
-            onAdd: () => {
-              append({ ...initialStateRow });
-            },
-            editable: !readOnly,
-          }}
-        />
-        {/* <button type="submit">SUBMIT</button> */}
-      </form>
+      {/* <form key="form-qa" onSubmit={handleSubmit(onSubmit, onError)}> */}
+      <AntdTableDragable
+        {...{
+          pagination: false,
+          rowclassName: "row-table-detail",
+          columns: columns({
+            readOnly,
+            control,
+            remove,
+            errors,
+            subject,
+            getSubjectLoading,
+            spec,
+            getSpecLoading,
+          }),
+          dataSource: fields,
+          rowKey: "id",
+          onSwap: ({ dragIndex, hoverIndex }) => swap(dragIndex, hoverIndex),
+          onAdd: () => {
+            append({ ...initialStateRow });
+          },
+          editable: !readOnly,
+        }}
+      />
+      {/* <button type="submit">SUBMIT</button> */}
+      {/* </form> */}
     </>
   );
 };
@@ -110,11 +112,12 @@ const columns = ({
         <>
           <Controller
             {...{
-              name: `qa_detail[${index}].qa_subject_id`,
+              name: `npr_formula_qa[${index}].qa_subject_id`,
               control,
               rules: { required: true },
-              defaultValue: null,
+              defaultValue: val,
               render: ({ field }) => {
+                console.log("field", field);
                 const { onChange } = field;
                 return SelectField({
                   fieldId: "qa_subject_id",
@@ -136,8 +139,8 @@ const columns = ({
           />
           <br />
           {errors &&
-            errors?.qa_detail?.length &&
-            errors?.qa_detail[index]?.qa_subject_id && (
+            errors?.npr_formula_qa?.length &&
+            errors?.npr_formula_qa[index]?.qa_subject_id && (
               <Text strong className="require">
                 This field is required.
               </Text>
@@ -151,7 +154,7 @@ const columns = ({
         <CustomLabel label={"Spec"} require readOnly={readOnly} />
       </div>
     ),
-    dataIndex: "qa_specification_name",
+    dataIndex: "qa_specification_id",
     align: "left",
     width: "20%",
     ellipsis: true,
@@ -164,10 +167,10 @@ const columns = ({
         <>
           <Controller
             {...{
-              name: `qa_detail[${index}].qa_specification_id`,
+              name: `npr_formula_qa[${index}].qa_specification_id`,
               control,
               rules: { required: true },
-              defaultValue: null,
+              defaultValue: val,
               render: ({ field }) => {
                 const { onChange } = field;
                 return SelectField({
@@ -190,8 +193,8 @@ const columns = ({
           />
           <br />
           {errors &&
-            errors?.qa_detail?.length &&
-            errors?.qa_detail[index]?.qa_specification_id && (
+            errors?.npr_formula_qa?.length &&
+            errors?.npr_formula_qa[index]?.qa_specification_id && (
               <Text strong className="require">
                 This field is required.
               </Text>
@@ -215,10 +218,10 @@ const columns = ({
         <>
           <Controller
             {...{
-              name: `qa_detail[${index}].npr_formula_qa_result`,
+              name: `npr_formula_qa[${index}].npr_formula_qa_result`,
               control,
               rules: { required: true },
-              defaultValue: null,
+              defaultValue: val,
               render: ({ field }) => {
                 return InputField({
                   fieldProps: {
@@ -249,10 +252,10 @@ const columns = ({
         <>
           <Controller
             {...{
-              name: `qa_detail[${index}].npr_formula_qa_remark`,
+              name: `npr_formula_qa[${index}].npr_formula_qa_remark`,
               control,
               rules: { required: true },
-              defaultValue: null,
+              defaultValue: val,
               render: ({ field }) => {
                 return InputField({
                   fieldProps: {
