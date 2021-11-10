@@ -52,7 +52,7 @@ export const item_fields = {
   currency_id: 1,
   currency_no: "THB",
   item_trade_name: null,
-  item_shelf_life: 0,
+  item_shelf_life: 730,
   item_sale_local: 1,
   item_sale_export: false,
   item_specification: false,

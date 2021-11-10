@@ -248,6 +248,7 @@ const TabItemDetail = ({
                   className={"full-width"}
                   disabled={0}
                   value={data_head.item_shelf_life}
+                  defaultValue={730}
                   onChange={(data) =>
                     upDateFormValue({
                       item_shelf_life: data,

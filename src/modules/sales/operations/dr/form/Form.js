@@ -37,10 +37,13 @@ const Form = ({
     auth: { user_name, employee_no_name_eng },
   } = useContext(AppContext);
   const { so_detail_id, customer_detail_name } = watch("dr.0");
+
   return (
     <>
       {fields.map((obj, index) => (
         <div className="form-group" key={index}>
+          {console.log("Check DR", obj?.dr_id, readOnly)}
+          {console.log("view Cancel ", obj?.dr_id && !readOnly)}
           <div className="d-none">
             <input {...register(`dr.${index}.po_no`)} />
             <input {...register(`dr.${index}.customer_id`)} />
@@ -175,33 +178,36 @@ const Form = ({
                 </Col>
               </Row>
               {obj?.dr_id && !readOnly && (
-                <div
-                  className="mt-2 pt-1"
+                <Row
+                  className="col-2 mt-1 mb-1"
                   style={{ borderTop: "1px solid #c0c0c0" }}
                 >
-                  <Row className="col-2 mt-1 mb-1">
-                    <Col span={8}>
-                      <CustomLabel label="Cancel :" readOnly={readOnly} />
-                    </Col>
-                    <Col span={16}>
-                      <Controller
-                        name={`dr.${index}.tg_trans_status_id`}
-                        control={control}
-                        render={({ field: { value } }) => (
-                          <Checkbox
-                            checked={value === 3 ? true : false}
-                            onChange={(e) => {
-                              e.target.checked
-                                ? setValue(`dr.${index}.tg_trans_status_id`, 3)
-                                : setValue(`dr.${index}.tg_trans_status_id`, 1);
-                            }}
-                            defaultChecked={false}
-                          />
-                        )}
-                      />
-                    </Col>
-                  </Row>
-                </div>
+                  {/* <div
+                  className="mt-2 pt-1"
+                  style={{ borderTop: "1px solid #c0c0c0" }}
+                > */}
+                  <Col span={8}>
+                    <CustomLabel label="Cancel :" readOnly={readOnly} />
+                  </Col>
+                  <Col span={16}>
+                    <Controller
+                      name={`dr.${index}.tg_trans_status_id`}
+                      control={control}
+                      render={({ field: { value } }) => (
+                        <Checkbox
+                          checked={value === 3 ? true : false}
+                          onChange={(e) => {
+                            e.target.checked
+                              ? setValue(`dr.${index}.tg_trans_status_id`, 3)
+                              : setValue(`dr.${index}.tg_trans_status_id`, 1);
+                          }}
+                          defaultChecked={false}
+                        />
+                      )}
+                    />
+                  </Col>
+                  {/* </div> */}
+                </Row>
               )}
             </Col>
             <Col span={12}>

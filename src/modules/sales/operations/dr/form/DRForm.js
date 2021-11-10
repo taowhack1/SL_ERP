@@ -199,6 +199,9 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
     formMethod.reset({
       dr: [initialState],
     });
+    return () => {
+      readOnly = false;
+    };
   }, [dr_id]);
 
   const onCloseModal = () => {
@@ -209,6 +212,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
   };
 
   const onError = (errors, e) => console.log(errors, e);
+  console.log("readOnly : ", readOnly);
   return (
     <>
       <Modal
