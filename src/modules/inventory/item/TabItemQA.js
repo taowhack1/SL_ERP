@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import ItemQADetail from "./ItemQASpecification";
 import moment from "moment";
@@ -13,6 +15,7 @@ import {
   Space,
   Tabs,
   TimePicker,
+  Input,
 } from "antd";
 import Text from "antd/lib/typography/Text";
 import {
@@ -30,6 +33,7 @@ import { mainReducer } from "../../../include/reducer";
 import { itemQAFields } from "../config/item";
 import { pad2number } from "../../../include/js/function_main";
 const { TabPane } = Tabs;
+const { TextArea } = Input;
 const TabItemQA = () => {
   const { data_head, saveForm, readOnly, qaFormRef } = useContext(ItemContext);
   const [state, stateDispatch] = useReducer(mainReducer, data_head.qa_spec);
@@ -107,32 +111,33 @@ const TabItemQA = () => {
   };
   console.log("onChangeRevision", state);
   console.log("data_head.qa_spec", data_head.qa_spec);
+  console.log("item_qa_remark data_head :>> ", data_head);
   return (
     <>
       {/* ใช้เก็บข้อมูลรอ submit  */}
-      <input ref={qaFormRef} type="hidden" value={JSON.stringify(state)} />
-      <Row className="col-2 row-margin-vertical">
+      <input ref={qaFormRef} type='hidden' value={JSON.stringify(state)} />
+      <Row className='col-2 row-margin-vertical'>
         <Col span={12}>
-          <Row className="col-2 row-margin-vertical">
+          <Row className='col-2 row-margin-vertical'>
             <Col span={7}>
               <Text strong>
-                {!readOnly && <span className="require">* </span>}
+                {!readOnly && <span className='require'>* </span>}
                 QA L/T / Lot. :
               </Text>
             </Col>
             <Col span={16}>
               <Space size={24}>
                 {readOnly ? (
-                  <Text className="text-view">
+                  <Text className='text-view'>
                     {data_head.item_qa_lead_time_day
                       ? data_head.item_qa_lead_time_day
                       : "-"}
                   </Text>
                 ) : (
                   <InputNumber
-                    name="item_qa_lead_time_day"
+                    name='item_qa_lead_time_day'
                     placeholder={"Day"}
-                    title="Amount of day"
+                    title='Amount of day'
                     min={0}
                     step={1}
                     precision={0}
@@ -148,20 +153,20 @@ const TabItemQA = () => {
                 )}
                 <Text strong> Day </Text>
                 {readOnly ? (
-                  <Text className="text-view">
+                  <Text className='text-view'>
                     {data_head.item_qa_lead_time
                       ? data_head.item_qa_lead_time
                       : "-"}
                   </Text>
                 ) : (
                   <TimePicker
-                    className="full-width"
+                    className='full-width'
                     format={"HH:mm"}
                     showNow={false}
                     minuteStep={15}
                     name={"item_qa_lead_time"}
                     style={{ width: "150px" }}
-                    placeholder="00:00"
+                    placeholder='00:00'
                     required
                     value={
                       data_head.item_qa_lead_time
@@ -182,10 +187,32 @@ const TabItemQA = () => {
               </Space>
             </Col>
           </Row>
+          {/* <Row className='col-2 row-margin-vertical'>
+            <Col span={7}>
+              <CustomLabel label={" QA Remark :"} readOnly={readOnly} />
+            </Col>
+            <Col span={16}>
+              {readOnly ? (
+                <Text className='text-view'>
+                  {data_head.item_qa_remark ? data_head.item_qa_remark : "-"}
+                </Text>
+              ) : (
+                <TextArea
+                  style={{ width: "373px" }}
+                  autoSize={{ minRows: 2 }}
+                  placeholder={"Remark"}
+                  value={data_head.item_qa_remark}
+                  onChange={(e) => {
+                    saveForm({ item_qa_remark: e.target.value });
+                  }}
+                />
+              )}
+            </Col>
+          </Row> */}
         </Col>
         <Col span={12}></Col>
       </Row>
-      <div className="flex-space detail-tab-row mt-2">
+      <div className='flex-space detail-tab-row mt-2'>
         <Space>
           <Text strong style={{ fontSize: 16, marginRight: 10 }}>
             <ProfileOutlined style={{ marginRight: 10 }} />
@@ -196,15 +223,15 @@ const TabItemQA = () => {
 
       <Tabs
         tabPosition={"left"}
-        className="mt-1"
+        className='mt-1'
         // defaultActiveKey={`${state?.find((obj) => obj.item_qa_default)?.id}`}
       >
         {state?.map((obj) => (
           <TabPane
             tab={
-              <div className="tab-pane">
+              <div className='tab-pane'>
                 <div style={{ float: "left" }}>
-                  {!readOnly && <span className="require">* </span>}
+                  {!readOnly && <span className='require'>* </span>}
                   Rev. : {obj.item_qa_revision_no}
                 </div>
                 <div style={{ float: "right" }}>
@@ -213,7 +240,7 @@ const TabItemQA = () => {
                     obj.id === state.length - 1 &&
                     state.length > 1 && (
                       <CloseOutlined
-                        title="Delete"
+                        title='Delete'
                         onClick={() => showPopconfirm(obj.id)}
                         style={{
                           color: "red",
@@ -225,13 +252,12 @@ const TabItemQA = () => {
                 </div>
               </div>
             }
-            key={`${obj.id}`}
-          >
-            <div className="mt-2">
-              <div className="detail-tab-row">
+            key={`${obj.id}`}>
+            <div className='mt-2'>
+              <div className='detail-tab-row'>
                 <Title level={4}>
                   Revision :
-                  <Text className="text-value pd-left-1">
+                  <Text className='text-value pd-left-1'>
                     {obj.item_qa_revision_no}
                   </Text>
                   {!readOnly && (
@@ -239,27 +265,26 @@ const TabItemQA = () => {
                       onConfirm={() => {
                         onChangeRevision(obj.id);
                       }}
-                      title="Are you sure you want to change revision ?"
-                      okText="Yes"
-                      cancelText="No"
-                    >
+                      title='Are you sure you want to change revision ?'
+                      okText='Yes'
+                      cancelText='No'>
                       <EditOutlined
-                        className="button-icon pd-left-2"
+                        className='button-icon pd-left-2'
                         title={"Click to change revision"}
                       />
                     </Popconfirm>
                   )}
                 </Title>
               </div>
-              <Row className="mb-1">
+              <Row className='mb-1'>
                 <Col span={12}>
-                  <Row className="col-2 row-margin-vertical">
+                  <Row className='col-2 row-margin-vertical'>
                     <Col span={6}>
                       <CustomLabel label={"Default :"} />
                     </Col>
                     <Col span={17}>
                       {readOnly ? (
-                        <Space align="baseline">
+                        <Space align='baseline'>
                           {obj.item_qa_default ? (
                             <CheckSquareOutlined />
                           ) : (
@@ -268,7 +293,7 @@ const TabItemQA = () => {
                         </Space>
                       ) : (
                         <Checkbox
-                          name="item_qa_default"
+                          name='item_qa_default'
                           checked={obj.item_qa_default}
                           onChange={(e) => {
                             const checkDefault = e.target.checked;
@@ -280,6 +305,30 @@ const TabItemQA = () => {
                               null,
                               checkDefault
                             );
+                          }}
+                        />
+                      )}
+                    </Col>
+                  </Row>
+                  <Row className='col-2 row-margin-vertical'>
+                    <Col span={6}>
+                      <CustomLabel label={"Remark :"} />
+                    </Col>
+                    <Col span={17}>
+                      {readOnly ? (
+                        <Text className='text-view'>
+                          {obj.item_qa_remark ? obj.item_qa_remark : "-"}
+                        </Text>
+                      ) : (
+                        <TextArea
+                          style={{ width: "373px" }}
+                          autoSize={{ minRows: 2 }}
+                          placeholder={"Remark"}
+                          value={obj.item_qa_remark}
+                          onChange={(e) => {
+                            onChangeDetail(obj.id, {
+                              item_qa_remark: e.target.value,
+                            });
                           }}
                         />
                       )}
@@ -301,11 +350,10 @@ const TabItemQA = () => {
         ))}
       </Tabs>
       <Modal
-        title="Confirm Delete"
+        title='Confirm Delete'
         visible={visible.visible}
         onOk={handleOk}
-        onCancel={handleCancel}
-      >
+        onCancel={handleCancel}>
         <p>{"Are you want to delete this Part ?"}</p>
       </Modal>
     </>
