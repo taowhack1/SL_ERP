@@ -1,12 +1,16 @@
+/** @format */
+
 import { ClearOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Row, Col } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { filterItem } from "../actions/inventory";
 import CustomSelect from "./CustomSelect";
 import Search from "./Search";
 
 const SearchTable = (props) => {
+  const dispatch = useDispatch();
   const master_data = useSelector((state) => state.inventory.master_data);
   const [state, setState] = useState({
     type_id: null,
@@ -30,6 +34,9 @@ const SearchTable = (props) => {
     });
   };
   const reset_state = () => {
+    dispatch(
+      filterItem({ page: 1, pageSize: 20, keyword: null, item_id: null })
+    );
     setState({
       type_id: null,
       type_no_name: null,
@@ -46,9 +53,9 @@ const SearchTable = (props) => {
   }, [state]);
   return (
     <>
-      <div className="search-table">
-        <Row className="search-header">
-          <Text className="search-title" strong>
+      <div className='search-table'>
+        <Row className='search-header'>
+          <Text className='search-title' strong>
             <SearchOutlined style={{ marginRight: 10, size: "20px" }} />
             Search Tool.
           </Text>
@@ -63,8 +70,8 @@ const SearchTable = (props) => {
               allowClear
               showSearch
               placeholder={"Item Type"}
-              field_id="type_id"
-              field_name="type_no_name"
+              field_id='type_id'
+              field_name='type_no_name'
               value={state.type_no_name}
               data={master_data.item_type}
               onChange={(data, option) => {
@@ -89,7 +96,7 @@ const SearchTable = (props) => {
             />
           </Col>
         </Row>
-        <Row className="row-margin-vertical">
+        <Row className='row-margin-vertical'>
           <Col span={2}></Col>
           <Col span={2}>
             <Text strong>Item Category:</Text>
@@ -101,8 +108,8 @@ const SearchTable = (props) => {
               showSearch
               // disabled={disable_category}
               placeholder={"Category"}
-              field_id="category_id"
-              field_name="category_no_name"
+              field_id='category_id'
+              field_name='category_no_name'
               value={state.category_no_name}
               data={
                 state.type_id
@@ -129,17 +136,16 @@ const SearchTable = (props) => {
           <Col span={1}></Col>
           <Col span={2}>
             <Button
-              className="search-button"
+              className='search-button'
               danger
               icon={<ClearOutlined />}
-              onClick={reset_state}
-            >
+              onClick={reset_state}>
               Clear Search
             </Button>
           </Col>
           <Col span={8}></Col>
         </Row>
-        <Row className="col-2">
+        <Row className='col-2'>
           <Col span={2}></Col>
           <Col span={2}>
             <Text strong>{"Item Status : "}</Text>
@@ -151,8 +157,8 @@ const SearchTable = (props) => {
               showSearch
               // disabled={disable_category}
               placeholder={"Status"}
-              field_id="status_id"
-              field_name="status_name"
+              field_id='status_id'
+              field_name='status_name'
               value={state.status_name}
               data={[
                 {

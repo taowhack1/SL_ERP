@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Typography, Space, message } from "antd";
@@ -218,10 +220,10 @@ const ItemView = (props) => {
     <ItemContext.Provider value={ContextValue}>
       <FileContext.Provider value={{ data_file }}>
         <MainLayout {...config}>
-          <div id="form">
+          <div id='form'>
             <Row>
               <Col span={19}>
-                <Row className="col-2 mt-1">
+                <Row className='col-2 mt-1'>
                   <Col span={12}>
                     <h3 style={{ marginBottom: 8 }}>
                       {data_head.item_no && (
@@ -239,13 +241,13 @@ const ItemView = (props) => {
                   </h3>
                 </Row>
                 <Row>
-                  <Text className="item_name text-view">
+                  <Text className='item_name text-view'>
                     {data_head.item_name ? data_head.item_name : "-"}
                   </Text>
                 </Row>
                 <Row>
                   <Col span={24} style={{ marginLeft: 5, marginTop: 10 }}>
-                    <Space align="baseline">
+                    <Space align='baseline'>
                       {data_head.item_sale ? (
                         <CheckSquareOutlined />
                       ) : (
@@ -254,7 +256,7 @@ const ItemView = (props) => {
                       <Text>Can be sold</Text>
                     </Space>
                     <br />
-                    <Space align="baseline">
+                    <Space align='baseline'>
                       {data_head.item_purchase ? (
                         <CheckSquareOutlined />
                       ) : (
@@ -268,7 +270,7 @@ const ItemView = (props) => {
               <Col span={1}></Col>
               <Col span={4}>
                 <Row>
-                  <Col span={24} className="text-center">
+                  <Col span={24} className='text-center'>
                     {data_head.item_no && (
                       <Barcode
                         value={data_head.item_no}
@@ -280,7 +282,7 @@ const ItemView = (props) => {
                   </Col>
                 </Row>
                 <Row>
-                  <Col span={24} className="text-left">
+                  <Col span={24} className='text-left'>
                     <ItemPreview
                       data_file={data_file}
                       // updateFile={updateFile}
@@ -296,7 +298,7 @@ const ItemView = (props) => {
             {data_head.item_id ? (
               <ItemRevisionDetail data_head={data_head} readOnly={readOnly} />
             ) : null}
-            <Row className="col-2 row-tab-margin">
+            <Row className='col-2 row-tab-margin'>
               <Col span={24}>
                 <ItemTabList
                   data_file={data_file}

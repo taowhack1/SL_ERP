@@ -9,6 +9,7 @@ import {
   GET_ITEM_CATEGORY,
   GET_UOM,
   SET_LOADING,
+  SEARCH_ITEMS,
 } from "../types";
 
 import {
@@ -316,6 +317,8 @@ const clearFilterStockOnHand = () => (dispatch) => {
   message.success("Clear filter");
   dispatch({ type: CLEAR_FILTER_STOCK_ON_HAND });
 };
+const filterItem = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_ITEMS, payload: data });
 export {
   getItemType,
   getUOM,
@@ -329,6 +332,7 @@ export {
   getSampleItems,
   getSampleItemById,
   clearStateItems,
+  filterItem,
   apiSampleItem,
   GET_SAMPLE_ITEMS,
   CLEAR_STATE_ITEM,

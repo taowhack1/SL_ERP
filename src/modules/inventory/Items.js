@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch, useHistory, withRouter } from "react-router-dom";
@@ -12,7 +14,12 @@ import { item_show_columns } from "./config/item";
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 import SearchTable from "../../components/SearchTable";
-import { clearStateItems, getMasterDataItem } from "../../actions/inventory";
+import {
+  clearStateItems,
+  filterItem,
+  getMasterDataItem,
+} from "../../actions/inventory";
+import { sortData } from "../../include/js/function_main";
 const Items = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
@@ -23,19 +30,36 @@ const Items = (props) => {
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    // dispatch(getAllItems(auth.user_name));
-    dispatch(getMasterDataItem(auth.user_name, setLoading, false));
-    return () => dispatch(clearStateItems());
-  }, []);
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
+  // useEffect(() => {
+  //   // dispatch(getAllItems(auth.user_name));
+  //   dispatch(getMasterDataItem(auth.user_name, setLoading, false));
+  //   return () => dispatch(clearStateItems());
+  // }, []);
 
-  const dataItems = useSelector(
-    (state) => state.inventory.master_data.item_list
-  );
-  const [items, setItems] = useState(dataItems);
+  const { item_list } = useSelector((state) => state.inventory.master_data);
+  const { filter_item_list } = useSelector((state) => state.inventory);
+  const { pageSize, page, keyword } = filter_item_list || {};
+  useEffect(() => {
+    dispatch(getMasterDataItem(auth.user_name, setLoading, false));
+    return () => {
+      dispatch(clearStateItems());
+      setItems([]);
+    };
+  }, [dispatch]);
+  useEffect(() => {
+    if (!loading) {
+      setLoading(true);
+      console.log("Filter Keyword");
+      setItems(item_list);
+      setLoading(false);
+    }
+  }, [keyword, item_list, loading]);
+  const onChange = (pagination) => {
+    const { current, pageSize } = pagination;
+    //console.log("params", pagination, filters, sorter, extra);
+    dispatch(filterItem({ page: current, pageSize }));
+  };
+  const [items, setItems] = useState([]);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -61,7 +85,7 @@ const Items = (props) => {
     status_id,
     status_name,
   }) => {
-    let search_data = dataItems;
+    let search_data = item_list;
 
     if (type_id) {
       category_id
@@ -107,16 +131,17 @@ const Items = (props) => {
   };
 
   useEffect(() => {
-    setItems(dataItems);
-  }, [dataItems.length]);
+    setItems(item_list);
+  }, [item_list.length]);
 
   const redirect_to_view = (id) => {
     history.push("/inventory/items/view/" + (id ? id : "new"));
   };
+  console.log("filter :>> ", filter_item_list);
   return (
     <div>
       <MainLayout {...config}>
-        <Row className="row-tab-margin-lg">
+        <Row className='row-tab-margin-lg'>
           <Col span={24}>
             <Table
               title={() => <SearchTable onChangeSearch={onChangeSearch} />}
@@ -126,7 +151,12 @@ const Items = (props) => {
               onChange={onChange}
               bordered
               size={"small"}
-              rowKey="item_id"
+              pagination={{
+                pageSize,
+                current: page,
+                pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
+              }}
+              rowKey='item_id'
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

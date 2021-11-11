@@ -1,4 +1,6 @@
-import { GET_ALL_ITEMS, GET_ITEM_BY_ID } from "../types";
+/** @format */
+
+import { GET_ALL_ITEMS, GET_ITEM_BY_ID, SEARCH_ITEMS } from "../types";
 import { errorText, header_config } from "../../include/js/main_config";
 import {
   api_get_item_by_id,
@@ -34,7 +36,7 @@ import { apiSampleItem } from ".";
 
 const openNotificationWithIcon = (type, title, text) => {
   notification[type]({
-    message: <h4 className="notify-title">{title}</h4>,
+    message: <h4 className='notify-title'>{title}</h4>,
     description: text,
   });
 };
@@ -829,8 +831,8 @@ export const getItemAction = (
   if (button_cancel)
     action.push({
       name: (
-        <span className="require">
-          <DeleteOutlined className="pd-right-1" />
+        <span className='require'>
+          <DeleteOutlined className='pd-right-1' />
           Cancel
         </span>
       ),
@@ -844,7 +846,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               Raw Material Specification
             </span>
           ),
@@ -858,7 +860,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               Package Specification
             </span>
           ),
@@ -872,7 +874,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               Master Formula
             </span>
           ),
@@ -881,7 +883,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               Bulk Specification
             </span>
           ),
@@ -890,7 +892,7 @@ export const getItemAction = (
         certificate["9"].url && {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               Process Specification
             </span>
           ),
@@ -904,7 +906,7 @@ export const getItemAction = (
         certificate["8"].url && {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               FINISHED PRODUCT FILLING SPECIFACTION
             </span>
           ),
@@ -913,7 +915,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               FINSHED PRODUCT SPECIFICATION
             </span>
           ),
