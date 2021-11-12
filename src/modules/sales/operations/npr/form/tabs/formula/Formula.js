@@ -121,7 +121,7 @@ const Formula = (props) => {
             />
           </Tabs.TabPane>
           <Tabs.TabPane key={`2`} tab={`Formula`}>
-            {/* <BulkSpec {...{formMethods,formulaFields}}/> */}
+            <BulkSpec {...{ formMethods, formulaFields }} />
           </Tabs.TabPane>
           <Tabs.TabPane key={`3`} tab={`QA`}>
             <QA {...{ formMethods, qaFields }} />

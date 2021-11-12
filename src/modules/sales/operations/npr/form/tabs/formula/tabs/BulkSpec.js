@@ -8,164 +8,149 @@ import { Button, Col, message, Popconfirm, Row, Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useContext } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import {
-  InputField,
-  TextAreaField,
-} from "../../../../../../../../components/AntDesignComponent";
+import { TextAreaField } from "../../../../../../../../components/AntDesignComponent";
 import AntdTableDragable from "../../../../../../../../components/AntdTableDragable";
 import CustomLabel from "../../../../../../../../components/CustomLabel";
-import CustomTable from "../../../../../../../../components/CustomTable";
+import { useFetch } from "../../../../../../../../include/js/customHooks";
 import { NPRFormContext } from "../../../NPRRDForm";
 
-const FormulaDevelopment = () => {
-  const { readOnly, data } = useContext(NPRFormContext);
+const FormulaDevelopment = (props) => {
+  const { readOnly } = useContext(NPRFormContext);
+
   const {
-    handleSubmit,
-    formState: { errors },
     control,
     register,
-  } = useForm();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "formula_detail",
-  });
+    formState: { errors },
+    handleSubmit,
+  } = props?.formMethods || {};
 
-  const onSubmit = async (data) => {
-    console.log("onSubmit", data);
-  };
-
-  const onError = async (data) => {
-    console.log("onError", data);
-  };
-  console.log("fields", fields);
+  const { fields, append, remove, swap } = props?.formulaFields || {};
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit, onError)} id="formula-form">
-        <Row className="col-2 mt-1 mb-3" gutter={16}>
-          <Col span={24}>
-            <CustomLabel require readOnly={readOnly} label="Detail :" />
-          </Col>
-          <Col span={24} className="mb-1">
-            <div>
-              {readOnly ? (
-                <Text className="pd-left-3">
-                  {`
+      <Row className="col-2 mt-1 mb-3" gutter={16}>
+        <Col span={24}>
+          <CustomLabel require readOnly={readOnly} label="Detail :" />
+        </Col>
+        <Col span={24} className="mb-1">
+          <div>
+            {readOnly ? (
+              <Text className="pd-left-3">
+                {`
                    #############
                 `}
-                </Text>
-              ) : (
-                <>
-                  <Controller
-                    {...{
-                      name: `fields_name`,
-                      control,
-                      rules: { required: true },
-                      defaultValue: null,
-                      render: ({ field }) => {
-                        return TextAreaField({
-                          fieldProps: {
-                            className: "w-100",
-                            placeholder: "คำอธิบายเกี่ยวกับตัวอย่าง / สูตร",
-                            ...field,
-                          },
-                        });
-                      },
-                    }}
-                  />
-                  <br />
-                  {errors?.fields_name && (
-                    <Text strong className="require">
-                      This field is required.
-                    </Text>
-                  )}
-                </>
-              )}
-            </div>
-          </Col>
-          <Col span={24}>
-            <CustomLabel require readOnly={readOnly} label="Procedure :" />
-          </Col>
-          <Col span={24}>
-            <div>
-              {readOnly ? (
-                <Text className="pd-left-3">
-                  {`
+              </Text>
+            ) : (
+              <>
+                <Controller
+                  {...{
+                    name: `fields_name`,
+                    control,
+                    rules: { required: true },
+                    defaultValue: null,
+                    render: ({ field }) => {
+                      return TextAreaField({
+                        fieldProps: {
+                          className: "w-100",
+                          placeholder: "คำอธิบายเกี่ยวกับตัวอย่าง / สูตร",
+                          ...field,
+                        },
+                      });
+                    },
+                  }}
+                />
+                <br />
+                {errors?.fields_name && (
+                  <Text strong className="require">
+                    This field is required.
+                  </Text>
+                )}
+              </>
+            )}
+          </div>
+        </Col>
+        <Col span={24}>
+          <CustomLabel require readOnly={readOnly} label="Procedure :" />
+        </Col>
+        <Col span={24}>
+          <div>
+            {readOnly ? (
+              <Text className="pd-left-3">
+                {`
             1.############# 
             2.#################
             3.#############
             4.#################
             `}
-                </Text>
-              ) : (
-                <>
-                  <Controller
-                    {...{
-                      name: `fields_name`,
-                      control,
-                      rules: { required: true },
-                      defaultValue: null,
-                      render: ({ field }) => {
-                        return TextAreaField({
-                          fieldProps: {
-                            className: "w-100",
-                            placeholder: "ขั้นตอนการผสม",
-                            ...field,
-                          },
-                        });
-                      },
-                    }}
-                  />
-                  <br />
-                  {errors?.fields_name && (
-                    <Text strong className="require">
-                      This field is required.
-                    </Text>
-                  )}
-                </>
-              )}
-            </div>
-          </Col>
-        </Row>
+              </Text>
+            ) : (
+              <>
+                <Controller
+                  {...{
+                    name: `fields_name`,
+                    control,
+                    rules: { required: true },
+                    defaultValue: null,
+                    render: ({ field }) => {
+                      return TextAreaField({
+                        fieldProps: {
+                          className: "w-100",
+                          placeholder: "ขั้นตอนการผสม",
+                          ...field,
+                        },
+                      });
+                    },
+                  }}
+                />
+                <br />
+                {errors?.fields_name && (
+                  <Text strong className="require">
+                    This field is required.
+                  </Text>
+                )}
+              </>
+            )}
+          </div>
+        </Col>
+      </Row>
 
-        {/* BTN อัปเดตราคา */}
-        <div className="d-flex mb-1 flex-end">
-          {/* {npr_formula_id && ( */}
-          <Button
-            icon={
-              <SyncOutlined
-                style={{
-                  color: "#27ED00",
-                  // fontSize: "22px",
-                  fontWeight: "900",
-                }}
-                title="อัปเดตราคาวัตถุดิบปัจจุบัน"
-              />
-            }
-            onClick={() =>
-              // !loading
-              //   ? updateFormulaCost(npr_formula_id)
-              //   :
-              message.warning("Please wait until last update complete.")
-            }
-          >
-            อัปเดตราคา
-          </Button>
-          {/* )} */}
-        </div>
-        {/* Table สูตร */}
-        <AntdTableDragable
-          {...{
-            pagination: false,
-            rowclassName: "row-table-detail",
-            columns: columns({ readOnly }),
-            dataSource: fields,
-            rowKey: "id",
-            setState: () => console.log("SET STATE"),
-            onAdd: () => append(initialStateRow),
-            editable: !readOnly,
-          }}
-        />
-      </form>
+      {/* BTN อัปเดตราคา */}
+      <div className="d-flex mb-1 flex-end">
+        {/* {npr_formula_id && ( */}
+        <Button
+          icon={
+            <SyncOutlined
+              style={{
+                color: "#27ED00",
+                // fontSize: "22px",
+                fontWeight: "900",
+              }}
+              title="อัปเดตราคาวัตถุดิบปัจจุบัน"
+            />
+          }
+          onClick={() =>
+            // !loading
+            //   ? updateFormulaCost(npr_formula_id)
+            //   :
+            message.warning("Please wait until last update complete.")
+          }
+        >
+          อัปเดตราคา
+        </Button>
+        {/* )} */}
+      </div>
+      {/* Table สูตร */}
+      <AntdTableDragable
+        {...{
+          pagination: false,
+          rowclassName: "row-table-detail",
+          columns: columns({ readOnly }),
+          dataSource: fields,
+          rowKey: "id",
+          setState: () => console.log("SET STATE"),
+          onAdd: () => append(initialStateRow),
+          editable: !readOnly,
+        }}
+      />
     </>
   );
 };
