@@ -536,14 +536,17 @@ const SaleOrderCreate = (props) => {
             />
           </Col>
         </Row>
-
         <Row className='col-2 row-margin-vertical'>
-          <Col span={3}></Col>
+          <Col span={3}>
+            <Text strong>
+              <span className='require'>* </span>Select :
+            </Text>
+          </Col>
 
           <Col span={8}>
             <CustomSelect
-              name={"so_type_id"}
-              placeholder='สั่งผลิต / ขายอื่นๆ'
+              name={"so_production_type_id"}
+              placeholder='ผลิตรอ FG / ผลิตเก็บ'
               //data={selectData.salesType}
               field_id='so_type_id'
               field_name='so_type_name'
@@ -576,6 +579,34 @@ const SaleOrderCreate = (props) => {
               placeholder='PO No.'
             />
           </Col>
+          <Col span={2}></Col>
+        </Row>
+        <Row className='col-2 row-margin-vertical'>
+          <Col span={3}>
+            <Text strong>
+              <span className='require'>* </span>SO Ref. :
+            </Text>
+          </Col>
+
+          <Col span={8}>
+            <CustomSelect
+              name={"so_production_ref_id"}
+              placeholder='SO Ref'
+              //data={selectData.salesType}
+              field_id='so_type_id'
+              field_name='so_type_name'
+              // onChange={(val) =>
+              //   headDispatch({
+              //     type: "CHANGE_HEAD_VALUE",
+              //     payload: { so_type_id: val },
+              //   })
+              // }
+              //value={data_head.so_type_id}
+            />
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}></Col>
+          <Col span={8}></Col>
           <Col span={2}></Col>
         </Row>
         <Row className='col-2 row-tab-margin-l'>
