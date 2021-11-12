@@ -198,7 +198,8 @@ function TopContent(props) {
                 (props.save === "function" || props.save === "table_loading" ? (
                   <Button
                     className={!props?.disabledSaveBtn ? "primary" : ""}
-                    onClick={onSave}
+                    //onClick={onSave}
+                    onClick={() => showPopconfirm("Save", onSave)}
                     loading={btnLoading}
                     disabled={btnLoading || props?.disabledSaveBtn}>
                     Save
@@ -206,7 +207,10 @@ function TopContent(props) {
                 ) : (
                   <Button
                     className='primary'
-                    onClick={props.onSave && props.onSave}
+                    //onClick={props.onSave && props.onSave}
+                    onClick={() =>
+                      showPopconfirm("Save", props.onSave && props.onSave)
+                    }
                     loading={btnLoading}
                     disabled={btnLoading}>
                     <Link
@@ -253,7 +257,8 @@ function TopContent(props) {
               )} */}
               {props.buttonAction.includes("Confirm") && (
                 <Button
-                  onClick={onConfirm}
+                  //onClick={onConfirm}
+                  onClick={() => showPopconfirm("Confirm", onConfirm)}
                   loading={btnLoading}
                   disabled={btnLoading}>
                   Confirm
@@ -270,7 +275,8 @@ function TopContent(props) {
               )}
               {props.buttonAction.includes("Reject") && (
                 <Button
-                  onClick={onReject}
+                  //onClick={onReject}
+                  onClick={() => showPopconfirm("Reject", onReject)}
                   danger
                   // loading={btnLoading}
                   disabled={btnLoading}>
