@@ -41,6 +41,7 @@ import {
   RESET_ISSUE_DATA,
   SEARCH_RETURN,
   RESET_RETURN_DATA,
+  SEARCH_ITEMS,
 } from "../actions/types";
 
 import {
@@ -83,6 +84,12 @@ const initialState = {
     item_part: [],
     sampleItems: [],
     item_code_type: [],
+  },
+  filter_item_list: {
+    keyword: null,
+    page: 1,
+    pageSize: 20,
+    item_id: null,
   },
   configurations: {
     type: [],
@@ -174,6 +181,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         master_data: { ...state.master_data, item_list: action.payload },
+      };
+    case SEARCH_ITEMS:
+      return {
+        ...state,
+        filter_item_list: {
+          ...state.filter_item_list,
+          ...action.payload,
+        },
       };
     case CLEAR_STATE_ITEM:
       return {

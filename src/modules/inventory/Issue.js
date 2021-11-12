@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -121,7 +123,7 @@ const Issue = (props) => {
               loading={loading}
               onChange={onChange}
               rowKey={"issue_id"}
-              size="small"
+              size='small'
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
