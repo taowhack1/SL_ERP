@@ -20,7 +20,9 @@ import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
 import {
   create_so,
+  getProduction_for_fg,
   getSalesType,
+  getSo_production_type,
   get_qn_open_so,
   update_so,
 } from "../../actions/sales";
@@ -54,6 +56,8 @@ const initialStateDetail = [so_detail_fields];
 const SaleOrderCreate = (props) => {
   const [selectData, setSelectData] = useState({
     salesType: [],
+    soProductionType: [],
+    productionForFg: [],
   });
 
   const history = useHistory();
@@ -90,7 +94,19 @@ const SaleOrderCreate = (props) => {
       console.log("getSalesTypeData", resp);
       setSelectData((prev) => ({ ...prev, salesType: resp.data }));
     };
+    const getsoProductionTypeData = async () => {
+      const resp = await getSo_production_type();
+      console.log("getsoProductionTypeData", resp);
+      setSelectData((prev) => ({ ...prev, soProductionType: resp.data }));
+    };
+    const getproductionForFgData = async () => {
+      const resp = await getProduction_for_fg();
+      console.log("getproductionForFgData", resp);
+      setSelectData((prev) => ({ ...prev, productionForFg: resp.data }));
+    };
     getSalesTypeData();
+    getsoProductionTypeData();
+    getproductionForFgData();
     dispatch(get_qn_open_so());
     dispatch(get_vat_list());
     headDispatch({
@@ -263,6 +279,8 @@ const SaleOrderCreate = (props) => {
     history.push("/sales/orders/view/" + (id ? id : "new"));
   };
   console.log("data_head", data_head);
+  console.log("selectData :>> ", selectData);
+  console.log("data_detail :>> ", data_detail);
   return (
     <MainLayout {...config}>
       <div id='form'>
@@ -547,16 +565,25 @@ const SaleOrderCreate = (props) => {
             <CustomSelect
               name={"so_production_type_id"}
               placeholder='ผลิตรอ FG / ผลิตเก็บ'
-              //data={selectData.salesType}
-              field_id='so_type_id'
-              field_name='so_type_name'
-              // onChange={(val) =>
-              //   headDispatch({
-              //     type: "CHANGE_HEAD_VALUE",
-              //     payload: { so_type_id: val },
-              //   })
-              // }
-              //value={data_head.so_type_id}
+              disabled={data_head.so_type_id === 1 ? false : true}
+              data={selectData.soProductionType}
+              field_id='so_production_type_id'
+              field_name='so_production_type_description'
+              onChange={(val) =>
+                val === 1
+                  ? headDispatch({
+                      type: "CHANGE_HEAD_VALUE",
+                      payload: { so_production_type_id: val },
+                    })
+                  : headDispatch({
+                      type: "CHANGE_HEAD_VALUE",
+                      payload: {
+                        so_production_ref_id: null,
+                        so_production_type_id: val,
+                      },
+                    })
+              }
+              value={data_head.so_production_type_id}
             />
           </Col>
           <Col span={2}></Col>
@@ -590,18 +617,19 @@ const SaleOrderCreate = (props) => {
 
           <Col span={8}>
             <CustomSelect
+              disabled={data_head.so_production_type_id === 1 ? false : true}
               name={"so_production_ref_id"}
               placeholder='SO Ref'
-              //data={selectData.salesType}
-              field_id='so_type_id'
-              field_name='so_type_name'
-              // onChange={(val) =>
-              //   headDispatch({
-              //     type: "CHANGE_HEAD_VALUE",
-              //     payload: { so_type_id: val },
-              //   })
-              // }
-              //value={data_head.so_type_id}
+              data={selectData.productionForFg}
+              field_id='so_id'
+              field_name='so_description'
+              onChange={(val) =>
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: { so_production_ref_id: val },
+                })
+              }
+              value={data_head.so_production_ref_id}
             />
           </Col>
           <Col span={2}></Col>
@@ -616,6 +644,7 @@ const SaleOrderCreate = (props) => {
                 <Detail
                   readOnly={false}
                   data_detail={data_detail}
+                  so_production_type_id={data_head?.so_production_type_id}
                   detailDispatch={detailDispatch}
                   headDispatch={headDispatch}
                   vat_rate={data_head.vat_rate}

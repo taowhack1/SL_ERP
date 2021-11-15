@@ -1,3 +1,5 @@
+/** @format */
+
 import { Button, Row, Col, InputNumber, Typography, DatePicker } from "antd";
 import {
   DeleteTwoTone,
@@ -19,6 +21,7 @@ const { Text } = Typography;
 const SO_Detail = ({
   readOnly,
   data_detail,
+  so_production_type_id,
   detailDispatch,
   headDispatch,
   vat_rate,
@@ -78,17 +81,17 @@ const SO_Detail = ({
   return (
     <>
       {/* Column Header */}
-      <Row gutter={2} className="detail-table-head">
+      <Row gutter={2} className='detail-table-head'>
         {so_detail_columns &&
           so_detail_columns.map((col, key) => {
             return (
-              <Col key={key} span={col.size} className="col-outline">
+              <Col key={key} span={col.size} className='col-outline'>
                 <Text strong>{col.name}</Text>
               </Col>
             );
           })}
 
-        <Col span={1} className="col-outline">
+        <Col span={1} className='col-outline'>
           <Text strong>
             <EllipsisOutlined />
           </Text>
@@ -109,18 +112,21 @@ const SO_Detail = ({
                   }}
                   gutter={2}
                   name={`row-${key}`}
-                  className="col-2"
-                >
-                  <Col span={9} className="text-string">
+                  className='col-2'>
+                  <Col span={9} className='text-string'>
                     <CustomSelect
                       allowClear
                       showSearch
-                      size="small"
+                      size='small'
                       placeholder={"Item"}
-                      data={select_items ?? []}
-                      name="item_id"
-                      field_id="item_id"
-                      field_name="item_no_name"
+                      data={
+                        so_production_type_id == 3
+                          ? select_items.filter((obj) => obj.type_id === 3)
+                          : select_items ?? []
+                      }
+                      name='item_id'
+                      field_id='item_id'
+                      field_name='item_no_name'
                       value={line.item_no_name}
                       onChange={(data, option) => {
                         data !== undefined
@@ -139,14 +145,14 @@ const SO_Detail = ({
                       }}
                     />
                   </Col>
-                  <Col span={3} className="text-number">
+                  <Col span={3} className='text-number'>
                     <InputNumber
                       {...getNumberFormat(4)}
-                      name="so_detail_qty"
+                      name='so_detail_qty'
                       placeholder={"Qty"}
                       min={0.0}
                       step={1}
-                      size="small"
+                      size='small'
                       className={"full-width"}
                       disabled={0}
                       value={line.so_detail_qty}
@@ -163,16 +169,16 @@ const SO_Detail = ({
                       }}
                     />
                   </Col>
-                  <Col span={2} className="text-string">
+                  <Col span={2} className='text-string'>
                     <CustomSelect
                       allowClear
                       showSearch
-                      name="uom_id"
-                      size="small"
+                      name='uom_id'
+                      size='small'
                       placeholder={"Unit"}
                       data={select_uoms}
-                      field_id="uom_id"
-                      field_name="uom_no"
+                      field_id='uom_id'
+                      field_name='uom_no'
                       value={line.uom_no}
                       onSelect={(data, option) =>
                         onChangeValue(line.id, {
@@ -183,11 +189,11 @@ const SO_Detail = ({
                       onChange={(data) => onChangeValue({ uom_id: data })}
                     />
                   </Col>
-                  <Col span={3} className="text-number">
+                  <Col span={3} className='text-number'>
                     <InputNumber
                       {...getNumberFormat(4)}
-                      name="so_detail_price"
-                      placeholder="Unit Price"
+                      name='so_detail_price'
+                      placeholder='Unit Price'
                       value={line.so_detail_price}
                       min={0.0}
                       step={5}
@@ -203,21 +209,21 @@ const SO_Detail = ({
                         updateAmount();
                       }}
                       className={"full-width"}
-                      size="small"
+                      size='small'
                     />
                   </Col>
-                  <Col span={3} className="text-number">
-                    <div className="total-number">
+                  <Col span={3} className='text-number'>
+                    <div className='total-number'>
                       {convertDigit(line.so_detail_total_price, 4)}
                     </div>
                   </Col>
-                  <Col span={3} className="text-number">
+                  <Col span={3} className='text-number'>
                     <DatePicker
                       name={"so_detail_delivery_date"}
                       format={"DD/MM/YYYY"}
-                      size="small"
+                      size='small'
                       className={"full-width"}
-                      placeholder="Delivery date..."
+                      placeholder='Delivery date...'
                       value={
                         line.so_detail_delivery_date &&
                         line.so_detail_delivery_date
@@ -244,8 +250,7 @@ const SO_Detail = ({
                   }}
                   gutter={2}
                   name={`row-${key}`}
-                  className="col-2"
-                >
+                  className='col-2'>
                   <Col span={23}>
                     <TextArea
                       rows={1}
@@ -266,12 +271,12 @@ const SO_Detail = ({
             ))}
           <div style={{ marginTop: 10 }}>
             <Button
-              type="dashed"
+              type='dashed'
+              disabled={so_production_type_id == 3 ? true : false}
               onClick={() => {
                 addLine(data_detail);
               }}
-              block
-            >
+              block>
               <PlusOutlined /> Add a line
             </Button>
           </div>
@@ -291,31 +296,30 @@ const SO_Detail = ({
                   }}
                   gutter={2}
                   name={`row-${key}`}
-                  className="col-2"
-                >
-                  <Col span={9} className="text-string">
-                    <Text className="text-view">{line.item_no_name}</Text>
+                  className='col-2'>
+                  <Col span={9} className='text-string'>
+                    <Text className='text-view'>{line.item_no_name}</Text>
                   </Col>
-                  <Col span={3} className="text-number">
-                    <Text className="text-view">
+                  <Col span={3} className='text-number'>
+                    <Text className='text-view'>
                       {convertDigit(line.so_detail_qty, 4)}
                     </Text>
                   </Col>
-                  <Col span={2} className="text-string">
-                    <Text className="text-view">{line.uom_no}</Text>
+                  <Col span={2} className='text-string'>
+                    <Text className='text-view'>{line.uom_no}</Text>
                   </Col>
-                  <Col span={3} className="text-number">
-                    <Text className="text-view">
+                  <Col span={3} className='text-number'>
+                    <Text className='text-view'>
                       {convertDigit(line.so_detail_price, 4)}
                     </Text>
                   </Col>
-                  <Col span={3} className="text-number">
-                    <Text className="text-view">
+                  <Col span={3} className='text-number'>
+                    <Text className='text-view'>
                       {convertDigit(line.so_detail_total_price, 4)}
                     </Text>
                   </Col>
-                  <Col span={3} className="text-center">
-                    <Text className="text-view">
+                  <Col span={3} className='text-center'>
+                    <Text className='text-view'>
                       {line.so_detail_delivery_date}
                     </Text>
                   </Col>
@@ -329,10 +333,9 @@ const SO_Detail = ({
                   }}
                   gutter={2}
                   name={`row-${key}`}
-                  className="col-2"
-                >
+                  className='col-2'>
                   <Col span={23}>
-                    <Text className="pd-left-1 text-view text-left">
+                    <Text className='pd-left-1 text-view text-left'>
                       {line.so_detail_remark}
                     </Text>
                   </Col>
@@ -350,8 +353,7 @@ const SO_Detail = ({
           background:
             "linear-gradient(180deg,rgba(198,198,198,1) 0%, rgba(198,198,198,1) 55%,rgba(255,255,255,1) 100%)",
           marginBottom: 20,
-        }}
-      ></Row>
+        }}></Row>
     </>
   );
 };

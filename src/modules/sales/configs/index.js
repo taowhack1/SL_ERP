@@ -231,7 +231,8 @@ export const so_fields = {
   tg_flow_max_node_id: null,
   so_type_id: null,
   qn_tg_trans_close_id: 1,
-  so_wait_fg: 1,
+  so_production_type_id: null,
+  so_production_ref_id: null,
 };
 export const so_detail_fields = {
   id: 0,
