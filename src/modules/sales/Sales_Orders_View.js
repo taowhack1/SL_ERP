@@ -333,7 +333,9 @@ const SaleOrderView = (props) => {
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>{data_head.so_production_type_id}</Text>
+            <Text className='text-view'>
+              {data_head.so_production_type_description || "-"}
+            </Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -350,7 +352,9 @@ const SaleOrderView = (props) => {
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>{data_head.so_production_ref_id}</Text>
+            <Text className='text-view'>
+              {data_head.so_production_ref_id || "-"}
+            </Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>

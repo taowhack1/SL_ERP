@@ -20,6 +20,7 @@ import { Button } from "antd/lib/radio";
 import { Modal, Popconfirm } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
+import CustomSelect from "../../../../components/CustomSelect";
 const initialStateDetail = receive_detail_fields;
 const list_temp = [
   {
@@ -32,8 +33,15 @@ const list_temp = [
 
 // SO get Check bulk use api ----->getProduction_for_fg
 const ReceiveDetailWithoutPO = () => {
-  const { readOnly, mainState, listSOFG, initialStateHead, saveForm, loading } =
-    useContext(ReceiveContext);
+  const {
+    readOnly,
+    mainState,
+    listSOFG,
+    setListSOFG,
+    initialStateHead,
+    saveForm,
+    loading,
+  } = useContext(ReceiveContext);
   const dispatch = useDispatch();
   const [state, setState] = useState(mainState.receive_detail);
   const [selectData, setSelectData] = useState({
@@ -99,6 +107,8 @@ const ReceiveDetailWithoutPO = () => {
   const check_soFG = (data) => {
     const filter = list_temp.filter((obj) => obj.item_id === data.item_id);
     filter.length > 0 ? setVisible(true) : setVisible(false);
+    //setListSOFG
+    listSOFG.listSOForFg.filter((obj) => obj.item_id === data.item_id);
     console.log("data_onFn :>> ", filter);
   };
   const modalCancel = () => {
@@ -106,6 +116,7 @@ const ReceiveDetailWithoutPO = () => {
     setSelectData({ ...selectData, visible: false });
   };
   const onChangeValue = (id, data) => {
+    data.so_id == null && saveForm({ ...mainState, so_id: null });
     console.log("check type item :>> ", data);
     setState(state.map((obj) => (obj.id === id ? { ...obj, ...data } : obj)));
     data.type_id == 3 && check_soFG(data);
@@ -113,15 +124,15 @@ const ReceiveDetailWithoutPO = () => {
   const onOpenDetail = (record) => {
     setSelectData({ ...record, visible: true });
   };
+  const update_soFGCloes = (data) => {
+    setListSOFG((prev) => ({ ...prev, so_id: data }));
+    saveForm({ ...mainState, so_id: data });
+  };
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const handleOk = () => {
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setVisible(false);
-      setConfirmLoading(false);
-    }, 2000);
+    setVisible(false);
   };
 
   const handleCancel = () => {
@@ -129,9 +140,6 @@ const ReceiveDetailWithoutPO = () => {
     setVisible(false);
   };
   console.log("receive_detail", state);
-  console.log("mainState", mainState);
-  console.log("ReceiveData_listSOFG :>> ", listSOFG);
-  console.log("itemList :>> ", itemList);
   return (
     <>
       {/* Column Header */}
@@ -143,7 +151,7 @@ const ReceiveDetailWithoutPO = () => {
           delLine,
           onOpenDetail
         )}
-        onAdd={!readOnly && addLine}
+        onAdd={!readOnly && mainState.so_id ? readOnly : !readOnly && addLine}
         dataSource={state}
         rowKey={"id"}
         rowClassName={"row-table-detail"}
@@ -211,10 +219,19 @@ const ReceiveDetailWithoutPO = () => {
             </Button>
           </Popconfirm>,
         ]}>
-        <p>{"ต้องการรับ Item Bulk สำหรับรอผลิต FG หรือไม่"}</p>
+        <p>{"ไอเทมนี้มีการเปิดผลิตเพื่อรอ FG ต้องการอ้างอิง SO นั้นหรือไม่"}</p>
+        <CustomSelect
+          name={"so_id"}
+          placeholder='SO Ref'
+          data={listSOFG?.listSOForFg}
+          field_id='so_id'
+          field_name='so_description'
+          onChange={(val, option) => update_soFGCloes(val)}
+        />
       </Modal>
     </>
   );
 };
 
 export default React.memo(ReceiveDetailWithoutPO);
+//saveForm({ ...state, ...data }, po_id ?? null);

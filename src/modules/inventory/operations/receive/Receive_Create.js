@@ -69,6 +69,7 @@ const Receive_Create = (props) => {
   const [listSOFG, setListSOFG] = useState({
     listSOForFg: [],
     listSOForFgClose: [],
+    so_id: null,
   });
   const [loading, setLoading] = useState(false);
   const dataComments = useSelector((state) => state.log.comment_log);
@@ -235,6 +236,7 @@ const Receive_Create = (props) => {
       readOnly,
       mainState: state,
       listSOFG: listSOFG,
+      setListSOFG,
       initialStateHead,
       saveForm,
       loading,
@@ -242,6 +244,7 @@ const Receive_Create = (props) => {
   }, [readOnly, state, initialStateHead, saveForm, loading]);
   console.log("Receive State", state);
   console.log("listSOFG :>> ", listSOFG);
+
   return (
     <MainLayout {...config}>
       <ReceiveContext.Provider value={contextValue}>

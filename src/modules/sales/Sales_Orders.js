@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useCallback, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table, Space, Radio, Button, Popconfirm } from "antd";
@@ -130,9 +132,8 @@ const so_columns = ({ onOpen }) => [
       return (
         <div
           id={`open-dr-${index}`}
-          className="cursor"
-          onClick={() => onOpen()}
-        >
+          className='cursor'
+          onClick={() => onOpen()}>
           {getStatusByName(record.trans_status_name)}
         </div>
       );
@@ -201,45 +202,93 @@ const SaleOrder = (props) => {
       dispatch(updateSOFilter({ keyword: value }));
     },
     searchBar: (
-      <Space size={18}>
-        <div>
-          <Text strong>Sales Type :</Text>
-        </div>
-        <Radio.Group
-          options={[
-            {
-              label: "Production",
-              value: 1,
-            },
-            {
-              label: "Others",
-              value: 2,
-            },
-            {
-              label: "All",
-              value: 3,
-            },
-          ]}
-          onChange={(e) =>
-            dispatch(updateSOFilter({ salesType: e.target.value }))
-          }
-          optionType="button"
-          buttonStyle="solid"
-          value={filter.salesType}
-          defaultValue={filter.salesType}
-        />
-      </Space>
+      <>
+        {filter.salesType !== 2 ? (
+          <>
+            <Space size={18} style={{ marginRight: 15 }}>
+              <div>
+                <Text strong>Type :</Text>
+              </div>
+              <Radio.Group
+                options={[
+                  {
+                    label: "ผลิตเพื่อขาย",
+                    value: 1,
+                  },
+                  {
+                    label: "ผลิตเพื่อเก็บ",
+                    value: 2,
+                  },
+                  {
+                    label: "ผลิตเพื่อรอ FG",
+                    value: 3,
+                  },
+                ]}
+                onChange={(e) =>
+                  dispatch(updateSOFilter({ soProductionType: e.target.value }))
+                }
+                optionType='button'
+                buttonStyle='solid'
+                value={filter.soProductionType}
+                defaultValue={filter.soProductionType}
+              />
+            </Space>
+          </>
+        ) : (
+          <></>
+        )}
+
+        <Space size={18}>
+          <div>
+            <Text strong>Sales Type :</Text>
+          </div>
+          <Radio.Group
+            options={[
+              {
+                label: "Production",
+                value: 1,
+              },
+              {
+                label: "Others",
+                value: 2,
+              },
+              {
+                label: "All",
+                value: 3,
+              },
+            ]}
+            onChange={(e) =>
+              dispatch(updateSOFilter({ salesType: e.target.value }))
+            }
+            optionType='button'
+            buttonStyle='solid'
+            value={filter.salesType}
+            defaultValue={filter.salesType}
+          />
+        </Space>
+      </>
     ),
   };
 
   useEffect(() => {
     // SEARCH , FILTER
+    //filter.soProductionType === 3;
+    // ? keepData.so
+    // : keepData.so?.filter(
+    //     (obj) => obj.so_production_type_id === filter.soProductionType
+    //   );
     const filterData = () => {
       setLoading(true);
       let filterData =
         filter.salesType === 3
-          ? keepData.so
-          : keepData.so?.filter((obj) => obj.so_type_id === filter.salesType);
+          ? keepData.so?.filter(
+              (obj) => obj.so_production_type_id === filter.soProductionType
+            )
+          : keepData.so?.filter(
+              (obj) =>
+                obj.so_type_id === filter.salesType &&
+                obj.so_production_type_id === filter.soProductionType
+            );
       filterData = !filter.keyword
         ? filterData
         : filterData?.filter(
@@ -306,7 +355,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Item</Text>
           </div>
         ),
@@ -317,7 +366,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Qty.</Text>
           </div>
         ),
@@ -329,7 +378,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>UOM</Text>
           </div>
         ),
@@ -341,7 +390,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Unit Price</Text>
           </div>
         ),
@@ -353,7 +402,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Total Price</Text>
           </div>
         ),
@@ -365,7 +414,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>ยอดค้างส่ง</Text>
           </div>
         ),
@@ -377,7 +426,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Delivery Date</Text>
           </div>
         ),
@@ -385,11 +434,21 @@ const SaleOrder = (props) => {
         align: "center",
         width: "10%",
         className: "tb-col-sm",
-        render: (val, row) => val,
+        render: (val, row) => {
+          return record?.so_production_type_id == 3 ? (
+            <>
+              <Text>-</Text>
+            </>
+          ) : row?.button_create_dr ? (
+            <Text>{val}</Text>
+          ) : (
+            ""
+          );
+        },
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Delivery Status</Text>
           </div>
         ),
@@ -397,11 +456,21 @@ const SaleOrder = (props) => {
         align: "center",
         width: "15%",
         className: "tb-col-sm",
-        render: (val, row) => val,
+        render: (val, row) => {
+          return record?.so_production_type_id == 3 ? (
+            <>
+              <Text>ผลิตรอ FG</Text>
+            </>
+          ) : row?.button_create_dr ? (
+            <Text>{val}</Text>
+          ) : (
+            ""
+          );
+        },
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <EllipsisOutlined />
           </div>
         ),
@@ -409,20 +478,24 @@ const SaleOrder = (props) => {
         align: "center",
         width: "8%",
         className: "tb-col-sm",
-        render: (val, row) =>
-          row?.button_create_dr ? (
+        render: (val, row) => {
+          return record?.so_production_type_id == 3 ? (
+            <>
+              <Text>-</Text>
+            </>
+          ) : row?.button_create_dr ? (
             <Popconfirm
-              title="Do you want do create Delivery Request ?."
+              title='Do you want do create Delivery Request ?.'
               onConfirm={() => openDR(val)}
-              className="cursor"
-            >
-              <Button size="small" className="primary">
+              className='cursor'>
+              <Button size='small' className='primary'>
                 Open DR
               </Button>
             </Popconfirm>
           ) : (
             ""
-          ),
+          );
+        },
       },
     ];
     return (
@@ -433,11 +506,12 @@ const SaleOrder = (props) => {
           bordered
           rowKey={"so_detail_id"}
           pagination={false}
-          rowClassName="row-table-detail"
+          rowClassName='row-table-detail'
         />
       </>
     );
   };
+  console.log("state :>> ", state);
   return (
     <div>
       <MainLayout {...config}>
@@ -448,9 +522,9 @@ const SaleOrder = (props) => {
               columns={so_columns({ onOpen })}
               dataSource={state}
               rowKey={"so_id"}
-              size="small"
+              size='small'
               bordered
-              rowClassName="row-pointer"
+              rowClassName='row-pointer'
               expandable={{ expandedRowRender }}
               onRow={(record, rowIndex) => {
                 return {

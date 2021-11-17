@@ -335,6 +335,7 @@ export const receiveDetailWithNoPOColumns = (
                   location_no_name: null,
                   item_shelf_life: null,
                   type_id: null,
+                  so_id: null,
                 })
           }
         />
@@ -772,6 +773,7 @@ export const receive_fields = {
   tg_trans_close_id: null,
   commit: 1,
   receive_detail: [],
+  so_id: null,
 };
 
 export const receive_detail_fields = {

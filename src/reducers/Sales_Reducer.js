@@ -38,6 +38,7 @@ const inititalState = {
     so_detail: [],
     filter: {
       salesType: 1,
+      soProductionType: 1,
       keyword: null,
     },
   },
