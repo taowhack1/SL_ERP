@@ -34,6 +34,7 @@ import {
   so_fields,
   so_require_fields,
   so_require_fields_detail,
+  so_require_fields_type_production,
 } from "./configs";
 import Detail from "./Sales_Order_Detail";
 import { reducer } from "./reducers";
@@ -176,7 +177,11 @@ const SaleOrderCreate = (props) => {
       //e.preventDefault();
       console.log("SAVE");
       const message_key = "validate";
-      const validate = validateFormHead(data_head, so_require_fields);
+      const so_requireField =
+        data_head.so_type_id === 2
+          ? so_require_fields
+          : so_require_fields_type_production;
+      const validate = validateFormHead(data_head, so_requireField);
       const validate_detail = validateFormDetail(
         data_detail,
         so_require_fields_detail

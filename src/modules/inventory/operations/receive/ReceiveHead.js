@@ -222,12 +222,12 @@ const ReceiveHead = () => {
         </Col>
 
         <Col span={2}></Col>
-        {/* <Col span={3}>
+        <Col span={3}>
           <CustomLabel label={"SO Ref. :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
-          <Text className='text-view'>{state.so_no}</Text>
-        </Col> */}
+          <Text className='text-view'>{state.so_no || "-"}</Text>
+        </Col>
       </Row>
     </>
   );

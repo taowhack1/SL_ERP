@@ -37,8 +37,8 @@ const inititalState = {
     so_head: {},
     so_detail: [],
     filter: {
-      salesType: 1,
-      soProductionType: 1,
+      salesType: 3,
+      soProductionType: 0,
       keyword: null,
     },
   },

@@ -28,6 +28,7 @@ import {
 } from "../../include/js/function_main";
 import CustomTable from "../../components/CustomTable";
 import { EllipsisOutlined } from "@ant-design/icons";
+import CustomSelect from "../../components/CustomSelect";
 
 const so_columns = ({ onOpen }) => [
   {
@@ -203,67 +204,75 @@ const SaleOrder = (props) => {
     },
     searchBar: (
       <>
-        {filter.salesType !== 2 ? (
-          <>
-            <Space size={18} style={{ marginRight: 15 }}>
-              <div>
-                <Text strong>Type :</Text>
-              </div>
-              <Radio.Group
-                options={[
-                  {
-                    label: "ผลิตเพื่อขาย",
-                    value: 1,
-                  },
-                  {
-                    label: "ผลิตเพื่อเก็บ",
-                    value: 2,
-                  },
-                  {
-                    label: "ผลิตเพื่อรอ FG",
-                    value: 3,
-                  },
-                ]}
-                onChange={(e) =>
-                  dispatch(updateSOFilter({ soProductionType: e.target.value }))
-                }
-                optionType='button'
-                buttonStyle='solid'
-                value={filter.soProductionType}
-                defaultValue={filter.soProductionType}
-              />
-            </Space>
-          </>
-        ) : (
-          <></>
-        )}
-
-        <Space size={18}>
+        <Space size={18} style={{ marginRight: 15 }}>
           <div>
             <Text strong>Sales Type :</Text>
           </div>
-          <Radio.Group
-            options={[
+          <CustomSelect
+            name={"so_id"}
+            placeholder='SO Ref'
+            data={[
               {
-                label: "Production",
+                label: "ทั้งหมด",
+                value: 3,
+              },
+              {
+                label: "ผลิต",
                 value: 1,
               },
               {
-                label: "Others",
+                label: "อื่นๆ",
+                value: 2,
+              },
+            ]}
+            field_id='value'
+            field_name='label'
+            style={{ width: 200 }}
+            onChange={(val, option) =>
+              val === 2
+                ? dispatch(
+                    updateSOFilter({ salesType: val, soProductionType: 0 })
+                  )
+                : dispatch(updateSOFilter({ salesType: val }))
+            }
+            value={filter.salesType}
+            defaultValue={filter.salesType}
+          />
+        </Space>
+        <Space size={18}>
+          <div>
+            <Text strong>Production Type :</Text>
+          </div>
+          <CustomSelect
+            disabled={filter.salesType !== 2 ? false : true}
+            name={"so_id"}
+            placeholder='SO Ref'
+            data={[
+              {
+                label: "ทั้งหมด",
+                value: 0,
+              },
+              {
+                label: "ผลิตเพื่อขาย",
+                value: 1,
+              },
+              {
+                label: "ผลิตเพื่อเก็บ",
                 value: 2,
               },
               {
-                label: "All",
+                label: "ผลิตเพื่อรอ FG",
                 value: 3,
               },
             ]}
-            onChange={(e) =>
-              dispatch(updateSOFilter({ salesType: e.target.value }))
+            field_id='value'
+            field_name='label'
+            style={{ width: 200 }}
+            onChange={(val, option) =>
+              dispatch(updateSOFilter({ soProductionType: val }))
             }
-            optionType='button'
-            buttonStyle='solid'
-            value={filter.salesType}
-            defaultValue={filter.salesType}
+            value={filter.soProductionType}
+            defaultValue={filter.soProductionType}
           />
         </Space>
       </>
@@ -278,17 +287,35 @@ const SaleOrder = (props) => {
     //     (obj) => obj.so_production_type_id === filter.soProductionType
     //   );
     const filterData = () => {
+      console.log("filter FN");
       setLoading(true);
       let filterData =
         filter.salesType === 3
+          ? filter.soProductionType == 0
+            ? keepData.so?.filter(
+                (obj) => obj
+                //obj.so_production_type_id //filter.soProductionType
+              )
+            : keepData.so?.filter(
+                (obj) => obj.so_production_type_id === filter.soProductionType
+                //obj.so_production_type_id //filter.soProductionType
+              )
+          : filter.soProductionType == 0
           ? keepData.so?.filter(
-              (obj) => obj.so_production_type_id === filter.soProductionType
+              (obj) => obj.so_type_id === filter.salesType
+              //obj.so_production_type_id //filter.soProductionType
             )
           : keepData.so?.filter(
               (obj) =>
                 obj.so_type_id === filter.salesType &&
                 obj.so_production_type_id === filter.soProductionType
+              //obj.so_production_type_id //filter.soProductionType
             );
+      // keepData.so?.filter(
+      //     (obj) =>
+      //       obj.so_type_id === filter.salesType &&
+      //       obj.so_production_type_id === filter.soProductionType
+      //   );
       filterData = !filter.keyword
         ? filterData
         : filterData?.filter(

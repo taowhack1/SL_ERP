@@ -30,7 +30,7 @@ const list_temp = [
     item_id: 2782,
   },
 ];
-
+// item test C311SRNA000100
 // SO get Check bulk use api ----->getProduction_for_fg
 const ReceiveDetailWithoutPO = () => {
   const {
@@ -105,10 +105,13 @@ const ReceiveDetailWithoutPO = () => {
     );
   };
   const check_soFG = (data) => {
-    const filter = list_temp.filter((obj) => obj.item_id === data.item_id);
+    const filter = listSOFG?.listSOForFg?.filter(
+      (obj) => obj.item_id === data.item_id
+    );
     filter.length > 0 ? setVisible(true) : setVisible(false);
     //setListSOFG
-    listSOFG.listSOForFg.filter((obj) => obj.item_id === data.item_id);
+    //listSOFG.listSOForFg.filter((obj) => obj.item_id === data.item_id);
+    //filter.length > 0 ? setVisible(true) : setVisible(false);
     console.log("data_onFn :>> ", filter);
   };
   const modalCancel = () => {
@@ -116,17 +119,22 @@ const ReceiveDetailWithoutPO = () => {
     setSelectData({ ...selectData, visible: false });
   };
   const onChangeValue = (id, data) => {
-    data.so_id == null && saveForm({ ...mainState, so_id: null });
+    data.so_id == null &&
+      saveForm({ ...mainState, so_id: null, so_no: null }) &&
+      setListSOFG((prev) => ({ ...prev, so_id: null }));
+
     console.log("check type item :>> ", data);
     setState(state.map((obj) => (obj.id === id ? { ...obj, ...data } : obj)));
     data.type_id == 3 && check_soFG(data);
+    //data.type_id == 3 ? setVisible(true) : setVisible(false);
+    // setState(sortData(state.filter((obj) => obj.id !== id)));
   };
   const onOpenDetail = (record) => {
     setSelectData({ ...record, visible: true });
   };
-  const update_soFGCloes = (data) => {
+  const update_soFGCloes = (data, option) => {
     setListSOFG((prev) => ({ ...prev, so_id: data }));
-    saveForm({ ...mainState, so_id: data });
+    saveForm({ ...mainState, so_id: data, so_no: option.data.so_no });
   };
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -219,14 +227,17 @@ const ReceiveDetailWithoutPO = () => {
             </Button>
           </Popconfirm>,
         ]}>
-        <p>{"ไอเทมนี้มีการเปิดผลิตเพื่อรอ FG ต้องการอ้างอิง SO นั้นหรือไม่"}</p>
+        <p>
+          {"ไอเทมนี้มีการเปิดผลิตเพื่อรอ FG ต้องการอ้างอิงเลขที่ SO หรือไม่"}
+        </p>
         <CustomSelect
           name={"so_id"}
           placeholder='SO Ref'
           data={listSOFG?.listSOForFg}
           field_id='so_id'
           field_name='so_description'
-          onChange={(val, option) => update_soFGCloes(val)}
+          onChange={(val, option) => update_soFGCloes(val, option)}
+          value={listSOFG?.so_id}
         />
       </Modal>
     </>
