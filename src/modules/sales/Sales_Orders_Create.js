@@ -587,22 +587,46 @@ const SaleOrderCreate = (props) => {
               data={selectData.soProductionType}
               field_id='so_production_type_id'
               field_name='so_production_type_description'
-              onChange={(val) =>
-                val === 1
-                  ? headDispatch({
+              onChange={
+                (val) => {
+                  if (val === 1) {
+                    headDispatch({
                       type: "CHANGE_HEAD_VALUE",
                       payload: { so_production_type_id: val },
-                    })
-                  : headDispatch({
+                    });
+                  } else {
+                    headDispatch({
                       type: "CHANGE_HEAD_VALUE",
                       payload: {
                         so_production_ref_id: null,
                         so_production_type_id: val,
                       },
-                    })
+                    });
+                    detailDispatch({
+                      type: "RESET_DATA",
+                      payload: initialStateDetail,
+                    });
+                  }
+                }
+                // val === 1
+                //   ? headDispatch({
+                //       type: "CHANGE_HEAD_VALUE",
+                //       payload: { so_production_type_id: val },
+                //     })
+                //   : headDispatch({
+                //       type: "CHANGE_HEAD_VALUE",
+                //       payload: {
+                //         so_production_ref_id: null,
+                //         so_production_type_id: val,
+                //       },
+                //     })
               }
               value={data_head.so_production_type_id}
             />
+            {/* detailDispatch({
+                      type: "RESET_DATA",
+                      payload: initialStateDetail,
+                    }) */}
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
