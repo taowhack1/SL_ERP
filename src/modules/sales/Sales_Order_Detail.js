@@ -272,7 +272,13 @@ const SO_Detail = ({
           <div style={{ marginTop: 10 }}>
             <Button
               type='dashed'
-              disabled={so_production_type_id == 3 ? true : false}
+              disabled={
+                data_detail.length > 0
+                  ? so_production_type_id == 3
+                    ? true
+                    : false
+                  : false
+              }
               onClick={() => {
                 addLine(data_detail);
               }}

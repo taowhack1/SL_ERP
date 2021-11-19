@@ -57,6 +57,10 @@ const ReceiveDetailWithoutPO = () => {
     setState(sortData([...state, initialStateDetail]));
   };
   const delLine = (id) => {
+    mainState?.so_id !== null &&
+      saveForm({ ...mainState, so_id: null, so_no: null }) &&
+      setListSOFG((prev) => ({ ...prev, so_id: null }));
+    console.log("ก่อนลบ state.length :>> ", state.length);
     setState(sortData(state.filter((obj) => obj.id !== id)));
   };
 
@@ -109,9 +113,6 @@ const ReceiveDetailWithoutPO = () => {
       (obj) => obj.item_id === data.item_id
     );
     filter.length > 0 ? setVisible(true) : setVisible(false);
-    //setListSOFG
-    //listSOFG.listSOForFg.filter((obj) => obj.item_id === data.item_id);
-    //filter.length > 0 ? setVisible(true) : setVisible(false);
     console.log("data_onFn :>> ", filter);
   };
   const modalCancel = () => {
@@ -126,8 +127,6 @@ const ReceiveDetailWithoutPO = () => {
     console.log("check type item :>> ", data);
     setState(state.map((obj) => (obj.id === id ? { ...obj, ...data } : obj)));
     data.type_id == 3 && check_soFG(data);
-    //data.type_id == 3 ? setVisible(true) : setVisible(false);
-    // setState(sortData(state.filter((obj) => obj.id !== id)));
   };
   const onOpenDetail = (record) => {
     setSelectData({ ...record, visible: true });
@@ -144,10 +143,12 @@ const ReceiveDetailWithoutPO = () => {
   };
 
   const handleCancel = () => {
+    saveForm({ ...mainState, so_id: null, so_no: null }) &&
+      setListSOFG((prev) => ({ ...prev, so_id: null }));
     console.log("Clicked cancel button");
     setVisible(false);
   };
-  console.log("receive_detail", state);
+  console.log("receive_detail", state.length);
   return (
     <>
       {/* Column Header */}
@@ -172,9 +173,6 @@ const ReceiveDetailWithoutPO = () => {
         qtyRef={false}
       />
 
-      {/* <Button type='primary' onClick={showModal}>
-        Open Modal with async logic
-      </Button> */}
       <Modal
         title='Alert'
         visible={visible}
@@ -245,4 +243,3 @@ const ReceiveDetailWithoutPO = () => {
 };
 
 export default React.memo(ReceiveDetailWithoutPO);
-//saveForm({ ...state, ...data }, po_id ?? null);

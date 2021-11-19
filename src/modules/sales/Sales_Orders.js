@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table, Space, Radio, Button, Popconfirm } from "antd";
+import { Row, Col, Table, Space, Radio, Button, Popconfirm, Tag } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
 import { useDispatch, useSelector } from "react-redux";
@@ -138,6 +138,137 @@ const so_columns = ({ onOpen }) => [
           {getStatusByName(record.trans_status_name)}
         </div>
       );
+    },
+  },
+];
+const so_columns_Production = ({ onOpen }) => [
+  {
+    title: "SO No.",
+    dataIndex: "so_no",
+    key: "so_no",
+    width: "8%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.so_id - b.so_id,
+      multiple: 3,
+    },
+    render: (value) => value || "-",
+  },
+  {
+    title: "Quotation Ref.",
+    dataIndex: "qn_no",
+    key: "qn_no",
+    width: "10%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.qn_id - b.qn_id,
+      multiple: 3,
+    },
+    render: (value) => value || "-",
+  },
+  {
+    title: "PO No.",
+    dataIndex: "so_customer_po_no",
+    key: "so_customer_po_no",
+    width: "10%",
+    align: "center",
+    render: (value) => value || "-",
+  },
+  {
+    title: "Order Date",
+    dataIndex: "so_order_date",
+    key: "so_order_date",
+    width: "8%",
+    align: "center",
+    render: (value) => value || "-",
+  },
+  {
+    title: "Delivery Date",
+    dataIndex: "tg_so_delivery_date",
+    key: "tg_so_delivery_date",
+    width: "8%",
+    align: "center",
+    render: (value) => value || "-",
+  },
+  {
+    title: "Customer",
+    dataIndex: "customer_no_name",
+    key: "customer_no_name",
+    // width: "18%",
+    align: "left",
+    ellipsis: true,
+    render: (value) => value || "-",
+  },
+  // {
+  //   title: "Description",
+  //   dataIndex: "so_description",
+  //   key: "so_description",
+  //   width: "15%",
+  //   align: "left",
+  //   ellipsis: true,
+  //   render: (value) => value || "-",
+  // },
+  {
+    title: "Salesperson",
+    dataIndex: "so_created_by_no_name",
+    key: "so_created_by_no_name",
+    width: "15%",
+    align: "left",
+    ellipsis: true,
+    render: (value) => value || "-",
+  },
+  {
+    title: "Total Value",
+    dataIndex: "tg_so_total_amount",
+    key: "tg_so_total_amount",
+    width: "10%",
+    align: "right",
+    sorter: {
+      compare: (a, b) => a.tg_so_total_amount - b.tg_so_total_amount,
+      multiple: 3,
+    },
+    render: (value) => convertDigit(value, 2),
+  },
+  {
+    title: "Status",
+    dataIndex: "trans_status_name",
+    key: "trans_status_name",
+    width: "8%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
+      multiple: 3,
+    },
+    ellipsis: true,
+    render: (value, record, index) => {
+      return (
+        <div
+          id={`open-dr-${index}`}
+          className='cursor'
+          onClick={() => onOpen()}>
+          {getStatusByName(record.trans_status_name)}
+        </div>
+      );
+    },
+  },
+  {
+    title: "Production Status",
+    dataIndex: "so_production_status_name",
+    key: "so_production_status_name",
+    width: "8%",
+    align: "center",
+    sorter: {
+      compare: (a, b) =>
+        a.so_production_status_name - b.so_production_status_name,
+      multiple: 3,
+    },
+    ellipsis: true,
+    render: (value, record, index) => {
+      return (
+        <Tag color='default' className='w-100'>
+          {record.so_production_status_name}
+        </Tag>
+      ); //<div>{record.so_production_status_name}</div>;
     },
   },
 ];
@@ -486,7 +617,7 @@ const SaleOrder = (props) => {
         render: (val, row) => {
           return record?.so_production_type_id == 3 ? (
             <>
-              <Text>ผลิตรอ FG</Text>
+              <Text>-</Text>
             </>
           ) : row?.button_create_dr ? (
             <Text>{val}</Text>
@@ -546,7 +677,11 @@ const SaleOrder = (props) => {
           <Col span={24}>
             <Table
               loading={loading}
-              columns={so_columns({ onOpen })}
+              columns={
+                filter.soProductionType === 3
+                  ? so_columns_Production({ onOpen })
+                  : so_columns({ onOpen })
+              }
               dataSource={state}
               rowKey={"so_id"}
               size='small'
