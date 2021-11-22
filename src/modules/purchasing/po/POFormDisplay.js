@@ -263,7 +263,8 @@ const POFormDisplay = () => {
         ? [
             button_approve && "Approve",
             button_confirm && "Confirm",
-            button_edit && "Edit",
+            // button_edit && "Edit",
+            "Edit",
             button_reject && "Reject",
             "Back",
           ]

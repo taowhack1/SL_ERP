@@ -156,7 +156,7 @@ const SaleOrderCreate = (props) => {
     discard: "/sales/orders",
     onSave: (e) => {
       //e.preventDefault();
-      console.log("SAVE");
+      console.log("SAVE", data_head, data_detail);
       const message_key = "validate";
       const validate = validateFormHead(data_head, so_require_fields);
       const validate_detail = validateFormDetail(
