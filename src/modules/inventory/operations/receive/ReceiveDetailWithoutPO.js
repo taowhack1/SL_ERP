@@ -110,7 +110,7 @@ const ReceiveDetailWithoutPO = () => {
   };
   const check_soFG = (data) => {
     const filter = listSOFG?.listSOForFg?.filter(
-      (obj) => obj.item_id === data.item_id
+      (obj) => obj.item_id === data.item_id && obj.is_received === 0
     );
     filter.length > 0 ? setVisible(true) : setVisible(false);
     console.log("data_onFn :>> ", filter);
@@ -233,7 +233,7 @@ const ReceiveDetailWithoutPO = () => {
           placeholder='SO Ref'
           data={listSOFG?.listSOForFg}
           field_id='so_id'
-          field_name='so_description'
+          field_name='so_no_description'
           onChange={(val, option) => update_soFGCloes(val, option)}
           value={listSOFG?.so_id}
         />

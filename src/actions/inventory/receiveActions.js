@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   GET_RECEIVE_LIST,
   GET_PO_RECEIVE_LIST,
@@ -20,7 +22,7 @@ import { message } from "antd";
 
 const FILTER_REPORT_GR = "FILTER_REPORT_GR";
 const CLEAR_FILTER_REPORT_GR = "CLEAR_FILTER_REPORT_GR";
-
+const apiProduction_for_fg_receive = `sales/so/production_for_fg_receive`;
 export const get_receive_list = (user_name) => async (dispatch) => {
   return await axios
     .get(`${api_receive}/all/${user_name}`, header_config)
@@ -29,7 +31,31 @@ export const get_receive_list = (user_name) => async (dispatch) => {
       dispatch({ type: GET_RECEIVE_LIST, payload: res.data[0] });
     });
 };
-
+export const production_for_fg_receive = async () => {
+  console.log("Production_for_fg");
+  try {
+    return await axios
+      .get(`${apiProduction_for_fg_receive}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
 export const reset_receive = () => async (dispatch) => {
   dispatch({ type: RESET_RECEIVE });
 };

@@ -40,7 +40,7 @@ import DetailLoading from "../../../../components/DetailLoading";
 import { AppContext, ReceiveContext } from "../../../../include/js/context";
 import { getAllItems } from "../../../../actions/inventory/itemActions";
 import { get_all_vendor } from "../../../../actions/purchase/vendorActions";
-import { getProduction_for_fg } from "../../../../actions/sales";
+import { production_for_fg_receive } from "../../../../actions/inventory/receiveActions";
 
 const { Text } = Typography;
 
@@ -178,8 +178,8 @@ const Receive_Create = (props) => {
     dispatch(get_all_vendor());
     dispatch(get_po_receive_list());
     dispatch(getAllItems());
-    const getproductionForFgData = async () => {
-      const resp = await getProduction_for_fg();
+    const getproductionForFgDataReceive = async () => {
+      const resp = await production_for_fg_receive();
       console.log("getproductionForFgData", resp);
       setListSOFG((prev) => ({ ...prev, listSOForFg: resp.data }));
     };
@@ -196,7 +196,7 @@ const Receive_Create = (props) => {
         });
         setLoading(false);
       });
-    getproductionForFgData();
+    getproductionForFgDataReceive();
     id && getData();
     action === "create" && setLoading(false);
   }, []);
