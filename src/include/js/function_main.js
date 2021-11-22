@@ -1,3 +1,5 @@
+/** @format */
+
 import { Tag } from "antd";
 import React, { useCallback } from "react";
 import $ from "jquery";
@@ -213,30 +215,27 @@ export const getSelfStepStatus = ({
     if (button_approve || button_reject || button_confirm) {
       return (
         <Tag
-          color="processing"
+          color='processing'
           icon={<SyncOutlined spin />}
-          className="tag-status"
-        >
+          className='tag-status'>
           {"Pending"}
         </Tag>
       );
     } else if (trans_status_name !== "Cancel") {
       return (
         <Tag
-          color="warning"
+          color='warning'
           icon={<ClockCircleOutlined />}
-          className="tag-status"
-        >
+          className='tag-status'>
           {"Waiting"}
         </Tag>
       );
     } else {
       return (
         <Tag
-          color="error"
+          color='error'
           icon={<CloseCircleOutlined />}
-          className="tag-status"
-        >
+          className='tag-status'>
           {trans_status_name}
         </Tag>
       );
@@ -244,10 +243,9 @@ export const getSelfStepStatus = ({
   } else {
     return (
       <Tag
-        color="success"
+        color='success'
         icon={<CheckCircleOutlined />}
-        className="tag-status"
-      >
+        className='tag-status'>
         {trans_status_name}
       </Tag>
     );
@@ -265,10 +263,9 @@ export const getRefStatus = (
       case 1:
         return (
           <Tag
-            color="purple"
+            color='purple'
             className={callBack ? "tag-status function pointer" : "tag-status"}
-            {...(callBack && { onClick: callBack })}
-          >
+            {...(callBack && { onClick: callBack })}>
             {trans_close_name}
           </Tag>
         );
@@ -276,17 +273,16 @@ export const getRefStatus = (
       case 3:
         return (
           <Tag
-            color="success"
+            color='success'
             icon={<CheckCircleOutlined />}
-            className="tag-status"
-          >
+            className='tag-status'>
             {trans_close_name}
           </Tag>
         );
 
       default:
         return (
-          <Tag color="default" className="tag-status">
+          <Tag color='default' className='tag-status'>
             {trans_close_name}
           </Tag>
         );
@@ -416,8 +412,7 @@ export const warningTextValue = (value, digit, typeDanger) => {
         <Text
           className={className}
           type={typeDanger ? "danger" : "default"}
-          strong={typeDanger}
-        >
+          strong={typeDanger}>
           {convertDigit(value, digit)}
         </Text>
       );
@@ -480,8 +475,7 @@ export const getStatusByName = (statusName, callBack) => {
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color="default"
-        >
+          color='default'>
           {statusName}
         </Tag>
       );
@@ -495,8 +489,7 @@ export const getStatusByName = (statusName, callBack) => {
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color="processing"
-        >
+          color='processing'>
           {statusName}
         </Tag>
       );
@@ -507,8 +500,7 @@ export const getStatusByName = (statusName, callBack) => {
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color="blue"
-        >
+          color='blue'>
           {statusName}
         </Tag>
       );
@@ -517,8 +509,16 @@ export const getStatusByName = (statusName, callBack) => {
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color="cyan"
-        >
+          color='cyan'>
+          {statusName}
+        </Tag>
+      );
+    case statusName === "Receive In Process":
+      return (
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color='cyan'>
           {statusName}
         </Tag>
       );
@@ -527,8 +527,7 @@ export const getStatusByName = (statusName, callBack) => {
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color="success"
-        >
+          color='success'>
           {statusName}
         </Tag>
       );
@@ -538,8 +537,16 @@ export const getStatusByName = (statusName, callBack) => {
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color="#87d068"
-        >
+          color='#87d068'>
+          {statusName}
+        </Tag>
+      );
+    case statusName === "Received":
+      return (
+        <Tag
+          className={callBack ? "pointer w-100" : "w-100"}
+          onClick={callBack}
+          color='#87d068'>
           {statusName}
         </Tag>
       );
@@ -553,8 +560,7 @@ export const getStatusByName = (statusName, callBack) => {
           // icon={<SyncOutlined spin />}
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color="warning"
-        >
+          color='warning'>
           {statusName}
         </Tag>
       );
@@ -565,8 +571,7 @@ export const getStatusByName = (statusName, callBack) => {
           // icon={<SyncOutlined spin />}
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color="#108ee9"
-        >
+          color='#108ee9'>
           {statusName}
         </Tag>
       );
@@ -575,8 +580,7 @@ export const getStatusByName = (statusName, callBack) => {
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color="error"
-        >
+          color='error'>
           {statusName}
         </Tag>
       );
@@ -585,8 +589,7 @@ export const getStatusByName = (statusName, callBack) => {
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color="default"
-        >
+          color='default'>
           {statusName}
         </Tag>
       );

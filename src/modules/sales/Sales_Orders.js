@@ -265,9 +265,9 @@ const so_columns_Production = ({ onOpen }) => [
     ellipsis: true,
     render: (value, record, index) => {
       return (
-        <Tag color='default' className='w-100'>
-          {record.so_production_status_name}
-        </Tag>
+        <div className='cursor'>
+          {getStatusByName(record.so_production_status_name)}
+        </div>
       ); //<div>{record.so_production_status_name}</div>;
     },
   },
