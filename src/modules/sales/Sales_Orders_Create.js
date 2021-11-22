@@ -498,7 +498,7 @@ const SaleOrderCreate = (props) => {
 
           <Col span={8}>
             <CustomSelect
-              disabled={data_head.so_production_type_id === 1 ? false : true}
+              disabled={true}
               name={"so_production_ref_id"}
               placeholder='SO Ref'
               data={selectData.productionForFg}
