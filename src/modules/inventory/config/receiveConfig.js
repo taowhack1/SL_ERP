@@ -133,13 +133,13 @@ export const receiveDetailColumns = (
 ) => [
   {
     title: "No.",
-    render: (_, record) => <Text className="text-value">{record.id + 1}</Text>,
+    render: (_, record) => <Text className='text-value'>{record.id + 1}</Text>,
     width: "5%",
     align: "center",
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"Item"}</Text>
       </div>
     ),
@@ -147,14 +147,14 @@ export const receiveDetailColumns = (
     ellipsis: true,
     dataIndex: "item_no_name",
     render: (value, record) => (
-      <div className="text-value" title={value}>
+      <div className='text-value' title={value}>
         <Text>{value ?? "-"}</Text>
       </div>
     ),
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"Qty.( PO )"}</Text>
       </div>
     ),
@@ -163,12 +163,12 @@ export const receiveDetailColumns = (
     width: "10%",
     ellipsis: true,
     render: (value) => (
-      <Text className="text-value">{value ? convertDigit(value, 4) : "-"}</Text>
+      <Text className='text-value'>{value ? convertDigit(value, 4) : "-"}</Text>
     ),
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"Qty.Balance"}</Text>
       </div>
     ),
@@ -177,13 +177,13 @@ export const receiveDetailColumns = (
     width: "10%",
     ellipsis: true,
     render: (value) => (
-      <Text className="text-value">{value ? convertDigit(value, 4) : "-"}</Text>
+      <Text className='text-value'>{value ? convertDigit(value, 4) : "-"}</Text>
     ),
   },
   {
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">{"* "}</span>}
+      <div className='text-center'>
+        {!readOnly && <span className='require'>{"* "}</span>}
         <Text strong>{"Qty.Done"}</Text>
       </div>
     ),
@@ -197,9 +197,8 @@ export const receiveDetailColumns = (
           record.tg_receive_detail_qty_balance > 0
             ? "total-number-modal text-value"
             : "total-number text-value"
-        }
-      >
-        <Text className="text-value">
+        }>
+        <Text className='text-value'>
           {value ? convertDigit(value, 4) : "-"}
         </Text>
       </div>
@@ -207,7 +206,7 @@ export const receiveDetailColumns = (
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"Unit Price"}</Text>
       </div>
     ),
@@ -216,12 +215,12 @@ export const receiveDetailColumns = (
     width: "10%",
     ellipsis: true,
     render: (value) => (
-      <Text className="text-value">{convertDigit(value, 4) ?? 0}</Text>
+      <Text className='text-value'>{convertDigit(value, 4) ?? 0}</Text>
     ),
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"Due Date"}</Text>
       </div>
     ),
@@ -229,11 +228,11 @@ export const receiveDetailColumns = (
     dataIndex: "receive_detail_due_date",
     width: "10%",
     ellipsis: true,
-    render: (value) => <Text className="text-value">{value ?? "-"}</Text>,
+    render: (value) => <Text className='text-value'>{value ?? "-"}</Text>,
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"UOM"}</Text>
       </div>
     ),
@@ -241,7 +240,7 @@ export const receiveDetailColumns = (
     dataIndex: "uom_no",
     ellipsis: true,
     width: "7%",
-    render: (value) => <Text className="text-value">{value ?? "-"}</Text>,
+    render: (value) => <Text className='text-value'>{value ?? "-"}</Text>,
   },
   {
     title: (
@@ -259,7 +258,7 @@ export const receiveDetailColumns = (
             onClick={() => {
               onOpenDetail(record);
             }}
-            className="button-icon"
+            className='button-icon'
           />
         );
       } else {
@@ -269,7 +268,7 @@ export const receiveDetailColumns = (
               onClick={() => {
                 onOpenDetail(record);
               }}
-              className="button-icon"
+              className='button-icon'
             />
           )
         );
@@ -286,15 +285,15 @@ export const receiveDetailWithNoPOColumns = (
 ) => [
   {
     title: "No.",
-    render: (_, record) => <Text className="text-value">{record.id + 1}</Text>,
+    render: (_, record) => <Text className='text-value'>{record.id + 1}</Text>,
     width: "5%",
     align: "center",
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>
-          {!readOnly && <span className="require">{"* "}</span>}
+          {!readOnly && <span className='require'>{"* "}</span>}
           {"Item"}
         </Text>
       </div>
@@ -307,11 +306,11 @@ export const receiveDetailWithNoPOColumns = (
         <CustomSelect
           allowClear
           showSearch
-          size="small"
+          size='small'
           placeholder={"Item"}
           data={itemList}
-          field_id="item_id"
-          field_name="item_no_name"
+          field_id='item_id'
+          field_name='item_no_name'
           value={value}
           onChange={(data, option) =>
             data !== undefined
@@ -324,6 +323,7 @@ export const receiveDetailWithNoPOColumns = (
                   location_id: option.data.location_id,
                   location_no_name: option.data.location_no_name,
                   item_shelf_life: option.data.item_shelf_life,
+                  type_id: option.data.type_id,
                 })
               : onChange(record.id, {
                   item_id: null,
@@ -334,19 +334,21 @@ export const receiveDetailWithNoPOColumns = (
                   location_id: null,
                   location_no_name: null,
                   item_shelf_life: null,
+                  type_id: null,
+                  so_id: null,
                 })
           }
         />
       ) : (
-        <div className="text-value" title={value}>
+        <div className='text-value' title={value}>
           <Text>{value || "-"}</Text>
         </div>
       ),
   },
   {
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">{"* "}</span>}
+      <div className='text-center'>
+        {!readOnly && <span className='require'>{"* "}</span>}
         <Text strong>{"Qty.Done"}</Text>
       </div>
     ),
@@ -356,7 +358,7 @@ export const receiveDetailWithNoPOColumns = (
     ellipsis: true,
     render: (value, record) =>
       readOnly ? (
-        <Text className="text-value">{convertDigit(value || 0, 4)}</Text>
+        <Text className='text-value'>{convertDigit(value || 0, 4)}</Text>
       ) : (
         <div
           className={
@@ -364,18 +366,17 @@ export const receiveDetailWithNoPOColumns = (
               ? "total-number-modal text-value"
               : "total-number text-value"
           }
-          title="Click edit icon to fullfill"
-          onClick={() => message.warning("Click edit icon to fullfill", 3)}
-        >
-          <Text className="text-value">{convertDigit(value, 4)}</Text>
+          title='Click edit icon to fullfill'
+          onClick={() => message.warning("Click edit icon to fullfill", 3)}>
+          <Text className='text-value'>{convertDigit(value, 4)}</Text>
         </div>
       ),
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>
-          {!readOnly && <span className="require">{"* "}</span>}
+          {!readOnly && <span className='require'>{"* "}</span>}
           {"Unit Price"}
         </Text>
       </div>
@@ -386,7 +387,7 @@ export const receiveDetailWithNoPOColumns = (
     ellipsis: true,
     render: (value, record, key) =>
       readOnly ? (
-        <Text className="text-value">{convertDigit(value, 4)}</Text>
+        <Text className='text-value'>{convertDigit(value, 4)}</Text>
       ) : record.item_id ? (
         <InputNumber
           {...getNumberFormat(4)}
@@ -394,7 +395,7 @@ export const receiveDetailWithNoPOColumns = (
           min={0}
           step={1}
           disabled={record.item_id ? 0 : 1}
-          size="small"
+          size='small'
           className={"full-width check-field"}
           name={`receive_detail_price-${key}`}
           value={value}
@@ -407,16 +408,15 @@ export const receiveDetailWithNoPOColumns = (
       ) : (
         <div
           className={"total-number text-value"}
-          title="Please select item"
-          onClick={() => message.warning("Please select item", 3)}
-        >
-          <Text className="text-value">{convertDigit(value, 4)}</Text>
+          title='Please select item'
+          onClick={() => message.warning("Please select item", 3)}>
+          <Text className='text-value'>{convertDigit(value, 4)}</Text>
         </div>
       ),
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"UOM"}</Text>
       </div>
     ),
@@ -424,7 +424,7 @@ export const receiveDetailWithNoPOColumns = (
     dataIndex: "uom_no",
     ellipsis: true,
     width: "10%",
-    render: (value) => <Text className="text-value">{value ?? "-"}</Text>,
+    render: (value) => <Text className='text-value'>{value ?? "-"}</Text>,
   },
   {
     title: (
@@ -442,7 +442,7 @@ export const receiveDetailWithNoPOColumns = (
             onClick={() => {
               onOpenDetail(record);
             }}
-            className="button-icon"
+            className='button-icon'
           />
         );
       } else {
@@ -454,7 +454,7 @@ export const receiveDetailWithNoPOColumns = (
                   onClick={() => {
                     onOpenDetail(record);
                   }}
-                  className="button-icon"
+                  className='button-icon'
                 />
               )}
 
@@ -462,10 +462,9 @@ export const receiveDetailWithNoPOColumns = (
                 onConfirm={() => {
                   onDelete(record.id);
                 }}
-                title="Are you sure you want to delete this row？"
-                okText="Yes"
-                cancelText="No"
-              >
+                title='Are you sure you want to delete this row？'
+                okText='Yes'
+                cancelText='No'>
                 <DeleteOutlined style={{ color: "red" }} />
               </Popconfirm>
             </Space>
@@ -485,13 +484,13 @@ export const receiveSubDetailColumns = (
 ) => [
   {
     title: "No.",
-    render: (_, record) => <Text className="text-value">{record.id + 1}</Text>,
+    render: (_, record) => <Text className='text-value'>{record.id + 1}</Text>,
     width: "5%",
     align: "center",
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"Receive To"}</Text>
       </div>
     ),
@@ -499,11 +498,11 @@ export const receiveSubDetailColumns = (
     dataIndex: "location_no_name",
     // width: "10%",
     ellipsis: true,
-    render: (value) => <Text className="text-value">{value ?? "-"}</Text>,
+    render: (value) => <Text className='text-value'>{value ?? "-"}</Text>,
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"Lot No."}</Text>
       </div>
     ),
@@ -513,11 +512,11 @@ export const receiveSubDetailColumns = (
     ellipsis: true,
     render: (value, record) =>
       readOnly ? (
-        <Text className="text-value">{value ?? "-"}</Text>
+        <Text className='text-value'>{value ?? "-"}</Text>
       ) : (
         <Input
-          placeholder="Lot No."
-          size="small"
+          placeholder='Lot No.'
+          size='small'
           value={value}
           onChange={(e) => {
             onChange(record.id, {
@@ -529,8 +528,8 @@ export const receiveSubDetailColumns = (
   },
   {
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">{"* "}</span>}
+      <div className='text-center'>
+        {!readOnly && <span className='require'>{"* "}</span>}
         <Text strong>{"Receive Date"}</Text>
       </div>
     ),
@@ -540,14 +539,14 @@ export const receiveSubDetailColumns = (
     ellipsis: true,
     render: (value, record, key) =>
       readOnly ? (
-        <Text className="text-value">{value ?? "-"}</Text>
+        <Text className='text-value'>{value ?? "-"}</Text>
       ) : (
         <DatePicker
           format={"DD/MM/YYYY"}
-          size="small"
+          size='small'
           className={"full-width check-field"}
           name={`receive_detail_sub_receive_date-${key}`}
-          placeholder="Receive Date"
+          placeholder='Receive Date'
           value={value ? moment(value, "DD/MM/YYYY") : null}
           onChange={(data) => {
             data
@@ -563,7 +562,7 @@ export const receiveSubDetailColumns = (
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"MFG Date"}</Text>
       </div>
     ),
@@ -573,14 +572,14 @@ export const receiveSubDetailColumns = (
     ellipsis: true,
     render: (value, record) =>
       readOnly ? (
-        <Text className="text-value">{value ?? "-"}</Text>
+        <Text className='text-value'>{value ?? "-"}</Text>
       ) : (
         <DatePicker
           name={"receive_detail_sub_mfg_date"}
           format={"DD/MM/YYYY"}
-          size="small"
+          size='small'
           className={"full-width"}
-          placeholder="MFG Date"
+          placeholder='MFG Date'
           value={value ? moment(value, "DD/MM/YYYY") : null}
           onChange={(data, mfg_date) => {
             if (
@@ -622,7 +621,7 @@ export const receiveSubDetailColumns = (
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"EXP Date"}</Text>
       </div>
     ),
@@ -633,7 +632,7 @@ export const receiveSubDetailColumns = (
     render: (value, record, index) => {
       console.log("new record", record);
       if (readOnly) {
-        return <Text className="text-value">{value ?? "-"}</Text>;
+        return <Text className='text-value'>{value ?? "-"}</Text>;
       } else {
         if (record.receive_detail_sub_mfg_date != null) {
           const dateMFGinFN = moment(
@@ -648,10 +647,10 @@ export const receiveSubDetailColumns = (
           const HalfLife = record.item_shelf_life / 2;
           const calcula = record.item_shelf_life - dateDif;
           if (calcula >= HalfLife) {
-            return <Text className="text-value">{value ?? "-"}</Text>;
+            return <Text className='text-value'>{value ?? "-"}</Text>;
           } else {
             return (
-              <Text className="text-value" style={{ color: "red" }}>
+              <Text className='text-value' style={{ color: "red" }}>
                 {value}
               </Text>
             );
@@ -662,8 +661,8 @@ export const receiveSubDetailColumns = (
   },
   {
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">{"* "}</span>}
+      <div className='text-center'>
+        {!readOnly && <span className='require'>{"* "}</span>}
         <Text strong>{"Qty. Done"}</Text>
       </div>
     ),
@@ -673,14 +672,14 @@ export const receiveSubDetailColumns = (
     ellipsis: true,
     render: (value, record, key) =>
       readOnly ? (
-        <Text className="text-value">{convertDigit(value, 4)}</Text>
+        <Text className='text-value'>{convertDigit(value, 4)}</Text>
       ) : (
         <InputNumber
           {...getNumberFormat(4)}
           placeholder={"Qty Done"}
           min={0.0}
           step={0.001}
-          size="small"
+          size='small'
           className={"full-width check-field"}
           name={`receive_detail_sub_qty-${key}`}
           // className={value ? "full-width" : "full-width input-require"}
@@ -696,7 +695,7 @@ export const receiveSubDetailColumns = (
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text strong>{"UOM"}</Text>
       </div>
     ),
@@ -704,7 +703,7 @@ export const receiveSubDetailColumns = (
     dataIndex: "uom_no",
     ellipsis: true,
     width: "7%",
-    render: (value) => <Text className="text-value">{value}</Text>,
+    render: (value) => <Text className='text-value'>{value}</Text>,
   },
   {
     title: (
@@ -723,10 +722,9 @@ export const receiveSubDetailColumns = (
             onConfirm={() => {
               onDelete(record.id);
             }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
+            title='Are you sure you want to delete this row？'
+            okText='Yes'
+            cancelText='No'>
             <DeleteTwoTone />
           </Popconfirm>
         );
@@ -775,6 +773,7 @@ export const receive_fields = {
   tg_trans_close_id: null,
   commit: 1,
   receive_detail: [],
+  so_id: null,
 };
 
 export const receive_detail_fields = {

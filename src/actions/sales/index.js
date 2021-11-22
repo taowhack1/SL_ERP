@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   api_quo_list,
   api_get_select_list_customers,
@@ -26,6 +28,8 @@ import { message } from "antd";
 import { sortData } from "../../include/js/function_main";
 const apiNPRListToQN = `/sales/npr/ref/qn`;
 const apiSalesType = `/list/so_type`;
+const apiProduction_for_fg = `/sales/so/production_for_fg`;
+const apiSo_production_type = `/list/so_production_type`;
 const apiCloseSO = `/sales/so/status`;
 const UPDATE_FILTER = "UPDATE_FILTER";
 
@@ -423,6 +427,57 @@ const getSalesType = async () => {
   }
 };
 
+const getSo_production_type = async () => {
+  console.log("so_production_type");
+  try {
+    return await axios
+      .get(`${apiSo_production_type}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+const getProduction_for_fg = async () => {
+  console.log("Production_for_fg");
+  try {
+    return await axios
+      .get(`${apiProduction_for_fg}`, header_config)
+      .then((resp) => {
+        if (resp.status === 200) {
+          console.log("resp.data", resp.data);
+          return { success: true, data: resp.data, message: "Success" };
+        } else {
+          return { success: false, data: [], message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: [], message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: [], message: error };
+  }
+};
+
 const updateSOFilter = (payload) => (dispatch) => {
   try {
     dispatch({
@@ -494,6 +549,8 @@ const getCustomerAddress = (customer_id) => {
 export {
   getNPRtoQN,
   getSalesType,
+  getProduction_for_fg,
+  getSo_production_type,
   updateSOFilter,
   UPDATE_FILTER,
   getSalesOrder,

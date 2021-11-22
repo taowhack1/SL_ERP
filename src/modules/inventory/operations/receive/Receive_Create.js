@@ -40,6 +40,7 @@ import DetailLoading from "../../../../components/DetailLoading";
 import { AppContext, ReceiveContext } from "../../../../include/js/context";
 import { getAllItems } from "../../../../actions/inventory/itemActions";
 import { get_all_vendor } from "../../../../actions/purchase/vendorActions";
+import { getProduction_for_fg } from "../../../../actions/sales";
 
 const { Text } = Typography;
 
@@ -65,6 +66,11 @@ const Receive_Create = (props) => {
     receive_created: moment().format("DD/MM/YYYY"),
   };
   const [state, stateDispatch] = useReducer(reducer, initialStateHead);
+  const [listSOFG, setListSOFG] = useState({
+    listSOForFg: [],
+    listSOForFgClose: [],
+    so_id: null,
+  });
   const [loading, setLoading] = useState(false);
   const dataComments = useSelector((state) => state.log.comment_log);
   // const currentProject = useSelector((state) => state.auth.currentProject);
@@ -172,6 +178,11 @@ const Receive_Create = (props) => {
     dispatch(get_all_vendor());
     dispatch(get_po_receive_list());
     dispatch(getAllItems());
+    const getproductionForFgData = async () => {
+      const resp = await getProduction_for_fg();
+      console.log("getproductionForFgData", resp);
+      setListSOFG((prev) => ({ ...prev, listSOForFg: resp.data }));
+    };
     const getData = async () =>
       await getReceiveById(id, auth.user_name).then((res) => {
         const receiveData = {
@@ -185,6 +196,7 @@ const Receive_Create = (props) => {
         });
         setLoading(false);
       });
+    getproductionForFgData();
     id && getData();
     action === "create" && setLoading(false);
   }, []);
@@ -223,18 +235,21 @@ const Receive_Create = (props) => {
     return {
       readOnly,
       mainState: state,
+      listSOFG: listSOFG,
+      setListSOFG,
       initialStateHead,
       saveForm,
       loading,
     };
   }, [readOnly, state, initialStateHead, saveForm, loading]);
   console.log("Receive State", state);
+  console.log("listSOFG :>> ", listSOFG);
 
   return (
     <MainLayout {...config}>
       <ReceiveContext.Provider value={contextValue}>
-        <div id="form">
-          <Row className="col-2">
+        <div id='form'>
+          <Row className='col-2'>
             <Col span={8}>
               <h2>
                 <strong>
@@ -248,8 +263,8 @@ const Receive_Create = (props) => {
             <Col span={2}>
               <Text strong>Create Date :</Text>
             </Col>
-            <Col span={2} className="text-right">
-              <Text className="text-view">{state.receive_created}</Text>
+            <Col span={2} className='text-right'>
+              <Text className='text-view'>{state.receive_created}</Text>
             </Col>
           </Row>
 

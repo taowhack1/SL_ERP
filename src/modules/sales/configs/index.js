@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   getRefStatus,
   getSelfStepStatus,
@@ -229,6 +231,8 @@ export const so_fields = {
   tg_flow_max_node_id: null,
   so_type_id: null,
   qn_tg_trans_close_id: 1,
+  so_production_type_id: null,
+  so_production_ref_id: null,
 };
 export const so_detail_fields = {
   id: 0,
@@ -264,7 +268,16 @@ export const so_require_fields = [
   "customer_id",
   "so_type_id",
 ];
-
+export const so_require_fields_type_production = [
+  "so_order_date",
+  "so_description",
+  // "so_agreement",
+  "qn_id",
+  "payment_term_id",
+  "customer_id",
+  "so_type_id",
+  "so_production_type_id",
+];
 export const so_require_fields_detail = [
   "item_id",
   "uom_id",

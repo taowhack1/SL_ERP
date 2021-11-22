@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import { Row, Col, Input, Tabs } from "antd";
 import Detail from "./Receive_Detail";
@@ -24,21 +26,20 @@ const ReceiveTabs = ({ mainState, readOnly, remarkFields, saveForm }) => {
     );
   return (
     <>
-      <Row className="col-2 row-tab-margin-l">
+      <Row className='col-2 row-tab-margin-l'>
         <Col span={24}>
           <Tabs defaultActiveKey={"1"}>
             <Tabs.TabPane
               tab={
                 <span>
-                  {!readOnly && <span className="require">* </span>}
+                  {!readOnly && <span className='require'>* </span>}
                   {"Receive Detail"}
                 </span>
               }
-              key={"1"}
-            >
+              key={"1"}>
               {getTableDetail(mainState.po_id)}
             </Tabs.TabPane>
-            <Tabs.TabPane tab="Notes" key={"2"}>
+            <Tabs.TabPane tab='Notes' key={"2"}>
               <CustomRemark
                 fields={remarkFields}
                 saveForm={saveForm}

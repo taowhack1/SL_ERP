@@ -1,6 +1,8 @@
+/** @format */
+
 import React, { useCallback, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table, Space, Radio, Button, Popconfirm } from "antd";
+import { Row, Col, Table, Space, Radio, Button, Popconfirm, Tag } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +28,7 @@ import {
 } from "../../include/js/function_main";
 import CustomTable from "../../components/CustomTable";
 import { EllipsisOutlined } from "@ant-design/icons";
+import CustomSelect from "../../components/CustomSelect";
 
 const so_columns = ({ onOpen }) => [
   {
@@ -130,12 +133,142 @@ const so_columns = ({ onOpen }) => [
       return (
         <div
           id={`open-dr-${index}`}
-          className="cursor"
-          onClick={() => onOpen()}
-        >
+          className='cursor'
+          onClick={() => onOpen()}>
           {getStatusByName(record.trans_status_name)}
         </div>
       );
+    },
+  },
+];
+const so_columns_Production = ({ onOpen }) => [
+  {
+    title: "SO No.",
+    dataIndex: "so_no",
+    key: "so_no",
+    width: "8%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.so_id - b.so_id,
+      multiple: 3,
+    },
+    render: (value) => value || "-",
+  },
+  {
+    title: "Quotation Ref.",
+    dataIndex: "qn_no",
+    key: "qn_no",
+    width: "10%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.qn_id - b.qn_id,
+      multiple: 3,
+    },
+    render: (value) => value || "-",
+  },
+  {
+    title: "PO No.",
+    dataIndex: "so_customer_po_no",
+    key: "so_customer_po_no",
+    width: "10%",
+    align: "center",
+    render: (value) => value || "-",
+  },
+  {
+    title: "Order Date",
+    dataIndex: "so_order_date",
+    key: "so_order_date",
+    width: "8%",
+    align: "center",
+    render: (value) => value || "-",
+  },
+  {
+    title: "Delivery Date",
+    dataIndex: "tg_so_delivery_date",
+    key: "tg_so_delivery_date",
+    width: "8%",
+    align: "center",
+    render: (value) => value || "-",
+  },
+  {
+    title: "Customer",
+    dataIndex: "customer_no_name",
+    key: "customer_no_name",
+    // width: "18%",
+    align: "left",
+    ellipsis: true,
+    render: (value) => value || "-",
+  },
+  // {
+  //   title: "Description",
+  //   dataIndex: "so_description",
+  //   key: "so_description",
+  //   width: "15%",
+  //   align: "left",
+  //   ellipsis: true,
+  //   render: (value) => value || "-",
+  // },
+  {
+    title: "Salesperson",
+    dataIndex: "so_created_by_no_name",
+    key: "so_created_by_no_name",
+    width: "15%",
+    align: "left",
+    ellipsis: true,
+    render: (value) => value || "-",
+  },
+  {
+    title: "Total Value",
+    dataIndex: "tg_so_total_amount",
+    key: "tg_so_total_amount",
+    width: "10%",
+    align: "right",
+    sorter: {
+      compare: (a, b) => a.tg_so_total_amount - b.tg_so_total_amount,
+      multiple: 3,
+    },
+    render: (value) => convertDigit(value, 2),
+  },
+  {
+    title: "Status",
+    dataIndex: "trans_status_name",
+    key: "trans_status_name",
+    width: "8%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
+      multiple: 3,
+    },
+    ellipsis: true,
+    render: (value, record, index) => {
+      return (
+        <div
+          id={`open-dr-${index}`}
+          className='cursor'
+          onClick={() => onOpen()}>
+          {getStatusByName(record.trans_status_name)}
+        </div>
+      );
+    },
+  },
+  {
+    title: "Production Status",
+    dataIndex: "so_production_status_name",
+    key: "so_production_status_name",
+    width: "8%",
+    align: "center",
+    sorter: {
+      compare: (a, b) =>
+        a.so_production_status_name - b.so_production_status_name,
+      multiple: 3,
+    },
+    ellipsis: true,
+    render: (value, record, index) => {
+      return (
+        <Tag color='default' className='w-100'>
+          {record.so_production_status_name}
+        </Tag>
+      ); //<div>{record.so_production_status_name}</div>;
     },
   },
 ];
@@ -201,45 +334,119 @@ const SaleOrder = (props) => {
       dispatch(updateSOFilter({ keyword: value }));
     },
     searchBar: (
-      <Space size={18}>
-        <div>
-          <Text strong>Sales Type :</Text>
-        </div>
-        <Radio.Group
-          options={[
-            {
-              label: "Production",
-              value: 1,
-            },
-            {
-              label: "Others",
-              value: 2,
-            },
-            {
-              label: "All",
-              value: 3,
-            },
-          ]}
-          onChange={(e) =>
-            dispatch(updateSOFilter({ salesType: e.target.value }))
-          }
-          optionType="button"
-          buttonStyle="solid"
-          value={filter.salesType}
-          defaultValue={filter.salesType}
-        />
-      </Space>
+      <>
+        <Space size={18} style={{ marginRight: 15 }}>
+          <div>
+            <Text strong>Sales Type :</Text>
+          </div>
+          <CustomSelect
+            name={"so_id"}
+            placeholder='SO Ref'
+            data={[
+              {
+                label: "ทั้งหมด",
+                value: 3,
+              },
+              {
+                label: "ผลิต",
+                value: 1,
+              },
+              {
+                label: "อื่นๆ",
+                value: 2,
+              },
+            ]}
+            field_id='value'
+            field_name='label'
+            style={{ width: 200 }}
+            onChange={(val, option) =>
+              val === 2
+                ? dispatch(
+                    updateSOFilter({ salesType: val, soProductionType: 0 })
+                  )
+                : dispatch(updateSOFilter({ salesType: val }))
+            }
+            value={filter.salesType}
+            defaultValue={filter.salesType}
+          />
+        </Space>
+        <Space size={18}>
+          <div>
+            <Text strong>Production Type :</Text>
+          </div>
+          <CustomSelect
+            disabled={filter.salesType !== 2 ? false : true}
+            name={"so_id"}
+            placeholder='SO Ref'
+            data={[
+              {
+                label: "ทั้งหมด",
+                value: 0,
+              },
+              {
+                label: "ผลิตเพื่อขาย",
+                value: 1,
+              },
+              {
+                label: "ผลิตเพื่อเก็บ",
+                value: 2,
+              },
+              {
+                label: "ผลิตเพื่อรอ FG",
+                value: 3,
+              },
+            ]}
+            field_id='value'
+            field_name='label'
+            style={{ width: 200 }}
+            onChange={(val, option) =>
+              dispatch(updateSOFilter({ soProductionType: val }))
+            }
+            value={filter.soProductionType}
+            defaultValue={filter.soProductionType}
+          />
+        </Space>
+      </>
     ),
   };
 
   useEffect(() => {
     // SEARCH , FILTER
+    //filter.soProductionType === 3;
+    // ? keepData.so
+    // : keepData.so?.filter(
+    //     (obj) => obj.so_production_type_id === filter.soProductionType
+    //   );
     const filterData = () => {
+      console.log("filter FN");
       setLoading(true);
       let filterData =
         filter.salesType === 3
-          ? keepData.so
-          : keepData.so?.filter((obj) => obj.so_type_id === filter.salesType);
+          ? filter.soProductionType == 0
+            ? keepData.so?.filter(
+                (obj) => obj
+                //obj.so_production_type_id //filter.soProductionType
+              )
+            : keepData.so?.filter(
+                (obj) => obj.so_production_type_id === filter.soProductionType
+                //obj.so_production_type_id //filter.soProductionType
+              )
+          : filter.soProductionType == 0
+          ? keepData.so?.filter(
+              (obj) => obj.so_type_id === filter.salesType
+              //obj.so_production_type_id //filter.soProductionType
+            )
+          : keepData.so?.filter(
+              (obj) =>
+                obj.so_type_id === filter.salesType &&
+                obj.so_production_type_id === filter.soProductionType
+              //obj.so_production_type_id //filter.soProductionType
+            );
+      // keepData.so?.filter(
+      //     (obj) =>
+      //       obj.so_type_id === filter.salesType &&
+      //       obj.so_production_type_id === filter.soProductionType
+      //   );
       filterData = !filter.keyword
         ? filterData
         : filterData?.filter(
@@ -306,7 +513,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Item</Text>
           </div>
         ),
@@ -317,7 +524,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Qty.</Text>
           </div>
         ),
@@ -329,7 +536,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>UOM</Text>
           </div>
         ),
@@ -341,7 +548,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Unit Price</Text>
           </div>
         ),
@@ -353,7 +560,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Total Price</Text>
           </div>
         ),
@@ -365,7 +572,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>ยอดค้างส่ง</Text>
           </div>
         ),
@@ -377,7 +584,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Delivery Date</Text>
           </div>
         ),
@@ -385,11 +592,21 @@ const SaleOrder = (props) => {
         align: "center",
         width: "10%",
         className: "tb-col-sm",
-        render: (val, row) => val,
+        render: (val, row) => {
+          return record?.so_production_type_id == 3 ? (
+            <>
+              <Text>-</Text>
+            </>
+          ) : row?.button_create_dr ? (
+            <Text>{val}</Text>
+          ) : (
+            ""
+          );
+        },
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>Delivery Status</Text>
           </div>
         ),
@@ -397,11 +614,21 @@ const SaleOrder = (props) => {
         align: "center",
         width: "15%",
         className: "tb-col-sm",
-        render: (val, row) => val,
+        render: (val, row) => {
+          return record?.so_production_type_id == 3 ? (
+            <>
+              <Text>-</Text>
+            </>
+          ) : row?.button_create_dr ? (
+            <Text>{val}</Text>
+          ) : (
+            ""
+          );
+        },
       },
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <EllipsisOutlined />
           </div>
         ),
@@ -409,20 +636,24 @@ const SaleOrder = (props) => {
         align: "center",
         width: "8%",
         className: "tb-col-sm",
-        render: (val, row) =>
-          row?.button_create_dr ? (
+        render: (val, row) => {
+          return record?.so_production_type_id == 3 ? (
+            <>
+              <Text>-</Text>
+            </>
+          ) : row?.button_create_dr ? (
             <Popconfirm
-              title="Do you want do create Delivery Request ?."
+              title='Do you want do create Delivery Request ?.'
               onConfirm={() => openDR(val)}
-              className="cursor"
-            >
-              <Button size="small" className="primary">
+              className='cursor'>
+              <Button size='small' className='primary'>
                 Open DR
               </Button>
             </Popconfirm>
           ) : (
             ""
-          ),
+          );
+        },
       },
     ];
     return (
@@ -433,11 +664,12 @@ const SaleOrder = (props) => {
           bordered
           rowKey={"so_detail_id"}
           pagination={false}
-          rowClassName="row-table-detail"
+          rowClassName='row-table-detail'
         />
       </>
     );
   };
+  console.log("state :>> ", state);
   return (
     <div>
       <MainLayout {...config}>
@@ -445,12 +677,16 @@ const SaleOrder = (props) => {
           <Col span={24}>
             <Table
               loading={loading}
-              columns={so_columns({ onOpen })}
+              columns={
+                filter.soProductionType === 3
+                  ? so_columns_Production({ onOpen })
+                  : so_columns({ onOpen })
+              }
               dataSource={state}
               rowKey={"so_id"}
-              size="small"
+              size='small'
               bordered
-              rowClassName="row-pointer"
+              rowClassName='row-pointer'
               expandable={{ expandedRowRender }}
               onRow={(record, rowIndex) => {
                 return {

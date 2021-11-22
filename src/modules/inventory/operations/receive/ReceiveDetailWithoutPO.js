@@ -16,11 +16,28 @@ import { get_location_shelf_by_item_id } from "../../../../actions/inventory";
 import CustomTable from "../../../../components/CustomTable";
 import ReceiveSubDetail from "./ReceiveSubDetail";
 import { ReceiveContext } from "../../../../include/js/context";
+import { Button } from "antd/lib/radio";
+import { Modal, Popconfirm } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
+import Text from "antd/lib/typography/Text";
+import CustomSelect from "../../../../components/CustomSelect";
 const initialStateDetail = receive_detail_fields;
+const list_temp = [
+  {
+    item_id: 2781,
+  },
+  {
+    item_id: 2782,
+  },
+];
+// item test C311SRNA000100
+// SO get Check bulk use api ----->getProduction_for_fg
 const ReceiveDetailWithoutPO = () => {
   const {
     readOnly,
     mainState,
+    listSOFG,
+    setListSOFG,
     initialStateHead,
     saveForm,
     loading,
@@ -40,6 +57,10 @@ const ReceiveDetailWithoutPO = () => {
     setState(sortData([...state, initialStateDetail]));
   };
   const delLine = (id) => {
+    mainState?.so_id !== null &&
+      saveForm({ ...mainState, so_id: null, so_no: null }) &&
+      setListSOFG((prev) => ({ ...prev, so_id: null }));
+    console.log("ก่อนลบ state.length :>> ", state.length);
     setState(sortData(state.filter((obj) => obj.id !== id)));
   };
 
@@ -87,19 +108,47 @@ const ReceiveDetailWithoutPO = () => {
       )
     );
   };
-
+  const check_soFG = (data) => {
+    const filter = listSOFG?.listSOForFg?.filter(
+      (obj) => obj.item_id === data.item_id
+    );
+    filter.length > 0 ? setVisible(true) : setVisible(false);
+    console.log("data_onFn :>> ", filter);
+  };
   const modalCancel = () => {
     console.log("modal Cancel");
     setSelectData({ ...selectData, visible: false });
   };
   const onChangeValue = (id, data) => {
+    data.so_id == null &&
+      saveForm({ ...mainState, so_id: null, so_no: null }) &&
+      setListSOFG((prev) => ({ ...prev, so_id: null }));
+
+    console.log("check type item :>> ", data);
     setState(state.map((obj) => (obj.id === id ? { ...obj, ...data } : obj)));
+    data.type_id == 3 && check_soFG(data);
   };
   const onOpenDetail = (record) => {
     setSelectData({ ...record, visible: true });
   };
-  console.log("receive_detail", state);
-  console.log("mainState", mainState);
+  const update_soFGCloes = (data, option) => {
+    setListSOFG((prev) => ({ ...prev, so_id: data }));
+    saveForm({ ...mainState, so_id: data, so_no: option.data.so_no });
+  };
+  const [visible, setVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const handleOk = () => {
+    setVisible(false);
+  };
+
+  const handleCancel = () => {
+    saveForm({ ...mainState, so_id: null, so_no: null }) &&
+      setListSOFG((prev) => ({ ...prev, so_id: null }));
+    console.log("Clicked cancel button");
+    setVisible(false);
+  };
+  console.log("receive_detail", state.length);
   return (
     <>
       {/* Column Header */}
@@ -111,7 +160,7 @@ const ReceiveDetailWithoutPO = () => {
           delLine,
           onOpenDetail
         )}
-        onAdd={!readOnly && addLine}
+        onAdd={!readOnly && mainState.so_id ? readOnly : !readOnly && addLine}
         dataSource={state}
         rowKey={"id"}
         rowClassName={"row-table-detail"}
@@ -123,6 +172,72 @@ const ReceiveDetailWithoutPO = () => {
         readOnly={readOnly}
         qtyRef={false}
       />
+
+      <Modal
+        title='Alert'
+        visible={visible}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        footer={[
+          <Popconfirm
+            key='discard'
+            icon={<QuestionCircleOutlined style={{ color: "red" }} />}
+            onConfirm={() => {
+              handleCancel();
+            }}
+            title={
+              <Text strong>
+                {"Are you sure to "}
+                <span className='require'>NO</span>
+                {" ?"}
+              </Text>
+            }
+            okText='Yes'
+            cancelText='No'>
+            <Button key='back' style={{ color: "red", marginRight: 10 }}>
+              NO
+            </Button>
+          </Popconfirm>,
+          <Popconfirm
+            key='confirm'
+            onConfirm={() => {
+              handleOk();
+            }}
+            icon={<QuestionCircleOutlined style={{ color: "green" }} />}
+            title={
+              <Text strong>
+                {"Are you sure to "}
+                <span style={{ color: "green" }}>Confirm</span>
+                {" ?"}
+              </Text>
+            }
+            okText='Yes'
+            cancelText='No'>
+            <Button
+              key='submit'
+              style={{
+                color: "#ffffff",
+                marginRight: 10,
+                backgroundColor: "#5d6384",
+              }}>
+              Confirm
+            </Button>
+          </Popconfirm>,
+        ]}>
+        <p>
+          {"ไอเทมนี้มีการเปิดผลิตเพื่อรอ FG ต้องการอ้างอิงเลขที่ SO หรือไม่"}
+        </p>
+        <CustomSelect
+          name={"so_id"}
+          placeholder='SO Ref'
+          data={listSOFG?.listSOForFg}
+          field_id='so_id'
+          field_name='so_description'
+          onChange={(val, option) => update_soFGCloes(val, option)}
+          value={listSOFG?.so_id}
+        />
+      </Modal>
     </>
   );
 };
