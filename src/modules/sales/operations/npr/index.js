@@ -126,13 +126,13 @@ const NPRList = () => {
                 break;
             }
           }}
-          optionType='button'
-          buttonStyle='solid'
+          optionType="button"
+          buttonStyle="solid"
           defaultValue={0}
         />
       </Space>
     ),
-    configColumn: <ConfigColumn {...modalConfig} />,
+    // configColumn: <ConfigColumn {...modalConfig} />,
   };
 
   console.log("List", state);
