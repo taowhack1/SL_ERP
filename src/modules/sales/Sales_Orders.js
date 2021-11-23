@@ -133,8 +133,9 @@ const so_columns = ({ onOpen }) => [
       return (
         <div
           id={`open-dr-${index}`}
-          className='cursor'
-          onClick={() => onOpen()}>
+          className="cursor"
+          onClick={() => onOpen()}
+        >
           {getStatusByName(record.trans_status_name)}
         </div>
       );
@@ -244,8 +245,9 @@ const so_columns_Production = ({ onOpen }) => [
       return (
         <div
           id={`open-dr-${index}`}
-          className='cursor'
-          onClick={() => onOpen()}>
+          className="cursor"
+          onClick={() => onOpen()}
+        >
           {getStatusByName(record.trans_status_name)}
         </div>
       );
@@ -265,7 +267,7 @@ const so_columns_Production = ({ onOpen }) => [
     ellipsis: true,
     render: (value, record, index) => {
       return (
-        <Tag color='default' className='w-100'>
+        <Tag color="default" className="w-100">
           {record.so_production_status_name}
         </Tag>
       ); //<div>{record.so_production_status_name}</div>;
@@ -341,7 +343,7 @@ const SaleOrder = (props) => {
           </div>
           <CustomSelect
             name={"so_id"}
-            placeholder='SO Ref'
+            placeholder="SO Ref"
             data={[
               {
                 label: "ทั้งหมด",
@@ -356,8 +358,8 @@ const SaleOrder = (props) => {
                 value: 2,
               },
             ]}
-            field_id='value'
-            field_name='label'
+            field_id="value"
+            field_name="label"
             style={{ width: 200 }}
             onChange={(val, option) =>
               val === 2
@@ -377,7 +379,7 @@ const SaleOrder = (props) => {
           <CustomSelect
             disabled={filter.salesType !== 2 ? false : true}
             name={"so_id"}
-            placeholder='SO Ref'
+            placeholder="SO Ref"
             data={[
               {
                 label: "ทั้งหมด",
@@ -396,8 +398,8 @@ const SaleOrder = (props) => {
                 value: 3,
               },
             ]}
-            field_id='value'
-            field_name='label'
+            field_id="value"
+            field_name="label"
             style={{ width: 200 }}
             onChange={(val, option) =>
               dispatch(updateSOFilter({ soProductionType: val }))
@@ -513,7 +515,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <Text>Item</Text>
           </div>
         ),
@@ -524,7 +526,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <Text>Qty.</Text>
           </div>
         ),
@@ -536,7 +538,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <Text>UOM</Text>
           </div>
         ),
@@ -548,7 +550,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <Text>Unit Price</Text>
           </div>
         ),
@@ -560,7 +562,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <Text>Total Price</Text>
           </div>
         ),
@@ -572,7 +574,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <Text>ยอดค้างส่ง</Text>
           </div>
         ),
@@ -584,7 +586,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <Text>Delivery Date</Text>
           </div>
         ),
@@ -606,7 +608,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <Text>Delivery Status</Text>
           </div>
         ),
@@ -628,7 +630,7 @@ const SaleOrder = (props) => {
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <EllipsisOutlined />
           </div>
         ),
@@ -643,10 +645,11 @@ const SaleOrder = (props) => {
             </>
           ) : row?.button_create_dr ? (
             <Popconfirm
-              title='Do you want do create Delivery Request ?.'
+              title="Do you want do create Delivery Request ?."
               onConfirm={() => openDR(val)}
-              className='cursor'>
-              <Button size='small' className='primary'>
+              className="cursor"
+            >
+              <Button size="small" className="primary">
                 Open DR
               </Button>
             </Popconfirm>
@@ -664,7 +667,7 @@ const SaleOrder = (props) => {
           bordered
           rowKey={"so_detail_id"}
           pagination={false}
-          rowClassName='row-table-detail'
+          rowClassName="row-table-detail"
         />
       </>
     );
@@ -684,9 +687,9 @@ const SaleOrder = (props) => {
               }
               dataSource={state}
               rowKey={"so_id"}
-              size='small'
+              size="small"
               bordered
-              rowClassName='row-pointer'
+              rowClassName="row-pointer"
               expandable={{ expandedRowRender }}
               onRow={(record, rowIndex) => {
                 return {

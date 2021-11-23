@@ -90,6 +90,13 @@ const MainHead = (props) => {
                     <DatabaseOutlined /> Development
                   </Text>
                 </>
+              ) : process.env.REACT_APP_API_SERVER ===
+                process.env.REACT_APP_API_LOCALHOST ? (
+                <>
+                  <Text className="server-status status-localhost" strong>
+                    <DatabaseOutlined /> Localhost
+                  </Text>
+                </>
               ) : (
                 <>
                   <Text className="server-status status-production" strong>

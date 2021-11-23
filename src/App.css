@@ -592,6 +592,11 @@ span.status-production {
   /* background-color: #00ed10 !important; */
   background-color: #2ecc71 !important;
 }
+span.ant-typography .server-status .status-localhost,
+span.status-localhost {
+  /* background-color: #00ed10 !important; */
+  background-color: #cc432e !important;
+}
 span.status {
   height: 18px;
   width: 18px;

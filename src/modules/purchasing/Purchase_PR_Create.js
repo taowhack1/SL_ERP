@@ -274,10 +274,13 @@ const PurchaseRequisitionCreate = (props) => {
               field_id="type_id"
               field_name="type_name"
               value={data_head.type_name}
-              data={item_type.filter(
-                (type) =>
-                  type.type_id !== 3 && type.type_id !== 4 && type.type_id !== 5
-              )}
+              data={
+                item_type
+                //   .filter(
+                //   (type) =>
+                //     type.type_id !== 3 && type.type_id !== 4 && type.type_id !== 5
+                // )
+              }
               onChange={(data, option) => {
                 data !== undefined
                   ? upDateFormValue({
