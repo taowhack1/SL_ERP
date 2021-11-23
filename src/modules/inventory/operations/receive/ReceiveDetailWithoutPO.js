@@ -126,7 +126,7 @@ const ReceiveDetailWithoutPO = () => {
 
     console.log("check type item :>> ", data);
     setState(state.map((obj) => (obj.id === id ? { ...obj, ...data } : obj)));
-    data.type_id == 3 && check_soFG(data);
+    // data.type_id == 3 && check_soFG(data);
   };
   const onOpenDetail = (record) => {
     setSelectData({ ...record, visible: true });

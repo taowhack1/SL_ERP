@@ -372,42 +372,6 @@ const SaleOrder = (props) => {
             defaultValue={filter.salesType}
           />
         </Space>
-        <Space size={18}>
-          <div>
-            <Text strong>Production Type :</Text>
-          </div>
-          <CustomSelect
-            disabled={filter.salesType !== 2 ? false : true}
-            name={"so_id"}
-            placeholder="SO Ref"
-            data={[
-              {
-                label: "ทั้งหมด",
-                value: 0,
-              },
-              {
-                label: "ผลิตเพื่อขาย",
-                value: 1,
-              },
-              {
-                label: "ผลิตเพื่อเก็บ",
-                value: 2,
-              },
-              {
-                label: "ผลิตเพื่อรอ FG",
-                value: 3,
-              },
-            ]}
-            field_id="value"
-            field_name="label"
-            style={{ width: 200 }}
-            onChange={(val, option) =>
-              dispatch(updateSOFilter({ soProductionType: val }))
-            }
-            value={filter.soProductionType}
-            defaultValue={filter.soProductionType}
-          />
-        </Space>
       </>
     ),
   };
@@ -681,9 +645,10 @@ const SaleOrder = (props) => {
             <Table
               loading={loading}
               columns={
-                filter.soProductionType === 3
-                  ? so_columns_Production({ onOpen })
-                  : so_columns({ onOpen })
+                // filter.soProductionType === 3
+                //   ? so_columns_Production({ onOpen })
+                //   :
+                so_columns({ onOpen })
               }
               dataSource={state}
               rowKey={"so_id"}
