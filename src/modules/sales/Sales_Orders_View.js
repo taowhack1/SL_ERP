@@ -87,7 +87,9 @@ const SaleOrderView = (props) => {
     ],
     search: false,
     buttonAction: [
-      data_head && data_head.button_edit && "Edit",
+      data_head &&
+        (data_head.button_edit || auth.department_id === 1) &&
+        "Edit",
       data_head && data_head.button_confirm && "Confirm",
       data_head && data_head.button_approve && "Approve",
       data_head && data_head.button_reject && "Reject",
@@ -97,7 +99,7 @@ const SaleOrderView = (props) => {
       {
         name: (
           <Text>
-            <PrinterTwoTone className='mr-1' /> Print
+            <PrinterTwoTone className="mr-1" /> Print
           </Text>
         ),
         link: `${process.env.REACT_APP_REPORT_SERVER}/report_so.aspx?so_no=${
@@ -108,7 +110,7 @@ const SaleOrderView = (props) => {
         data_head.button_recall && {
           name: (
             <Text>
-              <EditTwoTone className='mr-1' /> ขอแก้ไขข้อมูล
+              <EditTwoTone className="mr-1" /> ขอแก้ไขข้อมูล
             </Text>
           ),
           link: `#`,
@@ -153,8 +155,8 @@ const SaleOrderView = (props) => {
       data_head &&
         data_head.button_cancel && {
           name: (
-            <div className='text-center'>
-              <Text className='error'>Cancel</Text>
+            <div className="text-center">
+              <Text className="error">Cancel</Text>
             </div>
           ),
           cancel: true,
@@ -230,20 +232,20 @@ const SaleOrderView = (props) => {
   };
   return (
     <MainLayout {...config}>
-      <div id='form'>
+      <div id="form">
         {/* Head */}
-        <Row className='col-2'>
+        <Row className="col-2">
           <Col span={8}>
             <h2>
               <strong>
                 Sales Order {data_head.so_no ? "#" + data_head.so_no : null}
                 {data_head.tg_trans_status_id === 3 && (
-                  <Text strong type='danger'>
+                  <Text strong type="danger">
                     #{data_head.trans_status_name}
                   </Text>
                 )}
                 {data_head?.tg_trans_close_id === 3 && (
-                  <Text strong className='complete'>
+                  <Text strong className="complete">
                     {`#Complete`}
                   </Text>
                 )}
@@ -255,31 +257,31 @@ const SaleOrderView = (props) => {
             <Text strong>Create Date :</Text>
           </Col>
           <Col span={2} style={{ textAlign: "right" }}>
-            <Text className='text-view'>{data_head.so_created}</Text>
+            <Text className="text-view">{data_head.so_created}</Text>
           </Col>
         </Row>
 
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>Delivery Date :</Text>
           </Col>
           <Col span={8}>
-            <Text className='text-view'>{data_head.tg_so_delivery_date}</Text>
+            <Text className="text-view">{data_head.tg_so_delivery_date}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Order Date :</Text>
           </Col>
           <Col span={8}>
-            <Text className='text-view'> {data_head.so_order_date}</Text>
+            <Text className="text-view"> {data_head.so_order_date}</Text>
           </Col>
         </Row>
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>Quotations Ref. :</Text>
           </Col>
           <Col span={8}>
-            <Text className='text-view'>{data_head.qn_no_description}</Text>
+            <Text className="text-view">{data_head.qn_no_description}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -287,10 +289,10 @@ const SaleOrderView = (props) => {
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>{data_head.customer_no_name}</Text>
+            <Text className="text-view">{data_head.customer_no_name}</Text>
           </Col>
         </Row>
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           {/* close qn */}
           <Col span={3}></Col>
 
@@ -300,23 +302,23 @@ const SaleOrderView = (props) => {
             ) : (
               <BorderOutlined />
             )}
-            <Text className='ml-3'>{"Close Quotations."}</Text>
+            <Text className="ml-3">{"Close Quotations."}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Payment Terms :</Text>
           </Col>
           <Col span={8}>
-            <Text className='text-view'>{data_head.payment_term_no_name}</Text>
+            <Text className="text-view">{data_head.payment_term_no_name}</Text>
           </Col>
         </Row>
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>Sales Type :</Text>
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>{data_head.so_type_name}</Text>
+            <Text className="text-view">{data_head.so_type_name}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -324,16 +326,16 @@ const SaleOrderView = (props) => {
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>{data_head.vat_name}</Text>
+            <Text className="text-view">{data_head.vat_name}</Text>
           </Col>
         </Row>
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>Select :</Text>
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>
+            <Text className="text-view">
               {data_head.so_production_type_description || "-"}
             </Text>
           </Col>
@@ -343,16 +345,16 @@ const SaleOrderView = (props) => {
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>{data_head.so_description}</Text>
+            <Text className="text-view">{data_head.so_description}</Text>
           </Col>
         </Row>
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>SO Ref. :</Text>
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>
+            <Text className="text-view">
               {data_head.so_production_ref_id || "-"}
             </Text>
           </Col>
@@ -362,17 +364,17 @@ const SaleOrderView = (props) => {
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>{data_head.so_customer_po_no}</Text>
+            <Text className="text-view">{data_head.so_customer_po_no}</Text>
           </Col>
         </Row>
-        <Row className='col-2 row-tab-margin-l'>
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
-            <Tabs defaultActiveKey='1' onChange={callback}>
-              <Tabs.TabPane tab='Request Detail' key='1'>
+            <Tabs defaultActiveKey="1" onChange={callback}>
+              <Tabs.TabPane tab="Request Detail" key="1">
                 <Detail readOnly={true} data_detail={data_detail} />
               </Tabs.TabPane>
-              <Tabs.TabPane tab='Notes' key='2'>
-                <Text className='text-view'>{data_head.so_remark}</Text>
+              <Tabs.TabPane tab="Notes" key="2">
+                <Text className="text-view">{data_head.so_remark}</Text>
               </Tabs.TabPane>
             </Tabs>
           </Col>
