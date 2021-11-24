@@ -81,7 +81,9 @@ const SalesQNView = (props) => {
     search: false,
     buttonAction: [
       // "Edit",
-      data_head && data_head.button_edit && "Edit",
+      data_head &&
+        (data_head.button_edit || auth.department_id === 1) &&
+        "Edit",
       data_head && data_head.button_confirm && "Confirm",
       data_head && data_head.button_approve && "Approve",
       data_head && data_head.button_reject && "Reject",
