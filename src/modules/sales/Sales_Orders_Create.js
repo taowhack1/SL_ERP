@@ -314,35 +314,24 @@ const SaleOrderCreate = (props) => {
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
-              <span className="require">* </span>Sales Type :
+              <span className="require">* </span>Description :
             </Text>
           </Col>
 
           <Col span={8}>
-            <CustomSelect
-              name={"so_type_id"}
-              placeholder="สั่งผลิต / ขายอื่นๆ"
-              data={selectData.salesType}
-              field_id="so_type_id"
-              field_name="so_type_name"
-              onChange={(val) =>
-                val === 1
-                  ? headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: { so_type_id: val },
-                    })
-                  : headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: {
-                        so_type_id: val,
-                        so_production_ref_id: null,
-                        so_production_type_id: null,
-                      },
-                    })
+            <Input
+              name="so_description"
+              onChange={(e) =>
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: { so_description: e.target.value },
+                })
               }
-              value={data_head.so_type_id}
+              value={data_head.so_description}
+              placeholder="Description"
             />
           </Col>
+
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>
@@ -380,43 +369,37 @@ const SaleOrderCreate = (props) => {
         <Row className="col-2 row-margin-vertical">
           {/* Close QN */}
           <Col span={3}>
-            <CustomLabel
-              label={"Production type :"}
-              require={data_head.so_type_id == 1 ? true : false}
-            />
+            <Text strong>
+              <span className="require">* </span>Sales Type :
+            </Text>
           </Col>
 
           <Col span={8}>
             <CustomSelect
-              name={"so_production_type_id"}
-              placeholder="ผลิตรอ FG / ผลิตเก็บ"
-              disabled={data_head.so_type_id === 1 ? false : true}
-              data={selectData.soProductionType}
-              field_id="so_production_type_id"
-              field_name="so_production_type_description"
-              onChange={(val) => {
-                if (val === 1) {
-                  headDispatch({
-                    type: "CHANGE_HEAD_VALUE",
-                    payload: { so_production_type_id: val },
-                  });
-                } else {
-                  headDispatch({
-                    type: "CHANGE_HEAD_VALUE",
-                    payload: {
-                      so_production_ref_id: null,
-                      so_production_type_id: val,
-                    },
-                  });
-                  detailDispatch({
-                    type: "RESET_DATA",
-                    payload: initialStateDetail,
-                  });
-                }
-              }}
-              value={data_head.so_production_type_id}
+              name={"so_type_id"}
+              placeholder="สั่งผลิต / ขายอื่นๆ"
+              data={selectData.salesType}
+              field_id="so_type_id"
+              field_name="so_type_name"
+              onChange={(val) =>
+                val === 1
+                  ? headDispatch({
+                      type: "CHANGE_HEAD_VALUE",
+                      payload: { so_type_id: val },
+                    })
+                  : headDispatch({
+                      type: "CHANGE_HEAD_VALUE",
+                      payload: {
+                        so_type_id: val,
+                        so_production_ref_id: null,
+                        so_production_type_id: null,
+                      },
+                    })
+              }
+              value={data_head.so_type_id}
             />
           </Col>
+
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>
@@ -471,56 +454,43 @@ const SaleOrderCreate = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          {/* <Col span={3}>
-            <CustomLabel
-              label={" SO Ref. :"}
-              require={data_head.so_production_type_id == 1 ? true : false}
-            />
-          </Col>
-
-          <Col span={8}>
-            <CustomSelect
-              disabled={data_head.so_production_type_id === 1 ? false : true}
-              name={"so_production_ref_id"}
-              placeholder="SO Ref"
-              data={selectData.productionForFg}
-              field_id="so_id"
-              field_name="so_description"
-              onChange={(val) =>
-                headDispatch({
-                  type: "CHANGE_HEAD_VALUE",
-                  payload: { so_production_ref_id: val },
-                })
-              }
-              value={data_head.so_production_ref_id}
-            />
-          </Col> */}
+          {/* PD Type */}
           <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Vat
-            </Text>
+            <CustomLabel
+              label={"Production type :"}
+              require={data_head.so_type_id == 1 ? true : false}
+            />
           </Col>
 
           <Col span={8}>
             <CustomSelect
-              placeholder="Select Vat Type"
-              data={vatList || []}
-              field_id="vat_id"
-              field_name="vat_name"
-              showSearch
-              onChange={(val, option) => {
-                console.log("option", option);
-                headDispatch({
-                  type: "CHANGE_HEAD_VALUE",
-                  payload: {
-                    vat_id: option.data.vat_id,
-                    vat_rate: option.data.vat_rate,
-                    vat_include: option.data.vat_include,
-                  },
-                });
+              name={"so_production_type_id"}
+              placeholder="ผลิตรอ FG / ผลิตเก็บ"
+              disabled={data_head.so_type_id === 1 ? false : true}
+              data={selectData.soProductionType}
+              field_id="so_production_type_id"
+              field_name="so_production_type_description"
+              onChange={(val) => {
+                if (val === 1) {
+                  headDispatch({
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: { so_production_type_id: val },
+                  });
+                } else {
+                  headDispatch({
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      so_production_ref_id: null,
+                      so_production_type_id: val,
+                    },
+                  });
+                  detailDispatch({
+                    type: "RESET_DATA",
+                    payload: initialStateDetail,
+                  });
+                }
               }}
-              value={data_head.vat_id}
-              defaultValue={1}
+              value={data_head.so_production_type_id}
             />
           </Col>
 
@@ -564,6 +534,60 @@ const SaleOrderCreate = (props) => {
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
+              <span className="require">* </span>Vat
+            </Text>
+          </Col>
+
+          <Col span={8}>
+            <CustomSelect
+              placeholder="Select Vat Type"
+              data={vatList || []}
+              field_id="vat_id"
+              field_name="vat_name"
+              showSearch
+              onChange={(val, option) => {
+                console.log("option", option);
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: {
+                    vat_id: option.data.vat_id,
+                    vat_rate: option.data.vat_rate,
+                    vat_include: option.data.vat_include,
+                  },
+                });
+              }}
+              value={data_head.vat_id}
+              defaultValue={1}
+            />
+          </Col>
+
+          <Col span={2}></Col>
+
+          <Col span={3}>
+            <Text strong className="pd-left-1">
+              PO No. :
+            </Text>
+          </Col>
+
+          <Col span={8}>
+            <Input
+              name="so_customer_po_no"
+              onChange={(e) =>
+                headDispatch({
+                  type: "CHANGE_HEAD_VALUE",
+                  payload: { so_customer_po_no: e.target.value },
+                })
+              }
+              value={data_head.so_customer_po_no}
+              placeholder="PO No."
+            />
+          </Col>
+          <Col span={2}></Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          {/* quotation */}
+          <Col span={3}>
+            <Text strong>
               <span className="require">* </span>Quotations Ref.
             </Text>
           </Col>
@@ -591,31 +615,9 @@ const SaleOrderCreate = (props) => {
               }}
             />
           </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Description :
-            </Text>
-          </Col>
-
-          <Col span={8}>
-            <Input
-              name="so_description"
-              onChange={(e) =>
-                headDispatch({
-                  type: "CHANGE_HEAD_VALUE",
-                  payload: { so_description: e.target.value },
-                })
-              }
-              value={data_head.so_description}
-              placeholder="Description"
-            />
-          </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          <Col span={3}></Col>
-
-          <Col span={8}>
+          <Col span={8} offset={3}>
             <Checkbox
               onChange={(e) =>
                 headDispatch({
@@ -631,84 +633,6 @@ const SaleOrderCreate = (props) => {
             />
             <Text className="ml-2">{"Close Quotations."}</Text>
           </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong className="pd-left-1">
-              PO No. :
-            </Text>
-          </Col>
-
-          <Col span={8}>
-            <Input
-              name="so_customer_po_no"
-              onChange={(e) =>
-                headDispatch({
-                  type: "CHANGE_HEAD_VALUE",
-                  payload: { so_customer_po_no: e.target.value },
-                })
-              }
-              value={data_head.so_customer_po_no}
-              placeholder="PO No."
-            />
-          </Col>
-          <Col span={2}></Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>
-              <span className="require">* </span>Vat
-            </Text>
-          </Col>
-
-          <Col span={8}>
-            <CustomSelect
-              placeholder="Select Vat Type"
-              data={vatList || []}
-              field_id="vat_id"
-              field_name="vat_name"
-              showSearch
-              onChange={(val, option) => {
-                console.log("option", option);
-                headDispatch({
-                  type: "CHANGE_HEAD_VALUE",
-                  payload: {
-                    vat_id: option.data.vat_id,
-                    vat_rate: option.data.vat_rate,
-                    vat_include: option.data.vat_include,
-                  },
-                });
-              }}
-              value={data_head.vat_id}
-              defaultValue={1}
-            />
-          </Col>
-          {/* <Col span={3}>
-            <CustomLabel
-              label={" SO Ref. :"}
-              require={data_head.so_production_type_id == 1 ? true : false}
-            />
-          </Col>
-
-          <Col span={8}>
-            <CustomSelect
-              disabled={data_head.so_production_type_id === 1 ? false : true}
-              name={"so_production_ref_id"}
-              placeholder='SO Ref'
-              data={selectData.productionForFg}
-              field_id='so_id'
-              field_name='so_description'
-              onChange={(val) =>
-                headDispatch({
-                  type: "CHANGE_HEAD_VALUE",
-                  payload: { so_production_ref_id: val },
-                })
-              }
-              value={data_head.so_production_ref_id}
-            />
-          </Col> */}
-          <Col span={2}></Col>
-          <Col span={3}></Col>
-          <Col span={8}></Col>
           <Col span={2}></Col>
         </Row>
         <Row className="col-2 row-tab-margin-l">
