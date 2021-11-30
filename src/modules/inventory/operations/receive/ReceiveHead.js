@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { useContext, useEffect, useState } from "react";
 import { Row, Col, Input, Typography, DatePicker } from "antd";
 import { useSelector } from "react-redux";
@@ -19,7 +17,6 @@ const ReceiveHead = () => {
     saveForm({ ...state, ...data }, po_id ?? null);
   };
   const changeState = (data) => {
-    console.log(data);
     setState({ ...state, ...data });
   };
   const resetForm = () => {
@@ -27,23 +24,21 @@ const ReceiveHead = () => {
     save(initialStateHead);
   };
   useEffect(() => {
-    console.log("effect head");
     setState(mainState);
   }, [mainState]);
-  console.log("ReceiveHead", state, mainState);
   return (
     <>
-      <Row className='col-2 row-margin-vertical'>
+      <Row className="col-2 row-margin-vertical">
         {/* 1 */}
         <Col span={3}>
           <CustomLabel label={"Description :"} require readOnly={readOnly} />
         </Col>
         <Col span={8}>
           {readOnly ? (
-            <Text className='text-value'>{state.receive_description}</Text>
+            <Text className="text-value">{state.receive_description}</Text>
           ) : (
             <Input
-              name='receive_description'
+              name="receive_description"
               onChange={(e) =>
                 changeState({
                   receive_description: e.target.value,
@@ -51,7 +46,7 @@ const ReceiveHead = () => {
               }
               onBlur={() => save()}
               value={state.receive_description}
-              placeholder='Description'
+              placeholder="Description"
             />
           )}
         </Col>
@@ -61,15 +56,15 @@ const ReceiveHead = () => {
         </Col>
         <Col span={8}>
           {readOnly || state.po_id ? (
-            <Text className='text-value'>{state.vendor_no_name ?? "-"}</Text>
+            <Text className="text-value">{state.vendor_no_name ?? "-"}</Text>
           ) : (
             <CustomSelect
               placeholder={"Vendor"}
               allowClear
               showSearch
-              name='vendor_id'
-              field_id='vendor_id'
-              field_name='vendor_no_name'
+              name="vendor_id"
+              field_id="vendor_id"
+              field_name="vendor_no_name"
               value={state.vendor_no_name}
               data={vendors}
               onChange={(data, option) =>
@@ -97,22 +92,22 @@ const ReceiveHead = () => {
           )}
         </Col>
       </Row>
-      <Row className='col-2 row-margin-vertical '>
+      <Row className="col-2 row-margin-vertical ">
         <Col span={3}>
           <CustomLabel label={"PO Ref. :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
           {/* PO Ref */}
           {readOnly ? (
-            <Text className='text-value'>{state.po_no_description ?? "-"}</Text>
+            <Text className="text-value">{state.po_no_description ?? "-"}</Text>
           ) : (
             <CustomSelect
               allowClear
               showSearch
               placeholder={"PO No. ex.PO2009000x"}
-              name='po_id'
-              field_id='po_id'
-              field_name='po_no_description'
+              name="po_id"
+              field_id="po_id"
+              field_name="po_no_description"
               value={state.po_no_description}
               data={po_list}
               onChange={(data, option) => {
@@ -132,13 +127,13 @@ const ReceiveHead = () => {
         </Col>
         <Col span={8}>
           {readOnly || state.po_id ? (
-            <Text className='text-value'>{state.receive_order_date}</Text>
+            <Text className="text-value">{state.receive_order_date}</Text>
           ) : (
             <DatePicker
               format={"DD/MM/YYYY"}
               className={"full-width"}
               name={`receive_order_date`}
-              placeholder='Order Date'
+              placeholder="Order Date"
               value={
                 state.receive_order_date
                   ? moment(state.receive_order_date, "DD/MM/YYYY")
@@ -158,17 +153,17 @@ const ReceiveHead = () => {
           )}
         </Col>
       </Row>
-      <Row className='col-2 row-margin-vertical'>
+      <Row className="col-2 row-margin-vertical">
         <Col span={3}>
           <CustomLabel label={"Invoice No :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
           {readOnly ? (
-            <Text className='text-value'>{state.receive_invoice_no}</Text>
+            <Text className="text-value">{state.receive_invoice_no}</Text>
           ) : (
             <Input
-              name='receive_invoice_no'
-              className='full-width'
+              name="receive_invoice_no"
+              className="full-width"
               placeholder={"Invoice No"}
               value={state.receive_invoice_no}
               onChange={(e) =>
@@ -186,22 +181,22 @@ const ReceiveHead = () => {
           <CustomLabel label={"Currency :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
-          <Text className='text-view'>{state.currency_no ?? "THB"}</Text>
+          <Text className="text-view">{state.currency_no ?? "THB"}</Text>
         </Col>
       </Row>
-      <Row className='col-2 row-margin-vertical'>
+      <Row className="col-2 row-margin-vertical">
         <Col span={3}>
           <CustomLabel label={"Invoice Date :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
           {readOnly ? (
-            <Text className='text-value'>{state.receive_invoice_date}</Text>
+            <Text className="text-value">{state.receive_invoice_date}</Text>
           ) : (
             <DatePicker
               format={"DD/MM/YYYY"}
               className={"full-width"}
               name={`receive_invoice_date`}
-              placeholder='Invoice Date'
+              placeholder="Invoice Date"
               value={
                 state.receive_invoice_date
                   ? moment(state.receive_invoice_date, "DD/MM/YYYY")
@@ -226,7 +221,7 @@ const ReceiveHead = () => {
           <CustomLabel label={"SO Ref. :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
-          <Text className='text-view'>{state.so_no || "-"}</Text>
+          <Text className="text-view">{state.so_no || "-"}</Text>
         </Col>
       </Row>
     </>

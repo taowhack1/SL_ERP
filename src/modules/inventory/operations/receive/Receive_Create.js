@@ -52,7 +52,6 @@ const Receive_Create = (props) => {
 
   const { auth, currentProject, currentMenu } = useContext(AppContext);
   const { action, id } = useParams();
-  console.log("action", action);
   const { readOnly } = props?.location?.state ?? {
     readOnly: action !== "view" ? false : true,
   };
@@ -91,7 +90,6 @@ const Receive_Create = (props) => {
   const data =
     props.location && props.location.state ? props.location.state : 0;
   const redirectToView = (id) => {
-    console.log("redirect id", id);
     return history.push({
       pathname: `${currentMenu.menu_url}/view/` + (id ?? "new"),
       state: { readOnly: true },
@@ -147,11 +145,9 @@ const Receive_Create = (props) => {
     discard: currentMenu.menu_url,
     back: currentMenu.menu_url,
     onSave: (e) => {
-      console.log("Save", state);
       const key = "validate";
       const validate = validateFormHead(state, receive_require_fields);
       if (validate.validate) {
-        console.log("pass", state);
         state.receive_id
           ? dispatch(
               update_receive(
@@ -163,7 +159,6 @@ const Receive_Create = (props) => {
             )
           : dispatch(create_receive(auth.user_name, state, redirectToView));
       } else {
-        console.log("not pass", state);
         message.warning({
           content: "Please fill your form completely.",
           key,
@@ -180,7 +175,6 @@ const Receive_Create = (props) => {
     dispatch(getAllItems());
     const getproductionForFgData = async () => {
       const resp = await getProduction_for_fg();
-      console.log("getproductionForFgData", resp);
       setListSOFG((prev) => ({ ...prev, listSOForFg: resp.data }));
     };
     const getData = async () =>
@@ -189,7 +183,6 @@ const Receive_Create = (props) => {
           ...res[0].value.data.main_master,
           receive_detail: sortData(res[1].value),
         };
-        console.log("receiveData", receiveData);
         stateDispatch({
           type: "SET_HEAD",
           payload: receiveData,
@@ -203,7 +196,6 @@ const Receive_Create = (props) => {
 
   const getDetail = async (data, po_id) => {
     setLoading(true);
-    console.log("getDetail", po_id);
     if (!po_id) {
       stateDispatch({
         type: "SET_HEAD",
@@ -225,7 +217,6 @@ const Receive_Create = (props) => {
   };
 
   const saveForm = async (data, po_id) => {
-    console.log("save Data", data);
     state.po_id === data.po_id
       ? stateDispatch({ type: "CHANGE_HEAD_VALUE", payload: data })
       : getDetail(data, po_id);
@@ -242,14 +233,12 @@ const Receive_Create = (props) => {
       loading,
     };
   }, [readOnly, state, initialStateHead, saveForm, loading]);
-  console.log("Receive State", state);
-  console.log("listSOFG :>> ", listSOFG);
 
   return (
     <MainLayout {...config}>
       <ReceiveContext.Provider value={contextValue}>
-        <div id='form'>
-          <Row className='col-2'>
+        <div id="form">
+          <Row className="col-2">
             <Col span={8}>
               <h2>
                 <strong>
@@ -263,8 +252,8 @@ const Receive_Create = (props) => {
             <Col span={2}>
               <Text strong>Create Date :</Text>
             </Col>
-            <Col span={2} className='text-right'>
-              <Text className='text-view'>{state.receive_created}</Text>
+            <Col span={2} className="text-right">
+              <Text className="text-view">{state.receive_created}</Text>
             </Col>
           </Row>
 

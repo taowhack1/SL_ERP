@@ -110,11 +110,11 @@ export const disburse_detail_columns = [
 ];
 
 export const disburse_sub_detail_columns = [
-  { id: 0, name: "Source Location/Shelf", size: 7 },
-  { id: 1, name: "Lot / Batch No.", size: 8 },
-  { id: 2, name: "Disburse Qty.", size: 3 },
-  { id: 3, name: "Unit", size: 2 },
-  { id: 4, name: "Disburse Date", size: 3 },
+  // { id: 0, name: "Source Location/Shelf", size: 7 },
+  { id: 1, name: "Lot / Batch No.", size: 11 },
+  { id: 2, name: "Disburse Qty.", size: 5 },
+  { id: 3, name: "Unit", size: 3 },
+  { id: 4, name: "Disburse Date", size: 4 },
 ];
 
 export const disburse_fields = {

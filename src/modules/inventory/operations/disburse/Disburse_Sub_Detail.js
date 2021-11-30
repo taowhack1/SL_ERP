@@ -127,7 +127,7 @@ const SubDetail = ({
                 name={`row-${key}`}
                 className="col-2"
               >
-                <Col span={7} className="text-string">
+                {/* <Col span={7} className="text-string">
                   <CustomSelect
                     allowClear
                     showSearch
@@ -160,8 +160,8 @@ const SubDetail = ({
                           });
                     }}
                   />
-                </Col>
-                <Col span={8} className="text-string">
+                </Col> */}
+                <Col span={11} className="text-string">
                   <CustomSelect
                     allowClear
                     showSearch
@@ -205,7 +205,7 @@ const SubDetail = ({
                     }}
                   />
                 </Col>
-                <Col span={3} className="text-number">
+                <Col span={5} className="text-number">
                   <InputNumber
                     {...numberFormat}
                     placeholder={"Quantity Done"}
@@ -224,7 +224,7 @@ const SubDetail = ({
                     }}
                   />
                 </Col>
-                <Col span={2} className="text-number text-value">
+                <Col span={3} className="text-number text-value">
                   <div
                     className="input-string-disabled text-value uom"
                     placeholder={"Unit"}
@@ -232,7 +232,7 @@ const SubDetail = ({
                     {data_detail.uom_no}
                   </div>
                 </Col>
-                <Col span={3} className="text-string">
+                <Col span={4} className="text-string">
                   <DatePicker
                     name={"disburse_detail_sub_disburse_date"}
                     format={"DD/MM/YYYY"}

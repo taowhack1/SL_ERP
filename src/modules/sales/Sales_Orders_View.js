@@ -268,6 +268,14 @@ const SaleOrderView = (props) => {
           <Col span={8}>
             <Text className="text-view">{data_head.tg_so_delivery_date}</Text>
           </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          <Col span={3}>
+            <Text strong>Description :</Text>
+          </Col>
+          <Col span={8}>
+            <Text className="text-view">{data_head.so_description}</Text>
+          </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Order Date :</Text>
@@ -278,11 +286,13 @@ const SaleOrderView = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Quotations Ref. :</Text>
+            <Text strong>Sales Type :</Text>
           </Col>
+
           <Col span={8}>
-            <Text className="text-view">{data_head.qn_no_description}</Text>
+            <Text className="text-view">{data_head.so_type_name}</Text>
           </Col>
+
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Customer :</Text>
@@ -293,16 +303,15 @@ const SaleOrderView = (props) => {
           </Col>
         </Row>
         <Row className="col-2 row-margin-vertical">
-          {/* close qn */}
-          <Col span={3}></Col>
+          {/* Quotation */}
+          <Col span={3}>
+            <Text strong>Production Type :</Text>
+          </Col>
 
           <Col span={8}>
-            {[2, 3].includes(data_head.qn_tg_trans_close_id) ? (
-              <CheckSquareOutlined />
-            ) : (
-              <BorderOutlined />
-            )}
-            <Text className="ml-3">{"Close Quotations."}</Text>
+            <Text className="text-view">
+              {data_head.so_production_type_description || "-"}
+            </Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -314,49 +323,11 @@ const SaleOrderView = (props) => {
         </Row>
         <Row className="col-2 row-margin-vertical">
           <Col span={3}>
-            <Text strong>Sales Type :</Text>
-          </Col>
-
-          <Col span={8}>
-            <Text className="text-view">{data_head.so_type_name}</Text>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
             <Text strong>Vat :</Text>
           </Col>
 
           <Col span={8}>
             <Text className="text-view">{data_head.vat_name}</Text>
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>Select :</Text>
-          </Col>
-
-          <Col span={8}>
-            <Text className="text-view">
-              {data_head.so_production_type_description || "-"}
-            </Text>
-          </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
-            <Text strong>Description :</Text>
-          </Col>
-
-          <Col span={8}>
-            <Text className="text-view">{data_head.so_description}</Text>
-          </Col>
-        </Row>
-        <Row className="col-2 row-margin-vertical">
-          <Col span={3}>
-            <Text strong>SO Ref. :</Text>
-          </Col>
-
-          <Col span={8}>
-            <Text className="text-view">
-              {data_head.so_production_ref_id || "-"}
-            </Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -366,6 +337,32 @@ const SaleOrderView = (props) => {
           <Col span={8}>
             <Text className="text-view">{data_head.so_customer_po_no}</Text>
           </Col>
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          {/* quotation */}
+          <Col span={3}>
+            <Text strong>Quotations Ref. :</Text>
+          </Col>
+          <Col span={8}>
+            <Text className="text-view">{data_head.qn_no_description}</Text>
+          </Col>
+          <Col span={2}></Col>
+          {/* Description */}
+        </Row>
+        <Row className="col-2 row-margin-vertical">
+          {/*production type */}
+
+          <Col span={3}></Col>
+
+          <Col span={8}>
+            {[2, 3].includes(data_head.qn_tg_trans_close_id) ? (
+              <CheckSquareOutlined />
+            ) : (
+              <BorderOutlined />
+            )}
+            <Text className="ml-3">{"Close Quotations."}</Text>
+          </Col>
+          <Col span={2}></Col>
         </Row>
         <Row className="col-2 row-tab-margin-l">
           <Col span={24}>

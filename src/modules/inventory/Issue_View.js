@@ -78,7 +78,13 @@ const Issue_View = (props) => {
     ],
     search: false,
     buttonAction: [
-      data_head && data_head.button_edit && "Edit",
+      data_head &&
+        (data_head.button_edit ||
+          (data_head?.mrp_id &&
+            data_head.tg_trans_status_id !== 3 &&
+            ![2, 3].includes(data_head.tg_trans_close_id) &&
+            [1, 10, 20, 21, 22, 23, 25].includes(auth.department_id))) &&
+        "Edit",
       data_head && data_head.button_confirm && "Confirm",
       data_head && data_head.button_approve && "Approve",
       data_head && data_head.button_reject && "Reject",

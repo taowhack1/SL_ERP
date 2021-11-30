@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { useState, useContext } from "react";
 import {
   calSubtotal,
@@ -8,11 +6,9 @@ import {
 } from "../../../../include/js/function_main";
 import {
   receive_detail_fields,
-  receiveDetailColumns,
   receiveDetailWithNoPOColumns,
 } from "../../config/receiveConfig";
 import { useDispatch, useSelector } from "react-redux";
-import { get_location_shelf_by_item_id } from "../../../../actions/inventory";
 import CustomTable from "../../../../components/CustomTable";
 import ReceiveSubDetail from "./ReceiveSubDetail";
 import { ReceiveContext } from "../../../../include/js/context";
@@ -22,15 +18,6 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
 import CustomSelect from "../../../../components/CustomSelect";
 const initialStateDetail = receive_detail_fields;
-const list_temp = [
-  {
-    item_id: 2781,
-  },
-  {
-    item_id: 2782,
-  },
-];
-// item test C311SRNA000100
 // SO get Check bulk use api ----->getProduction_for_fg
 const ReceiveDetailWithoutPO = () => {
   const {
@@ -60,12 +47,10 @@ const ReceiveDetailWithoutPO = () => {
     mainState?.so_id !== null &&
       saveForm({ ...mainState, so_id: null, so_no: null }) &&
       setListSOFG((prev) => ({ ...prev, so_id: null }));
-    console.log("ก่อนลบ state.length :>> ", state.length);
     setState(sortData(state.filter((obj) => obj.id !== id)));
   };
 
   const modalSave = (row_id, data_sub_detail) => {
-    console.log("modal Save");
     setSelectData({ ...selectData, visible: false });
     const receive_qty = sumArrOdjWithField(
       data_sub_detail,
@@ -113,10 +98,8 @@ const ReceiveDetailWithoutPO = () => {
       (obj) => obj.item_id === data.item_id
     );
     filter.length > 0 ? setVisible(true) : setVisible(false);
-    console.log("data_onFn :>> ", filter);
   };
   const modalCancel = () => {
-    console.log("modal Cancel");
     setSelectData({ ...selectData, visible: false });
   };
   const onChangeValue = (id, data) => {
@@ -124,11 +107,12 @@ const ReceiveDetailWithoutPO = () => {
       saveForm({ ...mainState, so_id: null, so_no: null }) &&
       setListSOFG((prev) => ({ ...prev, so_id: null }));
 
-    console.log("check type item :>> ", data);
     setState(state.map((obj) => (obj.id === id ? { ...obj, ...data } : obj)));
+    // if type = bulk > check so bulk
     data.type_id == 3 && check_soFG(data);
   };
   const onOpenDetail = (record) => {
+    console.log("Record", record);
     setSelectData({ ...record, visible: true });
   };
   const update_soFGCloes = (data, option) => {
@@ -145,10 +129,10 @@ const ReceiveDetailWithoutPO = () => {
   const handleCancel = () => {
     saveForm({ ...mainState, so_id: null, so_no: null }) &&
       setListSOFG((prev) => ({ ...prev, so_id: null }));
-    console.log("Clicked cancel button");
     setVisible(false);
   };
-  console.log("receive_detail", state.length);
+
+  console.log("itemList", itemList);
   return (
     <>
       {/* Column Header */}

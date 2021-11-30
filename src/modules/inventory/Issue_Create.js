@@ -186,6 +186,8 @@ const IssueCreate = (props) => {
   };
 
   console.log("head filter", filter);
+
+  console.log("CHECK", data_detail);
   return (
     <MainLayout {...config}>
       <div id="form">

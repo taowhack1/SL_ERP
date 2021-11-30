@@ -1,12 +1,9 @@
-/** @format */
-
-import { Row, Col, Typography, message } from "antd";
+import { Row, Col, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import CustomTable from "../../../../components/CustomTable";
 import {
   sortData,
-  sumArrOdjWithField,
   validateFormDetail,
 } from "../../../../include/js/function_main";
 
@@ -51,7 +48,7 @@ const ReceiveSubDetailTable = ({
           location_no: selectData.location_no,
           uom_id: selectData.uom_id,
           uom_no: selectData.uom_no,
-          color:false,
+          color: false,
           receive_detail_sub_receive_date: moment().format("DD/MM/YYYY"),
         },
       ])
@@ -62,8 +59,7 @@ const ReceiveSubDetailTable = ({
   };
 
   const onChangeValue = (id, data) => {
-    setState(state.map((obj) => (obj.id === id ? { ...obj, ...data } : obj )));
-    console.log("data",data)
+    setState(state.map((obj) => (obj.id === id ? { ...obj, ...data } : obj)));
   };
 
   const validateForm = (arrObjData) => {
@@ -72,18 +68,8 @@ const ReceiveSubDetailTable = ({
       receive_sub_detail_require_fields
     );
     if (validate) {
-      const receive_qty = sumArrOdjWithField(
-        arrObjData,
-        "receive_detail_sub_qty"
-      );
-
-      console.log("receive_qty", receive_qty);
-
-      console.log(selectData.id, arrObjData);
       saveModal(arrObjData);
     } else {
-      console.log("return data", data);
-      // setState(data);
       message.warning({
         content: "Please fill your form completely.",
         key: "warning",
@@ -92,30 +78,28 @@ const ReceiveSubDetailTable = ({
     }
   };
 
-  console.log(
-    "selectData.receive_sub_detail",
-    state,
-    selectData.receive_sub_detail
-  );
-  console.log("locationList", locationList);
   const AlertShelfLift = (record, dateMFG) => {
-      const dateMFGinFN = moment(dateMFG,"DD/MM/YYYY");
-      const dateRecevie = moment(
-        record.receive_detail_sub_receive_date,
-        "DD/MM/YYYY"
-      );
-      const dateDif = dateRecevie.diff(dateMFGinFN,'days');
-      const HalfLife = record.item_shelf_life / 2;
-      const calcula = record.item_shelf_life - dateDif;
-      if(calcula >= HalfLife){
-      }else{
-        message.warning({content: "The remaining shelf life is less than half",key: "warning",duration: 5,})
-      }
-      //calcula >= HalfLife ? console.log("The remaining shelf life is normal") :message.warning({content: "The remaining shelf life is less than half",key: "warning",duration: 2,});
+    const dateMFGinFN = moment(dateMFG, "DD/MM/YYYY");
+    const dateRecevie = moment(
+      record.receive_detail_sub_receive_date,
+      "DD/MM/YYYY"
+    );
+    const dateDif = dateRecevie.diff(dateMFGinFN, "days");
+    const HalfLife = record.item_shelf_life / 2;
+    const calcula = record.item_shelf_life - dateDif;
+    if (calcula >= HalfLife) {
+    } else {
+      message.warning({
+        content: "The remaining shelf life is less than half",
+        key: "warning",
+        duration: 5,
+      });
+    }
+    //calcula >= HalfLife ? console.log("The remaining shelf life is normal") :message.warning({content: "The remaining shelf life is less than half",key: "warning",duration: 2,});
   };
   return (
     <>
-      <Row className='row-tab-margin-lg'>
+      <Row className="row-tab-margin-lg">
         <Col span={24}>
           <CustomTable
             columns={receiveSubDetailColumns(
@@ -138,7 +122,7 @@ const ReceiveSubDetailTable = ({
         </Col>
         <button
           style={{ display: "none" }}
-          type='button'
+          type="button"
           ref={btnSave}
           onClick={() => validateForm(state)}
         />
