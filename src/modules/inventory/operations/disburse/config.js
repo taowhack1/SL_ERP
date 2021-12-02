@@ -189,7 +189,8 @@ export const disburse_detail_fields = {
 export const disburse_sub_detail_fields = {
   disburse_detail_sub_id: null,
   disburse_detail_sub_disburse_date: null,
-  disburse_detail_sub_qty: null,
+  tg_stock_qty_balance: 0,
+  disburse_detail_sub_qty: 0,
   disburse_detail_sub_remark: null,
   disburse_detail_id: null,
   stock_lot_no: null,

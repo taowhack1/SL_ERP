@@ -94,7 +94,8 @@ const DisburseDetail = ({
       payload: data_sub_detail,
     });
     setTempDetail(data_detail);
-    dispatch(get_location_shelf_by_item_id(item_id));
+    // dispatch(get_location_shelf_by_item_id(item_id));
+    console.log("GET LOT_BATCH");
     dispatch(get_lot_batch_by_item_id_shelf(item_id));
   };
 

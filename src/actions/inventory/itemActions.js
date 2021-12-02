@@ -266,7 +266,6 @@ const bind_filling = (item_id, data_filling) => {
       detail.item_filling_process_worker !== null &&
       detail.commit === 1
   );
-  console.log("filling data temp ", data_filling_temp);
   return (
     data_filling_temp.length &&
     axios

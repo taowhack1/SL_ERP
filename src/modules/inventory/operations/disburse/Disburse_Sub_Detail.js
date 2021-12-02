@@ -1,4 +1,12 @@
-import { Button, Row, Col, InputNumber, Typography, DatePicker } from "antd";
+import {
+  Button,
+  Row,
+  Col,
+  InputNumber,
+  Typography,
+  DatePicker,
+  Spin,
+} from "antd";
 import {
   DeleteTwoTone,
   PlusOutlined,
@@ -17,6 +25,8 @@ import moment from "moment";
 import CustomSelect from "../../../../components/CustomSelect";
 
 import { convertDigit, numberFormat } from "../../../../include/js/main_config";
+import { api_get_lot_batch_by_item_id_shelf } from "../../../../include/js/api";
+import { useFetch } from "../../../../include/js/customHooks";
 const { Text } = Typography;
 
 const SubDetail = ({
@@ -27,12 +37,17 @@ const SubDetail = ({
   temp_sub_detail,
   tempSubDetailDispatch,
 }) => {
-  const location_shelf_list = useSelector(
-    (state) => state.inventory.stock.item_location_shelf
+  const { item_id } = data_detail || {};
+  // const lot_batch_list = useSelector(
+  //   (state) => state.inventory.stock.item_lot_batch
+  // );
+
+  const { data, loading: loadingGetLotBatch } = useFetch(
+    `${api_get_lot_batch_by_item_id_shelf}/${item_id}`,
+    !item_id
   );
-  const lot_batch_list = useSelector(
-    (state) => state.inventory.stock.item_lot_batch
-  );
+  const [lot_batch_list] = data ? data : [];
+  console.log("data", data);
   // function
   useEffect(() => {
     !temp_sub_detail.length && addLine();
@@ -67,31 +82,25 @@ const SubDetail = ({
       },
     });
   };
-  const getLotBatchList = (line) => {
-    console.log(line);
-    if (lot_batch_list) {
-      if (line && line.shelf_id) {
-        return sortData(
-          lot_batch_list.filter((lot) => lot.shelf_id === line.shelf_id)
-        );
-      } else if (line && !line.shelf_id) {
-        return sortData(lot_batch_list);
-      } else {
-        return [];
-      }
-    }
+  const getMaxQty = (stock_id) => {
+    if (!stock_id) return 0;
+    console.log("getMaxQty Stock_id", stock_id);
+    console.log("lot_batch_list 2", lot_batch_list);
+    // const tempLotBatch = lot_batch_list;
+    const maxQty =
+      lot_batch_list?.find((obj) => obj.stock_id === stock_id)
+        ?.tg_stock_qty_balance || 0;
+    // console.log("maxQty", maxQty);
+    // const findData = lot_batch_list?.filter((obj) => (obj.stock_id === stock_id));
+    // console.log(
+    //   "max",
+    //   lot_batch_list?.filter((obj) => (obj.stock_id === stock_id))[0]
+    //     ?.tg_stock_qty_balance || 0
+    // );
+    // console.log("lot_batch_list 3", findData, lot_batch_list);
+    return maxQty;
   };
-  const getLocationShelf = (shelf_id) => {
-    if (location_shelf_list) {
-      if (shelf_id) {
-        return location_shelf_list.filter(
-          (location) => location.shelf_id === shelf_id
-        );
-      } else {
-        return location_shelf_list;
-      }
-    }
-  };
+  console.log("lot_batch_list 1", lot_batch_list);
   return (
     <>
       {/* Column Header */}
@@ -127,95 +136,62 @@ const SubDetail = ({
                 name={`row-${key}`}
                 className="col-2"
               >
-                {/* <Col span={7} className="text-string">
-                  <CustomSelect
-                    allowClear
-                    showSearch
-                    placeholder={"Source Location"}
-                    name="location_id"
-                    field_id="shelf_id"
-                    field_name="location_shelf_no_name"
-                    value={line.location_shelf_no_name}
-                    data={getLocationShelf(line.shelf_id)}
-                    size={"small"}
-                    onChange={(data, option) => {
-                      console.log("selected data", option);
-                      data
-                        ? onChangeValue(line.id, {
-                            location_id: option.data.location_id,
-                            location_shelf_no_name:
-                              option.data.location_shelf_no_name,
-                            shelf_id: option.data.shelf_id,
-                            shelf_name: option.data.shelf_name,
-                          })
-                        : onChangeValue(line.id, {
-                            location_id: null,
-                            location_shelf_no_name: null,
-                            shelf_id: null,
-                            shelf_name: null,
-
-                            stock_batch: null,
-                            stock_lot_no: null,
-                            stock_lot_no_batch_qty_balance: null,
-                          });
-                    }}
-                  />
-                </Col> */}
                 <Col span={11} className="text-string">
-                  <CustomSelect
-                    allowClear
-                    showSearch
-                    placeholder={"Lot / Batch no."}
-                    size={"small"}
-                    name="stock_batch"
-                    field_id="stock_id"
-                    field_name="stock_lot_no_batch_qty_balance"
-                    value={line.stock_lot_no_batch_qty_balance}
-                    data={getLotBatchList(line)}
-                    onChange={(data, option) => {
-                      data
-                        ? onChangeValue(line.id, {
-                            stock_id: option.data.stock_id,
-                            stock_batch: option.data.stock_batch,
-                            stock_lot_no: option.data.stock_lot_no,
-                            stock_lot_no_batch_qty_balance:
-                              option.data.stock_lot_no_batch_qty_balance,
+                  <Spin spinning={loadingGetLotBatch}>
+                    <CustomSelect
+                      allowClear
+                      showSearch
+                      placeholder={"Lot / Batch no."}
+                      size={"small"}
+                      name="stock_batch"
+                      field_id="stock_id"
+                      field_name="stock_lot_no_batch_qty_balance"
+                      value={line.stock_lot_no_batch_qty_balance}
+                      data={lot_batch_list}
+                      onChange={(data, option) => {
+                        data
+                          ? onChangeValue(line.id, {
+                              stock_id: option.data.stock_id,
+                              stock_batch: option.data.stock_batch,
+                              stock_lot_no: option.data.stock_lot_no,
+                              stock_lot_no_batch_qty_balance:
+                                option.data.stock_lot_no_batch_qty_balance,
 
-                            location_id: option.data.location_id,
-                            location_shelf_no_name:
-                              option.data.location_shelf_no_name,
-                            shelf_id: option.data.shelf_id,
-                            shelf_name: option.data.shelf_name,
-                            stock_mfg_date: option.data.stock_mfg_date,
-                            stock_exp_date: option.data.stock_exp_date,
-                            tg_stock_qty_balance:
-                              option.data.tg_stock_qty_balance,
-                            disburse_detail_sub_qty: 0,
-                          })
-                        : onChangeValue(line.id, {
-                            stock_id: null,
-                            stock_batch: null,
-                            stock_lot_no: null,
-                            stock_lot_no_batch_qty_balance: null,
-                            stock_mfg_date: null,
-                            stock_exp_date: null,
-                            tg_stock_qty_balance: null,
-                            disburse_detail_sub_qty: 0,
-                          });
-                    }}
-                  />
+                              shelf_id: option.data.shelf_id,
+                              location_id: option.data.location_id,
+                              stock_mfg_date: option.data.stock_mfg_date,
+                              stock_exp_date: option.data.stock_exp_date,
+                              tg_stock_qty_balance:
+                                option.data.tg_stock_qty_balance,
+                              disburse_detail_sub_qty: 0,
+                            })
+                          : onChangeValue(line.id, {
+                              stock_id: null,
+                              stock_batch: null,
+                              stock_lot_no: null,
+                              stock_lot_no_batch_qty_balance: null,
+                              stock_mfg_date: null,
+                              stock_exp_date: null,
+                              tg_stock_qty_balance: 0,
+                              disburse_detail_sub_qty: 0,
+                              shelf_id: null,
+                              location_id: null,
+                            });
+                      }}
+                    />
+                  </Spin>
                 </Col>
                 <Col span={5} className="text-number">
                   <InputNumber
                     {...numberFormat}
                     placeholder={"Quantity Done"}
                     min={0.0}
-                    // max={limit_qty}
+                    max={getMaxQty(line?.stock_id)}
                     step={0.000001}
                     size="small"
                     name="disburse_detail_sub_qty"
                     className={"full-width"}
-                    disabled={0}
+                    disabled={!getMaxQty(line?.stock_id)}
                     value={line.disburse_detail_sub_qty}
                     onChange={(data) => {
                       onChangeValue(line.id, {
@@ -292,27 +268,22 @@ const SubDetail = ({
                 name={`row-${key}`}
                 className="col-2"
               >
-                <Col span={7} className="text-string">
-                  <Text className="text-view text-string">
-                    {line.location_shelf_no_name}
-                  </Text>
-                </Col>
-                <Col span={8} className="text-string">
+                <Col span={11} className="text-string">
                   <Text className="text-view text-string">
                     {line.stock_lot_no_batch_qty_balance}
                   </Text>
                 </Col>
-                <Col span={3} className="text-number">
+                <Col span={5} className="text-number">
                   <Text className="text-view text-number">
                     {convertDigit(line.disburse_detail_sub_qty)}
                   </Text>
                 </Col>
-                <Col span={2} className="text-string">
+                <Col span={3} className="text-string">
                   <Text className="text-view text-string">
                     {data_detail.uom_no}
                   </Text>
                 </Col>
-                <Col span={3} className="text-number">
+                <Col span={4} className="text-number">
                   <Text className="text-view text-number">
                     {line.disburse_detail_sub_disburse_date}
                   </Text>

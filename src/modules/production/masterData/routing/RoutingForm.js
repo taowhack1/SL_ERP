@@ -39,6 +39,7 @@ const RoutingForm = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const [loading, setLoading] = useState(false);
+  const [type_id, setTypeId] = useState(null);
   const {
     auth: { user_name },
   } = useContext(AppContext);
@@ -73,6 +74,7 @@ const RoutingForm = (props) => {
       .then((resp) => {
         if (resp.status === 200) {
           persistData = resp.data[0];
+          setTypeId(persistData?.type_id || null);
           return { success: true, data: resp.data[0], message: "Success" };
         } else {
           return { success: false, data: {}, message: "Fail." };
@@ -148,6 +150,7 @@ const RoutingForm = (props) => {
   };
   const { routing_created, routing_description, item_no_name } = persistData;
   console.log("main errors ", errors);
+  console.log("type_id", type_id);
   return (
     <>
       <MainLayout {...config}>
@@ -245,11 +248,15 @@ const RoutingForm = (props) => {
                                     if (val !== undefined) {
                                       field.onChange(val);
                                       setValue("type_id", row?.obj?.type_id);
+                                      setValue("routing_type_id", null);
                                       setValue("uom_id", row?.obj?.uom_id);
+                                      setTypeId(row?.obj?.type_id);
                                     } else {
                                       field.onChange(null);
                                       setValue("type_id", null);
+                                      setValue("routing_type_id", null);
                                       setValue("uom_id", null);
+                                      setTypeId(null);
                                     }
                                   },
                                 },
@@ -290,10 +297,14 @@ const RoutingForm = (props) => {
                                 className: "w-100",
                                 allowClear: true,
                                 showSearch: true,
-                                disabled: loading,
+                                disabled: loading || !type_id,
                                 ...field,
                               },
-                              dataSource: routingTypes || [],
+                              dataSource: routingTypes
+                                ? routingTypes?.filter(
+                                    (obj) => obj.type_id === type_id
+                                  )
+                                : [],
                               fieldId: "routing_type_id",
                               fieldName: "routing_type_no_name",
                             })
