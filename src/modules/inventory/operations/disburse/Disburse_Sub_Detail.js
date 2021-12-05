@@ -29,7 +29,9 @@ import { api_get_lot_batch_by_item_id_shelf } from "../../../../include/js/api";
 import { useFetch } from "../../../../include/js/customHooks";
 const { Text } = Typography;
 
+const apiGetStockAvailableByItemIdAndDisburseID = `/inventory/disburse/stock_available`;
 const SubDetail = ({
+  disburse_id,
   limit_qty,
   readOnly,
   disburse_detail_id,
@@ -43,10 +45,12 @@ const SubDetail = ({
   // );
 
   const { data, loading: loadingGetLotBatch } = useFetch(
-    `${api_get_lot_batch_by_item_id_shelf}/${item_id}`,
+    `${apiGetStockAvailableByItemIdAndDisburseID}/${item_id}&${
+      disburse_id || 0
+    }`,
     !item_id
   );
-  const [lot_batch_list] = data ? data : [];
+  const { data: lot_batch_list } = data || {};
   console.log("data", data);
   // function
   useEffect(() => {
@@ -86,18 +90,9 @@ const SubDetail = ({
     if (!stock_id) return 0;
     console.log("getMaxQty Stock_id", stock_id);
     console.log("lot_batch_list 2", lot_batch_list);
-    // const tempLotBatch = lot_batch_list;
     const maxQty =
       lot_batch_list?.find((obj) => obj.stock_id === stock_id)
         ?.tg_stock_qty_balance || 0;
-    // console.log("maxQty", maxQty);
-    // const findData = lot_batch_list?.filter((obj) => (obj.stock_id === stock_id));
-    // console.log(
-    //   "max",
-    //   lot_batch_list?.filter((obj) => (obj.stock_id === stock_id))[0]
-    //     ?.tg_stock_qty_balance || 0
-    // );
-    // console.log("lot_batch_list 3", findData, lot_batch_list);
     return maxQty;
   };
   console.log("lot_batch_list 1", lot_batch_list);
@@ -146,7 +141,7 @@ const SubDetail = ({
                       name="stock_batch"
                       field_id="stock_id"
                       field_name="stock_lot_no_batch_qty_balance"
-                      value={line.stock_lot_no_batch_qty_balance}
+                      value={line.stock_id}
                       data={lot_batch_list}
                       onChange={(data, option) => {
                         data

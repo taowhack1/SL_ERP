@@ -28,6 +28,7 @@ import SubDetail from "./Disburse_Sub_Detail";
 const { Text } = Typography;
 const DisburseDetail = ({
   readOnly,
+  disburse_id,
   issue_id,
   data_detail,
   detailDispatch,
@@ -410,6 +411,7 @@ const DisburseDetail = ({
         <Row className="row-tab-margin-lg">
           <Col span={24}>
             <SubDetail
+              disburse_id={disburse_id}
               limit_qty={temp_detail?.tg_disburse_detail_qty_balance || 0}
               disburse_detail_id={
                 temp_detail && temp_detail?.disburse_detail_id

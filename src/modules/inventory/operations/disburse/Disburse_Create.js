@@ -326,6 +326,7 @@ const DisburseCreate = (props) => {
               <Tabs.TabPane tab="Request Detail" key={"1"}>
                 <Detail
                   readOnly={false}
+                  disburse_id={data_head?.disburse_id}
                   issue_id={data_head.issue_id}
                   data_detail={data_detail}
                   headDispatch={headDispatch}
