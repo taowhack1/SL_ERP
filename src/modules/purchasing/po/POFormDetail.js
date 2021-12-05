@@ -1,3 +1,5 @@
+/** @format */
+
 import { ReloadOutlined, SyncOutlined } from "@ant-design/icons";
 import { Col, Divider, InputNumber, message, Row, Tabs } from "antd";
 import Text from "antd/lib/typography/Text";
@@ -120,7 +122,7 @@ const POFormDetail = () => {
   return (
     <>
       <Tabs>
-        <Tabs.TabPane tab="Edit Detail" key="1">
+        <Tabs.TabPane tab='Edit Detail' key='1'>
           <TablePODetail
             {...{
               //   po_detail,
@@ -138,7 +140,7 @@ const POFormDetail = () => {
         </Tabs.TabPane>
       </Tabs>
       <Tabs>
-        <Tabs.TabPane tab="Extended" key="2">
+        <Tabs.TabPane tab='Extended' key='2'>
           <TablePOExtendedDetail
             {...{
               //   po_detail,
@@ -157,24 +159,24 @@ const POFormDetail = () => {
           {/* <POFooterSummary /> */}
         </Tabs.TabPane>
       </Tabs>
-      <Divider className="divider-sm" />
-      <Row className="col-2 row-margin-vertical">
+      <Divider className='divider-sm' />
+      <Row className='col-2 row-margin-vertical'>
         <Col span={14}></Col>
 
-        <Col span={6} className="text-number">
+        <Col span={6} className='text-number'>
           <SyncOutlined
-            className="button-icon mr-2"
+            className='button-icon mr-2'
             style={{ fontWieght: "bold" }}
             onClick={() => onChangePOState({ ...onCalculateTotal(poState) })}
           />
           <Text strong>Extended Discount :</Text>
         </Col>
-        <Col span={3} className="text-number">
+        <Col span={3} className='text-number'>
           <InputNumber
             {...getNumberFormat(4)}
             min={0}
-            className="w-100"
-            size="small"
+            className='w-100'
+            size='small'
             value={po_discount}
             onChange={(val) =>
               onChangePOState({
@@ -183,7 +185,7 @@ const POFormDetail = () => {
             }
           />
         </Col>
-        <Col span={1} className="text-string">
+        <Col span={1} className='text-string'>
           <Text strong> {`${currency_no || "-"}`}</Text>
         </Col>
       </Row>
