@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import CustomSelect from "../../../components/CustomSelect";
 import Text from "antd/lib/typography/Text";
@@ -52,7 +54,7 @@ export const item_fields = {
   currency_id: 1,
   currency_no: "THB",
   item_trade_name: null,
-  item_shelf_life: 730,
+  item_shelf_life: 0,
   item_sale_local: 1,
   item_sale_export: false,
   item_specification: false,
@@ -222,18 +224,18 @@ export const item_vendor_require_fields = [
 export const qaDetailColumns = ({ readOnly, onChange, onDelete, data }) => [
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <CustomLabel label={"No."} readOnly={readOnly} />
       </div>
     ),
     dataIndex: "id",
     align: "center",
     width: "5%",
-    render: (value) => <Text className="text-value">{value + 1}</Text>,
+    render: (value) => <Text className='text-value'>{value + 1}</Text>,
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <CustomLabel label={"Subject"} readOnly={readOnly} require />
       </div>
     ),
@@ -242,16 +244,16 @@ export const qaDetailColumns = ({ readOnly, onChange, onDelete, data }) => [
     width: "30%",
     render: (value, record) =>
       readOnly ? (
-        <Text className="text-value">{value}</Text>
+        <Text className='text-value'>{value}</Text>
       ) : (
         <CustomSelect
           allowClear
           showSearch
           size={"small"}
           placeholder={"Subject"}
-          name="qa_subject_id"
-          field_id="qa_subject_id"
-          field_name="qa_subject_name"
+          name='qa_subject_id'
+          field_id='qa_subject_id'
+          field_name='qa_subject_name'
           value={value}
           data={data.subject}
           onChange={(data, option) => {
@@ -270,7 +272,7 @@ export const qaDetailColumns = ({ readOnly, onChange, onDelete, data }) => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <CustomLabel label={"Specification"} readOnly={readOnly} require />
       </div>
     ),
@@ -279,16 +281,16 @@ export const qaDetailColumns = ({ readOnly, onChange, onDelete, data }) => [
     width: "30%",
     render: (value, record) =>
       readOnly ? (
-        <Text className="text-value">{value}</Text>
+        <Text className='text-value'>{value}</Text>
       ) : (
         <CustomSelect
           allowClear
           showSearch
           size={"small"}
           placeholder={"Subject"}
-          name="qa_specification_id"
-          field_id="qa_specification_id"
-          field_name="qa_specification_name"
+          name='qa_specification_id'
+          field_id='qa_specification_id'
+          field_name='qa_specification_name'
           value={value}
           data={data.spec}
           onChange={(data, option) => {
@@ -307,7 +309,7 @@ export const qaDetailColumns = ({ readOnly, onChange, onDelete, data }) => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <CustomLabel label={"Method"} readOnly={readOnly} require />
       </div>
     ),
@@ -316,16 +318,16 @@ export const qaDetailColumns = ({ readOnly, onChange, onDelete, data }) => [
     width: "30%",
     render: (value, record) =>
       readOnly ? (
-        <Text className="text-value">{value}</Text>
+        <Text className='text-value'>{value}</Text>
       ) : (
         <CustomSelect
           allowClear
           showSearch
           size={"small"}
           placeholder={"Method"}
-          name="qa_method_id"
-          field_id="qa_method_id"
-          field_name="qa_method_name"
+          name='qa_method_id'
+          field_id='qa_method_id'
+          field_name='qa_method_name'
           value={record.qa_method_name}
           data={data.method}
           onChange={(data, option) => {
@@ -359,10 +361,9 @@ export const qaDetailColumns = ({ readOnly, onChange, onDelete, data }) => [
             onConfirm={() => {
               onDelete(record.id);
             }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
+            title='Are you sure you want to delete this row？'
+            okText='Yes'
+            cancelText='No'>
             <DeleteTwoTone />
           </Popconfirm>
         );
@@ -573,7 +574,7 @@ export const itemPartConditionColumns = (
   },
   {
     id: 2,
-    title: <div className="text-center">Condition</div>,
+    title: <div className='text-center'>Condition</div>,
     dataIndex: "item_part_specification_detail_condition",
     key: "item_part_specification_detail_condition",
     align: "left",
@@ -586,7 +587,7 @@ export const itemPartConditionColumns = (
           <Input
             size={"small"}
             placeholder={"Condition"}
-            name="item_part_specification_detail_condition"
+            name='item_part_specification_detail_condition'
             value={record.item_part_specification_detail_condition}
             onChange={(e) => {
               onChange(record.id, {
@@ -601,7 +602,7 @@ export const itemPartConditionColumns = (
   },
   {
     id: 3,
-    title: <div className="text-center">Set</div>,
+    title: <div className='text-center'>Set</div>,
     dataIndex: "item_part_specification_detail_set",
     key: "item_part_specification_detail_set",
     align: "left",
@@ -614,7 +615,7 @@ export const itemPartConditionColumns = (
           <Input
             size={"small"}
             placeholder={"Set"}
-            name="item_part_specification_detail_set"
+            name='item_part_specification_detail_set'
             value={record.item_part_specification_detail_set}
             onChange={(e) => {
               onChange(record.id, {
@@ -644,10 +645,9 @@ export const itemPartConditionColumns = (
             onConfirm={() => {
               onDelete(record.id);
             }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
+            title='Are you sure you want to delete this row？'
+            okText='Yes'
+            cancelText='No'>
             <DeleteTwoTone />
           </Popconfirm>
         );
@@ -784,7 +784,7 @@ export const itemFormulaColumns = (
   },
   {
     id: 2,
-    title: <div className="text-center">Raw Material Code</div>,
+    title: <div className='text-center'>Raw Material Code</div>,
     dataIndex: "item_no_name",
     key: "item_no_name",
     align: "left",
@@ -792,7 +792,7 @@ export const itemFormulaColumns = (
     render: (value, record, index) => {
       if (readOnly) {
         return (
-          <div className="text-value" title={value}>
+          <div className='text-value' title={value}>
             <Text>{value ?? "-"}</Text>
           </div>
         );
@@ -803,9 +803,9 @@ export const itemFormulaColumns = (
             showSearch
             size={"small"}
             placeholder={"Raw Material Code"}
-            name="item_id_formula"
-            field_id="item_id"
-            field_name="item_no_name"
+            name='item_id_formula'
+            field_id='item_id'
+            field_name='item_no_name'
             value={record.item_no_name}
             data={itemList}
             onChange={(data, option) => {
@@ -829,8 +829,8 @@ export const itemFormulaColumns = (
   {
     id: 3,
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">* </span>}
+      <div className='text-center'>
+        {!readOnly && <span className='require'>* </span>}
         %(W/W)
       </div>
     ),
@@ -844,8 +844,8 @@ export const itemFormulaColumns = (
       } else {
         return (
           <InputNumber
-            name="item_formula_percent_qty"
-            placeholder="Percentage"
+            name='item_formula_percent_qty'
+            placeholder='Percentage'
             value={record.item_formula_percent_qty}
             disabled={record.item_id_formula ? 0 : 1}
             defaultValue={0.0}
@@ -861,8 +861,8 @@ export const itemFormulaColumns = (
               });
             }}
             onBlur={() => Save(record.id, "item_formula_percent_qty")}
-            size="small"
-            className="full-width"
+            size='small'
+            className='full-width'
           />
         );
       }
@@ -885,10 +885,9 @@ export const itemFormulaColumns = (
             onConfirm={() => {
               onDelete(record.id);
             }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
+            title='Are you sure you want to delete this row？'
+            okText='Yes'
+            cancelText='No'>
             <DeleteTwoTone />
           </Popconfirm>
         );
@@ -917,7 +916,7 @@ export const itemPartMixColumns = (
   },
   {
     id: 2,
-    title: <div className="text-center">Part Name</div>,
+    title: <div className='text-center'>Part Name</div>,
     dataIndex: "item_part_description",
     key: "item_part_description",
     align: "left",
@@ -932,9 +931,9 @@ export const itemPartMixColumns = (
             showSearch
             size={"small"}
             placeholder={"Select Part"}
-            name="item_part_sort"
-            field_id="item_part_sort"
-            field_name="item_part_description"
+            name='item_part_sort'
+            field_id='item_part_sort'
+            field_name='item_part_description'
             value={getPartName(record.item_part_sort_mix)}
             data={data_part}
             onChange={(data, option) => {
@@ -971,10 +970,9 @@ export const itemPartMixColumns = (
             onConfirm={() => {
               onDelete(record.id);
             }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
+            title='Are you sure you want to delete this row？'
+            okText='Yes'
+            cancelText='No'>
             <DeleteTwoTone />
           </Popconfirm>
         );
@@ -1040,8 +1038,8 @@ export const fillingProcessColumns = (
   },
   {
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">* </span>}
+      <div className='text-center'>
+        {!readOnly && <span className='require'>* </span>}
         {"Description"}
       </div>
     ),
@@ -1051,7 +1049,7 @@ export const fillingProcessColumns = (
     ellipsis: true,
     render: (value, record) => {
       return readOnly ? (
-        <Text className="text-value">{value}</Text>
+        <Text className='text-value'>{value}</Text>
       ) : (
         <Input
           placeholder={"Description"}
@@ -1066,8 +1064,8 @@ export const fillingProcessColumns = (
   },
   {
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">* </span>}
+      <div className='text-center'>
+        {!readOnly && <span className='require'>* </span>}
         {"Worker"}
       </div>
     ),
@@ -1077,12 +1075,12 @@ export const fillingProcessColumns = (
     width: "10%",
     render: (value, record) => {
       return readOnly ? (
-        <Text className="text-value">{value ? value : "-"}</Text>
+        <Text className='text-value'>{value ? value : "-"}</Text>
       ) : (
         <InputNumber
-          className="full-width"
+          className='full-width'
           name={worker}
-          placeholder="Amount of Worker"
+          placeholder='Amount of Worker'
           min={0}
           step={1}
           defaultValue={0}
@@ -1098,15 +1096,15 @@ export const fillingProcessColumns = (
             console.log(e.target.value);
             onSave(record.id, worker);
           }}
-          size="small"
+          size='small'
         />
       );
     },
   },
   {
     title: (
-      <div className="text-center">
-        {!readOnly && <span className="require">* </span>}
+      <div className='text-center'>
+        {!readOnly && <span className='require'>* </span>}
         {"Time (HH:mm:ss)"}
       </div>
     ),
@@ -1116,16 +1114,16 @@ export const fillingProcessColumns = (
     width: "15%",
     render: (value, record) => {
       return readOnly ? (
-        <Text className="text-value">{value ? value : "00:00:00"}</Text>
+        <Text className='text-value'>{value ? value : "00:00:00"}</Text>
       ) : (
         <TimePicker
-          className="full-width"
+          className='full-width'
           size={"small"}
           format={"HH:mm:ss"}
           secondStep={10}
           showNow={false}
           name={time}
-          placeholder="HH:mm:ss"
+          placeholder='HH:mm:ss'
           required
           value={value ? moment(value, "HH:mm:ss") : ""}
           onChange={(data) => {
@@ -1157,10 +1155,9 @@ export const fillingProcessColumns = (
             onConfirm={() => {
               onDelete(record.id);
             }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
+            title='Are you sure you want to delete this row？'
+            okText='Yes'
+            cancelText='No'>
             <DeleteTwoTone />
           </Popconfirm>
         );
@@ -1224,23 +1221,23 @@ export const itemUOMConversionColumns = ({
   },
   {
     title: (
-      <div className="text-center">
-        <CustomLabel label="Main UOM" require readOnly={readOnly} />
+      <div className='text-center'>
+        <CustomLabel label='Main UOM' require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "uom_no_name_from",
     width: "20%",
     align: "center",
     render: (value) => (
-      <Text name="uom_id_from" className="text-value">
+      <Text name='uom_id_from' className='text-value'>
         {value}
       </Text>
     ),
   },
   {
     title: (
-      <div className="text-center">
-        <CustomLabel label="Type" require readOnly={readOnly} />
+      <div className='text-center'>
+        <CustomLabel label='Type' require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "uom_convert_main_action",
@@ -1248,7 +1245,7 @@ export const itemUOMConversionColumns = ({
     align: "center",
     render: (value, record, key) => {
       return readOnly ? (
-        <Text className="text-value">{value}</Text>
+        <Text className='text-value'>{value}</Text>
       ) : (
         <CustomSelect
           allowClear
@@ -1257,8 +1254,8 @@ export const itemUOMConversionColumns = ({
           placeholder={"> , < , ="}
           className={"full-width check-field"}
           name={`uom_convert_main_action-${key}`}
-          field_id="uom_convert_main_action_id"
-          field_name="uom_convert_main_action"
+          field_id='uom_convert_main_action_id'
+          field_name='uom_convert_main_action'
           value={value}
           data={[
             {
@@ -1293,8 +1290,8 @@ export const itemUOMConversionColumns = ({
   },
   {
     title: (
-      <div className="text-center">
-        <CustomLabel label="To UOM" require readOnly={readOnly} />
+      <div className='text-center'>
+        <CustomLabel label='To UOM' require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "uom_no_name_to",
@@ -1302,7 +1299,7 @@ export const itemUOMConversionColumns = ({
     align: "center",
     render: (value, record, key) => {
       return readOnly ? (
-        <Text className="text-value text-left">{value}</Text>
+        <Text className='text-value text-left'>{value}</Text>
       ) : (
         <CustomSelect
           allowClear
@@ -1311,8 +1308,8 @@ export const itemUOMConversionColumns = ({
           placeholder={"Unit of measure"}
           className={"full-width check-field"}
           name={`uom_id_to-${key}`}
-          field_id="uom_id"
-          field_name="uom_no_name"
+          field_id='uom_id'
+          field_name='uom_no_name'
           value={value}
           data={filterUOM}
           onChange={(data, option) => {
@@ -1332,8 +1329,8 @@ export const itemUOMConversionColumns = ({
   },
   {
     title: (
-      <div className="text-center">
-        <CustomLabel label="Ratio" require readOnly={readOnly} />
+      <div className='text-center'>
+        <CustomLabel label='Ratio' require readOnly={readOnly} />
       </div>
     ),
     dataIndex: "uom_convert_value",
@@ -1341,8 +1338,8 @@ export const itemUOMConversionColumns = ({
     align: "center",
     render: (value, record, key) => {
       return readOnly ? (
-        <div className="text-right">
-          <Text className="text-value ">{convertDigit(value, 4)}</Text>
+        <div className='text-right'>
+          <Text className='text-value '>{convertDigit(value, 4)}</Text>
         </div>
       ) : (
         <InputNumber
@@ -1381,8 +1378,8 @@ export const itemUOMConversionColumns = ({
       } else {
         return record.uom_convert_id !== null ? (
           <Switch
-            size="small"
-            title="Active / In-Active"
+            size='small'
+            title='Active / In-Active'
             checked={value}
             onChange={(_) => onSwitch(record.id)}
           />
@@ -1391,10 +1388,9 @@ export const itemUOMConversionColumns = ({
             onConfirm={() => {
               onDelete(record.id);
             }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
+            title='Are you sure you want to delete this row？'
+            okText='Yes'
+            cancelText='No'>
             <DeleteTwoTone />
           </Popconfirm>
         );
