@@ -385,7 +385,11 @@ const SaleOrderCreate = (props) => {
                 val === 1
                   ? headDispatch({
                       type: "CHANGE_HEAD_VALUE",
-                      payload: { so_type_id: val },
+                      payload: {
+                        so_type_id: val,
+                        so_production_type_id: 1,
+                        so_production_ref_id: null,
+                      },
                     })
                   : headDispatch({
                       type: "CHANGE_HEAD_VALUE",
