@@ -824,6 +824,7 @@ export const getItemAction = (
   data_packaging_detail
 ) => {
   const { certificate } = data_file;
+  console.log("data_packaging_detail :>> ", data_packaging_detail);
   const list_action_filling_specifaction = data_packaging_detail.map((data) => {
     if (data.item_no.substr(1, 1) == "4") {
       return {
@@ -834,10 +835,10 @@ export const getItemAction = (
           </span>
         ),
         link: `${process.env.REACT_APP_REPORT_SERVER}/file_upload/item/${
-          data.item_id
-        }_${data.item_no.substr(1)}/${data.item_id}_${data.item_no.substr(
-          1
-        )}_8.pdf`,
+          data.item_id_packaging
+        }_${data.item_no.substr(1)}/${
+          data.item_id_packaging
+        }_${data.item_no.substr(1)}_8.pdf`,
       };
     }
   });
