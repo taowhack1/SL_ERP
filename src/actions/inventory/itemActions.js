@@ -36,7 +36,7 @@ import { apiSampleItem } from ".";
 
 const openNotificationWithIcon = (type, title, text) => {
   notification[type]({
-    message: <h4 className="notify-title">{title}</h4>,
+    message: <h4 className='notify-title'>{title}</h4>,
     description: text,
   });
 };
@@ -820,16 +820,63 @@ export const getFGMaterialList = async (
 
 export const getItemAction = (
   { type_id, button_cancel, item_no },
-  data_file
+  data_file,
+  data_packaging_detail
 ) => {
   const { certificate } = data_file;
+  console.log("data_packaging_detail :>> ", data_packaging_detail);
+  const list_action_filling_specifaction = data_packaging_detail.map((data) => {
+    if (data.item_no.substr(1, 1) == "4") {
+      return {
+        name: (
+          <span>
+            <PrinterOutlined className='pd-right-1 button-icon' />
+            <b>{data.item_no}</b> FINISHED PRODUCT FILLING SPECIFACTION
+          </span>
+        ),
+        link: `${process.env.REACT_APP_REPORT_SERVER}/file_upload/item/${
+          data.item_id_packaging
+        }_${data.item_no.substr(1)}/${
+          data.item_id_packaging
+        }_${data.item_no.substr(1)}_8.pdf`,
+      };
+    }
+  });
+  const list_action_specifaction = data_packaging_detail.map((data) => {
+    if (data.item_no.substr(1, 1) == "4") {
+      return {
+        name: (
+          <span>
+            <PrinterOutlined className='pd-right-1 button-icon' />
+            <b>{data.item_no}</b> FINSHED PRODUCT SPECIFICATION
+          </span>
+        ),
+        link: `${process.env.REACT_APP_REPORT_SERVER}/report_fg_package.aspx?item_code=${data.item_no}`,
+      };
+    }
+  });
+  const list_action_package = data_packaging_detail.map((data) => {
+    console.log("data.item_no.substring ", data.item_no.substr(1, 1));
+    if (data?.item_no?.substr(1, 1) == "2") {
+      return {
+        name: (
+          <span>
+            <PrinterOutlined className='pd-right-1 button-icon' />
+            <b>{data.item_no}</b> Package Specification
+          </span>
+        ),
+        link: `${process.env.REACT_APP_REPORT_SERVER}/report_package_specification.aspx?item_code=${data.item_no}`,
+      };
+    }
+  });
+
   console.log(certificate);
   let action = [];
   if (button_cancel)
     action.push({
       name: (
-        <span className="require">
-          <DeleteOutlined className="pd-right-1" />
+        <span className='require'>
+          <DeleteOutlined className='pd-right-1' />
           Cancel
         </span>
       ),
@@ -843,7 +890,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               Raw Material Specification
             </span>
           ),
@@ -857,7 +904,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               Package Specification
             </span>
           ),
@@ -871,7 +918,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               Master Formula
             </span>
           ),
@@ -880,7 +927,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               Bulk Specification
             </span>
           ),
@@ -889,7 +936,7 @@ export const getItemAction = (
         certificate["9"].url && {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               Process Specification
             </span>
           ),
@@ -903,7 +950,7 @@ export const getItemAction = (
         certificate["8"].url && {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               FINISHED PRODUCT FILLING SPECIFACTION
             </span>
           ),
@@ -912,12 +959,20 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className="pd-right-1 button-icon" />
+              <PrinterOutlined className='pd-right-1 button-icon' />
               FINSHED PRODUCT SPECIFICATION
             </span>
           ),
           link: `${process.env.REACT_APP_REPORT_SERVER}/report_fg_package.aspx?item_code=${item_no}`,
         },
+      ];
+      break;
+    case 5:
+      action = [
+        ...action,
+        ...list_action_filling_specifaction,
+        ...list_action_specifaction,
+        ...list_action_package,
       ];
       break;
     default:
