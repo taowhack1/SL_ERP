@@ -111,12 +111,12 @@ const MRPCreate = (props) => {
       item_qty_produce_bulk_request = 0,
     } = state;
 
-    console.log("getRPMDetail state", state);
     const getMaterial = async () => {
       setLoading({
         ...loading,
         detailLoading: true,
       });
+
       await getFGMaterialList(
         so_id,
         item_id,
@@ -277,7 +277,6 @@ const MRPCreate = (props) => {
         mrpRoutingRequireFields
       );
 
-      console.log("Save Data", state);
       if (validate.validate) {
         if (!validateRouting.validate) {
           message.error({

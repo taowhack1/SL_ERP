@@ -1,5 +1,8 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "editor.acceptSuggestionOnCommitCharacter": false
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "[sql]": {
+    "editor.defaultFormatter": "ms-mssql.mssql"
+  }
 }

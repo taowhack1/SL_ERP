@@ -93,8 +93,6 @@ const MRPHead = () => {
     }
   }, [mainState?.calRPM]);
 
-  console.log("mainState @@", mainState);
-  console.log("config", config);
   return (
     <>
       <Row className="col-2">
@@ -198,7 +196,6 @@ const MRPHead = () => {
                       value={mainState.so_detail_id}
                       data={mainState.so_detail ?? []}
                       onChange={(data, option) => {
-                        console.log("select data", option?.data);
                         data !== undefined
                           ? onChange({
                               ...resetValue,
