@@ -135,7 +135,7 @@ const ItemView = (props) => {
       step: flow,
       process_complete: data_head.process_complete,
     },
-    action: getItemAction(data_head, data_file),
+    action: getItemAction(data_head, data_file, data_packaging_detail),
     // save: "function",
     discard: "/inventory/items",
     back: "/inventory/items",
