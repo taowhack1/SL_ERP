@@ -18,6 +18,7 @@ import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 import CustomLabel from "../../../components/CustomLabel";
 import moment from "moment";
 import { CalculatorOutlined } from "@ant-design/icons";
+import { useFetch } from "../../../include/js/customHooks";
 const { Text } = Typography;
 const resetValue = {
   so_detail_id: null,
@@ -41,6 +42,7 @@ const resetValue = {
   rm_detail: [],
   pk_detail: [],
 };
+const apiItemProduceList = `/production/mrp/item_produce`;
 const MRPHead = () => {
   const [config, setConfig] = useState({
     editBulk: false,
@@ -49,6 +51,7 @@ const MRPHead = () => {
   const SOList = useSelector(
     (mainState) => mainState.production.operations.mrp.mrp.data_so_ref
   );
+
   const {
     calBtn,
     detailLoading,
@@ -58,8 +61,12 @@ const MRPHead = () => {
     initialState,
     readOnly,
   } = useContext(MRPContext);
-
+  const { data: itemProduceList, loading: getItemProduceListLoading } =
+    useFetch(`${apiItemProduceList}/${mainState?.so_id}`, !mainState?.so_id);
+  const { data: itemList } = itemProduceList || {};
+  console.log("itemProduceList", itemProduceList);
   const onChangeConfig = (data) => setConfig((prev) => ({ ...prev, ...data }));
+
   const onChange = (data) => {
     console.log("onChange Data", data);
     // setState({ ...mainState, ...data });
@@ -68,6 +75,7 @@ const MRPHead = () => {
       payload: data,
     });
   };
+
   const Reset = () => {
     mainStateDispatch({ type: "RESET_DATA", payload: initialState });
   };
@@ -188,13 +196,13 @@ const MRPHead = () => {
                     <CustomSelect
                       allowClear
                       showSearch
-                      disabled={detailLoading || !mainState.so_id}
+                      disabled={detailLoading || getItemProduceListLoading}
                       placeholder={"Item"}
                       name="item_id"
                       field_id="so_detail_id"
                       field_name="item_no_name"
                       value={mainState.so_detail_id}
-                      data={mainState.so_detail ?? []}
+                      data={itemList || []}
                       onChange={(data, option) => {
                         data !== undefined
                           ? onChange({
