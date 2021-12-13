@@ -326,7 +326,7 @@ const columns = () => [
     align: "right",
     className: "tb-col-sm",
     width: "8%",
-    dataIndex: "tg_receive_detail_qty",
+    dataIndex: "receive_detail_sub_qty",
     render: (val) => convertDigit(val, 6) || "-",
   },
   {
