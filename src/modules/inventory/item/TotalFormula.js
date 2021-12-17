@@ -1,3 +1,5 @@
+/** @format */
+
 import { Table } from "antd";
 import React, { useContext } from "react";
 import { totalFormulaColumns } from "../config/item";
@@ -35,6 +37,7 @@ const TotalFormula = () => {
     return temp.length ? sortData(temp) : [];
   };
   const combineData = combinePart();
+  console.log("combineData :>> ", combineData);
   //   console.log("map Part ", formulaData);
   //   formulaData.map((arr) => combineData.push(...arr));
   return (
@@ -42,13 +45,13 @@ const TotalFormula = () => {
       <CustomTable
         loading={false}
         columns={totalFormulaColumns}
-        rowClassName="row-table-detail"
+        rowClassName='row-table-detail'
         dataSource={combineData}
         onChange={() => console.log("change page")}
         bordered
         pageSize={100}
-        size="small"
-        rowKey="id"
+        size='small'
+        rowKey='id'
       />
     </>
   );
