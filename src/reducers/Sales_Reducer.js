@@ -40,6 +40,7 @@ const inititalState = {
       salesType: 3,
       soProductionType: 0,
       keyword: null,
+      so_status: null,
     },
   },
   operations: {
