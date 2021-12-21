@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table, Space, Radio, Button, Popconfirm, Tag } from "antd";
 import MainLayout from "../../components/MainLayout";
@@ -30,8 +30,15 @@ import CustomTable from "../../components/CustomTable";
 import { EllipsisOutlined } from "@ant-design/icons";
 import CustomSelect from "../../components/CustomSelect";
 import SO_SearchTable from "../sales/SO_search_tools";
-
-const so_columns = ({ onOpen }) => [
+import SOFilter from "../sales/SOFilter";
+const so_columns = ({
+  onOpen,
+  refSearchInput,
+  searchText,
+  setSearchText,
+  searchedColumn,
+  setSearchedColumn,
+}) => [
   {
     title: "SO No.",
     dataIndex: "so_no",
@@ -42,6 +49,14 @@ const so_columns = ({ onOpen }) => [
       compare: (a, b) => a.so_id - b.so_id,
       multiple: 3,
     },
+    ...SOFilter(
+      "so_no",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
     render: (value) => value || "-",
   },
   {
@@ -54,6 +69,14 @@ const so_columns = ({ onOpen }) => [
       compare: (a, b) => a.qn_id - b.qn_id,
       multiple: 3,
     },
+    ...SOFilter(
+      "qn_no",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
     render: (value) => value || "-",
   },
   {
@@ -62,6 +85,14 @@ const so_columns = ({ onOpen }) => [
     key: "so_customer_po_no",
     width: "10%",
     align: "center",
+    ...SOFilter(
+      "so_customer_po_no",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
     render: (value) => value || "-",
   },
   {
@@ -142,7 +173,14 @@ const so_columns = ({ onOpen }) => [
     },
   },
 ];
-const so_columns_Production = ({ onOpen }) => [
+const so_columns_Production = ({
+  onOpen,
+  refSearchInput,
+  searchText,
+  setSearchText,
+  searchedColumn,
+  setSearchedColumn,
+}) => [
   {
     title: "SO No.",
     dataIndex: "so_no",
@@ -286,7 +324,9 @@ const SaleOrder = (props) => {
   const { filter } = useSelector((state) => state.sales.so);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
-
+  const refSearchInput = useRef();
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState(0);
   const getSOList = async () => {
     setLoading(true);
     const resp = await getSalesOrder(auth.user_name);
@@ -759,8 +799,22 @@ const SaleOrder = (props) => {
               loading={loading}
               columns={
                 filter.soProductionType === 3
-                  ? so_columns_Production({ onOpen })
-                  : so_columns({ onOpen })
+                  ? so_columns_Production({
+                      onOpen,
+                      refSearchInput,
+                      searchText,
+                      setSearchText,
+                      searchedColumn,
+                      setSearchedColumn,
+                    })
+                  : so_columns({
+                      onOpen,
+                      refSearchInput,
+                      searchText,
+                      setSearchText,
+                      searchedColumn,
+                      setSearchedColumn,
+                    })
               }
               dataSource={
                 state //.filter((data) => data.button_approve == 1
