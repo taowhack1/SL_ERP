@@ -29,6 +29,7 @@ import {
 import CustomTable from "../../components/CustomTable";
 import { EllipsisOutlined } from "@ant-design/icons";
 import CustomSelect from "../../components/CustomSelect";
+import SO_SearchTable from "../sales/SO_search_tools";
 
 const so_columns = ({ onOpen }) => [
   {
@@ -272,6 +273,7 @@ const so_columns_Production = ({ onOpen }) => [
     },
   },
 ];
+
 const keepData = {
   so: [],
 };
@@ -531,31 +533,6 @@ const SaleOrder = (props) => {
         : filter.so_status === "Waiting"
         ? filterData?.filter((po) => po?.trans_status_name == "Draft")
         : filterData;
-      // filterData = !filter.keyword
-      //   ? filterData
-      //   : // :  filter.so_status === "Pending Approve"
-      //     // ? filterData?.filter((so) => so?.button_approve == 1):
-      //     // : filter.so_status === "Pending Confirm"
-      //     // ? filterData?.filter((so) => so?.button_confirm == 1)
-      //     // : filter.so_status === "Completed"
-      //     // ? filterData?.filter((so) => so?.trans_status_name == "Completed")
-      //     // : filter.so_status === "Open DR 1"
-      //     // ? filterData?.filter((so) => so?.trans_status_name == "Open DR 1")
-      //     // : filter.so_status === "None DR"
-      //     // ? filterData?.filter((so) => so?.trans_status_name == "None DR")
-      //     // : filter.so_status === "Transports 2"
-      //     // ? filterData?.filter((so) => so?.trans_status_name == "Transports 2")
-      //     // : filter.so_status === "Cancel"
-      //     // ? filterData?.filter((so) => so?.trans_status_name == "Cancel")
-      //     filterData?.filter(
-      //       (obj) =>
-      //         obj?.so_no?.indexOf(filter.keyword) >= 0 ||
-      //         obj?.qn_no?.indexOf(filter.keyword) >= 0 ||
-      //         obj?.customer_no_name?.indexOf(filter.keyword) >= 0 ||
-      //         obj?.so_created_by_no_name?.indexOf(filter.keyword) >= 0 ||
-      //         obj?.so_created?.indexOf(filter.keyword) >= 0 ||
-      //         obj?.so_description?.indexOf(filter.keyword) >= 0
-      //     );
       setState(filterData);
       setLoading(false);
     };
@@ -778,6 +755,7 @@ const SaleOrder = (props) => {
         <Row>
           <Col span={24}>
             <Table
+              //title={() => <SO_SearchTable />} //onChangeSearch={onChangeSearch} />}
               loading={loading}
               columns={
                 filter.soProductionType === 3
