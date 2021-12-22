@@ -132,7 +132,8 @@ const RoutingForm = (props) => {
         commit: 1,
         routing_detail: data.routing_detail.map((obj) => ({
           ...obj,
-          routing_detail_type_id: data.type_id === 3 ? 1 : 2,
+          routing_detail_type_id:
+            data.type_id === 3 ? 1 : data.type_id === 4 ? 2 : 3,
         })),
       },
     ];

@@ -68,7 +68,9 @@ export const getReceiveById = (id, user_name) => {
     );
 
     const get_detail = axios.get(`${api_receive_detail}/${id}`).then((res) => {
+      console.log("RECEIVE _DETAIL API ", `${api_receive_detail}/${id}`);
       let details = res.data[0];
+      console.log("RECEIVE_DETAIL", details);
       return axios
         .get(`${api_receive_sub_detail}/${id}`, header_config)
         .then((res) => {
