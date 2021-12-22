@@ -359,7 +359,7 @@ export const qn_actions = (data, qn_id) => (dispatch) => {
 };
 
 export const so_actions = (data, so_id) => (dispatch) => {
-  console.log("so_actions");
+  console.log("so_actions", data);
   data.commit = 1;
   // data = {process_status_id : '3', user_name : '2563003', process_id : '30', commit : 1}
   axios
