@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Row, Col, Table, Button, Space, Typography, Divider } from "antd";
@@ -105,7 +105,9 @@ const PO = (props) => {
   }, [keyword, poList, getPOLoading, po_status]);
 
   const [data, setData] = useState([]);
-
+  const refSearchInput = useRef();
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState(0);
   const onChange = (pagination) => {
     const { current, pageSize } = pagination;
     dispatch(filterPO({ page: current, pageSize }));
@@ -217,7 +219,13 @@ const PO = (props) => {
           <Col span={18}>
             <Table
               style={{ marginTop: 60 }}
-              columns={po_list_columns}
+              columns={po_list_columns({
+                refSearchInput,
+                searchText,
+                setSearchText,
+                searchedColumn,
+                setSearchedColumn,
+              })}
               dataSource={data}
               rowKey={"po_id"}
               loading={getPOLoading || loading}

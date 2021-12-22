@@ -101,6 +101,14 @@ const so_columns = ({
     key: "so_order_date",
     width: "8%",
     align: "center",
+    ...SOFilter(
+      "so_order_date",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
     render: (value) => value || "-",
   },
   {
@@ -109,6 +117,14 @@ const so_columns = ({
     key: "tg_so_delivery_date",
     width: "8%",
     align: "center",
+    ...SOFilter(
+      "tg_so_delivery_date",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
     render: (value) => value || "-",
   },
   {
@@ -117,6 +133,14 @@ const so_columns = ({
     key: "customer_no_name",
     // width: "18%",
     align: "left",
+    ...SOFilter(
+      "customer_no_name",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
     ellipsis: true,
     render: (value) => value || "-",
   },
@@ -135,6 +159,14 @@ const so_columns = ({
     key: "so_created_by_no_name",
     width: "15%",
     align: "left",
+    ...SOFilter(
+      "so_created_by_no_name",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
     ellipsis: true,
     render: (value) => value || "-",
   },
