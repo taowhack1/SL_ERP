@@ -21,7 +21,7 @@ import {
   api_item_uom_conversion,
 } from "../../include/js/api";
 import axios from "axios";
-import { message, notification } from "antd";
+import { message, notification, Divider } from "antd";
 import {
   item_save_file,
   itemSaveFileVendor,
@@ -819,7 +819,7 @@ export const getFGMaterialList = async (
 };
 
 export const getItemAction = (
-  { type_id, button_cancel, item_no },
+  { type_id, button_cancel, item_no, item_id },
   data_file,
   data_packaging_detail
 ) => {
@@ -831,10 +831,10 @@ export const getItemAction = (
         name: (
           <span>
             <PrinterOutlined className='pd-right-1 button-icon' />
-            <b>{data.item_no}</b> FINISHED PRODUCT FILLING SPECIFACTION
+            {data.item_no}
           </span>
         ),
-        link: `${process.env.REACT_APP_REPORT_SERVER}/file_upload/item/${
+        link: `${process.env.REACT_APP_SERVER}/file_upload/item/${
           data.item_id_packaging
         }_${data.item_no.substr(1)}/${
           data.item_id_packaging
@@ -848,7 +848,7 @@ export const getItemAction = (
         name: (
           <span>
             <PrinterOutlined className='pd-right-1 button-icon' />
-            <b>{data.item_no}</b> FINSHED PRODUCT SPECIFICATION
+            {data.item_no}
           </span>
         ),
         link: `${process.env.REACT_APP_REPORT_SERVER}/report_fg_package.aspx?item_code=${data.item_no}`,
@@ -862,7 +862,7 @@ export const getItemAction = (
         name: (
           <span>
             <PrinterOutlined className='pd-right-1 button-icon' />
-            <b>{data.item_no}</b> Package Specification
+            {data.item_no}
           </span>
         ),
         link: `${process.env.REACT_APP_REPORT_SERVER}/report_package_specification.aspx?item_code=${data.item_no}`,
@@ -970,8 +970,57 @@ export const getItemAction = (
     case 5:
       action = [
         ...action,
+        {
+          name: (
+            <span>
+              <Divider orientation='left' plain style={{ margin: "1px 0" }}>
+                <b>FINISHED PRODUCT FILLING SPECIFACTION</b>
+              </Divider>
+            </span>
+          ),
+        },
         ...list_action_filling_specifaction,
+        {
+          name: (
+            <span>
+              <PrinterOutlined className='pd-right-1 button-icon' />
+              {item_no}
+            </span>
+          ),
+          link: `${
+            process.env.REACT_APP_SERVER
+          }/file_upload/item/${item_id}_${item_no.substr(
+            1
+          )}/${item_id}_${item_no.substr(1)}_8.pdf`,
+        },
+        {
+          name: (
+            <span>
+              <Divider orientation='left' plain style={{ margin: "1px 0" }}>
+                <b>FINSHED PRODUCT SPECIFICATION</b>
+              </Divider>
+            </span>
+          ),
+        },
         ...list_action_specifaction,
+        {
+          name: (
+            <span>
+              <PrinterOutlined className='pd-right-1 button-icon' />
+              {item_no}
+            </span>
+          ),
+          link: `${process.env.REACT_APP_REPORT_SERVER}/report_fg_package.aspx?item_code=${item_no}`,
+        },
+        {
+          name: (
+            <span>
+              <Divider orientation='left' plain style={{ margin: "1px 0" }}>
+                <b>Package Specification</b>
+              </Divider>
+            </span>
+          ),
+        },
         ...list_action_package,
       ];
       break;
