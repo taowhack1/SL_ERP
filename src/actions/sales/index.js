@@ -361,7 +361,7 @@ export const qn_actions = (data, qn_id) => (dispatch) => {
 export const so_actions = (data, so_id) => (dispatch) => {
   console.log("so_actions", data, so_id);
   const Lineurl =
-    "https://1854-101-109-23-157.ngrok.io/api/line/post/message/push_message/so_approve";
+    "https://c81a-101-109-25-198.ngrok.io/api/line/post/message/push_message/so_approve";
   data.commit = 1;
   axios.post(`${Lineurl}`, { so_id, ...data }, header_config).then((res) => {
     console.log(res);
