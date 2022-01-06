@@ -199,14 +199,15 @@ const MRPHead = () => {
                       disabled={detailLoading || getItemProduceListLoading}
                       placeholder={"Item"}
                       name="item_id"
-                      field_id="so_detail_id"
+                      field_id="item_so_detail_id"
                       field_name="item_no_name"
-                      value={mainState.so_detail_id}
+                      value={mainState.item_so_detail_id}
                       data={itemList || []}
                       onChange={(data, option) => {
                         data !== undefined
                           ? onChange({
                               ...resetValue,
+                              item_so_detail_id: option.data.item_so_detail_id,
                               so_detail_id: option.data.so_detail_id,
                               item_id: option.data.item_id,
                               item_no_name: option.data.item_no_name,

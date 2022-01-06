@@ -109,6 +109,7 @@ const MRPCreate = (props) => {
       calRPM,
       mrp_qty_produce_ref_used,
       item_qty_produce_bulk_request = 0,
+      type_id,
     } = state;
 
     const getMaterial = async () => {
@@ -116,67 +117,95 @@ const MRPCreate = (props) => {
         ...loading,
         detailLoading: true,
       });
+      console.log(
+        "getMaterial",
+        `
+          type_id : ${type_id}
+          so_id : ${so_id}
+          so_detail_id : ${so_detail_id}
+          item_id : ${item_id}
+          qty_to_produce : ${mrp_qty_produce}
+          ref_used : ${mrp_qty_produce_ref_used}
+          qty_bulk_to_produce : ${item_qty_produce_bulk_request}
+        `
+      );
 
-      await getFGMaterialList(
-        so_id,
-        item_id,
-        mrp_qty_produce,
-        so_detail_id,
-        mrp_qty_produce_ref_used,
-        item_qty_produce_bulk_request
-      )
-        .then((res) => {
-          const materialDetail = res.data[0];
-          console.log("getRPMDetail materialDetail", materialDetail);
-          stateDispatch({
-            type: "SET_DATA_OBJECT",
-            payload: materialDetail
-              ? {
-                  ...state,
-                  ...materialDetail,
-                  user_name: auth.user_name,
-                  branch_id: auth.branch_id,
-                  tg_trans_status_id: 1,
-                  uom_no: materialDetail?.uom_no,
-                  rm_detail: sortData(materialDetail?.item_formula ?? []) ?? [],
-                  pk_detail:
-                    sortData(materialDetail?.item_packaging ?? []) ?? [],
-                  item_formula: null,
-                  calRPM: false,
-                  mrp_routing: {
-                    bulk: sortData(
-                      materialDetail.mrp_routing.filter(
-                        (obj) => obj.routing_detail_type_id === 1
-                      )
-                    ),
-                    fg: sortData(
-                      materialDetail.mrp_routing.filter(
-                        (obj) => obj.routing_detail_type_id === 2
-                      )
-                    ),
-                  },
-                }
-              : initialState,
-          });
-          setTimeout(() => {
+      if ([3, 4].includes(type_id)) {
+        console.log("CASE CALCULATE TYPE ", type_id);
+        await getFGMaterialList(
+          so_id,
+          item_id,
+          mrp_qty_produce,
+          so_detail_id,
+          mrp_qty_produce_ref_used,
+          item_qty_produce_bulk_request
+        )
+          .then((res) => {
+            const materialDetail = res.data[0];
+            console.log("getRPMDetail materialDetail", materialDetail);
+            stateDispatch({
+              type: "SET_DATA_OBJECT",
+              payload: materialDetail
+                ? {
+                    ...state,
+                    ...materialDetail,
+                    user_name: auth.user_name,
+                    branch_id: auth.branch_id,
+                    tg_trans_status_id: 1,
+                    uom_no: materialDetail?.uom_no,
+                    rm_detail:
+                      sortData(materialDetail?.item_formula ?? []) ?? [],
+                    pk_detail:
+                      sortData(materialDetail?.item_packaging ?? []) ?? [],
+                    item_formula: null,
+                    calRPM: false,
+                    mrp_routing: {
+                      bulk: sortData(
+                        materialDetail.mrp_routing.filter(
+                          (obj) => obj.routing_detail_type_id === 1
+                        )
+                      ),
+                      fg: sortData(
+                        materialDetail.mrp_routing.filter(
+                          (obj) => obj.routing_detail_type_id === 2
+                        )
+                      ),
+                    },
+                  }
+                : initialState,
+            });
+            setTimeout(() => {
+              setLoading({
+                ...loading,
+                detailLoading: false,
+              });
+              message.success({
+                key: "notify2",
+                content: "RPM has been updated",
+                duration: 3,
+              });
+            }, [500]);
+          })
+          .catch((error) => {
+            message.error(error);
             setLoading({
               ...loading,
               detailLoading: false,
             });
-            message.success({
-              key: "notify2",
-              content: "RPM has been updated",
-              duration: 3,
-            });
-          }, [500]);
-        })
-        .catch((error) => {
-          message.error(error);
-          setLoading({
-            ...loading,
-            detailLoading: false,
           });
+      } else if ([5].includes(type_id)) {
+        console.log("CASE CALCULATE TYPE ", type_id);
+        setLoading({
+          ...loading,
+          detailLoading: false,
         });
+      } else {
+        console.log("CASE CALCULATE TYPE ", type_id);
+        setLoading({
+          ...loading,
+          detailLoading: false,
+        });
+      }
     };
 
     so_id && so_detail_id && calRPM
