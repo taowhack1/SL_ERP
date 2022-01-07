@@ -69,6 +69,7 @@ const SaleOrderView = (props) => {
       user_name: auth.user_name,
       process_id: data_head.process_id,
       process_member_remark: remark,
+      node_stay: data_head.node_stay,
     };
     message.success({ content: "Reject", key: "validate", duration: 1 });
     dispatch(so_actions(app_detail, data_head.so_id));
@@ -201,6 +202,7 @@ const SaleOrderView = (props) => {
         user_name: auth.user_name,
         process_id: data_head.process_id,
         process_member_remark: remark,
+        node_stay: data_head.node_stay,
       };
       dispatch(so_actions(app_detail, data_head.so_id));
     },
@@ -210,6 +212,7 @@ const SaleOrderView = (props) => {
         process_status_id: 2,
         user_name: auth.user_name,
         process_id: data_head.process_id,
+        node_stay: data_head.node_stay,
       };
       dispatch(so_actions(app_detail, data_head.so_id));
     },
