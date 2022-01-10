@@ -361,14 +361,19 @@ export const qn_actions = (data, qn_id) => (dispatch) => {
 export const so_actions = (data, so_id) => (dispatch) => {
   console.log("so_actions", data, so_id);
   if (data.process_status_id >= 2 && data.process_status_id != 6) {
-    console.log("sending Line :>> ", data);
-    const Lineurl =
-      "https://ffa1-101-108-62-36.ngrok.io/api/line/post/message/push_message/so_approve";
+    // const Lineurl =
+    //   "https://ffa1-101-108-62-36.ngrok.io/api/line/post/message/push_message/so_approve";
     data.commit = 1;
-    axios.post(`${Lineurl}`, { so_id, ...data }, header_config).then((res) => {
-      console.log(res);
-      //dispatch(get_so_by_id(so_id, data.user_name));
-    });
+    axios
+      .post(
+        `${process.env.REACT_APP_LOCAL_LINE_APPROVE_SO}`,
+        { so_id, ...data },
+        header_config
+      )
+      .then((res) => {
+        console.log(res);
+        //dispatch(get_so_by_id(so_id, data.user_name));
+      });
   }
   data.commit = 1;
   axios
