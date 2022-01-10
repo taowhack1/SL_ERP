@@ -25,6 +25,7 @@ import {
 } from "../../../actions/inventory/itemActions";
 import {
   createMRP,
+  getMRPCalV2,
   getSOReference,
   updateMRP,
 } from "../../../actions/production/mrpActions";
@@ -195,6 +196,13 @@ const MRPCreate = (props) => {
           });
       } else if ([5].includes(type_id)) {
         console.log("CASE CALCULATE TYPE ", type_id);
+        const data = await getMRPCalV2({
+          item_id,
+          so_id,
+          so_detail_id,
+          item_qty_produce: mrp_qty_produce,
+        });
+        console.log("GET DATA", data);
         setLoading({
           ...loading,
           detailLoading: false,

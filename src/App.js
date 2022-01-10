@@ -121,6 +121,7 @@ import StockOnHandV2 from "./modules/inventory/StockOnHandV2";
 import AdjustStock from "./modules/inventory/configurations/adjustStock";
 import TimeSheet from "./modules/production/operations/timesheet/TimeSheet";
 import PORoutes from "./modules/purchasing/po/PORoutes";
+import MRPRoutes from "./modules/production/operations/mrp/MRPRoutes";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -539,6 +540,10 @@ const App = (props) => {
             <Route exact path="/production/operations/mrp/create">
               <MRPCreate />
             </Route>
+            <Route path="/production/operations/mrp_v2">
+              <MRPRoutes />
+            </Route>
+
             <Route exact path="/production/operations/mrp-test">
               <MRPTest />
             </Route>
