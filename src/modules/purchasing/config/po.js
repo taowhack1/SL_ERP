@@ -1,3 +1,5 @@
+/** @format */
+
 import { getSelfStepStatus } from "../../../include/js/function_main";
 
 export const po_require_fields = [
@@ -17,7 +19,14 @@ export const po_require_fields_detail = [
   // "po_detail_price",
 ];
 
-export const po_list_columns = [
+export const po_list_columns = ({
+  onOpen,
+  refSearchInput,
+  searchText,
+  setSearchText,
+  searchedColumn,
+  setSearchedColumn,
+}) => [
   {
     title: "Purchase Order",
     className: "tb-col-sm bg-tb-primary",

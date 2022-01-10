@@ -1,5 +1,6 @@
 /** @format */
 
+import { useSelector } from "react-redux";
 import {
   PERSIST_FORM_PO,
   RESET_PERSIST_FORM_PO,
@@ -34,6 +35,7 @@ import {
   GET_DISTRICT,
 } from "../actions/types";
 import { sortData } from "../include/js/function_main";
+
 const initialState = {
   operations: {
     po: {
@@ -61,6 +63,7 @@ const initialState = {
       page: 1,
       pageSize: 20,
       vendor_id: null,
+      po_status: null,
     },
   },
   vendor: {
