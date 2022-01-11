@@ -573,12 +573,12 @@ const SaleOrder = (props) => {
       console.log("!filter.keyword :>> ", !filter.keyword);
       filterData = filter.keyword
         ? filterData?.filter(
-            (po) =>
-              po?.po_no?.indexOf(filter.keyword) >= 0 ||
-              po?.vendor_no_name?.indexOf(filter.keyword) >= 0 ||
-              po?.po_created_by_no_name?.indexOf(filter.keyword) >= 0 ||
-              po?.po_created?.indexOf(filter.keyword) >= 0 ||
-              po?.po_description?.indexOf(filter.keyword) >= 0
+            (so) =>
+              so?.so_no?.indexOf(filter.keyword) >= 0 ||
+              so?.vendor_no_name?.indexOf(filter.keyword) >= 0 ||
+              so?.customer_name?.indexOf(filter.keyword) >= 0 ||
+              so?.so_created?.indexOf(filter.keyword) >= 0 ||
+              so?.so_description?.indexOf(filter.keyword) >= 0
           )
         : filter.so_status === "Pending Approve"
         ? filterData?.filter((po) => po?.button_approve == 1)
