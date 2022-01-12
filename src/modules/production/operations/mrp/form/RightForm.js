@@ -3,25 +3,22 @@ import Text from "antd/lib/typography/Text";
 import moment from "moment";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import {
-  DatePickerField,
-  InputNumberField,
-  SelectField,
-} from "../../../../../components/AntDesignComponent";
+import { DatePickerField } from "../../../../../components/AntDesignComponent";
 import CustomLabel from "../../../../../components/CustomLabel";
-import { getNumberFormat } from "../../../../../include/js/main_config";
 
 const RightForm = () => {
   const {
     register,
     control,
     reset,
+    watch,
     formState: { errors },
     readOnly = false,
   } = useFormContext();
+  const [so_detail_delivery_date] = watch(["so_detail_delivery_date"]);
   return (
     <>
-      <Row className="col-2 mt-1 mb-1" gutter={8}>
+      {/* <Row className="col-2 mt-1 mb-1" gutter={8}>
         <Col span={8}>
           <CustomLabel readOnly={readOnly} require label={"Bulk plan date :"} />
         </Col>
@@ -34,7 +31,7 @@ const RightForm = () => {
                 {...{
                   name: `mrp_item_ref_plan_date`,
                   control,
-                  rules: { required: true },
+                  rules: { required: false },
                   defaultValue: null,
                   render: ({ field }) => {
                     const { onChange, value } = field;
@@ -66,7 +63,7 @@ const RightForm = () => {
 
       <Row className="col-2 mt-1 mb-1" gutter={8}>
         <Col span={8}>
-          <CustomLabel readOnly={readOnly} require label={"Item :"} />
+          <CustomLabel readOnly={readOnly} require label={"FG plan date :"} />
         </Col>
         <Col span={16}>
           {readOnly ? (
@@ -77,7 +74,7 @@ const RightForm = () => {
                 {...{
                   name: `mrp_item_plan_date`,
                   control,
-                  rules: { required: true },
+                  rules: { required: false },
                   defaultValue: null,
                   render: ({ field }) => {
                     const { onChange, value } = field;
@@ -105,13 +102,15 @@ const RightForm = () => {
             </>
           )}
         </Col>
-      </Row>
+      </Row> */}
       <Row className="col-2 mt-1 mb-1" gutter={8}>
         <Col span={8}>
           <CustomLabel readOnly={readOnly} require label={"Delivery Date :"} />
         </Col>
         <Col span={16}>
-          <Text className="pre-wrap">{`so_detail_delivery_date`}</Text>
+          <Text className="pre-wrap">{`${
+            so_detail_delivery_date || "-"
+          }`}</Text>
         </Col>
       </Row>
 
@@ -120,11 +119,11 @@ const RightForm = () => {
           <CustomLabel readOnly={readOnly} require label={"Vendor L/T :"} />
         </Col>
         <Col span={16}>
-          <div>
+          {/* <div>
             <Text strong>
               RM : <span>-</span> days
             </Text>
-          </div>
+          </div> */}
           <div>
             <Text strong>
               PK : <span>-</span> days

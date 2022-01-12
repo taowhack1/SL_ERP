@@ -7,6 +7,7 @@ import CustomLabel from "../../../../../components/CustomLabel";
 import LeftForm from "./LeftForm";
 import RightForm from "./RightForm";
 import DetailForm from "./detail";
+
 const Form = () => {
   const {
     register,
@@ -14,7 +15,9 @@ const Form = () => {
     reset,
     formState: { errors },
     handleSubmit,
+    readOnly = false,
   } = useFormContext();
+
   return (
     <>
       <div id="form">
@@ -25,9 +28,9 @@ const Form = () => {
               <div className="mt-1">
                 <Controller
                   {...{
-                    name: `fields_name`,
+                    name: `mrp_description`,
                     control,
-                    rules: { required: true },
+                    rules: { required: false },
                     defaultValue: null,
                     render: ({ field }) => {
                       return InputField({
@@ -41,7 +44,7 @@ const Form = () => {
                   }}
                 />
                 <br />
-                {errors?.fields_name && (
+                {errors?.mrp_description && (
                   <Text strong className="require">
                     This field is required.
                   </Text>

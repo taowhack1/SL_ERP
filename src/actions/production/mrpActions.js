@@ -207,6 +207,7 @@ const getMRPCalV2 = ({ item_id, so_id, so_detail_id, item_qty_produce }) => {
     ])
     .then((res) => {
       console.log("res api data", res);
+      return res?.data;
     })
     .catch((error) => {
       console.log(`getMRPCalV2 ERROR!!.`, error);
