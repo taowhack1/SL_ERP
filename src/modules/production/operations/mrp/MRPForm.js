@@ -47,8 +47,6 @@ const MRPForm = () => {
   );
 
   const onSubmit = async (data) => {
-    console.log("onSubmit", data);
-
     const { item_id, so_id, so_detail_id, mrp_item_qty_to_produce } =
       data || {};
     console.log(
@@ -68,14 +66,16 @@ const MRPForm = () => {
         duration: 4,
       });
     // Do Submit
+    formMethods.setValue("componentsLoading", true);
     const resData = await getMRPCalV2({
       item_id,
       so_id,
       so_detail_id,
       item_qty_produce: mrp_item_qty_to_produce,
     });
+
     formMethods.setValue("item_set_spec", resData?.data || []);
-    console.log("resData", resData);
+    formMethods.setValue("componentsLoading", false);
   };
   const onError = (data) => {
     // Do Submit

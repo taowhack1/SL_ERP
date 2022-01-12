@@ -7,11 +7,12 @@ const ComponentsForm = (props) => {
   const { fieldName = "components", columns = () => [] } = props || {};
   const {
     dataSource = [],
-    loading = false,
+    // loading = false,
     readOnly = false,
-    reset,
+    watch,
     register,
   } = useFormContext();
+  const loading = watch("componentsLoading") || false;
   const { fields } = useFieldArray({
     name: fieldName,
     defaultValue: [],
