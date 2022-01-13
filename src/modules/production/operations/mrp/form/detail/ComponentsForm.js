@@ -1,6 +1,6 @@
 import { Table } from "antd";
 import React from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import CustomTable from "../../../../../../components/CustomTable";
 
 const ComponentsForm = (props) => {
@@ -11,9 +11,15 @@ const ComponentsForm = (props) => {
     readOnly = false,
     watch,
     register,
+    control,
   } = useFormContext();
-  const loading = watch("componentsLoading") || false;
+  const loading = useWatch({
+    control,
+    name: "componentsLoading",
+    defaultValue: false,
+  });
   const { fields } = useFieldArray({
+    control,
     name: fieldName,
     defaultValue: [],
   });

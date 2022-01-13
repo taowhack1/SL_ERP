@@ -1,7 +1,7 @@
 import { Button, Col, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import {
   InputNumberField,
   SelectField,
@@ -23,11 +23,16 @@ const LeftForm = () => {
     watch,
     setValue,
   } = useFormContext();
-  const [so_id, item_so_detail_id, mrp_item_qty_to_produce] = watch([
-    "so_id",
-    "item_so_detail_id",
-    "mrp_item_qty_to_produce",
-  ]);
+  // const [so_id, item_so_detail_id, mrp_item_qty_to_produce] = watch([
+  //   "so_id",
+  //   "item_so_detail_id",
+  //   "mrp_item_qty_to_produce",
+  // ]);
+  const [so_id, item_so_detail_id, mrp_item_qty_to_produce] = useWatch({
+    control,
+    name: ["so_id", "item_so_detail_id", "mrp_item_qty_to_produce"],
+    defaultValue: [null, null, 0],
+  });
 
   console.log("mrp_item_qty_to_produce", mrp_item_qty_to_produce);
 

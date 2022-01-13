@@ -27,6 +27,9 @@ const MRPDetail = () => {
         </Tabs.TabPane>
         <Tabs.TabPane tab="Routing" key="2">
           <h1>Routing</h1>
+          <ComponentsForm
+            {...{ fieldName: "item_routing_spec", columns: routingColumns }}
+          />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Notes" key="3">
           <h1>Notes</h1>
@@ -38,29 +41,7 @@ const MRPDetail = () => {
 
 export default React.memo(MRPDetail);
 
-export const mrpDetailColumns = ({
-  readOnly,
-  onChange,
-  fieldName,
-  register,
-}) => [
-  {
-    title: "No.",
-    dataIndex: "id",
-    width: "4%",
-    align: "center",
-    render: (value, record, index) => {
-      return (
-        <>
-          <input
-            className="d-none"
-            {...register(`${fieldName}.${index}.item_id`, { required: true })}
-          />
-          {value}
-        </>
-      );
-    },
-  },
+const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
   {
     title: (
       <div className="text-center" title="Item code">
@@ -70,7 +51,7 @@ export const mrpDetailColumns = ({
     dataIndex: "item_no",
     key: "item_no",
     align: "center",
-    width: "15%",
+    width: "13%",
     ellipsis: true,
     render: (value, record, index) => {
       return (
@@ -325,7 +306,7 @@ export const mrpDetailColumns = ({
     key: "item_vendor_moq",
     align: "right",
     require: true,
-    width: "8%",
+    width: "6%",
     render: (value, record, index) => {
       return <Text className="text-value ">{convertDigit(value, 6)}</Text>;
     },
@@ -340,48 +321,99 @@ export const mrpDetailColumns = ({
     key: "pr_uom_no",
     align: "center",
     require: true,
-    width: "6%",
+    width: "5%",
     render: (value, record, index) => {
       return <Text className="text-value ">{value ?? "-"}</Text>;
     },
   },
-  // {
-  //   title: (
-  //     <div className="text-center" title="Lead time">
-  //       L/T (days)
-  //     </div>
-  //   ),
-  //   dataIndex: "mrp_detail_pr_lead_time_day",
-  //   align: "center",
-  //   width: "5%",
-  //   render: (value, record, index) => {
-  //     return value;
-  //   },
-  // },
-  // {
-  //   title: (
-  //     <div className="text-center" title="Suggestion Date">
-  //       Sugg. Date
-  //     </div>
-  //   ),
-  //   dataIndex: "mrp_detail_suggestion_date",
-  //   align: "center",
-  //   width: "9%",
-  //   render: (value, record, index) => {
-  //     return <Text className="text-value">{value}</Text>;
-  //   },
-  // },
-  // {
-  //   title: (
-  //     <div className="text-center" title="Incomming Date">
-  //       Inc. Date
-  //     </div>
-  //   ),
-  //   dataIndex: "mrp_detail_incoming_date",
-  //   align: "center",
-  //   width: "9%",
-  //   render: (value, record, index) => {
-  //     return <Text className="text-value">{value}</Text>;
-  //   },
-  // },
+  {
+    title: (
+      <div className="text-center" title="Lead time">
+        L/T (days)
+      </div>
+    ),
+    dataIndex: "item_vendor_lead_time_day",
+    align: "center",
+    width: "5%",
+    render: (value, record, index) => {
+      return value;
+    },
+  },
+  {
+    title: (
+      <div className="text-center" title="Suggestion Date">
+        Sugg. Date
+      </div>
+    ),
+    dataIndex: "mrp_item_sugg_incoming_date",
+    align: "center",
+    width: "9%",
+    render: (value, record, index) => {
+      return <Text className="text-value">{value}</Text>;
+    },
+  },
+  {
+    title: (
+      <div className="text-center" title="Incoming Date">
+        Inc. Date
+      </div>
+    ),
+    dataIndex: "mrp_item_actual_incoming_date",
+    align: "center",
+    width: "9%",
+    render: (value, record, index) => {
+      return <Text className="text-value">{value}</Text>;
+    },
+  },
+];
+
+const routingColumns = ({ control, register, readOnly = false }) => [
+  {
+    title: (
+      <div className="text-center">
+        <b>No.</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "id",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Cost Center</b>
+      </div>
+    ),
+    align: "left",
+    className: "tb-col-sm",
+    // width: "10%",
+    dataIndex: "machine_id",
+    render: (val) => val || "-",
+  },
+
+  {
+    title: (
+      <div className="text-center">
+        <b>Man</b>
+      </div>
+    ),
+    align: "right",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "routing_detail_worker",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Date</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "routing_detail_plan_date",
+    render: (val) => val || "-",
+  },
 ];
