@@ -90,6 +90,13 @@ const initialState = {
     page: 1,
     pageSize: 20,
     item_id: null,
+    status_name: "All",
+    status_id: 99,
+    search_text: "",
+    category_id: null,
+    type_id: null,
+    type_no_name: null,
+    category_no_name: null,
   },
   configurations: {
     type: [],

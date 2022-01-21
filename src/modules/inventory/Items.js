@@ -38,7 +38,7 @@ const Items = (props) => {
 
   const { item_list } = useSelector((state) => state.inventory.master_data);
   const { filter_item_list } = useSelector((state) => state.inventory);
-  const { pageSize, page, keyword } = filter_item_list || {};
+  const { pageSize, page } = filter_item_list || {};
   useEffect(() => {
     dispatch(getMasterDataItem(auth.user_name, setLoading, false));
     return () => {
@@ -49,14 +49,13 @@ const Items = (props) => {
   useEffect(() => {
     if (!loading) {
       setLoading(true);
-      console.log("Filter Keyword");
-      setItems(item_list);
+      console.log("Filter Keyword", filter_item_list);
+      onChangeSearch(filter_item_list);
       setLoading(false);
     }
-  }, [keyword, item_list, loading]);
+  }, [item_list, loading, filter_item_list]);
   const onChange = (pagination) => {
     const { current, pageSize } = pagination;
-    //console.log("params", pagination, filters, sorter, extra);
     dispatch(filterItem({ page: current, pageSize }));
   };
   const [items, setItems] = useState([]);
@@ -124,20 +123,19 @@ const Items = (props) => {
         );
       }
     }
-
     setItems(
       search_data.filter((item) => item.item_no_name.indexOf(search_text) >= 0)
     );
   };
 
-  useEffect(() => {
-    setItems(item_list);
-  }, [item_list.length]);
+  // useEffect(() => {
+  //   setItems(item_list);
+  //   console.log("item_list.length :>> ", item_list.length);
+  // }, []);
 
   const redirect_to_view = (id) => {
     history.push("/inventory/items/view/" + (id ? id : "new"));
   };
-  console.log("filter :>> ", filter_item_list);
   return (
     <div>
       <MainLayout {...config}>

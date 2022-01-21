@@ -1,7 +1,11 @@
 /** @format */
 
-import { ClearOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Row, Col } from "antd";
+import {
+  ClearOutlined,
+  LoadingOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Button, Row, Col, Input } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,45 +16,48 @@ import Search from "./Search";
 const SearchTable = (props) => {
   const dispatch = useDispatch();
   const master_data = useSelector((state) => state.inventory.master_data);
-  const [state, setState] = useState({
-    type_id: null,
-    type_no_name: null,
-    category_id: null,
-    category_no_name: null,
-    search_text: "",
-    status_id: 99,
-    status_name: "All",
-  });
+  const { filter_item_list } = useSelector((state) => state.inventory);
+  const {
+    pageSize,
+    page,
+    keyword,
+    status_name,
+    status_id,
+    search_text,
+    category_id,
+    type_id,
+    type_no_name,
+    category_no_name,
+  } = filter_item_list || {};
+
   const changeState = (stateKeyValue, stateKey) => {
-    setState({
-      ...state,
-      ...stateKeyValue,
-    });
+    dispatch(filterItem({ ...stateKeyValue }));
   };
   const changeSearchBox = (value) => {
-    setState({
-      ...state,
-      search_text: value,
-    });
+    dispatch(filterItem({ search_text: value }));
   };
   const reset_state = () => {
     dispatch(
-      filterItem({ page: 1, pageSize: 20, keyword: null, item_id: null })
+      filterItem({
+        page: 1,
+        pageSize: 20,
+        keyword: null,
+        item_id: null,
+        search_text: "",
+        category_id: null,
+        type_id: null,
+        status_id: 99,
+        status_name: "All",
+        type_no_name: null,
+        type_id: null,
+      })
     );
-    setState({
-      type_id: null,
-      type_no_name: null,
-      category_id: null,
-      category_no_name: null,
-      search_text: "",
-      status_id: 99,
-      status_name: "All",
-    });
   };
   useEffect(() => {
-    console.log("Search", state);
-    props.onChangeSearch && props.onChangeSearch(state);
-  }, [state]);
+    console.log("Search ", filter_item_list);
+    props.onChangeSearch && props.onChangeSearch(filter_item_list);
+  }, [filter_item_list]);
+
   return (
     <>
       <div className='search-table'>
@@ -72,7 +79,7 @@ const SearchTable = (props) => {
               placeholder={"Item Type"}
               field_id='type_id'
               field_name='type_no_name'
-              value={state.type_no_name}
+              value={type_no_name}
               data={master_data.item_type}
               onChange={(data, option) => {
                 data !== undefined
@@ -90,7 +97,8 @@ const SearchTable = (props) => {
           <Col span={9}>
             <Search
               onSearch={changeSearchBox}
-              search={state.search_text}
+              search={search_text}
+              //value={search_text}
               // search={search}
               // loading={loading}
             />
@@ -110,11 +118,11 @@ const SearchTable = (props) => {
               placeholder={"Category"}
               field_id='category_id'
               field_name='category_no_name'
-              value={state.category_no_name}
+              value={category_no_name}
               data={
-                state.type_id
+                type_id
                   ? master_data.item_category.filter(
-                      (categ) => categ.type_id === state.type_id
+                      (categ) => categ.type_id === type_id
                     )
                   : master_data.item_category
               }
@@ -159,7 +167,7 @@ const SearchTable = (props) => {
               placeholder={"Status"}
               field_id='status_id'
               field_name='status_name'
-              value={state.status_name}
+              value={status_name}
               data={[
                 {
                   id: 0,
