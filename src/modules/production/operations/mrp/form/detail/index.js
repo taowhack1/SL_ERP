@@ -7,6 +7,7 @@ import {
   getNumberFormat,
 } from "../../../../../../include/js/main_config";
 import ComponentsForm from "./ComponentsForm";
+import NotesForm from "./NotesForm";
 
 const MRPDetail = () => {
   return (
@@ -19,20 +20,21 @@ const MRPDetail = () => {
         <Tabs.TabPane tab="Packaging" key="2">
           <h1>Packaging</h1>
         </Tabs.TabPane> */}
-        <Tabs.TabPane tab="Set Components" key="1">
+        <Tabs.TabPane tab="Set Components" key="1" forceRender={true}>
           <h1>Set Components</h1>
           <ComponentsForm
             {...{ fieldName: "item_set_spec", columns: mrpDetailColumns }}
           />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Routing" key="2">
+        <Tabs.TabPane tab="Routing" key="2" forceRender={true}>
           <h1>Routing</h1>
           <ComponentsForm
             {...{ fieldName: "item_routing_spec", columns: routingColumns }}
           />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Notes" key="3">
+        <Tabs.TabPane tab="Notes" key="3" forceRender={true}>
           <h1>Notes</h1>
+          <NotesForm />
         </Tabs.TabPane>
       </Tabs>
     </div>
@@ -48,19 +50,19 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
         {!readOnly && <span className="require">* </span>} Item Code
       </div>
     ),
-    dataIndex: "item_no",
-    key: "item_no",
+    dataIndex: "item_id",
+    key: "item_id",
     align: "center",
     width: "13%",
     ellipsis: true,
-    render: (value, record, index) => {
+    render: (value, { item_no }, index) => {
       return (
         <>
           <input
             className="d-none"
-            {...register(`${fieldName}.${index}.item_no`, { required: true })}
+            {...register(`${fieldName}.${index}.item_id`, { required: false })}
           />
-          <Text className="text-value text-left">{value ?? "-"}</Text>
+          <Text className="text-value text-left">{item_no ?? "-"}</Text>
         </>
       );
     },
@@ -78,12 +80,12 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     render: (value, record, index) => {
       return (
         <>
-          <input
+          {/* <input
             className="d-none"
             {...register(`${fieldName}.${index}.item_name`, {
               required: true,
             })}
-          />
+          /> */}
           <Text className="text-value text-left">{value ?? "-"}</Text>
         </>
       );
@@ -101,8 +103,10 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     require: true,
     width: "10%",
     ellipsis: true,
-    render: (value, record, index) => {
-      const {
+    render: (
+      value,
+      {
+        item_qty_to_issue,
         item_qty_available,
         item_qty_on_gr,
         item_qty_on_hand,
@@ -110,7 +114,9 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
         item_qty_on_po,
         item_qty_on_pr,
         item_qty_on_qc,
-      } = record;
+      },
+      index
+    ) => {
       return (
         <>
           <Popover
@@ -163,9 +169,9 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
             title="Available Quantity"
           >
             {warningTextValue(
-              value,
+              item_qty_available,
               6,
-              value < record.item_qty_to_issue ? true : false
+              item_qty_available < item_qty_to_issue ? true : false
             )}
           </Popover>
           {/* {record.item_id && (
@@ -191,7 +197,7 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     require: true,
     width: "10%",
     ellipsis: true,
-    render: (value, record, index) => {
+    render: (item_qty_to_issue, record, index) => {
       return (
         <>
           <input
@@ -202,7 +208,7 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
             })}
           />
           <Text className="text-value text-right">
-            {convertDigit(value, 6) ?? "-"}
+            {convertDigit(item_qty_to_issue, 6) ?? "-"}
           </Text>
         </>
       );
@@ -222,14 +228,14 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     require: true,
     width: "6%",
     ellipsis: true,
-    render: (value, record, index) => {
+    render: (uom_no, record, index) => {
       return (
         <>
           <input
             className="d-none"
             {...register(`${fieldName}.${index}.uom_id`, { required: false })}
           />
-          <Text className="text-value">{value ?? "-"}</Text>
+          <Text className="text-value">{uom_no ?? "-"}</Text>
         </>
       );
     },
@@ -245,12 +251,20 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     require: true,
     align: "right",
     width: "12%",
-    render: (value, record, index) => {
+    render: (item_qty_to_pr, record, index) => {
       // if (readOnly || record?.type_id === 3) {
       return (
-        <Text className="text-value text-right">
-          {convertDigit(value, 6) ?? "-"}
-        </Text>
+        <>
+          <input
+            className="d-none"
+            {...register(`${fieldName}.${index}.item_qty_to_pr`, {
+              required: false,
+            })}
+          />
+          <Text className="text-value text-right">
+            {convertDigit(item_qty_to_pr, 6) ?? "-"}
+          </Text>
+        </>
       );
       // } else {
       //   return (
@@ -307,8 +321,10 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     align: "right",
     require: true,
     width: "6%",
-    render: (value, record, index) => {
-      return <Text className="text-value ">{convertDigit(value, 6)}</Text>;
+    render: (item_vendor_moq, record, index) => {
+      return (
+        <Text className="text-value ">{convertDigit(item_vendor_moq, 6)}</Text>
+      );
     },
   },
   {
@@ -322,8 +338,18 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     align: "center",
     require: true,
     width: "5%",
-    render: (value, record, index) => {
-      return <Text className="text-value ">{value ?? "-"}</Text>;
+    render: (pr_uom_no, record, index) => {
+      return (
+        <>
+          <input
+            className="d-none"
+            {...register(`${fieldName}.${index}.pr_uom_id`, {
+              required: false,
+            })}
+          />
+          <Text className="text-value ">{pr_uom_no ?? "-"}</Text>
+        </>
+      );
     },
   },
   {
@@ -335,8 +361,8 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     dataIndex: "item_vendor_lead_time_day",
     align: "center",
     width: "5%",
-    render: (value, record, index) => {
-      return value;
+    render: (item_vendor_lead_time_day, record, index) => {
+      return item_vendor_lead_time_day;
     },
   },
   {
@@ -348,8 +374,8 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     dataIndex: "mrp_item_sugg_incoming_date",
     align: "center",
     width: "9%",
-    render: (value, record, index) => {
-      return <Text className="text-value">{value}</Text>;
+    render: (mrp_item_sugg_incoming_date, record, index) => {
+      return <Text className="text-value">{mrp_item_sugg_incoming_date}</Text>;
     },
   },
   {
@@ -361,8 +387,10 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     dataIndex: "mrp_item_actual_incoming_date",
     align: "center",
     width: "9%",
-    render: (value, record, index) => {
-      return <Text className="text-value">{value}</Text>;
+    render: (mrp_item_actual_incoming_date, record, index) => {
+      return (
+        <Text className="text-value">{mrp_item_actual_incoming_date}</Text>
+      );
     },
   },
 ];
@@ -389,7 +417,8 @@ const routingColumns = ({ control, register, readOnly = false }) => [
     className: "tb-col-sm",
     // width: "10%",
     dataIndex: "machine_id",
-    render: (val) => val || "-",
+    render: (val, { machine_cost_center_description }) =>
+      machine_cost_center_description,
   },
 
   {
@@ -400,7 +429,7 @@ const routingColumns = ({ control, register, readOnly = false }) => [
     ),
     align: "right",
     className: "tb-col-sm",
-    width: "10%",
+    width: "12%",
     dataIndex: "routing_detail_worker",
     render: (val) => val || "-",
   },
@@ -412,7 +441,7 @@ const routingColumns = ({ control, register, readOnly = false }) => [
     ),
     align: "center",
     className: "tb-col-sm",
-    width: "10%",
+    width: "12%",
     dataIndex: "routing_detail_plan_date",
     render: (val) => val || "-",
   },

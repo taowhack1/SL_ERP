@@ -59,15 +59,15 @@ const RightForm = () => {
             </>
           )}
         </Col>
-      </Row>
+      </Row> */}
 
       <Row className="col-2 mt-1 mb-1" gutter={8}>
         <Col span={8}>
-          <CustomLabel readOnly={readOnly} require label={"FG plan date :"} />
+          <CustomLabel readOnly={readOnly} require label={"Item plan date :"} />
         </Col>
         <Col span={16}>
           {readOnly ? (
-            <Text className="pre-wrap">{`SOME_FIELDS`}</Text>
+            <Text className="pre-wrap">{`mrp_item_plan_date`}</Text>
           ) : (
             <>
               <Controller
@@ -102,7 +102,7 @@ const RightForm = () => {
             </>
           )}
         </Col>
-      </Row> */}
+      </Row>
       <Row className="col-2 mt-1 mb-1" gutter={8}>
         <Col span={8}>
           <CustomLabel readOnly={readOnly} require label={"Delivery Date :"} />

@@ -142,6 +142,7 @@ const MRPCreate = (props) => {
           item_qty_produce_bulk_request
         )
           .then((res) => {
+            console.log("resDAta", res);
             const materialDetail = res.data[0];
             console.log("getRPMDetail materialDetail", materialDetail);
             stateDispatch({

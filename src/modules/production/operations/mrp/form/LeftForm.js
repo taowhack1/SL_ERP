@@ -23,18 +23,18 @@ const LeftForm = () => {
     watch,
     setValue,
   } = useFormContext();
-  // const [so_id, item_so_detail_id, mrp_item_qty_to_produce] = watch([
+  // const [so_id, item_so_detail_id, mrp_item_qty_produce] = watch([
   //   "so_id",
   //   "item_so_detail_id",
-  //   "mrp_item_qty_to_produce",
+  //   "mrp_item_qty_produce",
   // ]);
-  const [so_id, item_so_detail_id, mrp_item_qty_to_produce] = useWatch({
+  const [so_id, item_so_detail_id, mrp_item_qty_produce] = useWatch({
     control,
-    name: ["so_id", "item_so_detail_id", "mrp_item_qty_to_produce"],
+    name: ["so_id", "item_so_detail_id", "mrp_item_qty_produce"],
     defaultValue: [null, null, 0],
   });
 
-  console.log("mrp_item_qty_to_produce", mrp_item_qty_to_produce);
+  console.log("mrp_item_qty_produce", mrp_item_qty_produce);
 
   const { data: soList, loading: soListLoading } = useFetch(
     `${apiSOList}`,
@@ -124,7 +124,7 @@ const LeftForm = () => {
                           console.log("obj", obj);
                           onChange(id || null);
                           setValue(
-                            "mrp_item_qty_to_produce",
+                            "mrp_item_qty_produce",
                             obj.tg_so_detail_qty_balance
                           );
                           setValue("so_detail_id", obj.so_detail_id);
@@ -158,7 +158,7 @@ const LeftForm = () => {
           <>
             <Controller
               {...{
-                name: `mrp_item_qty_to_produce`,
+                name: `mrp_item_qty_produce`,
                 control,
                 rules: { required: true },
                 render: ({ field }) => {
@@ -176,7 +176,7 @@ const LeftForm = () => {
               }}
             />
             <br />
-            {errors?.mrp_item_qty_to_produce && (
+            {errors?.mrp_item_qty_produce && (
               <Text strong className="require">
                 This field is required.
               </Text>
@@ -220,7 +220,7 @@ const LeftForm = () => {
             <>
               <Controller
                 {...{
-                  name: `mrp_item_ref_qty_to_produce`,
+                  name: `mrp_item_ref_qty_produce`,
                   control,
                   rules: { required: false },
                   defaultValue: null,
@@ -240,7 +240,7 @@ const LeftForm = () => {
               />
 
               <br />
-              {errors?.mrp_item_ref_qty_to_produce && (
+              {errors?.mrp_item_ref_qty_produce && (
                 <Text strong className="require">
                   This field is required.
                 </Text>
