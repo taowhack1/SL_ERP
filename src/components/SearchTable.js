@@ -16,7 +16,6 @@ import Search from "./Search";
 const SearchTable = (props) => {
   const dispatch = useDispatch();
   const master_data = useSelector((state) => state.inventory.master_data);
-  const { filter_item_list } = useSelector((state) => state.inventory);
   const {
     pageSize,
     page,
@@ -28,8 +27,7 @@ const SearchTable = (props) => {
     type_id,
     type_no_name,
     category_no_name,
-  } = filter_item_list || {};
-
+  } = props.filter_item_list;
   const changeState = (stateKeyValue, stateKey) => {
     dispatch(filterItem({ ...stateKeyValue }));
   };
@@ -54,9 +52,9 @@ const SearchTable = (props) => {
     );
   };
   useEffect(() => {
-    console.log("Search ", filter_item_list);
-    props.onChangeSearch && props.onChangeSearch(filter_item_list);
-  }, [filter_item_list]);
+    console.log("Search ", props?.filter_item_list);
+    props.onChangeSearch && props.onChangeSearch(props.filter_item_list);
+  }, [props?.filter_item_list]);
 
   return (
     <>

@@ -229,9 +229,9 @@ const App = (props) => {
             <Route exact path='/inventory/receive_pd'>
               <ReceivePDList />
             </Route>
-            <Route exact path='/inventory/receive_pd/create'>
+            {/* <Route exact path='/inventory/receive_pd/create'>
               <ReceivePDCreate />
-            </Route>
+            </Route> */}
             {/* INVENTORY MASTER DATA */}
             <Route exact path='/inventory/items'>
               <Items />
