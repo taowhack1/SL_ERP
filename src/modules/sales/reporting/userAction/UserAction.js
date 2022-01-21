@@ -51,7 +51,7 @@ const UserAction = () => {
   console.log(`user_name`, user_name);
   const showReport = (formButton) => {
     const report_user_action = `${process.env.REACT_APP_REPORT_SERVER}/report_user_action.aspx?`;
-    const value = `start_date=${state.start_date}&end_date=${state.end_date}`;
+    const value = `&start_date=${state.start_date}&end_date=${state.end_date}`;
     if (state.start_date == null && state.end_date == null) {
       window.open(report_user_action);
     } else {
