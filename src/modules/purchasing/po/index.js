@@ -6,13 +6,7 @@ import { withRouter } from "react-router-dom";
 import { Row, Col, Table, Button, Space, Typography, Divider } from "antd";
 import MainLayout from "../../../components/MainLayout";
 import { po_list_columns } from "../config/po";
-import {
-  get_po_list,
-  reset_po_data,
-  get_po_by_id,
-  get_open_po_list,
-  filterPO,
-} from "../../../actions/purchase/PO_Actions";
+import { filterPO } from "../../../actions/purchase/PO_Actions";
 import { reset_comments } from "../../../actions/comment&log";
 import $ from "jquery";
 
@@ -38,71 +32,56 @@ const PO = (props) => {
   } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [rowClick, setRowClick] = useState(false);
-
-  const { data: poList, loading: getPOLoading } = useFetch(
-    `${apiGetPO}/${user_name}&0`,
-    !user_name
-  );
-
+  const listDataPo = useFetch(`${apiGetPO}/${user_name}&0`, !user_name);
+  console.log("listDataPo :>> ", listDataPo);
   const { filter } = useSelector((state) => state.purchase.po);
   const { pageSize, page, keyword, po_status } = filter || {};
 
-  const getSearchData = (data, keyword, user_name) => {
-    // user_name == "2563003" &&
-    //   dispatch(filterPO({ po_status: "Pending Approve" }));
-    const search_data = sortData(
-      keyword
-        ? data?.filter(
-            (po) =>
-              po?.po_no?.indexOf(keyword) >= 0 ||
-              po?.vendor_no_name?.indexOf(keyword) >= 0 ||
-              po?.po_created_by_no_name?.indexOf(keyword) >= 0 ||
-              po?.po_created?.indexOf(keyword) >= 0 ||
-              po?.po_description?.indexOf(keyword) >= 0
-          )
-        : po_status === "Pending Approve"
-        ? data?.filter((po) => po?.button_approve == 1)
-        : po_status === "Pending Confirm"
-        ? data?.filter((po) => po?.button_confirm == 1)
-        : po_status === "Pending Receive"
-        ? data?.filter((po) => po?.trans_status_name == "Pending Receive")
-        : po_status === "Completed"
-        ? data?.filter((po) => po?.trans_status_name == "Completed")
-        : po_status === "Confirm"
-        ? data?.filter((po) => po?.trans_status_name == "Confirm")
-        : po_status === "Cancel"
-        ? data?.filter((po) => po?.trans_status_name == "Cancel")
-        : po_status === "Waiting"
-        ? data?.filter((po) => po?.trans_status_name == "Draft")
-        : data
-    );
+  const getSearchData = (keyword) => {
+    const search_data =
+      listDataPo?.data &&
+      sortData(
+        keyword
+          ? listDataPo?.data?.filter(
+              (po) =>
+                po?.po_no?.indexOf(keyword) >= 0 ||
+                po?.vendor_no_name?.indexOf(keyword) >= 0 ||
+                po?.po_created_by_no_name?.indexOf(keyword) >= 0 ||
+                po?.po_created?.indexOf(keyword) >= 0 ||
+                po?.po_description?.indexOf(keyword) >= 0
+            )
+          : po_status === "Pending Approve"
+          ? data?.filter((po) => po?.button_approve == 1)
+          : po_status === "Pending Confirm"
+          ? data?.filter((po) => po?.button_confirm == 1)
+          : po_status === "Pending Receive"
+          ? data?.filter((po) => po?.trans_status_name == "Pending Receive")
+          : po_status === "Completed"
+          ? data?.filter((po) => po?.trans_status_name == "Completed")
+          : po_status === "Confirm"
+          ? data?.filter((po) => po?.trans_status_name == "Confirm")
+          : po_status === "Cancel"
+          ? data?.filter((po) => po?.trans_status_name == "Cancel")
+          : po_status === "Waiting"
+          ? data?.filter((po) => po?.trans_status_name == "Draft")
+          : listDataPo?.data
+      );
     console.log("search_data :>> ", search_data);
     return sortData(search_data);
   };
 
-  // useEffect(() => {
-  //   if(!getPOLoading){
-  //     console.log("Filter Keyword");
-  //   setLoading(true);
-  //   const respSearch = getSearchData(keyword);
-  //   setData(respSearch);
-  //   setLoading(false);
-  //   }
-  // }, [keyword,getPOLoading]);
   useEffect(() => {
     if (user_name == "9999999") {
       dispatch(filterPO({ po_status: "Pending Approve" }));
     }
   }, [user_name]);
   useEffect(() => {
-    if (!getPOLoading) {
-      setLoading(true);
-      console.log("Filter Keyword");
-      const respSearch = getSearchData(poList, keyword, user_name);
-      setData(respSearch);
-      setLoading(false);
-    }
-  }, [keyword, poList, getPOLoading, po_status]);
+    setLoading(true);
+    console.log("Filter Keyword");
+    const respSearch = getSearchData(keyword);
+    setData(respSearch);
+    setLoading(false);
+  }, [keyword, listDataPo?.data, listDataPo?.loading, po_status]);
 
   const [data, setData] = useState([]);
   const refSearchInput = useRef();
@@ -177,12 +156,7 @@ const PO = (props) => {
             field_id='value'
             field_name='label'
             style={{ width: 200 }}
-            onChange={
-              (val, option) => dispatch(filterPO({ po_status: val }))
-              //setData(data.filter((data) => data.button_approve === val))
-              // user_name == "2563009" &&
-              // dispatch(filterPO({ po_status: "Pending Approve" }));
-            }
+            onChange={(val, option) => dispatch(filterPO({ po_status: val }))}
             value={po_status}
             //defaultValue={}
           />
@@ -228,7 +202,7 @@ const PO = (props) => {
               })}
               dataSource={data}
               rowKey={"po_id"}
-              loading={getPOLoading || loading}
+              loading={listDataPo?.loading ? true : false}
               onChange={onChange}
               size='small'
               pagination={{
