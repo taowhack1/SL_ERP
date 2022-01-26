@@ -95,7 +95,7 @@ const SearchTable = (props) => {
           <Col span={9}>
             <Search
               onSearch={changeSearchBox}
-              search={search_text}
+              searchValue={search_text}
               //value={search_text}
               // search={search}
               // loading={loading}

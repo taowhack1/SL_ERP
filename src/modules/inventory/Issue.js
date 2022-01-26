@@ -18,6 +18,9 @@ import useKeepLogs from "../logs/useKeepLogs";
 import { sortData } from "../../include/js/function_main";
 import { Button } from "antd/lib/radio";
 import { reset_comments } from "../../actions/comment&log";
+import { useFetch } from "../../include/js/customHooks";
+import { api_issue } from "../../include/js/api";
+import { header_config } from "../../include/js/main_config";
 const Issue = (props) => {
   const keepLog = useKeepLogs();
   const authorize = Authorize();
@@ -25,11 +28,12 @@ const Issue = (props) => {
   const current_menu = useSelector((state) => state.auth.currentMenu);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
-  const auth = useSelector((state) => state.auth.authData);
+  const { user_name } = useSelector((state) => state.auth.authData);
   const { issue_list, filter } = useSelector((state) => state.inventory.issue);
   const { pageSize, page, keyword, vendor_id } = filter || {};
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+  const listDataIssue = useFetch(`${api_issue}/all/${user_name}`);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
     const { current, pageSize } = pagination;
@@ -37,37 +41,39 @@ const Issue = (props) => {
   };
 
   const getSearchData = (keyword) => {
-    const search_data = sortData(
-      keyword
-        ? issue_list?.filter(
-            (issue) =>
-              issue?.issue_no?.indexOf(keyword) >= 0 ||
-              issue?.cost_center_no_name?.indexOf(keyword) >= 0 ||
-              issue?.issue_created_by_no_name?.indexOf(keyword) >= 0 ||
-              issue?.issue_created?.indexOf(keyword) >= 0 ||
-              issue?.issue_description?.indexOf(keyword) >= 0
-          )
-        : issue_list
-    );
+    const search_data =
+      listDataIssue?.data &&
+      sortData(
+        keyword
+          ? listDataIssue?.data[0]?.filter(
+              (issue) =>
+                issue?.issue_no?.indexOf(keyword) >= 0 ||
+                issue?.cost_center_no_name?.indexOf(keyword) >= 0 ||
+                issue?.issue_created_by_no_name?.indexOf(keyword) >= 0 ||
+                issue?.issue_created?.indexOf(keyword) >= 0 ||
+                issue?.issue_description?.indexOf(keyword) >= 0
+            )
+          : listDataIssue?.data[0]
+      );
 
     return sortData(search_data);
   };
 
   useEffect(() => {
-    dispatch(get_issue_list(auth.user_name));
-    dispatch(reset_issue_data());
+    //dispatch(get_issue_list(user_name));
     return () => {
+      //dispatch(reset_issue_data());
       dispatch(reset_comments());
       setData([]);
     };
   }, [dispatch]);
   useEffect(() => {
-    console.log("Filter Keyword");
+    console.log("Filter Keyword", keyword);
     setLoading(true);
     const respSearch = getSearchData(keyword);
     setData(respSearch);
     setLoading(false);
-  }, [keyword]);
+  }, [keyword, listDataIssue?.data]);
 
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
@@ -105,13 +111,7 @@ const Issue = (props) => {
       </Button>
     ),
   };
-  useEffect(() => {
-    console.log("useEffect set issue_list");
-    const respSearch = getSearchData(keyword);
-    setData(respSearch);
-    setLoading(false);
-    return () => setData([]);
-  }, [issue_list]);
+
   return (
     <div>
       <MainLayout {...config}>
@@ -120,7 +120,7 @@ const Issue = (props) => {
             <Table
               columns={issue_columns}
               dataSource={data}
-              loading={loading}
+              loading={listDataIssue.loading ? true : false}
               onChange={onChange}
               rowKey={"issue_id"}
               size='small'
@@ -134,7 +134,7 @@ const Issue = (props) => {
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
                     keepLog.keep_log_action(record.issue_no);
-                    dispatch(get_issue_by_id(record.issue_id, auth.user_name));
+                    dispatch(get_issue_by_id(record.issue_id, user_name));
                     props.history.push({
                       pathname: "/inventory/issue/view/" + record.issue_id,
                     });
