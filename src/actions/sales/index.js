@@ -22,6 +22,7 @@ import {
   GET_QN_BY_ID,
   RESET_SO,
   GET_SO_BY_ID,
+  SEARCH_QN,
 } from "../types";
 import axios from "axios";
 import { message } from "antd";
@@ -572,7 +573,8 @@ const getCustomerAddress = (customer_id) => {
     return { success: false, data: [], message: error };
   }
 };
-
+const filterQn = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_QN, payload: data });
 export {
   getNPRtoQN,
   getSalesType,
@@ -584,4 +586,5 @@ export {
   closeSO,
   getCustomerAddress,
   getQNList,
+  filterQn,
 };

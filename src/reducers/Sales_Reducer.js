@@ -21,6 +21,7 @@ import {
   GET_QN_BY_ID,
   GET_SO_BY_ID,
   SET_LOADING,
+  SEARCH_QN,
 } from "../actions/types";
 import dr from "../modules/sales/operations/dr";
 
@@ -30,6 +31,12 @@ const inititalState = {
     qn_list: [],
     qn_head: {},
     qn_detail: [],
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 20,
+      qn_id: null,
+    },
   },
   so: {
     qn_ref: [],
@@ -87,6 +94,17 @@ export default (state = inititalState, action) => {
       return { ...state, loading: action.payload };
     case SET_QN_LIST:
       return { ...state, qn: { ...state.qn, qn_list: action.payload } };
+    case SEARCH_QN:
+      return {
+        ...state,
+        qn: {
+          ...state.qn,
+          filter: {
+            ...state.qn.filter,
+            ...action.payload,
+          },
+        },
+      };
     case GET_QN_BY_ID:
       return { ...state, qn: { ...state.qn, ...action.payload } };
     case RESET_QN:

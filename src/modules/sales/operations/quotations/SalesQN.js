@@ -1,13 +1,11 @@
+/** @format */
+
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
-import { Row, Col, Table } from "antd";
+import { Row, Col, Table, Button } from "antd";
 import MainLayout from "../../../../components/MainLayout";
-import {
-  getQNList,
-  get_quotation_list,
-  reset_qn,
-} from "../../../../actions/sales";
+import { filterQn } from "../../../../actions/sales";
 import { reset_comments } from "../../../../actions/comment&log";
 import { getMasterDataItem } from "../../../../actions/inventory";
 import Authorize from "../../../system/Authorize";
@@ -16,8 +14,11 @@ import { convertDigit } from "../../../../include/js/main_config";
 import {
   getRefStatus,
   getSelfStepStatus,
+  sortData,
 } from "../../../../include/js/function_main";
 import ModalConfirmOpenSO from "./ModalConfirmOpenSO";
+import { useFetch } from "../../../../include/js/customHooks";
+import { api_quo_list } from "../../../../include/js/api";
 export const quotationColumns = ({ onOpenSO }) => [
   {
     title: "Reference",
@@ -129,34 +130,49 @@ const SalesQN = (props) => {
     qn_no: null,
   });
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(reset_qn());
-    dispatch(reset_comments());
-
-    dispatch(get_quotation_list(auth.user_name));
-    dispatch(getMasterDataItem());
-  }, []);
-
+  const { filter } = useSelector((state) => state.sales.qn);
+  const { pageSize, page, keyword } = filter || {};
   const dataTable = useSelector((state) => state.sales.qn.qn_list);
   const [state, setState] = useState(dataTable || []);
-  const [loading, setLoading] = useState(false);
+  const listDataQn = useFetch(`${api_quo_list}/all/${auth.user_name}`);
+  const getSearchData = (keyword) => {
+    const search_data =
+      listDataQn?.data &&
+      sortData(
+        keyword
+          ? listDataQn?.data[0]?.filter(
+              (qn) =>
+                qn.qn_no?.toUpperCase()?.indexOf(keyword?.toUpperCase()) > -1 ||
+                qn.qn_created?.toUpperCase()?.indexOf(keyword?.toUpperCase()) >
+                  -1 ||
+                qn.customer_no_name
+                  ?.toUpperCase()
+                  ?.indexOf(keyword?.toUpperCase()) > -1 ||
+                qn.qn_description
+                  ?.toUpperCase()
+                  ?.indexOf(keyword?.toUpperCase()) > -1 ||
+                qn.qn_created_by_no_name
+                  ?.toUpperCase()
+                  ?.indexOf(keyword?.toUpperCase()) > -1
+            )
+          : listDataQn?.data[0]
+      );
 
-  const getData = async (user_name) => {
-    setLoading(true);
-    const resp = await getQNList(user_name);
-    if (resp.success) {
-      setState(resp.data);
-    }
-    setLoading(false);
+    return sortData(search_data);
   };
   useEffect(() => {
-    getData(auth.user_name);
-    return () => {
-      setState([]);
-    };
-  }, [auth.user_name]);
+    console.log("Filter Keyword", keyword);
+    const respSearch = getSearchData(keyword);
+    setState(respSearch);
+  }, [keyword, listDataQn?.data]);
+  useEffect(() => {
+    dispatch(reset_comments());
+    dispatch(getMasterDataItem());
+  }, []);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
+    const { current, pageSize } = pagination;
+    dispatch(filterQn({ page: current, pageSize }));
   };
 
   const onOpenSO = ({ qn_id, qn_no }) => {
@@ -188,21 +204,26 @@ const SalesQN = (props) => {
     onCancel: () => {
       console.log("Cancel");
     },
-    onSearch: (text) =>
-      setState(
-        dataTable.filter(
-          (obj) =>
-            obj.qn_no?.toUpperCase()?.indexOf(text?.toUpperCase()) > -1 ||
-            obj.qn_created?.toUpperCase()?.indexOf(text?.toUpperCase()) > -1 ||
-            obj.customer_no_name?.toUpperCase()?.indexOf(text?.toUpperCase()) >
-              -1 ||
-            obj.qn_description?.toUpperCase()?.indexOf(text?.toUpperCase()) >
-              -1 ||
-            obj.qn_created_by_no_name
-              ?.toUpperCase()
-              ?.indexOf(text?.toUpperCase()) > -1
-        )
-      ),
+    onSearch: (value) => {
+      dispatch(filterQn({ keyword: value }));
+    },
+    searchValue: keyword || null,
+    searchBar: (
+      <Button
+        className='primary'
+        onClick={() =>
+          dispatch(
+            filterQn({
+              page: 1,
+              pageSize: 20,
+              keyword: null,
+              qn_id: null,
+            })
+          )
+        }>
+        Clear Filter
+      </Button>
+    ),
   };
 
   const modalConfig = React.useMemo(
@@ -221,12 +242,17 @@ const SalesQN = (props) => {
             <Table
               columns={quotationColumns({ onOpenSO })}
               dataSource={state}
-              loading={loading}
+              loading={listDataQn.loading ? true : false}
               onChange={onChange}
-              rowKey="qn_id"
-              size="small"
+              rowKey='qn_id'
+              size='small'
+              pagination={{
+                pageSize,
+                current: page,
+                pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
+              }}
               bordered
-              rowClassName="row-pointer"
+              rowClassName='row-pointer'
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

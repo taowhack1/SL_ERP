@@ -141,6 +141,7 @@ export const CREATE_QUOTATION = "CREATE_QUOTATION";
 export const GET_QN_BY_ID = "GET_QN_BY_ID";
 export const RESET_QN = "RESET_QN";
 export const SET_QN_LIST = "SET_QN_LIST";
+export const SEARCH_QN = "SEARCH_QN";
 
 export const GET_SO_LIST = "GET_SO_LIST";
 export const GET_SO_BY_ID = "GET_SO_BY_ID";
