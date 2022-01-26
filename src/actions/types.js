@@ -98,6 +98,7 @@ export const INACTIVE_CUSTOMER = "INACTIVE_CUSTOMER";
 export const GET_COST_CENTER_LIST = "GET_COST_CENTER_LIST";
 export const RESET_COMMENTS = "RESET_COMMENTS";
 //Purchase -> Vendor
+export const SEARCH_VENDOR = "SEARCH_VENDOR";
 export const GET_ALL_VENDOR = "GET_ALL_VENDOR";
 export const GET_VENDOR_BY_ID = "GET_VENDOR_BY_ID";
 export const GET_VENDOR_GROUP = "GET_VENDOR_GROUP";

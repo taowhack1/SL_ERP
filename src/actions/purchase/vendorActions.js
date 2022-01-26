@@ -26,6 +26,7 @@ import {
   GET_VENDOR_GROUP,
   GET_VENDOR_VAT,
   GET_ZIP,
+  SEARCH_VENDOR,
 } from "../types";
 import { message } from "antd";
 
@@ -198,3 +199,5 @@ export const VatID = () => (dispatch) => {
     });
   });
 };
+export const filterVendor = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_VENDOR, payload: data });
