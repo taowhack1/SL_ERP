@@ -42,6 +42,7 @@ import {
   SEARCH_RETURN,
   RESET_RETURN_DATA,
   SEARCH_ITEMS,
+  SEARCH_DISBURSE,
 } from "../actions/types";
 
 import {
@@ -136,6 +137,12 @@ const initialState = {
     disburse_head: {},
     disburse_detail: [],
     disburse_sub_detail: [],
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 20,
+      branch_id: null,
+    },
   },
   report: {
     stock_on_hand: {
@@ -427,7 +434,17 @@ export default (state = initialState, action) => {
         ...state,
         disburse: { ...state.disburse, ...action.payload },
       };
-
+    case SEARCH_DISBURSE:
+      return {
+        ...state,
+        disburse: {
+          ...state.disburse,
+          filter: {
+            ...state.disburse.filter,
+            ...action.payload,
+          },
+        },
+      };
     //REPORT
     case GET_REPORT_STOCK:
       return {

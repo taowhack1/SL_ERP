@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table } from "antd";
+import { Row, Col, Table, Button } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
 import { issue_columns } from "./config";
@@ -16,7 +16,6 @@ import {
 import Authorize from "../system/Authorize";
 import useKeepLogs from "../logs/useKeepLogs";
 import { sortData } from "../../include/js/function_main";
-import { Button } from "antd/lib/radio";
 import { reset_comments } from "../../actions/comment&log";
 import { useFetch } from "../../include/js/customHooks";
 import { api_issue } from "../../include/js/api";
