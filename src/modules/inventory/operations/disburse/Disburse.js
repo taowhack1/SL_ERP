@@ -30,7 +30,9 @@ const Disburse = (props) => {
   const { issue_ref } = useSelector((state) => state.inventory.disburse);
   const [state, setState] = useState();
   const onChange = (pagination, filters, sorter, extra) => {
+    const { current, pageSize } = pagination;
     console.log("params", pagination, filters, sorter, extra);
+    dispatch(filterDisburse({ page: current, pageSize }));
   };
   const listDataDisburse = useFetch(`${api_disburse}/all/${auth?.user_name}`);
   const listDataIssueRef = useFetch(`${api_issue_ref_list}`);
@@ -110,6 +112,12 @@ const Disburse = (props) => {
               onChange={onChange}
               rowKey={"disburse_id"}
               size='small'
+              size={"small"}
+              pagination={{
+                pageSize,
+                current: page,
+                pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
+              }}
               loading={listDataDisburse.loading ? true : false}
               onRow={(record, rowIndex) => {
                 return {

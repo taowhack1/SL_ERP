@@ -29,7 +29,7 @@ const Issue = (props) => {
   const [rowClick, setRowClick] = useState(false);
   const { user_name } = useSelector((state) => state.auth.authData);
   const { issue_list, filter } = useSelector((state) => state.inventory.issue);
-  const { pageSize, page, keyword, vendor_id } = filter || {};
+  const { pageSize, page, keyword } = filter || {};
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const listDataIssue = useFetch(`${api_issue}/all/${user_name}`);
@@ -123,6 +123,11 @@ const Issue = (props) => {
               onChange={onChange}
               rowKey={"issue_id"}
               size='small'
+              pagination={{
+                pageSize,
+                current: page,
+                pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
+              }}
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

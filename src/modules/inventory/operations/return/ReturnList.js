@@ -111,7 +111,13 @@ const ReturnList = (props) => {
                 columns={returnListColumns}
                 dataSource={data}
                 rowKey={"return_id"}
+                onChange={onChange}
                 size={"small"}
+                pagination={{
+                  pageSize,
+                  current: page,
+                  pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
+                }}
                 loading={listDataReturn.loading ? true : false}
                 onRow={(record, rowIndex) => {
                   return {

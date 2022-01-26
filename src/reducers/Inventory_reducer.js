@@ -43,6 +43,7 @@ import {
   RESET_RETURN_DATA,
   SEARCH_ITEMS,
   SEARCH_DISBURSE,
+  SEARCH_RECEIVE,
 } from "../actions/types";
 
 import {
@@ -349,6 +350,17 @@ export default (state = initialState, action) => {
       return {
         ...state,
         receive: { ...state.receive, receive_sub_detail: action.payload },
+      };
+    case SEARCH_RECEIVE:
+      return {
+        ...state,
+        receive: {
+          ...state.receive,
+          filter: {
+            ...state.receive.filter,
+            ...action.payload,
+          },
+        },
       };
     case RESET_RECEIVE:
       return {
