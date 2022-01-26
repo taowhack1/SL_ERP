@@ -11,8 +11,6 @@ import { disburse_columns } from "./config";
 import {
   filterDisburse,
   get_disburse_by_id,
-  get_disburse_list,
-  get_issue_ref_list,
 } from "../../../../actions/inventory/disburseActions";
 import Authorize from "../../../system/Authorize";
 import useKeepLogs from "../../../logs/useKeepLogs";
@@ -34,7 +32,6 @@ const Disburse = (props) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  //api_issue_ref_list `${api_disburse}/all/${user_name}`
   const listDataDisburse = useFetch(`${api_disburse}/all/${auth?.user_name}`);
   const listDataIssueRef = useFetch(`${api_issue_ref_list}`);
   const count_issue_ref =

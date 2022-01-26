@@ -9,24 +9,21 @@ import useKeepLogs from "../../../logs/useKeepLogs";
 import { AppContext } from "../../../../include/js/context";
 import { returnListColumns } from "./config";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  filterReturn,
-  getAllReturnList,
-  reset_return_data,
-} from "../../../../actions/inventory/operation/return/returnActions";
+import { filterReturn } from "../../../../actions/inventory/operation/return/returnActions";
 import DetailLoading from "../../../../components/DetailLoading";
 import { sortData } from "../../../../include/js/function_main";
 import { reset_comments } from "../../../../actions/comment&log";
+import { useFetch } from "../../../../include/js/customHooks";
+import { api_return } from "../../../../include/js/api";
 const ReturnList = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   const dispatch = useDispatch();
   authorize.check_authorize();
-  const { issueReturnList: returnList, filter } = useSelector(
-    (state) => state.inventory.operations.issueReturn
-  );
-  const { pageSize, page, keyword, vendor_id } = filter || {};
+  const { user_name } = useSelector((state) => state.auth.authData);
+  const { filter } = useSelector((state) => state.inventory.operations);
+  const { pageSize, page, keyword } = filter || {};
   const onChange = (pagination, filters, sorter, extra) => {
     const { current, pageSize } = pagination;
     dispatch(filterReturn({ page: current, pageSize }));
@@ -34,19 +31,24 @@ const ReturnList = (props) => {
   const { auth, currentProject, currentMenu } = useContext(AppContext);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  //fetch data
+  const listDataReturn = useFetch(`${api_return}/all/${user_name}`);
+
   const getSearchData = (keyword) => {
-    const search_data = sortData(
-      keyword
-        ? returnList?.filter(
-            (list) =>
-              list?.return_no?.indexOf(keyword) >= 0 ||
-              list?.issue_no?.indexOf(keyword) >= 0 ||
-              list?.return_created_by_no_name?.indexOf(keyword) >= 0 ||
-              list?.return_created?.indexOf(keyword) >= 0 ||
-              list?.return_description?.indexOf(keyword) >= 0
-          )
-        : returnList
-    );
+    const search_data =
+      listDataReturn.data &&
+      sortData(
+        keyword
+          ? listDataReturn.data[0]?.filter(
+              (list) =>
+                list?.return_no?.indexOf(keyword) >= 0 ||
+                list?.issue_no?.indexOf(keyword) >= 0 ||
+                list?.return_created_by_no_name?.indexOf(keyword) >= 0 ||
+                list?.return_created?.indexOf(keyword) >= 0 ||
+                list?.return_description?.indexOf(keyword) >= 0
+            )
+          : listDataReturn.data[0]
+      );
 
     return sortData(search_data);
   };
@@ -87,29 +89,16 @@ const ReturnList = (props) => {
     ),
   };
   useEffect(() => {
-    dispatch(getAllReturnList(auth.user_name));
-    dispatch(reset_return_data());
     return () => {
       dispatch(reset_comments());
       setData([]);
     };
   }, [dispatch]);
   useEffect(() => {
-    console.log("Filter Keyword");
-    setLoading(true);
+    console.log("Filter Keyword", keyword);
     const respSearch = getSearchData(keyword);
     setData(respSearch);
-    setLoading(false);
-  }, [keyword]);
-  useEffect(() => {
-    setLoading(true);
-    console.log("useEffect set return_list");
-    const respSearch = getSearchData(keyword);
-    setData(respSearch);
-    setLoading(false);
-    return () => setData([]);
-  }, [returnList]);
-  console.log("returnList", returnList);
+  }, [keyword, listDataReturn.data]);
   return (
     <>
       <MainLayout {...config}>
@@ -123,7 +112,7 @@ const ReturnList = (props) => {
                 dataSource={data}
                 rowKey={"return_id"}
                 size={"small"}
-                loading={loading}
+                loading={listDataReturn.loading ? true : false}
                 onRow={(record, rowIndex) => {
                   return {
                     onClick: (e) => {

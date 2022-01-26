@@ -119,6 +119,12 @@ const initialState = {
     receive_head: {},
     receive_detail: [],
     receive_sub_detail: [],
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 20,
+      receive_id: null,
+    },
   },
   issue: {
     issue_list: [],
@@ -141,7 +147,7 @@ const initialState = {
       keyword: null,
       page: 1,
       pageSize: 20,
-      branch_id: null,
+      disburse_id: null,
     },
   },
   report: {
@@ -173,12 +179,12 @@ const initialState = {
       isLoading: false,
       issueRef: [],
       issueReturnList: [],
-      filter: {
-        keyword: null,
-        page: 1,
-        pageSize: 20,
-        issue_id: null,
-      },
+    },
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 20,
+      issue_id: null,
     },
   },
 };
@@ -590,10 +596,10 @@ export default (state = initialState, action) => {
           ...state.operations,
           issueReturn: {
             ...state.operations.issueReturn,
-            filter: {
-              ...state.operations.issueReturn.filter,
-              ...action.payload,
-            },
+          },
+          filter: {
+            ...state.operations.filter,
+            ...action.payload,
           },
         },
       };
