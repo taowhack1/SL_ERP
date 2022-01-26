@@ -132,8 +132,7 @@ const SalesQN = (props) => {
   const dispatch = useDispatch();
   const { filter } = useSelector((state) => state.sales.qn);
   const { pageSize, page, keyword } = filter || {};
-  const dataTable = useSelector((state) => state.sales.qn.qn_list);
-  const [state, setState] = useState(dataTable || []);
+  const [state, setState] = useState([]);
   const listDataQn = useFetch(`${api_quo_list}/all/${auth.user_name}`);
   const getSearchData = (keyword) => {
     const search_data =
