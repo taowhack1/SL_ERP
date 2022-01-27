@@ -19,6 +19,7 @@ import {
 } from "../../../../../include/js/function_main";
 import useKeepLogs from "../../../../logs/useKeepLogs";
 import Authorize from "../../../../system/Authorize";
+import { Button } from "antd";
 const columns = [
   {
     title: "No.",
@@ -155,7 +156,7 @@ const NPRListForPU = () => {
   const list = operations.npr.list;
   const { filter_pu } = operations.npr;
   const { pageSize, page, keyword } = filter_pu || {};
-  const [state, setState] = useState(list);
+  const [state, setState] = useState([]);
   const getSearchData = (keyword) => {
     const search_data =
       listDataNPR &&
@@ -223,6 +224,21 @@ const NPRListForPU = () => {
       dispatch(filterNPR_PU({ keyword: text }));
     },
     searchValue: keyword || null,
+    searchBar: (
+      <Button
+        className='primary'
+        onClick={() =>
+          dispatch(
+            filterNPR_PU({
+              page: 1,
+              pageSize: 10,
+              keyword: null,
+            })
+          )
+        }>
+        Clear Filter
+      </Button>
+    ),
   };
 
   const viewRecord = (record) =>
