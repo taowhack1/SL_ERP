@@ -23,6 +23,8 @@ import {
   SET_LOADING,
   SEARCH_QN,
   SEARCH_NPR,
+  SEARCH_NPR_RD,
+  SEARCH_NPR_PU,
 } from "../actions/types";
 import dr from "../modules/sales/operations/dr";
 
@@ -57,7 +59,25 @@ const inititalState = {
     npr: {
       itemList: [],
       list: [],
-      filter: {
+      filter_rd: {
+        pageSize: 10,
+        page: 1,
+        keyword: null,
+        npr_id: null,
+      },
+      filter_pu: {
+        pageSize: 10,
+        page: 1,
+        keyword: null,
+        npr_id: null,
+      },
+      filter_pd: {
+        pageSize: 10,
+        page: 1,
+        keyword: null,
+        npr_id: null,
+      },
+      filter_estimate: {
         pageSize: 10,
         page: 1,
         keyword: null,
@@ -156,7 +176,7 @@ export default (state = inititalState, action) => {
           },
         },
       };
-    case SEARCH_NPR:
+    case SEARCH_NPR_RD:
       return {
         ...state,
         loading: false,
@@ -164,8 +184,23 @@ export default (state = inititalState, action) => {
           ...state.operations,
           npr: {
             ...state.operations.npr,
-            filter: {
-              ...state.operations.npr.filter,
+            filter_rd: {
+              ...state.operations.npr.filter_rd,
+              ...action.payload,
+            },
+          },
+        },
+      };
+    case SEARCH_NPR_PU:
+      return {
+        ...state,
+        loading: false,
+        operations: {
+          ...state.operations,
+          npr: {
+            ...state.operations.npr,
+            filter_pu: {
+              ...state.operations.npr.filter_pu,
               ...action.payload,
             },
           },

@@ -5,20 +5,24 @@ import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getRDEmp } from "../../../../actions/hrm";
-import { filterNPR, getNPRList } from "../../../../actions/sales/nprActions";
+import {
+  apiNPRRD,
+  filterNPR,
+  filterNPR_RD,
+  getNPRList,
+} from "../../../../actions/sales/nprActions";
 import ConfigColumn from "../../../../components/ConfigColumn";
 import DetailLoading from "../../../../components/DetailLoading";
 import MainLayout from "../../../../components/MainLayout";
 import { useFetch } from "../../../../include/js/customHooks";
 import { sortData } from "../../../../include/js/function_main";
 import NPRTable from "./NPRTable";
-const apiNPRRD = `/sales/npr_rd`;
 const NPRList = () => {
   const dispatch = useDispatch();
   const { operations } = useSelector((state) => state.sales);
   const list = operations.npr;
-  const { filter } = operations.npr;
-  const { pageSize, page, keyword } = filter || {};
+  const { filter_rd } = operations.npr;
+  const { pageSize, page, keyword } = filter_rd || {};
   const [state, setState] = useState([]);
   const [modal, setModal] = useState({
     visible: false,
@@ -28,12 +32,10 @@ const NPRList = () => {
     loading: NPRloading,
     fetchData,
   } = useFetch(`${apiNPRRD}`);
-  console.log("listDataNPR :>> ", listDataNPR);
-  console.log("filter pageSize:>> ", filter);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
     const { current, pageSize } = pagination;
-    dispatch(filterNPR({ page: current, pageSize }));
+    dispatch(filterNPR_RD({ page: current, pageSize }));
   };
   const getSearchData = (keyword) => {
     const search_data =
@@ -114,7 +116,7 @@ const NPRList = () => {
     },
     onSearch: (w) => {
       const text = w.toUpperCase();
-      dispatch(filterNPR({ keyword: text }));
+      dispatch(filterNPR_RD({ keyword: text }));
     },
     searchValue: keyword || null,
     searchBar: (
