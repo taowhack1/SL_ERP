@@ -1,15 +1,23 @@
 /** @format */
 
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { getNPRList } from "../../../../actions/sales/nprActions";
+import {
+  apiNPRRD,
+  filterNPR_ESTIMATE,
+  getNPRList,
+} from "../../../../actions/sales/nprActions";
 import DetailLoading from "../../../../components/DetailLoading";
 import MainLayout from "../../../../components/MainLayout";
-import { getStatusByName } from "../../../../include/js/function_main";
+import { useFetch } from "../../../../include/js/customHooks";
+import {
+  getStatusByName,
+  sortData,
+} from "../../../../include/js/function_main";
 import useKeepLogs from "../../../logs/useKeepLogs";
 const columns = [
   {
@@ -22,7 +30,7 @@ const columns = [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>NPR No.</Text>
       </div>
     ),
@@ -47,7 +55,7 @@ const columns = [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>Product</Text>
       </div>
     ),
@@ -60,7 +68,7 @@ const columns = [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>Customer</Text>
       </div>
     ),
@@ -73,7 +81,7 @@ const columns = [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>Sales Person</Text>
       </div>
     ),
@@ -98,7 +106,7 @@ const columns = [
     children: [
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>R&D</Text>
           </div>
         ),
@@ -136,13 +144,62 @@ const Estimate = () => {
   const { branch_id } = useSelector((state) => state.auth.authData);
   const { operations, loading } = useSelector((state) => state.sales);
   const list = operations.npr.list;
+  const { filter_estimate } = operations.npr;
+  const { pageSize, page, keyword } = filter_estimate || {};
   const [state, setState] = useState(list);
+  // useEffect(() => {
+  //   dispatch(getNPRList(branch_id));
+  // }, []);
+  // useEffect(() => {
+  //   setState(list);
+  // }, [list]);
+  const {
+    data: listDataNPR,
+    loading: NPRloading,
+    fetchData,
+  } = useFetch(`${apiNPRRD}`);
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log("params", pagination, filters, sorter, extra);
+    const { current, pageSize } = pagination;
+    dispatch(filterNPR_ESTIMATE({ page: current, pageSize }));
+  };
+  const getSearchData = (keyword) => {
+    const search_data =
+      listDataNPR &&
+      sortData(
+        keyword
+          ? listDataNPR.filter(
+              (npr) =>
+                npr?.npr_no?.toUpperCase()?.indexOf(keyword) >= 0 ||
+                (npr?.npr_product_name &&
+                  npr?.npr_product_name?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.npr_customer_name &&
+                  npr?.npr_customer_name?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.npr_created_by_name &&
+                  npr?.npr_created_by_name?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.npr_responsed_required_by_name &&
+                  npr?.npr_responsed_required_by_name
+                    ?.toUpperCase()
+                    ?.indexOf(keyword) >= 0) ||
+                (npr?.npr_request_date &&
+                  npr?.npr_request_date?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.trans_status &&
+                  npr?.trans_status?.toUpperCase()?.indexOf(keyword) >= 0) ||
+                (npr?.npr_responsed_by &&
+                  npr?.npr_responsed_by?.toUpperCase()?.indexOf(keyword) >= 0)
+            )
+          : listDataNPR
+      );
+    return search_data;
+  };
   useEffect(() => {
-    dispatch(getNPRList(branch_id));
-  }, []);
-  useEffect(() => {
-    setState(list);
-  }, [list]);
+    const respSearch = getSearchData(keyword);
+    setState(respSearch);
+  }, [keyword, listDataNPR]);
   const layoutConfig = {
     projectId: 7,
     title: "SALES",
@@ -155,46 +212,44 @@ const Estimate = () => {
     discard: "",
     onSearch: (w) => {
       const text = w.toUpperCase();
-      setState(
-        list.filter(
-          (obj) =>
-            obj.npr_no?.toUpperCase()?.indexOf(text) >= 0 ||
-            (obj.npr_product_name &&
-              obj.npr_product_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_customer_name &&
-              obj.npr_customer_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_created_by_name &&
-              obj.npr_created_by_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_responsed_required_by_name &&
-              obj.npr_responsed_required_by_name
-                ?.toUpperCase()
-                ?.indexOf(text) >= 0) ||
-            (obj.npr_request_date &&
-              obj.npr_request_date?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.trans_status &&
-              obj.trans_status?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_responsed_by &&
-              obj.npr_responsed_by?.toUpperCase()?.indexOf(text) >= 0)
-        )
-      );
+      dispatch(filterNPR_ESTIMATE({ keyword: text }));
     },
+    searchValue: keyword || null,
+    searchBar: (
+      <Button
+        className='primary'
+        onClick={() =>
+          dispatch(
+            filterNPR_ESTIMATE({
+              page: 1,
+              pageSize: 10,
+              keyword: null,
+            })
+          )
+        }>
+        Clear Filter
+      </Button>
+    ),
   };
   const viewRecord = (record) =>
     history.push("/sales/operation/estimate/" + record.npr_id, record);
   return (
     <>
       <MainLayout {...layoutConfig}>
-        {loading ? (
+        {NPRloading ? (
           <DetailLoading />
         ) : (
           <Table
             size={"small"}
             rowKey={"id"}
+            onChange={onChange}
             columns={columns}
             bordered
             dataSource={state}
             pagination={{
-              pageSize: 15,
+              pageSize: pageSize,
+              current: page,
+              pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
             }}
             onRow={(record) => ({
               onClick: (e) => {

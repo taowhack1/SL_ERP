@@ -26,6 +26,7 @@ import {
   SEARCH_NPR_RD,
   SEARCH_NPR_PU,
   SEARCH_NPR_PD,
+  SEARCH_NPR_ESTIMATE,
 } from "../actions/types";
 import dr from "../modules/sales/operations/dr";
 
@@ -217,6 +218,21 @@ export default (state = inititalState, action) => {
             ...state.operations.npr,
             filter_pd: {
               ...state.operations.npr.filter_pd,
+              ...action.payload,
+            },
+          },
+        },
+      };
+    case SEARCH_NPR_ESTIMATE:
+      return {
+        ...state,
+        loading: false,
+        operations: {
+          ...state.operations,
+          npr: {
+            ...state.operations.npr,
+            filter_estimate: {
+              ...state.operations.npr.filter_estimate,
               ...action.payload,
             },
           },
