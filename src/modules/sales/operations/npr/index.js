@@ -66,7 +66,7 @@ const NPRList = () => {
             )
           : listDataNPR
       );
-    return sortData(search_data);
+    return search_data;
   };
 
   useEffect(() => {
@@ -141,16 +141,20 @@ const NPRList = () => {
             const nprType = e.target.value;
             switch (nprType) {
               case 0:
-                setState(listDataNPR);
+                setState(sortData(listDataNPR));
                 break;
               case 1:
-                setState(listDataNPR.filter((obj) => obj.branch_id === 1));
+                setState(
+                  sortData(listDataNPR.filter((obj) => obj.branch_id === 1))
+                );
                 break;
               case 3:
-                setState(listDataNPR.filter((obj) => obj.branch_id === 3));
+                setState(
+                  sortData(listDataNPR.filter((obj) => obj.branch_id === 3))
+                );
                 break;
               default:
-                setState(listDataNPR);
+                setState(sortData(listDataNPR));
                 break;
             }
           }}
