@@ -4,7 +4,7 @@ import { message } from "antd";
 import axios from "axios";
 import { sortData } from "../../include/js/function_main";
 import { errorText, header_config } from "../../include/js/main_config";
-import { SET_LOADING } from "../types";
+import { SEARCH_NPR, SET_LOADING } from "../types";
 
 const GET_NPR_LIST = "GET_NPR_LIST";
 const GET_NPR_ITEM_LIST = "GET_NPR_ITEM_LIST";
@@ -755,6 +755,8 @@ const updateNPRFormulaCost = (npr_formula_id, alert) => {
     return { success: false, data: null };
   }
 };
+export const filterNPR = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_NPR, payload: data });
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,

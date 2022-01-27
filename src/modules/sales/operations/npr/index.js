@@ -5,30 +5,80 @@ import Text from "antd/lib/typography/Text";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getRDEmp } from "../../../../actions/hrm";
-import { getNPRList } from "../../../../actions/sales/nprActions";
+import { filterNPR, getNPRList } from "../../../../actions/sales/nprActions";
 import ConfigColumn from "../../../../components/ConfigColumn";
 import DetailLoading from "../../../../components/DetailLoading";
 import MainLayout from "../../../../components/MainLayout";
+import { useFetch } from "../../../../include/js/customHooks";
 import { sortData } from "../../../../include/js/function_main";
 import NPRTable from "./NPRTable";
-
+const apiNPRRD = `/sales/npr_rd`;
 const NPRList = () => {
   const dispatch = useDispatch();
-  const { operations, loading } = useSelector((state) => state.sales);
-  const list = operations.npr.list;
-  const [state, setState] = useState(list);
+  const { operations } = useSelector((state) => state.sales);
+  const list = operations.npr;
+  const { filter } = operations.npr;
+  const { pageSize, page, keyword } = filter || {};
+  const [state, setState] = useState([]);
   const [modal, setModal] = useState({
     visible: false,
   });
+  const {
+    data: listDataNPR,
+    loading: NPRloading,
+    fetchData,
+  } = useFetch(`${apiNPRRD}`);
+  console.log("listDataNPR :>> ", listDataNPR);
+  console.log("filter pageSize:>> ", filter);
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log("params", pagination, filters, sorter, extra);
+    const { current, pageSize } = pagination;
+    dispatch(filterNPR({ page: current, pageSize }));
+  };
+  const getSearchData = (keyword) => {
+    const search_data =
+      listDataNPR &&
+      sortData(
+        keyword
+          ? listDataNPR.filter(
+              (npr) =>
+                npr?.npr_no?.toUpperCase()?.indexOf(keyword) >= 0 ||
+                (npr?.npr_product_name &&
+                  npr?.npr_product_name?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.npr_customer_name &&
+                  npr?.npr_customer_name?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.npr_created_by_name &&
+                  npr?.npr_created_by_name?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.npr_responsed_required_by_name &&
+                  npr?.npr_responsed_required_by_name
+                    ?.toUpperCase()
+                    ?.indexOf(keyword) >= 0) ||
+                (npr?.npr_request_date &&
+                  npr?.npr_request_date?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.trans_status &&
+                  npr?.trans_status?.toUpperCase()?.indexOf(keyword) >= 0) ||
+                (npr?.npr_responsed_by &&
+                  npr?.npr_responsed_by?.toUpperCase()?.indexOf(keyword) >= 0)
+            )
+          : listDataNPR
+      );
+    return sortData(search_data);
+  };
+
   useEffect(() => {
     dispatch(getRDEmp());
-    dispatch(getNPRList());
+    //dispatch(getNPRList());
     setModal((prev) => ({ ...prev, update: false }));
   }, []);
   useEffect(() => {
     console.log("list", list);
-    setState(sortData(list));
-  }, [list]);
+    const respSearch = getSearchData(keyword);
+    setState(respSearch);
+  }, [keyword, listDataNPR]);
   const onClose = useCallback(() => {
     setModal((prev) => ({
       ...prev,
@@ -64,31 +114,9 @@ const NPRList = () => {
     },
     onSearch: (w) => {
       const text = w.toUpperCase();
-      setState(
-        list.filter(
-          (obj) =>
-            // (department_id === 1 || obj?.rd_type_branch_id === branch_id) &&
-
-            obj?.npr_no?.toUpperCase()?.indexOf(text) >= 0 ||
-            (obj?.npr_product_name &&
-              obj?.npr_product_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj?.npr_customer_name &&
-              obj?.npr_customer_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj?.npr_created_by_name &&
-              obj?.npr_created_by_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj?.npr_responsed_required_by_name &&
-              obj?.npr_responsed_required_by_name
-                ?.toUpperCase()
-                ?.indexOf(text) >= 0) ||
-            (obj?.npr_request_date &&
-              obj?.npr_request_date?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj?.trans_status &&
-              obj?.trans_status?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj?.npr_responsed_by &&
-              obj?.npr_responsed_by?.toUpperCase()?.indexOf(text) >= 0)
-        )
-      );
+      dispatch(filterNPR({ keyword: text }));
     },
+    searchValue: keyword || null,
     searchBar: (
       <Space size={18}>
         <div>
@@ -113,21 +141,21 @@ const NPRList = () => {
             const nprType = e.target.value;
             switch (nprType) {
               case 0:
-                setState(list);
+                setState(listDataNPR);
                 break;
               case 1:
-                setState(list.filter((obj) => obj.branch_id === 1));
+                setState(listDataNPR.filter((obj) => obj.branch_id === 1));
                 break;
               case 3:
-                setState(list.filter((obj) => obj.branch_id === 3));
+                setState(listDataNPR.filter((obj) => obj.branch_id === 3));
                 break;
               default:
-                setState(list);
+                setState(listDataNPR);
                 break;
             }
           }}
-          optionType="button"
-          buttonStyle="solid"
+          optionType='button'
+          buttonStyle='solid'
           defaultValue={0}
         />
       </Space>
@@ -139,7 +167,16 @@ const NPRList = () => {
   return (
     <>
       <MainLayout {...layoutConfig}>
-        {loading ? <DetailLoading /> : <NPRTable dataSource={state} />}
+        {NPRloading ? (
+          <DetailLoading />
+        ) : (
+          <NPRTable
+            dataSource={state}
+            pageSize={pageSize}
+            page={page}
+            onChange={onChange}
+          />
+        )}
       </MainLayout>
     </>
   );

@@ -22,6 +22,7 @@ import {
   GET_SO_BY_ID,
   SET_LOADING,
   SEARCH_QN,
+  SEARCH_NPR,
 } from "../actions/types";
 import dr from "../modules/sales/operations/dr";
 
@@ -48,12 +49,20 @@ const inititalState = {
       soProductionType: 0,
       keyword: null,
       so_status: null,
+      page: 1,
+      pageSize: 20,
     },
   },
   operations: {
     npr: {
       itemList: [],
       list: [],
+      filter: {
+        pageSize: 10,
+        page: 1,
+        keyword: null,
+        npr_id: null,
+      },
     },
     dr: {
       search: {
@@ -144,6 +153,21 @@ export default (state = inititalState, action) => {
           npr: {
             ...state.npr,
             list: action.payload,
+          },
+        },
+      };
+    case SEARCH_NPR:
+      return {
+        ...state,
+        loading: false,
+        operations: {
+          ...state.operations,
+          npr: {
+            ...state.operations.npr,
+            filter: {
+              ...state.operations.npr.filter,
+              ...action.payload,
+            },
           },
         },
       };
