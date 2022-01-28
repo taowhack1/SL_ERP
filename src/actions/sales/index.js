@@ -363,8 +363,15 @@ export const so_actions = (data, so_id) => (dispatch) => {
   console.log("so_actions", data, so_id);
   // const Lineurl =
   //   "https://1c4e-112-121-130-63.ngrok.io/api/line/post/message/push_message/so_approve";
-  if (data.process_status_id >= 2 && data.process_status_id != 6) {
-    console.log("sending Line :>> ", data);
+  if (
+    data.process_status_id >= 2 &&
+    data.process_status_id != 6 &&
+    data.process_status_id != 7
+  ) {
+    console.log(
+      "sending Line process_status_id >= 2 && data.process_status_id != 6:>> ",
+      data
+    );
     data.commit = 1;
     axios
       .post(
@@ -377,7 +384,10 @@ export const so_actions = (data, so_id) => (dispatch) => {
         //dispatch(get_so_by_id(so_id, data.user_name));
       });
   } else if (data.process_status_id == 6 && data.node_stay == 3) {
-    console.log("sending Line :>> ", data);
+    console.log(
+      "sending Line process_status_id == 6 && data.node_stay == 3:>> ",
+      data
+    );
     data.commit = 1;
     axios
       .post(
