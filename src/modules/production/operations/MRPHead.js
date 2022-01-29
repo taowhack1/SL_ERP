@@ -64,11 +64,9 @@ const MRPHead = () => {
   const { data: itemProduceList, loading: getItemProduceListLoading } =
     useFetch(`${apiItemProduceList}/${mainState?.so_id}`, !mainState?.so_id);
   const { data: itemList } = itemProduceList || {};
-  console.log("itemProduceList", itemProduceList);
   const onChangeConfig = (data) => setConfig((prev) => ({ ...prev, ...data }));
 
   const onChange = (data) => {
-    console.log("onChange Data", data);
     // setState({ ...mainState, ...data });
     mainStateDispatch({
       type: "CHANGE_OBJ_VALUE",

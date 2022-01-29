@@ -813,9 +813,9 @@ export const getFGMaterialList = async (
     "getFGMaterialList",
     `${api_get_fg_material}/${so_id}&${so_detail_id}&${item_id}&${qty_to_produce}&${mrp_qty_produce_ref_used}&${item_qty_produce_bulk_request}`
   );
-  // return await axios.get(
-  //   `${api_get_fg_material}/${so_id}&${so_detail_id}&${item_id}&${qty_to_produce}&${mrp_qty_produce_ref_used}&${item_qty_produce_bulk_request}`
-  // );
+  return await axios.get(
+    `${api_get_fg_material}/${so_id}&${so_detail_id}&${item_id}&${qty_to_produce}&${mrp_qty_produce_ref_used}&${item_qty_produce_bulk_request}`
+  );
 };
 
 export const getItemAction = (
