@@ -19,10 +19,9 @@ const useFetch = (url, missingParams = false) => {
     const source = axios.CancelToken.source();
 
     if (!missingParams) {
-      setLoading("Loading...");
+      setLoading(true);
       setData(null);
       setError(null);
-      console.log("url", url);
       url &&
         axios
           .get(url, { cancelToken: source.token })
@@ -97,7 +96,6 @@ const useSubTableFetch = (props) => {
           };
         });
 
-      console.log("get data", resp);
       resp.success &&
         setState((prev) => ({
           ...prev,

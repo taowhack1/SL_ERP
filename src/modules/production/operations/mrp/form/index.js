@@ -1,7 +1,7 @@
-import { Col, Row } from "antd";
+import { Col, Row, Spin } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { InputField } from "../../../../../components/AntDesignComponent";
 import CustomLabel from "../../../../../components/CustomLabel";
 import LeftForm from "./LeftForm";
@@ -10,45 +10,61 @@ import DetailForm from "./detail";
 
 const Form = () => {
   const {
-    register,
     control,
-    reset,
     formState: { errors },
-    handleSubmit,
-    readOnly = false,
+    readOnly = true,
+    loading = false,
   } = useFormContext();
-
+  const mrp_description = useWatch({
+    control,
+    name: "mrp_description",
+    defaultValue: "-",
+  });
   return (
     <>
       <div id="form">
         <Row className="col-2 mt-1 mb-1" gutter={16}>
           <Col span={24}>
             <>
-              <CustomLabel require label="Description / Job Name :" />
+              <CustomLabel
+                readOnly={readOnly}
+                require
+                label="Description / Job Name :"
+              />
               <div className="mt-1">
-                <Controller
-                  {...{
-                    name: `mrp_description`,
-                    control,
-                    rules: { required: false },
-                    defaultValue: null,
-                    render: ({ field }) => {
-                      return InputField({
-                        fieldProps: {
-                          className: "w-100",
-                          placeholder: "Description",
-                          ...field,
-                        },
-                      });
-                    },
-                  }}
-                />
-                <br />
-                {errors?.mrp_description && (
-                  <Text strong className="require">
-                    This field is required.
-                  </Text>
-                )}
+                <Spin spinning={loading}>
+                  {readOnly ? (
+                    <Text className="text-value pd-left-2">{`${mrp_description}`}</Text>
+                  ) : (
+                    <>
+                      <Controller
+                        {...{
+                          name: `mrp_description`,
+                          control,
+                          rules: { required: false },
+                          defaultValue: null,
+                          render: ({ field }) => {
+                            return InputField({
+                              fieldProps: {
+                                className: "w-100",
+                                placeholder: "Description",
+                                disabled: readOnly,
+                                ...field,
+                              },
+                            });
+                          },
+                        }}
+                      />
+
+                      <br />
+                      {errors?.mrp_description && (
+                        <Text strong className="require">
+                          This field is required.
+                        </Text>
+                      )}
+                    </>
+                  )}
+                </Spin>
               </div>
             </>
           </Col>
@@ -63,7 +79,9 @@ const Form = () => {
         </Row>
         <Row className="col-2 mt-3 mb-1" gutter={16}>
           <Col span={24}>
-            <DetailForm />
+            <Spin spinning={loading}>
+              <DetailForm />
+            </Spin>
           </Col>
         </Row>
       </div>
