@@ -14,7 +14,7 @@ import {
   getUOMInRow,
 } from "../../../../actions/inventory/configurations/uom/uomAction";
 
-function UOMMain(props) {
+function UomMain(props) {
   const dispatch = useDispatch();
   const uom = useSelector((state) => state.inventory.configurations.uom);
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -94,4 +94,4 @@ function UOMMain(props) {
   );
 }
 
-export default withRouter(UOMMain);
+export default withRouter(UomMain);
