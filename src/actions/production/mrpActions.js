@@ -215,4 +215,88 @@ const getMRPCalV2 = ({ item_id, so_id, so_detail_id, item_qty_produce }) => {
     });
 };
 
-export { getMRPTest, getMRPCalV2 };
+const getMRPv2ByID = (id = null, user_name = null) => {
+  try {
+    if (!id) return { success: false, data: {}, message: "Missing id" };
+    const apiGetMRPv2ByID = `/production/mrp_v2/${id}&${user_name}`;
+    return axios
+      .get(`${apiGetMRPv2ByID}`, header_config)
+      .then((resp) => {
+        console.log("resp", resp);
+        const {
+          status,
+          data: { success, data },
+        } = resp || {};
+        if (status === 200 && success) {
+          return { success: true, data, message: "Success" };
+        } else {
+          return { success: false, data: {}, message: resp };
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error?.response) {
+          console.error(error.response);
+        }
+        return { success: false, data: {}, message: error };
+      });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
+const saveMRPv2 = (data) => {
+  try {
+    const { mrp_id } = data || {};
+    if (!mrp_id) return { success: false, data: {}, message: "Missing id" };
+    const apiSaveMRPv2 = `/production/mrp_v2`;
+    return mrp_id
+      ? axios
+          .put(`${apiSaveMRPv2}`, data, header_config)
+          .then((resp) => {
+            console.log("resp", resp);
+            const {
+              status,
+              data: { success, data },
+            } = resp || {};
+            if (status === 200 && success) {
+              return { success: true, data, message: "Success" };
+            } else {
+              return { success: false, data: {}, message: resp };
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            if (error?.response) {
+              console.error(error.response);
+            }
+            return { success: false, data: {}, message: error };
+          })
+      : axios
+          .post(`${apiSaveMRPv2}`, data, header_config)
+          .then((resp) => {
+            console.log("resp", resp);
+            const {
+              status,
+              data: { success, data },
+            } = resp || {};
+            if (status === 200 && success) {
+              return { success: true, data, message: "Success" };
+            } else {
+              return { success: false, data: {}, message: resp };
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            if (error?.response) {
+              console.error(error.response);
+            }
+            return { success: false, data: {}, message: error };
+          });
+  } catch (error) {
+    console.log(error);
+    return { success: false, data: {}, message: error };
+  }
+};
+
+export { getMRPTest, getMRPCalV2, getMRPv2ByID, saveMRPv2 };

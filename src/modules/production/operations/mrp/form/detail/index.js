@@ -1,6 +1,8 @@
 import { InputNumber, Popover, Tabs } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
+import { Controller } from "react-hook-form";
+import { InputNumberField } from "../../../../../../components/AntDesignComponent";
 import { warningTextValue } from "../../../../../../include/js/function_main";
 import {
   convertDigit,
@@ -43,7 +45,12 @@ const MRPDetail = () => {
 
 export default React.memo(MRPDetail);
 
-const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
+const mrpDetailColumns = ({
+  readOnly = true,
+  fieldName,
+  register,
+  control,
+}) => [
   {
     title: (
       <div className="text-center" title="Item code">
@@ -80,12 +87,6 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     render: (value, record, index) => {
       return (
         <>
-          {/* <input
-            className="d-none"
-            {...register(`${fieldName}.${index}.item_name`, {
-              required: true,
-            })}
-          /> */}
           <Text className="text-value text-left">{value ?? "-"}</Text>
         </>
       );
@@ -251,63 +252,98 @@ const mrpDetailColumns = ({ readOnly, fieldName, register }) => [
     require: true,
     align: "right",
     width: "12%",
-    render: (item_qty_to_pr, record, index) => {
-      // if (readOnly || record?.type_id === 3) {
-      return (
-        <>
-          <input
-            className="d-none"
-            {...register(`${fieldName}.${index}.item_qty_to_pr`, {
-              required: false,
-            })}
-          />
-          <Text className="text-value text-right">
-            {convertDigit(item_qty_to_pr, 6) ?? "-"}
-          </Text>
-        </>
-      );
-      // } else {
-      //   return (
-      // <InputNumber
-      //   disabled={record.item_id !== null ? 0 : 1}
-      //   {...getNumberFormat(6)}
-      //   placeholder={"Qty. to PR"}
-      //   min={0}
-      //   step={record.item_vendor_moq}
-      //   className="full-width"
-      //   name="mrp_detail_qty_pr"
-      //   value={value}
-      //   onChange={(data) => {
-      //     if (
-      //       record.mrp_detail_qty_available >=
-      //         record.mrp_detail_qty_issue &&
-      //       record.item_vendor_lead_time_day &&
-      //       data > 0
-      //     ) {
-      //       onChange(record.id, {
-      //         mrp_detail_qty_pr: data,
-      //         mrp_detail_pr_lead_time_day: record.item_vendor_lead_time_day,
-      //       });
-      //     } else if (
-      //       record.mrp_detail_qty_available >=
-      //         record.mrp_detail_qty_issue &&
-      //       record.item_vendor_lead_time_day &&
-      //       data === 0
-      //     ) {
-      //       onChange(record.id, {
-      //         mrp_detail_qty_pr: data,
-      //         mrp_detail_pr_lead_time_day: 0,
-      //       });
-      //     } else {
-      //       onChange(record.id, {
-      //         mrp_detail_qty_pr: data,
-      //       });
-      //     }
-      //   }}
-      //   size="small"
-      // />
-      //   );
-      // }
+    render: (
+      item_qty_to_pr,
+      {
+        id,
+        item_id,
+        type_id,
+        item_vendor_moq,
+        mrp_detail_qty_available,
+        mrp_detail_qty_issue,
+        item_vendor_lead_time_day,
+      },
+      index
+    ) => {
+      console.log("item_qty_to_pr", item_qty_to_pr);
+      if (readOnly || [3, 4].includes(type_id)) {
+        return (
+          <>
+            <input
+              className="d-none"
+              {...register(`${fieldName}.${index}.item_qty_to_pr`, {
+                required: false,
+              })}
+            />
+            <Text className="text-value text-right">
+              {convertDigit(item_qty_to_pr, 6) ?? "-"}
+            </Text>
+          </>
+        );
+      } else {
+        console.log("1.item_qty_to_pr", item_qty_to_pr);
+        return (
+          <>
+            <Controller
+              {...{
+                name: `${fieldName}.${index}.item_qty_to_pr`,
+                control,
+                defaultValue: item_qty_to_pr,
+                render: ({ field }) => {
+                  console.log("2.field", field);
+                  return InputNumberField({
+                    fieldProps: {
+                      className: "w-100",
+                      placeholder: "Qty. to PR",
+                      min: 0,
+                      size: "small",
+                      ...getNumberFormat(6),
+                      ...field,
+                    },
+                  });
+                },
+              }}
+            />
+          </>
+
+          // <InputNumber
+          //   disabled={item_id !== null ? 0 : 1}
+          //   {...getNumberFormat(6)}
+          //   placeholder={"Qty. to PR"}
+          //   min={0}
+          //   step={item_vendor_moq}
+          //   className="full-width"
+          //   name="item_qty_to_pr"
+          //   value={item_qty_to_pr}
+          //   onChange={(data) => {
+          //     if (
+          //       mrp_detail_qty_available >= mrp_detail_qty_issue &&
+          //       item_vendor_lead_time_day &&
+          //       data > 0
+          //     ) {
+          //       onChange(id, {
+          //         item_qty_to_pr: data,
+          //         mrp_detail_pr_lead_time_day: item_vendor_lead_time_day,
+          //       });
+          //     } else if (
+          //       mrp_detail_qty_available >= mrp_detail_qty_issue &&
+          //       item_vendor_lead_time_day &&
+          //       data === 0
+          //     ) {
+          //       onChange(id, {
+          //         item_qty_to_pr: data,
+          //         mrp_detail_pr_lead_time_day: 0,
+          //       });
+          //     } else {
+          //       onChange(id, {
+          //         item_qty_to_pr: data,
+          //       });
+          //     }
+          //   }}
+          //   size="small"
+          // />
+        );
+      }
     },
   },
   {
@@ -430,7 +466,7 @@ const routingColumns = ({ control, register, readOnly = false }) => [
     align: "right",
     className: "tb-col-sm",
     width: "12%",
-    dataIndex: "routing_detail_worker",
+    dataIndex: "mrp_routing_worker",
     render: (val) => val || "-",
   },
   {
@@ -442,7 +478,7 @@ const routingColumns = ({ control, register, readOnly = false }) => [
     align: "center",
     className: "tb-col-sm",
     width: "12%",
-    dataIndex: "routing_detail_plan_date",
+    dataIndex: "mrp_routing_plan_date",
     render: (val) => val || "-",
   },
 ];
