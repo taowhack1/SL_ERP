@@ -1,13 +1,21 @@
-import { message } from "antd";
+import { Button, message } from "antd";
 import moment from "moment";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useHistory, useParams, useRouteMatch } from "react-router";
+import { approveFunction } from "../../../../actions";
 import {
   getMRPCalV2,
   getMRPv2ByID,
   saveMRPv2,
 } from "../../../../actions/production/mrpActions";
+import Comments from "../../../../components/Comments";
 import MainLayout from "../../../../components/MainLayout";
 import { AppContext } from "../../../../include/js/context";
 import Form from "./form";
@@ -24,42 +32,78 @@ const MRPForm = () => {
   const [configs, setConfigs] = useState({
     readOnly: false,
     loading: false,
+    log: [],
   });
+
   const formMethods = useForm({
     defaultValues: initialState,
   });
-  // const formMethods2 = useForm({
-  //   defaultValues: initialState,
-  // });
+
+  const getData = useCallback(async () => {
+    setConfigs((prev) => ({ ...prev, readOnly: true, loading: true }));
+    const { data } = await getMRPv2ByID(id, user_name);
+    const { log } = data || {};
+
+    formMethods.reset(data);
+    setConfigs((prev) => ({
+      ...prev,
+      readOnly: ["create", "edit"].includes(action) ? false : true,
+      log,
+      loading: false,
+    }));
+  }, [action]);
+
   useEffect(() => {
-    const getData = async () => {
-      setConfigs((prev) => ({ ...prev, readOnly: true, loading: true }));
-      const { data } = await getMRPv2ByID(id, user_name);
-      formMethods.reset(data);
-      setConfigs((prev) => ({
-        ...prev,
-        readOnly: ["create", "edit"].includes(action) ? false : true,
-        loading: false,
-      }));
-    };
     id && user_name && getData();
   }, [id, user_name, action]);
 
-  const [button_edit, button_confirm, button_approve, button_reject] = useWatch(
-    {
-      control: formMethods.control,
-      name: [
-        "button_edit",
-        "button_confirm",
-        "button_approve",
-        "button_reject",
-      ],
-      defaultValue: [false, false, false, false],
-    }
-  );
+  const [
+    process_id,
+    button_edit,
+    button_confirm,
+    button_approve,
+    button_reject,
+    node_stay,
+    data_flow_process,
+    process_complete,
+  ] = useWatch({
+    control: formMethods.control,
+    name: [
+      "process_id",
+      "button_edit",
+      "button_confirm",
+      "button_approve",
+      "button_reject",
+      "node_stay",
+      "data_flow_process",
+      "process_complete",
+    ],
+    defaultValue: [null, false, false, false, false, null, null, null],
+  });
 
-  const layoutConfig = useMemo(
-    () => ({
+  const layoutConfig = useMemo(() => {
+    const flow = data_flow_process?.map((step) => {
+      return step.all_group_in_node;
+    });
+
+    const doActions = async (status_id = 0, msg = "....") => {
+      setConfigs((prev) => ({ ...prev, loading: true }));
+      const resp = await approveFunction({
+        status: status_id,
+        user_name,
+        process_id,
+        process_member_remark: "Confirm Document.",
+      });
+
+      if (resp.success) {
+        message.success(`${msg} successfully.`);
+        getData();
+      } else {
+        message.error(`${msg} fail.`);
+      }
+      setConfigs((prev) => ({ ...prev, log: resp?.data?.log, loading: false }));
+    };
+    return {
       projectId: 10, // project ID from DB
       title: "PRODUCTION", // project name
       home: "/production", // path
@@ -78,8 +122,13 @@ const MRPForm = () => {
         : ["edit", "create"].includes(action)
         ? ["Save", "Discard"]
         : [], // button
+      step: {
+        current: node_stay - 1,
+        step: flow,
+        process_complete,
+      },
       badgeCont: 0, //number
-      step: null, // object {current:0,step:[],process_complete:bool}
+      // step: null, // object {current:0,step:[],process_complete:bool}
       create: "", // path or "modal" and use openModal() instead
       edit: { path: `/production/operations/mrp_v2/edit/${id}` }, // object {data: any , path : "string"} or function
       discard: "/production/operations/mrp_v2", //path
@@ -89,16 +138,36 @@ const MRPForm = () => {
         formMethods.setValue("isSave", true);
         document.getElementById("submit-form").click();
       },
-      onConfirm: () => console.log("Confirm"),
-      onApprove: () => console.log("Approve"),
-      onReject: () => console.log("Reject"),
-      onCancel: () => console.log("Cancel"),
+      onConfirm: () => {
+        doActions(2, "Confirm document");
+      },
+      onApprove: () => {
+        doActions(5, "Approve document");
+      },
+      onReject: () => {
+        doActions(6, "Reject document");
+      },
+      onCancel: () => {
+        doActions(3, "Cancel document");
+      },
       onSearch: (keyword) => console.log("Search Key", keyword),
       openModal: () => console.log("openModal"),
       searchBar: null, //html code this show below search input
-    }),
-    [action, id, button_edit, button_confirm, button_approve, button_reject]
-  );
+    };
+  }, [
+    action,
+    id,
+    configs,
+    process_id,
+    button_edit,
+    button_confirm,
+    button_approve,
+    button_reject,
+    node_stay,
+    data_flow_process,
+    process_complete,
+    // getData,
+  ]);
 
   const onSubmit = async (data) => {
     if (!data?.isSave) {
@@ -117,11 +186,21 @@ const MRPForm = () => {
         so_detail_id,
         item_qty_produce: mrp_item_qty_produce,
       });
-      formMethods.setValue("item_set_spec", resData?.data?.item_set_spec || []);
-      formMethods.setValue(
-        "item_routing_spec",
-        resData?.data?.item_routing_spec || []
-      );
+
+      console.log("CALCULATE ", resData);
+      // formMethods.setValue("item_set_spec", []);
+      // formMethods.setValue("item_routing_spec", []);
+      // formMethods.setValue("item_set_spec", resData?.data?.item_set_spec || []);
+      // formMethods.setValue(
+      //   "item_routing_spec",
+      //   resData?.data?.item_routing_spec || []
+      // );
+
+      formMethods.reset({
+        ...data,
+        item_set_spec: resData?.data?.item_set_spec || [],
+        item_routing_spec: resData?.data?.item_routing_spec || [],
+      });
       // formMethods.setValue("componentsLoading", false);
       setConfigs((prev) => ({ ...prev, loading: false }));
     } else {
@@ -130,12 +209,21 @@ const MRPForm = () => {
         ...data,
         user_name,
         branch_id,
-        commit: 0,
+        commit: 1,
       };
       // Do save mrp.
-      const resp = await saveMRPv2(saveData);
       console.log("Save  Data", saveData);
-      console.log("SAVE Resp", resp);
+      // const resp = await saveMRPv2(saveData);
+      // console.log("SAVE Resp", resp);
+      // if (resp.success) {
+      //   const {
+      //     data: { tb_mrp },
+      //   } = resp || {};
+      //   const { mrp_id } = tb_mrp[0];
+      //   history.push(`/production/operations/mrp_v2/view/${mrp_id}`);
+      // }
+      formMethods.setValue("isSave", false);
+
       setConfigs((prev) => ({ ...prev, loading: false }));
     }
   };
@@ -152,12 +240,18 @@ const MRPForm = () => {
           key="form-1"
           onSubmit={formMethods.handleSubmit(onSubmit, onError)}
         >
+          {/* <Button
+            onClick={() => formMethods.setValue("mrp_description", "5555555")}
+          >
+            SET
+          </Button> */}
           <Form />
           <button type="submit" id="submit-form" className="d-none">
             Submit Btn
           </button>
         </form>
       </FormProvider>
+      <Comments data={configs?.log || []} />
     </MainLayout>
   );
 };

@@ -27,12 +27,12 @@ const MPRv2 = () => {
       search: true, // bool show search
       searchValue: null, //search string
       buttonAction: ["Create"],
+      create: "/production/operations/mrp_v2/create",
       onCancel: () => console.log("Cancel"),
       onSearch: (searchText) => console.log("search", searchText),
     }),
     []
   );
-  console.log("main", loading);
   return (
     <MainLayout {...config}>
       <Table
@@ -42,7 +42,6 @@ const MPRv2 = () => {
         rowClassName="row-table-detail"
         loading={loading}
         columns={columns()}
-        // dataSource={[]}
         dataSource={data || []}
         onRow={(record) => ({
           onClick: () =>

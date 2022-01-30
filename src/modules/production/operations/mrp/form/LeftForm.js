@@ -52,7 +52,7 @@ const LeftForm = () => {
     <>
       <Row className="col-2 mt-1 mb-1" gutter={8}>
         <Col span={8}>
-          <CustomLabel readOnly={readOnly} require label={"SO Documents :"} />
+          <CustomLabel readOnly={readOnly} require label={"SO documents :"} />
         </Col>
         <Col span={16}>
           <Spin spinning={loading}>

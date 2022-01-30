@@ -18,7 +18,6 @@ import { useHistory, useParams } from "react-router-dom";
 const { Text } = Typography;
 
 const MRPView = (props) => {
-  const history = useHistory();
   const readOnly = true;
   const { id } = useParams();
   const authorize = Authorize();

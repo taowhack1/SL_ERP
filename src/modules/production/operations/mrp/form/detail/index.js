@@ -63,11 +63,12 @@ const mrpDetailColumns = ({
     width: "13%",
     ellipsis: true,
     render: (value, { item_no }, index) => {
+      console.log(`${fieldName}.${index}.item_id`);
       return (
         <>
           <input
-            className="d-none"
-            {...register(`${fieldName}.${index}.item_id`, { required: false })}
+            // className="d-none"
+            {...register(`${fieldName}.${index}.item_id`)}
           />
           <Text className="text-value text-left">{item_no ?? "-"}</Text>
         </>
@@ -252,20 +253,7 @@ const mrpDetailColumns = ({
     require: true,
     align: "right",
     width: "12%",
-    render: (
-      item_qty_to_pr,
-      {
-        id,
-        item_id,
-        type_id,
-        item_vendor_moq,
-        mrp_detail_qty_available,
-        mrp_detail_qty_issue,
-        item_vendor_lead_time_day,
-      },
-      index
-    ) => {
-      console.log("item_qty_to_pr", item_qty_to_pr);
+    render: (item_qty_to_pr, { type_id }, index) => {
       if (readOnly || [3, 4].includes(type_id)) {
         return (
           <>
@@ -281,7 +269,6 @@ const mrpDetailColumns = ({
           </>
         );
       } else {
-        console.log("1.item_qty_to_pr", item_qty_to_pr);
         return (
           <>
             <Controller

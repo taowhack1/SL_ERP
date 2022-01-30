@@ -248,11 +248,10 @@ const getMRPv2ByID = (id = null, user_name = null) => {
 const saveMRPv2 = (data) => {
   try {
     const { mrp_id } = data || {};
-    if (!mrp_id) return { success: false, data: {}, message: "Missing id" };
     const apiSaveMRPv2 = `/production/mrp_v2`;
     return mrp_id
       ? axios
-          .put(`${apiSaveMRPv2}`, data, header_config)
+          .put(`${apiSaveMRPv2}`, [data], header_config)
           .then((resp) => {
             console.log("resp", resp);
             const {
@@ -273,7 +272,7 @@ const saveMRPv2 = (data) => {
             return { success: false, data: {}, message: error };
           })
       : axios
-          .post(`${apiSaveMRPv2}`, data, header_config)
+          .post(`${apiSaveMRPv2}`, [data], header_config)
           .then((resp) => {
             console.log("resp", resp);
             const {
