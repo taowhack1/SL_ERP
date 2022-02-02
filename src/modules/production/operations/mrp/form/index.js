@@ -15,14 +15,27 @@ const Form = () => {
     readOnly = true,
     loading = false,
   } = useFormContext();
-  const mrp_description = useWatch({
+  const [mrp_description, mrp_no, mrp_created] = useWatch({
     control,
-    name: "mrp_description",
+    name: ["mrp_description", "mrp_no", "mrp_created"],
     defaultValue: "-",
   });
   return (
     <>
       <div id="form">
+        <Row className="col-2 mt-1 mb-1" gutter={16}>
+          <Col span={12}>
+            <h2>
+              <strong>{mrp_no}</strong>
+            </h2>
+          </Col>
+          <Col span={12} className="text-right">
+            <p>
+              <CustomLabel readOnly={true} label="Issued Date :" />
+              <Text className="ml-2">{mrp_created || "-"}</Text>
+            </p>
+          </Col>
+        </Row>
         <Row className="col-2 mt-1 mb-1" gutter={16}>
           <Col span={24}>
             <>

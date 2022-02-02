@@ -78,10 +78,10 @@ const JobOrderListTable = (props) => {
     <>
       <Table
         bordered
-        rowKey='id'
-        size='small'
+        rowKey="id"
+        size="small"
         onChange={onChange}
-        rowClassName='row-table-detail'
+        rowClassName="row-table-detail"
         expandable={{ expandedRowRender }}
         onExpand={(expanded, row) =>
           handleExpand(expanded, row, `/${row?.mrp_id}`, 0)
@@ -105,7 +105,8 @@ export const getJobStatus = (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color='error'>
+          color="error"
+        >
           {trans_status_name || "-"}
         </Tag>
       );
@@ -114,7 +115,8 @@ export const getJobStatus = (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color='processing'>
+          color="processing"
+        >
           {trans_status_name || "-"}
         </Tag>
       );
@@ -123,7 +125,8 @@ export const getJobStatus = (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color='#108ee9'>
+          color="#108ee9"
+        >
           {trans_status_name || "-"}
         </Tag>
       );
@@ -132,7 +135,8 @@ export const getJobStatus = (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color='#87d068'>
+          color="#87d068"
+        >
           {trans_status_name || "-"}
         </Tag>
       );
@@ -141,7 +145,8 @@ export const getJobStatus = (
         <Tag
           className={callBack ? "pointer w-100" : "w-100"}
           onClick={callBack}
-          color='default'>
+          color="default"
+        >
           {trans_status_name || "-"}
         </Tag>
       );
@@ -150,7 +155,7 @@ export const getJobStatus = (
 const columns = ({ viewJobOrder, editJobOrder }) => [
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>No.</b>
       </div>
     ),
@@ -163,7 +168,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Job No.</b>
       </div>
     ),
@@ -175,7 +180,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>MRP No.</b>
       </div>
     ),
@@ -188,7 +193,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Description</b>
       </div>
     ),
@@ -200,33 +205,37 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
   },
   {
     title: (
-      <div className='text-center'>
-        <b>Bulk Code</b>
+      <div className="text-center">
+        <b>Ref. Code</b>
       </div>
     ),
     align: "center",
     className: "col-sm",
     width: "10%",
-    dataIndex: "item_no_ref",
+    dataIndex: "item_ref_no",
     render: (val) => val || "-",
   },
   {
     title: (
-      <div className='text-center'>
-        <b>Bulk Qty.</b>
+      <div className="text-center">
+        <b>Ref. Qty.</b>
       </div>
     ),
     align: "right",
     className: "col-sm",
     width: "10%",
-    dataIndex: "mrp_qty_produce_ref",
-    render: (val, { uom_no_ref }) =>
-      val ? <Text>{`${convertDigit(val, 6)} ${uom_no_ref || "-"}`}</Text> : "-",
+    dataIndex: "mrp_ref_qty_produce",
+    render: (val, { uom_ref_no }) =>
+      val ? (
+        <Text>{`${convertDigit(val, 6)} ${uom_ref_no || "-"}.`}</Text>
+      ) : (
+        "-"
+      ),
   },
   {
     title: (
-      <div className='text-center'>
-        <b>FG Code</b>
+      <div className="text-center">
+        <b>Item Code</b>
       </div>
     ),
     align: "center",
@@ -237,20 +246,20 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
   },
   {
     title: (
-      <div className='text-center'>
-        <b>FG Qty.</b>
+      <div className="text-center">
+        <b>Item Qty.</b>
       </div>
     ),
     align: "right",
     className: "col-sm",
     width: "10%",
-    dataIndex: "mrp_qty_produce",
+    dataIndex: "mrp_item_qty_produce",
     render: (val, { uom_no }) =>
       val ? <Text>{`${convertDigit(val, 6)} ${uom_no || "-"}`}</Text> : "-",
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Status</b>
       </div>
     ),
@@ -262,7 +271,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <EllipsisOutlined />
       </div>
     ),
@@ -277,7 +286,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
 const subJobOrderColumns = [
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>No.</b>
       </div>
     ),
@@ -288,7 +297,7 @@ const subJobOrderColumns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Job No.</b>
       </div>
     ),
@@ -299,7 +308,7 @@ const subJobOrderColumns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Req. No.</b>
       </div>
     ),
@@ -310,7 +319,7 @@ const subJobOrderColumns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Item Code</b>
       </div>
     ),
@@ -321,7 +330,7 @@ const subJobOrderColumns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Job Name</b>
       </div>
     ),
@@ -332,7 +341,7 @@ const subJobOrderColumns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Quantity</b>
       </div>
     ),
@@ -343,7 +352,7 @@ const subJobOrderColumns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>UOM</b>
       </div>
     ),
@@ -354,7 +363,7 @@ const subJobOrderColumns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Job Type</b>
       </div>
     ),
@@ -365,7 +374,7 @@ const subJobOrderColumns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <b>Status</b>
       </div>
     ),

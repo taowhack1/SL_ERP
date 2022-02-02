@@ -37,7 +37,7 @@ const MPRv2 = () => {
     <MainLayout {...config}>
       <Table
         bordered
-        rowKey="id"
+        rowKey="ids"
         className="mt-2"
         rowClassName="row-table-detail"
         loading={loading}

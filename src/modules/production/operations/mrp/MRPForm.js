@@ -213,15 +213,15 @@ const MRPForm = () => {
       };
       // Do save mrp.
       console.log("Save  Data", saveData);
-      // const resp = await saveMRPv2(saveData);
-      // console.log("SAVE Resp", resp);
-      // if (resp.success) {
-      //   const {
-      //     data: { tb_mrp },
-      //   } = resp || {};
-      //   const { mrp_id } = tb_mrp[0];
-      //   history.push(`/production/operations/mrp_v2/view/${mrp_id}`);
-      // }
+      const resp = await saveMRPv2(saveData);
+      console.log("SAVE Resp", resp);
+      if (resp.success) {
+        const {
+          data: { tb_mrp },
+        } = resp || {};
+        const { mrp_id } = tb_mrp[0];
+        history.push(`/production/operations/mrp_v2/view/${mrp_id}`);
+      }
       formMethods.setValue("isSave", false);
 
       setConfigs((prev) => ({ ...prev, loading: false }));

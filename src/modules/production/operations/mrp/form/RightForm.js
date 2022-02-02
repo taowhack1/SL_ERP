@@ -3,7 +3,10 @@ import Text from "antd/lib/typography/Text";
 import moment from "moment";
 import React from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
-import { DatePickerField } from "../../../../../components/AntDesignComponent";
+import {
+  DatePickerField,
+  InputNumberField,
+} from "../../../../../components/AntDesignComponent";
 import CustomLabel from "../../../../../components/CustomLabel";
 
 const RightForm = () => {
@@ -12,11 +15,12 @@ const RightForm = () => {
     formState: { errors },
     readOnly = true,
     loading = false,
+    register,
   } = useFormContext();
-  const [so_due_date] = useWatch({
+  const [so_due_date, mrp_item_plan_date] = useWatch({
     control,
-    name: ["so_due_date"],
-    defaultValue: ["-"],
+    name: ["so_due_date", "mrp_item_plan_date"],
+    defaultValue: ["-", "-"],
   });
   return (
     <>
@@ -27,7 +31,10 @@ const RightForm = () => {
         <Col span={16}>
           <Spin spinning={loading}>
             {readOnly ? (
-              <Text className="pre-wrap">{`mrp_item_plan_date`}</Text>
+              <>
+                <input className="d-none" {...register("mrp_item_plan_date")} />
+                <Text className="pre-wrap">{`${mrp_item_plan_date}`}</Text>
+              </>
             ) : (
               <>
                 <Controller
@@ -70,6 +77,22 @@ const RightForm = () => {
         </Col>
         <Col span={16}>
           <Spin spinning={loading}>
+            <Controller
+              {...{
+                name: `so_due_date`,
+                control,
+                defaultValue: so_due_date,
+                render: ({ field }) => {
+                  return InputNumberField({
+                    fieldProps: {
+                      className: "w-100 d-none",
+                      size: "small",
+                      ...field,
+                    },
+                  });
+                },
+              }}
+            />
             <Text className="pre-wrap">{`${so_due_date || "-"}`}</Text>
           </Spin>
         </Col>

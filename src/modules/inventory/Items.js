@@ -141,7 +141,7 @@ const Items = (props) => {
   return (
     <div>
       <MainLayout {...config}>
-        <Row className='row-tab-margin-lg'>
+        <Row className="row-tab-margin-lg">
           <Col span={24}>
             <Table
               title={() => <SearchTable onChangeSearch={onChangeSearch} />}
@@ -156,7 +156,7 @@ const Items = (props) => {
                 current: page,
                 pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
               }}
-              rowKey='item_id'
+              rowKey="item_id"
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {
@@ -166,7 +166,7 @@ const Items = (props) => {
                       .find("tr")
                       .removeClass("selected-row");
                     $(e.target).closest("tr").addClass("selected-row");
-                    keepLog.keep_log_action(record.item_no);
+                    keepLog.keep_log_action(`Click View ${record.item_no}`);
                     dispatch(
                       get_item_by_id(
                         record.item_id,

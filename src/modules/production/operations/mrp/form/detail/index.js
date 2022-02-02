@@ -62,13 +62,26 @@ const mrpDetailColumns = ({
     align: "center",
     width: "13%",
     ellipsis: true,
-    render: (value, { item_no }, index) => {
+    render: (item_id, { item_no }, index) => {
       console.log(`${fieldName}.${index}.item_id`);
       return (
         <>
-          <input
-            // className="d-none"
-            {...register(`${fieldName}.${index}.item_id`)}
+          <Controller
+            {...{
+              name: `${fieldName}.${index}.item_id`,
+              control,
+              defaultValue: item_id,
+              render: ({ field }) => {
+                return InputNumberField({
+                  fieldProps: {
+                    className: "w-100 d-none",
+                    placeholder: "Item id.",
+                    size: "small",
+                    ...field,
+                  },
+                });
+              },
+            }}
           />
           <Text className="text-value text-left">{item_no ?? "-"}</Text>
         </>
@@ -106,10 +119,10 @@ const mrpDetailColumns = ({
     width: "10%",
     ellipsis: true,
     render: (
-      value,
+      item_qty_available,
+
       {
         item_qty_to_issue,
-        item_qty_available,
         item_qty_on_gr,
         item_qty_on_hand,
         item_qty_on_issue,
@@ -121,6 +134,22 @@ const mrpDetailColumns = ({
     ) => {
       return (
         <>
+          <Controller
+            {...{
+              name: `${fieldName}.${index}.item_qty_available`,
+              control,
+              defaultValue: item_qty_available,
+              render: ({ field }) => {
+                return InputNumberField({
+                  fieldProps: {
+                    className: "w-100 d-none",
+                    size: "small",
+                    ...field,
+                  },
+                });
+              },
+            }}
+          />
           <Popover
             content={
               <>
@@ -171,7 +200,7 @@ const mrpDetailColumns = ({
             title="Available Quantity"
           >
             {warningTextValue(
-              item_qty_available,
+              item_qty_available || 0,
               6,
               item_qty_available < item_qty_to_issue ? true : false
             )}
@@ -202,12 +231,21 @@ const mrpDetailColumns = ({
     render: (item_qty_to_issue, record, index) => {
       return (
         <>
-          <input
-            type="number"
-            className="d-none"
-            {...register(`${fieldName}.${index}.item_qty_to_issue`, {
-              required: false,
-            })}
+          <Controller
+            {...{
+              name: `${fieldName}.${index}.item_qty_to_issue`,
+              control,
+              defaultValue: item_qty_to_issue,
+              render: ({ field }) => {
+                return InputNumberField({
+                  fieldProps: {
+                    className: "w-100 d-none",
+                    size: "small",
+                    ...field,
+                  },
+                });
+              },
+            }}
           />
           <Text className="text-value text-right">
             {convertDigit(item_qty_to_issue, 6) ?? "-"}
@@ -224,18 +262,30 @@ const mrpDetailColumns = ({
         <br /> UOM.
       </div>
     ),
-    dataIndex: "uom_no",
-    key: "uom_no",
+    dataIndex: "uom_id",
+    key: "uom_id",
     align: "center",
     require: true,
     width: "6%",
     ellipsis: true,
-    render: (uom_no, record, index) => {
+    render: (uom_id, { uom_no }, index) => {
       return (
         <>
-          <input
-            className="d-none"
-            {...register(`${fieldName}.${index}.uom_id`, { required: false })}
+          <Controller
+            {...{
+              name: `${fieldName}.${index}.uom_id`,
+              control,
+              defaultValue: uom_id,
+              render: ({ field }) => {
+                return InputNumberField({
+                  fieldProps: {
+                    className: "w-100 d-none",
+                    size: "small",
+                    ...field,
+                  },
+                });
+              },
+            }}
           />
           <Text className="text-value">{uom_no ?? "-"}</Text>
         </>
@@ -257,11 +307,21 @@ const mrpDetailColumns = ({
       if (readOnly || [3, 4].includes(type_id)) {
         return (
           <>
-            <input
-              className="d-none"
-              {...register(`${fieldName}.${index}.item_qty_to_pr`, {
-                required: false,
-              })}
+            <Controller
+              {...{
+                name: `${fieldName}.${index}.item_qty_to_pr`,
+                control,
+                defaultValue: item_qty_to_pr,
+                render: ({ field }) => {
+                  return InputNumberField({
+                    fieldProps: {
+                      className: "w-100 d-none",
+                      size: "small",
+                      ...field,
+                    },
+                  });
+                },
+              }}
             />
             <Text className="text-value text-right">
               {convertDigit(item_qty_to_pr, 6) ?? "-"}
@@ -346,7 +406,27 @@ const mrpDetailColumns = ({
     width: "6%",
     render: (item_vendor_moq, record, index) => {
       return (
-        <Text className="text-value ">{convertDigit(item_vendor_moq, 6)}</Text>
+        <>
+          <Controller
+            {...{
+              name: `${fieldName}.${index}.item_vendor_moq`,
+              control,
+              defaultValue: item_vendor_moq,
+              render: ({ field }) => {
+                return InputNumberField({
+                  fieldProps: {
+                    className: "w-100 d-none",
+                    size: "small",
+                    ...field,
+                  },
+                });
+              },
+            }}
+          />
+          <Text className="text-value ">
+            {convertDigit(item_vendor_moq, 6)}
+          </Text>
+        </>
       );
     },
   },
@@ -356,19 +436,29 @@ const mrpDetailColumns = ({
         PUR. UOM.
       </div>
     ),
-    dataIndex: "pr_uom_no",
-    key: "pr_uom_no",
+    dataIndex: "pr_uom_id",
+    key: "pr_uom_id",
     align: "center",
     require: true,
     width: "5%",
-    render: (pr_uom_no, record, index) => {
+    render: (pr_uom_id, { pr_uom_no }, index) => {
       return (
         <>
-          <input
-            className="d-none"
-            {...register(`${fieldName}.${index}.pr_uom_id`, {
-              required: false,
-            })}
+          <Controller
+            {...{
+              name: `${fieldName}.${index}.pr_uom_id`,
+              control,
+              defaultValue: pr_uom_id,
+              render: ({ field }) => {
+                return InputNumberField({
+                  fieldProps: {
+                    className: "w-100 d-none",
+                    size: "small",
+                    ...field,
+                  },
+                });
+              },
+            }}
           />
           <Text className="text-value ">{pr_uom_no ?? "-"}</Text>
         </>
@@ -385,7 +475,27 @@ const mrpDetailColumns = ({
     align: "center",
     width: "5%",
     render: (item_vendor_lead_time_day, record, index) => {
-      return item_vendor_lead_time_day;
+      return (
+        <>
+          <Controller
+            {...{
+              name: `${fieldName}.${index}.item_vendor_lead_time_day`,
+              control,
+              defaultValue: item_vendor_lead_time_day,
+              render: ({ field }) => {
+                return InputNumberField({
+                  fieldProps: {
+                    className: "w-100 d-none",
+                    size: "small",
+                    ...field,
+                  },
+                });
+              },
+            }}
+          />
+          <Text className="text-value">{item_vendor_lead_time_day || "-"}</Text>
+        </>
+      );
     },
   },
   {
@@ -398,7 +508,29 @@ const mrpDetailColumns = ({
     align: "center",
     width: "9%",
     render: (mrp_item_sugg_incoming_date, record, index) => {
-      return <Text className="text-value">{mrp_item_sugg_incoming_date}</Text>;
+      return (
+        <>
+          <Controller
+            {...{
+              name: `${fieldName}.${index}.mrp_item_sugg_incoming_date`,
+              control,
+              defaultValue: mrp_item_sugg_incoming_date,
+              render: ({ field }) => {
+                return InputNumberField({
+                  fieldProps: {
+                    className: "w-100 d-none",
+                    size: "small",
+                    ...field,
+                  },
+                });
+              },
+            }}
+          />
+          <Text className="text-value">
+            {mrp_item_sugg_incoming_date || "-"}
+          </Text>
+        </>
+      );
     },
   },
   {
@@ -412,7 +544,27 @@ const mrpDetailColumns = ({
     width: "9%",
     render: (mrp_item_actual_incoming_date, record, index) => {
       return (
-        <Text className="text-value">{mrp_item_actual_incoming_date}</Text>
+        <>
+          <Controller
+            {...{
+              name: `${fieldName}.${index}.mrp_item_actual_incoming_date`,
+              control,
+              defaultValue: mrp_item_actual_incoming_date,
+              render: ({ field }) => {
+                return InputNumberField({
+                  fieldProps: {
+                    className: "w-100 d-none",
+                    size: "small",
+                    ...field,
+                  },
+                });
+              },
+            }}
+          />
+          <Text className="text-value">
+            {mrp_item_actual_incoming_date || "-"}
+          </Text>
+        </>
       );
     },
   },
@@ -428,7 +580,7 @@ const routingColumns = ({ control, register, readOnly = false }) => [
     align: "center",
     className: "tb-col-sm",
     width: "5%",
-    dataIndex: "id",
+    dataIndex: "ids",
   },
   {
     title: (
@@ -459,7 +611,19 @@ const routingColumns = ({ control, register, readOnly = false }) => [
   {
     title: (
       <div className="text-center">
-        <b>Date</b>
+        <b>Period</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "12%",
+    dataIndex: "mrp_routing_plan_time",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Plan Date</b>
       </div>
     ),
     align: "center",
