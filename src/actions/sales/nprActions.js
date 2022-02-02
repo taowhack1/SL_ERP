@@ -4,7 +4,14 @@ import { message } from "antd";
 import axios from "axios";
 import { sortData } from "../../include/js/function_main";
 import { errorText, header_config } from "../../include/js/main_config";
-import { SET_LOADING } from "../types";
+import {
+  SEARCH_NPR,
+  SEARCH_NPR_ESTIMATE,
+  SEARCH_NPR_PD,
+  SEARCH_NPR_PU,
+  SEARCH_NPR_RD,
+  SET_LOADING,
+} from "../types";
 
 const GET_NPR_LIST = "GET_NPR_LIST";
 const GET_NPR_ITEM_LIST = "GET_NPR_ITEM_LIST";
@@ -12,7 +19,7 @@ const GET_NPR_SMD_MASTER_DATA = "GET_NPR_SMD_MASTER_DATA";
 const apiNPR = `/sales/npr`;
 // const apiNPR = `/sales/npr_rd`;
 const apiNPRItems = `/list/item/npr`;
-const apiNPRRD = `/sales/npr_rd`;
+export const apiNPRRD = `/sales/npr_rd`;
 const apiGetNPRFormula = `/sales/npr_formula/npr`;
 const apiNPRFormula = `/sales/npr_formula`;
 const apiGetNPRFeedback = `/sales/npr_satisfication/formula`;
@@ -755,6 +762,14 @@ const updateNPRFormulaCost = (npr_formula_id, alert) => {
     return { success: false, data: null };
   }
 };
+export const filterNPR_RD = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_NPR_RD, payload: data });
+export const filterNPR_PU = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_NPR_PU, payload: data });
+export const filterNPR_PD = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_NPR_PD, payload: data });
+export const filterNPR_ESTIMATE = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_NPR_ESTIMATE, payload: data });
 export {
   GET_NPR_LIST,
   GET_NPR_ITEM_LIST,

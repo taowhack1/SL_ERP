@@ -31,6 +31,8 @@ import { EllipsisOutlined } from "@ant-design/icons";
 import CustomSelect from "../../components/CustomSelect";
 import SO_SearchTable from "../sales/SO_search_tools";
 import SOFilter from "../sales/SOFilter";
+import { useFetch } from "../../include/js/customHooks";
+import { api_quo_list, api_so } from "../../include/js/api";
 const so_columns = ({
   onOpen,
   refSearchInput,
@@ -354,37 +356,94 @@ const SaleOrder = (props) => {
   const current_menu = useSelector((state) => state.auth.currentMenu);
   const auth = useSelector((state) => state.auth.authData);
   const { filter } = useSelector((state) => state.sales.so);
+  const { pageSize, page, keyword, so_status, soProductionType, salesType } =
+    filter || {};
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
   const refSearchInput = useRef();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState(0);
-  const getSOList = async () => {
-    setLoading(true);
-    const resp = await getSalesOrder(auth.user_name);
-    if (resp.success) {
-      keepData.so = sortData(resp.data);
-      setState(sortData(resp.data));
-    }
-    setLoading(false);
+  const {
+    data: listDataSo,
+    fetchData,
+    loading: SOloading,
+  } = useFetch(`${api_so}/all/${auth.user_name}`);
+  const listDataQn = useFetch(`${api_quo_list}/all/${auth.user_name}`);
+  const count_list_qn = listDataQn?.data && listDataQn?.data[0]?.length;
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log("params", pagination, filters, sorter, extra);
+    const { current, pageSize } = pagination;
+    dispatch(updateSOFilter({ page: current, pageSize }));
   };
-
+  const getSearchData = (keyword) => {
+    let search_data =
+      listDataSo &&
+      sortData(
+        salesType === 3
+          ? soProductionType == 0
+            ? listDataSo.filter((obj) => obj)
+            : listDataSo.filter(
+                (obj) => obj.so_production_type_id === soProductionType
+              )
+          : soProductionType == 0
+          ? listDataSo.filter((obj) => obj.so_type_id === salesType)
+          : so_status == "Pending Approve"
+          ? listDataSo.filter((so) => so?.button_approve == 1)
+          : listDataSo.filter(
+              (obj) =>
+                obj.so_type_id === salesType &&
+                obj.so_production_type_id === soProductionType
+            )
+      );
+    search_data = keyword
+      ? search_data?.filter(
+          (so) =>
+            so?.so_no?.indexOf(keyword) >= 0 ||
+            so?.customer_no?.indexOf(keyword) >= 0 ||
+            so?.customer_name?.indexOf(keyword) >= 0 ||
+            so?.so_created?.indexOf(keyword) >= 0 ||
+            so?.so_description?.indexOf(keyword) >= 0
+        )
+      : so_status === "Pending Approve"
+      ? search_data?.filter((so) => so?.button_approve == 1)
+      : so_status === "Pending Confirm"
+      ? search_data?.filter((so) => so?.button_confirm == 1)
+      : so_status === "Completed"
+      ? search_data?.filter((so) => so?.trans_status_name == "Completed ")
+      : so_status === "Available"
+      ? search_data?.filter((so) => so?.trans_status_name == "Available")
+      : so_status === "None DR"
+      ? search_data?.filter((so) => so?.trans_status_name == "None DR")
+      : so_status === "Transports 1"
+      ? search_data?.filter((so) => so?.trans_status_name == "Transports 1")
+      : so_status === "Transports 2"
+      ? search_data?.filter((so) => so?.trans_status_name == "Transports 2")
+      : so_status === "Transports 3"
+      ? search_data?.filter((so) => so?.trans_status_name == "Transports 3")
+      : so_status === "Transports 4"
+      ? search_data?.filter((so) => so?.trans_status_name == "Transports 4")
+      : so_status === "Open DR 1"
+      ? search_data?.filter((so) => so?.trans_status_name == "Open DR 1")
+      : so_status === "Cancel"
+      ? search_data?.filter((so) => so?.trans_status_name == "Cancel")
+      : so_status === "Waiting"
+      ? search_data?.filter((so) => so?.trans_status_name == "Draft")
+      : search_data;
+    console.log("object :>> ", search_data);
+    return sortData(search_data);
+  };
   useEffect(() => {
     dispatch(get_sale_master_data());
     dispatch(reset_comments());
-    dispatch(get_quotation_list(auth.user_name));
     dispatch(getMasterDataItem());
-    getSOList();
-    return () => {
-      keepData.so = [];
-    };
   }, []);
-
-  const { qn_ref } = useSelector((state) => state.sales.so);
-
+  useEffect(() => {
+    console.log("Filter Keyword", keyword);
+    const respSearch = getSearchData(keyword);
+    setState(respSearch);
+  }, [keyword, listDataSo, so_status, soProductionType, salesType]);
+  console.log("listDataSo :>> ", listDataSo);
   const [state, setState] = useState(keepData.so);
-  const [loading, setLoading] = useState(false);
-
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -398,13 +457,12 @@ const SaleOrder = (props) => {
     buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     disabledEditBtn: !rowClick,
     discard: "/sales/orders",
-    badgeCount: qn_ref.length,
+    badgeCount: count_list_qn,
     onCancel: () => {
       console.log("Cancel");
     },
     onSearch: (value) => {
       console.log(value);
-
       dispatch(updateSOFilter({ keyword: value }));
     },
     searchBar: (
@@ -471,7 +529,7 @@ const SaleOrder = (props) => {
             onChange={(val, option) =>
               dispatch(updateSOFilter({ so_status: val }))
             }
-            value={filter.so_status}
+            value={so_status}
           />
         </Space>
 
@@ -506,16 +564,16 @@ const SaleOrder = (props) => {
                   )
                 : dispatch(updateSOFilter({ salesType: val }))
             }
-            value={filter.salesType}
-            defaultValue={filter.salesType}
+            value={salesType}
+            defaultValue={salesType}
           />
         </Space>
-        <Space size={18}>
+        <Space size={18} style={{ marginRight: 15 }} wrap>
           <div>
             <Text strong>Production Type :</Text>
           </div>
           <CustomSelect
-            disabled={filter.salesType !== 2 ? false : true}
+            disabled={salesType !== 2 ? false : true}
             name={"so_id"}
             placeholder='SO Ref'
             data={[
@@ -542,75 +600,31 @@ const SaleOrder = (props) => {
             onChange={(val, option) =>
               dispatch(updateSOFilter({ soProductionType: val }))
             }
-            value={filter.soProductionType}
-            defaultValue={filter.soProductionType}
+            value={soProductionType}
+            defaultValue={soProductionType}
           />
+        </Space>
+        <Space size={18}>
+          <Button
+            className='primary'
+            onClick={() =>
+              dispatch(
+                updateSOFilter({
+                  page: 1,
+                  pageSize: 20,
+                  keyword: null,
+                  so_status: null,
+                  soProductionType: 0,
+                  salesType: 3,
+                })
+              )
+            }>
+            Clear Filter
+          </Button>
         </Space>
       </>
     ),
   };
-
-  useEffect(() => {
-    const filterData = () => {
-      console.log("filter FN", filter.so_status);
-      setLoading(true);
-      let filterData =
-        filter.salesType === 3
-          ? filter.soProductionType == 0
-            ? keepData.so?.filter((obj) => obj)
-            : keepData.so?.filter(
-                (obj) => obj.so_production_type_id === filter.soProductionType
-              )
-          : filter.soProductionType == 0
-          ? keepData.so?.filter((obj) => obj.so_type_id === filter.salesType)
-          : filter.so_status == "Pending Approve"
-          ? keepData.so?.filter((so) => so?.button_approve == 1)
-          : keepData.so?.filter(
-              (obj) =>
-                obj.so_type_id === filter.salesType &&
-                obj.so_production_type_id === filter.soProductionType
-            );
-      console.log("!filter.keyword :>> ", !filter.keyword);
-      filterData = filter.keyword
-        ? filterData?.filter(
-            (po) =>
-              po?.po_no?.indexOf(filter.keyword) >= 0 ||
-              po?.vendor_no_name?.indexOf(filter.keyword) >= 0 ||
-              po?.po_created_by_no_name?.indexOf(filter.keyword) >= 0 ||
-              po?.po_created?.indexOf(filter.keyword) >= 0 ||
-              po?.po_description?.indexOf(filter.keyword) >= 0
-          )
-        : filter.so_status === "Pending Approve"
-        ? filterData?.filter((po) => po?.button_approve == 1)
-        : filter.so_status === "Pending Confirm"
-        ? filterData?.filter((po) => po?.button_confirm == 1)
-        : filter.so_status === "Completed"
-        ? filterData?.filter((po) => po?.trans_status_name == "Completed ")
-        : filter.so_status === "Available"
-        ? filterData?.filter((po) => po?.trans_status_name == "Available")
-        : filter.so_status === "None DR"
-        ? filterData?.filter((po) => po?.trans_status_name == "None DR")
-        : filter.so_status === "Transports 1"
-        ? filterData?.filter((po) => po?.trans_status_name == "Transports 1")
-        : filter.so_status === "Transports 2"
-        ? filterData?.filter((po) => po?.trans_status_name == "Transports 2")
-        : filter.so_status === "Transports 3"
-        ? filterData?.filter((po) => po?.trans_status_name == "Transports 3")
-        : filter.so_status === "Transports 4"
-        ? filterData?.filter((po) => po?.trans_status_name == "Transports 4")
-        : filter.so_status === "Open DR 1"
-        ? filterData?.filter((po) => po?.trans_status_name == "Open DR 1")
-        : filter.so_status === "Cancel"
-        ? filterData?.filter((po) => po?.trans_status_name == "Cancel")
-        : filter.so_status === "Waiting"
-        ? filterData?.filter((po) => po?.trans_status_name == "Draft")
-        : filterData;
-      setState(filterData);
-      setLoading(false);
-    };
-    keepData.so.length && filterData();
-  }, [filter, keepData.so, filter.so_status]);
-
   const [modal, setModal] = useState({
     visible: false,
     dr_id: null,
@@ -625,8 +639,8 @@ const SaleOrder = (props) => {
       dr_id: null,
       so_detail_id: null,
     }));
-    getSOList();
-  }, [setModal, getSOList]);
+    fetchData();
+  }, [setModal, fetchData]);
 
   const onOpen = useCallback(
     (so_detail_id) =>
@@ -816,11 +830,7 @@ const SaleOrder = (props) => {
       </>
     );
   };
-  console.log("state :>> ", state);
-  console.log(
-    "state fillter :>> ",
-    state.filter((data) => data.button_confirm == 1)
-  );
+
   return (
     <div>
       <MainLayout {...config}>
@@ -828,7 +838,8 @@ const SaleOrder = (props) => {
           <Col span={24}>
             <Table
               //title={() => <SO_SearchTable />} //onChangeSearch={onChangeSearch} />}
-              loading={loading}
+              onChange={onChange}
+              loading={SOloading ? true : false}
               columns={
                 filter.soProductionType === 3
                   ? so_columns_Production({
@@ -851,6 +862,11 @@ const SaleOrder = (props) => {
               dataSource={
                 state //.filter((data) => data.button_approve == 1
               }
+              pagination={{
+                pageSize,
+                current: page,
+                pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
+              }}
               rowKey={"so_id"}
               size='small'
               bordered

@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Tabs, Typography, message } from "antd";
@@ -159,14 +161,14 @@ const PRView = (props) => {
   };
   return (
     <MainLayout {...config}>
-      <div id="form">
-        <Row className="col-2">
+      <div id='form'>
+        <Row className='col-2'>
           <Col span={8}>
             <h2>
               <strong>
                 Purchase Requisition{" "}
                 {data_head.tg_trans_status_id === 3 && (
-                  <Text strong type="danger">
+                  <Text strong type='danger'>
                     #{data_head.trans_status_name}
                   </Text>
                 )}
@@ -177,37 +179,37 @@ const PRView = (props) => {
           <Col span={2}>
             <Text strong>Create Date : </Text>
           </Col>
-          <Col span={2} className="text-center">
-            <Text className="text-view">{data_head.pr_created}</Text>
+          <Col span={2} className='text-center'>
+            <Text className='text-view'>{data_head.pr_created}</Text>
           </Col>
         </Row>
 
-        <Row className="col-2" style={{ marginBottom: 20 }}>
+        <Row className='col-2' style={{ marginBottom: 20 }}>
           <h3>
             <b>PR No. : </b>
             {data_head.pr_no}
           </h3>
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className='col-2 row-margin-vertical'>
           <Col span={3}>
             <Text strong>Description :</Text>
           </Col>
-          <Col span={8} className="text-view">
+          <Col span={8} className='text-view'>
             {data_head.pr_description}
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Job Name :</Text>
           </Col>
-          <Col span={8} className="text-view">
+          <Col span={8} className='text-view'>
             {data_head.mrp_no_description ?? "-"}
           </Col>
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className='col-2 row-margin-vertical'>
           <Col span={3}>
             <Text strong>Cost center :</Text>
           </Col>
-          <Col span={8} className="text-view">
+          <Col span={8} className='text-view'>
             {data_head.cost_center_no_name}
           </Col>
           <Col span={2}></Col>
@@ -216,40 +218,40 @@ const PRView = (props) => {
             <Text strong>Request by :</Text>
           </Col>
 
-          <Col span={8} className="text-view">
+          <Col span={8} className='text-view'>
             {data_head.pr_created_by_no_name}
           </Col>
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className='col-2 row-margin-vertical'>
           {/* 5 */}
           <Col span={3}>
             <Text strong>Item Type :</Text>
           </Col>
-          <Col span={8} className="text-view">
+          <Col span={8} className='text-view'>
             {data_head.type_name}
           </Col>
           <Col span={2}></Col>
         </Row>
-        <Row className="col-2 row-margin-vertical">
+        <Row className='col-2 row-margin-vertical'>
           <Col span={3}>
             <Text strong>Vendor :</Text>
           </Col>
           <Col span={8}>
-            <Text className="text-view">{data_head.vendor_no_name}</Text>
+            <Text className='text-view'>{data_head.vendor_no_name}</Text>
           </Col>
 
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>Currency :</Text>
           </Col>
-          <Col span={8} className="text-view">
+          <Col span={8} className='text-view'>
             {data_head.currency_no ? data_head.currency_no : "THB"}
           </Col>
         </Row>
-        <Row className="col-2 row-tab-margin-l">
+        <Row className='col-2 row-tab-margin-l'>
           <Col span={24}>
-            <Tabs defaultActiveKey="1" onChange={callback}>
-              <Tabs.TabPane tab="Request Detail" key="1">
+            <Tabs defaultActiveKey='1' onChange={callback}>
+              <Tabs.TabPane tab='Request Detail' key='1'>
                 <ItemLine
                   pr_id={data_head.pr_id}
                   data_detail={data_detail}
@@ -257,8 +259,8 @@ const PRView = (props) => {
                   readOnly={true}
                 />
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Notes" key="2">
-                <Text className="text-view">
+              <Tabs.TabPane tab='Notes' key='2'>
+                <Text className='text-view'>
                   {data_head.pr_remark ? data_head.pr_remark : "-"}
                 </Text>
               </Tabs.TabPane>

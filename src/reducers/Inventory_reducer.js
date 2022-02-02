@@ -42,6 +42,8 @@ import {
   SEARCH_RETURN,
   RESET_RETURN_DATA,
   SEARCH_ITEMS,
+  SEARCH_DISBURSE,
+  SEARCH_RECEIVE,
 } from "../actions/types";
 
 import {
@@ -90,6 +92,13 @@ const initialState = {
     page: 1,
     pageSize: 20,
     item_id: null,
+    status_name: "All",
+    status_id: 99,
+    search_text: "",
+    category_id: null,
+    type_id: null,
+    type_no_name: null,
+    category_no_name: null,
   },
   configurations: {
     type: [],
@@ -111,6 +120,12 @@ const initialState = {
     receive_head: {},
     receive_detail: [],
     receive_sub_detail: [],
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 20,
+      receive_id: null,
+    },
   },
   issue: {
     issue_list: [],
@@ -129,6 +144,12 @@ const initialState = {
     disburse_head: {},
     disburse_detail: [],
     disburse_sub_detail: [],
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 20,
+      disburse_id: null,
+    },
   },
   report: {
     stock_on_hand: {
@@ -159,12 +180,12 @@ const initialState = {
       isLoading: false,
       issueRef: [],
       issueReturnList: [],
-      filter: {
-        keyword: null,
-        page: 1,
-        pageSize: 20,
-        issue_id: null,
-      },
+    },
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 20,
+      issue_id: null,
     },
   },
 };
@@ -330,6 +351,17 @@ export default (state = initialState, action) => {
         ...state,
         receive: { ...state.receive, receive_sub_detail: action.payload },
       };
+    case SEARCH_RECEIVE:
+      return {
+        ...state,
+        receive: {
+          ...state.receive,
+          filter: {
+            ...state.receive.filter,
+            ...action.payload,
+          },
+        },
+      };
     case RESET_RECEIVE:
       return {
         ...state,
@@ -420,7 +452,17 @@ export default (state = initialState, action) => {
         ...state,
         disburse: { ...state.disburse, ...action.payload },
       };
-
+    case SEARCH_DISBURSE:
+      return {
+        ...state,
+        disburse: {
+          ...state.disburse,
+          filter: {
+            ...state.disburse.filter,
+            ...action.payload,
+          },
+        },
+      };
     //REPORT
     case GET_REPORT_STOCK:
       return {
@@ -566,10 +608,10 @@ export default (state = initialState, action) => {
           ...state.operations,
           issueReturn: {
             ...state.operations.issueReturn,
-            filter: {
-              ...state.operations.issueReturn.filter,
-              ...action.payload,
-            },
+          },
+          filter: {
+            ...state.operations.filter,
+            ...action.payload,
           },
         },
       };

@@ -122,6 +122,8 @@ import AdjustStock from "./modules/inventory/configurations/adjustStock";
 import TimeSheet from "./modules/production/operations/timesheet/TimeSheet";
 import PORoutes from "./modules/purchasing/po/PORoutes";
 import MRPRoutes from "./modules/production/operations/mrp/MRPRoutes";
+import UserAction from "./modules/sales/reporting/userAction/UserAction";
+import SummarySo from "./modules/sales/reporting/summary_so/SummarySo";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -228,9 +230,9 @@ const App = (props) => {
             <Route exact path="/inventory/receive_pd">
               <ReceivePDList />
             </Route>
-            <Route exact path="/inventory/receive_pd/create">
+            {/* <Route exact path='/inventory/receive_pd/create'>
               <ReceivePDCreate />
-            </Route>
+            </Route> */}
             {/* INVENTORY MASTER DATA */}
             <Route exact path="/inventory/items">
               <Items />
@@ -483,6 +485,12 @@ const App = (props) => {
             <Route exact path="/sales/reporting/compareformula">
               <CompareFormulaMain />
             </Route>
+            <Route exact path="/sales/reporting/useraction">
+              <UserAction />
+            </Route>
+            <Route exact path="/sales/reporting/summary_so">
+              <SummarySo />
+            </Route>
             {/* SALES CONFIGURATION */}
             <Route exact path="/sales/config/customers">
               <Customer />
@@ -543,7 +551,6 @@ const App = (props) => {
             <Route path="/production/operations/mrp_v2">
               <MRPRoutes />
             </Route>
-
             <Route exact path="/production/operations/mrp-test">
               <MRPTest />
             </Route>

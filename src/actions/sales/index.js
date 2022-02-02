@@ -22,6 +22,7 @@ import {
   GET_QN_BY_ID,
   RESET_SO,
   GET_SO_BY_ID,
+  SEARCH_QN,
 } from "../types";
 import axios from "axios";
 import { message } from "antd";
@@ -359,13 +360,50 @@ export const qn_actions = (data, qn_id) => (dispatch) => {
 };
 
 export const so_actions = (data, so_id) => (dispatch) => {
-  console.log("so_actions");
+  console.log("so_actions", data, so_id);
+  // const Lineurl =
+  //   "https://1c4e-112-121-130-63.ngrok.io/api/line/post/message/push_message/so_approve";
+  if (
+    data.process_status_id >= 2 &&
+    data.process_status_id != 6 &&
+    data.process_status_id != 7
+  ) {
+    console.log(
+      "sending Line process_status_id >= 2 && data.process_status_id != 6:>> ",
+      data
+    );
+    data.commit = 1;
+    axios
+      .post(
+        `${process.env.REACT_APP_LOCAL_LINE_APPROVE_SO}`,
+        { so_id, ...data },
+        header_config
+      )
+      .then((res) => {
+        console.log(res);
+        //dispatch(get_so_by_id(so_id, data.user_name));
+      });
+  } else if (data.process_status_id == 6 && data.node_stay == 3) {
+    console.log(
+      "sending Line process_status_id == 6 && data.node_stay == 3:>> ",
+      data
+    );
+    data.commit = 1;
+    axios
+      .post(
+        `${process.env.REACT_APP_LOCAL_LINE_APPROVE_SO}`,
+        { so_id, ...data, reject: true },
+        header_config
+      )
+      .then((res) => {
+        console.log(res);
+        //dispatch(get_so_by_id(so_id, data.user_name));
+      });
+  }
   data.commit = 1;
-  // data = {process_status_id : '3', user_name : '2563003', process_id : '30', commit : 1}
   axios
     .put(`${api_approve}/${data.process_id}`, data, header_config)
     .then((res) => {
-      console.log(res);
       dispatch(get_so_by_id(so_id, data.user_name));
     });
 };
@@ -545,7 +583,8 @@ const getCustomerAddress = (customer_id) => {
     return { success: false, data: [], message: error };
   }
 };
-
+const filterQn = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_QN, payload: data });
 export {
   getNPRtoQN,
   getSalesType,
@@ -557,4 +596,5 @@ export {
   closeSO,
   getCustomerAddress,
   getQNList,
+  filterQn,
 };

@@ -834,11 +834,7 @@ export const getItemAction = (
             {data.item_no}
           </span>
         ),
-        link: `${process.env.REACT_APP_SERVER}/file_upload/item/${
-          data.item_id_packaging
-        }_${data.item_no.substr(1)}/${
-          data.item_id_packaging
-        }_${data.item_no.substr(1)}_8.pdf`,
+        link: `${process.env.REACT_APP_SERVER}/file_upload/item/${data.item_id_packaging}_${data.item_no}/${data.item_id_packaging}_${data.item_no}_8.pdf`,
       };
     }
   });
@@ -987,11 +983,7 @@ export const getItemAction = (
               {item_no}
             </span>
           ),
-          link: `${
-            process.env.REACT_APP_SERVER
-          }/file_upload/item/${item_id}_${item_no.substr(
-            1
-          )}/${item_id}_${item_no.substr(1)}_8.pdf`,
+          link: `${process.env.REACT_APP_SERVER}/file_upload/item/${item_id}_${item_no}/${item_id}_${item_no}_8.pdf`,
         },
         {
           name: (

@@ -1,3 +1,5 @@
+/** @format */
+
 import { EditTwoTone, ProfileTwoTone } from "@ant-design/icons";
 import { Badge, Table } from "antd";
 import Text from "antd/lib/typography/Text";
@@ -20,7 +22,7 @@ const columns = ({ onOpen }) => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>NPR No.</Text>
       </div>
     ),
@@ -38,7 +40,7 @@ const columns = ({ onOpen }) => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>Product</Text>
       </div>
     ),
@@ -51,7 +53,7 @@ const columns = ({ onOpen }) => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>Customer</Text>
       </div>
     ),
@@ -64,7 +66,7 @@ const columns = ({ onOpen }) => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>Company Name</Text>
       </div>
     ),
@@ -77,7 +79,7 @@ const columns = ({ onOpen }) => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>Sales Person</Text>
       </div>
     ),
@@ -102,7 +104,7 @@ const columns = ({ onOpen }) => [
     children: [
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>ผู้รับผิดชอบ</Text>
           </div>
         ),
@@ -132,7 +134,7 @@ const columns = ({ onOpen }) => [
     ],
   },
   {
-    title: <div className="text-center">บันทึกการขอตัวอย่างเพิ่ม</div>,
+    title: <div className='text-center'>บันทึกการขอตัวอย่างเพิ่ม</div>,
     align: "center",
     dataIndex: "npr_id",
     width: "10%",
@@ -143,13 +145,13 @@ const columns = ({ onOpen }) => [
           <Badge count={[2, 3].includes(record.add_trans_id) ? 1 : 0}>
             <EditTwoTone
               onClick={() => onOpen(record)}
-              className="pointer w-100 font-l"
+              className='pointer w-100 font-l'
             />
           </Badge>
         ) : (
           <ProfileTwoTone
             onClick={() => onOpen(record)}
-            className="pointer w-100 font-l"
+            className='pointer w-100 font-l'
           />
         )
       ) : (
@@ -158,7 +160,9 @@ const columns = ({ onOpen }) => [
   },
 ];
 
-const NPRTable = ({ dataSource }) => {
+const NPRTable = ({ dataSource, pageSize, page, onChange }) => {
+  console.log("pageSize :>> ", pageSize);
+  console.log("page :>> ", page);
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
@@ -200,9 +204,12 @@ const NPRTable = ({ dataSource }) => {
         rowKey={"id"}
         columns={columns({ onOpen })}
         bordered
+        onChange={onChange}
         dataSource={dataSource}
         pagination={{
-          pageSize: 15,
+          pageSize: pageSize,
+          current: page,
+          pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
         }}
         onRow={(record) => ({
           onClick: (e) => {

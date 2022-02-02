@@ -38,7 +38,6 @@ import ReceiveHead from "./ReceiveHead";
 import ReceiveTabs from "./ReceiveTabs";
 import DetailLoading from "../../../../components/DetailLoading";
 import { AppContext, ReceiveContext } from "../../../../include/js/context";
-import { getAllItems } from "../../../../actions/inventory/itemActions";
 import { get_all_vendor } from "../../../../actions/purchase/vendorActions";
 import { getProduction_for_fg } from "../../../../actions/sales";
 
@@ -172,7 +171,6 @@ const Receive_Create = (props) => {
     setLoading(true);
     dispatch(get_all_vendor());
     dispatch(get_po_receive_list());
-    dispatch(getAllItems());
     const getproductionForFgData = async () => {
       const resp = await getProduction_for_fg();
       setListSOFG((prev) => ({ ...prev, listSOForFg: resp.data }));
@@ -237,8 +235,8 @@ const Receive_Create = (props) => {
   return (
     <MainLayout {...config}>
       <ReceiveContext.Provider value={contextValue}>
-        <div id="form">
-          <Row className="col-2">
+        <div id='form'>
+          <Row className='col-2'>
             <Col span={8}>
               <h2>
                 <strong>
@@ -252,8 +250,8 @@ const Receive_Create = (props) => {
             <Col span={2}>
               <Text strong>Create Date :</Text>
             </Col>
-            <Col span={2} className="text-right">
-              <Text className="text-view">{state.receive_created}</Text>
+            <Col span={2} className='text-right'>
+              <Text className='text-view'>{state.receive_created}</Text>
             </Col>
           </Row>
 

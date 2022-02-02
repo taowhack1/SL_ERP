@@ -38,6 +38,7 @@ export const SEARCH_RETURN = "SEARCH_RETURN";
 export const RESET_RETURN_DATA = "RESET_RETURN_DATA";
 //Inventory -> DISBURSE
 export const RESET_DISBURSE = "RESET_DISBURSE";
+export const SEARCH_DISBURSE = "SEARCH_DISBURSE";
 export const GET_DISBURSE_LIST = "GET_DISBURSE_LIST";
 export const GET_ISSUE_REF_LIST = "GET_ISSUE_DISBURSE_LIST";
 export const GET_ISSUE_DETAIL_REF = "GET_ISSUE_DETAIL_REF";
@@ -62,6 +63,7 @@ export const GET_UOM_IN_ROW = "GET_UOM_IN_ROW";
 //Inventory -> Operation
 //Inventory -> Receive
 export const RESET_RECEIVE = "RESET_RECEIVE";
+export const SEARCH_RECEIVE = "SEARCH_RECEIVE";
 export const GET_RECEIVE_LIST = "GET_RECEIVE_LIST";
 export const GET_PO_RECEIVE_LIST = "GET_PO_RECEIVE_LIST";
 export const GET_PO_DETAIL_REF = "GET_PO_DETAIL_REF";
@@ -96,6 +98,7 @@ export const INACTIVE_CUSTOMER = "INACTIVE_CUSTOMER";
 export const GET_COST_CENTER_LIST = "GET_COST_CENTER_LIST";
 export const RESET_COMMENTS = "RESET_COMMENTS";
 //Purchase -> Vendor
+export const SEARCH_VENDOR = "SEARCH_VENDOR";
 export const GET_ALL_VENDOR = "GET_ALL_VENDOR";
 export const GET_VENDOR_BY_ID = "GET_VENDOR_BY_ID";
 export const GET_VENDOR_GROUP = "GET_VENDOR_GROUP";
@@ -138,7 +141,12 @@ export const CREATE_QUOTATION = "CREATE_QUOTATION";
 export const GET_QN_BY_ID = "GET_QN_BY_ID";
 export const RESET_QN = "RESET_QN";
 export const SET_QN_LIST = "SET_QN_LIST";
-
+export const SEARCH_QN = "SEARCH_QN";
+export const SEARCH_NPR_RD = "SEARCH_NPR_RD";
+export const SEARCH_NPR_PU = "SEARCH_NPR_PU";
+export const SEARCH_NPR_PD = "SEARCH_NPR_PD";
+export const SEARCH_NPR_ESTIMATE = "SEARCH_NPR_ESTIMATE";
+export const SEARCH_NPR = "SEARCH_NPR";
 export const GET_SO_LIST = "GET_SO_LIST";
 export const GET_SO_BY_ID = "GET_SO_BY_ID";
 

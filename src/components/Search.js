@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import { Input } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";

@@ -33,6 +33,7 @@ import {
   GET_COUNTRY,
   GET_VENDOR_VAT,
   GET_DISTRICT,
+  SEARCH_VENDOR,
 } from "../actions/types";
 import { sortData } from "../include/js/function_main";
 
@@ -50,7 +51,7 @@ const initialState = {
       keyword: null,
       page: 1,
       pageSize: 20,
-      vendor_id: null,
+      pr_id: null,
     },
   },
   po: {
@@ -83,9 +84,26 @@ const initialState = {
     vendor_vat: [],
   },
   currency: [],
+  filter: {
+    keyword: null,
+    page: 1,
+    pageSize: 20,
+    vendor_id: null,
+  },
 };
 export default (state = initialState, action) => {
   switch (action.type) {
+    case SEARCH_VENDOR:
+      return {
+        ...state,
+        vendor: {
+          ...state.vendor,
+          filter: {
+            ...state.vendor.filter,
+            ...action.payload,
+          },
+        },
+      };
     case GET_ALL_VENDOR:
       return {
         ...state,

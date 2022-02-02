@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState, useContext } from "react";
 import {
   calSubtotal,
@@ -17,6 +19,11 @@ import { Modal, Popconfirm } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
 import CustomSelect from "../../../../components/CustomSelect";
+import { useFetch } from "../../../../include/js/customHooks";
+import {
+  api_get_all_item_list,
+  api_get_item_list,
+} from "../../../../include/js/api";
 const initialStateDetail = receive_detail_fields;
 // SO get Check bulk use api ----->getProduction_for_fg
 const ReceiveDetailWithoutPO = () => {
@@ -35,10 +42,10 @@ const ReceiveDetailWithoutPO = () => {
     visible: false,
     receive_sub_detail: [],
   });
-  const itemList = useSelector(
-    (state) => state.inventory.master_data.item_list
-  );
-
+  // const itemList = useSelector(
+  //   (state) => state.inventory.master_data.item_list
+  // );
+  const listDataitem = useFetch(`${api_get_item_list}`);
   // function
   const addLine = () => {
     setState(sortData([...state, initialStateDetail]));
@@ -132,19 +139,20 @@ const ReceiveDetailWithoutPO = () => {
     setVisible(false);
   };
 
-  console.log("itemList", itemList);
   return (
     <>
       {/* Column Header */}
+      {/* {loading } */}
       <CustomTable
         columns={receiveDetailWithNoPOColumns(
           readOnly,
           onChangeValue,
-          itemList,
+          listDataitem?.data,
           delLine,
           onOpenDetail
         )}
         onAdd={!readOnly && mainState.so_id ? readOnly : !readOnly && addLine}
+        loading={listDataitem?.loading ? true : false}
         dataSource={state}
         rowKey={"id"}
         rowClassName={"row-table-detail"}
@@ -158,14 +166,14 @@ const ReceiveDetailWithoutPO = () => {
       />
 
       <Modal
-        title="Alert"
+        title='Alert'
         visible={visible}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[
           <Popconfirm
-            key="discard"
+            key='discard'
             icon={<QuestionCircleOutlined style={{ color: "red" }} />}
             onConfirm={() => {
               handleCancel();
@@ -173,19 +181,18 @@ const ReceiveDetailWithoutPO = () => {
             title={
               <Text strong>
                 {"Are you sure to "}
-                <span className="require">NO</span>
+                <span className='require'>NO</span>
                 {" ?"}
               </Text>
             }
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button key="back" style={{ color: "red", marginRight: 10 }}>
+            okText='Yes'
+            cancelText='No'>
+            <Button key='back' style={{ color: "red", marginRight: 10 }}>
               NO
             </Button>
           </Popconfirm>,
           <Popconfirm
-            key="confirm"
+            key='confirm'
             onConfirm={() => {
               handleOk();
             }}
@@ -197,31 +204,28 @@ const ReceiveDetailWithoutPO = () => {
                 {" ?"}
               </Text>
             }
-            okText="Yes"
-            cancelText="No"
-          >
+            okText='Yes'
+            cancelText='No'>
             <Button
-              key="submit"
+              key='submit'
               style={{
                 color: "#ffffff",
                 marginRight: 10,
                 backgroundColor: "#5d6384",
-              }}
-            >
+              }}>
               Confirm
             </Button>
           </Popconfirm>,
-        ]}
-      >
+        ]}>
         <p>
           {"ไอเทมนี้มีการเปิดผลิตเพื่อรอ FG ต้องการอ้างอิงเลขที่ SO หรือไม่"}
         </p>
         <CustomSelect
           name={"so_id"}
-          placeholder="SO Ref"
+          placeholder='SO Ref'
           data={listSOFG?.listSOForFg}
-          field_id="so_id"
-          field_name="so_description"
+          field_id='so_id'
+          field_name='so_description'
           onChange={(val, option) => update_soFGCloes(val, option)}
           value={listSOFG?.so_id}
         />

@@ -21,6 +21,12 @@ import {
   GET_QN_BY_ID,
   GET_SO_BY_ID,
   SET_LOADING,
+  SEARCH_QN,
+  SEARCH_NPR,
+  SEARCH_NPR_RD,
+  SEARCH_NPR_PU,
+  SEARCH_NPR_PD,
+  SEARCH_NPR_ESTIMATE,
 } from "../actions/types";
 import dr from "../modules/sales/operations/dr";
 
@@ -30,6 +36,12 @@ const inititalState = {
     qn_list: [],
     qn_head: {},
     qn_detail: [],
+    filter: {
+      keyword: null,
+      page: 1,
+      pageSize: 20,
+      qn_id: null,
+    },
   },
   so: {
     qn_ref: [],
@@ -41,12 +53,38 @@ const inititalState = {
       soProductionType: 0,
       keyword: null,
       so_status: null,
+      page: 1,
+      pageSize: 20,
     },
   },
   operations: {
     npr: {
       itemList: [],
       list: [],
+      filter_rd: {
+        pageSize: 10,
+        page: 1,
+        keyword: null,
+        npr_id: null,
+      },
+      filter_pu: {
+        pageSize: 10,
+        page: 1,
+        keyword: null,
+        npr_id: null,
+      },
+      filter_pd: {
+        pageSize: 10,
+        page: 1,
+        keyword: null,
+        npr_id: null,
+      },
+      filter_estimate: {
+        pageSize: 10,
+        page: 1,
+        keyword: null,
+        npr_id: null,
+      },
     },
     dr: {
       search: {
@@ -87,6 +125,17 @@ export default (state = inititalState, action) => {
       return { ...state, loading: action.payload };
     case SET_QN_LIST:
       return { ...state, qn: { ...state.qn, qn_list: action.payload } };
+    case SEARCH_QN:
+      return {
+        ...state,
+        qn: {
+          ...state.qn,
+          filter: {
+            ...state.qn.filter,
+            ...action.payload,
+          },
+        },
+      };
     case GET_QN_BY_ID:
       return { ...state, qn: { ...state.qn, ...action.payload } };
     case RESET_QN:
@@ -126,6 +175,66 @@ export default (state = inititalState, action) => {
           npr: {
             ...state.npr,
             list: action.payload,
+          },
+        },
+      };
+    case SEARCH_NPR_RD:
+      return {
+        ...state,
+        loading: false,
+        operations: {
+          ...state.operations,
+          npr: {
+            ...state.operations.npr,
+            filter_rd: {
+              ...state.operations.npr.filter_rd,
+              ...action.payload,
+            },
+          },
+        },
+      };
+    case SEARCH_NPR_PU:
+      return {
+        ...state,
+        loading: false,
+        operations: {
+          ...state.operations,
+          npr: {
+            ...state.operations.npr,
+            filter_pu: {
+              ...state.operations.npr.filter_pu,
+              ...action.payload,
+            },
+          },
+        },
+      };
+    case SEARCH_NPR_PD:
+      return {
+        ...state,
+        loading: false,
+        operations: {
+          ...state.operations,
+          npr: {
+            ...state.operations.npr,
+            filter_pd: {
+              ...state.operations.npr.filter_pd,
+              ...action.payload,
+            },
+          },
+        },
+      };
+    case SEARCH_NPR_ESTIMATE:
+      return {
+        ...state,
+        loading: false,
+        operations: {
+          ...state.operations,
+          npr: {
+            ...state.operations.npr,
+            filter_estimate: {
+              ...state.operations.npr.filter_estimate,
+              ...action.payload,
+            },
           },
         },
       };
