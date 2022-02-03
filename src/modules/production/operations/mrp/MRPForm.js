@@ -187,15 +187,6 @@ const MRPForm = () => {
         item_qty_produce: mrp_item_qty_produce,
       });
 
-      console.log("CALCULATE ", resData);
-      // formMethods.setValue("item_set_spec", []);
-      // formMethods.setValue("item_routing_spec", []);
-      // formMethods.setValue("item_set_spec", resData?.data?.item_set_spec || []);
-      // formMethods.setValue(
-      //   "item_routing_spec",
-      //   resData?.data?.item_routing_spec || []
-      // );
-
       formMethods.reset({
         ...data,
         item_set_spec: resData?.data?.item_set_spec || [],
