@@ -123,6 +123,7 @@ import TimeSheet from "./modules/production/operations/timesheet/TimeSheet";
 import PORoutes from "./modules/purchasing/po/PORoutes";
 import UserAction from "./modules/sales/reporting/userAction/UserAction";
 import SummarySo from "./modules/sales/reporting/summary_so/SummarySo";
+import WhereUse from "./modules/inventory/reporting/whereUse";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -361,6 +362,9 @@ const App = (props) => {
             </Route>
             <Route exact path='/inventory/configurations/adjuststock'>
               <AdjustStock />
+            </Route>
+            <Route exact path='/inventory/where_use'>
+              <WhereUse />
             </Route>
             {/* PURCHASE */}
             <Route exact path='/purchase'>
