@@ -86,7 +86,7 @@ import TypeView from "./modules/inventory/configurations/type/TypeView";
 import Category from "./modules/inventory/configurations/category/Category";
 import CategoryCreate from "./modules/inventory/configurations/category/CategoryCreate";
 import CategoryView from "./modules/inventory/configurations/category/CategoryView";
-import UomMain from "./modules/inventory/configurations/uom/UomMain";
+import UomList from "./modules/inventory/configurations/uom/UomList";
 import UomCreate from "./modules/inventory/configurations/uom/UomCreate";
 import UomView from "./modules/inventory/configurations/uom/UomView";
 import Transfer from "./modules/inventory/operations/transfer/Transfer";
@@ -299,7 +299,7 @@ const App = (props) => {
               component={CategoryCreate}
             />
             <Route exact path="/inventory/configurations/uom">
-              <UomMain />
+              <UomList />
             </Route>
             {/* {uom} */}
             <Route

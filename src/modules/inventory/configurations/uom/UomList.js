@@ -14,7 +14,7 @@ import {
   getUOMInRow,
 } from "../../../../actions/inventory/configurations/uom/uomAction";
 
-function UomMain(props) {
+function UomList(props) {
   const dispatch = useDispatch();
   const uom = useSelector((state) => state.inventory.configurations.uom);
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -54,6 +54,7 @@ function UomMain(props) {
     buttonAction: ["Create"],
     discard: "/uom/Create",
     onCancel: () => {
+      // cancel
       console.log("Cancel");
     },
   };
@@ -94,4 +95,4 @@ function UomMain(props) {
   );
 }
 
-export default withRouter(UomMain);
+export default withRouter(UomList);
