@@ -1,12 +1,9 @@
-/** @format */
-
 import { Col, Row, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import MainLayout from "../../../../components/MainLayout";
 import { sortData } from "../../../../include/js/function_main";
-import Authorize from "../../../system/Authorize";
 import { uomShowColumns } from "./config";
 import $ from "jquery";
 import {
@@ -14,7 +11,7 @@ import {
   getUOMInRow,
 } from "../../../../actions/inventory/configurations/uom/uomAction";
 
-function UOMMain(props) {
+function UomMain(props) {
   const dispatch = useDispatch();
   const uom = useSelector((state) => state.inventory.configurations.uom);
   const current_project = useSelector((state) => state.auth.currentProject);
@@ -94,4 +91,4 @@ function UOMMain(props) {
   );
 }
 
-export default withRouter(UOMMain);
+export default withRouter(UomMain);
