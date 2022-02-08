@@ -171,30 +171,40 @@ const MRPForm = () => {
 
   const onSubmit = async (data) => {
     if (!data?.isSave) {
-      const { item_id, so_id, so_detail_id, mrp_item_qty_produce } = data || {};
-      if (!item_id || !so_id || !so_detail_id || !mrp_item_qty_produce)
+      // ! CALCULATE MATERIAL
+      const { item_id, so_id, so_detail_id, mrp_item_qty_produce, type_id } =
+        data || {};
+      if (
+        !item_id ||
+        !so_id ||
+        !so_detail_id ||
+        !mrp_item_qty_produce ||
+        !type_id
+      )
         return message.warning({
           content: "ข้อมูลไม่ครบถ้วน ไม่สามารถคำนวณผลลัพธ์ได้",
           duration: 4,
         });
       // Do Submit
       setConfigs((prev) => ({ ...prev, loading: true }));
-      // formMethods.setValue("componentsLoading", true);
       const resData = await getMRPCalV2({
         item_id,
         so_id,
         so_detail_id,
         item_qty_produce: mrp_item_qty_produce,
+        type_id,
       });
-
+      console.log("getMRPCalV2 ", resData);
       formMethods.reset({
         ...data,
         item_set_spec: resData?.data?.item_set_spec || [],
         item_routing_spec: resData?.data?.item_routing_spec || [],
+        item_fg_spec: resData?.data?.item_fg_spec || [],
+        item_bulk_spec: resData?.data?.item_bulk_spec || [],
       });
-      // formMethods.setValue("componentsLoading", false);
       setConfigs((prev) => ({ ...prev, loading: false }));
     } else {
+      // ! SAVE DATA
       setConfigs((prev) => ({ ...prev, loading: true }));
       const saveData = {
         ...data,

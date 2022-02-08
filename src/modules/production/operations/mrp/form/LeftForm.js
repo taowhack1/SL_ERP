@@ -139,6 +139,7 @@ const LeftForm = () => {
                               "so_due_date",
                               obj.so_detail_delivery_date
                             );
+                            setValue("type_id", obj.type_id);
                           },
                         },
                       });

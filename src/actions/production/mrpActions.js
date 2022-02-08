@@ -189,7 +189,13 @@ const getMRPTest = ({
   }
 };
 
-const getMRPCalV2 = ({ item_id, so_id, so_detail_id, item_qty_produce }) => {
+const getMRPCalV2 = ({
+  item_id,
+  so_id,
+  so_detail_id,
+  item_qty_produce,
+  type_id,
+}) => {
   if (!item_id || !so_id || !so_detail_id)
     return {
       success: false,
@@ -203,6 +209,7 @@ const getMRPCalV2 = ({ item_id, so_id, so_detail_id, item_qty_produce }) => {
         so_id,
         so_detail_id,
         item_qty_produce,
+        type_id,
       },
     ])
     .then((res) => {

@@ -1,7 +1,7 @@
 import { InputNumber, Popover, Tabs } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { InputNumberField } from "../../../../../../components/AntDesignComponent";
 import { warningTextValue } from "../../../../../../include/js/function_main";
 import {
@@ -12,6 +12,12 @@ import ComponentsForm from "./ComponentsForm";
 import NotesForm from "./NotesForm";
 
 const MRPDetail = () => {
+  const { control } = useFormContext();
+  const [type_id] = useWatch({
+    control,
+    name: ["type_id"],
+    defaultValue: [null],
+  });
   return (
     <div className="mt-2">
       <Tabs>
@@ -22,19 +28,38 @@ const MRPDetail = () => {
         <Tabs.TabPane tab="Packaging" key="2">
           <h1>Packaging</h1>
         </Tabs.TabPane> */}
-        <Tabs.TabPane tab="Set Components" key="1" forceRender={true}>
-          <h1>Set Components</h1>
-          <ComponentsForm
-            {...{ fieldName: "item_set_spec", columns: mrpDetailColumns }}
-          />
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Routing" key="2" forceRender={true}>
+        {[null, 5].includes(type_id) && (
+          <Tabs.TabPane tab="Set Components" key="1" forceRender={true}>
+            <h1>Set Components</h1>
+            <ComponentsForm
+              {...{ fieldName: "item_set_spec", columns: mrpDetailColumns }}
+            />
+          </Tabs.TabPane>
+        )}
+        {[null, 3, 4].includes(type_id) && (
+          <Tabs.TabPane tab="Bulk Spec." key="2" forceRender={true}>
+            <h1>Bulk Spec.</h1>
+            <ComponentsForm
+              {...{ fieldName: "item_bulk_spec", columns: mrpDetailColumns }}
+            />
+          </Tabs.TabPane>
+        )}
+        {[null, 4].includes(type_id) && (
+          <Tabs.TabPane tab="FG Spec." key="3" forceRender={true}>
+            <h1>FG Spec.</h1>
+            <ComponentsForm
+              {...{ fieldName: "item_fg_spec", columns: mrpDetailColumns }}
+            />
+          </Tabs.TabPane>
+        )}
+
+        <Tabs.TabPane tab="Routing" key="4" forceRender={true}>
           <h1>Routing</h1>
           <ComponentsForm
             {...{ fieldName: "item_routing_spec", columns: routingColumns }}
           />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Notes" key="3" forceRender={true}>
+        <Tabs.TabPane tab="Notes" key="5" forceRender={true}>
           <h1>Notes</h1>
           <NotesForm />
         </Tabs.TabPane>
@@ -57,20 +82,20 @@ const mrpDetailColumns = ({
         {!readOnly && <span className="require">* </span>} Item Code
       </div>
     ),
-    dataIndex: "item_id",
-    key: "item_id",
+    dataIndex: "item_mat_id",
+    key: "item_mat_id",
     align: "center",
     width: "13%",
     ellipsis: true,
-    render: (item_id, { item_no }, index) => {
-      console.log(`${fieldName}.${index}.item_id`);
+    render: (item_mat_id, { item_mat_no }, index) => {
+      console.log(`${fieldName}.${index}.item_mat_id`);
       return (
         <>
           <Controller
             {...{
-              name: `${fieldName}.${index}.item_id`,
+              name: `${fieldName}.${index}.item_mat_id`,
               control,
-              defaultValue: item_id,
+              defaultValue: item_mat_id,
               render: ({ field }) => {
                 return InputNumberField({
                   fieldProps: {
@@ -83,7 +108,7 @@ const mrpDetailColumns = ({
               },
             }}
           />
-          <Text className="text-value text-left">{item_no ?? "-"}</Text>
+          <Text className="text-value text-left">{item_mat_no ?? "-"}</Text>
         </>
       );
     },
@@ -94,8 +119,8 @@ const mrpDetailColumns = ({
         Description
       </div>
     ),
-    dataIndex: "item_name",
-    key: "item_name",
+    dataIndex: "item_mat_name",
+    key: "item_mat_name",
     align: "left",
     ellipsis: true,
     render: (value, record, index) => {
