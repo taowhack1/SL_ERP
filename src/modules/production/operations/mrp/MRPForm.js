@@ -180,6 +180,7 @@ const MRPForm = () => {
         type_id,
         mrp_item_plan_date,
         mrp_item_ref_plan_date,
+        mrp_item_ref_qty_produce,
       } = data || {};
       if (
         !item_id ||
@@ -202,6 +203,7 @@ const MRPForm = () => {
         type_id,
         mrp_item_plan_date,
         mrp_item_ref_plan_date,
+        mrp_item_ref_qty_produce,
       });
       console.log("getMRPCalV2 ", resData);
       formMethods.reset({
@@ -214,7 +216,7 @@ const MRPForm = () => {
       setConfigs((prev) => ({ ...prev, loading: false }));
     } else {
       // ! SAVE DATA
-      setConfigs((prev) => ({ ...prev, loading: true }));
+      // setConfigs((prev) => ({ ...prev, loading: true }));
       const saveData = {
         ...data,
         user_name,
@@ -223,18 +225,19 @@ const MRPForm = () => {
       };
       // Do save mrp.
       console.log("Save  Data", saveData);
-      const resp = await saveMRPv2(saveData);
-      console.log("SAVE Resp", resp);
-      if (resp.success) {
-        const {
-          data: { tb_mrp },
-        } = resp || {};
-        const { mrp_id } = tb_mrp[0];
-        history.push(`/production/operations/mrp_v2/view/${mrp_id}`);
-      }
+      // const resp = await saveMRPv2(saveData);
+      // console.log("SAVE Resp", resp);
+      // if (resp.success) {
+      //   const {
+      //     data: { tb_mrp },
+      //   } = resp || {};
+      //   const { mrp_id } = tb_mrp[0];
+      //   history.push(`/production/operations/mrp_v2/view/${mrp_id}`);
+      // }
+
       formMethods.setValue("isSave", false);
 
-      setConfigs((prev) => ({ ...prev, loading: false }));
+      // setConfigs((prev) => ({ ...prev, loading: false }));
     }
   };
   const onError = (data) => {
@@ -244,17 +247,11 @@ const MRPForm = () => {
 
   return (
     <MainLayout {...layoutConfig}>
-      {/* <h1>{`MRP FORM ${action} / ${id}`}</h1> */}
       <FormProvider {...formMethods} {...configs}>
         <form
           key="form-1"
           onSubmit={formMethods.handleSubmit(onSubmit, onError)}
         >
-          {/* <Button
-            onClick={() => formMethods.setValue("mrp_description", "5555555")}
-          >
-            SET
-          </Button> */}
           <Form />
           <button type="submit" id="submit-form" className="d-none">
             Submit Btn

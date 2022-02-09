@@ -11,7 +11,6 @@ const ComponentsForm = (props) => {
     defaultValue: [],
   });
 
-  console.log("fields", fields);
   return (
     <>
       <CustomTable

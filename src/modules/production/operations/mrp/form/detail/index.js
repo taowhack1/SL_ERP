@@ -21,13 +21,6 @@ const MRPDetail = () => {
   return (
     <div className="mt-2">
       <Tabs>
-        {/* <Tabs.TabPane tab="Raw Material" key="1">
-          <h1>Raw Material</h1>
-          
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Packaging" key="2">
-          <h1>Packaging</h1>
-        </Tabs.TabPane> */}
         {[null, 5].includes(type_id) && (
           <Tabs.TabPane tab="Set Components" key="1" forceRender={true}>
             <h1>Set Components</h1>
@@ -52,7 +45,6 @@ const MRPDetail = () => {
             />
           </Tabs.TabPane>
         )}
-
         <Tabs.TabPane tab="Routing" key="4" forceRender={true}>
           <h1>Routing</h1>
           <ComponentsForm
@@ -88,9 +80,12 @@ const mrpDetailColumns = ({
     width: "13%",
     ellipsis: true,
     render: (item_mat_id, { item_mat_no }, index) => {
-      console.log(`${fieldName}.${index}.item_mat_id`);
       return (
         <>
+          <input
+            className="d-none"
+            {...register(`${fieldName}.${index}.item_vendor_pack_size`)}
+          />
           <Controller
             {...{
               name: `${fieldName}.${index}.item_mat_id`,
@@ -362,7 +357,6 @@ const mrpDetailColumns = ({
                 control,
                 defaultValue: item_qty_to_pr,
                 render: ({ field }) => {
-                  console.log("2.field", field);
                   return InputNumberField({
                     fieldProps: {
                       className: "w-100",
@@ -377,43 +371,6 @@ const mrpDetailColumns = ({
               }}
             />
           </>
-
-          // <InputNumber
-          //   disabled={item_id !== null ? 0 : 1}
-          //   {...getNumberFormat(6)}
-          //   placeholder={"Qty. to PR"}
-          //   min={0}
-          //   step={item_vendor_moq}
-          //   className="full-width"
-          //   name="item_qty_to_pr"
-          //   value={item_qty_to_pr}
-          //   onChange={(data) => {
-          //     if (
-          //       mrp_detail_qty_available >= mrp_detail_qty_issue &&
-          //       item_vendor_lead_time_day &&
-          //       data > 0
-          //     ) {
-          //       onChange(id, {
-          //         item_qty_to_pr: data,
-          //         mrp_detail_pr_lead_time_day: item_vendor_lead_time_day,
-          //       });
-          //     } else if (
-          //       mrp_detail_qty_available >= mrp_detail_qty_issue &&
-          //       item_vendor_lead_time_day &&
-          //       data === 0
-          //     ) {
-          //       onChange(id, {
-          //         item_qty_to_pr: data,
-          //         mrp_detail_pr_lead_time_day: 0,
-          //       });
-          //     } else {
-          //       onChange(id, {
-          //         item_qty_to_pr: data,
-          //       });
-          //     }
-          //   }}
-          //   size="small"
-          // />
         );
       }
     },

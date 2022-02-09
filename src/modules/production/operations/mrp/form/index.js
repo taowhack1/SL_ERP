@@ -15,9 +15,9 @@ const Form = () => {
     readOnly = true,
     loading = false,
   } = useFormContext();
-  const [mrp_description, mrp_no, mrp_created] = useWatch({
+  const [mrp_description, mrp_no, mrp_created, isSave] = useWatch({
     control,
-    name: ["mrp_description", "mrp_no", "mrp_created"],
+    name: ["mrp_description", "mrp_no", "mrp_created", "isSave"],
     defaultValue: "-",
   });
   return (
@@ -54,7 +54,7 @@ const Form = () => {
                         {...{
                           name: `mrp_description`,
                           control,
-                          rules: { required: false },
+                          rules: { required: isSave },
                           defaultValue: null,
                           render: ({ field }) => {
                             return InputField({

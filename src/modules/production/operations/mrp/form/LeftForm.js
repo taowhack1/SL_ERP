@@ -1,4 +1,4 @@
-import { Button, Col, Row, Spin } from "antd";
+import { Button, Col, Popconfirm, Row, Spin } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
@@ -11,6 +11,7 @@ import CustomLabel from "../../../../../components/CustomLabel";
 import { getNumberFormat } from "../../../../../include/js/main_config";
 import { useFetch } from "../../../../../include/js/customHooks";
 import moment from "moment";
+import { DeleteOutlined } from "@ant-design/icons";
 
 const apiSOList = `/list/so`;
 const apiItemList = `/production/mrp/item_produce`;
@@ -23,6 +24,7 @@ const LeftForm = () => {
     readOnly = true,
     loading = false,
     setValue,
+    unregister,
   } = useFormContext();
   const [
     so_id,
@@ -166,6 +168,12 @@ const LeftForm = () => {
                               setValue("mrp_item_ref_qty_produce", null);
                               setValue("item_ref_no_name", null);
                               setValue("mrp_item_ref_plan_date", null);
+                              unregister([
+                                "item_ref_id",
+                                "mrp_item_ref_qty_produce",
+                                "item_ref_no_name",
+                                "mrp_item_ref_plan_date",
+                              ]);
                             }
 
                             setValue(
@@ -226,7 +234,7 @@ const LeftForm = () => {
                   {...{
                     name: `mrp_item_plan_date`,
                     control,
-                    rules: { required: false },
+                    rules: { required: true },
                     defaultValue: mrp_item_plan_date,
                     render: ({ field }) => {
                       const { onChange, value } = field;
@@ -302,6 +310,39 @@ const LeftForm = () => {
               borderRadius: 5,
             }}
           >
+            {item_ref_id && (
+              <div
+                className="w-100 text-right mb-2"
+                // style={{ backgroundColor: "#c3c3c3" }}
+              >
+                <Popconfirm
+                  onConfirm={() => {
+                    setValue("item_ref_id", null);
+                    setValue("mrp_item_ref_qty_produce", null);
+                    setValue("item_ref_no_name", null);
+                    setValue("mrp_item_ref_plan_date", null);
+                    unregister([
+                      "item_ref_id",
+                      "mrp_item_ref_qty_produce",
+                      "item_ref_no_name",
+                      "mrp_item_ref_plan_date",
+                    ]);
+                  }}
+                  title="ไม่ต้องการผลิต Bulk ใช่หรือไม่ ?"
+                  okText="ใช่"
+                  cancelText="ยกเลิก"
+                >
+                  <DeleteOutlined
+                    style={{
+                      color: "red",
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                    }}
+                  />
+                </Popconfirm>
+              </div>
+            )}
             <Row className="col-2 mt-1 mb-1" gutter={8}>
               <Col span={8}>
                 <CustomLabel readOnly={readOnly} label={"Bulk :"} />
@@ -335,7 +376,7 @@ const LeftForm = () => {
                       {...{
                         name: `mrp_item_ref_plan_date`,
                         control,
-                        rules: { required: false },
+                        rules: { required: item_ref_id },
                         defaultValue: null,
                         render: ({ field }) => {
                           const { onChange, value } = field;
@@ -382,25 +423,32 @@ const LeftForm = () => {
                     <Text className="text-value">{`${mrp_item_ref_qty_produce}`}</Text>
                   </>
                 ) : (
-                  <Controller
-                    {...{
-                      name: `mrp_item_ref_qty_produce`,
-                      control,
-                      rules: { required: false },
-                      render: ({ field }) => {
-                        return InputNumberField({
-                          fieldProps: {
-                            disabled: !item_ref_id,
-                            className: "w-100",
-                            placeholder: "Qty.",
-                            min: 0,
-                            ...getNumberFormat(6),
-                            ...field,
-                          },
-                        });
-                      },
-                    }}
-                  />
+                  <>
+                    <Controller
+                      {...{
+                        name: `mrp_item_ref_qty_produce`,
+                        control,
+                        rules: { required: item_ref_id },
+                        render: ({ field }) => {
+                          return InputNumberField({
+                            fieldProps: {
+                              disabled: !item_ref_id,
+                              className: "w-100",
+                              placeholder: "Qty.",
+                              min: 0,
+                              ...getNumberFormat(6),
+                              ...field,
+                            },
+                          });
+                        },
+                      }}
+                    />
+                    {errors?.mrp_item_ref_qty_produce && (
+                      <Text strong className="require">
+                        This field is required.
+                      </Text>
+                    )}
+                  </>
                 )}
               </Col>
             </Row>
