@@ -21,6 +21,7 @@ const ComponentsForm = (props) => {
         loading={loading}
         columns={columns({ readOnly, fieldName, register, control })}
         dataSource={fields}
+        pageSize={999}
       />
     </>
   );

@@ -17,60 +17,13 @@ const RightForm = () => {
     loading = false,
     register,
   } = useFormContext();
-  const [so_due_date, mrp_item_plan_date] = useWatch({
+  const [so_due_date] = useWatch({
     control,
-    name: ["so_due_date", "mrp_item_plan_date"],
-    defaultValue: ["-", "-"],
+    name: ["so_due_date"],
+    defaultValue: ["-"],
   });
   return (
     <>
-      <Row className="col-2 mt-1 mb-1" gutter={8}>
-        <Col span={8}>
-          <CustomLabel readOnly={readOnly} require label={"Item plan date :"} />
-        </Col>
-        <Col span={16}>
-          <Spin spinning={loading}>
-            {readOnly ? (
-              <>
-                <input className="d-none" {...register("mrp_item_plan_date")} />
-                <Text className="pre-wrap">{`${mrp_item_plan_date}`}</Text>
-              </>
-            ) : (
-              <>
-                <Controller
-                  {...{
-                    name: `mrp_item_plan_date`,
-                    control,
-                    rules: { required: false },
-                    defaultValue: null,
-                    render: ({ field }) => {
-                      const { onChange, value } = field;
-                      return DatePickerField({
-                        fieldProps: {
-                          className: "w-100",
-                          placeholder: "Date Picker",
-                          format: "DD/MM/YYYY",
-                          value: value ? moment(value, "DD/MM/YYYY") : null,
-                          onChange: (date) =>
-                            onChange(
-                              date ? moment(date).format("DD/MM/YYYY") : null
-                            ),
-                        },
-                      });
-                    },
-                  }}
-                />
-                <br />
-                {errors?.mrp_item_plan_date && (
-                  <Text strong className="require">
-                    This field is required.
-                  </Text>
-                )}
-              </>
-            )}
-          </Spin>
-        </Col>
-      </Row>
       <Row className="col-2 mt-1 mb-1" gutter={8}>
         <Col span={8}>
           <CustomLabel readOnly={readOnly} require label={"Delivery date :"} />

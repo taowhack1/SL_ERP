@@ -195,6 +195,8 @@ const getMRPCalV2 = ({
   so_detail_id,
   item_qty_produce,
   type_id,
+  mrp_item_plan_date,
+  mrp_item_ref_plan_date,
 }) => {
   if (!item_id || !so_id || !so_detail_id)
     return {
@@ -210,6 +212,8 @@ const getMRPCalV2 = ({
         so_detail_id,
         item_qty_produce,
         type_id,
+        mrp_item_plan_date,
+        mrp_item_ref_plan_date,
       },
     ])
     .then((res) => {

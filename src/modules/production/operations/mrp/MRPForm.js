@@ -172,8 +172,15 @@ const MRPForm = () => {
   const onSubmit = async (data) => {
     if (!data?.isSave) {
       // ! CALCULATE MATERIAL
-      const { item_id, so_id, so_detail_id, mrp_item_qty_produce, type_id } =
-        data || {};
+      const {
+        item_id,
+        so_id,
+        so_detail_id,
+        mrp_item_qty_produce,
+        type_id,
+        mrp_item_plan_date,
+        mrp_item_ref_plan_date,
+      } = data || {};
       if (
         !item_id ||
         !so_id ||
@@ -193,6 +200,8 @@ const MRPForm = () => {
         so_detail_id,
         item_qty_produce: mrp_item_qty_produce,
         type_id,
+        mrp_item_plan_date,
+        mrp_item_ref_plan_date,
       });
       console.log("getMRPCalV2 ", resData);
       formMethods.reset({
@@ -275,11 +284,9 @@ const initialState = {
 
   // Ref. Item FG -> Bulk
   item_ref_id: null,
-  // item_ref_no:null,
-  // item_ref_name:null,
   mrp_item_ref_qty_produce: 0,
   mrp_item_ref_plan_date: null,
-  mrp_include_ref_on_stock: false,
+  // mrp_include_ref_on_stock: false,
   sys_reserve_item_ref_qty: 0,
   sys_advice_item_ref_qty: 0,
 
