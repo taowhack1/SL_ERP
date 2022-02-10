@@ -15,44 +15,55 @@ const initialStateModal = {
   routing_detail_type_id: null,
   uom_no: null,
 };
-const apiGetJobByMRPId = `/production/job_order/mrp`;
+const apiGetJobByMRPId = `/production/job_order/mrp_v2`;
 const SubJobOrder = (props) => {
   const { id } = useParams();
   const { data, loading, fetchData } = useFetch(`${apiGetJobByMRPId}/${id}`);
   const {
-    job_order,
-    bulk_job_order_no,
-    fg_job_order_no,
+    job_order_detail,
+    item_id,
     item_no,
-    item_no_ref,
+    type_id,
+    item_job_order_no,
+    item_ref_id,
+    item_ref_no,
+    type_ref_id,
+    item_ref_job_order_no,
     mrp_id,
     mrp_no,
-    mrp_qty_produce,
-    mrp_qty_produce_open,
-    mrp_qty_produce_balance,
-    mrp_qty_produce_ref,
-    mrp_qty_produce_ref_open,
-    mrp_qty_produce_ref_balance,
+    mrp_item_qty_produce,
+    mrp_item_qty_produce_open,
+    mrp_item_qty_produce_balance,
+    mrp_item_ref_qty_produce,
+    mrp_item_ref_qty_produce_open,
+    mrp_item_ref_qty_produce_balance,
     mrp_so_running_no,
     uom_no,
-    uom_no_ref,
+    uom_ref_no,
     bulk_job_order_no_description,
     fg_job_order_no_description,
-  } = data?.length ? data[0] : {};
+    // } = data?.length ? data[0] : {};
+  } = data?.data?.length ? data?.data[0] : {};
   const formConfig = {
     //Seperateable
-    sepBulk: mrp_qty_produce_ref_balance,
-    sepFG: mrp_qty_produce_balance,
+    sepBulk: [3].includes(type_id)
+      ? mrp_item_qty_produce_balance
+      : mrp_item_ref_qty_produce_balance,
+    sepFG: mrp_item_qty_produce_balance,
+    sepSet: mrp_item_qty_produce_balance,
     bulk_job_order_no_description,
     fg_job_order_no_description,
   };
 
-  const [jobBulk, jobFG] = [
-    job_order?.filter(
+  const [jobBulk, jobFG, jobSet] = [
+    job_order_detail?.filter(
       ({ routing_detail_type_id }) => routing_detail_type_id === 1
     ),
-    job_order?.filter(
-      ({ routing_detail_type_id }) => routing_detail_type_id === 2
+    job_order_detail?.filter(({ routing_detail_type_id }) =>
+      [2].includes(routing_detail_type_id)
+    ),
+    job_order_detail?.filter(({ routing_detail_type_id }) =>
+      [3].includes(routing_detail_type_id)
     ),
   ];
 
@@ -63,14 +74,17 @@ const SubJobOrder = (props) => {
       ...prev,
       visible: true,
       routing_detail_type_id,
-      uom_no: routing_detail_type_id === 1 ? uom_no_ref : uom_no,
+      uom_no:
+        type_id !== 3 && routing_detail_type_id === 1 ? uom_ref_no : uom_no,
       mrp_id,
       ...formConfig,
     }));
+
   const onClose = (isUpdate = false) => {
     console.log("onClose", isUpdate);
     setModal((prev) => ({ ...prev, ...initialStateModal }));
   };
+
   const viewJob = ({ job_order_id, routing_detail_type_id }) =>
     setModal((prev) => ({
       ...prev,
@@ -80,6 +94,7 @@ const SubJobOrder = (props) => {
       mrp_id,
       ...formConfig,
     }));
+
   const onPrint = (job_order_no = null) => {
     if (!job_order_no) return message.error("Missing Job No.");
     window.open(
@@ -112,7 +127,7 @@ const SubJobOrder = (props) => {
       openModal: () => console.log("openModal"),
       searchBar: null, //html code this show below search input
     }),
-    []
+    [mrp_no]
   );
 
   return (
@@ -137,15 +152,15 @@ const SubJobOrder = (props) => {
             </Row>
             <Row className="col-2 mt-1 mb-1" gutter={8}>
               <Col span={6}>
-                <CustomLabel readOnly={false} label="Bulk Item :" />
+                <CustomLabel readOnly={false} label="Item :" />
               </Col>
-              <Col span={18}>{item_no_ref || "-"}</Col>
+              <Col span={18}>{item_no || "-"}</Col>
             </Row>
             <Row className="col-2 mt-1 mb-1" gutter={8}>
               <Col span={6}>
-                <CustomLabel readOnly={false} label="FG Item :" />
+                <CustomLabel readOnly={false} label="Item Ref.:" />
               </Col>
-              <Col span={18}>{item_no || "-"}</Col>
+              <Col span={18}>{item_ref_no || "-"}</Col>
             </Row>
             <Row className="col-2 mt-1 mb-1" gutter={8}>
               <Col span={6}>
@@ -156,16 +171,31 @@ const SubJobOrder = (props) => {
           </Col>
           <Col span={9}>
             <Row className="col-2 mt-1 mb-1" gutter={8}>
-              <Col span={6}>
-                <CustomLabel readOnly={false} label="Job Bulk No. :" />
+              <Col span={8}>
+                <CustomLabel readOnly={false} label="Job Item No. :" />
               </Col>
-              <Col span={18}>{bulk_job_order_no || "-"}</Col>
+              <Col span={16}>{item_job_order_no || "-"}</Col>
+            </Row>
+            <Row className="col-2 mt-1 mb-1" gutter={8}>
+              <Col span={8}>
+                <CustomLabel readOnly={false} label="Job Item Ref. No.:" />
+              </Col>
+              <Col span={16}>{item_ref_job_order_no || "-"}</Col>
             </Row>
             <Row className="col-2 mt-1 mb-1" gutter={8}>
               <Col span={6}>
-                <CustomLabel readOnly={false} label="Job FG No. :" />
+                <CustomLabel readOnly={false} label="Item Qty. :" />
               </Col>
-              <Col span={18}>{fg_job_order_no || "-"}</Col>
+              <Col span={18}>
+                <Text className="text-value">
+                  {mrp_item_qty_produce
+                    ? convertDigit(mrp_item_qty_produce, 6)
+                    : "-"}
+                </Text>
+                <Text className="ml-3" strong>
+                  {uom_no || ""}
+                </Text>
+              </Col>
             </Row>
             <Row className="col-2 mt-1 mb-1" gutter={8}>
               <Col span={6}>
@@ -173,25 +203,12 @@ const SubJobOrder = (props) => {
               </Col>
               <Col span={18}>
                 <Text className="text-value">
-                  {mrp_qty_produce_ref
-                    ? convertDigit(mrp_qty_produce_ref, 6)
+                  {mrp_item_ref_qty_produce
+                    ? convertDigit(mrp_item_ref_qty_produce, 6)
                     : "-"}
                 </Text>
                 <Text className="ml-3" strong>
-                  {uom_no_ref || ""}
-                </Text>
-              </Col>
-            </Row>
-            <Row className="col-2 mt-1 mb-1" gutter={8}>
-              <Col span={6}>
-                <CustomLabel readOnly={false} label="FG Qty. :" />
-              </Col>
-              <Col span={18}>
-                <Text className="text-value">
-                  {mrp_qty_produce ? convertDigit(mrp_qty_produce, 6) : "-"}
-                </Text>
-                <Text className="ml-3" strong>
-                  {uom_no || ""}
+                  {uom_ref_no || ""}
                 </Text>
               </Col>
             </Row>
@@ -200,90 +217,150 @@ const SubJobOrder = (props) => {
         <Divider />
         <Tabs>
           <Tabs.TabPane tab="Job Order ย่อย">
-            <Table
-              columns={subJobOrderColumns({
-                title: (
-                  <div>
-                    {`Bulk - Job Order ( `}
-                    <span
-                      className={formConfig?.sepBulk ? "require" : "complete"}
+            {/* Bulk - JOB ORDER */}
+            {([3].includes(type_id) ||
+              ([4].includes(type_id) && item_ref_id)) && (
+              <Table
+                columns={subJobOrderColumns({
+                  title: (
+                    <div>
+                      {`Bulk - Job Order ( `}
+                      <span
+                        className={formConfig?.sepBulk ? "require" : "complete"}
+                      >
+                        {`${convertDigit(
+                          type_id === 3
+                            ? mrp_item_qty_produce_open
+                            : mrp_item_ref_qty_produce_open || 0,
+                          6
+                        )} / ${convertDigit(
+                          type_id === 3
+                            ? mrp_item_qty_produce
+                            : mrp_item_ref_qty_produce || 0,
+                          6
+                        )}`}
+                      </span>
+                      {` ${uom_ref_no || uom_no || "-"} )`}
+                    </div>
+                  ),
+                  className: "col-sm bg-tb-primary",
+                  onPrint,
+                  viewJob,
+                  routing_detail_type_id: 1,
+                })}
+                dataSource={jobBulk}
+                loading={loading}
+                size="small"
+                className="mb-3"
+                rowClassName="row-table-detail"
+                rowKey="id"
+                bordered
+                footer={() => (
+                  <div className="w-100" style={{ height: 35 }}>
+                    <Button
+                      type={formConfig?.sepBulk ? "primary" : ""}
+                      style={{ float: "right" }}
+                      onClick={() => onOpen({ routing_detail_type_id: 1 })}
+                      disabled={!formConfig?.sepBulk}
                     >
-                      {`${convertDigit(
-                        mrp_qty_produce_ref_open || 0,
-                        6
-                      )} / ${convertDigit(mrp_qty_produce_ref || 0, 6)}`}
-                    </span>
-                    {` ${uom_no_ref || uom_no || "-"} )`}
+                      แบ่ง Job
+                    </Button>
                   </div>
-                ),
-                className: "col-sm bg-tb-primary",
-                onPrint,
-                viewJob,
-                routing_detail_type_id: 1,
-              })}
-              dataSource={jobBulk}
-              loading={loading}
-              size="small"
-              className="mb-3"
-              rowClassName="row-table-detail"
-              rowKey="id"
-              bordered
-              footer={() => (
-                <div className="w-100" style={{ height: 35 }}>
-                  <Button
-                    type={formConfig?.sepBulk ? "primary" : ""}
-                    style={{ float: "right" }}
-                    onClick={() => onOpen({ routing_detail_type_id: 1 })}
-                    disabled={!formConfig?.sepBulk}
-                  >
-                    แบ่ง Job
-                  </Button>
-                </div>
-              )}
-              pagination={false}
-            />
-            <Table
-              columns={subJobOrderColumns({
-                title: (
-                  <div>
-                    {`FG - Job Order ( `}
-                    <span
-                      className={formConfig?.sepFG ? "require" : "complete"}
-                    >
-                      {`${convertDigit(
-                        mrp_qty_produce_open || 0,
-                        6
-                      )} / ${convertDigit(mrp_qty_produce || 0, 6)}`}
-                    </span>
-                    {` ${uom_no || "-"} )`}
-                  </div>
-                ),
+                )}
+                pagination={false}
+              />
+            )}
 
-                className: "col-sm bg-tb-secondary",
-                onPrint,
-                viewJob,
-                routing_detail_type_id: 2,
-              })}
-              dataSource={jobFG}
-              size="small"
-              className="mb-3"
-              rowClassName="row-table-detail"
-              rowKey="id"
-              bordered
-              footer={() => (
-                <div className="w-100" style={{ height: 35 }}>
-                  <Button
-                    type={formConfig?.sepFG ? "primary" : ""}
-                    style={{ float: "right" }}
-                    onClick={() => onOpen({ routing_detail_type_id: 2 })}
-                    disabled={!formConfig?.sepFG}
-                  >
-                    แบ่ง Job
-                  </Button>
-                </div>
-              )}
-              pagination={false}
-            />
+            {/* FG - JOB ORDER */}
+            {[4].includes(type_id) && (
+              <Table
+                columns={subJobOrderColumns({
+                  title: (
+                    <div>
+                      {`FG - Job Order ( `}
+                      <span
+                        className={formConfig?.sepFG ? "require" : "complete"}
+                      >
+                        {`${convertDigit(
+                          mrp_item_qty_produce_open || 0,
+                          6
+                        )} / ${convertDigit(mrp_item_qty_produce || 0, 6)}`}
+                      </span>
+                      {` ${uom_no || "-"} )`}
+                    </div>
+                  ),
+
+                  className: "col-sm bg-tb-secondary",
+                  onPrint,
+                  viewJob,
+                  routing_detail_type_id: 2,
+                })}
+                dataSource={jobFG}
+                size="small"
+                className="mb-3"
+                rowClassName="row-table-detail"
+                rowKey="id"
+                bordered
+                footer={() => (
+                  <div className="w-100" style={{ height: 35 }}>
+                    <Button
+                      type={formConfig?.sepFG ? "primary" : ""}
+                      style={{ float: "right" }}
+                      onClick={() => onOpen({ routing_detail_type_id: 2 })}
+                      disabled={!formConfig?.sepFG}
+                    >
+                      แบ่ง Job
+                    </Button>
+                  </div>
+                )}
+                pagination={false}
+              />
+            )}
+            {/* Set - JOB ORDER */}
+            {[5].includes(type_id) && (
+              <Table
+                columns={subJobOrderColumns({
+                  title: (
+                    <div>
+                      {`Set - Job Order ( `}
+                      <span
+                        className={formConfig?.sepSet ? "require" : "complete"}
+                      >
+                        {`${convertDigit(
+                          mrp_item_qty_produce_open || 0,
+                          6
+                        )} / ${convertDigit(mrp_item_qty_produce || 0, 6)}`}
+                      </span>
+                      {` ${uom_no || "-"} )`}
+                    </div>
+                  ),
+
+                  className: "col-sm bg-tb-secondary",
+                  onPrint,
+                  viewJob,
+                  routing_detail_type_id: 3,
+                })}
+                dataSource={jobSet}
+                size="small"
+                className="mb-3"
+                rowClassName="row-table-detail"
+                rowKey="id"
+                bordered
+                footer={() => (
+                  <div className="w-100" style={{ height: 35 }}>
+                    <Button
+                      type={formConfig?.sepSet ? "primary" : ""}
+                      style={{ float: "right" }}
+                      onClick={() => onOpen({ routing_detail_type_id: 3 })}
+                      disabled={!formConfig?.sepSet}
+                    >
+                      แบ่ง Job
+                    </Button>
+                  </div>
+                )}
+                pagination={false}
+              />
+            )}
           </Tabs.TabPane>
         </Tabs>
       </div>
@@ -368,9 +445,9 @@ const subJobOrderColumns = ({
         align: "center",
         className: "col-sm",
         dataIndex: "uom_no",
+        width: "8%",
         render: (val) => val || "-",
       },
-
       {
         title: (
           <div className="text-center">

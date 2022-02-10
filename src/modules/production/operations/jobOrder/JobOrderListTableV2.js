@@ -56,12 +56,6 @@ const JobOrderListTableV2 = (props) => {
     const { current, pageSize } = pagination;
     dispatch(searchJobOrder({ page: current, pageSize }));
   };
-  // const { expandedRowRender, handleExpand } = useSubTableFetch({
-  //   columns: () => subJobOrderColumns,
-  //   url: fetchUrl,
-  //   rowKey: "id",
-  //   dataKey: "job_order",
-  // });
 
   error && message.error(error, 6);
 
@@ -77,7 +71,7 @@ const JobOrderListTableV2 = (props) => {
   const expandedRowRender = ({ job_order_detail }) => (
     <CustomTable
       bordered
-      rowKey="id"
+      rowKey="job_order_id"
       className="table-detail sub-table-detail w-100"
       rowClassName="row-table-detail"
       columns={subJobOrderColumns}
