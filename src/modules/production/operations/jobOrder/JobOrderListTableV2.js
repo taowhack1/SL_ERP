@@ -74,6 +74,18 @@ const JobOrderListTableV2 = (props) => {
   const editJobOrder = (row) => {
     history.push(`/production/operations/job_order/${row?.mrp_id}`);
   };
+  const expandedRowRender = ({ job_order_detail }) => (
+    <CustomTable
+      bordered
+      rowKey="id"
+      className="table-detail sub-table-detail w-100"
+      rowClassName="row-table-detail"
+      columns={subJobOrderColumns}
+      pagination={false}
+      // loading={loading}
+      dataSource={job_order_detail}
+    />
+  );
   console.log("Job Order Table", data);
   console.log("search Job Order Table>> ", search);
   return (
@@ -84,20 +96,7 @@ const JobOrderListTableV2 = (props) => {
         size="small"
         onChange={onChange}
         rowClassName="row-table-detail"
-        expandable={({ job_order_detail = [] }) => ({
-          expandedRowRender: () => (
-            <CustomTable
-              bordered
-              rowKey="id"
-              className="table-detail sub-table-detail w-100"
-              rowClassName="row-table-detail"
-              columns={subJobOrderColumns()}
-              pagination={false}
-              // loading={loading}
-              dataSource={job_order_detail}
-            />
-          ),
-        })}
+        expandable={{ expandedRowRender }}
         loading={loading2}
         columns={columns({ viewJobOrder, editJobOrder })}
         dataSource={search}
@@ -218,6 +217,31 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
   {
     title: (
       <div className="text-center">
+        <b>Item Code</b>
+      </div>
+    ),
+    align: "center",
+    className: "col-sm",
+    width: "10%",
+    dataIndex: "item_no",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Item Qty.</b>
+      </div>
+    ),
+    align: "right",
+    className: "col-sm",
+    width: "10%",
+    dataIndex: "mrp_item_qty_produce",
+    render: (val, { uom_no }) =>
+      val ? <Text>{`${convertDigit(val, 6)} ${uom_no || "-"}`}</Text> : "-",
+  },
+  {
+    title: (
+      <div className="text-center">
         <b>Ref. Code</b>
       </div>
     ),
@@ -243,31 +267,6 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
       ) : (
         "-"
       ),
-  },
-  {
-    title: (
-      <div className="text-center">
-        <b>Item Code</b>
-      </div>
-    ),
-    align: "center",
-    className: "col-sm",
-    width: "10%",
-    dataIndex: "item_no",
-    render: (val) => val || "-",
-  },
-  {
-    title: (
-      <div className="text-center">
-        <b>Item Qty.</b>
-      </div>
-    ),
-    align: "right",
-    className: "col-sm",
-    width: "10%",
-    dataIndex: "mrp_item_qty_produce",
-    render: (val, { uom_no }) =>
-      val ? <Text>{`${convertDigit(val, 6)} ${uom_no || "-"}`}</Text> : "-",
   },
   {
     title: (
@@ -305,7 +304,7 @@ const subJobOrderColumns = [
     align: "center",
     width: "5%",
     dataIndex: "id",
-    render: (val) => val,
+    render: (val, row, index) => index + 1,
   },
   {
     title: (
