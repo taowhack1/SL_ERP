@@ -225,19 +225,19 @@ const MRPForm = () => {
       };
       // Do save mrp.
       console.log("Save  Data", saveData);
-      // const resp = await saveMRPv2(saveData);
-      // console.log("SAVE Resp", resp);
-      // if (resp.success) {
-      //   const {
-      //     data: { tb_mrp },
-      //   } = resp || {};
-      //   const { mrp_id } = tb_mrp[0];
-      //   history.push(`/production/operations/mrp_v2/view/${mrp_id}`);
-      // }
+      const resp = await saveMRPv2(saveData);
+      console.log("SAVE Resp", resp);
+      if (resp.success) {
+        const {
+          data: { tb_mrp },
+        } = resp || {};
+        const { mrp_id } = tb_mrp[0];
+        history.push(`/production/operations/mrp_v2/view/${mrp_id}`);
+      }
 
       formMethods.setValue("isSave", false);
 
-      // setConfigs((prev) => ({ ...prev, loading: false }));
+      setConfigs((prev) => ({ ...prev, loading: false }));
     }
   };
   const onError = (data) => {
@@ -278,6 +278,8 @@ const initialState = {
   // item_name:null,
   mrp_item_qty_produce: 0,
   mrp_item_plan_date: null,
+  item_weight_standard_qty: 0,
+  item_loss_percent_qty: 0,
 
   // Ref. Item FG -> Bulk
   item_ref_id: null,

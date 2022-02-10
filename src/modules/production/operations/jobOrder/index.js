@@ -8,6 +8,7 @@ import JobOrderListTable from "./JobOrderListTable";
 import PlanningModal from "../planning/PlanningModal";
 import { useDispatch, useSelector } from "react-redux";
 import { searchJobOrder } from "../../../../actions/production/jobOrderActions";
+import JobOrderListTableV2 from "./JobOrderListTableV2";
 const JobOrderMain = () => {
   const dispatch = useDispatch();
   const { filter } = useSelector(
@@ -57,7 +58,7 @@ const JobOrderMain = () => {
       searchValue: keyword || null, //search string
       searchBar: (
         <Button
-          className='primary'
+          className="primary"
           onClick={() =>
             dispatch(
               searchJobOrder({
@@ -67,7 +68,8 @@ const JobOrderMain = () => {
                 mrp_id: null,
               })
             )
-          }>
+          }
+        >
           Clear Filter
         </Button>
       ),
@@ -105,7 +107,8 @@ const JobOrderMain = () => {
   );
   return (
     <MainLayout {...layoutConfig}>
-      <JobOrderListTable {...listConfig} />
+      {/* <JobOrderListTable {...listConfig} /> */}
+      <JobOrderListTableV2 {...listConfig} />
       {/* <PlanningModal
         config={{
           title: "Plan Detail",

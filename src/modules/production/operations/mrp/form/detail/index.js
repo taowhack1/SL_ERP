@@ -13,10 +13,10 @@ import NotesForm from "./NotesForm";
 
 const MRPDetail = () => {
   const { control } = useFormContext();
-  const [type_id] = useWatch({
+  const [type_id, item_ref_id] = useWatch({
     control,
-    name: ["type_id"],
-    defaultValue: [null],
+    name: ["type_id", "item_ref_id"],
+    defaultValue: [null, null],
   });
   return (
     <div className="mt-2">
@@ -29,7 +29,8 @@ const MRPDetail = () => {
             />
           </Tabs.TabPane>
         )}
-        {[null, 3, 4].includes(type_id) && (
+        {(([null, 4].includes(type_id) && item_ref_id) ||
+          [null, 3].includes(type_id)) && (
           <Tabs.TabPane tab="Bulk Spec." key="2" forceRender={true}>
             <h1>Bulk Spec.</h1>
             <ComponentsForm

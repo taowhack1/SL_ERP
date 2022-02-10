@@ -38,6 +38,8 @@ const LeftForm = () => {
     item_ref_id,
     item_ref_no_name,
     mrp_item_ref_plan_date,
+    item_weight_standard_qty,
+    item_loss_percent_qty,
   ] = useWatch({
     control,
     name: [
@@ -52,8 +54,10 @@ const LeftForm = () => {
       "item_ref_id",
       "item_ref_no_name",
       "mrp_item_ref_plan_date",
+      "item_weight_standard_qty",
+      "item_loss_percent_qty",
     ],
-    defaultValue: [null, "-", "-", null, null, 0, null, 0, null, null],
+    defaultValue: [null, "-", "-", null, null, 0, null, 0, null, null, 0, 0],
   });
 
   const { data: soList, loading: soListLoading } = useFetch(
@@ -102,6 +106,7 @@ const LeftForm = () => {
                             setValue("item_so_detail_id", null);
                             setValue("mrp_item_plan_date", null);
                             setValue("mrp_item_qty_produce", 0);
+                            setValue("item_weight_standard_qty", 0);
                             setValue("so_detail_id", null);
                             setValue("item_id", null);
                             setValue("so_due_date", null);
@@ -180,6 +185,15 @@ const LeftForm = () => {
                               "mrp_item_qty_produce",
                               obj.tg_so_detail_qty_balance
                             );
+                            setValue(
+                              "item_weight_standard_qty",
+                              obj.item_weight_standard_qty
+                            );
+                            setValue(
+                              "item_loss_percent_qty",
+                              obj.item_loss_percent_qty
+                            );
+
                             setValue("so_detail_id", obj.so_detail_id);
                             setValue("item_id", obj.item_id);
                             setValue(
@@ -287,6 +301,19 @@ const LeftForm = () => {
                         min: 0,
                         ...getNumberFormat(6),
                         ...field,
+                        onChange: (val) => {
+                          field.onChange(val);
+
+                          if (type_id === 4 && item_ref_id) {
+                            const rawRefUsed =
+                              (item_weight_standard_qty / 1000) * val;
+                            setValue(
+                              "mrp_item_ref_qty_produce",
+                              rawRefUsed * (item_loss_percent_qty / 100) +
+                                rawRefUsed
+                            );
+                          }
+                        },
                       },
                     });
                   },
@@ -301,7 +328,7 @@ const LeftForm = () => {
             )}
           </Col>
         </Row>
-        {[4].includes(type_id) && (
+        {[4].includes(type_id) && item_ref_id && (
           <div
             style={{
               backgroundColor: "#F2F2F2",
@@ -310,7 +337,7 @@ const LeftForm = () => {
               borderRadius: 5,
             }}
           >
-            {item_ref_id && (
+            {!readOnly && (
               <div
                 className="w-100 text-right mb-2"
                 // style={{ backgroundColor: "#c3c3c3" }}
@@ -318,14 +345,16 @@ const LeftForm = () => {
                 <Popconfirm
                   onConfirm={() => {
                     setValue("item_ref_id", null);
-                    setValue("mrp_item_ref_qty_produce", null);
+                    setValue("mrp_item_ref_qty_produce", 0);
                     setValue("item_ref_no_name", null);
                     setValue("mrp_item_ref_plan_date", null);
+                    setValue("item_bulk_spec", []);
                     unregister([
                       "item_ref_id",
                       "mrp_item_ref_qty_produce",
                       "item_ref_no_name",
                       "mrp_item_ref_plan_date",
+                      "item_bulk_spec",
                     ]);
                   }}
                   title="ไม่ต้องการผลิต Bulk ใช่หรือไม่ ?"
@@ -347,13 +376,9 @@ const LeftForm = () => {
               <Col span={8}>
                 <CustomLabel readOnly={readOnly} label={"Bulk :"} />
               </Col>
-              <Col span={16} className="text-right">
-                <>
-                  <input className="d-none" {...register("item_ref_id")} />
-                  <Text className="pre-wrap">{`${
-                    item_ref_no_name || "-"
-                  }`}</Text>
-                </>
+              <Col span={16} className="text-left">
+                <input className="d-none" {...register("item_ref_id")} />
+                <Text className="pre-wrap">{`${item_ref_no_name || "-"}`}</Text>
               </Col>
             </Row>
 
