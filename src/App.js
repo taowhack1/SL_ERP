@@ -124,6 +124,8 @@ import PORoutes from "./modules/purchasing/po/PORoutes";
 import UserAction from "./modules/sales/reporting/userAction/UserAction";
 import SummarySo from "./modules/sales/reporting/summary_so/SummarySo";
 import WhereUse from "./modules/inventory/reporting/whereUse";
+import checkPoDueDateIndex from "./modules/purchasing/report/checkPoDueDate";
+import CheckPoDuedate from "./modules/purchasing/report/checkPoDueDate";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -385,6 +387,10 @@ const App = (props) => {
             <Route path='/purchase/po'>
               <PORoutes />
             </Route>
+            <Route path='/purchase/report/check_po_due_date'>
+              <CheckPoDuedate />
+            </Route>
+
             {/* <Route exact path="/purchase/po/create">
               <PurchPOCreate />
             </Route> */}
