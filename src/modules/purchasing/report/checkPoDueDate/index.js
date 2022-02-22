@@ -168,7 +168,6 @@ const CheckPoDuedate = () => {
   const { data: listDataMrp, loading: DataMrpLoading } = useFetch(
     `${api_mrp}/all/${user_name}`
   );
-  listDataMrp && console.log("listDataMrp", listDataMrp);
   const onChangeMRP = ({
     mrp_id,
     mrp_description,
