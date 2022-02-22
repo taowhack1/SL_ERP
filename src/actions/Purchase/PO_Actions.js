@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   GET_ALL_PO,
   CREATE_PO,
@@ -14,7 +16,7 @@ import {
   api_purchase_get_all_po,
   api_po_detail,
 } from "../../include/js/api";
-import { header_config } from "../../include/js/main_config";
+import { errorText, header_config } from "../../include/js/main_config";
 import axios from "axios";
 import { sortData } from "../../include/js/function_main";
 import { message } from "antd";
@@ -90,7 +92,27 @@ export const updatePODueDate =
         message.error(err, 4);
       });
   };
+export const updatePODueDateFormReport = (poDetail, user_name) => {
+  return axios
+    .put(api_po_detail, poDetail, header_config)
+    .then((res) => {
+      console.log("Update PO Detail Success...", res);
+      message.success("Update due date success...", 4);
 
+      if (res.data) {
+        return { success: true, data: res.data };
+      } else {
+        message.error(errorText.getData);
+        return { success: false, data: null };
+      }
+      //dispatch(get_po_by_id(po_id, user_name, redirect));
+    })
+    .catch((error) => {
+      if (!error.response) message.error(errorText.network);
+      if (error.response) message.error(errorText.getData);
+      return { success: false, data: null, error: error.response };
+    });
+};
 export const get_po_by_id =
   (po_id, user_name, redirect) => async (dispatch) => {
     console.log("get_po_by_id");

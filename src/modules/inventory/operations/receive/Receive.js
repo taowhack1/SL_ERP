@@ -48,8 +48,8 @@ const Receive = (props) => {
   };
   useEffect(() => {
     dispatch(reset_comments());
+    dispatch(get_po_receive_list());
     //dispatch(reset_receive());
-    //dispatch(get_po_receive_list());
     //dispatch(get_receive_list(auth.user_name));
   }, []);
 
