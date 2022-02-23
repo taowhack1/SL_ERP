@@ -1,10 +1,13 @@
+/** @format */
+
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
-import { Row, Col, Table } from "antd";
+import { Row, Col, Table, Button } from "antd";
 import MainLayout from "../../../../components/MainLayout";
 import $ from "jquery";
 import {
+  filterReceive,
   get_po_receive_list,
   get_receive_by_id,
   get_receive_list,
@@ -15,6 +18,12 @@ import { reset_comments } from "../../../../actions/comment&log";
 import Authorize from "../../../system/Authorize";
 import useKeepLogs from "../../../logs/useKeepLogs";
 import { AppContext } from "../../../../include/js/context";
+import { sortData } from "../../../../include/js/function_main";
+import { useFetch } from "../../../../include/js/customHooks";
+import {
+  api_receive,
+  api_receive_get_ref_po_head,
+} from "../../../../include/js/api";
 const Receive = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
@@ -23,21 +32,45 @@ const Receive = (props) => {
   const { auth, currentProject, currentMenu } = useContext(AppContext);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
+
+  const { filter } = useSelector((state) => state.inventory.receive);
+  const { pageSize, page, keyword } = filter || {};
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  //fetch data
+  const listDataReceive = useFetch(`${api_receive}/all/${auth.user_name}`);
+  const listDataPoRef = useFetch(`${api_receive_get_ref_po_head}`);
+  const count_po_ref = listDataPoRef?.data && listDataPoRef?.data[0].length;
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
+    const { current, pageSize } = pagination;
+    dispatch(filterReceive({ page: current, pageSize }));
   };
-  const { po_ref, receive_list } = useSelector(
-    (state) => state.inventory.receive
-  );
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(receive_list);
   useEffect(() => {
     dispatch(reset_comments());
-    dispatch(reset_receive());
     dispatch(get_po_receive_list());
-    dispatch(get_receive_list(auth.user_name));
+    //dispatch(reset_receive());
+    //dispatch(get_receive_list(auth.user_name));
   }, []);
 
+  const getSearchData = (keyword) => {
+    const search_data =
+      listDataReceive?.data &&
+      sortData(
+        keyword
+          ? listDataReceive?.data[0]?.filter(
+              (receive) =>
+                receive?.receive_no_description.indexOf(keyword) >= 0 ||
+                receive?.receive_created?.indexOf(keyword) >= 0 ||
+                receive?.payment_term_name?.indexOf(keyword) >= 0 ||
+                receive?.vendor_no_name?.indexOf(keyword) >= 0 ||
+                receive?.receive_created_by_no_name?.indexOf(keyword) >= 0
+            )
+          : listDataReceive?.data[0]
+      );
+
+    return sortData(search_data);
+  };
   const config = {
     projectId: currentProject && currentProject.project_id,
     title: currentProject && currentProject.project_name,
@@ -49,30 +82,36 @@ const Receive = (props) => {
     buttonAction: currentMenu.button_create !== 0 ? ["Create"] : [],
     disabledEditBtn: !rowClick,
     discard: "/inventory/receive",
-    badgeCount: po_ref.length,
+    badgeCount: count_po_ref,
     onCancel: () => {
       console.log("Cancel");
     },
     onSearch: (value) => {
-      console.log(value);
-      setLoading(true);
-      setTimeout(() => {
-        const search_data = receive_list.filter(
-          (receive) =>
-            receive?.receive_no_description.indexOf(value) >= 0 ||
-            receive?.receive_created?.indexOf(value) >= 0 ||
-            receive?.payment_term_name?.indexOf(value) >= 0 ||
-            receive?.vendor_no_name?.indexOf(value) >= 0 ||
-            receive?.receive_created_by_no_name?.indexOf(value) >= 0
-        );
-        setData(search_data);
-        setLoading(false);
-      }, 1200);
+      dispatch(filterReceive({ keyword: value }));
     },
+    searchValue: keyword || null,
+    searchBar: (
+      <Button
+        className='primary'
+        onClick={() =>
+          dispatch(
+            filterReceive({
+              page: 1,
+              pageSize: 20,
+              keyword: null,
+              receive_id: null,
+            })
+          )
+        }>
+        Clear Filter
+      </Button>
+    ),
   };
   useEffect(() => {
-    setData(receive_list);
-  }, [receive_list]);
+    console.log("Filter Keyword", keyword);
+    const respSearch = getSearchData(keyword);
+    setData(respSearch);
+  }, [keyword, listDataReceive?.data]);
   return (
     <div>
       <MainLayout {...config}>
@@ -83,8 +122,13 @@ const Receive = (props) => {
               dataSource={data}
               onChange={onChange}
               rowKey={"receive_id"}
-              size="small"
-              loading={loading}
+              size='small'
+              pagination={{
+                pageSize,
+                current: page,
+                pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
+              }}
+              loading={listDataReceive.loading ? true : false}
               onRow={(record, rowIndex) => {
                 return {
                   onClick: (e) => {

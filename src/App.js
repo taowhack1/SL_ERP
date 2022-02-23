@@ -123,6 +123,9 @@ import TimeSheet from "./modules/production/operations/timesheet/TimeSheet";
 import PORoutes from "./modules/purchasing/po/PORoutes";
 import UserAction from "./modules/sales/reporting/userAction/UserAction";
 import SummarySo from "./modules/sales/reporting/summary_so/SummarySo";
+import WhereUse from "./modules/inventory/reporting/whereUse";
+import checkPoDueDateIndex from "./modules/purchasing/report/checkPoDueDate";
+import CheckPoDuedate from "./modules/purchasing/report/checkPoDueDate";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -229,9 +232,9 @@ const App = (props) => {
             <Route exact path="/inventory/receive_pd">
               <ReceivePDList />
             </Route>
-            <Route exact path="/inventory/receive_pd/create">
+            {/* <Route exact path='/inventory/receive_pd/create'>
               <ReceivePDCreate />
-            </Route>
+            </Route> */}
             {/* INVENTORY MASTER DATA */}
             <Route exact path="/inventory/items">
               <Items />
@@ -362,6 +365,9 @@ const App = (props) => {
             <Route exact path="/inventory/configurations/adjuststock">
               <AdjustStock />
             </Route>
+            <Route exact path='/inventory/where_use'>
+              <WhereUse />
+            </Route>
             {/* PURCHASE */}
             <Route exact path="/purchase">
               <Purchase />
@@ -381,6 +387,10 @@ const App = (props) => {
             <Route path="/purchase/po">
               <PORoutes />
             </Route>
+            <Route path='/purchase/report/check_po_due_date'>
+              <CheckPoDuedate />
+            </Route>
+
             {/* <Route exact path="/purchase/po/create">
               <PurchPOCreate />
             </Route> */}

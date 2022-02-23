@@ -3,12 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch, useHistory, withRouter } from "react-router-dom";
-import { Row, Col, Table } from "antd";
+import { Row, Col, Table, Button } from "antd";
 import MainLayout from "../../components/MainLayout";
-import {
-  getAllItems,
-  get_item_by_id,
-} from "../../actions/inventory/itemActions";
+import { get_item_by_id } from "../../actions/inventory/itemActions";
 import $ from "jquery";
 import { item_show_columns } from "./config/item";
 import Authorize from "../system/Authorize";
@@ -19,7 +16,9 @@ import {
   filterItem,
   getMasterDataItem,
 } from "../../actions/inventory";
+import { api_get_all_item_list } from "../../include/js/api";
 import { sortData } from "../../include/js/function_main";
+import { useFetch } from "../../include/js/customHooks";
 const Items = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
@@ -29,31 +28,23 @@ const Items = (props) => {
   const current_menu = useSelector((state) => state.auth.currentMenu);
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
-  const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   // dispatch(getAllItems(auth.user_name));
-  //   dispatch(getMasterDataItem(auth.user_name, setLoading, false));
-  //   return () => dispatch(clearStateItems());
-  // }, []);
 
-  const { item_list } = useSelector((state) => state.inventory.master_data);
   const { filter_item_list } = useSelector((state) => state.inventory);
   const { pageSize, page } = filter_item_list || {};
+  //useFetch GET data item & loading state
+  const listData = useFetch(
+    `${api_get_all_item_list}/${auth?.user_name}`,
+    !auth?.user_name
+  );
+
   useEffect(() => {
-    dispatch(getMasterDataItem(auth.user_name, setLoading, false));
+    dispatch(getMasterDataItem(auth.user_name));
     return () => {
       dispatch(clearStateItems());
       setItems([]);
     };
   }, [dispatch]);
-  useEffect(() => {
-    if (!loading) {
-      setLoading(true);
-      console.log("Filter Keyword", filter_item_list);
-      onChangeSearch(filter_item_list);
-      setLoading(false);
-    }
-  }, [item_list, loading, filter_item_list]);
+
   const onChange = (pagination) => {
     const { current, pageSize } = pagination;
     dispatch(filterItem({ page: current, pageSize }));
@@ -77,14 +68,14 @@ const Items = (props) => {
       console.log("Cancel");
     },
   };
-  const onChangeSearch = ({
+  const onChangeSearch = async ({
     type_id,
     category_id,
     search_text,
     status_id,
     status_name,
   }) => {
-    let search_data = item_list;
+    let search_data = listData?.data;
 
     if (type_id) {
       category_id
@@ -128,22 +119,25 @@ const Items = (props) => {
     );
   };
 
-  // useEffect(() => {
-  //   setItems(item_list);
-  //   console.log("item_list.length :>> ", item_list.length);
-  // }, []);
-
   const redirect_to_view = (id) => {
     history.push("/inventory/items/view/" + (id ? id : "new"));
   };
+
   return (
     <div>
       <MainLayout {...config}>
         <Row className='row-tab-margin-lg'>
           <Col span={24}>
             <Table
-              title={() => <SearchTable onChangeSearch={onChangeSearch} />}
-              loading={loading}
+              title={() =>
+                listData.data && (
+                  <SearchTable
+                    onChangeSearch={onChangeSearch}
+                    filter_item_list={filter_item_list}
+                  />
+                )
+              }
+              loading={listData?.loading ? true : false}
               columns={item_show_columns}
               dataSource={items}
               onChange={onChange}

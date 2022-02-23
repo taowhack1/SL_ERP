@@ -1,17 +1,25 @@
+/** @format */
+
 import { Table } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { getNPRList } from "../../../../../actions/sales/nprActions";
+import {
+  apiNPRRD,
+  filterNPR_PU,
+  getNPRList,
+} from "../../../../../actions/sales/nprActions";
 import DetailLoading from "../../../../../components/DetailLoading";
 import MainLayout from "../../../../../components/MainLayout";
+import { useFetch } from "../../../../../include/js/customHooks";
 import {
   getStatusByName,
   sortData,
 } from "../../../../../include/js/function_main";
 import useKeepLogs from "../../../../logs/useKeepLogs";
 import Authorize from "../../../../system/Authorize";
+import { Button } from "antd";
 const columns = [
   {
     title: "No.",
@@ -23,7 +31,7 @@ const columns = [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>NPR No.</Text>
       </div>
     ),
@@ -41,7 +49,7 @@ const columns = [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>Product</Text>
       </div>
     ),
@@ -54,7 +62,7 @@ const columns = [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>Customer</Text>
       </div>
     ),
@@ -67,7 +75,7 @@ const columns = [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <Text>Sales Person</Text>
       </div>
     ),
@@ -92,7 +100,7 @@ const columns = [
     children: [
       {
         title: (
-          <div className="text-center">
+          <div className='text-center'>
             <Text>ผู้รับผิดชอบ</Text>
           </div>
         ),
@@ -140,15 +148,67 @@ const NPRListForPU = () => {
 
   const { branch_id } = useSelector((state) => state.auth.authData);
   const { operations, loading } = useSelector((state) => state.sales);
+  const {
+    data: listDataNPR,
+    loading: NPRloading,
+    fetchData,
+  } = useFetch(`${apiNPRRD}`);
   const list = operations.npr.list;
-
-  const [state, setState] = useState(list);
+  const { filter_pu } = operations.npr;
+  const { pageSize, page, keyword } = filter_pu || {};
+  const [state, setState] = useState([]);
+  const getSearchData = (keyword) => {
+    const search_data =
+      listDataNPR &&
+      sortData(
+        keyword
+          ? listDataNPR.filter(
+              (npr) =>
+                npr?.npr_no?.toUpperCase()?.indexOf(keyword) >= 0 ||
+                (npr?.npr_product_name &&
+                  npr?.npr_product_name?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.npr_customer_name &&
+                  npr?.npr_customer_name?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.npr_created_by_name &&
+                  npr?.npr_created_by_name?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.npr_responsed_required_by_name &&
+                  npr?.npr_responsed_required_by_name
+                    ?.toUpperCase()
+                    ?.indexOf(keyword) >= 0) ||
+                (npr?.npr_request_date &&
+                  npr?.npr_request_date?.toUpperCase()?.indexOf(keyword) >=
+                    0) ||
+                (npr?.trans_status &&
+                  npr?.trans_status?.toUpperCase()?.indexOf(keyword) >= 0) ||
+                (npr?.npr_responsed_by &&
+                  npr?.npr_responsed_by?.toUpperCase()?.indexOf(keyword) >= 0)
+            )
+          : listDataNPR
+      );
+    return search_data;
+  };
+  // useEffect(() => {
+  //   dispatch(getNPRList(branch_id));
+  // }, []);
+  // useEffect(() => {
+  //   setState(sortData(list?.filter((obj) => obj.tg_trans_status_id !== 1)));
+  // }, [list]);
   useEffect(() => {
-    dispatch(getNPRList(branch_id));
-  }, []);
-  useEffect(() => {
-    setState(sortData(list?.filter((obj) => obj.tg_trans_status_id !== 1)));
-  }, [list]);
+    console.log("list", list);
+    const respSearch = getSearchData(keyword);
+    setState(
+      sortData(respSearch?.filter((obj) => obj.tg_trans_status_id !== 1))
+    );
+    //setState(respSearch);
+  }, [keyword, listDataNPR]);
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log("params", pagination, filters, sorter, extra);
+    const { current, pageSize } = pagination;
+    dispatch(filterNPR_PU({ page: current, pageSize }));
+  };
   const layoutConfig = {
     projectId: 7,
     title: "SALES",
@@ -161,29 +221,24 @@ const NPRListForPU = () => {
     discard: "",
     onSearch: (w) => {
       const text = w.toUpperCase();
-      setState(
-        list.filter(
-          (obj) =>
-            obj.npr_no?.toUpperCase()?.indexOf(text) >= 0 ||
-            (obj.npr_product_name &&
-              obj.npr_product_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_customer_name &&
-              obj.npr_customer_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_created_by_name &&
-              obj.npr_created_by_name?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_responsed_required_by_name &&
-              obj.npr_responsed_required_by_name
-                ?.toUpperCase()
-                ?.indexOf(text) >= 0) ||
-            (obj.npr_request_date &&
-              obj.npr_request_date?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.trans_status &&
-              obj.trans_status?.toUpperCase()?.indexOf(text) >= 0) ||
-            (obj.npr_responsed_by &&
-              obj.npr_responsed_by?.toUpperCase()?.indexOf(text) >= 0)
-        )
-      );
+      dispatch(filterNPR_PU({ keyword: text }));
     },
+    searchValue: keyword || null,
+    searchBar: (
+      <Button
+        className='primary'
+        onClick={() =>
+          dispatch(
+            filterNPR_PU({
+              page: 1,
+              pageSize: 10,
+              keyword: null,
+            })
+          )
+        }>
+        Clear Filter
+      </Button>
+    ),
   };
 
   const viewRecord = (record) =>
@@ -191,7 +246,7 @@ const NPRListForPU = () => {
   return (
     <>
       <MainLayout {...layoutConfig}>
-        {loading ? (
+        {NPRloading ? (
           <DetailLoading />
         ) : (
           <Table
@@ -200,8 +255,11 @@ const NPRListForPU = () => {
             columns={columns}
             bordered
             dataSource={state}
+            onChange={onChange}
             pagination={{
-              pageSize: 15,
+              pageSize: pageSize,
+              current: page,
+              pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
             }}
             onRow={(record) => ({
               onClick: (e) => {

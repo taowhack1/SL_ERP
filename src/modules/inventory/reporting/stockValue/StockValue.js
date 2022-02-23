@@ -20,7 +20,6 @@ import { ClearOutlined, FileOutlined, SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { getConfigurationItemType } from "../../../../actions/inventory/configurations/type/typeItemAction";
 import { getConfigurationCategory } from "../../../../actions/inventory/configurations/category/categoryAction";
-import { getAllItems } from "../../../../actions/inventory/itemActions";
 import { getMasterDataItem } from "../../../../actions/inventory";
 import { useHistory } from "react-router";
 import { validateFormHead } from "../../../../include/js/function_main";
@@ -99,8 +98,6 @@ const StockValue = () => {
     dispatch(getConfigurationItemType());
     dispatch(getConfigurationCategory());
   }, []);
-
-  // dispatch(getAllItems(auth.user_name));
 
   const dateFormat = "DD/MM/YYYY";
 

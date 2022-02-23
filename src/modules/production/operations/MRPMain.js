@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, withRouter } from "react-router-dom";
@@ -18,6 +20,8 @@ import { getAllMRP } from "../../../actions/production/mrpActions";
 import { reset_comments } from "../../../actions/comment&log";
 import Search from "../../../components/Search";
 import { getAllItems } from "../../../actions/inventory/itemActions";
+import { useFetch } from "../../../include/js/customHooks";
+import { api_mrp, api_mrp_so_ref } from "../../../include/js/api";
 const MRPMain = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -26,16 +30,22 @@ const MRPMain = (props) => {
   authorize.check_authorize();
   const auth = useSelector((state) => state.auth.authData);
   const [rowClick, setRowClick] = useState(false);
-
+  const { data: listDataMRP, loading: MPRloading } = useFetch(
+    `${api_mrp}/all/${auth.user_name}`
+  );
+  const listDataMRP_SO_REF = useFetch(`${api_mrp_so_ref}`);
+  const count_so_ref = listDataMRP_SO_REF && listDataMRP_SO_REF?.data?.length;
+  console.log("count_so_ref :>> ", count_so_ref);
+  console.log("listDataMRP :>> ", listDataMRP);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-
-  const { mrpList, mrp } = useSelector(
-    (state) => state.production.operations.mrp
-  );
+  // const { mrpList, mrp } = useSelector(
+  //   (state) => state.production.operations.mrp
+  // );
+  const mrpList = listDataMRP && listDataMRP[0];
   const [stateMRP, setStateMRP] = useState(mrpList);
-
+  console.log("mrpList", mrpList);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -49,7 +59,7 @@ const MRPMain = (props) => {
     edit: {},
     disabledEditBtn: !rowClick,
     discard: "/production",
-    badgeCount: mrp.data_so_ref.length,
+    badgeCount: count_so_ref,
     onCancel: () => {
       console.log("Cancel");
     },
@@ -116,20 +126,21 @@ const MRPMain = (props) => {
   }, []);
   useEffect(() => {
     setStateMRP(mrpList);
-  }, [mrpList.length]);
+  }, [mrpList]);
   return (
     <div>
       <MainLayout {...config}>
-        <Row className="row-tab-margin-lg">
+        <Row className='row-tab-margin-lg'>
           <Col span={24}>
             <Table
               title={() => <MRPSearchTool onChangeSeach={onChangeSeach} />}
+              loading={MPRloading ? true : false}
               columns={mrp_columns()}
               dataSource={stateMRP}
               onChange={onChange}
               bordered
-              size="small"
-              rowKey="mrp_id"
+              size='small'
+              rowKey='mrp_id'
               onRow={(record) => {
                 return {
                   onClick: (e) => {

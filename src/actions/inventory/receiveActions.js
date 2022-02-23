@@ -1,9 +1,12 @@
+/** @format */
+
 import {
   GET_RECEIVE_LIST,
   GET_PO_RECEIVE_LIST,
   GET_PO_DETAIL_REF,
   RESET_RECEIVE,
   GET_RECEIVE_BY_ID,
+  SEARCH_RECEIVE,
 } from "../types";
 import axios from "axios";
 import { sortData } from "../../include/js/function_main";
@@ -33,7 +36,8 @@ export const get_receive_list = (user_name) => async (dispatch) => {
 export const reset_receive = () => async (dispatch) => {
   dispatch({ type: RESET_RECEIVE });
 };
-
+export const filterReceive = (data) => (dispatch) =>
+  dispatch({ type: SEARCH_RECEIVE, payload: data });
 export const get_po_receive_list = () => async (dispatch) => {
   return await axios
     .get(api_receive_get_ref_po_head, header_config)
