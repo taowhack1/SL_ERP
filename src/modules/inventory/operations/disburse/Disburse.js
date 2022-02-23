@@ -11,6 +11,7 @@ import { disburse_columns } from "./config";
 import {
   filterDisburse,
   get_disburse_by_id,
+  get_issue_ref_list,
 } from "../../../../actions/inventory/disburseActions";
 import Authorize from "../../../system/Authorize";
 import useKeepLogs from "../../../logs/useKeepLogs";
@@ -40,7 +41,7 @@ const Disburse = (props) => {
     listDataIssueRef?.data && listDataIssueRef?.data[0].length;
   console.log("listDataIssueRef", listDataIssueRef);
   useEffect(() => {
-    //dispatch(get_issue_ref_list());
+    dispatch(get_issue_ref_list());
     //dispatch(get_disburse_list(auth.user_name));
     dispatch(getMasterDataItem());
   }, []);
