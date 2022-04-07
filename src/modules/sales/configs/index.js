@@ -267,6 +267,7 @@ export const so_require_fields = [
   "payment_term_id",
   "customer_id",
   "so_type_id",
+  "so_sales_person",
 ];
 export const so_require_fields_type_production = [
   "so_order_date",
@@ -277,6 +278,7 @@ export const so_require_fields_type_production = [
   "customer_id",
   "so_type_id",
   "so_production_type_id",
+  "so_sales_person",
 ];
 export const so_require_fields_detail = [
   "item_id",

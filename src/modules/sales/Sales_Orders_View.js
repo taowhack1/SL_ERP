@@ -289,11 +289,13 @@ const SaleOrderView = (props) => {
         </Row>
         <Row className='col-2 row-margin-vertical'>
           <Col span={3}>
-            <Text strong>Sales Type :</Text>
+            <Text strong>Sales Person :</Text>
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>{data_head.so_type_name}</Text>
+            <Text className='text-view'>
+              {data_head.so_sales_person_no_name}
+            </Text>
           </Col>
 
           <Col span={2}></Col>
@@ -308,13 +310,11 @@ const SaleOrderView = (props) => {
         <Row className='col-2 row-margin-vertical'>
           {/* Quotation */}
           <Col span={3}>
-            <Text strong>Production Type :</Text>
+            <Text strong>Sales Type :</Text>
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>
-              {data_head.so_production_type_description || "-"}
-            </Text>
+            <Text className='text-view'>{data_head.so_type_name}</Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -326,11 +326,13 @@ const SaleOrderView = (props) => {
         </Row>
         <Row className='col-2 row-margin-vertical'>
           <Col span={3}>
-            <Text strong>Vat :</Text>
+            <Text strong>Production Type :</Text>
           </Col>
 
           <Col span={8}>
-            <Text className='text-view'>{data_head.vat_name}</Text>
+            <Text className='text-view'>
+              {data_head.so_production_type_description || "-"}
+            </Text>
           </Col>
           <Col span={2}></Col>
           <Col span={3}>
@@ -350,6 +352,13 @@ const SaleOrderView = (props) => {
             <Text className='text-view'>{data_head.qn_no_description}</Text>
           </Col>
           <Col span={2}></Col>
+          <Col span={3}>
+            <Text strong>Vat :</Text>
+          </Col>
+
+          <Col span={8}>
+            <Text className='text-view'>{data_head.vat_name}</Text>
+          </Col>
           {/* Description */}
         </Row>
         <Row className='col-2 row-margin-vertical'>
