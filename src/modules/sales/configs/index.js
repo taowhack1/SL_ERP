@@ -182,6 +182,7 @@ export const so_fields = {
   so_no: null,
   so_description: null,
   so_no_description: null,
+  so_sales_person: null,
   qn_id: null,
   qn_no: null,
   qn_no_description: null,
