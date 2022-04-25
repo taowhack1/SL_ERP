@@ -145,7 +145,7 @@ const SearchTableCheckPo = (props) => {
             </Col>
             <Col span={8}>{`${state.so_no_description || "-"}`}</Col>
             <Col span={2}>วันที่ของเข้าช้าสุด :</Col>
-            <Col span={2} span={2} style={{ color: "red" }}>
+            <Col span={2} style={{ color: "red" }}>
               {` ${
                 (po_due_date_last_date &&
                   po_due_date_last_date[0]?.po_due_date_last_date) ||
