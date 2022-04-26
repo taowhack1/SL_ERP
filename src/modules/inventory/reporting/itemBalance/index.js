@@ -141,6 +141,16 @@ const columnFindDetail = (convertDigit, listItemBalance) => [
     // render: renderContent,
   },
   {
+    title: "ราคา (PO)",
+    dataIndex: "po_detail_price", //stock_unit_price tg_item_cost_avg
+    width: "10%",
+    align: "right",
+    ellipsis: false,
+    render: (val) => convertDigit(val ? val : 0, 4),
+    //onCell: sharedOnCell,
+    //render: renderContent,
+  },
+  {
     title: "ราคาต่อหน่วย",
     dataIndex: "tg_item_cost_avg", //stock_unit_price tg_item_cost_avg
     width: "10%",
