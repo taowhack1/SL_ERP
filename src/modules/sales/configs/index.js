@@ -183,6 +183,7 @@ export const so_fields = {
   so_description: null,
   so_no_description: null,
   so_sales_person: null,
+  so_sales_oem: null,
   qn_id: null,
   qn_no: null,
   qn_no_description: null,
@@ -269,6 +270,7 @@ export const so_require_fields = [
   "customer_id",
   "so_type_id",
   "so_sales_person",
+  "so_sales_oem",
 ];
 export const so_require_fields_type_production = [
   "so_order_date",
@@ -280,6 +282,7 @@ export const so_require_fields_type_production = [
   "so_type_id",
   "so_production_type_id",
   "so_sales_person",
+  "so_sales_oem",
 ];
 export const so_require_fields_detail = [
   "item_id",

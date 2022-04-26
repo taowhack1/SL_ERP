@@ -127,6 +127,8 @@ import WhereUse from "./modules/inventory/reporting/whereUse";
 import checkPoDueDateIndex from "./modules/purchasing/report/checkPoDueDate";
 import CheckPoDuedate from "./modules/purchasing/report/checkPoDueDate";
 import ItemBalanceMain from "./modules/inventory/reporting/itemBalance";
+import SammarySoMain from "./modules/sales/reporting/summary_so_ver2";
+import SummarySoMain from "./modules/sales/reporting/summary_so_ver2";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -502,9 +504,13 @@ const App = (props) => {
             <Route exact path='/sales/reporting/useraction'>
               <UserAction />
             </Route>
-            <Route exact path='/sales/reporting/summary_so'>
+            {/* <Route exact path='/sales/reporting/summary_so'>
               <SummarySo />
+            </Route> */}
+            <Route exact path='/sales/reporting/summary_so'>
+              <SummarySoMain />
             </Route>
+
             {/* SALES CONFIGURATION */}
             <Route exact path='/sales/config/customers'>
               <Customer />

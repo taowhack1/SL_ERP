@@ -137,7 +137,6 @@ const SummarySo = () => {
                     className='search-button'
                     danger
                     icon={<ClearOutlined />}
-                    className='full-width'
                     onClick={reset_state}>
                     Clear Search
                   </Button>
