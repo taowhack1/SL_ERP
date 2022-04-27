@@ -52,6 +52,7 @@ const ExportCSV = ({ csvData, fileName, type }) => {
           จำนวนที่รับ: data.stock_in_qty,
           จำนวนที่เบิกใช้: data.stock_disburse_qty,
           คงเหลือ: data.calculate_history,
+          "ราคา (PO)": data.po_detail_price,
           ราคาต่อหน่วย: data.tg_item_cost_avg,
           รวมเป็นเงิน: data.calculate,
           ประเภทเอกสาร: data.trans_no,
