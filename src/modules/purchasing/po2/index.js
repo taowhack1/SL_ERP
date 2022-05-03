@@ -14,7 +14,7 @@ import {
   Tabs,
 } from "antd";
 import MainLayout from "../../../components/MainLayout";
-import { po_list_columns } from "../config/po";
+import { mrp_list_detail, po_list_columns } from "../config/po";
 import { filterPO } from "../../../actions/purchase/PO_Actions";
 import { reset_comments } from "../../../actions/comment&log";
 import $ from "jquery";
@@ -28,7 +28,9 @@ import { useFetch } from "../../../include/js/customHooks";
 import { AppContext } from "../../../include/js/context";
 import CustomSelect from "../../../components/CustomSelect";
 import Text from "antd/lib/typography/Text";
-
+import Axios from "axios";
+import { header_config } from "../../../include/js/main_config";
+const apiGetPRbyMRP = `/purchase/pr/detail_by_mrp`;
 const apiGetPO = `/purchase/po`;
 const PO = (props) => {
   const authorize = Authorize();
@@ -94,6 +96,7 @@ const PO = (props) => {
   }, [keyword, listDataPo?.data, listDataPo?.loading, po_status]);
 
   const [data, setData] = useState([]);
+  const [mrp, setMrp] = useState({ mrp_id: null, listMRP: [] });
   const refSearchInput = useRef();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState(0);
@@ -193,6 +196,39 @@ const PO = (props) => {
     "data filter :>> ",
     data.filter((data) => data.button_approve == 1)
   );
+  const GetPR_Detail_by_MRP = async (mrp_id) => {
+    const data_mpr = await mpr_detail_data(mrp_id);
+    console.log("data_mpr", data_mpr);
+    setMrp({ ...mrp, listMRP: data_mpr.data });
+  };
+  const mpr_detail_data = (mrp_id) => {
+    try {
+      return Axios.get(`${apiGetPRbyMRP}/${mrp_id}`, header_config)
+        .then((resp) => {
+          if (resp.status === 200) {
+            console.log("GetPR_Detail_by_MRP :>> ", resp.data);
+            return {
+              success: true,
+              data: sortData(resp.data),
+              //data: resp.data,
+              message: "Success",
+            };
+          } else {
+            return { success: false, data: [], message: resp };
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          if (error?.response) {
+            console.error(error.response);
+          }
+          return { success: false, data: [], message: error };
+        });
+    } catch (error) {
+      console.log(error);
+      return { success: false, data: [], message: error };
+    }
+  };
   return (
     <div>
       <MainLayout {...config}>
@@ -204,7 +240,6 @@ const PO = (props) => {
               </Col>
               <Col span={18}>
                 <Table
-                  style={{ marginTop: 60 }}
                   columns={po_list_columns({
                     refSearchInput,
                     searchText,
@@ -212,8 +247,7 @@ const PO = (props) => {
                     searchedColumn,
                     setSearchedColumn,
                   })}
-                  //dataSource={data}
-                  title={() => "PR AUTO VER 2"}
+                  dataSource={data}
                   rowKey={"po_id"}
                   loading={listDataPo?.loading ? true : false}
                   onChange={onChange}
@@ -247,20 +281,22 @@ const PO = (props) => {
           <Tabs.TabPane tab='PR AUTO' key='2'>
             <Row gutter={24}>
               <Col span={6}>
-                <PRListAuto />
+                <PRListAuto
+                  setMrp={setMrp}
+                  mrp={mrp}
+                  GetPR_Detail_by_MRP={GetPR_Detail_by_MRP}
+                />
               </Col>
               <Col span={18}>
                 <Table
-                  style={{ marginTop: 60 }}
-                  columns={po_list_columns({
+                  columns={mrp_list_detail({
                     refSearchInput,
                     searchText,
                     setSearchText,
                     searchedColumn,
                     setSearchedColumn,
                   })}
-                  //dataSource={data}
-                  title={() => "PR AUTO VER 2"}
+                  dataSource={mrp.listMRP}
                   rowKey={"po_id"}
                   loading={listDataPo?.loading ? true : false}
                   onChange={onChange}
@@ -270,23 +306,23 @@ const PO = (props) => {
                     current: page,
                     pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
                   }}
-                  onRow={(record, rowIndex) => {
-                    return {
-                      onClick: (e) => {
-                        setRowClick(true);
-                        $(e.target)
-                          .closest("tbody")
-                          .find("tr")
-                          .removeClass("selected-row");
-                        $(e.target).closest("tr").addClass("selected-row");
-                        // dispatch(get_po_by_id(record.po_id, auth.user_name));
-                        keepLog.keep_log_action(record.po_no);
-                        props.history.push({
-                          pathname: "/purchase/po/" + record.po_id,
-                        });
-                      },
-                    };
-                  }}
+                  // onRow={(record, rowIndex) => {
+                  //   return {
+                  //     onClick: (e) => {
+                  //       setRowClick(true);
+                  //       $(e.target)
+                  //         .closest("tbody")
+                  //         .find("tr")
+                  //         .removeClass("selected-row");
+                  //       $(e.target).closest("tr").addClass("selected-row");
+                  //       // dispatch(get_po_by_id(record.po_id, auth.user_name));
+                  //       keepLog.keep_log_action(record.po_no);
+                  //       props.history.push({
+                  //         pathname: "/purchase/po/" + record.po_id,
+                  //       });
+                  //     },
+                  //   };
+                  // }}
                 />
               </Col>
             </Row>

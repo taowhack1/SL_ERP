@@ -100,7 +100,119 @@ export const po_list_columns = ({
     ],
   },
 ];
-
+export const mrp_list_detail = ({
+  onOpen,
+  refSearchInput,
+  searchText,
+  setSearchText,
+  searchedColumn,
+  setSearchedColumn,
+}) => [
+  {
+    title: "Detail",
+    className: "tb-col-sm bg-tb-primary",
+    children: [
+      {
+        title: "No.",
+        dataIndex: "id",
+        key: 0,
+        width: "2%",
+        align: "center",
+        render: (val) => val + 1,
+      },
+      {
+        title: "MRP No.",
+        dataIndex: "mrp_no",
+        key: 4,
+        width: "5%",
+        align: "center",
+      },
+      {
+        title: "Pr No",
+        dataIndex: "pr_no",
+        key: 1,
+        width: "5%",
+        align: "left",
+      },
+      {
+        title: "Pr Due Date",
+        dataIndex: "pr_detail_due_date",
+        key: 3,
+        width: "5%",
+        align: "center",
+      },
+      {
+        title: "Item",
+        dataIndex: "item_no_name",
+        key: 5,
+        width: "10%",
+        align: "left",
+        ellipsis: true,
+      },
+      {
+        title: "Pr Qty.",
+        dataIndex: "pr_detail_qty",
+        key: 6,
+        width: "5%",
+        align: "right",
+        ellipsis: true,
+      },
+      {
+        title: "Unit",
+        dataIndex: "uom_no",
+        key: 7,
+        width: "5%",
+        align: "left",
+        ellipsis: false,
+      },
+      {
+        title: "Vendor",
+        dataIndex: "vendor_name",
+        key: 7,
+        width: "10%",
+        align: "left",
+        ellipsis: true,
+      },
+      // {
+      //   title: "Price",
+      //   dataIndex: "pr_detail_price",
+      //   key: 7,
+      //   width: "10%",
+      //   align: "left",
+      //   ellipsis: true,
+      // },
+      // {
+      //   title: "Discount",
+      //   dataIndex: "pr_detail_price",
+      //   key: 7,
+      //   width: "10%",
+      //   align: "left",
+      //   ellipsis: true,
+      // },
+      // {
+      //   title: "total",
+      //   dataIndex: "pr_detail_price",
+      //   key: 7,
+      //   width: "10%",
+      //   align: "left",
+      //   ellipsis: true,
+      // },
+      // {
+      //   title: "Status",
+      //   dataIndex: "trans_status_name",
+      //   key: 8,
+      //   width: "10%",
+      //   align: "center",
+      //   ellipsis: true,
+      //   render: (value, record, index) => {
+      //     return record && getSelfStepStatus(record ? record : []);
+      //     // console.log("PO record", record);
+      //     // return getSelfStepStatus(record);
+      //   },
+      // },
+    ],
+  },
+];
 export const po_fields = {
   po_id: null,
   po_no: null,

@@ -24,7 +24,9 @@ import { AppContext } from "../../../../include/js/context";
 import { useFetch } from "../../../../include/js/customHooks";
 import { sortData } from "../../../../include/js/function_main";
 
-const PRListAuto = () => {
+const PRListAuto = (props) => {
+  console.log("props :>> ", props);
+  const { GetPR_Detail_by_MRP, mrp, setMrp } = props;
   const {
     auth: { user_name, employee_no_name_eng },
   } = useContext(AppContext);
@@ -143,41 +145,42 @@ const PRListAuto = () => {
         columns={columns_MRP({
           selectData,
           pr_type: 2,
-          title: "MRP List to PR",
+          title: "MRP List",
           onPrintPR,
+          GetPR_Detail_by_MRP,
         })}
         dataSource={listDataMrp && listDataMrp[0]}
-        footer={() => (
-          <>
-            <div className='mb-1'>
-              <Text strong>
-                Selected : <span>{countSelectPRAuto}</span> Item
-              </Text>
-            </div>
-            <Space level={24}>
-              <Button
-                size='small'
-                onClick={() => clearSelected(2)}
-                disabled={!countSelectPRAuto}
-                loading={rejectLoading}>
-                Clear Select
-              </Button>
-              <Popconfirm
-                onConfirm={() => onCancelPR(2)}
-                title='Are you sure？'
-                icon={<QuestionCircleOutlined style={{ color: "red" }} />}>
-                <Button
-                  size='small'
-                  type='ghost'
-                  danger
-                  disabled={!countSelectPRAuto}
-                  loading={rejectLoading}>
-                  Cancel PR
-                </Button>
-              </Popconfirm>
-            </Space>
-          </>
-        )}
+        // footer={() => (
+        //   <>
+        //     <div className='mb-1'>
+        //       <Text strong>
+        //         Selected : <span>{countSelectPRAuto}</span> Item
+        //       </Text>
+        //     </div>
+        //     <Space level={24}>
+        //       <Button
+        //         size='small'
+        //         onClick={() => clearSelected(2)}
+        //         disabled={!countSelectPRAuto}
+        //         loading={rejectLoading}>
+        //         Clear Select
+        //       </Button>
+        //       <Popconfirm
+        //         onConfirm={() => onCancelPR(2)}
+        //         title='Are you sure？'
+        //         icon={<QuestionCircleOutlined style={{ color: "red" }} />}>
+        //         <Button
+        //           size='small'
+        //           type='ghost'
+        //           danger
+        //           disabled={!countSelectPRAuto}
+        //           loading={rejectLoading}>
+        //           Cancel PR
+        //         </Button>
+        //       </Popconfirm>
+        //     </Space>
+        //   </>
+        // )}
       />
     </>
   );
@@ -267,6 +270,7 @@ const columns_MRP = ({
   pr_type,
   title = "ใบขอซื้อ (PR)",
   onPrintPR,
+  GetPR_Detail_by_MRP,
 }) => [
   {
     title: (
@@ -317,8 +321,11 @@ const columns_MRP = ({
         className: "tb-col-sm",
         // width: "10%",
         dataIndex: "mrp_no",
-        render: (val) => (
-          <Text onClick={() => onPrintPR(val)} className='button-icon' strong>
+        render: (val, record) => (
+          <Text
+            onClick={() => GetPR_Detail_by_MRP(record.mrp_id)}
+            className='button-icon'
+            strong>
             {val || "-"}
           </Text>
         ),
