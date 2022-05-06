@@ -24,7 +24,8 @@ import { AppContext } from "../../../../include/js/context";
 import { useFetch } from "../../../../include/js/customHooks";
 import { sortData } from "../../../../include/js/function_main";
 
-const PRList = () => {
+const PRList = (props) => {
+  const { setBadgeCount } = props;
   const {
     auth: { user_name, employee_no_name_eng },
   } = useContext(AppContext);
@@ -119,11 +120,13 @@ const PRList = () => {
     setPR(
       sortData((data && data[0].filter((obj) => !obj.mrp_id)) || [], "id", 1)
     );
+
+    console.log("pr.length :>> ", pr.length);
     setPRAuto(
       sortData((data && data[0].filter((obj) => obj.mrp_id)) || [], "id", 1)
     );
   }, [data]);
-
+  setBadgeCount(pr.length);
   const onPrintPR = (pr_no) => {
     window.open(
       `${process.env.REACT_APP_REPORT_SERVER}/report_pr.aspx?pr_no=${pr_no}`

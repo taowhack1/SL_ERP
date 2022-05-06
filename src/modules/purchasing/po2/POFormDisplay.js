@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import MainLayout from "../../../components/MainLayout";
 import { Button, Divider, message } from "antd";
@@ -39,7 +41,7 @@ const POFormDisplay = () => {
   } = useContext(AppContext);
   const dataComments = useSelector((state) => state.log.comment_log);
   const { form } = useSelector((state) => state?.purchase?.operations?.po);
-  const { id } = useParams();
+  const { id, mrp } = useParams();
   const [config, setConfig] = useState({
     loading: false,
     readOnly: true,
@@ -468,14 +470,14 @@ const POFormDisplay = () => {
           onCalculateTotal,
           step,
           ...formConfig,
-        }}
-      >
-        <div id="form">
-          <div className="d-flex flex-space ">
+          mrp,
+        }}>
+        <div id='form'>
+          <div className='d-flex flex-space '>
             <h2>
               Purchase Order{" "}
               {getPO?.data && getPO?.data[0]?.trans_status_id === 3 && (
-                <span className="require"># เอกสารนี้ถูกยกเลิกแล้ว</span>
+                <span className='require'># เอกสารนี้ถูกยกเลิกแล้ว</span>
               )}
             </h2>
             <div>
@@ -486,20 +488,20 @@ const POFormDisplay = () => {
             {!config?.readOnly && (
               <div>
                 {step === 1 ? (
-                  <Button type="link" size="large" onClick={onNext}>
+                  <Button type='link' size='large' onClick={onNext}>
                     <b>
                       ถัดไป <RightOutlined />
                     </b>
                   </Button>
                 ) : (
                   <>
-                    <Button type="link" size="large" onClick={() => onPrev()}>
+                    <Button type='link' size='large' onClick={() => onPrev()}>
                       <b>
                         <LeftOutlined /> ก่อนหน้า
                       </b>
                     </Button>
                     {step !== 3 && (
-                      <Button type="link" size="large" onClick={() => onNext()}>
+                      <Button type='link' size='large' onClick={() => onNext()}>
                         <b>
                           ถัดไป <RightOutlined />
                         </b>
@@ -510,7 +512,7 @@ const POFormDisplay = () => {
               </div>
             )}
           </div>
-          <Divider className="divider-sm" />
+          <Divider className='divider-sm' />
           <POForm />
         </div>
       </POContext.Provider>

@@ -1,7 +1,10 @@
 /** @format */
-
+import React, { useState } from "react";
+import { EditTwoTone } from "@ant-design/icons";
+import Text from "antd/lib/typography/Text";
 import { getSelfStepStatus } from "../../../include/js/function_main";
-
+import { DatePicker } from "antd";
+import moment from "moment";
 export const po_require_fields = [
   "pr_id",
   "vendor_id",
@@ -100,6 +103,55 @@ export const po_list_columns = ({
     ],
   },
 ];
+export const columnsEditDueDate = (onChangeValue) => [
+  {
+    title: "PR no.",
+    dataIndex: "pr_no",
+    width: "3%",
+    align: "center",
+    ellipsis: false,
+  },
+  {
+    title: "Item Name",
+    dataIndex: "item_no_name",
+    width: "5%",
+    align: "left",
+    ellipsis: true,
+  },
+  {
+    title: "PR Due Date",
+    dataIndex: "pr_detail_due_date",
+    width: "3%",
+    align: "center",
+    ellipsis: false,
+  },
+  {
+    title: "Edit Due Date To",
+    dataIndex: "edit_pr_detail_due_date",
+    width: "5%",
+    align: "center",
+    ellipsis: false,
+    render: (val, record) => (
+      <DatePicker
+        format={"DD/MM/YYYY"}
+        size='small'
+        className={"full-width check-field"}
+        name={"edit_pr_detail_due_date"}
+        placeholder='Edit Due Date'
+        value={val ? moment(val, "DD/MM/YYYY") : null}
+        onChange={(data) => {
+          data
+            ? onChangeValue(record.id, {
+                edit_pr_detail_due_date: data.format("DD/MM/YYYY"),
+              })
+            : onChangeValue(record.id, {
+                edit_pr_detail_due_date: null,
+              });
+        }}
+      />
+    ),
+  },
+];
 export const mrp_list_detail = ({
   onOpen,
   refSearchInput,
@@ -107,6 +159,7 @@ export const mrp_list_detail = ({
   setSearchText,
   searchedColumn,
   setSearchedColumn,
+  editDueDate,
 }) => [
   {
     title: "Detail",
@@ -140,6 +193,14 @@ export const mrp_list_detail = ({
         key: 3,
         width: "5%",
         align: "center",
+        render: (val, record) => {
+          return (
+            <>
+              <Text style={{ color: "blue", marginRight: 10 }}>{val}</Text>
+              <EditTwoTone onClick={(e) => editDueDate(val, record)} />
+            </>
+          );
+        },
       },
       {
         title: "Item",

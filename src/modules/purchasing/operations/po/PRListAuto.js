@@ -148,6 +148,8 @@ const PRListAuto = (props) => {
           title: "MRP List",
           onPrintPR,
           GetPR_Detail_by_MRP,
+          setMrp,
+          mrp,
         })}
         dataSource={listDataMrp && listDataMrp[0]}
         // footer={() => (
@@ -271,6 +273,8 @@ const columns_MRP = ({
   title = "ใบขอซื้อ (PR)",
   onPrintPR,
   GetPR_Detail_by_MRP,
+  setMrp,
+  mrp,
 }) => [
   {
     title: (
@@ -323,7 +327,9 @@ const columns_MRP = ({
         dataIndex: "mrp_no",
         render: (val, record) => (
           <Text
-            onClick={() => GetPR_Detail_by_MRP(record.mrp_id)}
+            onClick={() => {
+              GetPR_Detail_by_MRP(record.mrp_id, record.mrp_no);
+            }}
             className='button-icon'
             strong>
             {val || "-"}

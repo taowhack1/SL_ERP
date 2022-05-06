@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Checkbox, Input, Table } from "antd";
 import Search from "../../../components/Search";
@@ -11,6 +13,7 @@ const initialSearch = {
   vendor: null,
   pr: null,
   remark: null,
+  mrp_no: null,
 };
 const SelectPR = (props) => {
   const [state, setState] = useState({
@@ -23,15 +26,16 @@ const SelectPR = (props) => {
     poState: { pr_selected },
     onSelect,
     po_id,
+    mrp,
   } = useContext(POContext);
   const {
     data: prItems,
     error: getPRItemsError,
     loading: getPRItemsLoading,
-  } = useFetch(`${apiGetPRItems}/${po_id !== "new" ? po_id : 0}`);
+  } = useFetch(`${apiGetPRItems}/${po_id !== "new" ? po_id : 0}&mpr`);
 
   console.log("PR:", prItems);
-
+  console.log("mrp_no POContext:>> ", mrp);
   const onSearch = (searchData) => {
     console.log(searchData);
     setSearch((prev) => ({ ...prev, ...searchData }));
@@ -65,28 +69,36 @@ const SelectPR = (props) => {
         (obj) => obj?.po_detail_remark?.indexOf(search?.remark) >= 0
       );
     }
+    if (search?.mrp_no) {
+      searchResult = searchResult?.filter(
+        (obj) => obj?.mrp_no?.indexOf(search?.mrp_no) >= 0
+      );
+    }
     setState((prev) => ({ ...prev, data: searchResult }));
   }, [search, prItems]);
 
   return (
     <>
-      <div className="w-100">
+      <div className='w-100'>
         <Button
           style={{ float: "right" }}
-          className="primary"
+          className='primary'
           onClick={clearSearch}
-          icon={<ClearOutlined />}
-        >
+          icon={<ClearOutlined />}>
           Clear Search
         </Button>
       </div>
       <Table
         bordered
-        rowKey="id"
-        size="small"
-        rowClassName="row-table-detail"
+        rowKey='id'
+        size='small'
+        rowClassName='row-table-detail'
         loading={getPRItemsLoading}
-        columns={prItemsColumns({ onSelect, pr_selected, search, onSearch })}
+        columns={
+          ["mrp"].includes(mrp)
+            ? prItemsColumns({ onSelect, pr_selected, search, onSearch })
+            : prItemsColumnsMRP({ onSelect, pr_selected, search, onSearch })
+        }
         dataSource={state?.data || []}
         pagination={{ pageSize: 40 }}
       />
@@ -99,7 +111,7 @@ export default React.memo(SelectPR);
 const prItemsColumns = ({ onSelect, pr_selected, search, onSearch }) => [
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <b></b>
       </div>
     ),
@@ -121,7 +133,7 @@ const prItemsColumns = ({ onSelect, pr_selected, search, onSearch }) => [
   {
     title: (
       <Search
-        placeholder="Item Code / Description"
+        placeholder='Item Code / Description'
         searchValue={search?.item}
         onSearch={(val) => onSearch({ item: val })}
       />
@@ -135,7 +147,7 @@ const prItemsColumns = ({ onSelect, pr_selected, search, onSearch }) => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <b>Quantity</b>
       </div>
     ),
@@ -147,7 +159,7 @@ const prItemsColumns = ({ onSelect, pr_selected, search, onSearch }) => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <b>UOM</b>
       </div>
     ),
@@ -160,7 +172,7 @@ const prItemsColumns = ({ onSelect, pr_selected, search, onSearch }) => [
   {
     title: (
       <Search
-        placeholder="Vendor"
+        placeholder='Vendor'
         searchValue={search?.vendor}
         onSearch={(val) => onSearch({ vendor: val })}
       />
@@ -174,7 +186,7 @@ const prItemsColumns = ({ onSelect, pr_selected, search, onSearch }) => [
   },
   {
     title: (
-      <div className="text-center">
+      <div className='text-center'>
         <b>Due Date</b>
       </div>
     ),
@@ -187,7 +199,7 @@ const prItemsColumns = ({ onSelect, pr_selected, search, onSearch }) => [
   {
     title: (
       <Search
-        placeholder="PR No."
+        placeholder='PR No.'
         searchValue={search?.pr}
         onSearch={(val) => onSearch({ pr: val })}
       />
@@ -201,7 +213,138 @@ const prItemsColumns = ({ onSelect, pr_selected, search, onSearch }) => [
   {
     title: (
       <Search
-        placeholder="Remark"
+        placeholder='Remark'
+        searchValue={search?.remark}
+        onSearch={(val) => onSearch({ remark: val })}
+      />
+    ),
+    align: "left",
+    className: "tb-col-sm",
+    dataIndex: "po_detail_remark",
+    ellipsis: true,
+    render: (val) => val || "-",
+  },
+];
+const prItemsColumnsMRP = ({ onSelect, pr_selected, search, onSearch }) => [
+  {
+    title: (
+      <div className='text-center'>
+        <b></b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "pr_detail_id",
+    render: (id, row, index) => (
+      <Checkbox
+        checked={
+          pr_selected?.find(({ pr_detail_id }) => pr_detail_id === id)
+            ? true
+            : false
+        }
+        onChange={(e) => onSelect({ checked: e.target.checked, data: row })}
+      />
+    ),
+  },
+  {
+    title: (
+      <Search
+        placeholder='Item Code / Description'
+        searchValue={search?.item}
+        onSearch={(val) => onSearch({ item: val })}
+      />
+    ),
+    align: "left",
+    width: "25%",
+    className: "tb-col-sm",
+    dataIndex: "item_no_name",
+    ellipsis: true,
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>Quantity</b>
+      </div>
+    ),
+    align: "right",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "po_detail_qty",
+    render: (val) => convertDigit(val, 6) || "-",
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>UOM</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "uom_no",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <Search
+        placeholder='Vendor'
+        searchValue={search?.vendor}
+        onSearch={(val) => onSearch({ vendor: val })}
+      />
+    ),
+    align: "left",
+    className: "tb-col-sm",
+    // width: "15%",
+    dataIndex: "vendor_no_name",
+    ellipsis: true,
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className='text-center'>
+        <b>Due Date</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "po_detail_due_date",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <Search
+        placeholder='PR No.'
+        searchValue={search?.pr}
+        onSearch={(val) => onSearch({ pr: val })}
+      />
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "pr_no",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <Search
+        placeholder='MRP No'
+        searchValue={search?.mrp_no}
+        onSearch={(val) => onSearch({ mrp_no: val })}
+      />
+    ),
+    align: "left",
+    className: "tb-col-sm",
+    dataIndex: "mrp_no",
+    ellipsis: true,
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <Search
+        placeholder='Remark'
         searchValue={search?.remark}
         onSearch={(val) => onSearch({ remark: val })}
       />

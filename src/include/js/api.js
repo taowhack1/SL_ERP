@@ -60,6 +60,7 @@ export const api_purchase_get_all_pr = `/purchase/pr/all`;
 export const api_po_detail = `/purchase/po_detail`;
 export const api_get_po_detail = `/purchase/po_detail`;
 export const api_get_pr_detail = `/purchase/pr_detail`;
+export const api_put_pr_detail = `/purchase/pr_detail`;
 
 export const api_quo_list = `/sales/qn`;
 
