@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   BorderOutlined,
   CheckSquareOutlined,
@@ -36,22 +38,21 @@ const ItemDocuments = () => {
             <Panel
               header={
                 <Space>
-                  <Text strong style={{ fontSize: 16 }} className="mr-1">
+                  <Text strong style={{ fontSize: 16 }} className='mr-1'>
                     {obj?.vendor_no_name}
                     {obj?.item_vendor_default ? (
                       <CheckSquareOutlined
-                        className="ml-2"
+                        className='ml-2'
                         style={{ color: "#11C800", fontSize: 18 }}
                       />
                     ) : null}
                   </Text>
                 </Space>
               }
-              key={obj?.id}
-            >
-              <Row className="col-2">
+              key={obj?.id}>
+              <Row className='col-2'>
                 <Col span={12}>
-                  <Row className="col-2 row-margin-vertical">
+                  <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj.item_vendor_detail.length &&
                       obj.item_vendor_detail[0]
@@ -74,7 +75,7 @@ const ItemDocuments = () => {
                         // 1 = ADMIN , 10 = MIS , 11 = RD , 13 = PU ,17 = QC , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE
                         // 41 = จ.ป.
                         // [1, 10, 11, 17, 20].includes(department_id) ? (
-                        [1, 11, 13, 20].includes(department_id) ? (
+                        [1, 11, 13, 20, 17].includes(department_id) ? (
                           <ItemFileUpload
                             data_file={obj?.item_vendor_detail_document}
                             updateFile={null}
@@ -91,15 +92,15 @@ const ItemDocuments = () => {
                         ) : obj.item_vendor_detail.length &&
                           obj.item_vendor_detail[0]
                             .item_vendor_detail_specification ? (
-                          <div className="blur-bg">
-                            <LockOutlined className="button-icon mr-1 font-18" />
+                          <div className='blur-bg'>
+                            <LockOutlined className='button-icon mr-1 font-18' />
                             This file need permission to access.
                           </div>
                         ) : null
                       }
                     </Col>
                   </Row>
-                  <Row className="col-2 row-margin-vertical">
+                  <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj?.item_vendor_detail.length &&
                       obj.item_vendor_detail[0].item_vendor_detail_msds ? (
@@ -136,15 +137,15 @@ const ItemDocuments = () => {
                             readOnly={true}
                           />
                         ) : (
-                          <div className="blur-bg">
-                            <LockOutlined className="button-icon mr-1 font-18" />
+                          <div className='blur-bg'>
+                            <LockOutlined className='button-icon mr-1 font-18' />
                             This file need permission to access.
                           </div>
                         )
                       }
                     </Col>
                   </Row>
-                  <Row className="col-2 row-margin-vertical">
+                  <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj?.item_vendor_detail.length &&
                       obj.item_vendor_detail[0].item_vendor_detail_quotation ? (
@@ -179,8 +180,8 @@ const ItemDocuments = () => {
                             readOnly={true}
                           />
                         ) : (
-                          <div className="blur-bg">
-                            <LockOutlined className="button-icon mr-1 font-18" />
+                          <div className='blur-bg'>
+                            <LockOutlined className='button-icon mr-1 font-18' />
                             This file need permission to access.
                           </div>
                         )
@@ -190,7 +191,7 @@ const ItemDocuments = () => {
                 </Col>
 
                 <Col span={12}>
-                  <Row className="col-2 row-margin-vertical">
+                  <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj?.item_vendor_detail.length &&
                       obj.item_vendor_detail[0]
@@ -224,7 +225,7 @@ const ItemDocuments = () => {
                       />
                     </Col>
                   </Row>
-                  <Row className="col-2 row-margin-vertical">
+                  <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj?.item_vendor_detail.length &&
                       obj.item_vendor_detail[0].item_vendor_detail_non_haram ? (
@@ -256,7 +257,7 @@ const ItemDocuments = () => {
                       />
                     </Col>
                   </Row>
-                  <Row className="col-2 row-margin-vertical">
+                  <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj?.item_vendor_detail.length &&
                       obj.item_vendor_detail[0].item_vendor_detail_non_halal ? (
