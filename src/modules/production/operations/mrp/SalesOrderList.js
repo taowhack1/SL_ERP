@@ -32,12 +32,8 @@ const SalesOrderList = () => {
 
   return (
     <>
-      <div className='form-section'>
-        <div className='d-flex flex-end mb-1 w-100'>
-          <Text strong style={{ marginRight: 10 }}>
-            เขียว = พร้อม ,FG=ดำ ผลิตแต่ bulk, FG=เขียว พร้อม,FG=ฟ้า no
-            bulk,FG=เหลือง no pk{" "}
-          </Text>
+      <div className="form-section">
+        <div className="d-flex flex-end mb-1 w-100">
           <Text strong>Filter Status : </Text>
           <div style={{ width: "150px", marginLeft: 10 }}>
             <CustomSelect
@@ -50,27 +46,29 @@ const SalesOrderList = () => {
             />
           </div>
           <Button
-            className='ml-4'
-            key='export-pdf'
+            className="ml-4"
+            key="export-pdf"
             icon={<ExportOutlined />}
             onClick={() =>
               window.open(
                 `${process.env.REACT_APP_REPORT_SERVER}/report_so_production_list.aspx?trans_status_id=${state.filter.trans_status_id}`,
                 "_blank"
               )
-            }>
+            }
+          >
             Export PDF
           </Button>
           <Button
-            key='export-excel'
+            key="export-excel"
             icon={<ExportOutlined />}
-            className='ml-2 primary'
+            className="ml-2 primary"
             onClick={() =>
               window.open(
                 `${process.env.REACT_APP_REPORT_SERVER}/report_so_production_list.aspx?excel=true&trans_status_id=${state.filter.trans_status_id}`,
                 "_blank"
               )
-            }>
+            }
+          >
             Export Excel
           </Button>
         </div>
@@ -80,8 +78,8 @@ const SalesOrderList = () => {
           bordered
           loading={loading}
           rowKey={"so_detail_id"}
-          size='small'
-          rowClassName='row-pointer'
+          size="small"
+          rowClassName="row-pointer"
           onRow={(record, rowIndex) => ({
             onClick: () => console.log(record),
           })}
@@ -96,7 +94,7 @@ export default React.memo(SalesOrderList);
 const columns = [
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text strong>{"No."}</Text>
       </div>
     ),
@@ -107,7 +105,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text strong>{"SO No."}</Text>
       </div>
     ),
@@ -119,7 +117,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text strong>{"Issued Date"}</Text>
       </div>
     ),
@@ -131,7 +129,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text strong>{"Item"}</Text>
       </div>
     ),
@@ -143,7 +141,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text strong>{"Qty"}</Text>
       </div>
     ),
@@ -156,7 +154,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text strong>{"MRP Qty."}</Text>
       </div>
     ),
@@ -169,7 +167,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text strong>{"UOM"}</Text>
       </div>
     ),
@@ -181,7 +179,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text strong>{"Customer"}</Text>
       </div>
     ),
@@ -192,7 +190,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text strong>{"Delivery"}</Text>
       </div>
     ),
@@ -204,7 +202,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text strong>{"Status"}</Text>
       </div>
     ),
@@ -216,7 +214,7 @@ const columns = [
   },
   {
     title: (
-      <div className='text-center'>
+      <div className="text-center">
         <Text strong>{"Status NEW"}</Text>
       </div>
     ),
@@ -237,7 +235,8 @@ const columns = [
                   position: "relative",
                   width: "100%",
                   "padding-bottom": "25%",
-                }}></div>
+                }}
+              ></div>
             );
           }
           if (val > 0) {
@@ -249,7 +248,8 @@ const columns = [
                   position: "relative",
                   width: "100%",
                   "padding-bottom": "25%",
-                }}></div>
+                }}
+              ></div>
             );
           }
         },
@@ -270,7 +270,8 @@ const columns = [
                   position: "relative",
                   width: "100%",
                   "padding-bottom": "25%",
-                }}></div>
+                }}
+              ></div>
             );
           }
           if (record.type_id == 3) {
@@ -282,43 +283,9 @@ const columns = [
                   position: "relative",
                   width: "100%",
                   "padding-bottom": "25%",
-                }}></div>
+                }}
+              ></div>
             );
-          }
-          if (val !== 0 && record.bom_pk > 0) {
-            return (
-              <div
-                style={{
-                  "margin-bottom": "1px",
-                  "background-color": "#4fd074",
-                  position: "relative",
-                  width: "100%",
-                  "padding-bottom": "25%",
-                }}></div>
-            );
-          } else if (val !== 0 && record.bom_pk == 0) {
-            return (
-              <div
-                style={{
-                  "margin-bottom": "1px",
-                  "background-color": "#fed800",
-                  position: "relative",
-                  width: "100%",
-                  "padding-bottom": "25%",
-                }}></div>
-            );
-          } else if (val == 0 && record.bom_pk > 0) {
-            return (
-              <div
-                style={{
-                  "margin-bottom": "1px",
-                  "background-color": "#70edff",
-                  position: "relative",
-                  width: "100%",
-                  "padding-bottom": "25%",
-                }}></div>
-            );
-          } else {
           }
         },
       },
@@ -338,7 +305,8 @@ const columns = [
                   position: "relative",
                   width: "100%",
                   "padding-bottom": "25%",
-                }}></div>
+                }}
+              ></div>
             );
           }
           if (record.trans_status_id >= 5) {
@@ -350,7 +318,8 @@ const columns = [
                   position: "relative",
                   width: "100%",
                   "padding-bottom": "25%",
-                }}></div>
+                }}
+              ></div>
             );
           }
         },
@@ -371,7 +340,8 @@ const columns = [
                   position: "relative",
                   width: "100%",
                   "padding-bottom": "25%",
-                }}></div>
+                }}
+              ></div>
             );
           }
           if (record.trans_status_id >= 5) {
@@ -383,7 +353,8 @@ const columns = [
                   position: "relative",
                   width: "100%",
                   "padding-bottom": "25%",
-                }}></div>
+                }}
+              ></div>
             );
           }
         },
