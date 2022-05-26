@@ -84,7 +84,8 @@ function UomMain(props) {
                     });
                   },
                 };
-              }}></Table>
+              }}
+            ></Table>
           </Col>
         </Row>
       </MainLayout>

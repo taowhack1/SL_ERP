@@ -148,14 +148,14 @@ const PO = (props) => {
     searchValue: keyword || null,
     searchBar: (
       <>
-        <Space split={<Divider type='vertical' />} style={{ marginRight: 20 }}>
+        <Space split={<Divider type="vertical" />} style={{ marginRight: 20 }}>
           <div>
             <Text strong>Status :</Text>
           </div>
           <CustomSelect
             //disabled={filter.salesType !== 2 ? false : true}
             name={"po_status"}
-            placeholder='PO Status'
+            placeholder="PO Status"
             data={[
               {
                 label: "Pending Approve",
@@ -186,8 +186,8 @@ const PO = (props) => {
                 value: "Cancel",
               },
             ]}
-            field_id='value'
-            field_name='label'
+            field_id="value"
+            field_name="label"
             style={{ width: 200 }}
             onChange={(val, option) => dispatch(filterPO({ po_status: val }))}
             value={po_status}
@@ -195,7 +195,7 @@ const PO = (props) => {
           />
         </Space>
         <Button
-          className='primary'
+          className="primary"
           onClick={() =>
             dispatch(
               filterPO({
@@ -206,7 +206,8 @@ const PO = (props) => {
                 po_status: null,
               })
             )
-          }>
+          }
+        >
           Clear Filter
         </Button>
       </>
@@ -288,16 +289,17 @@ const PO = (props) => {
   return (
     <div>
       <MainLayout {...config}>
-        <Tabs defaultActiveKey='1'>
+        <Tabs defaultActiveKey="1">
           <Tabs.TabPane
             tab={
               <Badge count={BadgeCount}>
-                <Text strong className='pd-right-2'>
+                <Text strong className="pd-right-2">
                   PR ทั่วไป
                 </Text>
               </Badge>
             }
-            key='1'>
+            key="1"
+          >
             <Row gutter={24}>
               <Col span={6}>
                 <PRList2 setBadgeCount={setBadgeCount} />
@@ -315,7 +317,7 @@ const PO = (props) => {
                   rowKey={"po_id"}
                   loading={listDataPo?.loading ? true : false}
                   onChange={onChange}
-                  size='small'
+                  size="small"
                   pagination={{
                     pageSize,
                     current: page,
@@ -334,6 +336,7 @@ const PO = (props) => {
                         props.history.push({
                           pathname: "/purchase/po/" + record.po_id,
                         });
+                        console.log("po click");
                       },
                     };
                   }}
@@ -341,7 +344,7 @@ const PO = (props) => {
               </Col>
             </Row>
           </Tabs.TabPane>
-          <Tabs.TabPane tab='PR AUTO' key='2'>
+          <Tabs.TabPane tab="PR AUTO" key="2">
             <Row gutter={24}>
               <Col span={6}>
                 <PRListAuto
@@ -364,7 +367,7 @@ const PO = (props) => {
                   rowKey={"po_id"}
                   loading={listDataPo?.loading ? true : false}
                   onChange={onChange}
-                  size='small'
+                  size="small"
                   pagination={{
                     pageSize,
                     current: page,
@@ -374,7 +377,7 @@ const PO = (props) => {
                     <>
                       <Space level={24}>
                         <Button
-                          size='small'
+                          size="small"
                           onClick={() => {
                             props.history.push({
                               pathname: "/purchase/po/new&" + mrp.mrp_no,
@@ -396,8 +399,8 @@ const PO = (props) => {
         <Modal
           title={
             <>
-              <FormOutlined className='button-icon' />
-              <span className='pd-left-1'>Edit Due Date</span>
+              <FormOutlined className="button-icon" />
+              <span className="pd-left-1">Edit Due Date</span>
             </>
           }
           width={800}
@@ -407,12 +410,12 @@ const PO = (props) => {
           onOk={onModalOk}
           footer={[
             readOnly ? (
-              <Button key='back' className={"primary"} onClick={onModalCancel}>
+              <Button key="back" className={"primary"} onClick={onModalCancel}>
                 Back
               </Button>
             ) : (
               <Popconfirm
-                key='discard'
+                key="discard"
                 icon={<QuestionCircleOutlined style={{ color: "red" }} />}
                 onConfirm={() => {
                   onModalCancel();
@@ -420,18 +423,19 @@ const PO = (props) => {
                 title={
                   <Text strong>
                     {"Are you sure to "}
-                    <span className='require'>Discard</span>
+                    <span className="require">Discard</span>
                     {" ?"}
                   </Text>
                 }
-                okText='Yes'
-                cancelText='No'>
-                <Button key='back'>Discard</Button>
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button key="back">Discard</Button>
               </Popconfirm>
             ),
             !readOnly && (
               <Popconfirm
-                key='confirm'
+                key="confirm"
                 onConfirm={() => {
                   onModalOk();
                 }}
@@ -443,19 +447,21 @@ const PO = (props) => {
                     {" ?"}
                   </Text>
                 }
-                okText='Yes'
-                cancelText='No'>
-                <Button key='submit' className='primary'>
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button key="submit" className="primary">
                   Confirm
                 </Button>
               </Popconfirm>
             ),
-          ]}>
+          ]}
+        >
           <CustomTable
             columns={columnsEditDueDate(onChangeValue)}
             dataSource={modalData}
             focusLastPage={true}
-            rowClassName='row-table-detail'
+            rowClassName="row-table-detail"
             rowKey={"id"}
           />
         </Modal>

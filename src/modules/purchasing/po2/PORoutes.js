@@ -10,6 +10,7 @@ const PORoutes = () => {
   return (
     <Switch>
       <Route exact path={`${path}/:id&:mrp`} component={POFormDisplay} />
+      <Route exact path={`${path}/:id`} component={POFormDisplay} />
       <Route path={`${path}`}>
         <PO />
       </Route>
