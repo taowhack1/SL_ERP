@@ -407,8 +407,9 @@ const MRPHead = () => {
                       name={"item_qty_produce_bulk_request"}
                       className="w-100"
                       value={
-                        mainState.item_qty_produce_bulk_request ||
-                        mainState.mrp_qty_produce_ref
+                        mainState.mrp_qty_produce_ref_used
+                          ? mainState.item_qty_produce_bulk_request
+                          : mainState.mrp_qty_produce_ref
                       }
                       onChange={(data) => {
                         onChange({

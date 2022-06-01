@@ -62,6 +62,8 @@ const ExportCSV = ({ csvData, fileName, type }) => {
       //   ],
       skipHeader: false,
       origin: 0, //ok
+      H: { t: "n", v: "n" },
+      G: { t: "n", v: "n" },
     });
     //ws["!cols"] = "MDW";
     // XLSX.utils.sheet_add_json(csvData, {
@@ -77,8 +79,9 @@ const ExportCSV = ({ csvData, fileName, type }) => {
   return (
     <Button
       icon={<FileExcelTwoTone style={{ marginRight: 5, size: "20px" }} />}
-      className='search-button'
-      onClick={(e) => exportToCSV(csvData, fileName, type)}>
+      className="search-button"
+      onClick={(e) => exportToCSV(csvData, fileName, type)}
+    >
       Export excel
     </Button>
   );

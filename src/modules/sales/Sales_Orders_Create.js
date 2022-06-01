@@ -296,9 +296,9 @@ const SaleOrderCreate = (props) => {
   console.log("data_detail :>> ", data_detail);
   return (
     <MainLayout {...config}>
-      <div id='form'>
+      <div id="form">
         {/* Head */}
-        <Row className='col-2'>
+        <Row className="col-2">
           <Col span={8}>
             <h2>
               <strong>
@@ -320,16 +320,16 @@ const SaleOrderCreate = (props) => {
 
         {/* Address & Information */}
         {/* Description order Date*/}
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <Text strong>
-              <span className='require'>* </span>Description :
+              <span className="require">* </span>Description :
             </Text>
           </Col>
 
           <Col span={8}>
             <Input
-              name='so_description'
+              name="so_description"
               onChange={(e) =>
                 headDispatch({
                   type: "CHANGE_HEAD_VALUE",
@@ -337,14 +337,14 @@ const SaleOrderCreate = (props) => {
                 })
               }
               value={data_head.so_description}
-              placeholder='Description'
+              placeholder="Description"
             />
           </Col>
 
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>
-              <span className='require'>* </span>Order Date
+              <span className="require">* </span>Order Date
             </Text>
           </Col>
           <Col span={8}>
@@ -352,7 +352,7 @@ const SaleOrderCreate = (props) => {
               name={"so_order_date"}
               format={"DD/MM/YYYY"}
               className={"full-width"}
-              placeholder='Order date'
+              placeholder="Order date"
               required
               value={
                 data_head.so_order_date
@@ -376,20 +376,20 @@ const SaleOrderCreate = (props) => {
           </Col>
         </Row>
         {/*Sales Type Customer*/}
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           {/* Close QN */}
           <Col span={3}>
             <Text strong>
-              <span className='require'>* </span>Sales Person :
+              <span className="require">* </span>Sales Person :
             </Text>
           </Col>
 
           <Col span={8}>
             <CustomSelect
               name={"so_type_id"}
-              placeholder='Sales Person'
-              field_id='emp_id'
-              field_name='emp_name_no_th'
+              placeholder="Sales Person"
+              field_id="emp_id"
+              field_name="emp_name_no_th"
               loading={loadingSalesPerson}
               data={listSalesPerson}
               value={data_head.so_sales_person}
@@ -414,7 +414,7 @@ const SaleOrderCreate = (props) => {
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>
-              <span className='require'>* </span>Customer{" "}
+              <span className="require">* </span>Customer{" "}
             </Text>
           </Col>
 
@@ -423,9 +423,9 @@ const SaleOrderCreate = (props) => {
               allowClear
               showSearch
               placeholder={"Customer"}
-              name='customer_id'
-              field_id='customer_id'
-              field_name='customer_no_name'
+              name="customer_id"
+              field_id="customer_id"
+              field_name="customer_no_name"
               value={data_head.customer_no_name}
               data={masterData.customers}
               onChange={(data, option) => {
@@ -464,21 +464,21 @@ const SaleOrderCreate = (props) => {
             />
           </Col>
         </Row>
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           {/* Close QN */}
           <Col span={3}>
             <Text strong>
-              <span className='require'>* </span>Sales OEM :
+              <span className="require">* </span>Sales OEM :
             </Text>
           </Col>
 
           <Col span={8}>
             <CustomSelect
               name={"so_sales_oem"}
-              placeholder='Sale OEM'
+              placeholder="Sale OEM"
               data={oem}
-              field_id='value'
-              field_name='label'
+              field_id="value"
+              field_name="label"
               onChange={(val) =>
                 val
                   ? headDispatch({
@@ -501,7 +501,7 @@ const SaleOrderCreate = (props) => {
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>
-              <span className='require'>* </span>
+              <span className="require">* </span>
               Payment Terms
             </Text>
           </Col>
@@ -510,9 +510,9 @@ const SaleOrderCreate = (props) => {
               allowClear
               showSearch
               placeholder={"Payment term"}
-              name='payment_term_id'
-              field_id='payment_term_id'
-              field_name='payment_term_no_name'
+              name="payment_term_id"
+              field_id="payment_term_id"
+              field_name="payment_term_no_name"
               value={data_head.payment_term_no_name}
               data={customer_payment_terms}
               onChange={(data, option) => {
@@ -535,21 +535,22 @@ const SaleOrderCreate = (props) => {
             />
           </Col>
         </Row>
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           {/* PD Type */}
           <Col span={3}>
             <Text strong>
-              <span className='require'>* </span>Sales Type :
+              <span className="require">* </span>Sales Type :
             </Text>
           </Col>
 
           <Col span={8}>
             <CustomSelect
               name={"so_type_id"}
-              placeholder='สั่งผลิต / ขายอื่นๆ'
+              placeholder="สั่งผลิต / ขายอื่นๆ"
               data={selectData.salesType}
-              field_id='so_type_id'
-              field_name='so_type_name'
+              field_id="so_type_id"
+              field_name="so_type_name"
+              disabled={data_head.so_id ? true : false}
               onChange={(val) =>
                 val === 1
                   ? headDispatch({
@@ -575,14 +576,14 @@ const SaleOrderCreate = (props) => {
 
           <Col span={2}></Col>
           <Col span={3}>
-            <Text strong className='pd-left-1'>
+            <Text strong className="pd-left-1">
               PO No. :
             </Text>
           </Col>
 
           <Col span={8}>
             <Input
-              name='so_customer_po_no'
+              name="so_customer_po_no"
               onChange={(e) =>
                 headDispatch({
                   type: "CHANGE_HEAD_VALUE",
@@ -590,12 +591,12 @@ const SaleOrderCreate = (props) => {
                 })
               }
               value={data_head.so_customer_po_no}
-              placeholder='PO No.'
+              placeholder="PO No."
             />
           </Col>
           <Col span={2}></Col>
         </Row>
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           <Col span={3}>
             <CustomLabel
               label={"Production type :"}
@@ -606,11 +607,11 @@ const SaleOrderCreate = (props) => {
           <Col span={8}>
             <CustomSelect
               name={"so_production_type_id"}
-              placeholder='ผลิตรอ FG / ผลิตเก็บ'
+              placeholder="ผลิตรอ FG / ผลิตเก็บ"
               disabled={data_head.so_type_id === 1 ? false : true}
               data={selectData.soProductionType}
-              field_id='so_production_type_id'
-              field_name='so_production_type_description'
+              field_id="so_production_type_id"
+              field_name="so_production_type_description"
               onChange={(val) => {
                 if (val === 1) {
                   headDispatch({
@@ -667,16 +668,16 @@ const SaleOrderCreate = (props) => {
           <Col span={2}></Col>
           <Col span={3}>
             <Text strong>
-              <span className='require'>* </span>Vat
+              <span className="require">* </span>Vat
             </Text>
           </Col>
 
           <Col span={8}>
             <CustomSelect
-              placeholder='Select Vat Type'
+              placeholder="Select Vat Type"
               data={vatList || []}
-              field_id='vat_id'
-              field_name='vat_name'
+              field_id="vat_id"
+              field_name="vat_name"
               showSearch
               onChange={(val, option) => {
                 console.log("option", option);
@@ -694,21 +695,21 @@ const SaleOrderCreate = (props) => {
             />
           </Col>
         </Row>
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           {/* quotation */}
           <Col span={3}>
             <Text strong>
-              <span className='require'>* </span>Quotations Ref.
+              <span className="require">* </span>Quotations Ref.
             </Text>
           </Col>
           <Col span={8}>
             <CustomSelect
               allowClear
               showSearch
-              name='qn_id'
+              name="qn_id"
               placeholder={"Quotation ref."}
-              field_id='qn_id'
-              field_name='qn_no_description'
+              field_id="qn_id"
+              field_name="qn_no_description"
               value={data_head.qn_no_description}
               data={quotation_list}
               onChange={(data, option) => {
@@ -730,7 +731,7 @@ const SaleOrderCreate = (props) => {
 
           <Col span={8}></Col>
         </Row>
-        <Row className='col-2 row-margin-vertical'>
+        <Row className="col-2 row-margin-vertical">
           <Col span={8} offset={3}>
             <Checkbox
               onChange={(e) =>
@@ -745,14 +746,14 @@ const SaleOrderCreate = (props) => {
                 [2, 3].includes(data_head.qn_tg_trans_close_id) ? true : false
               }
             />
-            <Text className='ml-2'>{"Close Quotations."}</Text>
+            <Text className="ml-2">{"Close Quotations."}</Text>
           </Col>
           <Col span={2}></Col>
         </Row>
-        <Row className='col-2 row-tab-margin-l'>
+        <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
-            <Tabs defaultActiveKey='1' onChange={callback}>
-              <Tabs.TabPane tab='Request Detail' key='1'>
+            <Tabs defaultActiveKey="1" onChange={callback}>
+              <Tabs.TabPane tab="Request Detail" key="1">
                 <Detail
                   readOnly={false}
                   data_detail={data_detail}
@@ -763,7 +764,7 @@ const SaleOrderCreate = (props) => {
                   vat_include={data_head.vat_include}
                 />
               </Tabs.TabPane>
-              <Tabs.TabPane tab='Notes' key='2'>
+              <Tabs.TabPane tab="Notes" key="2">
                 <TextArea
                   rows={2}
                   placeholder={"Remark..."}
