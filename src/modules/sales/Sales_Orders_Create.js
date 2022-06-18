@@ -55,6 +55,7 @@ const { Text } = Typography;
 
 const initialStateHead = so_fields;
 const initialStateDetail = [so_detail_fields];
+let check_change_qn = false;
 const SaleOrderCreate = (props) => {
   const [selectData, setSelectData] = useState({
     salesType: [],
@@ -153,6 +154,24 @@ const SaleOrderCreate = (props) => {
           detailDispatch({ type: "SET_DETAIL", payload: res.data[0] });
         });
       message.success("Get Quotations reference success.", 4);
+    } else if (
+      data_head.qn_id &&
+      data_head.so_id &&
+      quotation_list.length &&
+      check_change_qn
+    ) {
+      headDispatch({
+        type: "CHANGE_HEAD_VALUE",
+        payload: getDataRef(data_head.qn_id, data_head, quotation_list),
+      });
+      axios
+        .get(`${api_qn_detail}/ref/${data_head.qn_id}`, header_config)
+        .then((res) => {
+          console.log("res detail", res.data[0]);
+          detailDispatch({ type: "SET_DETAIL", payload: res.data[0] });
+        });
+      message.success("Get Quotations reference success.", 4);
+      check_change_qn = false;
     }
   }, [data_head.qn_id, quotation_list]);
   const oem = [
@@ -294,6 +313,7 @@ const SaleOrderCreate = (props) => {
   console.log("data_head", data_head);
   console.log("selectData :>> ", selectData);
   console.log("data_detail :>> ", data_detail);
+  console.log("check_change_qn", check_change_qn);
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -714,6 +734,8 @@ const SaleOrderCreate = (props) => {
               data={quotation_list}
               onChange={(data, option) => {
                 if (data) {
+                  console.log("change qn");
+                  check_change_qn = true;
                   headDispatch({
                     type: "CHANGE_HEAD_VALUE",
                     payload: {
