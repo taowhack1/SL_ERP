@@ -1,11 +1,14 @@
 import { EllipsisOutlined, SearchOutlined } from "@ant-design/icons";
 import { Table } from "antd";
+import moment from "moment";
 import React, { useContext } from "react";
 import { useHistory } from "react-router";
 import MainLayout from "../../../../../components/MainLayout";
 import { AppContext } from "../../../../../include/js/context";
 import { useFetch } from "../../../../../include/js/customHooks";
+import { getStatusByName } from "../../../../../include/js/function_main";
 import { convertDigit } from "../../../../../include/js/main_config";
+import MRPViewSalesOrderList from "../MRPViewSalesOrderList";
 const apiGetAllMRPv2 = `/production/mrp_v2/all`;
 const MPRv2 = () => {
   const history = useHistory();
@@ -30,6 +33,7 @@ const MPRv2 = () => {
       create: "/production/operations/mrp_v2/create",
       onCancel: () => console.log("Cancel"),
       onSearch: (searchText) => console.log("search", searchText),
+      searchBar: <MRPViewSalesOrderList />,
     }),
     []
   );
@@ -65,6 +69,7 @@ const columns = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "mrp_no",
+    sorter: (a, b) => a.mrp_id - b.mrp_id,
   },
   {
     title: (
@@ -76,6 +81,7 @@ const columns = () => [
     className: "tb-col-sm",
     width: "8%",
     dataIndex: "so_no",
+    sorter: (a, b) => a.so_id - b.so_id,
   },
   {
     title: (
@@ -88,6 +94,7 @@ const columns = () => [
     dataIndex: "item_no_name",
     ellipsis: true,
     render: (val) => val || "-",
+    sorter: (a, b) => a.item_id - b.item_id,
   },
   {
     title: (
@@ -112,6 +119,9 @@ const columns = () => [
     width: "8%",
     dataIndex: "mrp_item_plan_date",
     render: (val) => val || "-",
+    sorter: (a, b) =>
+      moment(a.mrp_item_plan_date, "DD/MM/YYYY").format("x") -
+      moment(b.mrp_item_plan_date, "DD/MM/YYYY").format("x"),
   },
   {
     title: (
@@ -124,6 +134,7 @@ const columns = () => [
     width: "10%",
     dataIndex: "mrp_item_qty_produce",
     render: (val) => convertDigit(val, 4) || "-",
+    sorter: (a, b) => a.mrp_item_qty_produce - b.mrp_item_qty_produce,
   },
   {
     title: (
@@ -147,7 +158,8 @@ const columns = () => [
     className: "tb-col-sm",
     width: "8%",
     dataIndex: "trans_status_name",
-    render: (val) => val || "-",
+    render: (val) => getStatusByName(val) || "-",
+    sorter: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
   },
   {
     title: (

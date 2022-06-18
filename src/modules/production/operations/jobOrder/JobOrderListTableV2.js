@@ -254,7 +254,7 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
     align: "right",
     className: "col-sm",
     width: "10%",
-    dataIndex: "mrp_ref_qty_produce",
+    dataIndex: "mrp_item_ref_qty_produce",
     render: (val, { uom_ref_no }) =>
       val ? (
         <Text>{`${convertDigit(val, 6)} ${uom_ref_no || "-"}.`}</Text>
