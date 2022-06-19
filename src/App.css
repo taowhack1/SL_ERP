@@ -619,8 +619,8 @@ span.status-dev {
 div.search-table {
   /* margin-top: 15px; */
   /* margin-bottom: 10px; */
-  border-radius: 10px 0px;
-  padding-bottom: 20px;
+  border-radius: 5px;
+  padding-bottom: 5px;
   border: 1px solid #ddd;
   box-shadow: 0px 0px 5px #ccc;
 }
