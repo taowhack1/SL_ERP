@@ -1,11 +1,4 @@
-/** @format */
-
-import {
-  getRefStatus,
-  getSelfStepStatus,
-} from "../../../include/js/function_main";
-import { convertDigit } from "../../../include/js/main_config";
-
+import moment from "moment";
 export const quotation_fields = {
   flow_id: null,
   qn_id: null,
@@ -187,7 +180,7 @@ export const so_fields = {
   qn_id: null,
   qn_no: null,
   qn_no_description: null,
-  so_order_date: null,
+  so_order_date: moment().format("DD/MM/YYYY"),
   tg_so_delivery_date: null,
   so_agreement: null,
   so_remark: null,

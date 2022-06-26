@@ -56,16 +56,24 @@ const ReportSOProduction = () => {
   );
 
   const getData = async (text) => {
-    setData1((prev) => ({ ...prev, loading: true }));
-    await axios
-      .get(`/so/search/${text}`)
-      .then((resp) =>
-        setData1((prev) => ({ ...prev, loading: false, data: resp || [] }))
-      )
-      .catch((error) => {
-        console.log("error", error);
-        setData1((prev) => ({ ...prev, loading: false }));
-      });
+    if (text) {
+      setData1((prev) => ({ ...prev, loading: true }));
+      console.log("text", text);
+      await axios
+        .get(`/search/so/${text}`)
+        .then((resp) => {
+          console.log("resp", resp);
+          setData1((prev) => ({
+            ...prev,
+            loading: false,
+            data: resp?.data || [],
+          }));
+        })
+        .catch((error) => {
+          console.log("error", error);
+          setData1((prev) => ({ ...prev, loading: false }));
+        });
+    }
   };
 
   useEffect(() => {
@@ -87,6 +95,7 @@ const ReportSOProduction = () => {
       getData();
     }
   }, [searchData]);
+
   return (
     <>
       <MainLayout {...layoutConfig}>

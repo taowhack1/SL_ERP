@@ -8,7 +8,68 @@ import Search from "antd/lib/input/Search";
 import numeral from "numeral";
 import axios from "axios";
 import { CSVLink } from "react-csv";
-
+const xlsxHeader = [
+  {
+    label: "No.",
+    key: "id",
+  },
+  {
+    label: "SO No.",
+    key: "so_no",
+  },
+  {
+    label: "Description",
+    key: "so_description",
+  },
+  {
+    label: "Customer",
+    key: "customer_name",
+  },
+  {
+    label: "จำนวนชั่วโมง",
+    key: "sum_tg_time_sheet_time",
+  },
+  {
+    label: "RM",
+    key: "rm_cost_avg",
+  },
+  {
+    label: "PK",
+    key: "pk_cost_avg",
+  },
+  {
+    label: "DL",
+    key: "dl_cost_avg",
+  },
+  {
+    label: "OH",
+    key: "oh_cost_avg",
+  },
+  {
+    label: "รวมต้นทุนการผลิต",
+    key: "cost_avg",
+  },
+  {
+    label: "ยอด WIP ยกมา",
+    key: "wip_cost_avg",
+  },
+  {
+    label: "Invoice No.",
+    key: "invoice_no",
+  },
+  {
+    label: "ราคาขายไม่รวม Vat",
+    key: "so_detail_total_price",
+  },
+  {
+    label: "WIP",
+    key: "wip_cost_avg",
+  },
+  {
+    label: "กำไร/ขาดทุน",
+    key: "profit_avg",
+  },
+];
 const ReportSOInventory = () => {
   const { filter } = useSelector(
     (state) => state?.inventory?.report?.issue || {}
@@ -56,16 +117,24 @@ const ReportSOInventory = () => {
   );
 
   const getData = async (text) => {
-    setData1((prev) => ({ ...prev, loading: true }));
-    await axios
-      .get(`/so/search/${text}`)
-      .then((resp) =>
-        setData1((prev) => ({ ...prev, loading: false, data: resp || [] }))
-      )
-      .catch((error) => {
-        console.log("error", error);
-        setData1((prev) => ({ ...prev, loading: false }));
-      });
+    if (text) {
+      setData1((prev) => ({ ...prev, loading: true }));
+      console.log("text", text);
+      await axios
+        .get(`/search/so/${text}`)
+        .then((resp) => {
+          console.log("resp", resp);
+          setData1((prev) => ({
+            ...prev,
+            loading: false,
+            data: resp?.data || [],
+          }));
+        })
+        .catch((error) => {
+          console.log("error", error);
+          setData1((prev) => ({ ...prev, loading: false }));
+        });
+    }
   };
 
   useEffect(() => {
@@ -75,9 +144,14 @@ const ReportSOInventory = () => {
         .get(
           `/reports/account/somrp/${searchData.so_id}&${searchData.customer_id}&${searchData.item_id}`
         )
-        .then((resp) =>
-          setData2((prev) => ({ ...prev, loading: false, data: resp || [] }))
-        )
+        .then((resp) => {
+          console.log("resp", resp);
+          setData2((prev) => ({
+            ...prev,
+            loading: false,
+            data: resp.data || [],
+          }));
+        })
         .catch((error) => {
           console.log("error", error);
           setData2((prev) => ({ ...prev, loading: false }));
@@ -127,6 +201,18 @@ const ReportSOInventory = () => {
                     dataSource={data1.data}
                     pagination={{ pageSize: 15 }}
                     rowKey="id"
+                    onRow={(row) => ({
+                      onClick: () => {
+                        // console.log("row", row);
+                        console.log("index", row);
+                        setSearchData((prev) => ({
+                          ...prev,
+                          so_id: row?.so_id,
+                          customer_id: row?.customer_id,
+                          item_id: row?.item_id,
+                        }));
+                      },
+                    })}
                   />
                 </Tabs.TabPane>
               </Tabs>
@@ -139,27 +225,7 @@ const ReportSOInventory = () => {
               <div>
                 <Button size="small" type="ghost" icon={<DownloadOutlined />}>
                   <Text>
-                    <CSVLink
-                      data={mockupDataSOList}
-                      headers={[
-                        {
-                          label: "SO No.",
-                          key: "so_no",
-                        },
-                        {
-                          label: "Customer",
-                          key: "customer_name",
-                        },
-                        {
-                          label: "Item",
-                          key: "item_no_name",
-                        },
-                        {
-                          label: "Price",
-                          key: "total_price",
-                        },
-                      ]}
-                    >
+                    <CSVLink data={data2.data} headers={xlsxHeader}>
                       Export Excel
                     </CSVLink>
                   </Text>
@@ -250,32 +316,6 @@ const columns = [
     width: "10%",
   },
 ];
-const mockupDataSOList = [
-  {
-    so_no: "SO-EX2206001",
-    item_no_name: "[C401SRLA00100] ตัวอย่างไอเทม 1 - 15,000 pcs.",
-    customer_name: "ลูกค้า 1 จำกัด",
-    so_order_date: "25/04/2022",
-    so_detail_delivery_date: "23/04/2022",
-    total_price: 15000,
-  },
-  {
-    so_no: "SO-EX2206002",
-    item_no_name: "[C401SRLA01100] ตัวอย่างไอเทม 2 - 150,000 pcs.",
-    customer_name: "ลูกค้า 1 จำกัด",
-    so_order_date: "28/05/2022",
-    so_detail_delivery_date: "28/05/2022",
-    total_price: 35000,
-  },
-  {
-    so_no: "SO-EX2206003",
-    item_no_name: "[C403SRLA00100] ตัวอย่างไอเทม 3 - 300 pcs.",
-    customer_name: "ลูกค้า 1 จำกัด",
-    so_order_date: "30/05/2022",
-    so_detail_delivery_date: "30/05/2022",
-    total_price: 55000,
-  },
-];
 const columns2 = [
   {
     className: "tb-col-sm",
@@ -284,13 +324,12 @@ const columns2 = [
     ellipsis: false,
     align: "center",
     render: (val, _, index) => index + 1,
-    sorter: (a, b) => a.id - b.id,
     title: (
       <div className="text-center">
         <b>No.</b>
       </div>
     ),
-    width: "5%",
+    width: "3%",
   },
   {
     className: "tb-col-sm",
@@ -304,7 +343,7 @@ const columns2 = [
         <b>SO No.</b>
       </div>
     ),
-    width: "10%",
+    width: "7%",
   },
   {
     className: "tb-col-sm",
@@ -318,7 +357,7 @@ const columns2 = [
         <b>Description</b>
       </div>
     ),
-    // width: "20%",
+    width: "10%",
   },
   {
     className: "tb-col-sm",
@@ -346,7 +385,7 @@ const columns2 = [
         <b>จำนวนชั่วโมง</b>
       </div>
     ),
-    // width: "20%",
+    width: "7%",
   },
   {
     className: "tb-col-sm",
@@ -374,7 +413,7 @@ const columns2 = [
             <b>RM</b>
           </div>
         ),
-        width: "10%",
+        width: "8%",
       },
       {
         className: "tb-col-sm",
@@ -389,7 +428,7 @@ const columns2 = [
             <b>PK</b>
           </div>
         ),
-        width: "10%",
+        width: "8%",
       },
     ],
   },
@@ -406,7 +445,7 @@ const columns2 = [
         <b>DL</b>
       </div>
     ),
-    width: "10%",
+    width: "8%",
   },
   {
     className: "tb-col-sm",
@@ -421,7 +460,7 @@ const columns2 = [
         <b>OH</b>
       </div>
     ),
-    width: "10%",
+    width: "8%",
   },
   {
     className: "tb-col-sm",
@@ -436,7 +475,7 @@ const columns2 = [
         <b>รวมต้นทุนการผลิต</b>
       </div>
     ),
-    // width: "10%",
+    width: "10%",
   },
   {
     className: "tb-col-sm",
@@ -451,7 +490,7 @@ const columns2 = [
         <b>ยอด WIP ยกมา</b>
       </div>
     ),
-    // width: "10%",
+    width: "10%",
   },
   {
     className: "tb-col-sm",
@@ -466,7 +505,7 @@ const columns2 = [
         <b>Invoice No.</b>
       </div>
     ),
-    // width: "10%",
+    width: "10%",
   },
   {
     className: "tb-col-sm",
@@ -478,10 +517,10 @@ const columns2 = [
     // sorter: (a, b) => a.id - b.id,
     title: (
       <div className="text-center">
-        <b>ราคาขาย ไม่รวม Vat</b>
+        <b>ราคาขายไม่รวม Vat</b>
       </div>
     ),
-    // width: "10%",
+    width: "10%",
   },
   {
     className: "tb-col-sm",
@@ -496,7 +535,7 @@ const columns2 = [
         <b>WIP</b>
       </div>
     ),
-    // width: "10%",
+    width: "10%",
   },
   {
     className: "tb-col-sm",
@@ -511,7 +550,7 @@ const columns2 = [
         <b>กำไร/ขาดทุน</b>
       </div>
     ),
-    // width: "10%",
+    width: "10%",
   },
 ];
 export default ReportSOInventory;

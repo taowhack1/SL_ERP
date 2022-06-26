@@ -11,6 +11,7 @@ import {
   message,
   Checkbox,
 } from "antd";
+import { RangePickerProps } from "antd/es/date-picker";
 import MainLayout from "../../components/MainLayout";
 import moment from "moment";
 
@@ -56,6 +57,11 @@ const { Text } = Typography;
 const initialStateHead = so_fields;
 const initialStateDetail = [so_detail_fields];
 let check_change_qn = false;
+const disabledDate = (current) => {
+  // Can not select days before today and today
+  return current && current < moment().day(-1).endOf("day");
+};
+
 const SaleOrderCreate = (props) => {
   const [selectData, setSelectData] = useState({
     salesType: [],
@@ -373,6 +379,7 @@ const SaleOrderCreate = (props) => {
               format={"DD/MM/YYYY"}
               className={"full-width"}
               placeholder="Order date"
+              disabledDate={disabledDate}
               required
               value={
                 data_head.so_order_date
