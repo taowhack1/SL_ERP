@@ -47,6 +47,7 @@ import {
   updatePRDueDateFormReport,
   update_pr,
 } from "../../../actions/purchase/PR_Actions";
+import CancelPR from "../CancelPR";
 const apiGetPRbyMRP = `/purchase/pr/detail_by_mrp`;
 const apiGetPO = `/purchase/po`;
 const PO = (props) => {
@@ -392,6 +393,22 @@ const PO = (props) => {
                     </>
                   )}
                 />
+              </Col>
+            </Row>
+          </Tabs.TabPane>
+          <Tabs.TabPane
+            tab={
+              <Badge>
+                <Text strong className="pd-right-2">
+                  Cancel PR Auto
+                </Text>
+              </Badge>
+            }
+            key="3"
+          >
+            <Row gutter={24}>
+              <Col span={6}>
+                <CancelPR />
               </Col>
             </Row>
           </Tabs.TabPane>
