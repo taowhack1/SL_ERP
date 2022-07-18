@@ -132,15 +132,13 @@ const PRListAuto = (props) => {
     );
   };
 
-  const countSelectPROthers = pr?.filter((obj) => obj.checked).length;
-  const countSelectPRAuto = prAuto?.filter((obj) => obj.checked).length;
   return (
     <>
       <Table
         bordered
-        rowKey='id'
-        size='small'
-        rowClassName='row-table-detail'
+        rowKey="id"
+        size="small"
+        rowClassName="row-table-detail"
         loading={DataMrpLoading ? true : false}
         columns={columns_MRP({
           selectData,
@@ -206,7 +204,7 @@ const columns = ({
     children: [
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <b>No.</b>
           </div>
         ),
@@ -218,7 +216,7 @@ const columns = ({
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <b>Check</b>
           </div>
         ),
@@ -237,7 +235,7 @@ const columns = ({
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <b>PR No.</b>
           </div>
         ),
@@ -246,14 +244,14 @@ const columns = ({
         // width: "10%",
         dataIndex: "pr_no",
         render: (val) => (
-          <Text onClick={() => onPrintPR(val)} className='button-icon' strong>
+          <Text onClick={() => onPrintPR(val)} className="button-icon" strong>
             {val || "-"}
           </Text>
         ),
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <b>Due Date</b>
           </div>
         ),
@@ -286,7 +284,7 @@ const columns_MRP = ({
     children: [
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <b>No.</b>
           </div>
         ),
@@ -317,7 +315,7 @@ const columns_MRP = ({
       // },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <b>MRP No.</b>
           </div>
         ),
@@ -330,15 +328,16 @@ const columns_MRP = ({
             onClick={() => {
               GetPR_Detail_by_MRP(record.mrp_id, record.mrp_no);
             }}
-            className='button-icon'
-            strong>
+            className="button-icon"
+            strong
+          >
             {val || "-"}
           </Text>
         ),
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <b>Source</b>
           </div>
         ),
@@ -350,7 +349,7 @@ const columns_MRP = ({
       },
       {
         title: (
-          <div className='text-center'>
+          <div className="text-center">
             <b>Item</b>
           </div>
         ),
