@@ -131,6 +131,7 @@ import SammarySoMain from "./modules/sales/reporting/summary_so_ver2";
 import SummarySoMain from "./modules/sales/reporting/summary_so_ver2";
 import InventoryRoutes from "./modules/inventory/Routes";
 import AccountingRoutes from "./modules/accounting";
+import DLInput from "./modules/production/operations/dlInput";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -570,6 +571,10 @@ const App = (props) => {
             </Route>
             <Route exact path="/production/operations/mrp-test">
               <MRPTest />
+            </Route>
+            {/* DL Input */}
+            <Route exact path="/production/operations/dl_input">
+              <DLInput />
             </Route>
             {/* PETCH ADD */}
             <Route exact path="/production/operations/workorder/">
