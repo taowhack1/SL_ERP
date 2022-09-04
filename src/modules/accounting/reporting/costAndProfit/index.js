@@ -3,7 +3,7 @@ import { DownloadOutlined, SearchOutlined } from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
 import { useSelector } from "react-redux";
 import MainLayout from "../../../../components/MainLayout";
-import { Button, Col, Input, Row, Table, Tabs, DatePicker } from "antd";
+import { Button, Col, Input, Row, Table, Tabs, DatePicker, Alert } from "antd";
 import Search from "antd/lib/input/Search";
 import numeral from "numeral";
 import axios from "axios";
@@ -80,19 +80,14 @@ const ReportSOCostAndProfit = () => {
 
   const [searchData, setSearchData] = useState({
     keyword: 0,
-    start_date: 0,
-    end_date: 0,
+    date_start: 0,
+    date_end: 0,
   });
 
   const [data1, setData1] = useState({
     loading: false,
     data: [],
   });
-
-  // const [data2, setData2] = useState({
-  //   loading: false,
-  //   data: [],
-  // });
 
   const layoutConfig = useMemo(
     () => ({
@@ -122,27 +117,6 @@ const ReportSOCostAndProfit = () => {
     }),
     [filter]
   );
-
-  // const getData = async (text) => {
-  //   if (text) {
-  //     setData1((prev) => ({ ...prev, loading: true }));
-  //     console.log("text", text);
-  //     await axios
-  //       .get(`/search/so/${text}`)
-  //       .then((resp) => {
-  //         console.log("resp", resp);
-  //         setData1((prev) => ({
-  //           ...prev,
-  //           loading: false,
-  //           data: resp?.data || [],
-  //         }));
-  //       })
-  //       .catch((error) => {
-  //         console.log("error", error);
-  //         setData1((prev) => ({ ...prev, loading: false }));
-  //       });
-  //   }
-  // };
 
   const expandedRowRender2 = (row) => {
     return (
@@ -189,10 +163,13 @@ const ReportSOCostAndProfit = () => {
     setData1((prev) => ({ ...prev, loading: true }));
     await axios
       .get(
-        `/reports/account/so_mrp_profit/${searchData.keyword}&${searchData.start_date}&${searchData.end_date}`
+        `/reports/account/so_mrp_profit/${searchData.keyword}&${searchData.date_start}&${searchData.date_end}`
       )
       .then((resp) => {
         console.log("resp", resp);
+        if (resp?.data?.length === 0) {
+          alert('ไม่พบข้อมูล กรุณาระบุข้อมูลให้ถูกต้อง หรือเฉพาะเจาะจงขึ้น')
+        }
         setData1((prev) => ({
           ...prev,
           loading: false,
@@ -237,8 +214,8 @@ const ReportSOCostAndProfit = () => {
                       console.log("data", data)
                       data
                         ? onChangeSearch({
-                          date_start: data[0].format("YYYY-MM-DD"),
-                          date_end: data[1].format("YYYY-MM-DD"),
+                          date_start: data[0].format("DD-MM-YYYY"),
+                          date_end: data[1].format("DD-MM-YYYY"),
                         })
                         : onChangeSearch({
                           date_start: 0,
@@ -258,6 +235,7 @@ const ReportSOCostAndProfit = () => {
             </Col>
           </Row>
         </div>
+
         <div id="form" className="w-100">
           {/* <Row>
             <Col span={24}> */}

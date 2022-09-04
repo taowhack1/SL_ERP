@@ -3,12 +3,16 @@ import { DownloadOutlined, SearchOutlined } from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
 import { useSelector } from "react-redux";
 import MainLayout from "../../../../components/MainLayout";
-import { Button, Col, Row, Table, Tabs } from "antd";
-import Search from "antd/lib/input/Search";
-import numeral from "numeral";
+import { Button, Col, Input, Row, Table, Tabs, DatePicker } from "antd";
 import axios from "axios";
-import { CSVLink } from "react-csv";
 import Form from "./DLForm";
+import $ from 'jquery'
+import numeral from "numeral";
+import confirm from "antd/lib/modal/confirm";
+import SODetailTable from "./SODetailTable";
+import { useCallback } from "react";
+
+const { RangePicker } = DatePicker
 const xlsxHeader = [
     {
         label: "No.",
@@ -77,9 +81,9 @@ const DLInput = () => {
     );
 
     const [searchData, setSearchData] = useState({
-        so_id: 0,
-        customer_id: 0,
-        item_id: 0,
+        keyword: 0,
+        start_date: 0,
+        end_date: 0,
     });
 
     const [data1, setData1] = useState({
@@ -87,8 +91,13 @@ const DLInput = () => {
         data: [],
     });
 
-    const [data2, setData2] = useState({
+    const [dl, setDL] = useState({
         loading: false,
+        so_detail_id: null,
+        so_id: null,
+        item_id: null,
+        customer_id: null,
+        action: 'new',
         data: [],
     });
 
@@ -123,61 +132,111 @@ const DLInput = () => {
         [filter]
     );
 
-    const getData = async (text) => {
-        if (text) {
-            setData1((prev) => ({ ...prev, loading: true }));
-            // console.log("text", text);
-            await axios
-                .get(`/search/so/${text}`)
-                .then((resp) => {
-                    console.log("resp", resp);
-                    setData1((prev) => ({
-                        ...prev,
-                        loading: false,
-                        data: resp?.data || [],
-                    }));
-                })
-                .catch((error) => {
-                    console.log("error", error);
-                    setData1((prev) => ({ ...prev, loading: false }));
-                });
-            // setTimeout(() => {
-            //     setData1((prev) => ({ ...prev, loading: false }));
-            // }, 1000);
-        }
+    const onSearch = async () => {
+        setData1((prev) => ({ ...prev, loading: true }));
+        await axios
+            .get(
+                `/production/dl_cost/list/${searchData.keyword}&${searchData.start_date}&${searchData.end_date}`
+            )
+            .then((resp) => {
+                console.log("resp", resp);
+                setData1((prev) => ({
+                    ...prev,
+                    loading: false,
+                    data: resp.data || [],
+                }));
+            })
+            .catch((error) => {
+                console.log("error", error);
+                setData1((prev) => ({ ...prev, loading: false }));
+            });
     };
 
+    const onChangeSearch = (obj) => {
+        setSearchData(prev => ({ ...prev, ...obj }))
+    }
+
+    const setDLData = (action = "", obj = {}) => {
+        let actionComplete = false
+        switch (action) {
+            case "change_so_detail":
+                // let confirmAction = false
+                // if (obj?.so_detail_id != dl?.so_detail_id && dl?.so_detail_id != null) {
+                // if (confirm({ title: 'คุณต้องการเปลี่ยนรายการใช่หรือไม่ ?', okText: "ใช่", cancelText: 'ไม่ใช่' })) {
+                setDL(prev => ({ ...prev, ...obj, data: [] }))
+                //     actionComplete = true
+                // }
+                // }
+                break;
+            case "add_dl_row":
+                setDL(prev => ({ ...prev, data: [...prev.data, obj] }))
+                actionComplete = true
+                break;
+            case "remove_dl_row":
+                setDL(prev => ({ ...prev, data: prev.data.filter(obj1 => obj1.id !== obj?.id) }))
+                actionComplete = true
+                break;
+            case "set_dl_data":
+                setDL(prev => ({ ...prev, ...obj, action: 'edit' }))
+                actionComplete = true
+                break;
+            case "set_dl_loading":
+                setDL(prev => ({ ...prev, loading: obj?.loading || false }))
+                break;
+            case "reset_dl":
+                setDL({
+                    loading: false,
+                    so_detail_id: null,
+                    so_id: null,
+                    item_id: null,
+                    customer_id: null,
+                    action: 'new',
+                    data: [],
+                })
+                actionComplete = true
+                break;
+            default:
+                break;
+        }
+        return actionComplete
+    }
+
+
     useEffect(() => {
-        const getData = async () => {
-            setData2((prev) => ({ ...prev, loading: true }));
+        const getData = async (dl_cost_id) => {
+            setDLData("set_dl_loading", { loading: true });
             return await axios
                 .get(
-                    `/reports/account/somrp/${searchData.so_id}&${searchData.customer_id}&${searchData.item_id}`
+                    `/production/dl_cost/${dl_cost_id}`
                 )
                 .then((resp) => {
                     console.log("resp", resp);
-                    setData2((prev) => ({
-                        ...prev,
-                        loading: false,
-                        data: resp.data || [],
-                    }));
+                    if (resp?.length) {
+                        setDLData("set_dl_data", { data: resp[0]?.dl_cost_detail });
+                    } else {
+                        setDLData("set_dl_loading", { loading: false });
+                    }
                 })
                 .catch((error) => {
                     console.log("error", error);
-                    setData2((prev) => ({ ...prev, loading: false }));
+                    setDLData("set_dl_loading", { loading: false });
                 });
-            // setTimeout(() => {
-            //     setData1((prev) => ({ ...prev, loading: false }));
-            // }, 1000);
         };
-        if (searchData.so_id && searchData.so_detail_id) {
-            getData();
+
+        if (dl?.so_detail_id && dl?.dl_cost_id) {
+            getData(dl?.dl_cost_id);
         }
-    }, [searchData]);
+    }, [dl?.so_detail_id]);
+
+    const setSelectedRow = useCallback((action, data) => {
+        setDLData(action, data)
+    }, [data1])
+
+    console.log("dl", dl)
     return (
         <>
             <MainLayout {...layoutConfig}>
-                <div className="search-table mt-2">
+                <div className="search-table mt-2 pb-2">
                     <Row className="search-header">
                         <Text className="search-title" strong>
                             <SearchOutlined style={{ marginRight: 10, size: "20px" }} />
@@ -186,150 +245,54 @@ const DLInput = () => {
                     </Row>
                     <Row>
                         <Col span={2}></Col>
-                        <Col span={2}>
-                            <Text strong>{`SO No. :`}</Text>
-                        </Col>
-                        <Col span={8}>
-                            <Search
-                                placeholder="SO No. / Description"
-                                enterButton="Search"
-                                allowClear
-                                loading={false}
-                                onSearch={(text) => getData(text)}
-                            />
-                        </Col>
-                        <Col span={1}></Col>
-                        <Col span={4}></Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <Tabs className="pd-1">
-                                <Tabs.TabPane tab={<b>Sale Order</b>}>
-                                    <Table
-                                        bordered
-                                        rowClassName={"row-table_detail"}
-                                        size={"small"}
-                                        loading={data1.loading}
-                                        columns={columns}
-                                        dataSource={data1.data}
-                                        pagination={{ pageSize: 15 }}
-                                        rowKey="id"
-                                        onRow={(row) => ({
-                                            onClick: () => {
-                                                // console.log("row", row);
-                                                console.log("index", row);
-                                                setSearchData((prev) => ({
-                                                    ...prev,
-                                                    so_id: row?.so_id,
-                                                    customer_id: row?.customer_id,
-                                                    item_id: row?.item_id,
-                                                }));
-                                            },
-                                        })}
+                        <Col span={20}>
+                            <div className="d-flex flex-row space-around w-100">
+                                <div className="mr-3">
+                                    <Text strong className="mr-1">{`SO No. :`}</Text>
+                                    <Input placeholder={"SO No. / Description / Customer"} style={{ width: '250px' }} onBlur={(e) => onChangeSearch({ keyword: e.target.value || 0 })} />
+                                </div>
+                                <div>
+                                    <Text strong className="mr-1">{`วันที่ :`}</Text>
+                                    <RangePicker
+                                        style={{ width: 350 }}
+                                        format={"DD/MM/YYYY"}
+                                        onChange={(data) => {
+                                            console.log("data", data)
+                                            data
+                                                ? onChangeSearch({
+                                                    date_start: data[0].format("YYYY-MM-DD"),
+                                                    date_end: data[1].format("YYYY-MM-DD"),
+                                                })
+                                                : onChangeSearch({
+                                                    date_start: 0,
+                                                    date_end: 0,
+                                                });
+                                        }}
                                     />
-                                </Tabs.TabPane>
-                            </Tabs>
+                                </div>
+                            </div>
                         </Col>
+                        <Col span={2}></Col>
+                    </Row>
+
+                    <Row className="mt-3">
+                        <Col span={24} className="text-center">
+                            <Button type="primary" icon={<SearchOutlined />} onClick={onSearch}>ค้นหาข้อมูล</Button>
+                        </Col>
+                    </Row>
+
+                    <Row className="mt-3 pd-2">
+                        <SODetailTable {...({ data1, setSelectedRow })} />
                     </Row>
                 </div>
                 <div className="mt-3">
-                    {/* <Tabs
-                        tabBarExtraContent={
-                            <div>
-                                <Button size="small" type="ghost" icon={<DownloadOutlined />}>
-                                    <Text>
-                                        <CSVLink data={data2.data} headers={xlsxHeader}>
-                                            Export Excel
-                                        </CSVLink>
-                                    </Text>
-                                </Button>
-                            </div>
-                        }
-                    > */}
-                    {/* <Tabs.TabPane tab={<b>Summary</b>}>
-                            <Table
-                                bordered
-                                rowClassName={"row-table_detail"}
-                                size={"small"}
-                                loading={data2.loading}
-                                columns={columns2}
-                                dataSource={data2.data}
-                                pagination={{ pageSize: 15 }}
-                                rowKey="id"
-                            />
-                        </Tabs.TabPane> */}
-
-                    <Form />
-                    {/* </Tabs> */}
+                    <Form dl={dl} setDLData={setDLData} />
                 </div>
             </MainLayout>
         </>
     );
 };
-const columns = [
-    {
-        className: "tb-col-sm",
-        dataIndex: "index",
-        key: "no",
-        ellipsis: false,
-        align: "center",
-        render: (val, _, index) => index + 1,
-        sorter: (a, b) => a.id - b.id,
-        title: <b>No.</b>,
-        width: "5%",
-    },
-    {
-        className: "tb-col-sm",
-        dataIndex: "so_no",
-        key: "so_no",
-        ellipsis: false,
-        render: (val) => val,
-        sorter: (a, b) => a.id - b.id,
-        title: <b>SO No.</b>,
-        width: "10%",
-    },
-    {
-        className: "tb-col-sm",
-        dataIndex: "item_no_name",
-        key: "item_no_name",
-        ellipsis: false,
-        render: (val) => val,
-        // sorter: (a, b) => a.id - b.id,
-        title: <b>Item</b>,
-        width: "35%",
-    },
-    {
-        className: "tb-col-sm",
-        dataIndex: "customer_name",
-        key: "customer_name",
-        ellipsis: false,
-        render: (val) => val,
-        sorter: (a, b) => a.id - b.id,
-        title: <b>Customer</b>,
-        width: "20%",
-    },
-    {
-        className: "tb-col-sm",
-        dataIndex: "so_order_date",
-        key: "so_order_date",
-        ellipsis: false,
-        align: "center",
-        render: (val) => val,
-        sorter: (a, b) => a.id - b.id,
-        title: <b>Order date</b>,
-        width: "10%",
-    },
-    {
-        className: "tb-col-sm",
-        dataIndex: "so_detail_delivery_date",
-        key: "so_detail_delivery_date",
-        ellipsis: false,
-        align: "center",
-        render: (val) => val,
-        sorter: (a, b) => a.id - b.id,
-        title: <b>Delivery</b>,
-        width: "10%",
-    },
-];
+
+
 
 export default DLInput;
