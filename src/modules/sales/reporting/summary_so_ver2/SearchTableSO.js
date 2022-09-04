@@ -153,24 +153,17 @@ const SearchTableSO = (props = []) => {
               name='stock_card_date_start'
               className='full-width'
               format={"DD/MM/YYYY"}
-              // value={[
-              //   mainState.date_start
-              //     ? moment(mainState.date_start, "YYYY-MM-DD")
-              //     : "",
-              //   mainState.date_end
-              //     ? moment(mainState.date_end, "YYYY-MM-DD")
-              //     : "",
-              // ]}
+
               onChange={(data) => {
                 data
                   ? onChangeState({
-                      date_start: data[0].format("YYYY-MM-DD"),
-                      date_end: data[1].format("YYYY-MM-DD"),
-                    })
+                    date_start: data[0].format("YYYY-MM-DD"),
+                    date_end: data[1].format("YYYY-MM-DD"),
+                  })
                   : onChangeState({
-                      date_start: null,
-                      date_end: null,
-                    });
+                    date_start: null,
+                    date_end: null,
+                  });
               }}
             />
           </Col>
@@ -224,7 +217,7 @@ const SearchTableSO = (props = []) => {
               className='search-button'
               danger
               icon={<ClearOutlined />}
-              //onClick={reset_state}
+            //onClick={reset_state}
             >
               Clear Search
             </Button>

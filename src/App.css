@@ -499,7 +499,7 @@ div:empty:before {
 }
 .w-100,
 .full-width {
-  width: 100%;
+  width: 100% !important;
 }
 .h-100,
 .full-height {
@@ -976,6 +976,9 @@ a.fc-timeline-event {
 }
 .space-between {
   justify-content: space-between;
+}
+.space-around {
+  justify-content: space-around;
 }
 .under-line {
   border-bottom: 1px solid #eceef1;

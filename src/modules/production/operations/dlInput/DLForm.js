@@ -23,21 +23,12 @@ const DLForm = () => {
         setState(state.map(obj => obj.index === index ? ({ ...obj, ...data }) : obj))
     }
     return (
-        <div id="form">
-            {/* <Table
-                bordered
-                rowClassName={"row-table_detail"}
-                size={"small"}
-                loading={data2.loading}
-                columns={columns2}
-                dataSource={data2.data}
-                pagination={{ pageSize: 15 }}
-                rowKey="id"
-            /> */}
+        <div id="form" className="w-100">
             <div className="text-left w-100 mb-2">
                 <h3>บันทึกข้อมูล DL</h3>
             </div>
             <CustomTable
+
                 rowKey="id"
                 rowClassName="row-table-detail"
                 pageSize={20}

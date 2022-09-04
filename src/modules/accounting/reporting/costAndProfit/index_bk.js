@@ -70,7 +70,7 @@ const xlsxHeader = [
     key: "profit_avg",
   },
 ];
-const ReportSOInventory = () => {
+const ReportSOCostAndProfit = () => {
   const { filter } = useSelector(
     (state) => state?.inventory?.report?.issue || {}
   );
@@ -93,7 +93,7 @@ const ReportSOInventory = () => {
       title: "ACCOUNTING", // project name
       home: "/accounting", // path
       show: true, // bool show sub - tool bar
-      breadcrumb: ["Accounting", "Reporting", "SO Inventory"], // [1,2,3] = 1 / 2 / 3
+      breadcrumb: ["Accounting", "Reporting", "SO - Cost and profit"], // [1,2,3] = 1 / 2 / 3
       search: false, // bool show search
       searchValue: null, //search string
       buttonAction: [], // button
@@ -553,4 +553,4 @@ const columns2 = [
     width: "10%",
   },
 ];
-export default ReportSOInventory;
+export default ReportSOCostAndProfit;

@@ -166,8 +166,8 @@ const Stock = (props) => {
         stockDataSource = resp.data;
         let filterData = keyword
           ? resp?.data?.filter(
-              (item) => item?.item_no_name.indexOf(keyword) >= 0
-            )
+            (item) => item?.item_no_name.indexOf(keyword) >= 0
+          )
           : resp.data;
         setState(filterData);
       }
@@ -190,8 +190,8 @@ const Stock = (props) => {
       const filterKeyword = (keyword = null) => {
         filterData = keyword
           ? stockDataSource?.filter(
-              (item) => item?.item_no_name.indexOf(keyword) >= 0
-            )
+            (item) => item?.item_no_name.indexOf(keyword) >= 0
+          )
           : stockDataSource;
       };
       const filterType = (type_id = 0) => {
@@ -264,31 +264,31 @@ const Stock = (props) => {
       user_name,
       item_id: row.item_id,
       startDate: "01-01-2021",
-      endDate: "31-12-2022",
+      endDate: "31-12-2050",
     });
     movement_historyhandle(expanded, row, {
       user_name,
       item_id: row.item_id,
       startDate: "01-01-2021",
-      endDate: "31-12-2022",
+      endDate: "31-12-2050",
     });
     reserved_historyhandle(expanded, row, {
       user_name,
       item_id: row.item_id,
       startDate: "01-01-2021",
-      endDate: "31-12-2022",
+      endDate: "31-12-2050",
     });
     po_historyhandle(expanded, row, {
       user_name,
       item_id: row.item_id,
       startDate: "01-01-2021",
-      endDate: "31-12-2022",
+      endDate: "31-12-2050",
     });
     pr_historyhandle(expanded, row, {
       user_name,
       item_id: row.item_id,
       startDate: "01-01-2021",
-      endDate: "31-12-2022",
+      endDate: "31-12-2050",
     });
   };
   return (
