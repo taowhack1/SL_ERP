@@ -5,7 +5,7 @@ import numeral from 'numeral';
 
 const SODetailTable = ({ data1, setSelectedRow }) => {
 
-    console.log("@@@@@@")
+    console.log("@@@@@@", data1.data)
     return (
         <Table
             bordered
@@ -24,6 +24,7 @@ const SODetailTable = ({ data1, setSelectedRow }) => {
                         so_id: row?.so_id,
                         item_id: row?.item_id,
                         customer_id: row?.customer_id,
+                        dl_cost_id: row?.dl_cost_id || null,
                         action: row?.dl_cost_id ? 'edit' : 'new'
                     })
 

@@ -97,6 +97,7 @@ const DLInput = () => {
         so_id: null,
         item_id: null,
         customer_id: null,
+        dl_cost_id: null,
         action: 'new',
         data: [],
     });
@@ -120,6 +121,9 @@ const DLInput = () => {
             save: () => {
                 console.log("save")
             }, //path if not path use "function" and use onSave instead.
+            onSave: () => {
+
+            },
             onConfirm: () => console.log("Confirm"),
             onApprove: () => console.log("Approve"),
             onReject: () => console.log("Reject"),
