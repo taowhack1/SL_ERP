@@ -28,9 +28,9 @@ const DLForm = ({ dl, setDLData }) => {
     const addRow = () => {
         setState(prev => ({ ...prev, data: [...prev.data, { ...defaultNewRow, dl_cost_detail_id: Math.ceil((Math.random(10) * 1000) / Math.random(10)) }] }))
     }
-    const deleteRow = (index) => {
-        console.log("deleteRow", index)
-        setState(prev => ({ ...prev, data: prev.data.splice(index, 1) }))
+    const deleteRow = (index2) => {
+        console.log("deleteRow", index2)
+        setState(prev => ({ ...prev, data: prev.data.filter((obj, index) => index !== index2) }))
     }
 
 

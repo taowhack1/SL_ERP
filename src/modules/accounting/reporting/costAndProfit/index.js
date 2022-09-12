@@ -644,7 +644,7 @@ const columns2 = [
     ellipsis: false,
     align: "center",
     render: (val) => <div className="w-100 text-center">
-      {numeral(val || 0).format("#,###.##")}
+      {val || "-"}
     </div>,
     sorter: (a, b) => a.id - b.id,
     title: <b>UoM</b>,
