@@ -139,7 +139,9 @@ const ReportSOCostAndProfit = () => {
           if (resp?.data?.length === 0) {
             alert('ไม่พบข้อมูล')
           }
-          setModal(prev => ({ ...prev, isModalOpen: true, data1: [], data2: [] }))
+          const data1 = resp?.data?.filter(obj => [1, 3].includes(obj.type_id))
+          const data2 = resp?.data?.filter(obj => [2].includes(obj?.type_id))
+          setModal(prev => ({ ...prev, isModalOpen: true, data1: data1 || [], data2: data2 || [] }))
         })
         .catch((error) => {
           console.log("error", error);
@@ -218,6 +220,7 @@ const ReportSOCostAndProfit = () => {
   }
   console.log("data1", data1)
   console.log("searchData", searchData)
+  console.log("modal", modal)
   return (
     <>
       <MainLayout {...layoutConfig}>
@@ -322,34 +325,56 @@ const ReportSOCostAndProfit = () => {
           </Tabs>
           {/* </Col>
           </Row> */}
+          <Modal title="View" open={modal.isModalOpen} onCancel={() => setModal(prev => ({ ...prev, isModalOpen: false }))}>
+            <Row>
+              <Col span={12}>
+                <Table
+                  bordered
+                  rowClassName={"row-table_detail"}
+                  size={"small"}
+                  loading={false}
+                  columns={modalColumns}
+                  dataSource={modal?.data1 || []}
+                  // pagination={{ pageSize: 15 }}
+                  rowKey="id"
+                  onRow={(row) => ({
+                    onClick: (e) => {
+                      // console.log("row", row);
+                      $(e.target)
+                        .closest("tbody")
+                        .find("tr")
+                        .removeClass("selected-row");
+                      $(e.target).closest("tr").addClass("selected-row");
+                    },
+                  })}
+                />
+              </Col>
+              <Col span={12}>
+                <Table
+                  bordered
+                  rowClassName={"row-table_detail"}
+                  size={"small"}
+                  loading={false}
+                  columns={modalColumns}
+                  dataSource={modal?.data2 || []}
+                  // pagination={{ pageSize: 15 }}
+                  rowKey="id"
+                  onRow={(row) => ({
+                    onClick: (e) => {
+                      // console.log("row", row);
+                      $(e.target)
+                        .closest("tbody")
+                        .find("tr")
+                        .removeClass("selected-row");
+                      $(e.target).closest("tr").addClass("selected-row");
+                    },
+                  })}
+                />
+              </Col>
+            </Row>
+          </Modal>
         </div>
 
-        <Modal title="View" open={modal?.isModalOpen} onCancel={() => setModal(prev => ({ ...prev, isModalOpen: false }))}>
-          <Row>
-            <Col span={12}>
-              <Table
-                bordered
-                rowClassName={"row-table_detail"}
-                size={"small"}
-                loading={false}
-                columns={modalColumns}
-                dataSource={modal?.data1 || []}
-                // pagination={{ pageSize: 15 }}
-                rowKey="id"
-                onRow={(row) => ({
-                  onClick: (e) => {
-                    // console.log("row", row);
-                    $(e.target)
-                      .closest("tbody")
-                      .find("tr")
-                      .removeClass("selected-row");
-                    $(e.target).closest("tr").addClass("selected-row");
-                  },
-                })}
-              />
-            </Col>
-          </Row>
-        </Modal>
       </MainLayout>
     </>
   );
