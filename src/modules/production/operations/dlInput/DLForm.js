@@ -59,7 +59,7 @@ const DLForm = ({ dl, setDLData }) => {
                 )
                 .then((resp) => {
                     console.log("getDLData", resp);
-                    if (resp[0]?.success) {
+                    if (resp?.data[0]?.success) {
                         Swal.fire({
                             title: "บันทึกข้อมูลเรียบร้อยแล้ว.",
                             icon: "success",
@@ -100,7 +100,7 @@ const DLForm = ({ dl, setDLData }) => {
                             icon: "success",
                             confirmButtonText: `ตกลง`,
                         }).then((result) => {
-                            setDLData('change_so_detail', resp[0])
+                            setDLData('set_dl_data', resp?.data[0])
                         });
                     } else {
                         Swal.fire({
@@ -165,7 +165,7 @@ const DLForm = ({ dl, setDLData }) => {
                     <h3>บันทึกข้อมูล DL</h3>
                 </div>
                 <div>
-                    <Button type="primary" onClick={() => onSave()} disabled={dl?.so_detail_id ? false : true}>Save</Button>
+                    <Button type="primary" onClick={() => onSave()} disabled={dl?.so_detail_id ? false : true}>บันทึกข้อมูล</Button>
                 </div>
             </div>
             <CustomTable

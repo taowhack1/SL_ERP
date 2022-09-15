@@ -3,7 +3,7 @@ import { DownloadOutlined, SearchOutlined } from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
 import { useSelector } from "react-redux";
 import MainLayout from "../../../../components/MainLayout";
-import { Button, Col, Input, Row, Table, Tabs, DatePicker, Alert } from "antd";
+import { Button, Col, Input, Row, Table, Tabs, DatePicker, Alert, Modal } from "antd";
 import Search from "antd/lib/input/Search";
 import numeral from "numeral";
 import axios from "axios";
@@ -89,6 +89,12 @@ const ReportSOCostAndProfit = () => {
     data: [],
   });
 
+  const [modal, setModal] = useState({
+    isModalOpen: false,
+    data1: [],
+    data2: []
+  })
+
   const layoutConfig = useMemo(
     () => ({
       projectId: 12, // project ID from DB
@@ -118,6 +124,31 @@ const ReportSOCostAndProfit = () => {
     [filter]
   );
 
+
+  const viewSource = async (record) => {
+    const { so_detail_id } = record || {}
+    console.log('view', record)
+    if (so_detail_id) {
+      // /reports/account/so_mrp_profit/rmpk/7346
+      await axios
+        .get(
+          `/reports/account/so_mrp_profit/rmpk/${so_detail_id}`
+        )
+        .then((resp) => {
+          console.log("resp", resp);
+          if (resp?.data?.length === 0) {
+            alert('ไม่พบข้อมูล')
+          }
+          setModal(prev => ({ ...prev, isModalOpen: true, data1: [], data2: [] }))
+        })
+        .catch((error) => {
+          console.log("error", error);
+          alert('พบข้อผิดพลาด')
+        });
+    }
+
+  }
+
   const expandedRowRender2 = (row) => {
     return (
       <div
@@ -133,7 +164,7 @@ const ReportSOCostAndProfit = () => {
           rowClassName={"row-table_detail"}
           size={"small"}
           loading={false}
-          columns={columns2}
+          columns={columns2(viewSource)}
           dataSource={row?.so_detail || []}
           // pagination={{ pageSize: 15 }}
           rowKey="so_detail_id"
@@ -292,6 +323,33 @@ const ReportSOCostAndProfit = () => {
           {/* </Col>
           </Row> */}
         </div>
+
+        <Modal title="View" open={modal?.isModalOpen} onCancel={() => setModal(prev => ({ ...prev, isModalOpen: false }))}>
+          <Row>
+            <Col span={12}>
+              <Table
+                bordered
+                rowClassName={"row-table_detail"}
+                size={"small"}
+                loading={false}
+                columns={modalColumns}
+                dataSource={modal?.data1 || []}
+                // pagination={{ pageSize: 15 }}
+                rowKey="id"
+                onRow={(row) => ({
+                  onClick: (e) => {
+                    // console.log("row", row);
+                    $(e.target)
+                      .closest("tbody")
+                      .find("tr")
+                      .removeClass("selected-row");
+                    $(e.target).closest("tr").addClass("selected-row");
+                  },
+                })}
+              />
+            </Col>
+          </Row>
+        </Modal>
       </MainLayout>
     </>
   );
@@ -506,7 +564,7 @@ const columns = [
       {numeral(val || 0).format("#,###.##")}
     </div>,
     sorter: (a, b) => a.id - b.id,
-    title: <b>Vat</b>,
+    title: <b>Tax</b>,
     width: 150,
   },
   {
@@ -577,7 +635,7 @@ const columns = [
 ];
 
 
-const columns2 = [
+const columns2 = (viewSource) => [
   {
     className: "tb-col-sm",
     dataIndex: "index",
@@ -684,7 +742,7 @@ const columns2 = [
         key: "rm_cost",
         ellipsis: false,
         align: "center",
-        render: (val) => <div className="w-100 text-right">
+        render: (val, record) => <div className="w-100 text-right" onClick={() => viewSource(record)}>
           {numeral(val || 0).format("#,###.##")}
         </div>,
         sorter: (a, b) => a.id - b.id,
@@ -718,7 +776,7 @@ const columns2 = [
         key: "pk_cost",
         ellipsis: false,
         align: "center",
-        render: (val) => <div className="w-100 text-right">
+        render: (val, record) => <div className="w-100 text-right" onClick={() => viewSource(record)}>
           {numeral(val || 0).format("#,###.##")}
         </div>,
         sorter: (a, b) => a.id - b.id,
@@ -810,7 +868,7 @@ const columns2 = [
       {numeral(val || 0).format("#,###.##")}
     </div>,
     sorter: (a, b) => a.id - b.id,
-    title: <b>Vat</b>,
+    title: <b>Tax</b>,
     width: 150,
   },
   {
@@ -879,4 +937,107 @@ const columns2 = [
     width: 200,
   },
 ];
+
+
+const modalColumns = [
+  {
+    className: "tb-col-sm",
+    dataIndex: "id",
+    key: "id",
+    ellipsis: false,
+    render: (val, record, index) => <div className="w-100 text-center">
+      {val}
+    </div>,
+    title: (
+      <div className="text-center">
+        <b>No.</b>
+      </div>
+    ),
+    width: 50,
+  },
+  {
+    className: "tb-col-sm",
+    dataIndex: "item_no",
+    key: "item_no",
+    ellipsis: false,
+    render: (val, record, index) => <div className="w-100 text-center">
+      {val}
+    </div>,
+    title: (
+      <div className="text-center">
+        <b>Code</b>
+      </div>
+    ),
+    width: 100,
+  },
+  {
+    className: "tb-col-sm",
+    dataIndex: "item_name",
+    key: "item_name",
+    ellipsis: false,
+    render: (val, record, index) => <div className="w-100 text-left">
+      {val}
+    </div>,
+    title: (
+      <div className="text-center">
+        <b>Name</b>
+      </div>
+    ),
+    width: 100,
+  },
+  {
+    className: "tb-col-sm",
+    dataIndex: "sum_mrp_detail_qty_issue",
+    key: "sum_mrp_detail_qty_issue",
+    ellipsis: false,
+    align: "center",
+    render: (val) => <div className="w-100 text-right">
+      {numeral(val || 0).format("#,###.####")}
+    </div>,
+    sorter: (a, b) => a.id - b.id,
+    title: <b>Issue Qty.</b>,
+    width: 100,
+  },
+  {
+    className: "tb-col-sm",
+    dataIndex: "uom_no",
+    key: "uom_no",
+    ellipsis: false,
+    render: (val, record, index) => <div className="w-100 text-center">
+      {val}
+    </div>,
+    title: (
+      <div className="text-center">
+        <b>UoM</b>
+      </div>
+    ),
+    width: 50,
+  },
+  {
+    className: "tb-col-sm",
+    dataIndex: "tg_item_cost_avg",
+    key: "tg_item_cost_avg",
+    ellipsis: false,
+    align: "center",
+    render: (val) => <div className="w-100 text-right">
+      {numeral(val || 0).format("#,###.####")}
+    </div>,
+    sorter: (a, b) => a.id - b.id,
+    title: <b>Price</b>,
+    width: 100,
+  },
+  {
+    className: "tb-col-sm",
+    dataIndex: "item_cost_sum",
+    key: "item_cost_sum",
+    ellipsis: false,
+    align: "center",
+    render: (val) => <div className="w-100 text-right">
+      {numeral(val || 0).format("#,###.####")}
+    </div>,
+    sorter: (a, b) => a.id - b.id,
+    title: <b>Total Cost</b>,
+    width: 100,
+  },
+]
 export default ReportSOCostAndProfit;

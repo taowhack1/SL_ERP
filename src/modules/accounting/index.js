@@ -6,6 +6,7 @@ import AccountingReporting from "./reporting";
 
 const AccountingRoutes = () => {
   const { path } = useRouteMatch();
+  console.log("path", path)
   return (
     <Switch>
       <Route path={`${path}/operations`}>

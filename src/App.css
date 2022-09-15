@@ -1460,3 +1460,7 @@ tr.drop-over-upward td {
   background: #141414;
   border-color: #141414;
 } */
+
+.input-number {
+  background-color: #c9e4fa;
+}
