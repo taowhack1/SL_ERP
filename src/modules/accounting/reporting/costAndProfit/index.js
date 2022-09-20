@@ -29,48 +29,68 @@ const xlsxHeader = [
     key: "customer_name",
   },
   {
-    label: "จำนวนชั่วโมง",
-    key: "sum_tg_time_sheet_time",
+    label: "Qty.",
+    key: "sum_so_detail_qty",
   },
   {
-    label: "RM",
-    key: "rm_cost_avg",
+    label: "ชั่วโมงการทำงาน",
+    key: "sum_tg_dl_cost_time",
   },
   {
-    label: "PK",
-    key: "pk_cost_avg",
+    label: "DM RM",
+    key: "sum_rm_cost",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "sum_rm_cost_p",
+  },
+  {
+    label: "DM PK",
+    key: "sum_pk_cost",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "sum_pk_cost_p",
   },
   {
     label: "DL",
-    key: "dl_cost_avg",
+    key: "sum_tg_dl_cost_wage",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "sum_tg_dl_cost_wage_p",
   },
   {
     label: "OH",
-    key: "oh_cost_avg",
+    key: "sum_tg_oh_cost_wage",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "sum_tg_oh_cost_wage_p",
+  },
+  {
+    label: "Tax",
+    key: "sum_so_detail_ac_tax_amount",
   },
   {
     label: "รวมต้นทุนการผลิต",
-    key: "cost_avg",
-  },
-  {
-    label: "ยอด WIP ยกมา",
-    key: "wip_cost_avg",
+    key: "sum_total_cost",
   },
   {
     label: "Invoice No.",
     key: "invoice_no",
   },
   {
-    label: "ราคาขายไม่รวม Vat",
-    key: "so_detail_total_price",
+    label: "Qty.",
+    key: "invoice_qty",
   },
   {
-    label: "WIP",
-    key: "wip_cost_avg",
+    label: "ราคาขาย(ไม่รวม Vat)",
+    key: "sum_so_detail_total_price",
   },
   {
-    label: "กำไร/ขาดทุน",
-    key: "profit_avg",
+    label: "กำไร / ขาดทุน",
+    key: "sum_total_profit",
   },
 ];
 const ReportSOCostAndProfit = () => {
@@ -125,7 +145,7 @@ const ReportSOCostAndProfit = () => {
   );
 
 
-  const viewSource = async (record) => {
+  const viewSource = async (record, type = 1) => {
     const { so_detail_id } = record || {}
     console.log('view', record)
     if (so_detail_id) {
@@ -141,7 +161,7 @@ const ReportSOCostAndProfit = () => {
           }
           const data1 = resp?.data?.filter(obj => [1, 3].includes(obj.type_id))
           const data2 = resp?.data?.filter(obj => [2].includes(obj?.type_id))
-          setModal(prev => ({ ...prev, isModalOpen: true, data1: data1 || [], data2: data2 || [] }))
+          setModal(prev => ({ ...prev, isModalOpen: true, data1: (type === 1 ? data1 : data2) || [], data2: data2 || [] }))
         })
         .catch((error) => {
           console.log("error", error);
@@ -325,9 +345,9 @@ const ReportSOCostAndProfit = () => {
           </Tabs>
           {/* </Col>
           </Row> */}
-          <Modal title="View" open={modal.isModalOpen} onCancel={() => setModal(prev => ({ ...prev, isModalOpen: false }))}>
-            <Row>
-              <Col span={12}>
+          <Modal title="View" visible={modal.isModalOpen} onCancel={() => setModal(prev => ({ ...prev, isModalOpen: false }))} footer={null} width="80%">
+            <Row glutter={18}>
+              <Col span={24}>
                 <Table
                   bordered
                   rowClassName={"row-table_detail"}
@@ -348,9 +368,7 @@ const ReportSOCostAndProfit = () => {
                     },
                   })}
                 />
-              </Col>
-              <Col span={12}>
-                <Table
+                {/* <Table
                   bordered
                   rowClassName={"row-table_detail"}
                   size={"small"}
@@ -369,8 +387,12 @@ const ReportSOCostAndProfit = () => {
                       $(e.target).closest("tr").addClass("selected-row");
                     },
                   })}
-                />
+                /> */}
               </Col>
+              {/* <Col span={2}></Col>
+              <Col span={11}> */}
+
+              {/* </Col> */}
             </Row>
           </Modal>
         </div>
@@ -767,7 +789,7 @@ const columns2 = (viewSource) => [
         key: "rm_cost",
         ellipsis: false,
         align: "center",
-        render: (val, record) => <div className="w-100 text-right" onClick={() => viewSource(record)}>
+        render: (val, record) => <div className="w-100 text-right" onClick={() => viewSource(record, 1)}>
           {numeral(val || 0).format("#,###.##")}
         </div>,
         sorter: (a, b) => a.id - b.id,
@@ -801,7 +823,7 @@ const columns2 = (viewSource) => [
         key: "pk_cost",
         ellipsis: false,
         align: "center",
-        render: (val, record) => <div className="w-100 text-right" onClick={() => viewSource(record)}>
+        render: (val, record) => <div className="w-100 text-right" onClick={() => viewSource(record, 2)}>
           {numeral(val || 0).format("#,###.##")}
         </div>,
         sorter: (a, b) => a.id - b.id,
