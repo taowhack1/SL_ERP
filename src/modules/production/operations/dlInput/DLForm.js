@@ -261,7 +261,7 @@ const columns2 = (setVal, deleteRow) => [
                 className='full-width'
                 format={"HH:mm"}
                 showNow={false}
-                minuteStep={15}
+                minuteStep={5}
                 name={"dl_cost_detail_time"}
                 style={{ width: "150px" }}
                 placeholder='00:00'

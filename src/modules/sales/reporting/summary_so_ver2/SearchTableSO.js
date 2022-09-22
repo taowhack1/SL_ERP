@@ -132,6 +132,7 @@ const SearchTableSO = (props = []) => {
     { label: "Sales OEM 1", value: "OEM 1" },
     { label: "Sales OEM 2", value: "OEM 2" },
     { label: "Sales OEM 3", value: "OEM 3" },
+    { label: "Sales OEM 4", value: "OEM 4" },
   ];
   return (
     <>

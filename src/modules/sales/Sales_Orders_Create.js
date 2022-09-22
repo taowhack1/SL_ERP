@@ -125,20 +125,20 @@ const SaleOrderCreate = (props) => {
       type: "SET_HEAD",
       payload: data.data_head
         ? {
-            ...data.data_head,
-            commit: 1,
-            user_name: auth.user_name,
-            branch_id: auth.branch_id,
-            branch_name: auth.branch_name,
-          }
+          ...data.data_head,
+          commit: 1,
+          user_name: auth.user_name,
+          branch_id: auth.branch_id,
+          branch_name: auth.branch_name,
+        }
         : {
-            ...so_fields,
-            commit: 1,
-            user_name: auth.user_name,
-            branch_id: auth.branch_id,
-            branch_name: auth.branch_name,
-            so_create_date: moment().format("DD/MM/YYYY"),
-          },
+          ...so_fields,
+          commit: 1,
+          user_name: auth.user_name,
+          branch_id: auth.branch_id,
+          branch_name: auth.branch_name,
+          so_create_date: moment().format("DD/MM/YYYY"),
+        },
     });
     detailDispatch({
       type: "SET_DETAIL",
@@ -184,6 +184,7 @@ const SaleOrderCreate = (props) => {
     { label: "Sales OEM 1", value: "OEM 1" },
     { label: "Sales OEM 2", value: "OEM 2" },
     { label: "Sales OEM 3", value: "OEM 3" },
+    { label: "Sales OEM 4", value: "OEM 4" },
   ];
   const config = {
     projectId: current_project && current_project.project_id,
@@ -223,22 +224,22 @@ const SaleOrderCreate = (props) => {
         console.log("pass");
         data_head.so_id
           ? dispatch(
-              update_so(
-                data_head.so_id,
-                auth.user_name,
-                data_head,
-                data_detail,
-                redirect_to_view
-              )
+            update_so(
+              data_head.so_id,
+              auth.user_name,
+              data_head,
+              data_detail,
+              redirect_to_view
             )
+          )
           : dispatch(
-              create_so(
-                auth.user_name,
-                data_head,
-                data_detail,
-                redirect_to_view
-              )
-            );
+            create_so(
+              auth.user_name,
+              data_head,
+              data_detail,
+              redirect_to_view
+            )
+          );
       } else {
         message.warning({
           content: "Please fill your form completely.",
@@ -423,17 +424,17 @@ const SaleOrderCreate = (props) => {
               onChange={(data, option) => {
                 data !== undefined
                   ? headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: {
-                        so_sales_person: data,
-                      },
-                    })
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      so_sales_person: data,
+                    },
+                  })
                   : headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: {
-                        so_sales_person: null,
-                      },
-                    });
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      so_sales_person: null,
+                    },
+                  });
               }}
             />
           </Col>
@@ -458,35 +459,35 @@ const SaleOrderCreate = (props) => {
               onChange={(data, option) => {
                 data !== undefined
                   ? headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: {
-                        currency_id: option.data.currency_id,
-                        currency_no: option.data.currency_no,
-                        customer_id: option.data.customer_id,
-                        customer_no_name: option.data.customer_no_name,
-                        payment_term_id: option.data.payment_term_id,
-                        payment_term_no_name: option.data.payment_term_no_name,
-                        vat_id: option.data.vat_id,
-                        vat_rate: option.data.vat_rate,
-                        vat_name: option.data.vat_name,
-                        vat_include: option.data.vat_include,
-                      },
-                    })
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      currency_id: option.data.currency_id,
+                      currency_no: option.data.currency_no,
+                      customer_id: option.data.customer_id,
+                      customer_no_name: option.data.customer_no_name,
+                      payment_term_id: option.data.payment_term_id,
+                      payment_term_no_name: option.data.payment_term_no_name,
+                      vat_id: option.data.vat_id,
+                      vat_rate: option.data.vat_rate,
+                      vat_name: option.data.vat_name,
+                      vat_include: option.data.vat_include,
+                    },
+                  })
                   : headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: {
-                        currency_id: 1,
-                        currency_no: "THB",
-                        customer_id: null,
-                        customer_no_name: null,
-                        payment_term_id: null,
-                        payment_term_no_name: null,
-                        vat_id: 1,
-                        vat_rate: 0.07,
-                        vat_name: "VAT 7%",
-                        vat_include: false,
-                      },
-                    });
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      currency_id: 1,
+                      currency_no: "THB",
+                      customer_id: null,
+                      customer_no_name: null,
+                      payment_term_id: null,
+                      payment_term_no_name: null,
+                      vat_id: 1,
+                      vat_rate: 0.07,
+                      vat_name: "VAT 7%",
+                      vat_include: false,
+                    },
+                  });
               }}
             />
           </Col>
@@ -509,17 +510,17 @@ const SaleOrderCreate = (props) => {
               onChange={(val) =>
                 val
                   ? headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: {
-                        so_sales_oem: val,
-                      },
-                    })
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      so_sales_oem: val,
+                    },
+                  })
                   : headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: {
-                        so_sales_oem: null,
-                      },
-                    })
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      so_sales_oem: null,
+                    },
+                  })
               }
               value={data_head.so_sales_oem}
             />
@@ -545,19 +546,19 @@ const SaleOrderCreate = (props) => {
               onChange={(data, option) => {
                 data !== undefined
                   ? headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: {
-                        payment_term_id: data,
-                        payment_term_no_name: option.title,
-                      },
-                    })
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      payment_term_id: data,
+                      payment_term_no_name: option.title,
+                    },
+                  })
                   : headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: {
-                        payment_term_id: null,
-                        payment_term_no_name: null,
-                      },
-                    });
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      payment_term_id: null,
+                      payment_term_no_name: null,
+                    },
+                  });
               }}
             />
           </Col>
@@ -581,21 +582,21 @@ const SaleOrderCreate = (props) => {
               onChange={(val) =>
                 val === 1
                   ? headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: {
-                        so_type_id: val,
-                        so_production_type_id: 1,
-                        so_production_ref_id: null,
-                      },
-                    })
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      so_type_id: val,
+                      so_production_type_id: 1,
+                      so_production_ref_id: null,
+                    },
+                  })
                   : headDispatch({
-                      type: "CHANGE_HEAD_VALUE",
-                      payload: {
-                        so_type_id: val,
-                        so_production_ref_id: null,
-                        so_production_type_id: null,
-                      },
-                    })
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      so_type_id: val,
+                      so_production_ref_id: null,
+                      so_production_type_id: null,
+                    },
+                  })
               }
               value={data_head.so_type_id}
             />
