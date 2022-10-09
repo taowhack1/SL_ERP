@@ -10,8 +10,10 @@ import {
 import { header_config } from "../../include/js/main_config";
 import { GET_ALL_MRP, GET_MRP_SO_REF, GET_MRP_BY_ID } from "../types";
 const apiMRPTest = `/production/mrp/calculate/sample`;
-const getMRPHead = (id, user_name) =>
-  axios.get(`${api_mrp}/${id}&${user_name}`, header_config);
+const getMRPHead = (id, user_name) => {
+  console.log(`${api_mrp}/${id}&${user_name}`)
+  return axios.get(`${api_mrp}/${id}&${user_name}`, header_config);
+}
 
 export const getSOReference = () => (dispatch) => {
   axios
@@ -102,52 +104,105 @@ export const updateMRP = async (mrp_id, data, user_name, redirect) => {
     console.log(error);
   }
 };
+export const updateCancelBulk = async (mrp_id) => {
+  const api = `/option/mrp/rm_delete`
+  try {
+    if (!mrp_id) {
+      console.log("mrp_id", mrp_id)
+      message.error({
+        content: "ไม่พบ MRP No. กรุณาติดต่อ Admin.",
+        duration: 2,
+        key: "validate",
+      });
+    }
+    const data = [
+      {
+        mrp_id,
+        commit: 1
+      }
+    ]
+    return axios
+      .put(`${api}`, data, header_config)
+      .then((res) => {
+        console.log("resp cancel", res)
+        if (res.data[0]?.success) {
+          message.success({
+            content: "ยกเลิกผลิต Bulk สำเร็จแล้ว",
+            duration: 2,
+            key: "validate",
+          });
+        } else {
+          message.error({
+            content: "ยกเลิกผลิต Bulk ล้มเหลว กรุณาติดต่อ Admin.",
+            duration: 2,
+            key: "validate",
+          });
+        }
+
+      })
+      .catch((error) => {
+        console.log(error);
+        message.error({
+          content: "ยกเลิกผลิต Bulk ล้มเหลว กรุณาติดต่อ Admin.",
+          duration: 2,
+          key: "validate",
+        });
+      });
+  } catch (error) {
+    console.log(error);
+    message.error({
+      content: "ยกเลิกผลิต Bulk ล้มเหลว กรุณาติดต่อ Admin.",
+      duration: 2,
+      key: "validate",
+    });
+  }
+};
 
 export const mrp_actions = (data, mrp_id) => (dispatch) => {
   data.commit = 1;
 
   data.process_id
     ? axios
-        .put(`${api_approve}/${data.process_id}`, data, header_config)
-        .then((res) => {
-          let msg = "";
-          switch (data.process_status_id) {
-            case 2:
-              // Confirm
-              msg = "Confirm.";
-              break;
-            case 3:
-              msg = "Cancel.";
-              break;
-            // Cancel
-            case 4:
-              msg = "Complete.";
-              break;
-            // Complete
-            case 5:
-              msg = "Approve.";
-              break;
-            // Approve
-            case 6:
-              msg = "Reject.";
-              break;
-            // Reject
-            default:
-              break;
-          }
-          message.success({
-            content: msg,
-            key: "validate",
-            duration: 2,
-          });
-          console.log(res);
-          // dispatch(getMRPByID(mrp_id, data.user_name));
-        })
+      .put(`${api_approve}/${data.process_id}`, data, header_config)
+      .then((res) => {
+        let msg = "";
+        switch (data.process_status_id) {
+          case 2:
+            // Confirm
+            msg = "Confirm.";
+            break;
+          case 3:
+            msg = "Cancel.";
+            break;
+          // Cancel
+          case 4:
+            msg = "Complete.";
+            break;
+          // Complete
+          case 5:
+            msg = "Approve.";
+            break;
+          // Approve
+          case 6:
+            msg = "Reject.";
+            break;
+          // Reject
+          default:
+            break;
+        }
+        message.success({
+          content: msg,
+          key: "validate",
+          duration: 2,
+        });
+        console.log(res);
+        // dispatch(getMRPByID(mrp_id, data.user_name));
+      })
     : message.error({
-        content: "Somethings went wrong. please contact programmer.",
-        key: "validate",
-        duration: 4,
-      });
+      content: "Somethings went wrong. please contact programmer.",
+      key: "validate",
+      duration: 4,
+    });
 };
 
 const getMRPTest = ({
@@ -189,4 +244,53 @@ const getMRPTest = ({
   }
 };
 
-export { getMRPTest };
+const getMRPRefForIssue = async () => {
+  const api = `/ref/mrp/t/issue/`
+  let data = {
+    success: false,
+    data: []
+  }
+  console.log("getMRPRefForIssue")
+  try {
+    await axios.get(api, header_config).then(resp => {
+      console.log("getMRPRefForIssue", resp)
+      if (resp?.status == 200) {
+        data = {
+          success: true,
+          data: resp?.data || []
+        }
+      }
+    })
+  } catch (error) {
+    console.log('error', error)
+  }
+
+  return data
+}
+const getMRPRefForReceive = async () => {
+  const api = `/ref/mrp/t/receive/`
+  let data = {
+    success: false,
+    data: []
+  }
+  console.log("getMRPRefForReceive")
+  try {
+    await axios.get(api, header_config).then(resp => {
+      console.log("getMRPRefForReceive", resp)
+      if (resp?.status == 200) {
+        data = {
+          success: true,
+          data: resp?.data || []
+        }
+      }
+    })
+  } catch (error) {
+    console.log('error', error)
+  }
+
+  return data
+}
+
+export {
+  getMRPTest, getMRPRefForIssue, getMRPRefForReceive
+};

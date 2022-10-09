@@ -33,12 +33,15 @@ const apiProduction_for_fg = `/sales/so/production_for_fg`;
 const apiSo_production_type = `/list/so_production_type`;
 const apiCloseSO = `/sales/so/status`;
 const UPDATE_FILTER = "UPDATE_FILTER";
+const apiSORefList = `/ref/so/t/so`
 
 export const get_quotation_list = (user_name) => (dispatch) => {
   axios.get(`${api_quo_list}/all/${user_name}`, header_config).then((res) => {
     dispatch({ type: SET_QN_LIST, payload: res.data[0] });
   });
 };
+
+
 const getQNList = (user_name) => {
   try {
     if (!user_name)
@@ -585,6 +588,45 @@ const getCustomerAddress = (customer_id) => {
 };
 const filterQn = (data) => (dispatch) =>
   dispatch({ type: SEARCH_QN, payload: data });
+
+const getMasterSORefList = () => {
+  try {
+    return axios.get(apiSORefList, header_config).then(resp => {
+      console.log("getMasterSORefList", resp)
+      if (resp.status === 200) {
+        return { success: true, data: resp?.data || [] }
+      }
+    }).catch(error => {
+      console.log("error", error)
+      return { success: false, data: [] }
+    })
+  } catch (error) {
+    console.log("error", error)
+    return { success: false, data: [] }
+  }
+}
+
+const getMasterSORefDetail = (so_ref_id) => {
+  const api = `/ref/so_detail/t/so_detail/${so_ref_id}`
+  try {
+    if (!so_ref_id) {
+      return { sucess: false, data: [] }
+    }
+    return axios.get(api, header_config).then(resp => {
+      console.log("getMasterSORefDetail", resp)
+      if (resp.status === 200) {
+        return { success: true, data: resp?.data || [] }
+      }
+    }).catch(error => {
+      console.log("error", error)
+      return { success: false, data: [] }
+    })
+  } catch (error) {
+    console.log("error", error)
+    return { success: false, data: [] }
+  }
+}
+
 export {
   getNPRtoQN,
   getSalesType,
@@ -597,4 +639,6 @@ export {
   getCustomerAddress,
   getQNList,
   filterQn,
+  getMasterSORefList,
+  getMasterSORefDetail
 };

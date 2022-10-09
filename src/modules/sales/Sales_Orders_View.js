@@ -89,8 +89,8 @@ const SaleOrderView = (props) => {
     search: false,
     buttonAction: [
       data_head &&
-        (data_head.button_edit || auth.department_id === 1) &&
-        "Edit",
+      (data_head.button_edit || auth.department_id === 1) &&
+      "Edit",
       data_head && data_head.button_confirm && "Confirm",
       data_head && data_head.button_approve && "Approve",
       data_head && data_head.button_reject && "Reject",
@@ -103,31 +103,30 @@ const SaleOrderView = (props) => {
             <PrinterTwoTone className='mr-1' /> Print
           </Text>
         ),
-        link: `${process.env.REACT_APP_REPORT_SERVER}/report_so.aspx?so_no=${
-          data_head && data_head.so_no
-        }`,
+        link: `${process.env.REACT_APP_REPORT_SERVER}/report_so.aspx?so_no=${data_head && data_head.so_no
+          }`,
       },
       data_head &&
-        data_head.button_recall && {
-          name: (
-            <Text>
-              <EditTwoTone className='mr-1' /> ขอแก้ไขข้อมูล
-            </Text>
-          ),
-          link: `#`,
-          callBack: () => {
-            const app_detail = {
-              process_status_id: 7,
-              user_name: auth.user_name,
-              process_id: data_head.process_id,
-              process_member_remark: `มีการร้องขอแก้ไขข้อมูลเพิ่มเติม จาก ${auth.employee_no_name_eng}`,
-            };
-            keepLog.keep_log_action(
-              `Click ขอแก้ไขข้อมูล SO : ${data_head?.so_no}`
-            );
-            dispatch(so_actions(app_detail, data_head.so_id));
-          },
+      data_head.button_recall && {
+        name: (
+          <Text>
+            <EditTwoTone className='mr-1' /> ขอแก้ไขข้อมูล
+          </Text>
+        ),
+        link: `#`,
+        callBack: () => {
+          const app_detail = {
+            process_status_id: 7,
+            user_name: auth.user_name,
+            process_id: data_head.process_id,
+            process_member_remark: `มีการร้องขอแก้ไขข้อมูลเพิ่มเติม จาก ${auth.employee_no_name_eng}`,
+          };
+          keepLog.keep_log_action(
+            `Click ขอแก้ไขข้อมูล SO : ${data_head?.so_no}`
+          );
+          dispatch(so_actions(app_detail, data_head.so_id));
         },
+      },
       // data_head?.tg_trans_status_id === 4 &&
       //   data_head?.tg_trans_close_id !== 3 && {
       //     name: (
@@ -154,15 +153,15 @@ const SaleOrderView = (props) => {
       //     },
       //   },
       data_head &&
-        data_head.button_cancel && {
-          name: (
-            <div className='text-center'>
-              <Text className='error'>Cancel</Text>
-            </div>
-          ),
-          cancel: true,
-          link: ``,
-        },
+      data_head.button_cancel && {
+        name: (
+          <div className='text-center'>
+            <Text className='error'>Cancel</Text>
+          </div>
+        ),
+        cancel: true,
+        link: ``,
+      },
     ],
     step: {
       current: data_head.node_stay - 1,
@@ -375,6 +374,7 @@ const SaleOrderView = (props) => {
           <Col span={8}></Col>
           {/* Description */}
         </Row>
+
         <Row className='col-2 row-margin-vertical'>
           {/*production type */}
 
@@ -389,6 +389,19 @@ const SaleOrderView = (props) => {
             <Text className='ml-3'>{"Close Quotations."}</Text>
           </Col>
           <Col span={2}></Col>
+        </Row>
+        <Row className='col-2 row-margin-vertical'>
+          <Col span={3}>
+            <Text strong>อ้างอิง SO :</Text>
+          </Col>
+          <Col span={8}>
+            <Text className='text-view'>{data_head?.so_no_description_ref || "-"}</Text>
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}></Col>
+
+          <Col span={8}></Col>
+          {/* Description */}
         </Row>
         <Row className='col-2 row-tab-margin-l'>
           <Col span={24}>

@@ -47,9 +47,9 @@ function TopContent(props) {
       props.edit === "modal"
         ? props.openModal("Edit")
         : props.history.push({
-            pathname: props.edit.path,
-            state: props.edit?.state,
-          });
+          pathname: props.edit.path,
+          state: props.edit?.state,
+        });
     }
   };
   const onSave = () => {
@@ -329,7 +329,7 @@ function TopContent(props) {
                         : "";
                     const current =
                       props.step.current === index &&
-                      !props.step.process_complete
+                        !props.step.process_complete
                         ? "current-step"
                         : "";
                     return (

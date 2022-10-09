@@ -6,7 +6,7 @@ import Comments from "../../../components/Comments";
 import { get_log_by_id } from "../../../actions/comment&log";
 import Authorize from "../../system/Authorize";
 import MRPTabPanel from "./MRPTabPanel";
-import { getMRPByID } from "../../../actions/production/mrpActions";
+import { getMRPByID, updateCancelBulk } from "../../../actions/production/mrpActions";
 import MRPHead from "./MRPHead";
 import { sortData } from "../../../include/js/function_main";
 import { MRPContext } from "../../../include/js/context";
@@ -15,6 +15,7 @@ import { updateProcessStatus } from "../../../actions/inventory";
 import MainLayoutLoading from "../../../components/MainLayoutLoading";
 import DetailLoading from "../../../components/DetailLoading";
 import { useHistory, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 const { Text } = Typography;
 
 const MRPView = (props) => {
@@ -78,15 +79,49 @@ const MRPView = (props) => {
       //     history.push("/production/operations/production", state),
       // },
       state &&
-        state?.button_cancel && {
-          name: (
-            <div className="text-center">
-              <Text className="error">Cancel</Text>
-            </div>
-          ),
-          cancel: true,
-          link: ``,
-        },
+      state?.button_delete_rm && {
+        name: (
+          <div className="text-center">
+            <Text className="error">ยกเลิกผลิต Bulk</Text>
+          </div>
+        ),
+        link: '#',
+        callBack: async () => {
+          Swal.fire({
+            title: "ต้องการยกเลิกใช่หรือไม่",
+            text: "",
+            confirmButtonText: "ใช่",
+            cancelButtonText: "ไม่ใช่",
+            showCancelButton: true,
+          }).then(async ({ isConfirmed, value }) => {
+            if (isConfirmed) {
+              setLoading(true)
+              await updateCancelBulk(state?.mrp_id)
+              setTimeout(() => {
+                setLoading(false)
+
+              }, 1500)
+            }
+          });
+
+          // setLoading(true)
+          // await updateCancelBulk(state?.mrp_id)
+          // setTimeout(() => {
+          //   setLoading(false)
+
+          // }, 1500)
+        }
+      },
+      state &&
+      state?.button_cancel && {
+        name: (
+          <div className="text-center">
+            <Text className="error">Cancel</Text>
+          </div>
+        ),
+        cancel: true,
+        link: ``,
+      }
     ],
     edit: {
       data: state,
@@ -174,6 +209,7 @@ const MRPView = (props) => {
     };
   }, [loading, id]);
 
+  console.log("mrp", state)
   return (
     <MRPContext.Provider value={headContextValue}>
       {loading ? (

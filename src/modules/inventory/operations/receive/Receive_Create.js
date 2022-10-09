@@ -40,6 +40,7 @@ import DetailLoading from "../../../../components/DetailLoading";
 import { AppContext, ReceiveContext } from "../../../../include/js/context";
 import { get_all_vendor } from "../../../../actions/purchase/vendorActions";
 import { getProduction_for_fg } from "../../../../actions/sales";
+import { getMRPRefForReceive } from "../../../../actions/production/mrpActions";
 
 const { Text } = Typography;
 
@@ -71,6 +72,12 @@ const Receive_Create = (props) => {
   });
   const [loading, setLoading] = useState(false);
   const dataComments = useSelector((state) => state.log.comment_log);
+
+  const [mrpRefList, setMRPRefList] = useState({
+    loading: false,
+    data: []
+  })
+
   // const currentProject = useSelector((state) => state.auth.currentProject);
 
   const flow =
@@ -86,8 +93,6 @@ const Receive_Create = (props) => {
     placeholder: "Remark",
   };
 
-  const data =
-    props.location && props.location.state ? props.location.state : 0;
   const redirectToView = (id) => {
     return history.push({
       pathname: `${currentMenu.menu_url}/view/` + (id ?? "new"),
@@ -110,28 +115,27 @@ const Receive_Create = (props) => {
     buttonAction:
       action !== "create" && readOnly
         ? [
-            state && state.button_edit && "Edit",
-            state && state.button_confirm && "Confirm",
-            state && state.button_approve && "Approve",
-            state && state.button_reject && "Reject",
-            "Back",
-          ]
+          state && state.button_edit && "Edit",
+          state && state.button_confirm && "Confirm",
+          state && state.button_approve && "Approve",
+          state && state.button_reject && "Reject",
+          "Back",
+        ]
         : ["Save", "Discard"],
     action: readOnly
       ? [
-          readOnly && {
-            name: "Print",
-            link: `${
-              process.env.REACT_APP_REPORT_SERVER
+        readOnly && {
+          name: "Print",
+          link: `${process.env.REACT_APP_REPORT_SERVER
             }/report_receive2.aspx?receive_no=${state && state.receive_no}`,
-          },
-          state &&
-            state.button_cancel && {
-              name: "Cancel",
-              cancel: true,
-              link: ``,
-            },
-        ]
+        },
+        state &&
+        state.button_cancel && {
+          name: "Cancel",
+          cancel: true,
+          link: ``,
+        },
+      ]
       : null,
     step: {
       current: state && state.node_stay - 1,
@@ -149,13 +153,13 @@ const Receive_Create = (props) => {
       if (validate.validate) {
         state.receive_id
           ? dispatch(
-              update_receive(
-                state.receive_id,
-                auth.user_name,
-                { ...state, commit: 1, user_name: auth.user_name },
-                redirectToView
-              )
+            update_receive(
+              state.receive_id,
+              auth.user_name,
+              { ...state, commit: 1, user_name: auth.user_name },
+              redirectToView
             )
+          )
           : dispatch(create_receive(auth.user_name, state, redirectToView));
       } else {
         message.warning({
@@ -188,6 +192,14 @@ const Receive_Create = (props) => {
         setLoading(false);
       });
     getproductionForFgData();
+
+    const getMRPRefList = async () => {
+      const resp = await getMRPRefForReceive()
+      console.log("resp", resp)
+      setMRPRefList(prev => ({ loading: false, data: resp.data }))
+    }
+    getMRPRefList()
+
     id && getData();
     action === "create" && setLoading(false);
   }, []);
@@ -229,8 +241,9 @@ const Receive_Create = (props) => {
       initialStateHead,
       saveForm,
       loading,
+      mrpRefList
     };
-  }, [readOnly, state, initialStateHead, saveForm, loading]);
+  }, [readOnly, state, initialStateHead, saveForm, loading, mrpRefList]);
 
   return (
     <MainLayout {...config}>
