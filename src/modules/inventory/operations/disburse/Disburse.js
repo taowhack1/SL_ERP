@@ -51,10 +51,10 @@ const Disburse = (props) => {
       sortData(
         keyword
           ? listDataDisburse?.data[0].filter(
-              (disburse) =>
-                disburse.disburse_no_description.indexOf(keyword) >= 0 ||
-                disburse.issue_no_description.indexOf(keyword) >= 0
-            )
+            (disburse) =>
+              disburse?.disburse_no_description?.indexOf(keyword) >= 0 ||
+              disburse?.issue_no_description?.indexOf(keyword) >= 0
+          )
           : listDataDisburse?.data[0]
       );
     return sortData(search_data);
