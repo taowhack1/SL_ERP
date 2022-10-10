@@ -79,12 +79,12 @@ const Issue_View = (props) => {
     search: false,
     buttonAction: [
       data_head &&
-        (data_head.button_edit ||
-          (data_head?.mrp_id &&
-            data_head.tg_trans_status_id !== 3 &&
-            ![2, 3].includes(data_head.tg_trans_close_id) &&
-            [1, 10, 20, 21, 22, 23, 25].includes(auth.department_id))) &&
-        "Edit",
+      (data_head.button_edit ||
+        (data_head?.mrp_id &&
+          data_head.tg_trans_status_id !== 3 &&
+          ![2, 3].includes(data_head.tg_trans_close_id) &&
+          [1, 10, 20, 21, 22, 23, 25].includes(auth.department_id))) &&
+      "Edit",
       data_head && data_head.button_confirm && "Confirm",
       data_head && data_head.button_approve && "Approve",
       data_head && data_head.button_reject && "Reject",
@@ -93,35 +93,34 @@ const Issue_View = (props) => {
     action: [
       {
         name: "Print",
-        link: `${
-          process.env.REACT_APP_REPORT_SERVER
-        }/report_ream1.aspx?issue_no=${data_head && data_head.issue_no}`,
+        link: `${process.env.REACT_APP_REPORT_SERVER
+          }/report_ream1.aspx?issue_no=${data_head && data_head.issue_no}`,
       },
       data_head &&
-        data_head.button_cancel && {
-          name: "Cancel",
-          cancel: true,
-          link: ``,
-        },
+      data_head.button_cancel && {
+        name: "Cancel",
+        cancel: true,
+        link: ``,
+      },
       data_head &&
-        data_head.button_recall &&
-        data_head.tg_trans_status_id === 4 && {
-          name: (
-            <Text>
-              <EditTwoTone className="mr-1" /> ขอแก้ไขข้อมูล
-            </Text>
-          ),
-          link: `#`,
-          callBack: () => {
-            const app_detail = {
-              process_status_id: 7,
-              user_name: auth.user_name,
-              process_id: data_head.process_id,
-              process_member_remark: `มีการร้องขอแก้ไขข้อมูลเพิ่มเติม จาก ${auth.employee_no_name_eng}`,
-            };
-            dispatch(issue_actions(app_detail, data_head.issue_id));
-          },
+      data_head.button_recall &&
+      data_head.tg_trans_status_id === 4 && {
+        name: (
+          <Text>
+            <EditTwoTone className="mr-1" /> ขอแก้ไขข้อมูล
+          </Text>
+        ),
+        link: `#`,
+        callBack: () => {
+          const app_detail = {
+            process_status_id: 7,
+            user_name: auth.user_name,
+            process_id: data_head.process_id,
+            process_member_remark: `มีการร้องขอแก้ไขข้อมูลเพิ่มเติม จาก ${auth.employee_no_name_eng}`,
+          };
+          dispatch(issue_actions(app_detail, data_head.issue_id));
         },
+      },
     ],
     step: {
       current: data_head && data_head.node_stay - 1,
@@ -274,9 +273,6 @@ const Issue_View = (props) => {
               <Col span={2}></Col>
               <Col span={6}>
                 <CustomLabel readOnly={readOnly} label={"Job Ref. :"} />
-              </Col>
-              <Col span={16}>
-                <Text>{data_head?.mrp_no ?? "-"}</Text>
                 {data_head?.mrp_no && (
                   <FileSearchOutlined
                     className="button-icon ml-2"
@@ -285,6 +281,9 @@ const Issue_View = (props) => {
                     }
                   />
                 )}
+              </Col>
+              <Col span={16}>
+                <Text>{data_head?.mrp_no_description ?? "-"}</Text>
               </Col>
             </Row>
           </Col>

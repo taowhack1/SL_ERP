@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CustomSelect from "../../components/CustomSelect";
 import {
   create_so,
+  getMasterSORefList,
   getProduction_for_fg,
   getSalesType,
   getSo_production_type,
@@ -93,6 +94,11 @@ const SaleOrderCreate = (props) => {
     data_head.data_flow_process.map((step) => {
       return step.all_group_in_node;
     });
+
+  const [soRefList, setSORefList] = useState({
+    loading: true,
+    data: []
+  })
   const callback = (key) => {
     setTab(key);
   };
@@ -106,19 +112,28 @@ const SaleOrderCreate = (props) => {
       console.log("getSalesTypeData", resp);
       setSelectData((prev) => ({ ...prev, salesType: resp.data }));
     };
+
     const getsoProductionTypeData = async () => {
       const resp = await getSo_production_type();
       console.log("getsoProductionTypeData", resp);
       setSelectData((prev) => ({ ...prev, soProductionType: resp.data }));
     };
+
     const getproductionForFgData = async () => {
       const resp = await getProduction_for_fg();
       console.log("getproductionForFgData", resp);
       setSelectData((prev) => ({ ...prev, productionForFg: resp.data }));
     };
+
+    const getSORefList = async () => {
+      const resp = await getMasterSORefList();
+      setSORefList((prev) => ({ loading: false, data: resp.data }))
+    }
+
     getSalesTypeData();
     getsoProductionTypeData();
     getproductionForFgData();
+    getSORefList();
     dispatch(get_qn_open_so());
     dispatch(get_vat_list());
     headDispatch({
@@ -321,6 +336,7 @@ const SaleOrderCreate = (props) => {
   console.log("selectData :>> ", selectData);
   console.log("data_detail :>> ", data_detail);
   console.log("check_change_qn", check_change_qn);
+  console.log("data_head?.so_id_ref", data_head?.so_id_ref)
   return (
     <MainLayout {...config}>
       <div id="form">
@@ -780,6 +796,59 @@ const SaleOrderCreate = (props) => {
           </Col>
           <Col span={2}></Col>
         </Row>
+        <Row className="col-2 row-margin-vertical">
+          {/* อ้างอิง SO อื่น */}
+          <Col span={3}>
+            <Text strong>
+              <span className="require">* </span>อ้างอิง SO :
+            </Text>
+          </Col>
+          <Col span={8}>
+            <CustomSelect
+              allowClear
+              showSearch
+              name="so_id_ref"
+              placeholder={"SO No."}
+              field_id="so_id_ref"
+              field_name="so_no_description_ref"
+              value={data_head.so_no_description_ref}
+              loading={soRefList?.loading}
+              data={soRefList?.data || []}
+              onChange={(data, option) => {
+                if (data) {
+                  console.log("change so ref");
+                  headDispatch({
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      so_id_ref: data,
+                      so_no_description_ref: option?.data?.so_no_description_ref,
+                    },
+                  });
+                  detailDispatch({
+                    type: "SET_DETAIL",
+                    payload: data_detail.map(obj => ({ ...obj, so_detail_id_ref: null, so_detail_id_ref_name: null }))
+                  })
+                } else {
+                  headDispatch({
+                    type: "CHANGE_HEAD_VALUE",
+                    payload: {
+                      so_id_ref: null,
+                      so_no_description_ref: null,
+                    },
+                  });
+                  detailDispatch({
+                    type: "SET_DETAIL",
+                    payload: data_detail.map(obj => ({ ...obj, so_detail_id_ref: null, so_detail_id_ref_name: null }))
+                  })
+                }
+              }}
+            />
+          </Col>
+          <Col span={2}></Col>
+          <Col span={3}></Col>
+
+          <Col span={8}></Col>
+        </Row>
         <Row className="col-2 row-tab-margin-l">
           <Col span={24}>
             <Tabs defaultActiveKey="1" onChange={callback}>
@@ -788,6 +857,7 @@ const SaleOrderCreate = (props) => {
                   readOnly={false}
                   data_detail={data_detail}
                   so_production_type_id={data_head?.so_production_type_id}
+                  so_id_ref={data_head?.so_id_ref}
                   detailDispatch={detailDispatch}
                   headDispatch={headDispatch}
                   vat_rate={data_head.vat_rate}

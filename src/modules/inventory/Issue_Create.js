@@ -26,6 +26,8 @@ import CustomLabel from "../../components/CustomLabel";
 import { mainReducer } from "../../include/reducer";
 import { SearchOutlined } from "@ant-design/icons";
 import { getMasterDataItem } from "../../actions/inventory";
+import { getMRPRefForIssue } from "../../actions/production/mrpActions";
+import { useState } from "react";
 const { Text } = Typography;
 const { TextArea } = Input;
 const { Panel } = Collapse;
@@ -49,6 +51,10 @@ const IssueCreate = (props) => {
     mainReducer,
     initialStateDetail
   );
+  const [mrpRefList, setMRPRefList] = useState({
+    loading: false,
+    data: []
+  })
 
   const flow =
     data_head &&
@@ -57,7 +63,7 @@ const IssueCreate = (props) => {
       return step.all_group_in_node;
     });
 
-  const callback = (key) => {};
+  const callback = (key) => { };
 
   const config = {
     projectId: current_project && current_project.project_id,
@@ -94,22 +100,22 @@ const IssueCreate = (props) => {
         console.log("pass");
         data_head?.issue_id
           ? dispatch(
-              update_issue(
-                data_head?.issue_id,
-                auth.user_name,
-                data_head,
-                data_detail,
-                redirect_to_view
-              )
+            update_issue(
+              data_head?.issue_id,
+              auth.user_name,
+              data_head,
+              data_detail,
+              redirect_to_view
             )
+          )
           : dispatch(
-              create_issue(
-                auth.user_name,
-                data_head,
-                data_detail,
-                redirect_to_view
-              )
-            );
+            create_issue(
+              auth.user_name,
+              data_head,
+              data_detail,
+              redirect_to_view
+            )
+          );
       } else {
         message.warning({
           content: "Please fill your form completely.",
@@ -137,27 +143,34 @@ const IssueCreate = (props) => {
       type: "SET_HEAD",
       payload: data.data_head
         ? {
-            ...data.data_head,
-            commit: 1,
-            user_name: auth.user_name,
-            branch_id: auth.branch_id,
-            branch_name: auth.branch_name,
-          }
+          ...data.data_head,
+          commit: 1,
+          user_name: auth.user_name,
+          branch_id: auth.branch_id,
+          branch_name: auth.branch_name,
+        }
         : {
-            ...issue_fields,
-            commit: 1,
-            user_name: auth.user_name,
-            issue_created_by_no_name: auth.employee_no_name_eng,
-            branch_id: auth.branch_id,
-            branch_name: auth.branch_name,
-            issue_created: moment().format("DD/MM/YYYY"),
-          },
+          ...issue_fields,
+          commit: 1,
+          user_name: auth.user_name,
+          issue_created_by_no_name: auth.employee_no_name_eng,
+          branch_id: auth.branch_id,
+          branch_name: auth.branch_name,
+          issue_created: moment().format("DD/MM/YYYY"),
+        },
     });
 
     detailDispatch({
       type: "SET_DETAIL",
       payload: data.data_detail ? data.data_detail : [issue_detail_fields],
     });
+
+    const getMRPRefList = async () => {
+      const resp = await getMRPRefForIssue()
+      console.log("resp", resp)
+      setMRPRefList(prev => ({ loading: false, data: resp.data }))
+    }
+    getMRPRefList()
   }, []);
 
   useEffect(() => {
@@ -247,13 +260,13 @@ const IssueCreate = (props) => {
                   onChange={(data, option) => {
                     data !== undefined
                       ? upDateFormValue({
-                          cost_center_id: data,
-                          cost_center_no_name: option.title,
-                        })
+                        cost_center_id: data,
+                        cost_center_no_name: option.title,
+                      })
                       : upDateFormValue({
-                          cost_center_id: null,
-                          cost_center_no_name: null,
-                        });
+                        cost_center_id: null,
+                        cost_center_no_name: null,
+                      });
                   }}
                 />
               </Col>
@@ -277,13 +290,13 @@ const IssueCreate = (props) => {
                   onChange={(data, option) => {
                     data !== undefined
                       ? upDateFormValue({
-                          type_id: data,
-                          type_no_name: option.title,
-                        })
+                        type_id: data,
+                        type_no_name: option.title,
+                      })
                       : upDateFormValue({
-                          type_id: null,
-                          type_no_name: null,
-                        });
+                        type_id: null,
+                        type_no_name: null,
+                      });
                   }}
                 />
               </Col>
@@ -308,15 +321,45 @@ const IssueCreate = (props) => {
                 <CustomLabel readOnly={readOnly} label={"Job Ref. :"} />
               </Col>
               <Col span={16}>
-                <Text>{data_head?.mrp_no ?? "-"}</Text>
+                {/* <Text>{data_head?.mrp_no ?? "-"}</Text>
                 {data_head?.mrp_no && (
                   <SearchOutlined
                     className="button-icon"
                     onClick={console.log("View Job Detail")}
                   />
-                )}
+                )} */}
+                <CustomSelect
+                  allowClear
+                  showSearch
+                  disabled={mrpRefList?.data?.length > 1 ? false : true}
+                  placeholder={"MRP No."}
+                  name="mrp_id"
+                  field_id="mrp_id"
+                  field_name="mrp_no_description"
+                  value={data_head?.mrp_id}
+                  data={mrpRefList?.data || []}
+                  onChange={(data, option) => {
+                    data !== undefined
+                      ? upDateFormValue({
+                        mrp_id: data,
+                        mrp_no_description: option.title,
+                      })
+                      : upDateFormValue({
+                        mrp_id: null,
+                        mrp_no_description: null,
+                      });
+                  }} />
               </Col>
             </Row>
+            {/* <Row className="col-2 row-margin-vertical">
+              <Col span={2}></Col>
+              <Col span={6}>
+                <CustomLabel readOnly={readOnly} label={"อ้างอิง MRP :"} />
+              </Col>
+              <Col span={16}>
+
+              </Col>
+            </Row> */}
           </Col>
         </Row>
 

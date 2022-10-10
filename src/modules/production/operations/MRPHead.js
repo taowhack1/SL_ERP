@@ -93,6 +93,7 @@ const MRPHead = () => {
     }
   }, [mainState?.calRPM]);
 
+  console.log("mainState", mainState)
   return (
     <>
       <Row className="col-2">
@@ -151,23 +152,23 @@ const MRPHead = () => {
                       onChange={async (data, option) => {
                         data !== undefined
                           ? onChange({
-                              ...resetValue,
-                              so_id: option.data.so_id,
-                              so_no_description: option.data.so_no_description,
-                              so_detail: option.data.so_detail,
-                              // item_id: null,
-                              // so_detail_id: null,
-                              // item_no_name: null,
-                              // mrp_delivery_date: null,
-                              // mrp_qty_produce: 0,
-                              // uom_id: null,
-                              // uom_no: null,
-                              // mrp_qty_produce_ref: 0,
-                              // mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
-                              // mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
-                              // mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
-                              // item_qty_produce_bulk_request: 0,
-                            })
+                            ...resetValue,
+                            so_id: option.data.so_id,
+                            so_no_description: option.data.so_no_description,
+                            so_detail: option.data.so_detail,
+                            // item_id: null,
+                            // so_detail_id: null,
+                            // item_no_name: null,
+                            // mrp_delivery_date: null,
+                            // mrp_qty_produce: 0,
+                            // uom_id: null,
+                            // uom_no: null,
+                            // mrp_qty_produce_ref: 0,
+                            // mrp_qty_produce_ref_used: 1, //ไม่ใช้ Bulk ในสต็อก
+                            // mrp_qty_produce_ref_before: 0, //ยอดผลิต Bulk ไม่รวมหักสต็อก
+                            // mrp_qty_produce_ref_stock: 0, //ยอด Bulk ค้างสต็อก
+                            // item_qty_produce_bulk_request: 0,
+                          })
                           : Reset();
                       }}
                     />
@@ -198,22 +199,22 @@ const MRPHead = () => {
                       onChange={(data, option) => {
                         data !== undefined
                           ? onChange({
-                              ...resetValue,
-                              so_detail_id: option.data.so_detail_id,
-                              item_id: option.data.item_id,
-                              item_no_name: option.data.item_no_name,
-                              mrp_delivery_date:
-                                option.data.so_detail_delivery_date,
-                              mrp_qty_produce:
-                                option.data.tg_so_detail_qty_balance,
-                              type_id: option?.data?.type_id,
-                              uom_id: option.data.uom_id,
-                              uom_no: option.data.uom_no,
-                              calRPM: true,
-                            })
+                            ...resetValue,
+                            so_detail_id: option.data.so_detail_id,
+                            item_id: option.data.item_id,
+                            item_no_name: option.data.item_no_name,
+                            mrp_delivery_date:
+                              option.data.so_detail_delivery_date,
+                            mrp_qty_produce:
+                              option.data.tg_so_detail_qty_balance,
+                            type_id: option?.data?.type_id,
+                            uom_id: option.data.uom_id,
+                            uom_no: option.data.uom_no,
+                            calRPM: true,
+                          })
                           : onChange({
-                              ...resetValue,
-                            });
+                            ...resetValue,
+                          });
                       }}
                     />
                   )}
@@ -328,9 +329,8 @@ const MRPHead = () => {
                 <Row className="col-2 row-margin-vertical">
                   <Col span={8}>
                     <CustomLabel
-                      label={`Bulk For FG. ( ${
-                        mainState?.uom_no_ref || mainState?.uom_no || " - "
-                      } ) :`}
+                      label={`Bulk For FG. ( ${mainState?.uom_no_ref || mainState?.uom_no || " - "
+                        } ) :`}
                       require
                       readOnly={readOnly}
                     />
@@ -353,9 +353,8 @@ const MRPHead = () => {
               <Row className="col-2 row-margin-vertical">
                 <Col span={8}>
                   <CustomLabel
-                    label={`Use Bulk On Stock. ( ${
-                      mainState?.uom_no_ref || mainState?.uom_no || " - "
-                    } ) :`}
+                    label={`Use Bulk On Stock. ( ${mainState?.uom_no_ref || mainState?.uom_no || " - "
+                      } ) :`}
                     require
                     readOnly={readOnly}
                   />
@@ -376,9 +375,8 @@ const MRPHead = () => {
               <Row className="col-2 row-margin-vertical">
                 <Col span={8}>
                   <CustomLabel
-                    label={`Bulk Production. ( ${
-                      mainState?.uom_no_ref || mainState?.uom_no || " - "
-                    } ) :`}
+                    label={`Bulk Production. ( ${mainState?.uom_no_ref || mainState?.uom_no || " - "
+                      } ) :`}
                     require
                     readOnly={readOnly}
                   />
@@ -453,9 +451,9 @@ const MRPHead = () => {
                       value={
                         mainState.mrp_bulk_produce_date
                           ? moment(
-                              mainState.mrp_bulk_produce_date,
-                              "DD/MM/YYYY"
-                            )
+                            mainState.mrp_bulk_produce_date,
+                            "DD/MM/YYYY"
+                          )
                           : ""
                       }
                       onChange={(data) => {

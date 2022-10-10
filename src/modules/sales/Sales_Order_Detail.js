@@ -16,10 +16,13 @@ import { calSubtotal, sumArrObjWithVat } from "../../include/js/function_main";
 
 import { convertDigit, getNumberFormat } from "../../include/js/main_config";
 import TextArea from "antd/lib/input/TextArea";
+import { getMasterSORefDetail } from "../../actions/sales";
+import { useState } from "react";
 const { Text } = Typography;
 
 const SO_Detail = ({
   readOnly,
+  so_id_ref,
   data_detail,
   so_production_type_id,
   detailDispatch,
@@ -27,6 +30,10 @@ const SO_Detail = ({
   vat_rate,
   vat_include,
 }) => {
+  const [soRefDetail, setSORefDetail] = useState({
+    loading: true,
+    data: []
+  })
   // state
   const select_items = useSelector(
     (state) => state.inventory.master_data.item_list
@@ -58,7 +65,15 @@ const SO_Detail = ({
   useEffect(() => {
     !readOnly && updateAmount();
   }, [readOnly, data_detail]);
-
+  useEffect(() => {
+    const getSORefDetail = async (so_id_ref) => {
+      const resp = await getMasterSORefDetail(so_id_ref)
+      console.log("resp", resp)
+      setSORefDetail(prev => ({ loading: false, data: resp?.data || [] }));
+    }
+    console.log("getMasterSORefDetail")
+    !readOnly && getSORefDetail(so_id_ref)
+  }, [readOnly, so_id_ref])
   // function
   const addLine = () => {
     detailDispatch({ type: "ADD_ROW", payload: so_detail_fields });
@@ -77,7 +92,7 @@ const SO_Detail = ({
       },
     });
   };
-
+  console.log("so_id_ref", so_id_ref)
   return (
     <>
       {/* Column Header */}
@@ -131,17 +146,17 @@ const SO_Detail = ({
                       onChange={(data, option) => {
                         data !== undefined
                           ? onChangeValue(line.id, {
-                              item_id: option.data.item_id,
-                              uom_id: option.data.uom_id,
-                              item_no_name: option.data.item_no_name,
-                              uom_no: option.data.uom_no,
-                            })
+                            item_id: option.data.item_id,
+                            uom_id: option.data.uom_id,
+                            item_no_name: option.data.item_no_name,
+                            uom_no: option.data.uom_no,
+                          })
                           : onChangeValue(line.id, {
-                              item_id: null,
-                              uom_id: null,
-                              item_no_name: null,
-                              uom_no: null,
-                            });
+                            item_id: null,
+                            uom_id: null,
+                            item_no_name: null,
+                            uom_no: null,
+                          });
                       }}
                     />
                   </Col>
@@ -226,7 +241,7 @@ const SO_Detail = ({
                       placeholder='Delivery date...'
                       value={
                         line.so_detail_delivery_date &&
-                        line.so_detail_delivery_date
+                          line.so_detail_delivery_date
                           ? moment(line.so_detail_delivery_date, "DD/MM/YYYY")
                           : ""
                       }
@@ -240,6 +255,44 @@ const SO_Detail = ({
                   <Col span={1} style={{ textAlign: "center" }}>
                     <DeleteTwoTone onClick={() => delLine(line.id)} />
                   </Col>
+                </Row>
+                <Row
+                  key={"sub-so_detail_id_ref" + key}
+                  style={{
+                    marginBottom: 0,
+                    border: "1px solid white",
+                    backgroundColor: "#FCFCFC",
+                  }}
+                  gutter={2}
+                  name={`row-so_detail_id_ref-${key}`}
+                  className='col-2'>
+                  <Col span={23}>
+                    <CustomSelect
+                      allowClear
+                      showSearch
+                      size='small'
+                      placeholder={"อ้างอิงรายการขายใน SO"}
+                      disabled={soRefDetail?.loading || !so_id_ref}
+                      // loading={soRefDetail?.loading}
+                      data={soRefDetail?.data || []}
+                      name='so_detail_id_ref'
+                      field_id='so_detail_id_ref'
+                      field_name='so_detail_id_ref_name'
+                      value={line?.so_detail_id_ref_name || null}
+                      onChange={(data, option) => {
+                        data !== undefined
+                          ? onChangeValue(line.id, {
+                            so_detail_id_ref: option.data.so_detail_id_ref,
+                            so_detail_id_ref_name: option.data.so_detail_id_ref_name,
+                          })
+                          : onChangeValue(line.id, {
+                            so_detail_id_ref: null,
+                            so_detail_id_ref_name: null
+                          });
+                      }}
+                    />
+                  </Col>
+                  <Col span={1}></Col>
                 </Row>
                 <Row
                   key={"sub-" + key}
@@ -329,6 +382,23 @@ const SO_Detail = ({
                       {line.so_detail_delivery_date}
                     </Text>
                   </Col>
+                </Row>
+                <Row
+                  key={"sub-so_detail_id_ref-" + key}
+                  style={{
+                    marginBottom: 0,
+                    border: "1px solid white",
+                    backgroundColor: "#FCFCFC",
+                  }}
+                  gutter={2}
+                  name={`row-so_detail_id_ref-${key}`}
+                  className='col-2'>
+                  <Col span={23}>
+                    <Text className='pd-left-1 text-view text-left'>
+                      <b> อ้างอิงรายการ :</b> [ {line?.so_detail_id_ref_name || "-"} ]
+                    </Text>
+                  </Col>
+                  <Col span={1}></Col>
                 </Row>
                 <Row
                   key={"sub-" + key}

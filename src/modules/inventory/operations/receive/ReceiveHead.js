@@ -5,13 +5,15 @@ import CustomSelect from "../../../../components/CustomSelect";
 import CustomLabel from "../../../../components/CustomLabel";
 import { ReceiveContext } from "../../../../include/js/context";
 import moment from "moment";
+import { getMRPRefForReceive } from "../../../../actions/production/mrpActions";
 const { Text } = Typography;
 const ReceiveHead = () => {
-  const { readOnly, mainState, initialStateHead, saveForm } =
+  const { readOnly, mainState, initialStateHead, saveForm, mrpRefList } =
     useContext(ReceiveContext);
   const vendors = useSelector((state) => state.purchase.vendor.vendor_list);
   const po_list = useSelector((state) => state.inventory.receive.po_ref);
   const [state, setState] = useState(mainState);
+
 
   const save = (data, po_id) => {
     saveForm({ ...state, ...data }, po_id ?? null);
@@ -70,23 +72,23 @@ const ReceiveHead = () => {
               onChange={(data, option) =>
                 data
                   ? changeState({
-                      vendor_id: option.data.vendor_id,
-                      vendor_no_name: option.data.vendor_no_name,
-                      payment_term_id: option.data.payment_term_id,
-                      payment_term_no_name: option.data.payment_term_no_name,
-                      currency_id: option.data.currency_id,
-                      currency_no: option.data.currency_no,
-                      vat_rate: option.data.vat_rate,
-                    })
+                    vendor_id: option.data.vendor_id,
+                    vendor_no_name: option.data.vendor_no_name,
+                    payment_term_id: option.data.payment_term_id,
+                    payment_term_no_name: option.data.payment_term_no_name,
+                    currency_id: option.data.currency_id,
+                    currency_no: option.data.currency_no,
+                    vat_rate: option.data.vat_rate,
+                  })
                   : changeState({
-                      vendor_id: null,
-                      vendor_no_name: null,
-                      payment_term_id: null,
-                      payment_term_no_name: null,
-                      currency_id: 1,
-                      currency_no: "THB",
-                      vat_rate: 0,
-                    })
+                    vendor_id: null,
+                    vendor_no_name: null,
+                    payment_term_id: null,
+                    payment_term_no_name: null,
+                    currency_id: 1,
+                    currency_no: "THB",
+                    vat_rate: 0,
+                  })
               }
             />
           )}
@@ -142,11 +144,11 @@ const ReceiveHead = () => {
               onChange={(data) => {
                 data
                   ? changeState({
-                      receive_order_date: data.format("DD/MM/YYYY"),
-                    })
+                    receive_order_date: data.format("DD/MM/YYYY"),
+                  })
                   : changeState({
-                      receive_order_date: null,
-                    });
+                    receive_order_date: null,
+                  });
               }}
               onBlur={() => save()}
             />
@@ -205,11 +207,11 @@ const ReceiveHead = () => {
               onChange={(data) => {
                 data
                   ? changeState({
-                      receive_invoice_date: data.format("DD/MM/YYYY"),
-                    })
+                    receive_invoice_date: data.format("DD/MM/YYYY"),
+                  })
                   : changeState({
-                      receive_invoice_date: null,
-                    });
+                    receive_invoice_date: null,
+                  });
               }}
               onBlur={() => save()}
             />
@@ -218,10 +220,36 @@ const ReceiveHead = () => {
 
         <Col span={2}></Col>
         <Col span={3}>
-          <CustomLabel label={"SO Ref. :"} readOnly={readOnly} />
+          <CustomLabel label={"Job Ref. :"} readOnly={readOnly} />
         </Col>
         <Col span={8}>
-          <Text className="text-view">{state.so_no || "-"}</Text>
+          {
+            readOnly ? (
+              <Text className="text-value">{state?.mrp_no_description || "-"}</Text>
+            ) : (
+              <CustomSelect
+                allowClear
+                showSearch
+                disabled={mrpRefList?.data?.length > 1 ? false : true}
+                placeholder={"MRP No."}
+                name="mrp_id"
+                field_id="mrp_id"
+                field_name="mrp_no_description"
+                value={state?.mrp_id}
+                data={mrpRefList?.data || []}
+                onChange={(data, option) => {
+                  data !== undefined
+                    ? changeState({
+                      mrp_id: data,
+                      mrp_no_description: option.title,
+                    })
+                    : changeState({
+                      mrp_id: null,
+                      mrp_no_description: null,
+                    });
+                }} />
+            )
+          }
         </Col>
       </Row>
     </>
