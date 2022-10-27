@@ -20,10 +20,22 @@ const TextAreaField = ({ fieldProps }) => {
 };
 const SelectField = ({ fieldProps, dataSource, fieldName, fieldId }) => {
   return (
-    <Select {...fieldProps}>
+    <Select
+      {...fieldProps}
+      filterOption={(inputValue, option) => {
+        return option?.title?.toUpperCase()?.indexOf(inputValue?.toUpperCase()) !== -1
+      }
+      }
+    >
       {dataSource.map((obj, id) => {
         return (
-          <Option value={fieldId ? obj[fieldId] : obj["id"]} key={id} obj={obj}>
+          <Option
+            value={fieldId ? obj[fieldId] : obj["id"]}
+            key={id}
+            obj={obj}
+            title={obj[fieldName]}
+            data={obj}
+          >
             {obj[fieldName]}
           </Option>
         );

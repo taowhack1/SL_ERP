@@ -149,8 +149,9 @@ const RoutingForm = (props) => {
     console.log(error);
   };
   const { routing_created, routing_description, item_no_name } = persistData;
-  console.log("main errors ", errors);
-  console.log("type_id", type_id);
+
+
+  console.log("items", items)
   return (
     <>
       <MainLayout {...config}>
@@ -243,6 +244,7 @@ const RoutingForm = (props) => {
                                   showSearch: true,
                                   disabled: loading,
                                   ...field,
+
                                   onChange: (val, row) => {
                                     console.log("select", row);
                                     if (val !== undefined) {
@@ -302,8 +304,8 @@ const RoutingForm = (props) => {
                               },
                               dataSource: routingTypes
                                 ? routingTypes?.filter(
-                                    (obj) => obj.type_id === type_id
-                                  )
+                                  (obj) => obj.type_id === type_id
+                                )
                                 : [],
                               fieldId: "routing_type_id",
                               fieldName: "routing_type_no_name",
