@@ -25,9 +25,13 @@ const ReceiveHead = () => {
     setState(initialStateHead);
     save(initialStateHead);
   };
+
   useEffect(() => {
     setState(mainState);
   }, [mainState]);
+
+
+  console.log("mainState", mainState, state)
   return (
     <>
       <Row className="col-2 row-margin-vertical">
@@ -69,6 +73,7 @@ const ReceiveHead = () => {
               field_name="vendor_no_name"
               value={state.vendor_no_name}
               data={vendors}
+              onBlur={() => save()}
               onChange={(data, option) =>
                 data
                   ? changeState({
@@ -237,11 +242,13 @@ const ReceiveHead = () => {
                 field_name="mrp_no_description"
                 value={state?.mrp_id}
                 data={mrpRefList?.data || []}
+                onBlur={() => save()}
                 onChange={(data, option) => {
+                  console.log("option", option)
                   data !== undefined
                     ? changeState({
-                      mrp_id: data,
-                      mrp_no_description: option.title,
+                      mrp_id: option?.data?.mrp_id,
+                      mrp_no_description: option?.data?.mrp_no_description,
                     })
                     : changeState({
                       mrp_id: null,

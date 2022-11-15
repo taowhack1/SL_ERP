@@ -64,6 +64,7 @@ const Receive_Create = (props) => {
     branch_name: auth.branch_name,
     receive_created: moment().format("DD/MM/YYYY"),
   };
+
   const [state, stateDispatch] = useReducer(reducer, initialStateHead);
   const [listSOFG, setListSOFG] = useState({
     listSOForFg: [],
@@ -99,6 +100,7 @@ const Receive_Create = (props) => {
       state: { readOnly: true },
     });
   };
+
   const config = {
     projectId: currentProject && currentProject.project_id,
     title: currentProject && currentProject.project_name,
