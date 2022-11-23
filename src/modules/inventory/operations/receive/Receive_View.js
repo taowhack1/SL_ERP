@@ -19,6 +19,7 @@ import ReceiveHead from "./ReceiveHead";
 import DetailLoading from "../../../../components/DetailLoading";
 import ReceiveTabs from "./ReceiveTabs";
 import { sortData } from "../../../../include/js/function_main";
+import { PrinterOutlined } from "@ant-design/icons";
 const { Text } = Typography;
 
 const Receive_View = (props) => {
@@ -97,17 +98,30 @@ const Receive_View = (props) => {
     ],
     action: [
       {
-        name: "Print",
-        link: `${
-          process.env.REACT_APP_REPORT_SERVER
-        }/report_receive2.aspx?receive_no=${state && state.receive_no}`,
+        name: (
+          <span>
+            <PrinterOutlined className='pd-right-1 button-icon' />
+            ปริ้นท์เอกสาร
+          </span>
+        ),
+        link: `${process.env.REACT_APP_REPORT_SERVER
+          }/report_receive2.aspx?receive_no=${state && state.receive_no}`,
+      },
+      {
+        name: (
+          <span>
+            <PrinterOutlined className='pd-right-1 button-icon' />
+            ปริ้นท์สติ๊กเกอร์
+          </span>
+        ),
+        link: `${process.env.REACT_APP_REPORT_SERVER}/report_identify_tag.aspx?receive_no=${state && state.receive_no}`,
       },
       state &&
-        state.button_cancel && {
-          name: "Cancel",
-          cancel: true,
-          link: ``,
-        },
+      state.button_cancel && {
+        name: "Cancel",
+        cancel: true,
+        link: ``,
+      },
     ],
     step: {
       current: state && state.node_stay - 1,

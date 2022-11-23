@@ -8,6 +8,7 @@ import Comments from "../../../../components/Comments";
 import Detail from "./Disburse_Detail";
 import ModalRemark from "../../../../components/Modal_Remark";
 import Authorize from "../../../system/Authorize";
+import { PrinterOutlined } from "@ant-design/icons";
 const { Text } = Typography;
 
 const DisburseView = (props) => {
@@ -75,12 +76,22 @@ const DisburseView = (props) => {
       "Back",
     ],
     action: [
+      {
+        name: (
+          <span>
+            <PrinterOutlined className='pd-right-1 button-icon' />
+            ปริ้นท์ใบจ่ายสินค้า
+          </span>
+        ),
+        link: `${process.env.REACT_APP_REPORT_SERVER}/report_disburse.aspx?disburse_no=${data_head.disburse_no}`,
+      },
       data_head &&
-        data_head.button_cancel && {
-          name: "Cancel",
-          cancel: true,
-          link: ``,
-        },
+      data_head.button_cancel && {
+        name: "Cancel",
+        cancel: true,
+        link: ``,
+      },
+
     ],
     step: {
       current: data_head && data_head.node_stay - 1,
