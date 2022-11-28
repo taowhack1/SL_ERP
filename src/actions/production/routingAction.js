@@ -86,41 +86,42 @@ export const updateRouting = (routing_id, data, redirect) => (dispatch) => {
 const saveRouting = (data) => {
   try {
     if (!data) return { success: false, data: [], message: "Missing id" };
+
     return !data[0].routing_id
       ? axios
-          .post(`${api_routing}`, data, header_config)
-          .then((resp) => {
-            if (resp.status === 200) {
-              console.log("post resp.data", resp.data);
-              return { success: true, data: resp.data, message: "Success" };
-            } else {
-              return { success: false, data: [], message: resp };
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            if (error?.response) {
-              console.error(error.response);
-            }
-            return { success: false, data: [], message: error };
-          })
+        .post(`${api_routing}`, data, header_config)
+        .then((resp) => {
+          if (resp.status === 200) {
+            console.log("post resp.data", resp.data);
+            return { success: true, data: resp.data, message: "Success" };
+          } else {
+            return { success: false, data: [], message: resp };
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          if (error?.response) {
+            console.error(error.response);
+          }
+          return { success: false, data: [], message: error };
+        })
       : axios
-          .put(`${api_routing}/${data[0].routing_id}`, data, header_config)
-          .then((resp) => {
-            if (resp.status === 200) {
-              console.log("put resp.data", resp.data);
-              return { success: true, data: resp.data, message: "Success" };
-            } else {
-              return { success: false, data: [], message: resp };
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            if (error?.response) {
-              console.error(error.response);
-            }
-            return { success: false, data: [], message: error };
-          });
+        .put(`${api_routing}/${data[0].routing_id}`, data, header_config)
+        .then((resp) => {
+          if (resp.status === 200) {
+            console.log("put resp.data", resp.data);
+            return { success: true, data: resp.data, message: "Success" };
+          } else {
+            return { success: false, data: [], message: resp };
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          if (error?.response) {
+            console.error(error.response);
+          }
+          return { success: false, data: [], message: error };
+        });
   } catch (error) {
     console.log(error);
     return { success: false, data: [], message: error };

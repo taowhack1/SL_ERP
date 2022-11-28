@@ -98,12 +98,15 @@ const RoutingForm = (props) => {
     getData(id);
   }, [id]);
 
+  const { routing_created, routing_description, item_no_name, routing_id } = persistData;
+
+
   const config = {
     projectId: 10,
     title: "PRODUCTION",
     home: "/production",
     show: true,
-    breadcrumb: ["Home", "Routing", "Create"],
+    breadcrumb: ["Home", "Routing", routing_id ? "Edit" : "Create"],
     search: false,
     buttonAction: ["Save", "Discard"],
     create: "",
@@ -148,7 +151,6 @@ const RoutingForm = (props) => {
   const onError = async (error) => {
     console.log(error);
   };
-  const { routing_created, routing_description, item_no_name } = persistData;
 
 
   console.log("items", items)
@@ -164,7 +166,7 @@ const RoutingForm = (props) => {
             <Row className="col-2">
               <Col span={8}>
                 <h2>
-                  <strong>Create Routing</strong>
+                  <strong>{routing_id ? 'Edit' : 'Create'} Routing</strong>
                 </h2>
               </Col>
               <Col span={12}></Col>
