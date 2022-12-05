@@ -68,9 +68,14 @@ const xlsxHeader = [
     label: "% ต่อยอดขาย",
     key: "sum_tg_oh_cost_wage_p",
   },
+
   {
     label: "Tax",
     key: "sum_so_detail_ac_tax_amount",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "so_detail_ac_tax_amount_p",
   },
   {
     label: "รวมต้นทุนการผลิต",
@@ -91,6 +96,10 @@ const xlsxHeader = [
   {
     label: "กำไร / ขาดทุน",
     key: "sum_total_profit",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "total_profit_p",
   },
 ];
 const ReportSOCostAndProfit = () => {
@@ -356,7 +365,7 @@ const ReportSOCostAndProfit = () => {
                   columns={modalColumns}
                   dataSource={modal?.data1 || []}
                   // pagination={{ pageSize: 15 }}
-                  rowKey="id"
+                  rowKey="item_id"
                   onRow={(row) => ({
                     onClick: (e) => {
                       // console.log("row", row);
@@ -920,6 +929,19 @@ const columns2 = (viewSource) => [
   },
   {
     className: "tb-col-sm",
+    dataIndex: "so_detail_ac_tax_amount_p",
+    key: "so_detail_ac_tax_amount_p",
+    ellipsis: false,
+    align: "center",
+    render: (val) => <div className="w-100 text-right">
+      {numeral(val || 0).format("#,###.##")} %
+    </div>,
+    sorter: (a, b) => a.id - b.id,
+    title: <b>% ต่อยอดขาย</b>,
+    width: 150,
+  },
+  {
+    className: "tb-col-sm",
     dataIndex: "total_cost",
     key: "total_cost",
     ellipsis: false,
@@ -982,6 +1004,19 @@ const columns2 = (viewSource) => [
     sorter: (a, b) => a.id - b.id,
     title: <b>กำไร / ขาดทุน</b>,
     width: 200,
+  },
+  {
+    className: "tb-col-sm",
+    dataIndex: "total_profit_p",
+    key: "total_profit_p",
+    ellipsis: false,
+    align: "center",
+    render: (val) => <div className="w-100 text-right">
+      {numeral(val || 0).format("#,###.##")} %
+    </div>,
+    sorter: (a, b) => a.id - b.id,
+    title: <b>% ต่อยอดขาย</b>,
+    width: 150,
   },
 ];
 
@@ -1067,7 +1102,7 @@ const modalColumns = [
     ellipsis: false,
     align: "center",
     render: (val) => <div className="w-100 text-right">
-      {numeral(val || 0).format("#,###.####")}
+      {numeral(val || 0).format("#,###.##")}
     </div>,
     sorter: (a, b) => a.id - b.id,
     title: <b>Price</b>,
@@ -1080,7 +1115,7 @@ const modalColumns = [
     ellipsis: false,
     align: "center",
     render: (val) => <div className="w-100 text-right">
-      {numeral(val || 0).format("#,###.####")}
+      {numeral(val || 0).format("#,###.##")}
     </div>,
     sorter: (a, b) => a.id - b.id,
     title: <b>Total Cost</b>,

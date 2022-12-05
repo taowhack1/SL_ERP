@@ -206,7 +206,7 @@ const SO_Detail = ({
                   </Col>
                   <Col span={3} className='text-number'>
                     <InputNumber
-                      {...getNumberFormat(4)}
+                      {...getNumberFormat(2)}
                       name='so_detail_price'
                       placeholder='Unit Price'
                       value={line.so_detail_price}
@@ -229,7 +229,7 @@ const SO_Detail = ({
                   </Col>
                   <Col span={3} className='text-number'>
                     <div className='total-number'>
-                      {convertDigit(line.so_detail_total_price, 4)}
+                      {convertDigit(line.so_detail_total_price, 2)}
                     </div>
                   </Col>
                   <Col span={3} className='text-number'>
@@ -369,12 +369,12 @@ const SO_Detail = ({
                   </Col>
                   <Col span={3} className='text-number'>
                     <Text className='text-view'>
-                      {convertDigit(line.so_detail_price, 4)}
+                      {convertDigit(line.so_detail_price, 2)}
                     </Text>
                   </Col>
                   <Col span={3} className='text-number'>
                     <Text className='text-view'>
-                      {convertDigit(line.so_detail_total_price, 4)}
+                      {convertDigit(line.so_detail_total_price, 2)}
                     </Text>
                   </Col>
                   <Col span={3} className='text-center'>

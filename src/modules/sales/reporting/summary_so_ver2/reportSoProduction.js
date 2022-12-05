@@ -68,7 +68,7 @@ const ReportSoProduction = () => {
       width: "10%",
       align: "right",
       ellipsis: false,
-      render: (val) => convertDigit(val ? val : 0, 4),
+      render: (val) => convertDigit(val ? val : 0, 2),
     },
   ];
 
@@ -113,7 +113,7 @@ const ReportSoProduction = () => {
                     <Table.Summary.Cell></Table.Summary.Cell>
                     <Table.Summary.Cell>
                       <Text strong>
-                        {convertDigit(totalBorrow ? totalBorrow : 0, 4)}
+                        {convertDigit(totalBorrow ? totalBorrow : 0, 2)}
                       </Text>
                     </Table.Summary.Cell>
                   </Table.Summary.Row>

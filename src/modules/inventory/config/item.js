@@ -259,13 +259,13 @@ export const qaDetailColumns = ({ readOnly, onChange, onDelete, data }) => [
           onChange={(data, option) => {
             data !== undefined
               ? onChange(record.id, {
-                  qa_subject_id: option.data.qa_subject_id,
-                  qa_subject_name: option.data.qa_subject_name,
-                })
+                qa_subject_id: option.data.qa_subject_id,
+                qa_subject_name: option.data.qa_subject_name,
+              })
               : onChange(record.id, {
-                  qa_subject_id: null,
-                  qa_subject_name: null,
-                });
+                qa_subject_id: null,
+                qa_subject_name: null,
+              });
           }}
         />
       ),
@@ -296,13 +296,13 @@ export const qaDetailColumns = ({ readOnly, onChange, onDelete, data }) => [
           onChange={(data, option) => {
             data !== undefined
               ? onChange(record.id, {
-                  qa_specification_id: option.data.qa_specification_id,
-                  qa_specification_name: option.data.qa_specification_name,
-                })
+                qa_specification_id: option.data.qa_specification_id,
+                qa_specification_name: option.data.qa_specification_name,
+              })
               : onChange(record.id, {
-                  qa_specification_id: null,
-                  qa_specification_name: null,
-                });
+                qa_specification_id: null,
+                qa_specification_name: null,
+              });
           }}
         />
       ),
@@ -333,13 +333,13 @@ export const qaDetailColumns = ({ readOnly, onChange, onDelete, data }) => [
           onChange={(data, option) => {
             data !== undefined
               ? onChange(record.id, {
-                  qa_method_id: option.data.qa_method_id,
-                  qa_method_name: option.data.qa_method_name,
-                })
+                qa_method_id: option.data.qa_method_id,
+                qa_method_name: option.data.qa_method_name,
+              })
               : onChange(record.id, {
-                  qa_method_id: null,
-                  qa_method_name: null,
-                });
+                qa_method_id: null,
+                qa_method_name: null,
+              });
           }}
         />
       ),
@@ -562,99 +562,99 @@ export const itemPartConditionColumns = (
   onDelete,
   Save
 ) => [
-  {
-    id: 1,
-    title: "No.",
-    dataIndex: "id",
-    width: "5%",
-    align: "center",
-    render: (value, record, index) => {
-      return value + 1;
+    {
+      id: 1,
+      title: "No.",
+      dataIndex: "id",
+      width: "5%",
+      align: "center",
+      render: (value, record, index) => {
+        return value + 1;
+      },
     },
-  },
-  {
-    id: 2,
-    title: <div className='text-center'>Condition</div>,
-    dataIndex: "item_part_specification_detail_condition",
-    key: "item_part_specification_detail_condition",
-    align: "left",
-    // width: "40%",
-    render: (value, record, index) => {
-      if (readOnly) {
-        return value;
-      } else {
-        return (
-          <Input
-            size={"small"}
-            placeholder={"Condition"}
-            name='item_part_specification_detail_condition'
-            value={record.item_part_specification_detail_condition}
-            onChange={(e) => {
-              onChange(record.id, {
-                item_part_specification_detail_condition: e.target.value,
-              });
-            }}
-            onBlur={() => Save(record.id)}
-          />
-        );
-      }
+    {
+      id: 2,
+      title: <div className='text-center'>Condition</div>,
+      dataIndex: "item_part_specification_detail_condition",
+      key: "item_part_specification_detail_condition",
+      align: "left",
+      // width: "40%",
+      render: (value, record, index) => {
+        if (readOnly) {
+          return value;
+        } else {
+          return (
+            <Input
+              size={"small"}
+              placeholder={"Condition"}
+              name='item_part_specification_detail_condition'
+              value={record.item_part_specification_detail_condition}
+              onChange={(e) => {
+                onChange(record.id, {
+                  item_part_specification_detail_condition: e.target.value,
+                });
+              }}
+              onBlur={() => Save(record.id)}
+            />
+          );
+        }
+      },
     },
-  },
-  {
-    id: 3,
-    title: <div className='text-center'>Set</div>,
-    dataIndex: "item_part_specification_detail_set",
-    key: "item_part_specification_detail_set",
-    align: "left",
-    // width: "40%",
-    render: (value, record, index) => {
-      if (readOnly) {
-        return value;
-      } else {
-        return (
-          <Input
-            size={"small"}
-            placeholder={"Set"}
-            name='item_part_specification_detail_set'
-            value={record.item_part_specification_detail_set}
-            onChange={(e) => {
-              onChange(record.id, {
-                item_part_specification_detail_set: e.target.value,
-              });
-            }}
-            onBlur={() => Save(record.id)}
-          />
-        );
-      }
+    {
+      id: 3,
+      title: <div className='text-center'>Set</div>,
+      dataIndex: "item_part_specification_detail_set",
+      key: "item_part_specification_detail_set",
+      align: "left",
+      // width: "40%",
+      render: (value, record, index) => {
+        if (readOnly) {
+          return value;
+        } else {
+          return (
+            <Input
+              size={"small"}
+              placeholder={"Set"}
+              name='item_part_specification_detail_set'
+              value={record.item_part_specification_detail_set}
+              onChange={(e) => {
+                onChange(record.id, {
+                  item_part_specification_detail_set: e.target.value,
+                });
+              }}
+              onBlur={() => Save(record.id)}
+            />
+          );
+        }
+      },
     },
-  },
-  {
-    title: (
-      <Text strong>
-        <EllipsisOutlined />
-      </Text>
-    ),
-    align: "center",
-    width: "5%",
-    render: (value, record, index) => {
-      if (readOnly) {
-        return null;
-      } else {
-        return (
-          <Popconfirm
-            onConfirm={() => {
-              onDelete(record.id);
-            }}
-            title='Are you sure you want to delete this row？'
-            okText='Yes'
-            cancelText='No'>
-            <DeleteTwoTone />
-          </Popconfirm>
-        );
-      }
+    {
+      title: (
+        <Text strong>
+          <EllipsisOutlined />
+        </Text>
+      ),
+      align: "center",
+      width: "5%",
+      render: (value, record, index) => {
+        if (readOnly) {
+          return null;
+        } else {
+          return (
+            <Popconfirm
+              onConfirm={() => {
+                onDelete(record.id);
+              }}
+              title='Are you sure you want to delete this row？'
+              okText='Yes'
+              cancelText='No'>
+              <DeleteTwoTone />
+            </Popconfirm>
+          );
+        }
+      },
     },
-  },
-];
+  ];
 
 export const item_production_process_columns = [
   {
@@ -772,129 +772,129 @@ export const itemFormulaColumns = (
   Save,
   { itemList, maxPercent }
 ) => [
-  {
-    id: 1,
-    title: "No.",
-    dataIndex: "id",
-    width: "5%",
-    align: "center",
-    render: (value, record, index) => {
-      return value + 1;
+    {
+      id: 1,
+      title: "No.",
+      dataIndex: "id",
+      width: "5%",
+      align: "center",
+      render: (value, record, index) => {
+        return value + 1;
+      },
     },
-  },
-  {
-    id: 2,
-    title: <div className='text-center'>Raw Material Code</div>,
-    dataIndex: "item_no_name",
-    key: "item_no_name",
-    align: "left",
-    // width: "40%",
-    render: (value, record, index) => {
-      if (readOnly) {
-        return (
-          <div className='text-value' title={value}>
-            <Text>{value ?? "-"}</Text>
-          </div>
-        );
-      } else {
-        return (
-          <CustomSelect
-            allowClear
-            showSearch
-            size={"small"}
-            placeholder={"Raw Material Code"}
-            name='item_id_formula'
-            field_id='item_id'
-            field_name='item_no_name'
-            value={record.item_no_name}
-            data={itemList}
-            onChange={(data, option) => {
-              data !== undefined
-                ? onChange(record.id, {
+    {
+      id: 2,
+      title: <div className='text-center'>Raw Material Code</div>,
+      dataIndex: "item_no_name",
+      key: "item_no_name",
+      align: "left",
+      // width: "40%",
+      render: (value, record, index) => {
+        if (readOnly) {
+          return (
+            <div className='text-value' title={value}>
+              <Text>{value ?? "-"}</Text>
+            </div>
+          );
+        } else {
+          return (
+            <CustomSelect
+              allowClear
+              showSearch
+              size={"small"}
+              placeholder={"Raw Material Code"}
+              name='item_id_formula'
+              field_id='item_id'
+              field_name='item_no_name'
+              value={record.item_no_name}
+              data={itemList}
+              onChange={(data, option) => {
+                data !== undefined
+                  ? onChange(record.id, {
                     item_id_formula: option.data.item_id,
                     item_no_name: option.data.item_no_name,
                   })
-                : onChange(record.id, {
+                  : onChange(record.id, {
                     item_id_formula: null,
                     item_no_name: null,
                     item_formula_percent_qty: 0,
                   });
-            }}
-            onBlur={() => Save(record.id)}
-          />
-        );
-      }
+              }}
+              onBlur={() => Save(record.id)}
+            />
+          );
+        }
+      },
     },
-  },
-  {
-    id: 3,
-    title: (
-      <div className='text-center'>
-        {!readOnly && <span className='require'>* </span>}
-        %(W/W)
-      </div>
-    ),
-    dataIndex: "item_formula_percent_qty",
-    key: "item_formula_percent_qty",
-    align: "right",
-    width: "20%",
-    render: (value, record, index) => {
-      if (readOnly) {
-        return convertDigit(value, 4) + " %";
-      } else {
-        return (
-          <InputNumber
-            name='item_formula_percent_qty'
-            placeholder='Percentage'
-            value={record.item_formula_percent_qty}
-            disabled={record.item_id_formula ? 0 : 1}
-            defaultValue={0.0}
-            min={0.0}
-            max={100}
-            {...getNumberFormat(4)}
-            // formatter={(value) => `${value}%`}
-            // parser={(value) => value.replace("%", "")}
-            step={0.0001}
-            onChange={(data) => {
-              onChange(record.id, {
-                item_formula_percent_qty: data,
-              });
-            }}
-            onBlur={() => Save(record.id, "item_formula_percent_qty")}
-            size='small'
-            className='full-width'
-          />
-        );
-      }
+    {
+      id: 3,
+      title: (
+        <div className='text-center'>
+          {!readOnly && <span className='require'>* </span>}
+          %(W/W)
+        </div>
+      ),
+      dataIndex: "item_formula_percent_qty",
+      key: "item_formula_percent_qty",
+      align: "right",
+      width: "20%",
+      render: (value, record, index) => {
+        if (readOnly) {
+          return convertDigit(value, 4) + " %";
+        } else {
+          return (
+            <InputNumber
+              name='item_formula_percent_qty'
+              placeholder='Percentage'
+              value={record.item_formula_percent_qty}
+              disabled={record.item_id_formula ? 0 : 1}
+              defaultValue={0.0}
+              min={0.0}
+              max={100}
+              {...getNumberFormat(4)}
+              // formatter={(value) => `${value}%`}
+              // parser={(value) => value.replace("%", "")}
+              step={0.0001}
+              onChange={(data) => {
+                onChange(record.id, {
+                  item_formula_percent_qty: data,
+                });
+              }}
+              onBlur={() => Save(record.id, "item_formula_percent_qty")}
+              size='small'
+              className='full-width'
+            />
+          );
+        }
+      },
     },
-  },
-  {
-    title: (
-      <Text strong>
-        <EllipsisOutlined />
-      </Text>
-    ),
-    align: "center",
-    width: "5%",
-    render: (value, record, index) => {
-      if (readOnly) {
-        return null;
-      } else {
-        return (
-          <Popconfirm
-            onConfirm={() => {
-              onDelete(record.id);
-            }}
-            title='Are you sure you want to delete this row？'
-            okText='Yes'
-            cancelText='No'>
-            <DeleteTwoTone />
-          </Popconfirm>
-        );
-      }
+    {
+      title: (
+        <Text strong>
+          <EllipsisOutlined />
+        </Text>
+      ),
+      align: "center",
+      width: "5%",
+      render: (value, record, index) => {
+        if (readOnly) {
+          return null;
+        } else {
+          return (
+            <Popconfirm
+              onConfirm={() => {
+                onDelete(record.id);
+              }}
+              title='Are you sure you want to delete this row？'
+              okText='Yes'
+              cancelText='No'>
+              <DeleteTwoTone />
+            </Popconfirm>
+          );
+        }
+      },
     },
-  },
-];
+  ];
 
 export const itemPartMixColumns = (
   readOnly,
@@ -904,82 +904,82 @@ export const itemPartMixColumns = (
   Save,
   { data_part }
 ) => [
-  {
-    id: 1,
-    title: "No.",
-    dataIndex: "id",
-    width: "5%",
-    align: "center",
-    render: (value, record, index) => {
-      return value + 1;
+    {
+      id: 1,
+      title: "No.",
+      dataIndex: "id",
+      width: "5%",
+      align: "center",
+      render: (value, record, index) => {
+        return value + 1;
+      },
     },
-  },
-  {
-    id: 2,
-    title: <div className='text-center'>Part Name</div>,
-    dataIndex: "item_part_description",
-    key: "item_part_description",
-    align: "left",
-    // width: "40%",
-    render: (value, record, index) => {
-      if (readOnly) {
-        return getPartName(record.item_part_sort_mix);
-      } else {
-        return (
-          <CustomSelect
-            allowClear
-            showSearch
-            size={"small"}
-            placeholder={"Select Part"}
-            name='item_part_sort'
-            field_id='item_part_sort'
-            field_name='item_part_description'
-            value={getPartName(record.item_part_sort_mix)}
-            data={data_part}
-            onChange={(data, option) => {
-              data !== undefined
-                ? onChange(record.id, {
+    {
+      id: 2,
+      title: <div className='text-center'>Part Name</div>,
+      dataIndex: "item_part_description",
+      key: "item_part_description",
+      align: "left",
+      // width: "40%",
+      render: (value, record, index) => {
+        if (readOnly) {
+          return getPartName(record.item_part_sort_mix);
+        } else {
+          return (
+            <CustomSelect
+              allowClear
+              showSearch
+              size={"small"}
+              placeholder={"Select Part"}
+              name='item_part_sort'
+              field_id='item_part_sort'
+              field_name='item_part_description'
+              value={getPartName(record.item_part_sort_mix)}
+              data={data_part}
+              onChange={(data, option) => {
+                data !== undefined
+                  ? onChange(record.id, {
                     item_part_sort_mix: option.data.item_part_sort,
                     // item_part_description: option.data.item_part_description,
                   })
-                : onChange(record.id, {
+                  : onChange(record.id, {
                     item_part_sort_mix: null,
                     // item_part_description: null,
                   });
-            }}
-            onBlur={() => Save(record.id)}
-          />
-        );
-      }
+              }}
+              onBlur={() => Save(record.id)}
+            />
+          );
+        }
+      },
     },
-  },
-  {
-    title: (
-      <Text strong>
-        <EllipsisOutlined />
-      </Text>
-    ),
-    align: "center",
-    width: "5%",
-    render: (value, record, index) => {
-      if (readOnly) {
-        return null;
-      } else {
-        return (
-          <Popconfirm
-            onConfirm={() => {
-              onDelete(record.id);
-            }}
-            title='Are you sure you want to delete this row？'
-            okText='Yes'
-            cancelText='No'>
-            <DeleteTwoTone />
-          </Popconfirm>
-        );
-      }
+    {
+      title: (
+        <Text strong>
+          <EllipsisOutlined />
+        </Text>
+      ),
+      align: "center",
+      width: "5%",
+      render: (value, record, index) => {
+        if (readOnly) {
+          return null;
+        } else {
+          return (
+            <Popconfirm
+              onConfirm={() => {
+                onDelete(record.id);
+              }}
+              title='Are you sure you want to delete this row？'
+              okText='Yes'
+              cancelText='No'>
+              <DeleteTwoTone />
+            </Popconfirm>
+          );
+        }
+      },
     },
-  },
-];
+  ];
 
 export const totalFormulaColumns = [
   {
@@ -1011,11 +1011,31 @@ export const totalFormulaColumns = [
   {
     title: "%(W/W)",
     dataIndex: "item_formula_percent_qty",
-    width: "30%",
+    width: "15%",
     align: "center",
     ellipsis: true,
     render: (value, record) => {
       return convertDigit(value, 4);
+    },
+  },
+  {
+    title: "Cost RM/Kg.",
+    dataIndex: "item_formula_cost",
+    width: "15%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record) => {
+      return convertDigit(value, 2);
+    },
+  },
+  {
+    title: "Cost %",
+    dataIndex: "item_formula_cost_percent",
+    width: "15%",
+    align: "center",
+    ellipsis: true,
+    render: (value, record) => {
+      return convertDigit(value, 2);
     },
   },
 ];
@@ -1026,145 +1046,145 @@ export const fillingProcessColumns = (
   onDelete,
   onSave
 ) => [
-  {
-    title: "No.",
-    dataIndex: "id",
-    width: "5%",
-    align: "center",
-    ellipsis: true,
-    render: (value) => {
-      return <Text className={readOnly ? "text-value" : ""}>{value + 1}</Text>;
+    {
+      title: "No.",
+      dataIndex: "id",
+      width: "5%",
+      align: "center",
+      ellipsis: true,
+      render: (value) => {
+        return <Text className={readOnly ? "text-value" : ""}>{value + 1}</Text>;
+      },
     },
-  },
-  {
-    title: (
-      <div className='text-center'>
-        {!readOnly && <span className='require'>* </span>}
-        {"Description"}
-      </div>
-    ),
-    dataIndex: name,
-    align: "left",
-    // width: "10%",
-    ellipsis: true,
-    render: (value, record) => {
-      return readOnly ? (
-        <Text className='text-value'>{value}</Text>
-      ) : (
-        <Input
-          placeholder={"Description"}
-          size={"small"}
-          value={value}
-          name={name}
-          onChange={(e) => onChange(record.id, { [name]: e.target.value })}
-          onBlur={(e) => onSave(record.id, name)}
-        />
-      );
-    },
-  },
-  {
-    title: (
-      <div className='text-center'>
-        {!readOnly && <span className='require'>* </span>}
-        {"Worker"}
-      </div>
-    ),
-    dataIndex: worker,
-    align: "center",
-    ellipsis: true,
-    width: "10%",
-    render: (value, record) => {
-      return readOnly ? (
-        <Text className='text-value'>{value ? value : "-"}</Text>
-      ) : (
-        <InputNumber
-          className='full-width'
-          name={worker}
-          placeholder='Amount of Worker'
-          min={0}
-          step={1}
-          defaultValue={0}
-          precision={0}
-          value={value}
-          onChange={(data) => {
-            console.log(data);
-            onChange(record.id, {
-              [worker]: data ?? 0,
-            });
-          }}
-          onBlur={(e) => {
-            console.log(e.target.value);
-            onSave(record.id, worker);
-          }}
-          size='small'
-        />
-      );
-    },
-  },
-  {
-    title: (
-      <div className='text-center'>
-        {!readOnly && <span className='require'>* </span>}
-        {"Time (HH:mm:ss)"}
-      </div>
-    ),
-    dataIndex: time,
-    align: "center",
-    ellipsis: true,
-    width: "15%",
-    render: (value, record) => {
-      return readOnly ? (
-        <Text className='text-value'>{value ? value : "00:00:00"}</Text>
-      ) : (
-        <TimePicker
-          className='full-width'
-          size={"small"}
-          format={"HH:mm:ss"}
-          secondStep={10}
-          showNow={false}
-          name={time}
-          placeholder='HH:mm:ss'
-          required
-          value={value ? moment(value, "HH:mm:ss") : ""}
-          onChange={(data) => {
-            const timestamp = moment(data, "HH:mm:ss").format("HH:mm:ss");
-            console.log(timestamp);
-            onChange(record.id, {
-              [time]: data ? timestamp : "00:00:00",
-            });
-          }}
-          onBlur={() => onSave(record.id, time)}
-        />
-      );
-    },
-  },
-  {
-    title: (
-      <Text strong>
-        <EllipsisOutlined />
-      </Text>
-    ),
-    align: "center",
-    width: "5%",
-    render: (_, record) => {
-      if (readOnly) {
-        return null;
-      } else {
-        return (
-          <Popconfirm
-            onConfirm={() => {
-              onDelete(record.id);
-            }}
-            title='Are you sure you want to delete this row？'
-            okText='Yes'
-            cancelText='No'>
-            <DeleteTwoTone />
-          </Popconfirm>
+    {
+      title: (
+        <div className='text-center'>
+          {!readOnly && <span className='require'>* </span>}
+          {"Description"}
+        </div>
+      ),
+      dataIndex: name,
+      align: "left",
+      // width: "10%",
+      ellipsis: true,
+      render: (value, record) => {
+        return readOnly ? (
+          <Text className='text-value'>{value}</Text>
+        ) : (
+          <Input
+            placeholder={"Description"}
+            size={"small"}
+            value={value}
+            name={name}
+            onChange={(e) => onChange(record.id, { [name]: e.target.value })}
+            onBlur={(e) => onSave(record.id, name)}
+          />
         );
-      }
+      },
     },
-  },
-];
+    {
+      title: (
+        <div className='text-center'>
+          {!readOnly && <span className='require'>* </span>}
+          {"Worker"}
+        </div>
+      ),
+      dataIndex: worker,
+      align: "center",
+      ellipsis: true,
+      width: "10%",
+      render: (value, record) => {
+        return readOnly ? (
+          <Text className='text-value'>{value ? value : "-"}</Text>
+        ) : (
+          <InputNumber
+            className='full-width'
+            name={worker}
+            placeholder='Amount of Worker'
+            min={0}
+            step={1}
+            defaultValue={0}
+            precision={0}
+            value={value}
+            onChange={(data) => {
+              console.log(data);
+              onChange(record.id, {
+                [worker]: data ?? 0,
+              });
+            }}
+            onBlur={(e) => {
+              console.log(e.target.value);
+              onSave(record.id, worker);
+            }}
+            size='small'
+          />
+        );
+      },
+    },
+    {
+      title: (
+        <div className='text-center'>
+          {!readOnly && <span className='require'>* </span>}
+          {"Time (HH:mm:ss)"}
+        </div>
+      ),
+      dataIndex: time,
+      align: "center",
+      ellipsis: true,
+      width: "15%",
+      render: (value, record) => {
+        return readOnly ? (
+          <Text className='text-value'>{value ? value : "00:00:00"}</Text>
+        ) : (
+          <TimePicker
+            className='full-width'
+            size={"small"}
+            format={"HH:mm:ss"}
+            secondStep={10}
+            showNow={false}
+            name={time}
+            placeholder='HH:mm:ss'
+            required
+            value={value ? moment(value, "HH:mm:ss") : ""}
+            onChange={(data) => {
+              const timestamp = moment(data, "HH:mm:ss").format("HH:mm:ss");
+              console.log(timestamp);
+              onChange(record.id, {
+                [time]: data ? timestamp : "00:00:00",
+              });
+            }}
+            onBlur={() => onSave(record.id, time)}
+          />
+        );
+      },
+    },
+    {
+      title: (
+        <Text strong>
+          <EllipsisOutlined />
+        </Text>
+      ),
+      align: "center",
+      width: "5%",
+      render: (_, record) => {
+        if (readOnly) {
+          return null;
+        } else {
+          return (
+            <Popconfirm
+              onConfirm={() => {
+                onDelete(record.id);
+              }}
+              title='Are you sure you want to delete this row？'
+              okText='Yes'
+              cancelText='No'>
+              <DeleteTwoTone />
+            </Popconfirm>
+          );
+        }
+      },
+    },
+  ];
 
 export const fillingProcessFields = {
   id: 0,
@@ -1209,192 +1229,192 @@ export const itemUOMConversionColumns = ({
   onSwitch,
   filterUOM,
 }) => [
-  {
-    title: "No.",
-    dataIndex: "id",
-    width: "5%",
-    align: "center",
-    ellipsis: true,
-    render: (value) => {
-      return <Text className={readOnly ? "text-value" : ""}>{value + 1}</Text>;
+    {
+      title: "No.",
+      dataIndex: "id",
+      width: "5%",
+      align: "center",
+      ellipsis: true,
+      render: (value) => {
+        return <Text className={readOnly ? "text-value" : ""}>{value + 1}</Text>;
+      },
     },
-  },
-  {
-    title: (
-      <div className='text-center'>
-        <CustomLabel label='Main UOM' require readOnly={readOnly} />
-      </div>
-    ),
-    dataIndex: "uom_no_name_from",
-    width: "20%",
-    align: "center",
-    render: (value) => (
-      <Text name='uom_id_from' className='text-value'>
-        {value}
-      </Text>
-    ),
-  },
-  {
-    title: (
-      <div className='text-center'>
-        <CustomLabel label='Type' require readOnly={readOnly} />
-      </div>
-    ),
-    dataIndex: "uom_convert_main_action",
-    width: "10%",
-    align: "center",
-    render: (value, record, key) => {
-      return readOnly ? (
-        <Text className='text-value'>{value}</Text>
-      ) : (
-        <CustomSelect
-          allowClear
-          showSearch
-          size={"small"}
-          placeholder={"> , < , ="}
-          className={"full-width check-field"}
-          name={`uom_convert_main_action-${key}`}
-          field_id='uom_convert_main_action_id'
-          field_name='uom_convert_main_action'
-          value={value}
-          data={[
-            {
-              uom_convert_main_action_id: 0,
-              uom_convert_main_action: ">",
-            },
-            {
-              uom_convert_main_action_id: 1,
-              uom_convert_main_action: "<",
-            },
-            {
-              uom_convert_main_action_id: 2,
-              uom_convert_main_action: "=",
-            },
-          ]}
-          onChange={(data, option) => {
-            console.log(data, option);
-            data !== undefined
-              ? onChange(record.id, {
+    {
+      title: (
+        <div className='text-center'>
+          <CustomLabel label='Main UOM' require readOnly={readOnly} />
+        </div>
+      ),
+      dataIndex: "uom_no_name_from",
+      width: "20%",
+      align: "center",
+      render: (value) => (
+        <Text name='uom_id_from' className='text-value'>
+          {value}
+        </Text>
+      ),
+    },
+    {
+      title: (
+        <div className='text-center'>
+          <CustomLabel label='Type' require readOnly={readOnly} />
+        </div>
+      ),
+      dataIndex: "uom_convert_main_action",
+      width: "10%",
+      align: "center",
+      render: (value, record, key) => {
+        return readOnly ? (
+          <Text className='text-value'>{value}</Text>
+        ) : (
+          <CustomSelect
+            allowClear
+            showSearch
+            size={"small"}
+            placeholder={"> , < , ="}
+            className={"full-width check-field"}
+            name={`uom_convert_main_action-${key}`}
+            field_id='uom_convert_main_action_id'
+            field_name='uom_convert_main_action'
+            value={value}
+            data={[
+              {
+                uom_convert_main_action_id: 0,
+                uom_convert_main_action: ">",
+              },
+              {
+                uom_convert_main_action_id: 1,
+                uom_convert_main_action: "<",
+              },
+              {
+                uom_convert_main_action_id: 2,
+                uom_convert_main_action: "=",
+              },
+            ]}
+            onChange={(data, option) => {
+              console.log(data, option);
+              data !== undefined
+                ? onChange(record.id, {
                   uom_convert_main_action_id:
                     option.data.uom_convert_main_action_id,
                   uom_convert_main_action: option.data.uom_convert_main_action,
                 })
-              : onChange(record.id, {
+                : onChange(record.id, {
                   uom_convert_main_action_id: null,
                   uom_convert_main_action: null,
                 });
-          }}
-        />
-      );
+            }}
+          />
+        );
+      },
     },
-  },
-  {
-    title: (
-      <div className='text-center'>
-        <CustomLabel label='To UOM' require readOnly={readOnly} />
-      </div>
-    ),
-    dataIndex: "uom_no_name_to",
-    width: "20%",
-    align: "center",
-    render: (value, record, key) => {
-      return readOnly ? (
-        <Text className='text-value text-left'>{value}</Text>
-      ) : (
-        <CustomSelect
-          allowClear
-          showSearch
-          size={"small"}
-          placeholder={"Unit of measure"}
-          className={"full-width check-field"}
-          name={`uom_id_to-${key}`}
-          field_id='uom_id'
-          field_name='uom_no_name'
-          value={value}
-          data={filterUOM}
-          onChange={(data, option) => {
-            data !== undefined
-              ? onChange(record.id, {
+    {
+      title: (
+        <div className='text-center'>
+          <CustomLabel label='To UOM' require readOnly={readOnly} />
+        </div>
+      ),
+      dataIndex: "uom_no_name_to",
+      width: "20%",
+      align: "center",
+      render: (value, record, key) => {
+        return readOnly ? (
+          <Text className='text-value text-left'>{value}</Text>
+        ) : (
+          <CustomSelect
+            allowClear
+            showSearch
+            size={"small"}
+            placeholder={"Unit of measure"}
+            className={"full-width check-field"}
+            name={`uom_id_to-${key}`}
+            field_id='uom_id'
+            field_name='uom_no_name'
+            value={value}
+            data={filterUOM}
+            onChange={(data, option) => {
+              data !== undefined
+                ? onChange(record.id, {
                   uom_id_to: option.data.uom_id,
                   uom_no_name_to: option.data.uom_no_name,
                 })
-              : onChange(record.id, {
+                : onChange(record.id, {
                   uom_id_to: null,
                   uom_no_name_to: null,
                 });
-          }}
-        />
-      );
-    },
-  },
-  {
-    title: (
-      <div className='text-center'>
-        <CustomLabel label='Ratio' require readOnly={readOnly} />
-      </div>
-    ),
-    dataIndex: "uom_convert_value",
-    width: "20%",
-    align: "center",
-    render: (value, record, key) => {
-      return readOnly ? (
-        <div className='text-right'>
-          <Text className='text-value '>{convertDigit(value, 4)}</Text>
-        </div>
-      ) : (
-        <InputNumber
-          {...getNumberFormat(4)}
-          className={"full-width check-field"}
-          name={`uom_convert_value-${key}`}
-          placeholder={"Ratio"}
-          min={0}
-          step={1}
-          size={"small"}
-          value={value}
-          onChange={(data) =>
-            onChange(record.id, {
-              uom_convert_value: data,
-            })
-          }
-        />
-      );
-    },
-  },
-
-  {
-    title: (
-      <Text strong>
-        <EllipsisOutlined />
-      </Text>
-    ),
-    dataIndex: "uom_convert_actived",
-    // dataIndex: "actions",
-    // key: "actions",
-    align: "center",
-    width: "5%",
-    render: (value, record, index) => {
-      if (readOnly) {
-        return null;
-      } else {
-        return record.uom_convert_id !== null ? (
-          <Switch
-            size='small'
-            title='Active / In-Active'
-            checked={value}
-            onChange={(_) => onSwitch(record.id)}
-          />
-        ) : (
-          <Popconfirm
-            onConfirm={() => {
-              onDelete(record.id);
             }}
-            title='Are you sure you want to delete this row？'
-            okText='Yes'
-            cancelText='No'>
-            <DeleteTwoTone />
-          </Popconfirm>
+          />
         );
-      }
+      },
     },
-  },
-];
+    {
+      title: (
+        <div className='text-center'>
+          <CustomLabel label='Ratio' require readOnly={readOnly} />
+        </div>
+      ),
+      dataIndex: "uom_convert_value",
+      width: "20%",
+      align: "center",
+      render: (value, record, key) => {
+        return readOnly ? (
+          <div className='text-right'>
+            <Text className='text-value '>{convertDigit(value, 4)}</Text>
+          </div>
+        ) : (
+          <InputNumber
+            {...getNumberFormat(4)}
+            className={"full-width check-field"}
+            name={`uom_convert_value-${key}`}
+            placeholder={"Ratio"}
+            min={0}
+            step={1}
+            size={"small"}
+            value={value}
+            onChange={(data) =>
+              onChange(record.id, {
+                uom_convert_value: data,
+              })
+            }
+          />
+        );
+      },
+    },
+
+    {
+      title: (
+        <Text strong>
+          <EllipsisOutlined />
+        </Text>
+      ),
+      dataIndex: "uom_convert_actived",
+      // dataIndex: "actions",
+      // key: "actions",
+      align: "center",
+      width: "5%",
+      render: (value, record, index) => {
+        if (readOnly) {
+          return null;
+        } else {
+          return record.uom_convert_id !== null ? (
+            <Switch
+              size='small'
+              title='Active / In-Active'
+              checked={value}
+              onChange={(_) => onSwitch(record.id)}
+            />
+          ) : (
+            <Popconfirm
+              onConfirm={() => {
+                onDelete(record.id);
+              }}
+              title='Are you sure you want to delete this row？'
+              okText='Yes'
+              cancelText='No'>
+              <DeleteTwoTone />
+            </Popconfirm>
+          );
+        }
+      },
+    },
+  ];
