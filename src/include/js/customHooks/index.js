@@ -34,7 +34,7 @@ const useFetch = (url, missingParams = false) => {
           .catch((err) => {
             setLoading(false);
             setError("Error. Can't fetch any data from the server.");
-            console.error("error", err);
+            console.log("error", err);
           });
     } else {
       console.log(
