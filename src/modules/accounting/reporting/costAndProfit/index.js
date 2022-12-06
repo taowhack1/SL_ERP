@@ -625,6 +625,19 @@ const columns = [
   },
   {
     className: "tb-col-sm",
+    dataIndex: "sum_so_detail_ac_tax_amount_p",
+    key: "sum_so_detail_ac_tax_amount_p",
+    ellipsis: false,
+    align: "center",
+    render: (val) => <div className="w-100 text-right">
+      {numeral(val || 0).format("#,###.##")} %
+    </div>,
+    sorter: (a, b) => a.id - b.id,
+    title: <b>% ต่อยอดขาย</b>,
+    width: 150,
+  },
+  {
+    className: "tb-col-sm",
     dataIndex: "sum_total_cost",
     key: "sum_total_cost",
     ellipsis: false,
@@ -687,6 +700,19 @@ const columns = [
     sorter: (a, b) => a.id - b.id,
     title: <b>กำไร / ขาดทุน</b>,
     width: 200,
+  },
+  {
+    className: "tb-col-sm",
+    dataIndex: "sum_total_profit_p",
+    key: "sum_total_profit_p",
+    ellipsis: false,
+    align: "center",
+    render: (val) => <div className="w-100 text-right">
+      {numeral(val || 0).format("#,###.##")} %
+    </div>,
+    sorter: (a, b) => a.id - b.id,
+    title: <b>% ต่อยอดขาย</b>,
+    width: 150,
   },
 ];
 
