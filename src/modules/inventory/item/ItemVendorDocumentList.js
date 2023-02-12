@@ -12,6 +12,7 @@ const ItemVendorDocumentList = ({
   onChangeFile,
 }) => {
   console.log("file", file);
+  console.log("vendorDetail", vendorDetail);
   return (
     <>
       <Row className="col-2 row-margin-vertical detail-tab-row">
@@ -42,6 +43,16 @@ const ItemVendorDocumentList = ({
             label={"MSDS."}
             field={"item_vendor_detail_msds"}
             checked={vendorDetail.item_vendor_detail_msds}
+            enableUpload={true}
+          />
+          <ItemVendorDocument
+            fileTypeId={12}
+            file={file}
+            onChange={onChange}
+            onChangeFile={onChangeFile}
+            label={"MSDS. Thai"}
+            field={"item_vendor_detail_msds"}
+            checked={vendorDetail.item_vendor_detail_msds_th}
             enableUpload={true}
           />
           <ItemVendorDocument

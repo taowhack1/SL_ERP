@@ -104,6 +104,46 @@ const ItemCertificate = ({
             </Col>
             <Col span={1}></Col>
           </Row>
+          {/* MSDS TH. */}
+          <Row className="col-2 row-margin-vertical">
+            <Col span={1}></Col>
+            <Col span={2}>
+              {readOnly ? (
+                <Space align="baseline">
+                  {data_head?.item_msds_th ? (
+                    <CheckSquareOutlined />
+                  ) : (
+                    <BorderOutlined />
+                  )}
+                </Space>
+              ) : (
+                <Checkbox
+                  checked={data_head?.item_msds_th}
+                  onChange={(e) =>
+                    upDateFormValue({
+                      item_msds_th: e.target.checked ? 1 : 0,
+                    })
+                  }
+                />
+              )}
+            </Col>
+            <Col span={9}>
+              <Text strong> MSDS. Thai</Text>
+            </Col>
+            <Col span={10}>
+              <ItemFileUpload
+                data_file={data_file}
+                updateFile={updateFile}
+                chkbox_upload_fields={data_head?.item_msds_th}
+                maxFile={1}
+                file_type_id={3}
+                upload_type={"Button"}
+                readOnly={readOnly}
+              />
+            </Col>
+            <Col span={1}></Col>
+          </Row>
+          {/* MSDS TH. */}
           <Row className="col-2 row-margin-vertical">
             <Col span={1}></Col>
             <Col span={2}>

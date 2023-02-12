@@ -1,10 +1,7 @@
-import { BorderOutlined, CheckSquareOutlined } from "@ant-design/icons";
-import { Checkbox, Col, Input, Row, Space, Radio } from "antd";
+
+import { Col, Input, Row } from "antd";
 import Text from "antd/lib/typography/Text";
 import React from "react";
-import CustomSelect from "../../../components/CustomSelect";
-import { get_pre_run_no } from "../../../include/js/function_main";
-import ItemCertificate from "./ItemCertificate";
 const TabItemRD = ({
   data_file,
   updateFile,

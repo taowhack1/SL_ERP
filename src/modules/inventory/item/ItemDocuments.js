@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import CustomLabel from "../../../components/CustomLabel";
 import { AppContext, ItemContext } from "../../../include/js/context";
 import { sortData } from "../../../include/js/function_main";
-import ItemCertificate from "./ItemCertificate";
 import ItemFileUpload from "./ItemFileUpload";
 const { Panel } = Collapse;
 const ItemDocuments = () => {
@@ -55,8 +54,8 @@ const ItemDocuments = () => {
                   <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj.item_vendor_detail.length &&
-                      obj.item_vendor_detail[0]
-                        .item_vendor_detail_specification ? (
+                        obj.item_vendor_detail[0]
+                          .item_vendor_detail_specification ? (
                         <CheckSquareOutlined />
                       ) : (
                         <BorderOutlined />
@@ -103,7 +102,7 @@ const ItemDocuments = () => {
                   <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj?.item_vendor_detail.length &&
-                      obj.item_vendor_detail[0].item_vendor_detail_msds ? (
+                        obj.item_vendor_detail[0].item_vendor_detail_msds ? (
                         <CheckSquareOutlined />
                       ) : (
                         <BorderOutlined />
@@ -148,7 +147,7 @@ const ItemDocuments = () => {
                   <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj?.item_vendor_detail.length &&
-                      obj.item_vendor_detail[0].item_vendor_detail_quotation ? (
+                        obj.item_vendor_detail[0].item_vendor_detail_quotation ? (
                         <CheckSquareOutlined />
                       ) : (
                         <BorderOutlined />
@@ -188,14 +187,59 @@ const ItemDocuments = () => {
                       }
                     </Col>
                   </Row>
+                  {/* MSDS TH. */}
+                  <Row className='col-2 row-margin-vertical'>
+                    <Col span={2} offset={1}>
+                      {obj?.item_vendor_detail?.length &&
+                        obj.item_vendor_detail[0]?.item_vendor_detail_msds_th ? (
+                        <CheckSquareOutlined />
+                      ) : (
+                        <BorderOutlined />
+                      )}
+                    </Col>
+                    <Col span={8}>
+                      <CustomLabel
+                        label={
+                          obj?.item_vendor_detail_document?.certificate["12"]?.file_type_name
+                        }
+                      />
+                    </Col>
+                    <Col span={13}>
+                      {
+                        // 1 = ADMIN , 10 = MIS , 11 = RD , 13 = PU ,17 = QC , 18 = SA , 20 = PD , 24 = WH , 90 = EXECUTIVE
+                        // 41 = จ.ป.
+                        [1, 10, 11, 13, 17, 24, 20, 41].includes(
+                          department_id
+                        ) ? (
+                          <ItemFileUpload
+                            data_file={obj?.item_vendor_detail_document}
+                            updateFile={null}
+                            chkbox_upload_fields={
+                              obj?.item_vendor_detail?.length &&
+                              obj.item_vendor_detail[0]?.item_vendor_detail_msds_th
+                            }
+                            maxFile={1}
+                            file_type_id={12}
+                            upload_type={"Button"}
+                            readOnly={true}
+                          />
+                        ) : (
+                          <div className='blur-bg'>
+                            <LockOutlined className='button-icon mr-1 font-18' />
+                            This file need permission to access.
+                          </div>
+                        )
+                      }
+                    </Col>
+                  </Row>
                 </Col>
 
                 <Col span={12}>
                   <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj?.item_vendor_detail.length &&
-                      obj.item_vendor_detail[0]
-                        .item_vendor_detail_halal_cert ? (
+                        obj.item_vendor_detail[0]
+                          .item_vendor_detail_halal_cert ? (
                         <CheckSquareOutlined />
                       ) : (
                         <BorderOutlined />
@@ -228,7 +272,7 @@ const ItemDocuments = () => {
                   <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj?.item_vendor_detail.length &&
-                      obj.item_vendor_detail[0].item_vendor_detail_non_haram ? (
+                        obj.item_vendor_detail[0].item_vendor_detail_non_haram ? (
                         <CheckSquareOutlined />
                       ) : (
                         <BorderOutlined />
@@ -260,7 +304,7 @@ const ItemDocuments = () => {
                   <Row className='col-2 row-margin-vertical'>
                     <Col span={2} offset={1}>
                       {obj?.item_vendor_detail.length &&
-                      obj.item_vendor_detail[0].item_vendor_detail_non_halal ? (
+                        obj.item_vendor_detail[0].item_vendor_detail_non_halal ? (
                         <CheckSquareOutlined />
                       ) : (
                         <BorderOutlined />
