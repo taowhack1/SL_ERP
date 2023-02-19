@@ -38,7 +38,6 @@ const ItemVendorModal = ({
   const { id: headId, item_vendor_detail: headDetail } = vendorData;
 
   const { vendorFile, updateFileVendor, readOnly } = useContext(ItemContext);
-  console.log("vendorFile", vendorFile);
   const { country } = useSelector((stateDetail) => stateDetail.hrm);
 
   const [stateDetail, setStateDetail] = useState({
@@ -48,6 +47,7 @@ const ItemVendorModal = ({
   const [stateFile, setStateFile] = useState({
     certificate: vendorFile[headId].certificate || itemVendorDocumentFields,
   });
+
   const onChangeFile = useCallback(
     (data, type) => {
       setStateFile({
@@ -59,9 +59,9 @@ const ItemVendorModal = ({
   );
 
   const onChangeValue = (data) => {
-    console.log("onChangeValue", data);
     setStateDetail({ ...stateDetail, ...data, commit: 1 });
   };
+
   const saveCloseModal = () => {
     if (!readOnly) {
       onChangeVendorState(headId, {
@@ -74,9 +74,6 @@ const ItemVendorModal = ({
     setModalState({ visible: false, vendorData: null });
   };
 
-  console.log("vendorData", vendorData);
-  console.log("stateDetail", stateDetail);
-  console.log("stateFile", stateFile);
   return (
     <>
       <Modal
@@ -123,13 +120,13 @@ const ItemVendorModal = ({
                     onChange={(val, obj) => {
                       val
                         ? onChangeValue({
-                            country_id: obj.data.country_id,
-                            country_name: obj.data.country_name,
-                          })
+                          country_id: obj.data.country_id,
+                          country_name: obj.data.country_name,
+                        })
                         : onChangeValue({
-                            country_id: null,
-                            country_name: null,
-                          });
+                          country_id: null,
+                          country_name: null,
+                        });
                     }}
                   />
                 )}

@@ -124,6 +124,7 @@ export const itemVendorDocumentFields = {
     4: null,
     5: null,
     6: null,
+    12: null,
   },
 };
 export const itemVendorFields = {
@@ -159,11 +160,13 @@ export const item_show_columns = [
     width: "10%",
     align: "left",
     ellipsis: true,
+    sorter: (a, b) => a.item_id - b.item_id
   },
   {
     title: "Item Name",
     dataIndex: "item_name",
     ellipsis: true,
+    sorter: (a, b) => a.item_name?.length - b.item_name?.length
   },
   {
     title: "Unit",
@@ -177,17 +180,20 @@ export const item_show_columns = [
     dataIndex: "type_name",
     width: "10%",
     ellipsis: true,
+    sorter: (a, b) => a.type_id = b.type_id
   },
   {
     title: "Category",
     dataIndex: "category_name",
     width: "10%",
     ellipsis: true,
+    sorter: (a, b) => a.category_id = b.category_id
   },
   {
     title: "Description",
     dataIndex: "item_remark",
     ellipsis: true,
+    sorter: (a, b) => a.item_description?.length - b.item_description?.length
   },
   {
     title: "Status",
@@ -533,6 +539,7 @@ export const item_file = {
     7: null,
     8: null, //filling process docs.
     9: null, //bulk spec docs.
+    12: null, //msds th
   },
 };
 
@@ -1107,13 +1114,11 @@ export const fillingProcessColumns = (
             precision={0}
             value={value}
             onChange={(data) => {
-              console.log(data);
               onChange(record.id, {
                 [worker]: data ?? 0,
               });
             }}
             onBlur={(e) => {
-              console.log(e.target.value);
               onSave(record.id, worker);
             }}
             size='small'
@@ -1148,7 +1153,6 @@ export const fillingProcessColumns = (
             value={value ? moment(value, "HH:mm:ss") : ""}
             onChange={(data) => {
               const timestamp = moment(data, "HH:mm:ss").format("HH:mm:ss");
-              console.log(timestamp);
               onChange(record.id, {
                 [time]: data ? timestamp : "00:00:00",
               });

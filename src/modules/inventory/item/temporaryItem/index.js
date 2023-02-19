@@ -22,6 +22,7 @@ const columns = ({ viewRecord }) => [
     width: "5%",
     align: "center",
     render: (val) => val + 1,
+    sorter: (a, b) => a.item_sample_id - b.item_sample_id
   },
   {
     title: (
@@ -32,6 +33,8 @@ const columns = ({ viewRecord }) => [
     dataIndex: "item_sample_no",
     width: "10%",
     align: "center",
+    sorter: (a, b) => a.item_sample_no?.split('-')[1] - b.item_sample_no?.split('-')[1],
+    sortDirections: ['descend', 'ascend']
   },
   {
     title: (
@@ -43,6 +46,8 @@ const columns = ({ viewRecord }) => [
     width: "30%",
     align: "left",
     ellipsis: true,
+    sorter: (a, b) => a.item_sample_name_trade.length - b.item_sample_name_trade.length,
+    sortDirections: ['descend', 'ascend']
   },
   {
     title: (
@@ -54,6 +59,8 @@ const columns = ({ viewRecord }) => [
     width: "30%",
     align: "left",
     ellipsis: true,
+    sorter: (a, b) => a.item_sample_name_inci.length - b.item_sample_name_inci.length,
+    sortDirections: ['descend', 'ascend']
   },
   {
     title: (
@@ -65,6 +72,8 @@ const columns = ({ viewRecord }) => [
     width: "15%",
     align: "left",
     ellipsis: true,
+    sorter: (a, b) => a.type_id - b.type_id,
+    sortDirections: ['descend', 'ascend']
   },
   {
     title: (
@@ -104,14 +113,14 @@ const TemporaryItems = () => {
       onSearch: (text) => {
         const filterData = text
           ? sampleItems?.filter(
-              (obj) =>
-                obj?.item_sample_no
-                  ?.toUpperCase()
-                  ?.indexOf(text?.toUpperCase()) >= 0 ||
-                obj?.item_sample_name_trade
-                  ?.toUpperCase()
-                  ?.indexOf(text?.toUpperCase()) >= 0
-            )
+            (obj) =>
+              obj?.item_sample_no
+                ?.toUpperCase()
+                ?.indexOf(text?.toUpperCase()) >= 0 ||
+              obj?.item_sample_name_trade
+                ?.toUpperCase()
+                ?.indexOf(text?.toUpperCase()) >= 0
+          )
           : sampleItems;
         setState(filterData);
       },
@@ -148,16 +157,16 @@ const TemporaryItems = () => {
               rowKey="id"
               bordered
               pagination={{ pageSize: 20 }}
-              // onRow={(record) => ({
-              //   onClick: () => {
-              //     console.log(record);
-              //     if (record.id === selectRow) return setSelectRow(null);
-              //     setSelectRow({
-              //       id: record.item_sample_id,
-              //       state: record,
-              //     });
-              //   },
-              // })}
+            // onRow={(record) => ({
+            //   onClick: () => {
+            //     console.log(record);
+            //     if (record.id === selectRow) return setSelectRow(null);
+            //     setSelectRow({
+            //       id: record.item_sample_id,
+            //       state: record,
+            //     });
+            //   },
+            // })}
             />
           )}
         </div>

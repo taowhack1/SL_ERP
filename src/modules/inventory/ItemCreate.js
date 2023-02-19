@@ -29,13 +29,9 @@ import {
   item_fields,
   item_file,
   item_packaging_detail_fields,
-  item_formula_detail_fields,
-  item_part_specification_detail_fields,
   item_part_specification_fields,
-  item_qa_detail_fields,
   item_require_fields,
   item_weight_detail,
-  item_part_mix_fields,
   fillingProcessFields,
   itemQAFields,
   itemVendorFields,
@@ -128,26 +124,26 @@ const ItemCreate = (props) => {
     dispatch(get_sale_master_data());
     dispatch(getAllMachine());
     dispatch(getCountry());
-    console.log("data.data_head", data.data_head);
     headDispatch({
       type: "SET_HEAD",
       payload:
         data && data.data_head
           ? {
-              ...data.data_head,
-              commit: 1,
-              user_name: auth.user_name,
-              qa_spec:
-                data.data_head.qa_spec.length <= 0
-                  ? sortData([itemQAFields])
-                  : data.data_head.qa_spec,
-              pu_vendor:
-                data.data_head?.pu_vendor?.length <= 0
-                  ? []
-                  : sortDataWithoutCommit(data.data_head.pu_vendor),
-            }
+            ...data.data_head,
+            commit: 1,
+            user_name: auth.user_name,
+            qa_spec:
+              data.data_head.qa_spec.length <= 0
+                ? sortData([itemQAFields])
+                : data.data_head.qa_spec,
+            pu_vendor:
+              data.data_head?.pu_vendor?.length <= 0
+                ? []
+                : sortDataWithoutCommit(data.data_head.pu_vendor),
+          }
           : { ...initialStateHead, commit: 1, user_name: auth.user_name },
     });
+
     console.log(
       " ISUS ",
       data?.data_head?.pu_vendor?.map((obj, key) => {
@@ -157,6 +153,8 @@ const ItemCreate = (props) => {
         };
       })
     );
+
+    console.log("data?.data_head", data?.data_head)
     setVendorFile(
       data?.data_head?.pu_vendor?.map((obj, key) => {
         return {
@@ -165,6 +163,7 @@ const ItemCreate = (props) => {
         };
       }) || [itemVendorDocumentFields]
     );
+
     weightDetailDispatch({
       type: "SET_DETAIL",
       payload:
@@ -172,6 +171,7 @@ const ItemCreate = (props) => {
           ? data.data_weight_detail
           : item_weight_detail,
     });
+
     packagingDetailDispatch({
       type: "SET_DETAIL",
       payload:
@@ -179,14 +179,18 @@ const ItemCreate = (props) => {
           ? data.data_packaging_detail
           : [item_packaging_detail_fields],
     });
+
     statePartDispatch({
       type: "SET_ARRAY",
       payload: data.data_part ?? [item_part_specification_fields],
     });
+
     setFile(data.data_file ?? item_file);
     setFilling(data.data_filling ?? []);
+
   }, []);
 
+  console.log("data_file", data_file)
   const config = {
     projectId: current_project && current_project.project_id,
     title: current_project && current_project.project_name,
@@ -197,7 +201,7 @@ const ItemCreate = (props) => {
       "Items",
       data_head.item_no ? "Edit" : "Create",
       data_head.item_no &&
-        "[ " + data_head.item_no + " ] " + data_head.item_name,
+      "[ " + data_head.item_no + " ] " + data_head.item_name,
     ],
     search: false,
     buttonAction: ["Save", "Discard"],
@@ -216,12 +220,11 @@ const ItemCreate = (props) => {
       // console.log("SAVE QA", data_qa_detail);
       console.log("SAVE WEIGHT", data_weight_detail);
       console.log("SAVE PACKAGING", data_packaging_detail);
-      console.log("SAVE FILES", data_file);
+      console.log("SAVE FILES", data_file, vendorFile);
       console.log("SAVE FILLING", filling);
 
       const key = "validate";
       const validate = validateFormHead(data_head, item_require_fields);
-      console.log("formulaPercent", formulaPercent);
       if (
         statePart.length > 1 &&
         convertDigit(formulaPercent, 4) !== convertDigit(100, 4)
@@ -262,11 +265,11 @@ const ItemCreate = (props) => {
           data_detail:
             vendorFormRef.current && vendorFormRef.current?.value
               ? JSON.parse(vendorFormRef.current.value).map((obj, key) => {
-                  return {
-                    ...obj,
-                    item_vendor_detail_document: vendorFile[key],
-                  };
-                })
+                return {
+                  ...obj,
+                  item_vendor_detail_document: vendorFile[key],
+                };
+              })
               : [],
           data_part: statePart,
           data_qa_detail:
@@ -319,18 +322,20 @@ const ItemCreate = (props) => {
     console.log("upDateFormValue", data);
     headDispatch({ type: "CHANGE_HEAD_VALUE", payload: data });
   };
+
   const updateFile = useCallback(
     (data, type) => {
       type === 1
         ? setFile({ ...data_file, ...data })
         : setFile({
-            ...data_file,
-            certificate: { ...data_file.certificate, ...data },
-          });
+          ...data_file,
+          certificate: { ...data_file.certificate, ...data },
+        });
     },
     [data_file]
   );
   const updateFileVendor = (headId, fileList) => {
+    console.log("updateFileVendor", fileList)
     setVendorFile(
       vendorFile.map((obj) =>
         obj.id === headId ? { ...obj, certificate: fileList } : obj

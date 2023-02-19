@@ -53,12 +53,10 @@ const ItemFileUpload = ({
     const reader = new FileReader();
     let file_tmp = null;
     if (fileList.length) {
-      console.log("file", file);
       file_tmp = file;
       // file_tmp = fileList[0];
       reader.readAsDataURL(file);
       reader.onload = (e) => {
-        console.log("reader.onload", file, e.target);
         file_tmp.uid = file.uid;
         file_tmp.thumbUrl = e.target.result;
         file_tmp.url = e.target.result;
@@ -68,7 +66,6 @@ const ItemFileUpload = ({
         file_tmp.file_type_id = file_type_id;
         file_tmp.file_name = file.name;
         file_tmp.file_type = file.type;
-        console.log(file_tmp);
         saveFile(file_type_id, file_tmp);
         setLoading(false);
       };
@@ -79,7 +76,6 @@ const ItemFileUpload = ({
   };
 
   const handlePreview = async (file) => {
-    console.log("file", file);
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
@@ -143,7 +139,6 @@ const ItemFileUpload = ({
           : [];
         break;
     }
-    console.log("file_temp", file_temp);
     switch (upload_type) {
       case "Card":
         return (
@@ -204,15 +199,15 @@ const ItemFileUpload = ({
                 disabled={readOnly}
                 onPreview={handlePreview}>
                 {readOnly ||
-                (file_temp.length && file_temp[0] && file_temp[0].name)
+                  (file_temp.length && file_temp[0] && file_temp[0].name)
                   ? null
                   : (
-                      <Button
-                        icon={<UploadOutlined />}
-                        disabled={chkbox_upload_fields ? 0 : 1}>
-                        Click to upload
-                      </Button>
-                    ) ?? null}
+                    <Button
+                      icon={<UploadOutlined />}
+                      disabled={chkbox_upload_fields ? 0 : 1}>
+                      Click to upload
+                    </Button>
+                  ) ?? null}
               </Upload>
             )}
           </>

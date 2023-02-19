@@ -39,7 +39,6 @@ const TabItemDetail = ({
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   let disabled_field = data_head.item_id ? 1 : 0;
-  console.log("data_head", data_head);
   return (
     <>
       <Row>
@@ -68,23 +67,23 @@ const TabItemDetail = ({
                   onChange={(data, option) => {
                     data !== undefined
                       ? upDateFormValue({
-                          item_type_id: data,
-                          item_type_no_name: option.title,
-                          item_pre_run_no: get_pre_run_no(
-                            data_head.item_pre_run_no,
-                            0,
-                            option.data.item_type_run_no
-                          ),
-                        })
+                        item_type_id: data,
+                        item_type_no_name: option.title,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          0,
+                          option.data.item_type_run_no
+                        ),
+                      })
                       : upDateFormValue({
-                          item_type_id: null,
-                          item_type_no_name: null,
-                          item_pre_run_no: get_pre_run_no(
-                            data_head.item_pre_run_no,
-                            0,
-                            "-"
-                          ),
-                        });
+                        item_type_id: null,
+                        item_type_no_name: null,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          0,
+                          "-"
+                        ),
+                      });
                   }}
                 />
               )}
@@ -114,32 +113,32 @@ const TabItemDetail = ({
                   onChange={(data, option) => {
                     data !== undefined
                       ? upDateFormValue({
-                          type_id: data,
-                          type_name: option.title,
-                          category_id: null,
-                          category_name: null,
-                          item_shelf_life: [2, 3, 4].includes(data)
-                            ? 730
-                            : data === 1
+                        type_id: data,
+                        type_name: option.title,
+                        category_id: null,
+                        category_name: null,
+                        item_shelf_life: [2, 3, 4].includes(data)
+                          ? 730
+                          : data === 1
                             ? 180
                             : 0,
-                          item_pre_run_no: get_pre_run_no(
-                            data_head.item_pre_run_no,
-                            1,
-                            option.data.type_run_no
-                          ),
-                        })
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          1,
+                          option.data.type_run_no
+                        ),
+                      })
                       : upDateFormValue({
-                          type_id: null,
-                          type_name: null,
-                          category_id: null,
-                          category_name: null,
-                          item_pre_run_no: get_pre_run_no(
-                            data_head.item_pre_run_no,
-                            1,
-                            "-"
-                          ),
-                        });
+                        type_id: null,
+                        type_name: null,
+                        category_id: null,
+                        category_name: null,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          1,
+                          "-"
+                        ),
+                      });
                   }}
                 />
               )}
@@ -173,27 +172,27 @@ const TabItemDetail = ({
                   onChange={(data, option) => {
                     data !== undefined
                       ? upDateFormValue({
-                          uom_id: option.data.uom_id,
-                          uom_no: option.data.uom_no,
-                          uom_no_name: option.data.uom_no_name,
-                          uom_name: option.data.uom_name,
-                          uom_conversion: data_head?.uom_conversion?.map(
-                            (obj) => {
-                              return {
-                                ...obj,
-                                uom_id: option.data.uom_id,
-                                uom_no_name: option.data.uom_no_name,
-                              };
-                            }
-                          ),
-                        })
+                        uom_id: option.data.uom_id,
+                        uom_no: option.data.uom_no,
+                        uom_no_name: option.data.uom_no_name,
+                        uom_name: option.data.uom_name,
+                        uom_conversion: data_head?.uom_conversion?.map(
+                          (obj) => {
+                            return {
+                              ...obj,
+                              uom_id: option.data.uom_id,
+                              uom_no_name: option.data.uom_no_name,
+                            };
+                          }
+                        ),
+                      })
                       : upDateFormValue({
-                          uom_id: null,
-                          uom_no: null,
-                          uom_no_name: null,
-                          uom_name: null,
-                          uom_conversion: [],
-                        });
+                        uom_id: null,
+                        uom_no: null,
+                        uom_no_name: null,
+                        uom_name: null,
+                        uom_conversion: [],
+                      });
                   }}
                 />
               )}
@@ -261,8 +260,8 @@ const TabItemDetail = ({
                     [2, 3, 4].includes(data_head.type_id)
                       ? 730
                       : data_head.type_id === 1
-                      ? 180
-                      : 0
+                        ? 180
+                        : 0
                   }
                   onChange={(data) =>
                     upDateFormValue({
@@ -303,25 +302,25 @@ const TabItemDetail = ({
                   onChange={(data, option) => {
                     data !== undefined
                       ? upDateFormValue({
-                          customer_id: option.data.customer_id,
-                          customer_no_name: option.data.customer_no_name,
-                          item_customer_run_no: option.data.customer_name_short,
-                          item_pre_run_no: get_pre_run_no(
-                            data_head.item_pre_run_no,
-                            3,
-                            option.data.customer_name_short
-                          ),
-                        })
+                        customer_id: option.data.customer_id,
+                        customer_no_name: option.data.customer_no_name,
+                        item_customer_run_no: option.data.customer_name_short,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          3,
+                          option.data.customer_name_short
+                        ),
+                      })
                       : upDateFormValue({
-                          customer_id: null,
-                          customer_no_name: null,
-                          item_customer_run_no: null,
-                          item_pre_run_no: get_pre_run_no(
-                            data_head.item_pre_run_no,
-                            3,
-                            "---"
-                          ),
-                        });
+                        customer_id: null,
+                        customer_no_name: null,
+                        item_customer_run_no: null,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          3,
+                          "---"
+                        ),
+                      });
                   }}
                 />
               )}
@@ -357,24 +356,24 @@ const TabItemDetail = ({
                   onChange={(data, option) => {
                     data !== undefined
                       ? upDateFormValue({
-                          identify_benefit_id: option.data.identify_benefit_id,
-                          identify_benefit_no_name:
-                            option.data.identify_benefit_no_name,
-                          item_pre_run_no: get_pre_run_no(
-                            data_head.item_pre_run_no,
-                            4,
-                            option.data.identify_benefit_run_no
-                          ),
-                        })
+                        identify_benefit_id: option.data.identify_benefit_id,
+                        identify_benefit_no_name:
+                          option.data.identify_benefit_no_name,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          4,
+                          option.data.identify_benefit_run_no
+                        ),
+                      })
                       : upDateFormValue({
-                          identify_benefit_id: null,
-                          identify_benefit_no_name: null,
-                          item_pre_run_no: get_pre_run_no(
-                            data_head.item_pre_run_no,
-                            4,
-                            "-"
-                          ),
-                        });
+                        identify_benefit_id: null,
+                        identify_benefit_no_name: null,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          4,
+                          "-"
+                        ),
+                      });
                   }}
                 />
               )}
@@ -403,17 +402,17 @@ const TabItemDetail = ({
                     value={
                       data_head.item_formula_effective_date
                         ? moment(
-                            data_head.item_formula_effective_date,
-                            "DD/MM/YYYY"
-                          )
+                          data_head.item_formula_effective_date,
+                          "DD/MM/YYYY"
+                        )
                         : ""
                     }
                     defaultValue={
                       data_head.item_formula_effective_date
                         ? moment(
-                            data_head.item_formula_effective_date,
-                            "DD/MM/YYYY"
-                          )
+                          data_head.item_formula_effective_date,
+                          "DD/MM/YYYY"
+                        )
                         : ""
                     }
                     onChange={(data) => {
@@ -454,30 +453,30 @@ const TabItemDetail = ({
                   data={
                     data_head.type_id
                       ? master_data.item_category.filter(
-                          (categ) => categ.type_id === data_head.type_id
-                        )
+                        (categ) => categ.type_id === data_head.type_id
+                      )
                       : master_data.item_category
                   }
                   onChange={(data, option) => {
                     data !== undefined
                       ? upDateFormValue({
-                          category_id: option.data.category_id,
-                          category_name: option.data.category_name,
-                          item_pre_run_no: get_pre_run_no(
-                            data_head.item_pre_run_no,
-                            2,
-                            option.data.category_run_no
-                          ),
-                        })
+                        category_id: option.data.category_id,
+                        category_name: option.data.category_name,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          2,
+                          option.data.category_run_no
+                        ),
+                      })
                       : upDateFormValue({
-                          category_id: null,
-                          category_name: null,
-                          item_pre_run_no: get_pre_run_no(
-                            data_head.item_pre_run_no,
-                            2,
-                            "--"
-                          ),
-                        });
+                        category_id: null,
+                        category_name: null,
+                        item_pre_run_no: get_pre_run_no(
+                          data_head.item_pre_run_no,
+                          2,
+                          "--"
+                        ),
+                      });
                   }}
                 />
               )}
@@ -509,13 +508,13 @@ const TabItemDetail = ({
                   onChange={(data, option) => {
                     data !== undefined
                       ? upDateFormValue({
-                          item_control_id: option.data.item_control_id,
-                          item_control_name: option.data.item_control_name,
-                        })
+                        item_control_id: option.data.item_control_id,
+                        item_control_name: option.data.item_control_name,
+                      })
                       : upDateFormValue({
-                          item_control_id: null,
-                          item_control_name: null,
-                        });
+                        item_control_id: null,
+                        item_control_name: null,
+                      });
                   }}
                 />
               )}

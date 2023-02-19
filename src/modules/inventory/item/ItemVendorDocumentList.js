@@ -51,7 +51,7 @@ const ItemVendorDocumentList = ({
             onChange={onChange}
             onChangeFile={onChangeFile}
             label={"MSDS. Thai"}
-            field={"item_vendor_detail_msds"}
+            field={"item_vendor_detail_msds_th"}
             checked={vendorDetail.item_vendor_detail_msds_th}
             enableUpload={true}
           />

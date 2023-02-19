@@ -11,7 +11,8 @@ export const item_save_file = (item_id, files, user_name) => {
     const file_temp = files.item_image;
     const file_temp2 = Object.values(files.certificate);
     file_temp2.unshift(file_temp);
-    console.log("file_temp", file_temp2);
+    console.log("item_save_file", file_temp2);
+
     file_temp2
       // .filter((file) => file && file !== null && file !== undefined)
       .forEach(async (file, key) => {

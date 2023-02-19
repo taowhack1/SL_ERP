@@ -5,7 +5,6 @@ import CustomLabel from "../../../components/CustomLabel";
 import { pad2number } from "../../../include/js/function_main";
 const { Panel } = Collapse;
 const ItemRevisionDetail = ({ data_head, readOnly, upDateFormValue }) => {
-  console.log("data_head.item_revision_no", data_head.item_revision_no);
   return (
     <>
       {/* <Collapse defaultActiveKey={["1"]}>
