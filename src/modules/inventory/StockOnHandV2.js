@@ -357,6 +357,7 @@ const Stock = (props) => {
 };
 
 export default withRouter(Stock);
+
 const columns_stock = () => [
   {
     title: (
@@ -514,7 +515,30 @@ const columns_movement = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_no",
-    render: (val) => val || "-",
+    render: (val, record) => {
+      let btn = ''
+      switch (record?.trans_no) {
+        case 'DSB':
+          btn = `report_disburse.aspx?disburse_no=${val}`
+          break;
+        case 'RTI':
+          btn = `report_return.aspx?return_no=${val}`
+          break;
+        case 'RCV':
+          btn = `report_receive2.aspx?receive_no=${val}`
+          break;
+        default:
+          break;
+      }
+
+      return <a
+        rel='noopener noreferrer'
+        target='_blank'
+        href={`${process.env.REACT_APP_REPORT_SERVER}/${btn}`}
+      >
+        {val}
+      </a>
+    },
   },
   {
     title: (
@@ -624,7 +648,15 @@ const columns_reserved = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_no",
-    render: (val) => val || "-",
+    render: (val, rec) => {
+      return <a
+        rel='noopener noreferrer'
+        target='_blank'
+        href={`${process.env.REACT_APP_REPORT_SERVER}/report_ream1.aspx?issue_no=${val}`}
+      >
+        {val}
+      </a>
+    },
   },
   {
     title: (
@@ -722,7 +754,15 @@ const columns_purchaseReq = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_no",
-    render: (val) => val || "-",
+    render: (val) => {
+      return <a
+        rel='noopener noreferrer'
+        target='_blank'
+        href={`${process.env.REACT_APP_REPORT_SERVER}/report_pr.aspx?pr_no=${val}`}
+      >
+        {val}
+      </a>
+    },
   },
   {
     title: (
@@ -796,7 +836,15 @@ const columns_purchaseorder = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_no",
-    render: (val) => val || "-",
+    render: (val) => {
+      return <a
+        rel='noopener noreferrer'
+        target='_blank'
+        href={`${process.env.REACT_APP_REPORT_SERVER}/report_po.aspx?po_no=${val}`}
+      >
+        {val}
+      </a>
+    },
   },
   {
     title: (

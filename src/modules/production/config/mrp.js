@@ -401,7 +401,7 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
             onChange={(data) => {
               if (
                 record.mrp_detail_qty_available >=
-                  record.mrp_detail_qty_issue &&
+                record.mrp_detail_qty_issue &&
                 record.item_vendor_lead_time_day &&
                 data > 0
               ) {
@@ -411,7 +411,7 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
                 });
               } else if (
                 record.mrp_detail_qty_available >=
-                  record.mrp_detail_qty_issue &&
+                record.mrp_detail_qty_issue &&
                 record.item_vendor_lead_time_day &&
                 data === 0
               ) {
@@ -482,24 +482,50 @@ export const mrpDetailColumns = ({ readOnly, onChange }) => [
     ),
     dataIndex: "mrp_detail_suggestion_date",
     align: "center",
-    width: "9%",
+    width: "18%",
     render: (value, record, index) => {
-      return <Text className="text-value">{value}</Text>;
+      if (readOnly) {
+        return <Text className="text-value">{value}</Text>
+      } else {
+        return <DatePicker
+          // disabled={line.item_id ? false : true}
+          name={"mrp_detail_suggestion_date"}
+          format={"DD/MM/YYYY"}
+          size="small"
+          className={"full-width,text-center"}
+          placeholder="Due Date"
+          value={
+            value
+              ? moment(value, "DD/MM/YYYY")
+              : ""
+          }
+          onChange={(data) => {
+            data
+              ?
+              onChange(record.id, {
+                mrp_detail_suggestion_date: data.format("DD/MM/YYYY")
+              })
+              : onChange(record.id, {
+                mrp_detail_suggestion_date: null
+              })
+          }}
+        />
+      }
     },
   },
-  {
-    title: (
-      <div className="text-center" title="Incomming Date">
-        Inc. Date
-      </div>
-    ),
-    dataIndex: "mrp_detail_incoming_date",
-    align: "center",
-    width: "9%",
-    render: (value, record, index) => {
-      return <Text className="text-value">{value}</Text>;
-    },
-  },
+  // {
+  //   title: (
+  //     <div className="text-center" title="Incomming Date">
+  //       Inc. Date
+  //     </div>
+  //   ),
+  //   dataIndex: "mrp_detail_incoming_date",
+  //   align: "center",
+  //   width: "9%",
+  //   render: (value, record, index) => {
+  //     return <Text className="text-value">{value}</Text>;
+  //   },
+  // },
 ];
 
 export const mrpRMDetailFields = {
@@ -679,165 +705,165 @@ export const mrpRoutingColumns = ({
   onChangeValue,
   machineList,
 }) => [
-  {
-    title: "No.",
-    width: "5%",
-    dataIndex: "id",
-    render: (val) => val + 1,
-    align: "center",
-  },
-  {
-    title: (
-      <div className="text-center">
-        <CustomLabel label="Cost Center" require readOnly={readOnly} />
-      </div>
-    ),
-    dataIndex: "machine_id",
+    {
+      title: "No.",
+      width: "5%",
+      dataIndex: "id",
+      render: (val) => val + 1,
+      align: "center",
+    },
+    {
+      title: (
+        <div className="text-center">
+          <CustomLabel label="Cost Center" require readOnly={readOnly} />
+        </div>
+      ),
+      dataIndex: "machine_id",
 
-    align: "left",
-    render: (val, record) =>
-      readOnly ? (
-        <Text className="text-value">
-          {record.machine_cost_center_description}
-        </Text>
-      ) : (
-        <CustomSelect
-          allowClear
-          showSearch
-          data={machineList}
-          field_id="machine_id"
-          field_name="machine_cost_center_description"
-          name="machine_id"
-          placeholder="Select Cost Center"
-          size="small"
-          value={val}
-          onChange={(data, option) => {
-            data && data
-              ? onChangeValue(record.id, {
+      align: "left",
+      render: (val, record) =>
+        readOnly ? (
+          <Text className="text-value">
+            {record.machine_cost_center_description}
+          </Text>
+        ) : (
+          <CustomSelect
+            allowClear
+            showSearch
+            data={machineList}
+            field_id="machine_id"
+            field_name="machine_cost_center_description"
+            name="machine_id"
+            placeholder="Select Cost Center"
+            size="small"
+            value={val}
+            onChange={(data, option) => {
+              data && data
+                ? onChangeValue(record.id, {
                   machine_id: data,
                 })
-              : onChangeValue(record.id, {
+                : onChangeValue(record.id, {
                   machine_id: null,
                 });
-          }}
-        />
-      ),
-  },
-  {
-    title: (
-      <div className="text-center">
-        <CustomLabel label="Man" require readOnly={readOnly} />
-      </div>
-    ),
-    width: "15%",
-    dataIndex: "mrp_routing_worker",
-    align: "right",
-    render: (val, record) =>
-      readOnly ? (
-        <Text className="text-value">{val}</Text>
-      ) : (
-        <InputNumber
-          name="mrp_routing_worker"
-          style={{ width: "100%" }}
-          placeholder="Man"
-          min={0}
-          size="small"
-          onChange={(data) => {
-            onChangeValue(record.id, {
-              mrp_routing_worker: Math.round(data),
-            });
-          }}
-          value={val}
-        />
-      ),
-  },
-  {
-    title: (
-      <div className="text-center">
-        <CustomLabel label="Period" require readOnly={readOnly} />
-      </div>
-    ),
-    width: "15%",
-    dataIndex: "mrp_routing_plan_time",
-    align: "right",
-    render: (val, record) =>
-      readOnly ? (
-        <Text className="text-value">{val}</Text>
-      ) : (
-        <TimePicker
-          size="small"
-          format={"HH:mm"}
-          showNow={false}
-          name={"mrp_routing_plan_time"}
-          className={"full-width"}
-          placeholder="Hour : Minute"
-          required
-          value={val ? moment(val, "HH:mm:ss") : ""}
-          onChange={(data) => {
-            const time = moment(data, "HH:mm").format("HH:mm:ss");
-            console.log(time);
-            onChangeValue(record.id, {
-              mrp_routing_plan_time: data ? time : null,
-            });
-          }}
-        />
-      ),
-  },
-  {
-    title: (
-      <div className="text-center">
-        <CustomLabel label="Plan Date" require readOnly={readOnly} />
-      </div>
-    ),
-    width: "15%",
-    dataIndex: "mrp_routing_plan_date",
-    align: "right",
-    render: (val, record) =>
-      readOnly ? (
-        <Text className="text-value">{val}</Text>
-      ) : (
-        <DatePicker
-          name={"mrp_routing_plan_date"}
-          format={"DD/MM/YYYY"}
-          className={"full-width"}
-          placeholder="Plan date"
-          size={"small"}
-          required
-          value={val ? moment(val, "DD/MM/YYYY") : ""}
-          defaultValue={val ? moment(val, "DD/MM/YYYY") : ""}
-          onChange={(data) => {
-            onChangeValue(record.id, {
-              mrp_routing_plan_date: data ? data.format("DD/MM/YYYY") : "",
-            });
-          }}
-        />
-      ),
-  },
-  {
-    title: (
-      <Text strong>
-        <EllipsisOutlined />
-      </Text>
-    ),
-    align: "center",
-    width: "5%",
-    render: (_, record) => {
-      if (readOnly) {
-        return null;
-      } else {
-        return (
-          <Popconfirm
-            onConfirm={() => {
-              onDelete(record.id);
             }}
-            title="Are you sure you want to delete this row？"
-            okText="Yes"
-            cancelText="No"
-          >
-            <DeleteTwoTone />
-          </Popconfirm>
-        );
-      }
+          />
+        ),
     },
-  },
-];
+    {
+      title: (
+        <div className="text-center">
+          <CustomLabel label="Man" require readOnly={readOnly} />
+        </div>
+      ),
+      width: "15%",
+      dataIndex: "mrp_routing_worker",
+      align: "right",
+      render: (val, record) =>
+        readOnly ? (
+          <Text className="text-value">{val}</Text>
+        ) : (
+          <InputNumber
+            name="mrp_routing_worker"
+            style={{ width: "100%" }}
+            placeholder="Man"
+            min={0}
+            size="small"
+            onChange={(data) => {
+              onChangeValue(record.id, {
+                mrp_routing_worker: Math.round(data),
+              });
+            }}
+            value={val}
+          />
+        ),
+    },
+    {
+      title: (
+        <div className="text-center">
+          <CustomLabel label="Period" require readOnly={readOnly} />
+        </div>
+      ),
+      width: "15%",
+      dataIndex: "mrp_routing_plan_time",
+      align: "right",
+      render: (val, record) =>
+        readOnly ? (
+          <Text className="text-value">{val}</Text>
+        ) : (
+          <TimePicker
+            size="small"
+            format={"HH:mm"}
+            showNow={false}
+            name={"mrp_routing_plan_time"}
+            className={"full-width"}
+            placeholder="Hour : Minute"
+            required
+            value={val ? moment(val, "HH:mm:ss") : ""}
+            onChange={(data) => {
+              const time = moment(data, "HH:mm").format("HH:mm:ss");
+              console.log(time);
+              onChangeValue(record.id, {
+                mrp_routing_plan_time: data ? time : null,
+              });
+            }}
+          />
+        ),
+    },
+    {
+      title: (
+        <div className="text-center">
+          <CustomLabel label="Plan Date" require readOnly={readOnly} />
+        </div>
+      ),
+      width: "15%",
+      dataIndex: "mrp_routing_plan_date",
+      align: "right",
+      render: (val, record) =>
+        readOnly ? (
+          <Text className="text-value">{val}</Text>
+        ) : (
+          <DatePicker
+            name={"mrp_routing_plan_date"}
+            format={"DD/MM/YYYY"}
+            className={"full-width"}
+            placeholder="Plan date"
+            size={"small"}
+            required
+            value={val ? moment(val, "DD/MM/YYYY") : ""}
+            defaultValue={val ? moment(val, "DD/MM/YYYY") : ""}
+            onChange={(data) => {
+              onChangeValue(record.id, {
+                mrp_routing_plan_date: data ? data.format("DD/MM/YYYY") : "",
+              });
+            }}
+          />
+        ),
+    },
+    {
+      title: (
+        <Text strong>
+          <EllipsisOutlined />
+        </Text>
+      ),
+      align: "center",
+      width: "5%",
+      render: (_, record) => {
+        if (readOnly) {
+          return null;
+        } else {
+          return (
+            <Popconfirm
+              onConfirm={() => {
+                onDelete(record.id);
+              }}
+              title="Are you sure you want to delete this row？"
+              okText="Yes"
+              cancelText="No"
+            >
+              <DeleteTwoTone />
+            </Popconfirm>
+          );
+        }
+      },
+    },
+  ];
