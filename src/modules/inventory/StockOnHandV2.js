@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table, Space, Button, Tabs } from "antd";
+import { Row, Col, Table, Space, Button, Tabs, Tooltip } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
 import {
@@ -525,6 +525,7 @@ const columns_movement = () => [
           btn = `report_return.aspx?return_no=${val}`
           break;
         case 'RCV':
+        case 'QCV':
           btn = `report_receive2.aspx?receive_no=${val}`
           break;
         default:
@@ -668,7 +669,29 @@ const columns_reserved = () => [
     className: "tb-col-sm",
     dataIndex: "document_description",
     ellipsis: true,
-    render: (val) => val || "-",
+    render: (val, rec) => {
+      // const so_no = rec?.document_description_ref?.split('/')[0]?.trim() || ''
+      // const mrp_no = rec?.document_description_ref?.split('/')[1]?.trim() || ''
+      // console.log("so_no", so_no)
+      // console.log("mrp_no", mrp_no)
+
+      // let ref_link = ''
+
+      // if (so_no != '') {
+      //   ref_link = <a
+      //     rel='noopener noreferrer'
+      //     target='_blank'
+      //     href={`${process.env.REACT_APP_REPORT_SERVER}/report_so.aspx?so_no=${so_no}`}
+      //   >
+      //     {so_no}
+      //   </a>
+      // }
+
+      return <Tooltip placement="top" title={rec?.document_description_ref || ''} arrow={true}>
+        <span >{val || "-"}</span>
+      </Tooltip>
+
+    },
   },
   {
     title: (

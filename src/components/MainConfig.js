@@ -14,8 +14,8 @@ export default function MainConfig(props) {
   const menusLocal = useSelector((state) => state.auth.menus);
   let projectMenus = menusLocal
     ? menusLocal.filter(
-        (menu) => menu.project_id === projectId && menu.menu_parent === 0
-      )
+      (menu) => menu.project_id === projectId && menu.menu_parent === 0
+    )
     : [];
 
   const set_log_detail = (data) => {
@@ -37,7 +37,7 @@ export default function MainConfig(props) {
             <Menu.Item key={key}>
               <Link
                 to={{
-                  pathname: sub.menu_url,
+                  pathname: sub?.menu_url || '#',
                 }}
                 onClick={() => {
                   dispatch(set_working_menu(sub));
