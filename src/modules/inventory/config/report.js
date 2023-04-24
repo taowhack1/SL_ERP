@@ -1,9 +1,9 @@
 /** @format */
 import React from "react";
-import { Button } from "antd";
+import { Button, Modal, Popover } from "antd";
 import numeral from "numeral";
 import { EditTwoTone } from "@ant-design/icons";
-export const stock_on_hand_columns = [
+export const stock_on_hand_columns = ({ openViewPriceHistory }) => [
   {
     title: "No.",
     dataIndex: "id",
@@ -137,7 +137,10 @@ export const stock_on_hand_columns = [
       multiple: 3,
     },
     ellipsis: false,
-    render: (value) => numeral(value).format("0,0.0000"),
+    render: (value, rec) => {
+
+      return <span title="คลิกเพื่อดูประวัติราคา" onClick={() => openViewPriceHistory(rec?.item_id, rec)}>{numeral(value).format("0,0.0000")}</span>
+    },
   },
   // {
   //   title: "View",

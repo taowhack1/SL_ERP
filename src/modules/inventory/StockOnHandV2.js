@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table, Space, Button, Tabs, Tooltip } from "antd";
+import { Row, Col, Table, Space, Button, Tabs, Tooltip, Modal } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
 import {
   clearFilterStockOnHand,
   filterStockOnHand,
+  getItemPriceHistory,
   getReportStockOnHand,
   getSubReportStockOnHand,
 } from "../../actions/inventory";
@@ -31,6 +32,7 @@ const Stock = (props) => {
     rowKey: "id",
     dataKey: "stock_history",
   });
+
   const {
     expandedRowRender: reserved_historyrender,
     handleExpand: reserved_historyhandle,
@@ -40,6 +42,7 @@ const Stock = (props) => {
     rowKey: "item_id",
     dataKey: "issue_history",
   });
+
   const {
     expandedRowRender: pr_historyrender,
     handleExpand: pr_historyhandle,
@@ -218,6 +221,7 @@ const Stock = (props) => {
       setLoading(false);
     }
   }, [filter, stockDataSource]);
+
   console.log("stock on hand");
   const expandedRowRender2 = (row) => {
     return (
@@ -291,6 +295,27 @@ const Stock = (props) => {
       endDate: "31-12-2050",
     });
   };
+
+  const [modal, setModal] = useState({
+    visible: false,
+    item_no: '',
+    data: []
+  })
+  const openViewPriceHistory = async (item_id = null, rec = '') => {
+    if (!item_id) return false
+
+    console.log("view item_id", item_id)
+    const data = await getItemPriceHistory(item_id);
+
+    setModal({
+      visible: true,
+      item: rec,
+      data: data?.data[0]
+    })
+
+    console.log("history price", data)
+  }
+
   return (
     <div>
       <MainLayout {...config} pageLoad={loading}>
@@ -322,7 +347,7 @@ const Stock = (props) => {
             <Table
               bordered
               loading={loading}
-              columns={stock_on_hand_columns}
+              columns={stock_on_hand_columns({ openViewPriceHistory })}
               dataSource={state}
               onChange={onChange}
               rowKey={"item_id"}
@@ -349,6 +374,26 @@ const Stock = (props) => {
                 };
               }}
             />
+
+            <Modal
+              visible={modal?.visible}
+              title={modal?.item?.item_no_name || "Item Code Here..."}
+              destroyOnClose
+              onCancel={() => setModal({ visible: false, item_no: '', data: [] })}
+              onOk={() => setModal({ visible: false, item_no: '', data: [] })}
+              width={800}
+            >
+              <h3>{"ประวัติการสั่งซื้อไอเทม"}</h3>
+              <Table
+                bordered
+                rowKey='id'
+                size='small'
+                rowClassName='row-table-detail'
+                dataSource={modal?.data || []}
+                columns={column_item_price_history()}
+              />
+            </Modal>
+
           </Col>
         </Row>
       </MainLayout>
@@ -357,6 +402,101 @@ const Stock = (props) => {
 };
 
 export default withRouter(Stock);
+
+const column_item_price_history = () => [
+  {
+    title: (
+      <div className="text-center">
+        <b>No.</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "id",
+    render: (val, rec, index) => index + 1,
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>วันที่รับเข้า</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "receive_detail_sub_receive_date",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>PO No.</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "po_no",
+    render: (val) => {
+      return <a
+        rel='noopener noreferrer'
+        target='_blank'
+        href={`${process.env.REACT_APP_REPORT_SERVER}/report_po.aspx?po_no=${val}`}
+      >
+        {val}
+      </a>
+    },
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>Vendor</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "15%",
+    dataIndex: "vendor_no_name",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>ราคาต่อหน่วย</b>
+      </div>
+    ),
+    align: "right",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "po_detail_price",
+    render: (val) => convertDigit(val, 4) || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>จำนวน</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "10%",
+    dataIndex: "receive_detail_sub_qty",
+    render: (val) => val || "-",
+  },
+  {
+    title: (
+      <div className="text-center">
+        <b>หน่วย</b>
+      </div>
+    ),
+    align: "center",
+    className: "tb-col-sm",
+    width: "5%",
+    dataIndex: "uom_no",
+    render: (val) => val || "-",
+  },
+];
 
 const columns_stock = () => [
   {

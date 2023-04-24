@@ -320,6 +320,41 @@ const clearFilterStockOnHand = () => (dispatch) => {
 };
 const filterItem = (data) => (dispatch) =>
   dispatch({ type: SEARCH_ITEMS, payload: data });
+
+
+const getItemPriceHistory = (item_id = null) => {
+  console.log("getItemPriceHistory", item_id);
+  if (!item_id)
+    return message.error("Error ! Missing Item ID.");
+
+  try {
+    return axios
+      .get(`/inventory/stock/item/history/${item_id}`, header_config)
+      .then((res) => {
+        console.log("res ", res);
+        if (res.data) {
+          return { success: true, data: res.data };
+        } else {
+          message.error(errorText.getData);
+          return { success: false, data: [] };
+        }
+
+      })
+      .catch((error) => {
+
+        console.log("catch");
+        if (!error.response) message.error(errorText.network);
+        if (error.response) message.error(errorText.getData);
+        return { success: false, data: [], error: error.response };
+
+      });
+  } catch (error) {
+    console.log("try catch");
+    console.log(error);
+    message.error(errorText.getData);
+    return { success: false, data: [] };
+  }
+};
 export {
   getItemType,
   getUOM,
@@ -344,4 +379,5 @@ export {
   clearFilterStockOnHand,
   getSubReportStockOnHand,
   apiGetBulkFG,
+  getItemPriceHistory
 };
