@@ -132,6 +132,7 @@ import SummarySoMain from "./modules/sales/reporting/summary_so_ver2";
 import InventoryRoutes from "./modules/inventory/Routes";
 import AccountingRoutes from "./modules/accounting";
 import DLInput from "./modules/production/operations/dlInput";
+import RPMChecking from "./modules/production/operations/rpm_checking";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -575,6 +576,10 @@ const App = (props) => {
             {/* DL Input */}
             <Route exact path="/production/operations/dl_input">
               <DLInput />
+            </Route>
+            {/* RPM Checking */}
+            <Route exact path="/production/operations/rpm_checking">
+              <RPMChecking />
             </Route>
             {/* PETCH ADD */}
             <Route exact path="/production/operations/workorder/">
