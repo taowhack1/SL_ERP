@@ -578,9 +578,14 @@ const App = (props) => {
               <DLInput />
             </Route>
             {/* RPM Checking */}
-            <Route exact path="/production/operations/rpm_checking">
+            {/* <Route exact path="/production/operations/rpm_checking">
               <RPMChecking />
-            </Route>
+            </Route> */}
+            <Route
+              exact
+              path="/production/operations/rpm_checking"
+              component={RPMChecking}
+            />
             {/* PETCH ADD */}
             <Route exact path="/production/operations/workorder/">
               <WorkOrderCreate1 />
