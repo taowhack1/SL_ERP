@@ -20,6 +20,8 @@ import { ClearOutlined } from "@ant-design/icons";
 import { sortData } from "../../include/js/function_main";
 import { convertDigit } from "../../include/js/main_config";
 import { AppContext } from "../../include/js/context";
+import moment from 'moment'
+
 let stockDataSource = [];
 let pass = 0;
 const Stock = (props) => {
@@ -789,6 +791,8 @@ const columns_reserved = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_no",
+    sorter: (a, b) => a.document_id - b.document_id,
+    sortDirections: ['ascend', 'descend', null],
     render: (val, rec) => {
       return <a
         rel='noopener noreferrer'
@@ -843,6 +847,8 @@ const columns_reserved = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_date",
+    sorter: (a, b) => moment(a.document_date, 'DD/MM/YYYY').format('X') - moment(b.document_date, 'DD/MM/YYYY').format('X'),
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => val || "-",
   },
   {
@@ -855,6 +861,8 @@ const columns_reserved = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_due_date",
+    sorter: (a, b) => moment(a.document_due_date, 'DD/MM/YYYY').format('X') - moment(b.document_due_date, 'DD/MM/YYYY').format('X'),
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => val || "-",
   },
   {
@@ -867,6 +875,8 @@ const columns_reserved = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_qty",
+    sorter: (a, b) => a.document_qty - b.document_qty,
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => convertDigit(val, 4) || "-",
   },
   {
@@ -879,6 +889,8 @@ const columns_reserved = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "tg_issue_detail_qty_balance",
+    sorter: (a, b) => a.tg_issue_detail_qty_balance - b.tg_issue_detail_qty_balance,
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => convertDigit(val, 6) || "-",
   },
   {
@@ -917,6 +929,8 @@ const columns_purchaseReq = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_no",
+    sorter: (a, b) => a.document_id - b.document_id,
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => {
       return <a
         rel='noopener noreferrer'
@@ -937,6 +951,8 @@ const columns_purchaseReq = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_date",
+    sorter: (a, b) => moment(a.document_date, 'DD/MM/YYYY').format('X') - moment(b.document_date, 'DD/MM/YYYY').format('X'),
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => val || "-",
   },
   {
@@ -949,6 +965,8 @@ const columns_purchaseReq = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_due_date",
+    sorter: (a, b) => moment(a.document_due_date, 'DD/MM/YYYY').format('X') - moment(b.document_due_date, 'DD/MM/YYYY').format('X'),
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => val || "-",
   },
   {
@@ -961,6 +979,8 @@ const columns_purchaseReq = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_qty",
+    sorter: (a, b) => a.document_qty - b.document_qty,
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => convertDigit(val, 6) || "-",
   },
   {
@@ -999,6 +1019,8 @@ const columns_purchaseorder = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_no",
+    sorter: (a, b) => a.document_id - b.document_id,
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => {
       return <a
         rel='noopener noreferrer'
@@ -1031,6 +1053,8 @@ const columns_purchaseorder = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_date",
+    sorter: (a, b) => moment(a.document_date, 'DD/MM/YYYY').format('X') - moment(b.document_date, 'DD/MM/YYYY').format('X'),
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => val || "-",
   },
   {
@@ -1043,6 +1067,8 @@ const columns_purchaseorder = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_due_date",
+    sorter: (a, b) => moment(a.document_due_date, 'DD/MM/YYYY').format('X') - moment(b.document_due_date, 'DD/MM/YYYY').format('X'),
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => val || "-",
   },
   {
@@ -1055,6 +1081,8 @@ const columns_purchaseorder = () => [
     className: "tb-col-sm",
     width: "10%",
     dataIndex: "document_qty",
+    sorter: (a, b) => a.document_qty - b.document_qty,
+    sortDirections: ['ascend', 'descend', null],
     render: (val) => convertDigit(val, 6) || "-",
   },
   {

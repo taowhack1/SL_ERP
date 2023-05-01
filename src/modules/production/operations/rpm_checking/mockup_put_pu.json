@@ -1,0 +1,21 @@
+{
+  "_api": "http://192.168.5.222:3009/api/purchase/pu_recoment/po_detail/",
+  "_put_body": [
+    {
+      "mrp_id": 1563,
+      "po_detail_id": 17241,
+      "po_detail_ready": 0,
+      "user_name": "2563003",
+      "po_detail_remark": "เรียกเข้าครั้งแรก 250kg วันที่ 6/2/2023 เรียกเข้าครั้งที่สอง 250kg วันที่ 7/3/2023 #2",
+      "commit": 1
+    },
+    {
+      "mrp_id": 1563,
+      "po_detail_id": 17313,
+      "po_detail_ready": 1,
+      "user_name": "2563003",
+      "po_detail_remark": "MRP Vendor #2",
+      "commit": 1
+    }
+  ]
+}
