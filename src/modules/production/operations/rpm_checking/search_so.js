@@ -1,11 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Col, DatePicker, Row } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import CustomSelect from '../../../../components/CustomSelect';
+import moment from 'moment';
 const { RangePicker } = DatePicker;
 
-const SOSearchTool = ({ onChangeSeach }) => {
+const SOSearchTool = ({ onSearch }) => {
+    const [state, setState] = useState({
+        keyword: '',
+        keyword2: '',
+        status: 0,
+        date_start: '',
+        date_end: ''
+    })
+
+    const onChange = (obj) => {
+        setState(prev => ({
+            ...prev,
+            ...obj
+        }))
+    }
+
     return (
         <div className="search-table mb-2">
             <Row className="search-header">
@@ -26,17 +42,17 @@ const SOSearchTool = ({ onChangeSeach }) => {
                         placeholder={"SO No. / Description"}
                         field_id="so_id"
                         field_name="so_no_name"
-                        // value={''}
+                        value={state?.keyword || ''}
                         data={mockupSO}
                         onChange={(data, option) => {
-                            // data !== undefined
-                            // ? changeState({
-                            //     mrp_id: data,
-                            //     mrp_no_description: option.title,
-                            //     item_id: option.data.item_id,
-                            //     item_no_name: option.data.item_no_name,
-                            //     })
-                            // : reset_state();
+                            console.log("option", option)
+                            data !== undefined
+                                ? onChange({
+                                    keyword: data,
+                                })
+                                : onChange({
+                                    keyword: '',
+                                })
                         }}
                     />
                 </Col>
@@ -50,8 +66,22 @@ const SOSearchTool = ({ onChangeSeach }) => {
                         format={"DD/MM/YYYY"}
                         name="so_due_date"
                         className="full-width"
-                        value={[]}
+                        value={[
+                            state?.date_start && moment(state?.date_start, 'DD/MM/YYYY'),
+                            state?.date_end && moment(state?.date_end, 'DD/MM/YYYY')
+                        ]}
+                        defaultPickerValue={[moment(), moment()]}
                         onChange={(data) => {
+                            console.log("data", data)
+                            data
+                                ? onChange({
+                                    date_start: data[0].format("DD/MM/YYYY"),
+                                    date_end: data[1].format("DD/MM/YYYY"),
+                                })
+                                : onChange({
+                                    date_start: '',
+                                    date_end: '',
+                                });
                         }}
                     />
                 </Col>
@@ -63,14 +93,16 @@ const SOSearchTool = ({ onChangeSeach }) => {
                 </Col>
                 <Col span={8}>
                     <CustomSelect
-                        // allowClear
-                        // showSearch
                         placeholder={"สถานะ SO"}
                         field_id="so_status_id"
                         field_name="so_status_name"
-                        defaultValue={1}
-                        // value={1}
+                        defaultValue={0}
+                        value={state?.status || 0}
                         data={[
+                            {
+                                so_status_id: 0,
+                                so_status_name: 'ทั้งหมด'
+                            },
                             {
                                 so_status_id: 1,
                                 so_status_name: 'ยังไม่ได้ผลิต'
@@ -84,16 +116,11 @@ const SOSearchTool = ({ onChangeSeach }) => {
                                 so_status_name: 'ผลิตเสร็จสิ้น'
                             },
                         ]}
-                    // onChange={(data, option) => {
-                    // data !== undefined
-                    // ? changeState({
-                    //     mrp_id: data,
-                    //     mrp_no_description: option.title,
-                    //     item_id: option.data.item_id,
-                    //     item_no_name: option.data.item_no_name,
-                    //     })
-                    // : reset_state();
-                    // }}
+                        onChange={(data, option) => {
+                            onChange({
+                                status: data,
+                            })
+                        }}
                     />
                 </Col>
             </Row>
@@ -107,19 +134,19 @@ const SOSearchTool = ({ onChangeSeach }) => {
                         allowClear
                         showSearch
                         placeholder={"Item Code / Trade Name"}
-                        field_id="id"
+                        field_id="item_no"
                         field_name="item_no_name"
-                        // value={''}
+                        value={state?.keyword2 || ''}
                         data={mockupItems}
                         onChange={(data, option) => {
-                            // data !== undefined
-                            // ? changeState({
-                            //     mrp_id: data,
-                            //     mrp_no_description: option.title,
-                            //     item_id: option.data.item_id,
-                            //     item_no_name: option.data.item_no_name,
-                            //     })
-                            // : reset_state();
+                            console.log("option", option)
+                            data !== undefined
+                                ? onChange({
+                                    keyword2: data,
+                                })
+                                : onChange({
+                                    keyword2: '',
+                                })
                         }}
                     />
                 </Col>
@@ -131,7 +158,7 @@ const SOSearchTool = ({ onChangeSeach }) => {
                         type="primary"
                         icon={<SearchOutlined />}
                         style={{ width: 150 }}
-                        onClick={() => console.log("clicked search")}
+                        onClick={() => onSearch(state)}
                     >
                         ค้นหาข้อมูล
                     </Button>

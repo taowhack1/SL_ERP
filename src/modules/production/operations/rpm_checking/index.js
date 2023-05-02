@@ -7,30 +7,20 @@ import SOSearchTool from './search_so';
 import useSubTable from '../../../../include/js/customHooks/useSubTable';
 import moment from 'moment';
 import Swal from 'sweetalert2';
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
+import $ from "jquery";
 
-const getDataDetail = ({ so_mrp_id = null }) => {
-    if (!so_mrp_id) {
-        return {
-            success: true, data: {
-                detail: []
-            }
-        }
-    }
-
-    return {
-        success: true,
-        data: {
-            detail: mockupData?.find((obj) => obj.so_mrp_id == so_mrp_id)?.detail || []
-        }
-    }
-}
 
 const RPMChecking = () => {
     const role = (new URLSearchParams(document.location.search))?.get('role') || null
 
     const [search, setSearch] = useState({
         keyword: '',
+        keyword2: '',
+        status: 0,
+        date_start: '',
+        date_end: '',
+        loading: false,
+        data: []
     })
 
     const layoutConfig = useMemo(
@@ -69,6 +59,74 @@ const RPMChecking = () => {
         []
     );
 
+    const onSeachData = async (objSearch) => {
+        console.log("objSearch", objSearch)
+        setSearch({
+            loading: true,
+            ...objSearch,
+            data: []
+        })
+
+        const data = await getData(objSearch)
+
+        console.log("data", data)
+        setSearch(prev => ({
+            ...prev,
+            loading: false,
+            data: data
+        }))
+    }
+
+    const getData = (objSearch) => {
+        return new Promise((res, rej) => {
+            console.log("getData", objSearch)
+            let data = mockupData
+
+            if (objSearch?.keyword2 != '') {
+                data = data?.filter(so => so?.detail?.some(item => item.item_no.indexOf(objSearch?.keyword2) >= 0))
+            }
+
+            if (objSearch?.keyword != '') {
+                data = data?.filter(so => so.so_no_name_mrp_no.indexOf(objSearch?.keyword) >= 0)
+            }
+
+            if (objSearch?.status != '0') {
+                data = data?.filter(so => so.so_status_id == objSearch?.status)
+            }
+
+            if (objSearch?.date_state != '' && objSearch?.date_end != '') {
+                data = data?.filter(so =>
+                    moment(so.so_delivery_date, 'DD/MM/YYYY').format('X') >= moment(objSearch.date_start, 'DD/MM/YYYY').format('X')
+                    &&
+                    moment(so.so_delivery_date, 'DD/MM/YYYY').format('X') <= moment(objSearch.date_end, 'DD/MM/YYYY').format('X')
+                )
+            }
+
+            setTimeout(() => {
+                res(data)
+            }, 1000)
+
+        }).catch(error => {
+            console.log("error", error)
+        })
+    }
+
+    const getDataDetail = ({ so_mrp_id = null }) => {
+        if (!so_mrp_id) {
+            return {
+                success: true, data: {
+                    detail: []
+                }
+            }
+        }
+
+        return {
+            success: true,
+            data: {
+                detail: search?.data?.find((obj) => obj.so_mrp_id == so_mrp_id)?.detail || []
+            }
+        }
+    }
 
     const { expandedRowRender, handleExpand } = useSubTable({
         columns: () => column_material({ role }),
@@ -92,6 +150,8 @@ const RPMChecking = () => {
             console.log("then")
         });
     }
+
+    //*--------------------------------------------
 
     let head_column = []
 
@@ -123,10 +183,10 @@ const RPMChecking = () => {
                 <Row className='row-tab-margin-lg'>
                     <Col span={24}>
                         <Table
-                            title={() => <SOSearchTool onChangeSeach={() => console.log("change")} />}
+                            title={() => <SOSearchTool onSearch={onSeachData} />}
                             loading={search?.loading}
                             columns={head_column}
-                            dataSource={mockupData}
+                            dataSource={search?.data}
                             bordered
                             size='small'
                             rowKey='so_mrp_id'
@@ -164,11 +224,25 @@ const columns1 = ({ onSave }) => [
         title: "Description",
         dataIndex: "so_no_name_mrp_no",
         key: "so_no_name_mrp_no",
-        width: "90%",
+        width: "80%",
         align: "left",
         sorter: {
             compare: (a, b) => a.so_id - b.so_id,
             multiple: 3,
+        },
+        ellipsis: true,
+        render: (val) => val
+    },
+    {
+        title: "Delivery Date",
+        dataIndex: "so_delivery_date",
+        key: "so_delivery_date",
+        width: "10%",
+        align: "center",
+        sortDirections: ['ascend', 'descend', null],
+        sorter: {
+            compare: (a, b) => moment(a.so_delivery_date, 'DD/MM/YYYY').format('X') - moment(b.so_delivery_date, 'DD/MM/YYYY').format('X'),
+            // multiple: 3,
         },
         ellipsis: true,
         render: (val) => val
@@ -341,7 +415,15 @@ const column_material = ({ role }) => [
         sortDirections: ['ascend', 'descend', null],
         ellipsis: true,
         render: (val) => <div className='text-center'>
-            {role == 'pu' ? <Checkbox defaultChecked={val == 2 ? true : false} /> : ''}
+            {role == 'pu' ? <Checkbox defaultChecked={val == 2 ? true : false} onChange={(e) => {
+                // console.log(a, b, c)
+                console.log("onchange", e, e.target)
+                $(e.target)
+                    .closest("tbody")
+                    .find("tr")
+                    .removeClass("selected-row");
+                $(e.target).closest("tr").addClass("selected-row");
+            }} /> : ''}
         </div>,
     }
 ]
@@ -357,6 +439,7 @@ const mockupData = [
         job_id: 'J23040001-1',
         so_mrp_id: '11',
         so_status_id: 1,
+        so_delivery_date: '20/04/2023',
         detail: [
             {
                 id: 1,
@@ -364,7 +447,7 @@ const mockupData = [
                 item_name: 'Shipper CC double O Bloom Eau De Perfume Pack 12',
                 issue_qty: 69,
                 uom_no: 'pcs',
-                pr_detail_due_date: '-',
+                pr_detail_due_date: '05/02/2023',
                 item_type_id: 2,
                 item_type_no: 'PK',
                 po_detail_due_date: '06/02/2023',
@@ -379,7 +462,7 @@ const mockupData = [
                 item_name: 'Alcoh-AA',
                 issue_qty: 32.55720,
                 uom_no: 'Kg.',
-                pr_detail_due_date: '-',
+                pr_detail_due_date: '05/02/2023',
                 item_type_id: 1,
                 item_type_no: 'RM',
                 po_detail_due_date: '06/02/2023',
@@ -394,7 +477,7 @@ const mockupData = [
                 item_name: 'TS31643CO ADORE CONC',
                 issue_qty: 5.62,
                 uom_no: 'Kg.',
-                pr_detail_due_date: '-',
+                pr_detail_due_date: '05/02/2023',
                 item_type_id: 1,
                 item_type_no: 'RM',
                 po_detail_due_date: '30/01/2023',
@@ -430,6 +513,7 @@ const mockupData = [
         job_id: 'J23040001-1',
         so_mrp_id: '12',
         so_status_id: 1,
+        so_delivery_date: '25/05/2023',
         detail: [
             {
                 id: 1,
@@ -488,6 +572,7 @@ const mockupData = [
         job_id: 'J23040001-1',
         so_mrp_id: '13',
         so_status_id: 3,
+        so_delivery_date: '02/05/2023',
         detail: [
             {
                 id: 1,

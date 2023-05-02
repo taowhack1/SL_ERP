@@ -583,6 +583,11 @@ const App = (props) => {
             </Route> */}
             <Route
               exact
+              path="/production/operations/rpm_checking?role=pu"
+              component={RPMChecking}
+            />
+            <Route
+              exact
               path="/production/operations/rpm_checking"
               component={RPMChecking}
             />

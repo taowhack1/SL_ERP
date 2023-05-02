@@ -284,15 +284,6 @@ const InputTax = () => {
                 // }}
                 onRow={(row) => ({
                   onClick: (e) => {
-                    // console.log("row", row);
-                    // console.log("index", row);
-                    // setSearchData((prev) => ({
-                    //   ...prev,
-                    //   so_id: row?.so_id,
-                    //   customer_id: row?.customer_id,
-                    //   item_id: row?.item_id,
-                    // }));
-
                     $(e.target)
                       .closest("tbody")
                       .find("tr")
