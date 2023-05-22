@@ -102,6 +102,107 @@ const xlsxHeader = [
     key: "total_profit_p",
   },
 ];
+
+const xlsxSubHeader = [
+  {
+    label: "SO No.",
+    key: "so_no",
+  },
+  {
+    label: "Description",
+    key: "so_description",
+  },
+  {
+    label: "Customer",
+    key: "customer_name",
+  },
+  {
+    label: "Item Code",
+    key: "item_no",
+  },
+  {
+    label: "Item Name",
+    key: "item_name",
+  },
+  {
+    label: "Qty.",
+    key: "so_detail_qty",
+  },
+  {
+    label: "UoM",
+    key: "uom_no",
+  },
+  {
+    label: "ชั่วโมงการทำงาน",
+    key: "tg_dl_cost_time",
+  },
+  {
+    label: "DM RM",
+    key: "rm_cost",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "rm_cost_p",
+  },
+  {
+    label: "DM PK",
+    key: "pk_cost",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "pk_cost_p",
+  },
+  {
+    label: "DL",
+    key: "tg_dl_cost_wage",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "tg_dl_cost_wage_p",
+  },
+  {
+    label: "OH",
+    key: "tg_oh_cost_wage",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "tg_oh_cost_wage_p",
+  },
+
+  {
+    label: "Tax",
+    key: "so_detail_ac_tax_amount",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "so_detail_ac_tax_amount_p",
+  },
+  {
+    label: "รวมต้นทุนการผลิต",
+    key: "total_cost",
+  },
+  {
+    label: "Invoice No.",
+    key: "invoice_no",
+  },
+  {
+    label: "Qty.",
+    key: "invoice_qty",
+  },
+  {
+    label: "ราคาขาย(ไม่รวม Vat)",
+    key: "so_detail_total_price",
+  },
+  {
+    label: "กำไร / ขาดทุน",
+    key: "total_profit",
+  },
+  {
+    label: "% ต่อยอดขาย",
+    key: "total_profit_p",
+  },
+];
+
 const ReportSOCostAndProfit = () => {
   const { filter } = useSelector(
     (state) => state?.inventory?.report?.issue || {}
@@ -217,6 +318,7 @@ const ReportSOCostAndProfit = () => {
       </div>
     )
   }
+
   const handleExpand2 = (expanded, row) => {
     console.log(expanded, row)
   }
@@ -246,6 +348,13 @@ const ReportSOCostAndProfit = () => {
 
   const onChangeSearch = (obj) => {
     setSearchData(prev => ({ ...prev, ...obj }))
+  }
+
+  const getSubTableDataExport = (data) => {
+    // data1.data
+    const so_detail_data = [...data?.reduce((array, obj) => array = [...array, ...obj.so_detail.map(obj => ({ ...obj, so_no: '' + obj.so_no }))], [])]
+    console.log("all_so_detail", so_detail_data)
+    return so_detail_data || []
   }
   console.log("data1", data1)
   console.log("searchData", searchData)
@@ -307,7 +416,14 @@ const ReportSOCostAndProfit = () => {
               <Button size="small" type="ghost" icon={<DownloadOutlined />}>
                 <Text>
                   <CSVLink data={data1.data} headers={xlsxHeader}>
-                    Export Excel
+                    Export SO
+                  </CSVLink>
+                </Text>
+              </Button>
+              <Button size="small" type="ghost" icon={<DownloadOutlined />}>
+                <Text>
+                  <CSVLink data={getSubTableDataExport(data1.data)} headers={xlsxSubHeader}>
+                    Export รายการทั้งหมด
                   </CSVLink>
                 </Text>
               </Button>
