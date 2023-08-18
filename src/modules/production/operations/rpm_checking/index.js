@@ -415,14 +415,12 @@ const column_material = ({ role }) => [
         sortDirections: ['ascend', 'descend', null],
         ellipsis: true,
         render: (val) => <div className='text-center'>
-            {role == 'pu' ? <Checkbox defaultChecked={val == 2 ? true : false} onChange={(e) => {
+            {role == 'pu' ? <Checkbox defaultChecked={val == 2 ? true : false} onChange={(e, b, c) => {
                 // console.log(a, b, c)
-                console.log("onchange", e, e.target)
-                $(e.target)
-                    .closest("tbody")
-                    .find("tr")
-                    .removeClass("selected-row");
-                $(e.target).closest("tr").addClass("selected-row");
+                console.log("onchange", e, b, c)
+
+                $(e.target).closest('tr').removeClass('active-row')
+                // console.log("thisCheckbox", thisCheckbox)
             }} /> : ''}
         </div>,
     }
@@ -484,7 +482,8 @@ const mockupData = [
                 receive_status_id: 2,
                 receive_status: 'มาแล้ว',
                 pu_remark: '',
-                material_status: 2
+                material_status: 2,
+                is_active: 1
             },
             {
                 id: 4,
@@ -499,7 +498,8 @@ const mockupData = [
                 receive_status_id: 3,
                 receive_status: 'มีของในสต็อก',
                 pu_remark: '',
-                material_status: 2
+                material_status: 2,
+                is_active: 1
             },
         ]
     },
@@ -558,7 +558,8 @@ const mockupData = [
                 receive_status_id: 2,
                 receive_status: 'มาแล้ว',
                 pu_remark: '',
-                material_status: 2
+                material_status: 2,
+                is_active: 1
             }
         ]
     },
@@ -587,7 +588,8 @@ const mockupData = [
                 receive_status_id: 2,
                 receive_status: 'มีของในสต็อก',
                 pu_remark: '',
-                material_status: 2
+                material_status: 2,
+                is_active: 1
             },
             {
                 id: 2,
@@ -602,7 +604,8 @@ const mockupData = [
                 receive_status_id: 2,
                 receive_status: 'มีของในสต็อก',
                 pu_remark: '',
-                material_status: 2
+                material_status: 2,
+                is_active: 1
             }
         ]
     },

@@ -66,7 +66,9 @@ const useSubTable = (props) => {
         bordered
         rowKey='id'
         className='table-detail sub-table-detail w-100'
-        rowClassName='row-table-detail'
+        rowClassName={(obj, b, c) => {
+          return obj?.is_active ? 'row-table-detail active-row' : 'row-table-detail'
+        }}
         columns={columns()}
         pagination={10}
         loading={loading}

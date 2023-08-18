@@ -338,6 +338,28 @@ tr.selected-row {
   background-color: #e3e3ed;
   border: 1px solid red !important;
 }
+
+tr.ant-table-row .active-row,
+tr.ant-table-row-level-0 .active-row,
+tr.active-row {
+  background-color: #d8ffd6;
+  border: 1px solid red !important;
+}
+
+tr.ant-table-row:has(input[type="checkbox"]:checked),
+tr.ant-table-row-level-0:has(input[type="checkbox"]:checked),
+tr:has(input[type="checkbox"]:checked) {
+  background-color: #d8ffd6;
+  border: 1px solid red !important;
+}
+
+tr.ant-table-row:has(input[type="checkbox"]:not(:checked)),
+tr.ant-table-row-level-0:has(input[type="checkbox"]:not(:checked)),
+tr:has(input[type="checkbox"]:not(:checked)) {
+  background-color: inherit;
+  /* border: 1px solid red !important; */
+}
+
 .row-margin-vertical {
   margin: 5px 0px !important;
 }
