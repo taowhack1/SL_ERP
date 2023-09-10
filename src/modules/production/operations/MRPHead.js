@@ -17,7 +17,7 @@ import { MRPContext } from "../../../include/js/context";
 import { convertDigit, getNumberFormat } from "../../../include/js/main_config";
 import CustomLabel from "../../../components/CustomLabel";
 import moment from "moment";
-import { CalculatorOutlined } from "@ant-design/icons";
+import { CalculatorOutlined, ExclamationOutlined } from "@ant-design/icons";
 const { Text } = Typography;
 const resetValue = {
   so_detail_id: null,
@@ -196,7 +196,23 @@ const MRPHead = () => {
                       field_name="item_no_name"
                       value={mainState.so_detail_id}
                       data={mainState.so_detail ?? []}
+
                       onChange={(data, option) => {
+                        console.log("option", option?.data)
+                        if (option?.data?.is_approved == 0) {
+                          message.warning({
+                            key: "notify1",
+                            content: (
+                              <span>
+                                Item นี้ยังไม่ถูกอนุมัติ ไม่สามารถใช้งานได้
+                              </span>
+                            ),
+                            duration: 6,
+                          });
+
+                          return false
+                        }
+
                         data !== undefined
                           ? onChange({
                             ...resetValue,
