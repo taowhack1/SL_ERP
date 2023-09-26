@@ -199,7 +199,7 @@ const MRPHead = () => {
 
                       onChange={(data, option) => {
                         console.log("option", option?.data)
-                        if (option?.data?.is_approved == 0) {
+                        if (option?.data?.type_id == 3 && option?.data?.is_approved == 0) {
                           message.warning({
                             key: "notify1",
                             content: (
