@@ -36,7 +36,7 @@ import { apiSampleItem } from ".";
 
 const openNotificationWithIcon = (type, title, text) => {
   notification[type]({
-    message: <h4 className='notify-title'>{title}</h4>,
+    message: <h4 className="notify-title">{title}</h4>,
     description: text,
   });
 };
@@ -110,49 +110,48 @@ const saveItemVendor = (item_id, data_detail, user_name) => {
     (obj) => obj.item_vendor_id !== null && obj.commit && obj.active === 0
   );
 
-
   const delPromise = dataDelete.length
     ? dataDelete.map((obj) =>
-      axios.delete(
-        `${api_item_vendor}/${item_id}&${obj.item_vendor_id}`,
-        dataDelete,
-        header_config
+        axios.delete(
+          `${api_item_vendor}/${item_id}&${obj.item_vendor_id}`,
+          dataDelete,
+          header_config
+        )
       )
-    )
     : [];
 
   let promiseFile = [];
 
-  console.log("save file vendor", vendorFile, promiseFile)
+  console.log("save file vendor", vendorFile, promiseFile);
   return [
     dataCreate.length
       ? axios
-        .post(`${api_item_vendor}/${item_id}`, dataCreate, header_config)
-        .then((res) => {
-          console.log("CREATE VENDOR", res);
-          const vendorId = res?.data[0].item_vendor_id;
-          vendorFile.create.forEach((obj) =>
-            promiseFile.push(
-              ...itemSaveFileVendor(item_id, vendorId, obj.file, user_name)
-            )
-          );
-          return promiseFile;
-        })
+          .post(`${api_item_vendor}/${item_id}`, dataCreate, header_config)
+          .then((res) => {
+            console.log("CREATE VENDOR", res);
+            const vendorId = res?.data[0].item_vendor_id;
+            vendorFile.create.forEach((obj) =>
+              promiseFile.push(
+                ...itemSaveFileVendor(item_id, vendorId, obj.file, user_name)
+              )
+            );
+            return promiseFile;
+          })
       : false,
     dataUpdate.length
       ? axios
-        .put(`${api_item_vendor}/${item_id}`, dataUpdate, header_config)
-        .then((res) => {
-          console.log("UPDATE VENDOR", res);
-          console.log("vendorFile", vendorFile);
+          .put(`${api_item_vendor}/${item_id}`, dataUpdate, header_config)
+          .then((res) => {
+            console.log("UPDATE VENDOR", res);
+            console.log("vendorFile", vendorFile);
 
-          vendorFile.update.forEach((obj) =>
-            promiseFile.push(
-              ...itemSaveFileVendor(item_id, obj.id, obj.file, user_name)
-            )
-          );
-          return promiseFile;
-        })
+            vendorFile.update.forEach((obj) =>
+              promiseFile.push(
+                ...itemSaveFileVendor(item_id, obj.id, obj.file, user_name)
+              )
+            );
+            return promiseFile;
+          })
       : false,
     ...delPromise,
   ];
@@ -170,26 +169,26 @@ const save_uom_conversion = (item_id, uom_conversion) => {
   console.log("Save UOM Conversion", newData, updateData);
   return newData.length
     ? axios
-      .post(`${api_item_uom_conversion}/${item_id}`, newData, header_config)
-      .then((res) => {
-        console.log("post ", res);
-        return updateData.length
-          ? axios
-            .put(
-              `${api_item_uom_conversion}/${item_id}`,
-              updateData,
-              header_config
-            )
-            .then((res) => console.log("put ", res))
-          : console.log("post only");
-      })
+        .post(`${api_item_uom_conversion}/${item_id}`, newData, header_config)
+        .then((res) => {
+          console.log("post ", res);
+          return updateData.length
+            ? axios
+                .put(
+                  `${api_item_uom_conversion}/${item_id}`,
+                  updateData,
+                  header_config
+                )
+                .then((res) => console.log("put ", res))
+            : console.log("post only");
+        })
     : updateData.length
-      ? axios.put(
+    ? axios.put(
         `${api_item_uom_conversion}/${item_id}`,
         updateData,
         header_config
       )
-      : console.log("not have any data uom conversion");
+    : console.log("not have any data uom conversion");
 };
 
 const bind_part_and_formula = (item_id, data_part) => {
@@ -341,9 +340,9 @@ export const createNewItems =
               access_right.qa && updateQASpec(item_id, qaData.update),
               access_right.weight && bind_weight(item_id, data_weight_detail),
               access_right.packaging &&
-              bind_packaging(item_id, data_packaging_detail),
+                bind_packaging(item_id, data_packaging_detail),
               access_right.attach_file &&
-              item_save_file(item_id, data_file, user_name),
+                item_save_file(item_id, data_file, user_name),
               access_right.filling && bind_filling(item_id, data_filling),
             ])
               .then(async (data) => {
@@ -452,7 +451,7 @@ export const upDateItem =
               access_right.qa && updateQASpec(item_id, qaData.update),
               access_right.weight && bind_weight(item_id, data_weight_detail),
               access_right.packaging &&
-              bind_packaging(item_id, data_packaging_detail),
+                bind_packaging(item_id, data_packaging_detail),
               // access_right.attach_file &&
               item_save_file(item_id, data_file, user_name),
               access_right.filling && bind_filling(item_id, data_filling),
@@ -555,16 +554,16 @@ export const get_item_by_id =
             const packingItemData = (data) => {
               const data_part = sortData(
                 data[2].value.data &&
-                data[2].value.data.map((obj) => {
-                  return {
-                    ...obj,
-                    item_part_specification_detail: sortData(
-                      obj.item_part_specification_detail
-                    ),
-                    item_formula: sortData(obj.item_formula),
-                    item_part_mix: sortData(obj.item_part_mix),
-                  };
-                })
+                  data[2].value.data.map((obj) => {
+                    return {
+                      ...obj,
+                      item_part_specification_detail: sortData(
+                        obj.item_part_specification_detail
+                      ),
+                      item_formula: sortData(obj.item_formula),
+                      item_part_mix: sortData(obj.item_part_mix),
+                    };
+                  })
               );
 
               const data_file_temp = data[6].value.data[0];
@@ -590,45 +589,45 @@ export const get_item_by_id =
                           certificate: {
                             2: obj.item_vendor_detail_document.length
                               ? convertFileField(
-                                obj.item_vendor_detail_document.filter(
-                                  (file) => file.file_type_id === 2
-                                )[0]
-                              )
+                                  obj.item_vendor_detail_document.filter(
+                                    (file) => file.file_type_id === 2
+                                  )[0]
+                                )
                               : null,
                             3: obj.item_vendor_detail_document.length
                               ? convertFileField(
-                                obj.item_vendor_detail_document.filter(
-                                  (file) => file.file_type_id === 3
-                                )[0]
-                              )
+                                  obj.item_vendor_detail_document.filter(
+                                    (file) => file.file_type_id === 3
+                                  )[0]
+                                )
                               : null,
                             4: obj.item_vendor_detail_document.length
                               ? convertFileField(
-                                obj.item_vendor_detail_document.filter(
-                                  (file) => file.file_type_id === 4
-                                )[0]
-                              )
+                                  obj.item_vendor_detail_document.filter(
+                                    (file) => file.file_type_id === 4
+                                  )[0]
+                                )
                               : null,
                             5: obj.item_vendor_detail_document.length
                               ? convertFileField(
-                                obj.item_vendor_detail_document.filter(
-                                  (file) => file.file_type_id === 5
-                                )[0]
-                              )
+                                  obj.item_vendor_detail_document.filter(
+                                    (file) => file.file_type_id === 5
+                                  )[0]
+                                )
                               : null,
                             6: obj.item_vendor_detail_document.length
                               ? convertFileField(
-                                obj.item_vendor_detail_document.filter(
-                                  (file) => file.file_type_id === 6
-                                )[0]
-                              )
+                                  obj.item_vendor_detail_document.filter(
+                                    (file) => file.file_type_id === 6
+                                  )[0]
+                                )
                               : null,
                             12: obj.item_vendor_detail_document.length
                               ? convertFileField(
-                                obj.item_vendor_detail_document.filter(
-                                  (file) => file.file_type_id === 12
-                                )[0]
-                              )
+                                  obj.item_vendor_detail_document.filter(
+                                    (file) => file.file_type_id === 12
+                                  )[0]
+                                )
                               : null,
                           },
                         },
@@ -744,45 +743,45 @@ export const item_actions = (data, item_id) => (dispatch) => {
 
   data.process_id
     ? axios
-      .put(`${api_approve}/${data.process_id}`, data, header_config)
-      .then((res) => {
-        let msg = "";
-        switch (data.process_status_id) {
-          case 2:
-            // Confirm
-            msg = "Confirm.";
-            break;
-          case 3:
-            msg = "Cancel.";
-            break;
-          // Cancel
-          case 4:
-            msg = "Complete.";
-            break;
-          // Complete
-          case 5:
-            msg = "Approve.";
-            break;
-          // Approve
-          case 6:
-            msg = "Reject.";
-            break;
-          // Reject
-          default:
-            break;
-        }
-        message.success({
-          content: msg,
-          key: "validate",
-          duration: 2,
-        });
-        dispatch(get_item_by_id(item_id, data.user_name));
-      })
+        .put(`${api_approve}/${data.process_id}`, data, header_config)
+        .then((res) => {
+          let msg = "";
+          switch (data.process_status_id) {
+            case 2:
+              // Confirm
+              msg = "Confirm.";
+              break;
+            case 3:
+              msg = "Cancel.";
+              break;
+            // Cancel
+            case 4:
+              msg = "Complete.";
+              break;
+            // Complete
+            case 5:
+              msg = "Approve.";
+              break;
+            // Approve
+            case 6:
+              msg = "Reject.";
+              break;
+            // Reject
+            default:
+              break;
+          }
+          message.success({
+            content: msg,
+            key: "validate",
+            duration: 2,
+          });
+          dispatch(get_item_by_id(item_id, data.user_name));
+        })
     : message.error({
-      content: "Somethings went wrong. please contact programmer.",
-      key: "validate",
-      duration: 4,
-    });
+        content: "Somethings went wrong. please contact programmer.",
+        key: "validate",
+        duration: 4,
+      });
 };
 
 export const itemUpdateStatus = (id, status) => {
@@ -798,18 +797,18 @@ export const itemUpdateStatus = (id, status) => {
       .then((res) => {
         res.data[0].length
           ? message.success({
-            content:
-              status === 0
-                ? "Item has been deleted."
-                : "Item has been actived.",
-            key: "validate",
-            duration: 2,
-          })
+              content:
+                status === 0
+                  ? "Item has been deleted."
+                  : "Item has been actived.",
+              key: "validate",
+              duration: 2,
+            })
           : message.error({
-            content: "Somethings went wrong. please contact programmer.",
-            key: "validate",
-            duration: 4,
-          });
+              content: "Somethings went wrong. please contact programmer.",
+              key: "validate",
+              duration: 4,
+            });
       })
       .catch((error) => {
         message.error({
@@ -852,7 +851,7 @@ export const getItemAction = (
       return {
         name: (
           <span>
-            <PrinterOutlined className='pd-right-1 button-icon' />
+            <PrinterOutlined className="pd-right-1 button-icon" />
             {data.item_no}
           </span>
         ),
@@ -865,7 +864,7 @@ export const getItemAction = (
       return {
         name: (
           <span>
-            <PrinterOutlined className='pd-right-1 button-icon' />
+            <PrinterOutlined className="pd-right-1 button-icon" />
             {data.item_no}
           </span>
         ),
@@ -879,7 +878,7 @@ export const getItemAction = (
       return {
         name: (
           <span>
-            <PrinterOutlined className='pd-right-1 button-icon' />
+            <PrinterOutlined className="pd-right-1 button-icon" />
             {data.item_no}
           </span>
         ),
@@ -893,8 +892,8 @@ export const getItemAction = (
   if (button_cancel)
     action.push({
       name: (
-        <span className='require'>
-          <DeleteOutlined className='pd-right-1' />
+        <span className="require">
+          <DeleteOutlined className="pd-right-1" />
           Cancel
         </span>
       ),
@@ -908,7 +907,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className='pd-right-1 button-icon' />
+              <PrinterOutlined className="pd-right-1 button-icon" />
               Raw Material Specification
             </span>
           ),
@@ -922,7 +921,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className='pd-right-1 button-icon' />
+              <PrinterOutlined className="pd-right-1 button-icon" />
               Package Specification
             </span>
           ),
@@ -936,8 +935,8 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className='pd-right-1 button-icon' />
-              Master Formula
+              <PrinterOutlined className="pd-right-1 button-icon" />
+              Master Formula (PDF)
             </span>
           ),
           link: `${process.env.REACT_APP_REPORT_SERVER}/report_bulk_formula.aspx?item_code=${item_no}`,
@@ -945,7 +944,16 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className='pd-right-1 button-icon' />
+              <PrinterOutlined className="pd-right-1 button-icon" />
+              Master Formula (Excel)
+            </span>
+          ),
+          link: `${process.env.REACT_APP_REPORT_SERVER}/report_bulk_formula.aspx?item_code=${item_no}&export_excel=1`,
+        },
+        {
+          name: (
+            <span>
+              <PrinterOutlined className="pd-right-1 button-icon" />
               Bulk Specification
             </span>
           ),
@@ -954,7 +962,7 @@ export const getItemAction = (
         certificate["9"].url && {
           name: (
             <span>
-              <PrinterOutlined className='pd-right-1 button-icon' />
+              <PrinterOutlined className="pd-right-1 button-icon" />
               Process Specification
             </span>
           ),
@@ -968,7 +976,7 @@ export const getItemAction = (
         certificate["8"].url && {
           name: (
             <span>
-              <PrinterOutlined className='pd-right-1 button-icon' />
+              <PrinterOutlined className="pd-right-1 button-icon" />
               FINISHED PRODUCT FILLING SPECIFACTION
             </span>
           ),
@@ -977,7 +985,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className='pd-right-1 button-icon' />
+              <PrinterOutlined className="pd-right-1 button-icon" />
               FINSHED PRODUCT SPECIFICATION
             </span>
           ),
@@ -991,7 +999,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <Divider orientation='left' plain style={{ margin: "1px 0" }}>
+              <Divider orientation="left" plain style={{ margin: "1px 0" }}>
                 <b>FINISHED PRODUCT FILLING SPECIFACTION</b>
               </Divider>
             </span>
@@ -1001,7 +1009,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className='pd-right-1 button-icon' />
+              <PrinterOutlined className="pd-right-1 button-icon" />
               {item_no}
             </span>
           ),
@@ -1010,7 +1018,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <Divider orientation='left' plain style={{ margin: "1px 0" }}>
+              <Divider orientation="left" plain style={{ margin: "1px 0" }}>
                 <b>FINSHED PRODUCT SPECIFICATION</b>
               </Divider>
             </span>
@@ -1020,7 +1028,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <PrinterOutlined className='pd-right-1 button-icon' />
+              <PrinterOutlined className="pd-right-1 button-icon" />
               {item_no}
             </span>
           ),
@@ -1029,7 +1037,7 @@ export const getItemAction = (
         {
           name: (
             <span>
-              <Divider orientation='left' plain style={{ margin: "1px 0" }}>
+              <Divider orientation="left" plain style={{ margin: "1px 0" }}>
                 <b>Package Specification</b>
               </Divider>
             </span>
@@ -1050,41 +1058,41 @@ const saveSampleItem = (id = null, data) => {
   try {
     return !id
       ? axios
-        .post(`${apiSampleItem}`, [data], header_config)
-        .then((res) => {
-          console.log("then");
-          console.log("res ", res);
-          if (res.data) {
-            return { success: true, data: res.data };
-          } else {
-            message.error(errorText.getData);
-            return { success: false, data: null };
-          }
-        })
-        .catch((error) => {
-          console.log("catch");
-          if (!error.response) message.error(errorText.network);
-          if (error.response) message.error(errorText.getData);
-          return { success: false, data: null, error: error.response };
-        })
+          .post(`${apiSampleItem}`, [data], header_config)
+          .then((res) => {
+            console.log("then");
+            console.log("res ", res);
+            if (res.data) {
+              return { success: true, data: res.data };
+            } else {
+              message.error(errorText.getData);
+              return { success: false, data: null };
+            }
+          })
+          .catch((error) => {
+            console.log("catch");
+            if (!error.response) message.error(errorText.network);
+            if (error.response) message.error(errorText.getData);
+            return { success: false, data: null, error: error.response };
+          })
       : axios
-        .put(`${apiSampleItem}/${id}`, [data], header_config)
-        .then((res) => {
-          console.log("then");
-          console.log("res ", res);
-          if (res.data) {
-            return { success: true, data: res.data };
-          } else {
-            message.error(errorText.getData);
-            return { success: false, data: null };
-          }
-        })
-        .catch((error) => {
-          console.log("catch");
-          if (!error.response) message.error(errorText.network);
-          if (error.response) message.error(errorText.getData);
-          return { success: false, data: null, error: error.response };
-        });
+          .put(`${apiSampleItem}/${id}`, [data], header_config)
+          .then((res) => {
+            console.log("then");
+            console.log("res ", res);
+            if (res.data) {
+              return { success: true, data: res.data };
+            } else {
+              message.error(errorText.getData);
+              return { success: false, data: null };
+            }
+          })
+          .catch((error) => {
+            console.log("catch");
+            if (!error.response) message.error(errorText.network);
+            if (error.response) message.error(errorText.getData);
+            return { success: false, data: null, error: error.response };
+          });
   } catch (error) {
     console.log("try catch");
     console.log(error);

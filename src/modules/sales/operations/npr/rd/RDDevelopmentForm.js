@@ -300,12 +300,19 @@ const RDDevelopmentForm = ({
     [onChange, state, category_id]
   );
 
-  const onPrintFormula = (batchSize) => {
+  const onPrintFormula = (batchSize, export_excel = 0) => {
     // keepLog.keep_log_action("Print Formula : ", state.npr_formula_no);
-    window.open(
-      `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula.aspx?npr_formula_no=${state.npr_formula_no}&sample_qty=${batchSize}`,
-      false
-    );
+    if (export_excel) {
+      window.open(
+        `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula.aspx?npr_formula_no=${state.npr_formula_no}&sample_qty=${batchSize}&export_excel=1`,
+        false
+      );
+    } else {
+      window.open(
+        `${process.env.REACT_APP_REPORT_SERVER}/report_npr_formula.aspx?npr_formula_no=${state.npr_formula_no}&sample_qty=${batchSize}`,
+        false
+      );
+    }
   };
 
   const onPrintLabel = () => {
@@ -376,7 +383,15 @@ const RDDevelopmentForm = ({
                   disabled={npr_formula_id ? false : true}
                   onClick={() => onPrintFormula(batchSize)}
                 >
-                  Print Formula
+                  Print Formula (PDF)
+                </Button>
+                <Button
+                  size="small"
+                  loading={false}
+                  disabled={npr_formula_id ? false : true}
+                  onClick={() => onPrintFormula(batchSize, 1)}
+                >
+                  Print Formula (Excel)
                 </Button>
                 <Button
                   size="small"

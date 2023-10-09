@@ -25,6 +25,7 @@ import {
   VatID,
 } from "../../../../actions/purchase/vendorActions";
 import CustomerTabs from "./CustomerTabs";
+import { useCallback } from "react";
 
 const { Title, Text } = Typography;
 
@@ -58,9 +59,13 @@ const CustomerCreate = (props) => {
         }
   );
 
-  const upDateFormValue = (data) => {
-    set_data_head({ ...data_head, ...data });
-  };
+  const upDateFormValue = useCallback(
+    (data) => {
+      set_data_head({ ...data_head, ...data });
+    },
+    [data_head]
+  );
+
   useEffect(() => {
     dispatch(get_vendor_group());
     dispatch(get_vendor_category());
