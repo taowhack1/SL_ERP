@@ -200,6 +200,12 @@ const SaleOrderCreate = (props) => {
     { label: "Sales OEM 2", value: "OEM 2" },
     { label: "Sales OEM 3", value: "OEM 3" },
     { label: "Sales OEM 4", value: "OEM 4" },
+    { label: "Sales OEM 5", value: "OEM 5" },
+    { label: "Sales OEM 6", value: "OEM 6" },
+    { label: "Sales OEM 7", value: "OEM 7" },
+    { label: "Sales OEM 8", value: "OEM 8" },
+    { label: "Sales OEM 9", value: "OEM 9" },
+    { label: "Sales OEM 10", value: "OEM 10" }
   ];
   const config = {
     projectId: current_project && current_project.project_id,
