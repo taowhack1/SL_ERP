@@ -129,20 +129,25 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
 
   useEffect(() => {
     const getSOData = async () => {
-      const resp = await getDRSODetail();
+
+      const resp = await getDRSODetail(so_detail_id);
       readOnly = false;
+
       if (resp.success) {
         if (so_detail_id) {
-          // FIND SO DETAIL FORM LIST BY USER CLICK FROM LIST
+          // FIND SO DETAIL FROM LIST BY USER CLICK FROM LIST
+          // const findData = resp?.data
           const findData = resp?.data?.find(
             (obj) => obj.so_detail_id === so_detail_id
           );
+
           if (!findData) {
             message.error(
               "Can't get any data from the server. Try agin later."
             );
             return false;
           }
+
           const {
             so_id,
             tg_so_detail_qty_delivery,
@@ -175,6 +180,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
         !so_detail_id && setSOData(resp.data);
       }
     };
+
     const getDRData = async () => {
       const resp = await getDR(dr_id);
       console.log("resp getDR", resp);
@@ -192,6 +198,7 @@ const DRForm = ({ visible, onClose, dr_id, so_detail_id }) => {
         message.error("Error ! Can't get any data from the server.");
       }
     };
+
     !dr_id ? getSOData() : getDRData();
   }, [dr_id, so_detail_id]);
 
