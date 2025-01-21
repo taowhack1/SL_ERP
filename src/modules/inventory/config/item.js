@@ -847,7 +847,7 @@ export const itemFormulaColumns = (
       width: "20%",
       render: (value, record, index) => {
         if (readOnly) {
-          return convertDigit(value, 4) + " %";
+          return convertDigit(value, 6) + " %";
         } else {
           return (
             <InputNumber
@@ -858,10 +858,10 @@ export const itemFormulaColumns = (
               defaultValue={0.0}
               min={0.0}
               max={100}
-              {...getNumberFormat(4)}
+              {...getNumberFormat(6)}
               // formatter={(value) => `${value}%`}
               // parser={(value) => value.replace("%", "")}
-              step={0.0001}
+              step={0.000001}
               onChange={(data) => {
                 onChange(record.id, {
                   item_formula_percent_qty: data,
@@ -1022,7 +1022,7 @@ export const totalFormulaColumns = [
     align: "center",
     ellipsis: true,
     render: (value, record) => {
-      return convertDigit(value, 4);
+      return convertDigit(value, 6);
     },
   },
   {
@@ -1363,11 +1363,11 @@ export const itemUOMConversionColumns = ({
       render: (value, record, key) => {
         return readOnly ? (
           <div className='text-right'>
-            <Text className='text-value '>{convertDigit(value, 4)}</Text>
+            <Text className='text-value '>{convertDigit(value, 6)}</Text>
           </div>
         ) : (
           <InputNumber
-            {...getNumberFormat(4)}
+            {...getNumberFormat(6)}
             className={"full-width check-field"}
             name={`uom_convert_value-${key}`}
             placeholder={"Ratio"}

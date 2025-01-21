@@ -139,37 +139,37 @@ export const columns = ({ readOnly = false, onChange }) => [
                   <Text strong className="mr-1">
                     On hand :
                   </Text>
-                  <Text>{convertDigit(tg_item_qty, 4)}</Text>
+                  <Text>{convertDigit(tg_item_qty, 6)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
                     PR :
                   </Text>
-                  <Text>{convertDigit(wait_pr, 4)}</Text>
+                  <Text>{convertDigit(wait_pr, 6)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
                     PO :
                   </Text>
-                  <Text>{convertDigit(wait_po, 4)}</Text>
+                  <Text>{convertDigit(wait_po, 6)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
                     GR :
                   </Text>
-                  <Text>{convertDigit(wait_receive, 4)}</Text>
+                  <Text>{convertDigit(wait_receive, 6)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
                     QC :
                   </Text>
-                  <Text>{convertDigit(wait_qc, 4)}</Text>
+                  <Text>{convertDigit(wait_qc, 6)}</Text>
                 </div>
                 <div className="d-flex flex-space">
                   <Text strong className="mr-1">
                     Reserve :
                   </Text>
-                  <Text>{convertDigit(wait_issue, 4)}</Text>
+                  <Text>{convertDigit(wait_issue, 6)}</Text>
                 </div>
               </>
             }
@@ -177,7 +177,7 @@ export const columns = ({ readOnly = false, onChange }) => [
           >
             {warningTextValue(
               value,
-              4,
+              6,
               value < record.mrp_detail_qty_issue ? true : false
             )}
           </Popover>
@@ -200,7 +200,7 @@ export const columns = ({ readOnly = false, onChange }) => [
     render: (value, record, index) => {
       return (
         <Text className="text-value text-right">
-          {convertDigit(value, 4) ?? "-"}
+          {convertDigit(value, 6) ?? "-"}
         </Text>
       );
     },

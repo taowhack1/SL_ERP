@@ -160,12 +160,12 @@ const TabBulkFormula = () => {
               <Text
                 strong
                 type={
-                  convertDigit(formulaPercent, 4) !== convertDigit(100, 4)
+                  convertDigit(formulaPercent, 6) !== convertDigit(100, 6)
                     ? "danger"
                     : "success"
                 }
               >
-                {convertDigit(formulaPercent, 4)}
+                {convertDigit(formulaPercent, 6)}
               </Text>
             </div>
             <Text strong style={{ fontWeight: 900 }}>
