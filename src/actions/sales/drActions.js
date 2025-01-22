@@ -10,39 +10,39 @@ const saveDR = (data) => {
   try {
     return !dr_id
       ? axios
-        .post(`${apiDR}`, data)
-        .then((resp) => {
-          if (resp.status === 200) {
-            console.log("resp.data", resp.data);
-            return { success: true, data: resp.data, message: "Success" };
-          } else {
-            return { success: false, data: {}, message: resp };
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          if (error?.response) {
-            console.error(error.response);
-          }
-          return { success: false, data: [], message: error };
-        })
+          .post(`${apiDR}`, data)
+          .then((resp) => {
+            if (resp.status === 200) {
+              console.log("resp.data", resp.data);
+              return { success: true, data: resp.data, message: "Success" };
+            } else {
+              return { success: false, data: {}, message: resp };
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            if (error?.response) {
+              console.error(error.response);
+            }
+            return { success: false, data: [], message: error };
+          })
       : axios
-        .put(`${apiDR}/${dr_id}`, data, header_config)
-        .then((resp) => {
-          if (resp.status === 200) {
-            console.log("resp.data", resp.data);
-            return { success: true, data: resp.data, message: "Success" };
-          } else {
-            return { success: false, data: {}, message: resp };
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          if (error?.response) {
-            console.error(error.response);
-          }
-          return { success: false, data: [], message: error };
-        });
+          .put(`${apiDR}/${dr_id}`, data, header_config)
+          .then((resp) => {
+            if (resp.status === 200) {
+              console.log("resp.data", resp.data);
+              return { success: true, data: resp.data, message: "Success" };
+            } else {
+              return { success: false, data: {}, message: resp };
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            if (error?.response) {
+              console.error(error.response);
+            }
+            return { success: false, data: [], message: error };
+          });
   } catch (error) {
     console.log(error);
     return { success: false, data: {}, message: error };
@@ -53,50 +53,49 @@ const getDR = (id) => {
   try {
     return id
       ? axios
-        .get(`${apiDR}/${id}`, header_config)
-        .then((resp) => {
-          if (resp.status === 200) {
-            console.log("resp.data", resp.data);
-            return { success: true, data: resp.data, message: "Success" };
-          } else {
-            return { success: false, data: {}, message: resp };
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          if (error?.response) {
-            console.error(error.response);
-          }
-          return { success: false, data: {}, message: error };
-        })
+          .get(`${apiDR}/${id}`, header_config)
+          .then((resp) => {
+            if (resp.status === 200) {
+              console.log("resp.data", resp.data);
+              return { success: true, data: resp.data, message: "Success" };
+            } else {
+              return { success: false, data: {}, message: resp };
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            if (error?.response) {
+              console.error(error.response);
+            }
+            return { success: false, data: {}, message: error };
+          })
       : axios
-        .get(`${apiDR}/0`, header_config)
-        .then((resp) => {
-          if (resp.status === 200) {
-            console.log("resp.data", resp.data);
-            return { success: true, data: resp.data, message: "Success" };
-          } else {
-            return { success: false, data: [], message: resp };
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          if (error?.response) {
-            console.error(error.response);
-          }
-          return { success: false, data: [], message: error };
-        });
+          .get(`${apiDR}/0`, header_config)
+          .then((resp) => {
+            if (resp.status === 200) {
+              console.log("resp.data", resp.data);
+              return { success: true, data: resp.data, message: "Success" };
+            } else {
+              return { success: false, data: [], message: resp };
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            if (error?.response) {
+              console.error(error.response);
+            }
+            return { success: false, data: [], message: error };
+          });
   } catch (error) {
     console.log(error);
     return { success: false, data: [], message: error };
   }
 };
 
-const getDRSODetail = (so_detail_id) => {
-
+const getDRSODetail = () => {
   try {
     return axios
-      .get(`${apiGetSODetailRef}/${0}`, header_config)
+      .get(`${apiGetSODetailRef}/0`, header_config)
       .then((resp) => {
         if (resp.status === 200) {
           console.log("getDRSODetail", resp.data);

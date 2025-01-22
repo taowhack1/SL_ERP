@@ -59,11 +59,11 @@ const ItemUOMConversion = ({
       state.map((obj) =>
         obj.id === id
           ? {
-              ...obj,
-              uom_convert_actived: !obj.uom_convert_actived,
-              user_name: auth.user_name,
-              commit: 1,
-            }
+            ...obj,
+            uom_convert_actived: !obj.uom_convert_actived,
+            user_name: auth.user_name,
+            commit: 1,
+          }
           : obj
       )
     );

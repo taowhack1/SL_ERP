@@ -373,39 +373,39 @@ const savePO = (data) => {
     console.log("savePO data : ", [data]);
     return !po_id
       ? axios
-          .post(`${apiPO}`, [data], header_config)
-          .then((resp) => {
-            if (resp.status === 200) {
-              console.log("resp.data", resp.data);
-              return { success: true, data: resp.data, message: "Success" };
-            } else {
-              return { success: false, data: {}, message: resp };
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            if (error?.response) {
-              console.error(error.response);
-            }
-            return { success: false, data: [], message: error };
-          })
+        .post(`${apiPO}`, [data], header_config)
+        .then((resp) => {
+          if (resp.status === 200) {
+            console.log("resp.data", resp.data);
+            return { success: true, data: resp.data, message: "Success" };
+          } else {
+            return { success: false, data: {}, message: resp };
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          if (error?.response) {
+            console.error(error.response);
+          }
+          return { success: false, data: [], message: error };
+        })
       : axios
-          .put(`${apiPO}/${po_id}`, [data], header_config)
-          .then((resp) => {
-            if (resp.status === 200) {
-              console.log("resp.data", resp.data);
-              return { success: true, data: resp.data, message: "Success" };
-            } else {
-              return { success: false, data: {}, message: resp };
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            if (error?.response) {
-              console.error(error.response);
-            }
-            return { success: false, data: [], message: error };
-          });
+        .put(`${apiPO}/${po_id}`, [data], header_config)
+        .then((resp) => {
+          if (resp.status === 200) {
+            console.log("resp.data", resp.data);
+            return { success: true, data: resp.data, message: "Success" };
+          } else {
+            return { success: false, data: {}, message: resp };
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          if (error?.response) {
+            console.error(error.response);
+          }
+          return { success: false, data: [], message: error };
+        });
   } catch (error) {
     console.log(error);
     return { success: false, data: {}, message: error };

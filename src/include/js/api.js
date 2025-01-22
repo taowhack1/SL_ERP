@@ -1,7 +1,5 @@
 /** @format */
 
-
-export const api_main_page = `/mainpage`
 //HRM
 export const api_get_production_emp = `/hrm/employees/production`;
 export const api_get_rd_emp = `/hrm/employees/rd`;
@@ -147,7 +145,6 @@ export const api_item_uom_conversion = `/inventory/uom_convert`;
 export const api_get_qn_by_id = `/sales/qn`;
 export const api_qn_detail = `/sales/qn_detail`;
 export const api_so = `/sales/so`;
-export const api_so_list = `/mainpage/so`
 export const api_so_detail = `/sales/so_detail`;
 export const api_get_qn_open_so = `/list/qn`;
 

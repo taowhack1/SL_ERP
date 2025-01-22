@@ -8,6 +8,8 @@ import { getGraph360Day } from "../../../actions/production/DashboardsAction";
 import { sortData } from "../../../include/js/function_main";
 import Authorize from "../../system/Authorize";
 import moment from "moment";
+import $ from "jquery";
+
 const temp_api = [
   {
     date: "01-09-2021",
@@ -84,23 +86,21 @@ const DashboardsIndex = () => {
     let tempOt = [];
     let freeze = [];
     let total = 0;
-    let sucess = [];
+    let success = [];
 
     let DataTransformer = [];
 
     if (data.length > 0) {
       DataTransformer = Object.values(
-        ...data
-          .filter((obj) => obj.date == date)
-          .map((obj) => {
-            return obj.detail;
-          })
+        ...data?.filter((obj) => obj.date == date)?.map((obj) => {
+          return obj.detail;
+        })
       );
     }
     console.log("DataTransformer :>> ", DataTransformer);
     let DataSet = DataTransformer.filter((obj, index) => {
       return obj.date == date;
-    }).map((obj, index) => {
+    })?.map((obj, index) => {
       total =
         total +
         obj.freeze +
@@ -109,31 +109,31 @@ const DashboardsIndex = () => {
         obj.tg_plan_job_actual_time_ot;
       machine_name.push(obj.machine_description);
       ot.push(obj.tg_plan_job_actual_time_ot);
-      sucess.push(obj.tg_plan_job_actual_time_hour);
+      success.push(obj.tg_plan_job_actual_time_hour);
       obj.tg_plan_job_actual_time_hour >= obj.plan_job_plan_time_hour
         ? plan.push(0)
         : obj.tg_plan_job_actual_time_hour <= obj.plan_job_plan_time_hour
-        ? plan.push(
+          ? plan.push(
             obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
           )
-        : plan.push(obj.plan_job_plan_time_hour);
+          : plan.push(obj.plan_job_plan_time_hour);
       freeze.push(obj.freeze);
       plan_day.push(obj.date);
       obj.tg_plan_job_actual_time_ot !== 0
-        ? plan[index] + sucess[index] == 8
+        ? plan[index] + success[index] == 8
           ? tempOt.push(0)
           : tempOt.push(
-              sucess[index] == 0
-                ? obj.plan_job_plan_time_hour - plan[index]
-                : obj.plan_job_plan_time_hour - sucess[index] - plan[index]
-            )
+            success[index] == 0
+              ? obj.plan_job_plan_time_hour - plan[index]
+              : obj.plan_job_plan_time_hour - success[index] - plan[index]
+          )
         : tempOt.push(plan[index] >= obj.plan_job_plan_time_hour ? 0 : 0);
       return { ...obj };
     });
     console.log("tempOt :>> ", tempOt);
     console.log("freeze :>> ", freeze);
     console.log("machine_name :>> ", machine_name);
-    console.log("sucess :>> ", sucess);
+    console.log("success :>> ", success);
     console.log("plan :>> ", plan);
     // console.log(
     //   "tempOt fn :>> ",
@@ -143,11 +143,11 @@ const DashboardsIndex = () => {
     // );
     let graphDay = [
       {
-        name: "sucess",
+        name: "success",
         data: [
           parseInt(
-            sucess.reduce((sum, number) => {
-              return sum + number / sucess.length;
+            success.reduce((sum, number) => {
+              return sum + number / success.length;
             }, 0)
           ),
         ],
@@ -177,8 +177,8 @@ const DashboardsIndex = () => {
                 return obj.tg_plan_job_actual_time_hour >= 8
                   ? 0
                   : obj.plan_job_plan_time_hour >= 8
-                  ? 0
-                  : 8.0 - obj.plan_job_plan_time_hour;
+                    ? 0
+                    : 8.0 - obj.plan_job_plan_time_hour;
               })
               .reduce((sum, number) => {
                 return sum + number / tempOt.length;
@@ -213,7 +213,7 @@ const DashboardsIndex = () => {
     ];
     let graphDay2 = [
       {
-        name: "sucess",
+        name: "success",
         data: DataTransformer.filter((obj, index) => {
           return obj.date == date;
         }).map((obj, index) => {
@@ -244,8 +244,8 @@ const DashboardsIndex = () => {
           return obj.tg_plan_job_actual_time_hour >= obj.plan_job_plan_time_hour
             ? 0
             : obj.tg_plan_job_actual_time_hour <= obj.plan_job_plan_time_hour
-            ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
-            : obj.plan_job_plan_time_hour;
+              ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
+              : obj.plan_job_plan_time_hour;
         }),
         plan_day: findUniqueValues(plan_day),
         colors: "#0000FF",
@@ -258,8 +258,8 @@ const DashboardsIndex = () => {
           return obj.tg_plan_job_actual_time_hour >= 8
             ? 0
             : obj.plan_job_plan_time_hour >= 8
-            ? 0
-            : 8 - obj.plan_job_plan_time_hour;
+              ? 0
+              : 8 - obj.plan_job_plan_time_hour;
         }),
         plan_day: findUniqueValues(plan_day),
         colors: "#FFFFFF",
@@ -289,8 +289,8 @@ const DashboardsIndex = () => {
     ];
     let graphMachine2 = [
       {
-        name: "sucess",
-        data: sucess,
+        name: "success",
+        data: success,
         machine_description: machine_name,
         colors: "#2ECC71",
       },
@@ -322,7 +322,7 @@ const DashboardsIndex = () => {
 
     let graphMachine = [
       {
-        name: "sucess",
+        name: "success",
         data: DataTransformer.filter((obj, index) => {
           return obj.date == date;
         }).map((obj, index) => {
@@ -353,8 +353,8 @@ const DashboardsIndex = () => {
           return obj.tg_plan_job_actual_time_hour >= obj.plan_job_plan_time_hour
             ? 0
             : obj.tg_plan_job_actual_time_hour <= obj.plan_job_plan_time_hour
-            ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
-            : obj.plan_job_plan_time_hour;
+              ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
+              : obj.plan_job_plan_time_hour;
         }),
         machine_description: machine_name,
         colors: "#0000FF",
@@ -367,8 +367,8 @@ const DashboardsIndex = () => {
           return obj.tg_plan_job_actual_time_hour >= 8
             ? 0
             : obj.plan_job_plan_time_hour >= 8
-            ? 0
-            : 8.0 - obj.plan_job_plan_time_hour;
+              ? 0
+              : 8.0 - obj.plan_job_plan_time_hour;
         }),
         machine_description: machine_name,
         colors: "#FFFFFF",
@@ -399,9 +399,6 @@ const DashboardsIndex = () => {
     console.log(`graphDay`, graphDay);
     if (type == "machine") {
       console.log("graphMachine if:>> ", graphMachine);
-      // setGraphMachine({
-      //   ...graphMachine,
-      // });
       setstateGraphMachine({
         series: [...graphMachine],
         options: {
@@ -560,8 +557,9 @@ const DashboardsIndex = () => {
         ...graphMachine,
       };
     }
+
     if (type == "day") {
-      console.log("graphDay[0].plan_day :>> ", graphDay[0].plan_day);
+      console.log("graphDay[0].plan_day :>> ", graphDay, graphDay[0].plan_day);
       setstateGraphDay({
         series: [...graphDay],
         options: {
@@ -575,6 +573,11 @@ const DashboardsIndex = () => {
             toolbar: {
               show: false,
             },
+            events: {
+              click: (event, chartContext, config) => {
+                console.log("Chart clicked", event, chartContext, config);
+              },
+            }
           },
 
           plotOptions: {
@@ -701,99 +704,88 @@ const DashboardsIndex = () => {
     let i = 0;
     let temp_testSum = [];
     let filter = [];
-    //let graphMonth = [];
-    // for (i = 1; i <= 12; i++) {
-    //   filter.push(
-    //     params.filter(
-    //       (obj, index) => moment(obj.date, "DD/MM/YYYY").format("M") == i
-    //     )
-    //   );
-    // }
-    // for (i = 1; i <= 12; i++) {
+
     filter.push(
-      params
-        // .filter(
-        //   (obj, index) => moment(obj.date, "DD/MM/YYYY").format("M") == i
-        // )
-        .reduce((a, c) => {
-          a.push({
-            ...c,
-            date_plan: date_plan.push(c.date.substr(0, 10)),
-            plan: c.detail
-              .filter((res) => res.plan_job_plan_time_hour >= 0)
-              .reduce((acc, cur) => acc + cur.plan_job_plan_time_hour, 0),
-            cplan: plan.push(
-              c.detail
-                .map((res) =>
-                  res.tg_plan_job_actual_time_hour >=
+      params.reduce((a, c) => {
+        a.push({
+          ...c,
+          date_plan: date_plan.push(c.date.substr(0, 10)),
+          plan: c.detail
+            .filter((res) => res.plan_job_plan_time_hour >= 0)
+            .reduce((acc, cur) => acc + cur.plan_job_plan_time_hour, 0),
+          cplan: plan.push(
+            c.detail
+              .map((res) =>
+                res.tg_plan_job_actual_time_hour >=
                   res.plan_job_plan_time_hour
-                    ? 0
-                    : res.tg_plan_job_actual_time_hour <=
-                      res.plan_job_plan_time_hour
+                  ? 0
+                  : res.tg_plan_job_actual_time_hour <=
+                    res.plan_job_plan_time_hour
                     ? res.plan_job_plan_time_hour -
-                      res.tg_plan_job_actual_time_hour
+                    res.tg_plan_job_actual_time_hour
                     : res.plan_job_plan_time_hour
-                )
-                .reduce((acc, cur) => acc + cur / c.detail.length, 0)
-            ),
-            success: c.detail
+              )
+              .reduce((acc, cur) => acc + cur / c.detail.length, 0)
+          ),
+          success: c.detail
+            .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
+            .reduce((acc, cur) => acc + cur.tg_plan_job_actual_time_hour, 0),
+          csuccess: success.push(
+            c.detail
               .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
-              .reduce((acc, cur) => acc + cur.tg_plan_job_actual_time_hour, 0),
-            csuccess: success.push(
-              c.detail
-                .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
-                .reduce(
-                  (acc, cur) =>
-                    acc + cur.tg_plan_job_actual_time_hour / c.detail.length,
-                  0
-                )
+              .reduce(
+                (acc, cur) =>
+                  acc + cur.tg_plan_job_actual_time_hour / c.detail.length,
+                0
+              )
+          ),
+          ot: c.detail
+            .filter((res) => res.tg_plan_job_actual_time_ot >= 0)
+            .reduce(
+              (acc, cur) =>
+                acc + cur.tg_plan_job_actual_time_ot / c.detail.length,
+              0
             ),
-            ot: c.detail
+          cot: ot.push(
+            c.detail
               .filter((res) => res.tg_plan_job_actual_time_ot >= 0)
               .reduce(
                 (acc, cur) =>
                   acc + cur.tg_plan_job_actual_time_ot / c.detail.length,
                 0
-              ),
-            cot: ot.push(
-              c.detail
-                .filter((res) => res.tg_plan_job_actual_time_ot >= 0)
-                .reduce(
-                  (acc, cur) =>
-                    acc + cur.tg_plan_job_actual_time_ot / c.detail.length,
-                  0
-                )
-            ),
+              )
+          ),
 
-            ctempOt: tempOt.push(
-              parseInt(
-                c.detail
-                  .map((res) =>
-                    res.tg_plan_job_actual_time_hour >= 8
-                      ? 0
-                      : res.plan_job_plan_time_hour >= 8
+          ctempOt: tempOt.push(
+            parseInt(
+              c.detail
+                .map((res) =>
+                  res.tg_plan_job_actual_time_hour >= 8
+                    ? 0
+                    : res.plan_job_plan_time_hour >= 8
                       ? 0
                       : 8.0 - res.plan_job_plan_time_hour
-                  )
-                  .reduce((acc, cur) => acc + cur / c.detail.length, 0)
-              )
-            ),
-            freeze: c.detail
+                )
+                .reduce((acc, cur) => acc + cur / c.detail.length, 0)
+            )
+          ),
+          freeze: c.detail
+            .filter((res) => res.freeze >= 0)
+            .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0),
+          cfreeze: freeze.push(
+            c.detail
               .filter((res) => res.freeze >= 0)
-              .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0),
-            cfreeze: freeze.push(
-              c.detail
-                .filter((res) => res.freeze >= 0)
-                .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0)
-            ),
-          });
-          return a;
-        }, [])
+              .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0)
+          ),
+        });
+        return a;
+      }, [])
     );
     console.log("graphMonth filter :>> ", filter);
+
     let graphMonth = [
       {
-        name: "sucess",
+        name: "success",
         data: success,
         date_plan: date_plan,
         colors: "#2ECC71",
@@ -824,135 +816,6 @@ const DashboardsIndex = () => {
       },
     ];
 
-    // setstateGraph12Month({
-    //   date: 1,
-    //   mountNumber: 1,
-    //   id: 1,
-    //   data: {
-    //     series: [...graphMonth],
-    //     options: {
-    //       colors: [...graphMonth?.map((color) => color.colors)],
-    //       chart: {
-    //         width: "20%",
-    //         type: "bar",
-    //         height: 350,
-    //         stacked: true,
-    //         toolbar: {
-    //           show: false,
-    //         },
-    //         events: {
-    //           click: (event, chartContext, config) => {
-    //             console.log(
-    //               "click_date  :>> ",
-    //               event.explicitOriginalTarget.textContent
-    //             );
-    //             if (event.target.localName == "tspan") {
-    //               selectDate(event.explicitOriginalTarget.textContent);
-    //             }
-    //           },
-    //         },
-    //       },
-    //       plotOptions: {
-    //         bar: {
-    //           horizontal: false,
-    //           columnWidth: "30%",
-    //           endingShape: "flat",
-    //         },
-    //       },
-    //       dataLabels: {
-    //         enabled: false,
-    //       },
-    //       stroke: {
-    //         show: true,
-    //         width: 0.2,
-    //         colors: ["#000000"],
-    //       },
-    //       annotations: {
-    //         position: "back",
-    //         yaxis: [
-    //           {
-    //             y: 8,
-    //             borderColor: "#D7D7D7",
-    //             strokeDashArray: 0,
-    //           },
-    //           {
-    //             y: 12,
-    //             borderColor: "#D7D7D7",
-    //             strokeDashArray: 0,
-    //           },
-    //           {
-    //             y: 20,
-    //             borderColor: "#D7D7D7",
-    //             strokeDashArray: 0,
-    //           },
-    //           {
-    //             y: 24,
-    //             borderColor: "#C3C3C3",
-    //             strokeDashArray: 0,
-    //           },
-    //         ],
-    //       },
-    //       responsive: [
-    //         {
-    //           breakpoint: 480,
-    //           options: {
-    //             legend: {
-    //               position: "bottom",
-    //               offsetX: -10,
-    //               offsetY: 0,
-    //             },
-    //           },
-    //         },
-    //       ],
-    //       yaxis: {
-    //         show: true,
-    //         max: 24,
-    //         tickAmount: 24,
-    //         labels: {
-    //           show: true,
-    //           formatter: (value) => {
-    //             return [8, 12, 20, 24].includes(value) ? value : " ";
-    //           },
-    //         },
-    //       },
-    //       xaxis: {
-    //         categories: [...graphMonth[0].date_plan],
-    //         Width: "20%",
-    //         title: {
-    //           text: "",
-    //           offsetX: 0,
-    //           offsetY: 0,
-    //           style: {
-    //             color: undefined,
-    //             fontSize: "12px",
-    //             fontFamily: "Helvetica, Arial, sans-serif",
-    //             fontWeight: 600,
-    //             cssClass: "apexcharts-xaxis-title",
-    //           },
-    //         },
-    //       },
-    //       grid: {
-    //         show: false,
-    //       },
-    //       fill: {
-    //         opacity: 2,
-    //       },
-    //       tooltip: {
-    //         enabled: false,
-    //         y: {
-    //           formatter: function (val) {
-    //             return val;
-    //           },
-    //         },
-    //       },
-    //       legend: {
-    //         show: false,
-    //         position: "bottom",
-    //         horizontalAlign: "center",
-    //       },
-    //     },
-    //   },
-    // });
     setstateGraph12Month({
       series: [...graphMonth],
       options: {
@@ -967,14 +830,11 @@ const DashboardsIndex = () => {
           },
           events: {
             click: (event, chartContext, config) => {
-              console.log(
-                "click_date  :>> ",
-                event.explicitOriginalTarget.textContent
-              );
               if (event.target.localName == "tspan") {
-                selectDate(params, event.explicitOriginalTarget.textContent);
+                console.log("e", event)
+                selectDate(params, $(event?.target).html());
               }
-            },
+            }
           },
         },
         plotOptions: {
@@ -1083,6 +943,7 @@ const DashboardsIndex = () => {
     console.log("graphMonth FN360DAY: tempOt>> ", tempOt);
     console.log("temp_testSum :>> ", temp_testSum);
   };
+
   const [stateGraphMachine, setstateGraphMachine] = useState({
     series: [],
     options: {
@@ -1250,6 +1111,25 @@ const DashboardsIndex = () => {
         toolbar: {
           show: false,
         },
+        events: {
+          click: (event, chartContext, config) => {
+            console.log("Chart clicked", event, chartContext, config);
+          },
+          dataPointSelection: (event, chartContext, config) => {
+            const seriesIndex = config.seriesIndex;
+            const dataPointIndex = config.dataPointIndex;
+            const value = config.w.config.series[seriesIndex].data[dataPointIndex];
+
+            console.log("Data point clicked", {
+              seriesIndex,
+              dataPointIndex,
+              value,
+            });
+
+            // Update state with selected data
+            // setSelectedData({ seriesIndex, dataPointIndex, value });
+          },
+        },
       },
 
       plotOptions: {
@@ -1351,6 +1231,7 @@ const DashboardsIndex = () => {
       },
     },
   });
+
   const [stateGraph12Month, setstateGraph12Month] = useState({
     series: [],
     options: {
@@ -1365,6 +1246,7 @@ const DashboardsIndex = () => {
         },
         events: {
           click: (event, chartContext, config) => {
+            console.log("chartContext", chartContext)
             if (event.target.localName == "tspan") {
               setstateGraphMachine(
                 renderGraphMachineAndMount(
@@ -1495,16 +1377,20 @@ const DashboardsIndex = () => {
     const dateDefaults = moment(date2, "DD/MM/YYYY")
       .add(-3, "days")
       .format("DD/MM/YYYY");
-    //Differenceconst dateDefaults = "04/10/2021";
-    console.log("dateDefaults :>> ", dateDefaults);
+    const currentDate = moment(date2, "DD/MM/YYYY").format('DD/MM/YYYY')
+
+    console.log("dateDefaults :>> ", dateDefaults, currentDate);
     renderGraph365Day(sortData(resp.data));
     if (change == true) {
+
       renderGraphMachineAndMount(
         sortData(resp.data),
         `${dateDefaults}`,
         "machine"
       );
+
       renderGraphMachineAndMount(sortData(resp.data), `${dateDefaults}`, "day");
+
     }
   };
   useEffect(() => {
@@ -1516,36 +1402,11 @@ const DashboardsIndex = () => {
     getGraph360DayFN(data, false);
   };
   const selectDate = (params, date) => {
-    console.log("params params :>> ", params);
+    console.log("selectDate :>> ", params, date);
     renderGraphMachineAndMount(params, date, "machine");
     renderGraphMachineAndMount(params, date, "day");
   };
-  // setTimeout(() => {
-  //   setRefresh(!refresh);
-  //   getGraph360DayFN(date2, true);
-  //   console.log("Auto refresh :>> ", refresh);
-  // }, 10000);
-  // auto_refresh();
-  // const renderGrap = () => {
-  //   let i = 0;
-  //   let graph = [];
-  //   for (i = 1; i <= 1; i++) {
-  //     graph.push(
-  //       <Chart
-  //         style={{
-  //           borderRight: "5px solid #c0c0c0",
-  //           marginLeft: 5,
-  //         }}
-  //         key={i}
-  //         type='bar'
-  //         width={1800}
-  //         height={300}
-  //         series={stateGraph12Month.series}
-  //         options={stateGraph12Month.options}></Chart>
-  //     );
-  //   }
-  //   return graph;
-  // };
+
   console.log("stateGraphMachine :>> ", stateGraphMachine);
   console.log("planData 2:>> ", planData);
   //console.log("graph :>> ", renderGrap());

@@ -23,7 +23,7 @@ const Production = (props) => {
     home: current_project && current_project?.project_url,
     show: true,
     breadcrumb: ["Home"],
-    search: true,
+    search: false,
     create: "",
     buttonAction: [""],
     discard: current_project?.project_url,

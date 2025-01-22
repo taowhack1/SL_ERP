@@ -5,7 +5,6 @@ import { withRouter } from "react-router-dom";
 import { Row, Col, Table, Space, Radio, Button, Popconfirm, Tag } from "antd";
 import MainLayout from "../../components/MainLayout";
 import $ from "jquery";
-import _ from 'lodash'
 import { useDispatch, useSelector } from "react-redux";
 import {
   getSalesOrder,
@@ -33,7 +32,7 @@ import CustomSelect from "../../components/CustomSelect";
 import SO_SearchTable from "../sales/SO_search_tools";
 import SOFilter from "../sales/SOFilter";
 import { useFetch } from "../../include/js/customHooks";
-import { api_quo_list, api_so, api_main_page } from "../../include/js/api";
+import { api_quo_list, api_so } from "../../include/js/api";
 const so_columns = ({
   onOpen,
   refSearchInput,
@@ -42,163 +41,189 @@ const so_columns = ({
   searchedColumn,
   setSearchedColumn,
 }) => [
-    {
-      title: "SO No.",
-      dataIndex: "so_no",
-      key: "so_no",
-      width: "8%",
-      align: "center",
-      sorter: {
-        compare: (a, b) => a.so_id - b.so_id,
-        multiple: 3,
-      },
-      ...SOFilter(
-        "so_no",
-        refSearchInput,
-        searchText,
-        setSearchText,
-        searchedColumn,
-        setSearchedColumn
-      ),
-      render: (value) => value || "-",
+  {
+    title: "SO No.",
+    dataIndex: "so_no",
+    key: "so_no",
+    width: "8%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.so_id - b.so_id,
+      multiple: 3,
     },
-    {
-      title: "Quotation Ref.",
-      dataIndex: "qn_no",
-      key: "qn_no",
-      width: "10%",
-      align: "center",
-      sorter: {
-        compare: (a, b) => a.qn_id - b.qn_id,
-        multiple: 3,
-      },
-      ...SOFilter(
-        "qn_no",
-        refSearchInput,
-        searchText,
-        setSearchText,
-        searchedColumn,
-        setSearchedColumn
-      ),
-      render: (value) => value || "-",
+    ...SOFilter(
+      "so_no",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
+    render: (value) => value || "-",
+  },
+  {
+    title: "Quotation Ref.",
+    dataIndex: "qn_no",
+    key: "qn_no",
+    width: "10%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.qn_id - b.qn_id,
+      multiple: 3,
     },
-    {
-      title: "PO No.",
-      dataIndex: "so_customer_po_no",
-      key: "so_customer_po_no",
-      width: "10%",
-      align: "center",
-      ...SOFilter(
-        "so_customer_po_no",
-        refSearchInput,
-        searchText,
-        setSearchText,
-        searchedColumn,
-        setSearchedColumn
-      ),
-      render: (value) => value || "-",
+    ...SOFilter(
+      "qn_no",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
+    render: (value) => value || "-",
+  },
+  {
+    title: "PO No.",
+    dataIndex: "so_customer_po_no",
+    key: "so_customer_po_no",
+    width: "10%",
+    align: "center",
+    ...SOFilter(
+      "so_customer_po_no",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
+    render: (value) => value || "-",
+  },
+  {
+    title: "Order Date",
+    dataIndex: "so_order_date",
+    key: "so_order_date",
+    width: "8%",
+    align: "center",
+    ...SOFilter(
+      "so_order_date",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
+    render: (value) => value || "-",
+  },
+  {
+    title: "Delivery Date",
+    dataIndex: "tg_so_delivery_date",
+    key: "tg_so_delivery_date",
+    width: "8%",
+    align: "center",
+    ...SOFilter(
+      "tg_so_delivery_date",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
+    render: (value) => value || "-",
+  },
+  {
+    title: "Customer",
+    dataIndex: "customer_no_name",
+    key: "customer_no_name",
+    // width: "18%",
+    align: "left",
+    ...SOFilter(
+      "customer_no_name",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
+    ellipsis: true,
+    render: (value) => value || "-",
+  },
+  // {
+  //   title: "Description",
+  //   dataIndex: "so_description",
+  //   key: "so_description",
+  //   width: "15%",
+  //   align: "left",
+  //   ellipsis: true,
+  //   render: (value) => value || "-",
+  // },
+  // {
+  //   title: "Create By",
+  //   dataIndex: "so_created_by_no_name",
+  //   key: "so_created_by_no_name",
+  //   width: "10%",
+  //   align: "left",
+  //   ...SOFilter(
+  //     "so_created_by_no_name",
+  //     refSearchInput,
+  //     searchText,
+  //     setSearchText,
+  //     searchedColumn,
+  //     setSearchedColumn
+  //   ),
+  //   ellipsis: true,
+  //   render: (value) => value || "-",
+  // },
+  {
+    title: "Salesperson",
+    dataIndex: "so_sales_person_no_name",
+    key: "so_sales_person_no_name",
+    width: "10%",
+    align: "left",
+    ...SOFilter(
+      "so_sales_person_no_name",
+      refSearchInput,
+      searchText,
+      setSearchText,
+      searchedColumn,
+      setSearchedColumn
+    ),
+    ellipsis: true,
+    render: (value) => value || "-",
+  },
+  {
+    title: "Total Value",
+    dataIndex: "tg_so_total_amount",
+    key: "tg_so_total_amount",
+    width: "10%",
+    align: "right",
+    sorter: {
+      compare: (a, b) => a.tg_so_total_amount - b.tg_so_total_amount,
+      multiple: 3,
     },
-    {
-      title: "Order Date",
-      dataIndex: "so_order_date",
-      key: "so_order_date",
-      width: "8%",
-      align: "center",
-      ...SOFilter(
-        "so_order_date",
-        refSearchInput,
-        searchText,
-        setSearchText,
-        searchedColumn,
-        setSearchedColumn
-      ),
-      render: (value) => value || "-",
+    render: (value) => convertDigit(value, 2),
+  },
+  {
+    title: "Status",
+    dataIndex: "trans_status_name",
+    key: "trans_status_name",
+    width: "8%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
+      multiple: 3,
     },
-    {
-      title: "Delivery Date",
-      dataIndex: "tg_so_delivery_date",
-      key: "tg_so_delivery_date",
-      width: "8%",
-      align: "center",
-      ...SOFilter(
-        "tg_so_delivery_date",
-        refSearchInput,
-        searchText,
-        setSearchText,
-        searchedColumn,
-        setSearchedColumn
-      ),
-      render: (value) => value || "-",
+    ellipsis: true,
+    render: (value, record, index) => {
+      return (
+        <div
+          id={`open-dr-${index}`}
+          className='cursor'
+          onClick={() => onOpen()}>
+          {getStatusByName(record.trans_status_name)}
+        </div>
+      );
     },
-    {
-      title: "Customer",
-      dataIndex: "customer_no_name",
-      key: "customer_no_name",
-      // width: "18%",
-      align: "left",
-      ...SOFilter(
-        "customer_no_name",
-        refSearchInput,
-        searchText,
-        setSearchText,
-        searchedColumn,
-        setSearchedColumn
-      ),
-      ellipsis: true,
-      render: (value) => value || "-",
-    },
-    {
-      title: "Salesperson",
-      dataIndex: "so_sales_person_no_name",
-      key: "so_sales_person_no_name",
-      width: "10%",
-      align: "left",
-      ...SOFilter(
-        "so_sales_person_no_name",
-        refSearchInput,
-        searchText,
-        setSearchText,
-        searchedColumn,
-        setSearchedColumn
-      ),
-      ellipsis: true,
-      render: (value) => value || "-",
-    },
-    {
-      title: "Total Value",
-      dataIndex: "tg_so_total_amount",
-      key: "tg_so_total_amount",
-      width: "10%",
-      align: "right",
-      sorter: {
-        compare: (a, b) => a.tg_so_total_amount - b.tg_so_total_amount,
-        multiple: 3,
-      },
-      render: (value) => convertDigit(value, 2),
-    },
-    {
-      title: "Status",
-      dataIndex: "trans_status_name",
-      key: "trans_status_name",
-      width: "8%",
-      align: "center",
-      sorter: {
-        compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
-        multiple: 3,
-      },
-      ellipsis: true,
-      render: (value, record, index) => {
-        return (
-          <div
-            id={`open-dr-${index}`}
-            className='cursor'
-            onClick={() => onOpen()}>
-            {getStatusByName(record.trans_status_name)}
-          </div>
-        );
-      },
-    },
-  ];
+  },
+];
 const so_columns_Production = ({
   onOpen,
   refSearchInput,
@@ -207,179 +232,159 @@ const so_columns_Production = ({
   searchedColumn,
   setSearchedColumn,
 }) => [
-    {
-      title: "SO No.",
-      dataIndex: "so_no",
-      key: "so_no",
-      width: "8%",
-      align: "center",
-      sorter: {
-        compare: (a, b) => a.so_id - b.so_id,
-        multiple: 3,
-      },
-      render: (value) => value || "-",
+  {
+    title: "SO No.",
+    dataIndex: "so_no",
+    key: "so_no",
+    width: "8%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.so_id - b.so_id,
+      multiple: 3,
     },
-    {
-      title: "Quotation Ref.",
-      dataIndex: "qn_no",
-      key: "qn_no",
-      width: "10%",
-      align: "center",
-      sorter: {
-        compare: (a, b) => a.qn_id - b.qn_id,
-        multiple: 3,
-      },
-      render: (value) => value || "-",
+    render: (value) => value || "-",
+  },
+  {
+    title: "Quotation Ref.",
+    dataIndex: "qn_no",
+    key: "qn_no",
+    width: "10%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.qn_id - b.qn_id,
+      multiple: 3,
     },
-    {
-      title: "PO No.",
-      dataIndex: "so_customer_po_no",
-      key: "so_customer_po_no",
-      width: "10%",
-      align: "center",
-      render: (value) => value || "-",
+    render: (value) => value || "-",
+  },
+  {
+    title: "PO No.",
+    dataIndex: "so_customer_po_no",
+    key: "so_customer_po_no",
+    width: "10%",
+    align: "center",
+    render: (value) => value || "-",
+  },
+  {
+    title: "Order Date",
+    dataIndex: "so_order_date",
+    key: "so_order_date",
+    width: "8%",
+    align: "center",
+    render: (value) => value || "-",
+  },
+  {
+    title: "Delivery Date",
+    dataIndex: "tg_so_delivery_date",
+    key: "tg_so_delivery_date",
+    width: "8%",
+    align: "center",
+    render: (value) => value || "-",
+  },
+  {
+    title: "Customer",
+    dataIndex: "customer_no_name",
+    key: "customer_no_name",
+    // width: "18%",
+    align: "left",
+    ellipsis: true,
+    render: (value) => value || "-",
+  },
+  // {
+  //   title: "Description",
+  //   dataIndex: "so_description",
+  //   key: "so_description",
+  //   width: "15%",
+  //   align: "left",
+  //   ellipsis: true,
+  //   render: (value) => value || "-",
+  // },
+  {
+    title: "Salesperson",
+    dataIndex: "so_created_by_no_name",
+    key: "so_created_by_no_name",
+    width: "15%",
+    align: "left",
+    ellipsis: true,
+    render: (value) => value || "-",
+  },
+  {
+    title: "Total Value",
+    dataIndex: "tg_so_total_amount",
+    key: "tg_so_total_amount",
+    width: "10%",
+    align: "right",
+    sorter: {
+      compare: (a, b) => a.tg_so_total_amount - b.tg_so_total_amount,
+      multiple: 3,
     },
-    {
-      title: "Order Date",
-      dataIndex: "so_order_date",
-      key: "so_order_date",
-      width: "8%",
-      align: "center",
-      render: (value) => value || "-",
+    render: (value) => convertDigit(value, 2),
+  },
+  {
+    title: "Status",
+    dataIndex: "trans_status_name",
+    key: "trans_status_name",
+    width: "8%",
+    align: "center",
+    sorter: {
+      compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
+      multiple: 3,
     },
-    {
-      title: "Delivery Date",
-      dataIndex: "tg_so_delivery_date",
-      key: "tg_so_delivery_date",
-      width: "8%",
-      align: "center",
-      render: (value) => value || "-",
+    ellipsis: true,
+    render: (value, record, index) => {
+      return (
+        <div
+          id={`open-dr-${index}`}
+          className='cursor'
+          onClick={() => onOpen()}>
+          {getStatusByName(record.trans_status_name)}
+        </div>
+      );
     },
-    {
-      title: "Customer",
-      dataIndex: "customer_no_name",
-      key: "customer_no_name",
-      // width: "18%",
-      align: "left",
-      ellipsis: true,
-      render: (value) => value || "-",
+  },
+  {
+    title: "Production Status",
+    dataIndex: "so_production_status_name",
+    key: "so_production_status_name",
+    width: "8%",
+    align: "center",
+    sorter: {
+      compare: (a, b) =>
+        a.so_production_status_name - b.so_production_status_name,
+      multiple: 3,
     },
-    {
-      title: "Salesperson",
-      dataIndex: "so_created_by_no_name",
-      key: "so_created_by_no_name",
-      width: "15%",
-      align: "left",
-      ellipsis: true,
-      render: (value) => value || "-",
+    ellipsis: true,
+    render: (value, record, index) => {
+      return (
+        <Tag color='default' className='w-100'>
+          {record.so_production_status_name}
+        </Tag>
+      ); //<div>{record.so_production_status_name}</div>;
     },
-    {
-      title: "Total Value",
-      dataIndex: "tg_so_total_amount",
-      key: "tg_so_total_amount",
-      width: "10%",
-      align: "right",
-      sorter: {
-        compare: (a, b) => a.tg_so_total_amount - b.tg_so_total_amount,
-        multiple: 3,
-      },
-      render: (value) => convertDigit(value, 2),
-    },
-    {
-      title: "Status",
-      dataIndex: "trans_status_name",
-      key: "trans_status_name",
-      width: "8%",
-      align: "center",
-      sorter: {
-        compare: (a, b) => a.tg_trans_status_id - b.tg_trans_status_id,
-        multiple: 3,
-      },
-      ellipsis: true,
-      render: (value, record, index) => {
-        return (
-          <div
-            id={`open-dr-${index}`}
-            className='cursor'
-            onClick={() => onOpen()}>
-            {getStatusByName(record.trans_status_name)}
-          </div>
-        );
-      },
-    },
-    {
-      title: "Production Status",
-      dataIndex: "so_production_status_name",
-      key: "so_production_status_name",
-      width: "8%",
-      align: "center",
-      sorter: {
-        compare: (a, b) =>
-          a.so_production_status_name - b.so_production_status_name,
-        multiple: 3,
-      },
-      ellipsis: true,
-      render: (value, record, index) => {
-        return (
-          <Tag color='default' className='w-100'>
-            {record.so_production_status_name}
-          </Tag>
-        ); //<div>{record.so_production_status_name}</div>;
-      },
-    },
-  ];
+  },
+];
 
 const keepData = {
   so: [],
 };
-
 const SaleOrder = (props) => {
   const keepLog = useKeepLogs();
   const authorize = Authorize();
   authorize.check_authorize();
   const current_menu = useSelector((state) => state.auth.currentMenu);
   const auth = useSelector((state) => state.auth.authData);
-
   const { filter } = useSelector((state) => state.sales.so);
-  const { pageSize, page, keyword: iptSearch, so_status, soProductionType, salesType } =
+  const { pageSize, page, keyword, so_status, soProductionType, salesType } =
     filter || {};
-
   const dispatch = useDispatch();
-
-  const [loading, setLoading] = useState(true);
-
   const [rowClick, setRowClick] = useState(false);
   const refSearchInput = useRef();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState(0);
-
-  // const [iptSearch, setIptSearch] = useState('')
-  const [keyword, setKeyword] = useState(iptSearch)
-
   const {
     data: listDataSo,
     fetchData,
     loading: SOloading,
-  } = useFetch(`${api_main_page}/so/${auth.user_name}&${keyword || 0}`);
-
-  const debouncedSetKeyword = useCallback(
-    _.debounce((value) => {
-      setKeyword(value)
-      setLoading(true)
-    }, 1500),
-    []
-  );
-
-  useEffect(() => {
-    debouncedSetKeyword(iptSearch);
-
-    // Cleanup function to cancel debounced function calls on unmount
-    return () => {
-      debouncedSetKeyword.cancel();
-    };
-  }, [iptSearch, debouncedSetKeyword]);
-
-  // ------------------------------------------------------------
+  } = useFetch(`${api_so}/all/${auth.user_name}`);
   const listDataQn = useFetch(`${api_quo_list}/all/${auth.user_name}`);
   const count_list_qn = listDataQn?.data && listDataQn?.data[0]?.length;
   const onChange = (pagination, filters, sorter, extra) => {
@@ -387,26 +392,74 @@ const SaleOrder = (props) => {
     const { current, pageSize } = pagination;
     dispatch(updateSOFilter({ page: current, pageSize }));
   };
-
+  const getSearchData = (keyword) => {
+    let search_data =
+      listDataSo &&
+      sortData(
+        salesType === 3
+          ? soProductionType == 0
+            ? listDataSo.filter((obj) => obj)
+            : listDataSo.filter(
+                (obj) => obj.so_production_type_id === soProductionType
+              )
+          : soProductionType == 0
+          ? listDataSo.filter((obj) => obj.so_type_id === salesType)
+          : so_status == "Pending Approve"
+          ? listDataSo.filter((so) => so?.button_approve == 1)
+          : listDataSo.filter(
+              (obj) =>
+                obj.so_type_id === salesType &&
+                obj.so_production_type_id === soProductionType
+            )
+      );
+    search_data = keyword
+      ? search_data?.filter(
+          (so) =>
+            so?.so_no?.indexOf(keyword) >= 0 ||
+            so?.customer_no?.indexOf(keyword) >= 0 ||
+            so?.customer_name?.indexOf(keyword) >= 0 ||
+            so?.so_created?.indexOf(keyword) >= 0 ||
+            so?.so_description?.indexOf(keyword) >= 0
+        )
+      : so_status === "Pending Approve"
+      ? search_data?.filter((so) => so?.button_approve == 1)
+      : so_status === "Pending Confirm"
+      ? search_data?.filter((so) => so?.button_confirm == 1)
+      : so_status === "Completed"
+      ? search_data?.filter((so) => so?.trans_status_name == "Completed ")
+      : so_status === "Available"
+      ? search_data?.filter((so) => so?.trans_status_name == "Available")
+      : so_status === "None DR"
+      ? search_data?.filter((so) => so?.trans_status_name == "None DR")
+      : so_status === "Transports 1"
+      ? search_data?.filter((so) => so?.trans_status_name == "Transports 1")
+      : so_status === "Transports 2"
+      ? search_data?.filter((so) => so?.trans_status_name == "Transports 2")
+      : so_status === "Transports 3"
+      ? search_data?.filter((so) => so?.trans_status_name == "Transports 3")
+      : so_status === "Transports 4"
+      ? search_data?.filter((so) => so?.trans_status_name == "Transports 4")
+      : so_status === "Open DR 1"
+      ? search_data?.filter((so) => so?.trans_status_name == "Open DR 1")
+      : so_status === "Cancel"
+      ? search_data?.filter((so) => so?.trans_status_name == "Cancel")
+      : so_status === "Waiting"
+      ? search_data?.filter((so) => so?.trans_status_name == "Draft")
+      : search_data;
+    console.log("object :>> ", search_data);
+    return sortData(search_data);
+  };
   useEffect(() => {
     dispatch(get_sale_master_data());
     dispatch(reset_comments());
     dispatch(getMasterDataItem());
   }, []);
-
-  // useEffect(() => {
-  //   const timeout1 = setTimeout(() => {
-  //     fetchData()
-  //   }, 1000)
-
-  //   return () => clearTimeout(timeout1)
-  // }, [keyword]);
-
   useEffect(() => {
-    // setState(listDataSo)
-    listDataSo?.length && setLoading(false)
-  }, [listDataSo])
-
+    console.log("Filter Keyword", keyword);
+    const respSearch = getSearchData(keyword);
+    setState(respSearch);
+  }, [keyword, listDataSo, so_status, soProductionType, salesType]);
+  console.log("listDataSo :>> ", listDataSo);
   const [state, setState] = useState(keepData.so);
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
@@ -524,8 +577,8 @@ const SaleOrder = (props) => {
             onChange={(val, option) =>
               val === 2
                 ? dispatch(
-                  updateSOFilter({ salesType: val, soProductionType: 0 })
-                )
+                    updateSOFilter({ salesType: val, soProductionType: 0 })
+                  )
                 : dispatch(updateSOFilter({ salesType: val }))
             }
             value={salesType}
@@ -603,9 +656,7 @@ const SaleOrder = (props) => {
       dr_id: null,
       so_detail_id: null,
     }));
-
     fetchData();
-    setLoading(true)
   }, [setModal, fetchData]);
 
   const onOpen = useCallback(
@@ -805,27 +856,29 @@ const SaleOrder = (props) => {
             <Table
               //title={() => <SO_SearchTable />} //onChangeSearch={onChangeSearch} />}
               onChange={onChange}
-              loading={loading}
+              loading={SOloading ? true : false}
               columns={
                 filter.soProductionType === 3
                   ? so_columns_Production({
-                    onOpen,
-                    refSearchInput,
-                    searchText,
-                    setSearchText,
-                    searchedColumn,
-                    setSearchedColumn,
-                  })
+                      onOpen,
+                      refSearchInput,
+                      searchText,
+                      setSearchText,
+                      searchedColumn,
+                      setSearchedColumn,
+                    })
                   : so_columns({
-                    onOpen,
-                    refSearchInput,
-                    searchText,
-                    setSearchText,
-                    searchedColumn,
-                    setSearchedColumn,
-                  })
+                      onOpen,
+                      refSearchInput,
+                      searchText,
+                      setSearchText,
+                      searchedColumn,
+                      setSearchedColumn,
+                    })
               }
-              dataSource={listDataSo}
+              dataSource={
+                state //.filter((data) => data.button_approve == 1
+              }
               pagination={{
                 pageSize,
                 current: page,
