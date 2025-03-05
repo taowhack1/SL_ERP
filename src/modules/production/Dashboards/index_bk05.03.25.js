@@ -211,6 +211,82 @@ const DashboardsIndex = () => {
         colors: "#FFFFFF",
       },
     ];
+    let graphDay2 = [
+      {
+        name: "success",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? 8
+            : obj.tg_plan_job_actual_time_hour;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#2ECC71",
+      },
+      {
+        name: "tempot",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? obj.tg_plan_job_actual_time_ot
+            : 0;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#CC0000",
+      },
+      {
+        name: "plan",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= obj.plan_job_plan_time_hour
+            ? 0
+            : obj.tg_plan_job_actual_time_hour <= obj.plan_job_plan_time_hour
+              ? obj.plan_job_plan_time_hour - obj.tg_plan_job_actual_time_hour
+              : obj.plan_job_plan_time_hour;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#0000FF",
+      },
+      {
+        name: "freeze",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? 0
+            : obj.plan_job_plan_time_hour >= 8
+              ? 0
+              : 8 - obj.plan_job_plan_time_hour;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.tg_plan_job_actual_time_hour >= 8
+            ? 0
+            : obj.tg_plan_job_actual_time_ot;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: DataTransformer.filter((obj, index) => {
+          return obj.date == date;
+        }).map((obj, index) => {
+          return obj.freeze;
+        }),
+        plan_day: findUniqueValues(plan_day),
+        colors: "#FFFFFF",
+      },
+    ];
     let graphMachine2 = [
       {
         name: "success",
@@ -615,140 +691,135 @@ const DashboardsIndex = () => {
 
   const renderGraph365Day = (params) => {
     console.log("planData :>> ", planData);
-    function getMachineCapacityYearly(machine_id = null) {
+    let plan = [];
+    let success = [];
+    let ot = [];
+    let tempOt = [];
+    let freeze = [];
+    let date_plan = [];
+    console.log(
+      "params renderGraph365Day:>> ",
+      params.map((obj, i) => moment(obj.date, "DD/MM/YYYY").format("M"))
+    );
+    let i = 0;
+    let temp_testSum = [];
+    let filter = [];
 
-      let plan = [];
-      let success = [];
-      let ot = [];
-      let tempOt = [];
-      let freeze = [];
-      let date_plan = [];
-      let filter = [];
-
-      filter.push(
-        params.reduce((a, c) => {
-          const filterMachine = c.detail.filter((res) => res.machine_id == machine_id);
-
-          a.push({
-            ...c,
-            date_plan: date_plan.push(c.date.substr(0, 10)),
-            plan: filterMachine
-              .filter((res) => res.plan_job_plan_time_hour >= 0)
-              .reduce((acc, cur) => acc + cur.plan_job_plan_time_hour, 0),
-            cplan: plan.push(
-              filterMachine
-                .map((res) =>
-                  res.tg_plan_job_actual_time_hour >=
+    filter.push(
+      params.reduce((a, c) => {
+        a.push({
+          ...c,
+          date_plan: date_plan.push(c.date.substr(0, 10)),
+          plan: c.detail
+            .filter((res) => res.plan_job_plan_time_hour >= 0)
+            .reduce((acc, cur) => acc + cur.plan_job_plan_time_hour, 0),
+          cplan: plan.push(
+            c.detail
+              .map((res) =>
+                res.tg_plan_job_actual_time_hour >=
+                  res.plan_job_plan_time_hour
+                  ? 0
+                  : res.tg_plan_job_actual_time_hour <=
                     res.plan_job_plan_time_hour
-                    ? 0
-                    : res.tg_plan_job_actual_time_hour <=
-                      res.plan_job_plan_time_hour
-                      ? res.plan_job_plan_time_hour -
-                      res.tg_plan_job_actual_time_hour
-                      : res.plan_job_plan_time_hour
-                )
-                .reduce((acc, cur) => acc + cur / filterMachine.length, 0)
-            ),
-            success: filterMachine
+                    ? res.plan_job_plan_time_hour -
+                    res.tg_plan_job_actual_time_hour
+                    : res.plan_job_plan_time_hour
+              )
+              .reduce((acc, cur) => acc + cur / c.detail.length, 0)
+          ),
+          success: c.detail
+            .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
+            .reduce((acc, cur) => acc + cur.tg_plan_job_actual_time_hour, 0),
+          csuccess: success.push(
+            c.detail
               .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
-              .reduce((acc, cur) => acc + cur.tg_plan_job_actual_time_hour, 0),
-            csuccess: success.push(
-              filterMachine
-                .filter((res) => res.tg_plan_job_actual_time_hour >= 0)
-                .reduce(
-                  (acc, cur) =>
-                    acc + cur.tg_plan_job_actual_time_hour / filterMachine.length,
-                  0
-                )
+              .reduce(
+                (acc, cur) =>
+                  acc + cur.tg_plan_job_actual_time_hour / c.detail.length,
+                0
+              )
+          ),
+          ot: c.detail
+            .filter((res) => res.tg_plan_job_actual_time_ot >= 0)
+            .reduce(
+              (acc, cur) =>
+                acc + cur.tg_plan_job_actual_time_ot / c.detail.length,
+              0
             ),
-            ot: filterMachine
+          cot: ot.push(
+            c.detail
               .filter((res) => res.tg_plan_job_actual_time_ot >= 0)
               .reduce(
                 (acc, cur) =>
-                  acc + cur.tg_plan_job_actual_time_ot / filterMachine.length,
+                  acc + cur.tg_plan_job_actual_time_ot / c.detail.length,
                 0
-              ),
-            cot: ot.push(
-              filterMachine
-                .filter((res) => res.tg_plan_job_actual_time_ot >= 0)
-                .reduce(
-                  (acc, cur) =>
-                    acc + cur.tg_plan_job_actual_time_ot / filterMachine.length,
-                  0
-                )
-            ),
-
-            ctempOt: tempOt.push(
-              parseInt(
-                filterMachine
-                  .map((res) =>
-                    res.tg_plan_job_actual_time_hour >= 8
-                      ? 0
-                      : res.plan_job_plan_time_hour >= 8
-                        ? 0
-                        : 8.0 - res.plan_job_plan_time_hour
-                  )
-                  .reduce((acc, cur) => acc + cur / filterMachine.length, 0)
               )
-            ),
-            freeze: filterMachine
+          ),
+
+          ctempOt: tempOt.push(
+            parseInt(
+              c.detail
+                .map((res) =>
+                  res.tg_plan_job_actual_time_hour >= 8
+                    ? 0
+                    : res.plan_job_plan_time_hour >= 8
+                      ? 0
+                      : 8.0 - res.plan_job_plan_time_hour
+                )
+                .reduce((acc, cur) => acc + cur / c.detail.length, 0)
+            )
+          ),
+          freeze: c.detail
+            .filter((res) => res.freeze >= 0)
+            .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0),
+          cfreeze: freeze.push(
+            c.detail
               .filter((res) => res.freeze >= 0)
-              .reduce((acc, cur) => acc + cur.freeze / filterMachine.length, 0),
-            cfreeze: freeze.push(
-              filterMachine
-                .filter((res) => res.freeze >= 0)
-                .reduce((acc, cur) => acc + cur.freeze / filterMachine.length, 0)
-            ),
-          });
-          return a;
-        }, [])
-      );
+              .reduce((acc, cur) => acc + cur.freeze / c.detail.length, 0)
+          ),
+        });
+        return a;
+      }, [])
+    );
+    console.log("graphMonth filter :>> ", filter);
 
-      let graphMonth = [
-        {
-          name: "success",
-          data: success,
-          date_plan: date_plan,
-          colors: "#2ECC71",
-        },
-        {
-          name: "plan",
-          data: plan,
-          date_plan: date_plan,
-          colors: "#0000FF",
-        },
-        {
-          name: "freeze",
-          data: tempOt,
-          date_plan: date_plan,
-          colors: "#FFFFFF",
-        },
-        {
-          name: "ot",
-          data: ot,
-          date_plan: date_plan,
-          colors: "#CC0000",
-        },
-        {
-          name: "freeze",
-          data: freeze,
-          date_plan: date_plan,
-          colors: "#FFFFFF",
-        },
-      ];
-
-      return graphMonth
-    }
-
-    const mixing300 = getMachineCapacityYearly(41);
-    const mixing50 = getMachineCapacityYearly(49);
-    const mixing1000 = getMachineCapacityYearly(50);
-    const mixing2000 = getMachineCapacityYearly(51);
+    let graphMonth = [
+      {
+        name: "success",
+        data: success,
+        date_plan: date_plan,
+        colors: "#2ECC71",
+      },
+      {
+        name: "plan",
+        data: plan,
+        date_plan: date_plan,
+        colors: "#0000FF",
+      },
+      {
+        name: "freeze",
+        data: tempOt,
+        date_plan: date_plan,
+        colors: "#FFFFFF",
+      },
+      {
+        name: "ot",
+        data: ot,
+        date_plan: date_plan,
+        colors: "#CC0000",
+      },
+      {
+        name: "freeze",
+        data: freeze,
+        date_plan: date_plan,
+        colors: "#FFFFFF",
+      },
+    ];
 
     setstateGraph12Month({
-      series: [...mixing300],
+      series: [...graphMonth],
       options: {
-        colors: [...mixing300?.map((color) => color.colors)],
+        colors: [...graphMonth?.map((color) => color.colors)],
         chart: {
           width: "20%",
           type: "bar",
@@ -830,7 +901,7 @@ const DashboardsIndex = () => {
           },
         },
         xaxis: {
-          categories: [...mixing300[0].date_plan],
+          categories: [...graphMonth[0].date_plan],
           Width: "20%",
           title: {
             text: "",
@@ -866,378 +937,11 @@ const DashboardsIndex = () => {
         },
       },
     });
-
-    setStateMixingCream50L({
-      series: [...mixing50],
-      options: {
-        colors: [...mixing50?.map((color) => color.colors)],
-        chart: {
-          width: "20%",
-          type: "bar",
-          height: 350,
-          stacked: true,
-          toolbar: {
-            show: false,
-          },
-          events: {
-            click: (event, chartContext, config) => {
-              if (event.target.localName == "tspan") {
-                console.log("e", event)
-                selectDate(params, $(event?.target).html());
-              }
-            }
-          },
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: "30%",
-            endingShape: "flat",
-          },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          show: true,
-          width: 0.2,
-          colors: ["#000000"],
-        },
-        annotations: {
-          position: "back",
-          yaxis: [
-            {
-              y: 8,
-              borderColor: "#D7D7D7",
-              strokeDashArray: 0,
-            },
-            {
-              y: 12,
-              borderColor: "#D7D7D7",
-              strokeDashArray: 0,
-            },
-            {
-              y: 20,
-              borderColor: "#D7D7D7",
-              strokeDashArray: 0,
-            },
-            {
-              y: 24,
-              borderColor: "#C3C3C3",
-              strokeDashArray: 0,
-            },
-          ],
-        },
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              legend: {
-                position: "bottom",
-                offsetX: -10,
-                offsetY: 0,
-              },
-            },
-          },
-        ],
-        yaxis: {
-          show: true,
-          max: 24,
-          tickAmount: 24,
-          labels: {
-            show: true,
-            formatter: (value) => {
-              return [8, 12, 20, 24].includes(value) ? value : " ";
-            },
-          },
-        },
-        xaxis: {
-          categories: [...mixing50[0].date_plan],
-          Width: "20%",
-          title: {
-            text: "",
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              color: undefined,
-              fontSize: "12px",
-              fontFamily: "Helvetica, Arial, sans-serif",
-              fontWeight: 600,
-              cssClass: "apexcharts-xaxis-title",
-            },
-          },
-        },
-        grid: {
-          show: false,
-        },
-        fill: {
-          opacity: 2,
-        },
-        tooltip: {
-          enabled: false,
-          y: {
-            formatter: function (val) {
-              return val;
-            },
-          },
-        },
-        legend: {
-          show: false,
-          position: "bottom",
-          horizontalAlign: "center",
-        },
-      },
-    });
-
-    setStateMixingCream1000L({
-      series: [...mixing1000],
-      options: {
-        colors: [...mixing1000?.map((color) => color.colors)],
-        chart: {
-          width: "20%",
-          type: "bar",
-          height: 350,
-          stacked: true,
-          toolbar: {
-            show: false,
-          },
-          events: {
-            click: (event, chartContext, config) => {
-              if (event.target.localName == "tspan") {
-                console.log("e", event)
-                selectDate(params, $(event?.target).html());
-              }
-            }
-          },
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: "30%",
-            endingShape: "flat",
-          },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          show: true,
-          width: 0.2,
-          colors: ["#000000"],
-        },
-        annotations: {
-          position: "back",
-          yaxis: [
-            {
-              y: 8,
-              borderColor: "#D7D7D7",
-              strokeDashArray: 0,
-            },
-            {
-              y: 12,
-              borderColor: "#D7D7D7",
-              strokeDashArray: 0,
-            },
-            {
-              y: 20,
-              borderColor: "#D7D7D7",
-              strokeDashArray: 0,
-            },
-            {
-              y: 24,
-              borderColor: "#C3C3C3",
-              strokeDashArray: 0,
-            },
-          ],
-        },
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              legend: {
-                position: "bottom",
-                offsetX: -10,
-                offsetY: 0,
-              },
-            },
-          },
-        ],
-        yaxis: {
-          show: true,
-          max: 24,
-          tickAmount: 24,
-          labels: {
-            show: true,
-            formatter: (value) => {
-              return [8, 12, 20, 24].includes(value) ? value : " ";
-            },
-          },
-        },
-        xaxis: {
-          categories: [...mixing1000[0].date_plan],
-          Width: "20%",
-          title: {
-            text: "",
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              color: undefined,
-              fontSize: "12px",
-              fontFamily: "Helvetica, Arial, sans-serif",
-              fontWeight: 600,
-              cssClass: "apexcharts-xaxis-title",
-            },
-          },
-        },
-        grid: {
-          show: false,
-        },
-        fill: {
-          opacity: 2,
-        },
-        tooltip: {
-          enabled: false,
-          y: {
-            formatter: function (val) {
-              return val;
-            },
-          },
-        },
-        legend: {
-          show: false,
-          position: "bottom",
-          horizontalAlign: "center",
-        },
-      },
-    });
-
-    setStateMixingCream2000L({
-      series: [...mixing2000],
-      options: {
-        colors: [...mixing2000?.map((color) => color.colors)],
-        chart: {
-          width: "20%",
-          type: "bar",
-          height: 350,
-          stacked: true,
-          toolbar: {
-            show: false,
-          },
-          events: {
-            click: (event, chartContext, config) => {
-              if (event.target.localName == "tspan") {
-                console.log("e", event)
-                selectDate(params, $(event?.target).html());
-              }
-            }
-          },
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: "30%",
-            endingShape: "flat",
-          },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          show: true,
-          width: 0.2,
-          colors: ["#000000"],
-        },
-        annotations: {
-          position: "back",
-          yaxis: [
-            {
-              y: 8,
-              borderColor: "#D7D7D7",
-              strokeDashArray: 0,
-            },
-            {
-              y: 12,
-              borderColor: "#D7D7D7",
-              strokeDashArray: 0,
-            },
-            {
-              y: 20,
-              borderColor: "#D7D7D7",
-              strokeDashArray: 0,
-            },
-            {
-              y: 24,
-              borderColor: "#C3C3C3",
-              strokeDashArray: 0,
-            },
-          ],
-        },
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              legend: {
-                position: "bottom",
-                offsetX: -10,
-                offsetY: 0,
-              },
-            },
-          },
-        ],
-        yaxis: {
-          show: true,
-          max: 24,
-          tickAmount: 24,
-          labels: {
-            show: true,
-            formatter: (value) => {
-              return [8, 12, 20, 24].includes(value) ? value : " ";
-            },
-          },
-        },
-        xaxis: {
-          categories: [...mixing2000[0].date_plan],
-          Width: "20%",
-          title: {
-            text: "",
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              color: undefined,
-              fontSize: "12px",
-              fontFamily: "Helvetica, Arial, sans-serif",
-              fontWeight: 600,
-              cssClass: "apexcharts-xaxis-title",
-            },
-          },
-        },
-        grid: {
-          show: false,
-        },
-        fill: {
-          opacity: 2,
-        },
-        tooltip: {
-          enabled: false,
-          y: {
-            formatter: function (val) {
-              return val;
-            },
-          },
-        },
-        legend: {
-          show: false,
-          position: "bottom",
-          horizontalAlign: "center",
-        },
-      },
-    });
-
-    // console.log("graphMonth FN360DAY:>> ", graphMonth);
-    // console.log("graphMonth FN360DAY: success>> ", success);
-    // console.log("graphMonth FN360DAY: plan>> ", plan);
-    // console.log("graphMonth FN360DAY: tempOt>> ", tempOt);
-    // console.log("temp_testSum :>> ", temp_testSum);
+    console.log("graphMonth FN360DAY:>> ", graphMonth);
+    console.log("graphMonth FN360DAY: success>> ", success);
+    console.log("graphMonth FN360DAY: plan>> ", plan);
+    console.log("graphMonth FN360DAY: tempOt>> ", tempOt);
+    console.log("temp_testSum :>> ", temp_testSum);
   };
 
   const [stateGraphMachine, setstateGraphMachine] = useState({
@@ -1664,346 +1368,6 @@ const DashboardsIndex = () => {
       },
     },
   });
-  const [stateMixingCream50L, setStateMixingCream50L] = useState({
-    series: [],
-    options: {
-      colors: [],
-      chart: {
-        width: "20%",
-        type: "bar",
-        height: 350,
-        stacked: true,
-        toolbar: {
-          show: false,
-        },
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: "30%",
-          endingShape: "flat",
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 0.2,
-        colors: ["#000000"],
-      },
-      annotations: {
-        position: "back",
-        yaxis: [
-          {
-            y: 8,
-            borderColor: "#D7D7D7",
-            strokeDashArray: 0,
-          },
-          {
-            y: 12,
-            borderColor: "#D7D7D7",
-            strokeDashArray: 0,
-          },
-          {
-            y: 20,
-            borderColor: "#D7D7D7",
-            strokeDashArray: 0,
-          },
-          {
-            y: 24,
-            borderColor: "#C3C3C3",
-            strokeDashArray: 0,
-          },
-        ],
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: "bottom",
-              offsetX: -10,
-              offsetY: 0,
-            },
-          },
-        },
-      ],
-      yaxis: {
-        show: true,
-        max: 24,
-        tickAmount: 24,
-        labels: {
-          show: true,
-          formatter: (value) => {
-            return [8, 12, 20, 24].includes(value) ? value : " ";
-          },
-        },
-      },
-      xaxis: {
-        categories: [],
-        Width: "20%",
-        title: {
-          text: "",
-          offsetX: 0,
-          offsetY: 0,
-          style: {
-            color: undefined,
-            fontSize: "12px",
-            fontFamily: "Helvetica, Arial, sans-serif",
-            fontWeight: 600,
-            cssClass: "apexcharts-xaxis-title",
-          },
-        },
-      },
-      grid: {
-        show: false,
-      },
-      fill: {
-        opacity: 2,
-      },
-      tooltip: {
-        enabled: false,
-        y: {
-          formatter: function (val) {
-            return val;
-          },
-        },
-      },
-      legend: {
-        show: false,
-        position: "bottom",
-        horizontalAlign: "center",
-      },
-    },
-  });
-  const [stateMixingCream1000L, setStateMixingCream1000L] = useState({
-    series: [],
-    options: {
-      colors: [],
-      chart: {
-        width: "20%",
-        type: "bar",
-        height: 350,
-        stacked: true,
-        toolbar: {
-          show: false,
-        },
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: "30%",
-          endingShape: "flat",
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 0.2,
-        colors: ["#000000"],
-      },
-      annotations: {
-        position: "back",
-        yaxis: [
-          {
-            y: 8,
-            borderColor: "#D7D7D7",
-            strokeDashArray: 0,
-          },
-          {
-            y: 12,
-            borderColor: "#D7D7D7",
-            strokeDashArray: 0,
-          },
-          {
-            y: 20,
-            borderColor: "#D7D7D7",
-            strokeDashArray: 0,
-          },
-          {
-            y: 24,
-            borderColor: "#C3C3C3",
-            strokeDashArray: 0,
-          },
-        ],
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: "bottom",
-              offsetX: -10,
-              offsetY: 0,
-            },
-          },
-        },
-      ],
-      yaxis: {
-        show: true,
-        max: 24,
-        tickAmount: 24,
-        labels: {
-          show: true,
-          formatter: (value) => {
-            return [8, 12, 20, 24].includes(value) ? value : " ";
-          },
-        },
-      },
-      xaxis: {
-        categories: [],
-        Width: "20%",
-        title: {
-          text: "",
-          offsetX: 0,
-          offsetY: 0,
-          style: {
-            color: undefined,
-            fontSize: "12px",
-            fontFamily: "Helvetica, Arial, sans-serif",
-            fontWeight: 600,
-            cssClass: "apexcharts-xaxis-title",
-          },
-        },
-      },
-      grid: {
-        show: false,
-      },
-      fill: {
-        opacity: 2,
-      },
-      tooltip: {
-        enabled: false,
-        y: {
-          formatter: function (val) {
-            return val;
-          },
-        },
-      },
-      legend: {
-        show: false,
-        position: "bottom",
-        horizontalAlign: "center",
-      },
-    },
-  });
-  const [stateMixingCream2000L, setStateMixingCream2000L] = useState({
-    series: [],
-    options: {
-      colors: [],
-      chart: {
-        width: "20%",
-        type: "bar",
-        height: 350,
-        stacked: true,
-        toolbar: {
-          show: false,
-        },
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: "30%",
-          endingShape: "flat",
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 0.2,
-        colors: ["#000000"],
-      },
-      annotations: {
-        position: "back",
-        yaxis: [
-          {
-            y: 8,
-            borderColor: "#D7D7D7",
-            strokeDashArray: 0,
-          },
-          {
-            y: 12,
-            borderColor: "#D7D7D7",
-            strokeDashArray: 0,
-          },
-          {
-            y: 20,
-            borderColor: "#D7D7D7",
-            strokeDashArray: 0,
-          },
-          {
-            y: 24,
-            borderColor: "#C3C3C3",
-            strokeDashArray: 0,
-          },
-        ],
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: "bottom",
-              offsetX: -10,
-              offsetY: 0,
-            },
-          },
-        },
-      ],
-      yaxis: {
-        show: true,
-        max: 24,
-        tickAmount: 24,
-        labels: {
-          show: true,
-          formatter: (value) => {
-            return [8, 12, 20, 24].includes(value) ? value : " ";
-          },
-        },
-      },
-      xaxis: {
-        categories: [],
-        Width: "20%",
-        title: {
-          text: "",
-          offsetX: 0,
-          offsetY: 0,
-          style: {
-            color: undefined,
-            fontSize: "12px",
-            fontFamily: "Helvetica, Arial, sans-serif",
-            fontWeight: 600,
-            cssClass: "apexcharts-xaxis-title",
-          },
-        },
-      },
-      grid: {
-        show: false,
-      },
-      fill: {
-        opacity: 2,
-      },
-      tooltip: {
-        enabled: false,
-        y: {
-          formatter: function (val) {
-            return val;
-          },
-        },
-      },
-      legend: {
-        show: false,
-        position: "bottom",
-        horizontalAlign: "center",
-      },
-    },
-  });
-
   const [refresh, setRefresh] = useState(false);
   const { user_name } = useSelector((state) => state.auth.authData);
   const getGraph360DayFN = async (date, change) => {
@@ -2037,7 +1401,6 @@ const DashboardsIndex = () => {
     console.log("data :>> ", data);
     getGraph360DayFN(data, false);
   };
-
   const selectDate = (params, date) => {
     console.log("selectDate :>> ", params, date);
     renderGraphMachineAndMount(params, date, "machine");
@@ -2050,51 +1413,31 @@ const DashboardsIndex = () => {
   console.log("stateGraph12Month :>> ", stateGraph12Month);
   return (
     <>
+      <Row gutter={[8, 16]}>
+        {/* <div>DashboardsIndex</div> */}
+        <Col span={4}>
+          <Chart
+            type="bar"
+            width={200}
+            height={400}
+            series={stateGraphDay.series}
+            options={stateGraphDay.options}
+          ></Chart>
+        </Col>
+        <Col>
+          <Chart
+            type="bar"
+            width={
+              85 * stateGraphMachine?.series[0]?.machine_description?.length
+            }
+            height={400}
+            series={stateGraphMachine.series}
+            options={stateGraphMachine.options}
+          ></Chart>
+        </Col>
+        <Col></Col>
+      </Row>
       <Row gutter={[8, 8]}>
-        <h2>Mixing - Cream 50 L</h2>
-        <div className="scroll__container">
-          {/* {renderGrap()} */}
-          <Chart
-            type="bar"
-            width={60 * planData.length}
-            height={300}
-            series={stateMixingCream50L.series}
-            options={stateMixingCream50L.options}
-          ></Chart>
-        </div>
-        <h2>Mixing - Cream 300 L</h2>
-        <div className="scroll__container">
-          {/* {renderGrap()} */}
-          <Chart
-            type="bar"
-            width={60 * planData.length}
-            height={300}
-            series={stateGraph12Month.series}
-            options={stateGraph12Month.options}
-          ></Chart>
-        </div>
-        <h2>Mixing - Cream 1,000 L</h2>
-        <div className="scroll__container">
-          {/* {renderGrap()} */}
-          <Chart
-            type="bar"
-            width={60 * planData.length}
-            height={300}
-            series={stateMixingCream1000L.series}
-            options={stateMixingCream1000L.options}
-          ></Chart>
-        </div>
-        <h2>Mixing - Cream 2,000 L</h2>
-        <div className="scroll__container">
-          {/* {renderGrap()} */}
-          <Chart
-            type="bar"
-            width={60 * planData.length}
-            height={300}
-            series={stateMixingCream2000L.series}
-            options={stateMixingCream2000L.options}
-          ></Chart>
-        </div>
         <Col span={24} style={{ background: "#C6C6CC" }}>
           {/* <span style={{ marginLeft: 10 }}>Autorefresh in </span> */}
           <Tag color="#0000FF" style={{ marginLeft: 100 }}>
@@ -2117,6 +1460,17 @@ const DashboardsIndex = () => {
             }}
           />
         </Col>
+
+        <div className="scroll__container">
+          {/* {renderGrap()} */}
+          <Chart
+            type="bar"
+            width={60 * planData.length}
+            height={300}
+            series={stateGraph12Month.series}
+            options={stateGraph12Month.options}
+          ></Chart>
+        </div>
       </Row>
     </>
   );

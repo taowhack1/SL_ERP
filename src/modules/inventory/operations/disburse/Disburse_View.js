@@ -85,6 +85,15 @@ const DisburseView = (props) => {
         ),
         link: `${process.env.REACT_APP_REPORT_SERVER}/report_disburse.aspx?disburse_no=${data_head.disburse_no}`,
       },
+      {
+        name: (
+          <span>
+            <PrinterOutlined className='pd-right-1 button-icon' />
+            ปริ้นท์ Tag สินค้า
+          </span>
+        ),
+        link: `${process.env.REACT_APP_REPORT_SERVER}/report_issued_tag.aspx?disburse_no=${data_head.disburse_no}`,
+      },
       data_head &&
       data_head.button_cancel && {
         name: "Cancel",

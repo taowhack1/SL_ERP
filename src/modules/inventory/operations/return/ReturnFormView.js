@@ -21,6 +21,7 @@ import { AppContext, ReturnContext } from "../../../../include/js/context";
 import { returnFields } from "./config";
 import ReturnHead from "./ReturnHead";
 import ReturnTabs from "./ReturnTabs";
+import { PrinterOutlined } from "@ant-design/icons";
 const initialState = returnFields;
 const readOnly = true;
 const ReturnFormView = () => {
@@ -85,8 +86,22 @@ const ReturnFormView = () => {
     },
     action: [
       {
-        name: "Print",
+        name: (
+          <span>
+            <PrinterOutlined className='pd-right-1 button-icon' />
+            ปริ้นท์ใบคืน
+          </span>
+        ),
         link: `${process.env.REACT_APP_REPORT_SERVER}/report_return.aspx?return_no=${state.return_no}`,
+      },
+      {
+        name: (
+          <span>
+            <PrinterOutlined className='pd-right-1 button-icon' />
+            ปริ้นท์ Tag สินค้า
+          </span>
+        ),
+        link: `${process.env.REACT_APP_REPORT_SERVER}/report_return_tag.aspx?return_no=${state.return_no}`,
       },
       state.button_cancel && {
         name: "Cancel",
