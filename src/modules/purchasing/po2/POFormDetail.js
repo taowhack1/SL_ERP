@@ -38,11 +38,11 @@ const POFormDetail = () => {
           const updateQty = moq < obj?.po_detail_qty ? obj?.po_detail_qty : moq;
           return obj?.id === id
             ? {
-                ...obj,
-                po_detail_qty: updateQty,
-                old_po_detail_qty: obj?.po_detail_qty,
-                po_detail_total_price: updateQty * obj?.po_detail_price,
-              }
+              ...obj,
+              po_detail_qty: updateQty,
+              old_po_detail_qty: obj?.po_detail_qty,
+              po_detail_total_price: updateQty * obj?.po_detail_price,
+            }
             : obj;
         }),
       });
@@ -56,11 +56,11 @@ const POFormDetail = () => {
         po_detail: po_detail.map((obj) =>
           obj?.id === id
             ? {
-                ...obj,
-                po_detail_qty: obj?.old_po_detail_qty || 0,
-                po_detail_total_price:
-                  obj?.old_po_detail_qty * obj?.po_detail_price,
-              }
+              ...obj,
+              po_detail_qty: obj?.old_po_detail_qty || 0,
+              po_detail_total_price:
+                obj?.old_po_detail_qty * obj?.po_detail_price,
+            }
             : obj
         ),
       });
@@ -104,6 +104,8 @@ const POFormDetail = () => {
         obj?.id === id ? { ...obj, ...data } : obj
       ),
     });
+
+    onChangePOState({ ...onCalculateTotal(poState) })
   };
 
   const onRemoveRow = (id) => {
@@ -164,11 +166,11 @@ const POFormDetail = () => {
         <Col span={14}></Col>
 
         <Col span={6} className='text-number'>
-          <SyncOutlined
+          {/* <SyncOutlined
             className='button-icon mr-2'
             style={{ fontWieght: "bold" }}
             onClick={() => onChangePOState({ ...onCalculateTotal(poState) })}
-          />
+          /> */}
           <Text strong>Extended Discount :</Text>
         </Col>
         <Col span={3} className='text-number'>
@@ -178,10 +180,13 @@ const POFormDetail = () => {
             className='w-100'
             size='small'
             value={po_discount}
-            onChange={(val) =>
+            onChange={(val) => {
               onChangePOState({
                 po_discount: val,
               })
+
+              onChangePOState({ ...onCalculateTotal(poState) })
+            }
             }
           />
         </Col>
