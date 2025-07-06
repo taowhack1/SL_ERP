@@ -1,0 +1,2 @@
+@echo off
+cd C:\Users\Administrator\Desktop\SL_ERP&echo.&echo.& echo -------------------------------------------------&echo.&echo.& echo Please wait, This process will take 1-5 minutes...&echo.&echo.& echo -------------------------------------------------&echo.&echo.& npm run build& xcopy "C:\Users\Administrator\Desktop\SL_ERP\build" "C:\Users\Administrator\Desktop\server\build" /E /I /Y& start cmd /k "pm2 restart all& pm2 list& echo Service start successfully."
