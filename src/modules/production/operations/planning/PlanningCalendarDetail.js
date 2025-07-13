@@ -213,7 +213,7 @@ const renderEventContent2 = (eventInfo, openModal) => {
     >
       {dayShift.length ? (
         dayShift.map((plan) => {
-          const { plan_job_no, plan_job_plan_time, id } = plan;
+          const { plan_job_no, mrp_no, plan_job_plan_time, id, so_no = '' } = plan;
           return (
             <div
               key={id}
@@ -227,7 +227,9 @@ const renderEventContent2 = (eventInfo, openModal) => {
               className="text-center pointer"
               onClick={() => openModal(plan)}
             >
-              <b>{`${plan_job_no} - ${plan_job_plan_time}`}</b>
+              <b>{`S/O No. : ${so_no}`}</b><br />
+              <b>{`${plan_job_no}`}</b><br />
+              <b>{`${plan_job_plan_time}`}</b>
             </div>
           );
         })
