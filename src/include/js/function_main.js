@@ -168,7 +168,7 @@ export const validateFormDetail = (ArrayObj, require_field) => {
           !obj_data[req_field],
           obj_data[req_field] === null,
           typeof obj_data[req_field] === "string" &&
-            obj_data[req_field].trim() === "",
+          obj_data[req_field].trim() === "",
           obj_data[req_field] <= 0
         );
         if (
@@ -352,13 +352,13 @@ export const replaceDataInArrObjById = (
   const newData = targetArr.map((arrObj) => {
     return arrObj.length > 1
       ? arrObj.map((data) => {
-          const matchData = masterArr.find(
-            (part) => part[keyId] === data[keyId]
-          );
-          return matchData
-            ? { ...data, [keyToReplace]: matchData[keyToReplace] }
-            : data;
-        })
+        const matchData = masterArr.find(
+          (part) => part[keyId] === data[keyId]
+        );
+        return matchData
+          ? { ...data, [keyToReplace]: matchData[keyToReplace] }
+          : data;
+      })
       : arrObj;
   });
   console.log("updateName");

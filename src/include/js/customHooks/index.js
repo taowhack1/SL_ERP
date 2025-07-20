@@ -19,7 +19,7 @@ const useFetch = (url, missingParams = false) => {
     const source = axios.CancelToken.source();
 
     if (!missingParams) {
-      setLoading("Loading...");
+      setLoading(true);
       setData(null);
       setError(null);
       console.log("url", url);

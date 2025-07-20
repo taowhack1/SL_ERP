@@ -30,7 +30,6 @@ const CustomTable = (props) => {
     },
   });
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
     setState({
       ...state,
       pagination: { ...state.pagination, current: pagination.current },
@@ -65,25 +64,25 @@ const CustomTable = (props) => {
         footer={
           onAdd
             ? () => (
-                <>
-                  {footer}
-                  {!readOnly && (
-                    <div className="mt-1">
-                      <Button
-                        disabled={disabledAddRow ?? false}
-                        type="dashed"
-                        onClick={() => {
-                          onAdd();
-                          focusLastPage && focusOnLast();
-                        }}
-                        block
-                      >
-                        <PlusOutlined /> Add a line
-                      </Button>
-                    </div>
-                  )}
-                </>
-              )
+              <>
+                {footer}
+                {!readOnly && (
+                  <div className="mt-1">
+                    <Button
+                      disabled={disabledAddRow ?? false}
+                      type="dashed"
+                      onClick={() => {
+                        onAdd();
+                        focusLastPage && focusOnLast();
+                      }}
+                      block
+                    >
+                      <PlusOutlined /> Add a line
+                    </Button>
+                  </div>
+                )}
+              </>
+            )
             : footer ?? null
         }
         onRow={(record, rowIndex) => {
