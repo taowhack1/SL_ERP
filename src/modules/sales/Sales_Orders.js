@@ -7,13 +7,10 @@ import { useDispatch, useSelector } from "react-redux"
 import { get_sale_master_data, updateSOFilter } from "../../actions/sales"
 import { reset_comments } from "../../actions/comment&log"
 import { getMasterDataItem } from "../../actions/inventory"
+import axios from 'axios'
 import Authorize from "../system/Authorize"
 import useKeepLogs from "../logs/useKeepLogs"
-import Text from "antd/lib/typography/Text"
 import DRForm from "./operations/dr/form/DRForm"
-import CustomSelect from "../../components/CustomSelect"
-import { api_so } from "../../include/js/api"
-
 // Import new components and hooks
 import SalesOrdersSearch from "./components/SalesOrdersSearch"
 import SalesOrdersTable from "./components/SalesOrdersTable"
@@ -36,42 +33,15 @@ const SaleOrder = (props) => {
   const refSearchInput = useRef()
   const [searchText, setSearchText] = useState("")
   const [searchedColumn, setSearchedColumn] = useState(0)
+  const [customers, setCustomer] = useState([])
+  const [salesPerson, setSalesPerson] = useState([])
 
   // Use the API hook
   const { data, loading, error, debouncedSearch, initialLoad } = useSalesOrdersAPI(process.env.REACT_APP_API_SERVER_V2 + `/sales/so`, auth.user_name)
 
-  // todo wait for api to be ready
-  const customerOptions = useMemo(() => {
-    if (!data || data.length === 0) return []
-
-    const uniqueCustomers = [
-      ...new Set(data.filter((item) => item.customer_no_name).map((item) => item.customer_no_name)),
-    ]
-
-    return uniqueCustomers.map((customer) => ({
-      value: customer,
-      label: customer,
-      id: data.find((item) => item.customer_no_name === customer)?.customer_no,
-    }))
-  }, [data])
-
-  // todo wait for api to be ready
-  const salespersonOptions = useMemo(() => {
-    if (!data || data.length === 0) return []
-
-    const uniqueSalespersons = [
-      ...new Set(data.filter((item) => item.so_sales_person_no_name).map((item) => item.so_sales_person_no_name)),
-    ]
-
-    return uniqueSalespersons.map((salesperson) => ({
-      value: salesperson,
-      label: salesperson,
-      id: data.find((item) => item.so_sales_person_no_name === salesperson)?.so_sales_person,
-    }))
-  }, [data])
-
   const statusOptions = useMemo(
     () => [
+      { value: "", label: "All" },
       { value: "Draft", label: "Draft" },
       { value: "Confirm", label: "Confirm" },
       { value: "Cancel", label: "Cancel" },
@@ -91,6 +61,32 @@ const SaleOrder = (props) => {
     dispatch(get_sale_master_data())
     dispatch(reset_comments())
     dispatch(getMasterDataItem())
+
+    async function loadData() {
+      const { data: dataCustomer } = await axios.get(`${process.env.REACT_APP_API_SERVER_V2}/sales/customer?search=${''}`)
+      const customerOptions = dataCustomer.map(obj => ({
+        value: obj?.customer_no,
+        label: obj?.customer_name,
+        id: obj?.customer_no
+      }))
+
+      console.log("customers", customerOptions)
+
+      const { data: dataSalesPerson } = await axios.get(`${process.env.REACT_APP_API_SERVER_V2}/sales/salesperson?search=${''}`)
+      const salespersonOptions = dataSalesPerson.map(obj => ({
+        value: obj?.emp_id,
+        label: obj?.emp_full_name,
+        id: obj?.emp_id
+      }))
+
+      console.log("salesPerson", salespersonOptions)
+
+      setCustomer(customerOptions)
+      setSalesPerson(salespersonOptions)
+    }
+
+    loadData()
+
   }, [])
 
   // Initial load when component mounts or Redux filters change
@@ -212,8 +208,8 @@ const SaleOrder = (props) => {
             <SalesOrdersSearch
               onSearch={handleSearch}
               loading={loading}
-              customerOptions={customerOptions}
-              salespersonOptions={salespersonOptions}
+              customerOptions={customers}
+              salespersonOptions={salesPerson}
               statusOptions={statusOptions}
               existingFilters={{ salesType, soProductionType, so_status, keyword }}
             />
