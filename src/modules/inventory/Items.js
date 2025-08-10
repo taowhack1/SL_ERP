@@ -17,8 +17,10 @@ import {
   getMasterDataItem,
 } from "../../actions/inventory";
 import { api_get_all_item_list } from "../../include/js/api";
-import { sortData } from "../../include/js/function_main";
 import { useFetch } from "../../include/js/customHooks";
+import useSearch from "../../include/js/customHooks/useSearch";
+import SearchItems from "./components/SearchItems"
+
 const Items = (props) => {
   const history = useHistory();
   const keepLog = useKeepLogs();
@@ -29,19 +31,11 @@ const Items = (props) => {
   const dispatch = useDispatch();
   const [rowClick, setRowClick] = useState(false);
 
-  const { filter_item_list } = useSelector((state) => state.inventory);
-  const { pageSize, page } = filter_item_list || {};
-  //useFetch GET data item & loading state
-  const listData = useFetch(
-    `${api_get_all_item_list}/${auth?.user_name}`,
-    !auth?.user_name
-  );
 
   useEffect(() => {
     dispatch(getMasterDataItem(auth.user_name));
     return () => {
       dispatch(clearStateItems());
-      setItems([]);
     };
   }, [dispatch]);
 
@@ -49,7 +43,7 @@ const Items = (props) => {
     const { current, pageSize } = pagination;
     dispatch(filterItem({ page: current, pageSize }));
   };
-  const [items, setItems] = useState([]);
+
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -68,86 +62,54 @@ const Items = (props) => {
       console.log("Cancel");
     },
   };
-  const onChangeSearch = async ({
-    type_id,
-    category_id,
-    search_text,
-    status_id,
-    status_name,
-  }) => {
-    let search_data = listData?.data;
-
-    if (type_id) {
-      category_id
-        ? (search_data = search_data.filter(
-            (item) => item.category_id === category_id
-          ))
-        : (search_data = search_data.filter(
-            (item) => item.type_id === type_id
-          ));
-    }
-    if (status_id !== 99) {
-      if (status_id !== 4) {
-        if (status_id === 1) {
-          //pending
-          search_data = search_data.filter(
-            (item) =>
-              item.button_confirm || item.button_approve || item.button_reject
-          );
-        } else if (status_name !== "Cancel") {
-          search_data = search_data.filter(
-            (item) =>
-              !item.button_confirm &&
-              !item.button_approve &&
-              !item.button_reject &&
-              item.process_complete === false
-          );
-        } else {
-          search_data = search_data.filter(
-            (item) => item.trans_status_id === 3
-          );
-        }
-      } else {
-        //complete
-        search_data = search_data.filter(
-          (item) => item.process_complete === true
-        );
-      }
-    }
-    setItems(
-      search_data.filter((item) => item.item_no_name.indexOf(search_text) >= 0)
-    );
-  };
 
   const redirect_to_view = (id) => {
     history.push("/inventory/items/view/" + (id ? id : "new"));
   };
 
+  const searchHook = useSearch({
+    endpoint: "http://localhost:3008/api/inventory/items/search",
+    initialParams: {
+      user_name: "2563003",
+      filter: {
+        item: undefined,
+        customer: undefined,
+        item_type: undefined,
+        item_category: undefined,
+      },
+    },
+    debounceMs: 1000,
+    mapResult: (res) => res,
+    storageKey: "InventoryItemsSearchState",
+  });
+
   return (
     <div>
       <MainLayout {...config}>
-        <Row className='row-tab-margin-lg'>
+        <Row className="" style={{ marginTop: 20 }}>
+          <Col span={24}>
+            <SearchItems
+              hook={searchHook}
+              initialUI={{
+                item: { label: searchHook.params.filter.item || "", value: "" },
+                customer: { label: searchHook.params.filter.customer || "", value: "" },
+                item_type: searchHook.params.filter.item_type || null,
+                item_category: searchHook.params.filter.item_category || null,
+              }}
+            />
+          </Col>
+        </Row>
+        <Row>
           <Col span={24}>
             <Table
-              title={() =>
-                listData.data && (
-                  <SearchTable
-                    onChangeSearch={onChangeSearch}
-                    filter_item_list={filter_item_list}
-                  />
-                )
-              }
-              loading={listData?.loading ? true : false}
+              loading={searchHook?.loading ? true : false}
               columns={item_show_columns}
-              dataSource={items}
+              dataSource={searchHook?.data}
               onChange={onChange}
               bordered
               size={"small"}
-              pagination={{
-                pageSize,
-                current: page,
-                pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
-              }}
+              pagination={false}
+              scroll={{ y: 550 }}
               rowKey='item_id'
               onRow={(record, rowIndex) => {
                 return {
@@ -157,8 +119,11 @@ const Items = (props) => {
                       .closest("tbody")
                       .find("tr")
                       .removeClass("selected-row");
+
                     $(e.target).closest("tr").addClass("selected-row");
+
                     keepLog.keep_log_action(record.item_no);
+
                     dispatch(
                       get_item_by_id(
                         record.item_id,

@@ -355,6 +355,15 @@ const getItemPriceHistory = (item_id = null) => {
     return { success: false, data: [] };
   }
 };
+
+const getMasterDataItemType = async () => {
+  return await axios.get(api_get_item_type, header_config).then((res) => res?.data[0]).catch(error => []);
+}
+
+const getMasterDataItemCategory = async () => {
+  return await axios.get(api_get_item_category, header_config).then((res) => res?.data[0]).catch(error => []);
+}
+
 export {
   getItemType,
   getUOM,
@@ -379,5 +388,7 @@ export {
   clearFilterStockOnHand,
   getSubReportStockOnHand,
   apiGetBulkFG,
-  getItemPriceHistory
+  getItemPriceHistory,
+  getMasterDataItemType,
+  getMasterDataItemCategory
 };

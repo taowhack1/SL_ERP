@@ -41,22 +41,27 @@ const openNotificationWithIcon = (type, title, text) => {
   });
 };
 const convertFileField = (file) => {
+  if (!file) return null
+
   let file_temp = file;
 
-  let path = file.item_file_path
+  console.log("convertFileField", file)
+
+  let path = file?.item_file_path
     ? process.env.REACT_APP_SERVER + file.item_file_path
     : require("./no_image.svg");
-  if (file.item_file_path) {
+  if (file?.item_file_path) {
     path = process.env.REACT_APP_SERVER + file.item_file_path;
   } else {
-    path = file.file_type_id === 1 ? require("./no_image.svg") : null;
+    path = file?.file_type_id === 1 ? require("./no_image.svg") : null;
     file_temp.item_file_original_type =
-      file.file_type_id === 1 ? "image" : null;
+      file?.file_type_id === 1 ? "image" : null;
   }
-  file_temp.name = file.item_file_original_name;
+
+  file_temp.name = file?.item_file_original_name;
   file_temp.path = path;
-  file_temp.file_type_id = file.file_type_id;
-  file_temp.uid = file.file_type_id;
+  file_temp.file_type_id = file?.file_type_id;
+  file_temp.uid = file?.file_type_id;
   file_temp.thumbUrl = path;
   file_temp.url = path;
   return file_temp;
@@ -112,12 +117,12 @@ const saveItemVendor = (item_id, data_detail, user_name) => {
 
   const delPromise = dataDelete.length
     ? dataDelete.map((obj) =>
-        axios.delete(
-          `${api_item_vendor}/${item_id}&${obj.item_vendor_id}`,
-          dataDelete,
-          header_config
-        )
+      axios.delete(
+        `${api_item_vendor}/${item_id}&${obj.item_vendor_id}`,
+        dataDelete,
+        header_config
       )
+    )
     : [];
 
   let promiseFile = [];
@@ -126,32 +131,32 @@ const saveItemVendor = (item_id, data_detail, user_name) => {
   return [
     dataCreate.length
       ? axios
-          .post(`${api_item_vendor}/${item_id}`, dataCreate, header_config)
-          .then((res) => {
-            console.log("CREATE VENDOR", res);
-            const vendorId = res?.data[0].item_vendor_id;
-            vendorFile.create.forEach((obj) =>
-              promiseFile.push(
-                ...itemSaveFileVendor(item_id, vendorId, obj.file, user_name)
-              )
-            );
-            return promiseFile;
-          })
+        .post(`${api_item_vendor}/${item_id}`, dataCreate, header_config)
+        .then((res) => {
+          console.log("CREATE VENDOR", res);
+          const vendorId = res?.data[0].item_vendor_id;
+          vendorFile.create.forEach((obj) =>
+            promiseFile.push(
+              ...itemSaveFileVendor(item_id, vendorId, obj.file, user_name)
+            )
+          );
+          return promiseFile;
+        })
       : false,
     dataUpdate.length
       ? axios
-          .put(`${api_item_vendor}/${item_id}`, dataUpdate, header_config)
-          .then((res) => {
-            console.log("UPDATE VENDOR", res);
-            console.log("vendorFile", vendorFile);
+        .put(`${api_item_vendor}/${item_id}`, dataUpdate, header_config)
+        .then((res) => {
+          console.log("UPDATE VENDOR", res);
+          console.log("vendorFile", vendorFile);
 
-            vendorFile.update.forEach((obj) =>
-              promiseFile.push(
-                ...itemSaveFileVendor(item_id, obj.id, obj.file, user_name)
-              )
-            );
-            return promiseFile;
-          })
+          vendorFile.update.forEach((obj) =>
+            promiseFile.push(
+              ...itemSaveFileVendor(item_id, obj.id, obj.file, user_name)
+            )
+          );
+          return promiseFile;
+        })
       : false,
     ...delPromise,
   ];
@@ -169,26 +174,26 @@ const save_uom_conversion = (item_id, uom_conversion) => {
   console.log("Save UOM Conversion", newData, updateData);
   return newData.length
     ? axios
-        .post(`${api_item_uom_conversion}/${item_id}`, newData, header_config)
-        .then((res) => {
-          console.log("post ", res);
-          return updateData.length
-            ? axios
-                .put(
-                  `${api_item_uom_conversion}/${item_id}`,
-                  updateData,
-                  header_config
-                )
-                .then((res) => console.log("put ", res))
-            : console.log("post only");
-        })
+      .post(`${api_item_uom_conversion}/${item_id}`, newData, header_config)
+      .then((res) => {
+        console.log("post ", res);
+        return updateData.length
+          ? axios
+            .put(
+              `${api_item_uom_conversion}/${item_id}`,
+              updateData,
+              header_config
+            )
+            .then((res) => console.log("put ", res))
+          : console.log("post only");
+      })
     : updateData.length
-    ? axios.put(
+      ? axios.put(
         `${api_item_uom_conversion}/${item_id}`,
         updateData,
         header_config
       )
-    : console.log("not have any data uom conversion");
+      : console.log("not have any data uom conversion");
 };
 
 const bind_part_and_formula = (item_id, data_part) => {
@@ -340,9 +345,9 @@ export const createNewItems =
               access_right.qa && updateQASpec(item_id, qaData.update),
               access_right.weight && bind_weight(item_id, data_weight_detail),
               access_right.packaging &&
-                bind_packaging(item_id, data_packaging_detail),
+              bind_packaging(item_id, data_packaging_detail),
               access_right.attach_file &&
-                item_save_file(item_id, data_file, user_name),
+              item_save_file(item_id, data_file, user_name),
               access_right.filling && bind_filling(item_id, data_filling),
             ])
               .then(async (data) => {
@@ -451,7 +456,7 @@ export const upDateItem =
               access_right.qa && updateQASpec(item_id, qaData.update),
               access_right.weight && bind_weight(item_id, data_weight_detail),
               access_right.packaging &&
-                bind_packaging(item_id, data_packaging_detail),
+              bind_packaging(item_id, data_packaging_detail),
               // access_right.attach_file &&
               item_save_file(item_id, data_file, user_name),
               access_right.filling && bind_filling(item_id, data_filling),
@@ -554,16 +559,16 @@ export const get_item_by_id =
             const packingItemData = (data) => {
               const data_part = sortData(
                 data[2].value.data &&
-                  data[2].value.data.map((obj) => {
-                    return {
-                      ...obj,
-                      item_part_specification_detail: sortData(
-                        obj.item_part_specification_detail
-                      ),
-                      item_formula: sortData(obj.item_formula),
-                      item_part_mix: sortData(obj.item_part_mix),
-                    };
-                  })
+                data[2].value.data.map((obj) => {
+                  return {
+                    ...obj,
+                    item_part_specification_detail: sortData(
+                      obj.item_part_specification_detail
+                    ),
+                    item_formula: sortData(obj.item_formula),
+                    item_part_mix: sortData(obj.item_part_mix),
+                  };
+                })
               );
 
               const data_file_temp = data[6].value.data[0];
@@ -587,47 +592,47 @@ export const get_item_by_id =
                         item_vendor_detail: sortData(obj.item_vendor_detail),
                         item_vendor_detail_document: {
                           certificate: {
-                            2: obj.item_vendor_detail_document.length
+                            2: obj?.item_vendor_detail_document.length
                               ? convertFileField(
-                                  obj.item_vendor_detail_document.filter(
-                                    (file) => file.file_type_id === 2
-                                  )[0]
-                                )
+                                obj?.item_vendor_detail_document.filter(
+                                  (file) => file.file_type_id === 2
+                                )[0]
+                              )
                               : null,
-                            3: obj.item_vendor_detail_document.length
+                            3: obj?.item_vendor_detail_document.length
                               ? convertFileField(
-                                  obj.item_vendor_detail_document.filter(
-                                    (file) => file.file_type_id === 3
-                                  )[0]
-                                )
+                                obj?.item_vendor_detail_document.filter(
+                                  (file) => file.file_type_id === 3
+                                )[0]
+                              )
                               : null,
-                            4: obj.item_vendor_detail_document.length
+                            4: obj?.item_vendor_detail_document.length
                               ? convertFileField(
-                                  obj.item_vendor_detail_document.filter(
-                                    (file) => file.file_type_id === 4
-                                  )[0]
-                                )
+                                obj?.item_vendor_detail_document.filter(
+                                  (file) => file.file_type_id === 4
+                                )[0]
+                              )
                               : null,
-                            5: obj.item_vendor_detail_document.length
+                            5: obj?.item_vendor_detail_document.length
                               ? convertFileField(
-                                  obj.item_vendor_detail_document.filter(
-                                    (file) => file.file_type_id === 5
-                                  )[0]
-                                )
+                                obj?.item_vendor_detail_document.filter(
+                                  (file) => file.file_type_id === 5
+                                )[0]
+                              )
                               : null,
-                            6: obj.item_vendor_detail_document.length
+                            6: obj?.item_vendor_detail_document.length
                               ? convertFileField(
-                                  obj.item_vendor_detail_document.filter(
-                                    (file) => file.file_type_id === 6
-                                  )[0]
-                                )
+                                obj?.item_vendor_detail_document.filter(
+                                  (file) => file.file_type_id === 6
+                                )[0]
+                              )
                               : null,
-                            12: obj.item_vendor_detail_document.length
+                            12: obj?.item_vendor_detail_document.length
                               ? convertFileField(
-                                  obj.item_vendor_detail_document.filter(
-                                    (file) => file.file_type_id === 12
-                                  )[0]
-                                )
+                                obj?.item_vendor_detail_document.filter(
+                                  (file) => file.file_type_id === 12
+                                )[0]
+                              )
                               : null,
                           },
                         },
@@ -743,45 +748,45 @@ export const item_actions = (data, item_id) => (dispatch) => {
 
   data.process_id
     ? axios
-        .put(`${api_approve}/${data.process_id}`, data, header_config)
-        .then((res) => {
-          let msg = "";
-          switch (data.process_status_id) {
-            case 2:
-              // Confirm
-              msg = "Confirm.";
-              break;
-            case 3:
-              msg = "Cancel.";
-              break;
-            // Cancel
-            case 4:
-              msg = "Complete.";
-              break;
-            // Complete
-            case 5:
-              msg = "Approve.";
-              break;
-            // Approve
-            case 6:
-              msg = "Reject.";
-              break;
-            // Reject
-            default:
-              break;
-          }
-          message.success({
-            content: msg,
-            key: "validate",
-            duration: 2,
-          });
-          dispatch(get_item_by_id(item_id, data.user_name));
-        })
+      .put(`${api_approve}/${data.process_id}`, data, header_config)
+      .then((res) => {
+        let msg = "";
+        switch (data.process_status_id) {
+          case 2:
+            // Confirm
+            msg = "Confirm.";
+            break;
+          case 3:
+            msg = "Cancel.";
+            break;
+          // Cancel
+          case 4:
+            msg = "Complete.";
+            break;
+          // Complete
+          case 5:
+            msg = "Approve.";
+            break;
+          // Approve
+          case 6:
+            msg = "Reject.";
+            break;
+          // Reject
+          default:
+            break;
+        }
+        message.success({
+          content: msg,
+          key: "validate",
+          duration: 2,
+        });
+        dispatch(get_item_by_id(item_id, data.user_name));
+      })
     : message.error({
-        content: "Somethings went wrong. please contact programmer.",
-        key: "validate",
-        duration: 4,
-      });
+      content: "Somethings went wrong. please contact programmer.",
+      key: "validate",
+      duration: 4,
+    });
 };
 
 export const itemUpdateStatus = (id, status) => {
@@ -797,18 +802,18 @@ export const itemUpdateStatus = (id, status) => {
       .then((res) => {
         res.data[0].length
           ? message.success({
-              content:
-                status === 0
-                  ? "Item has been deleted."
-                  : "Item has been actived.",
-              key: "validate",
-              duration: 2,
-            })
+            content:
+              status === 0
+                ? "Item has been deleted."
+                : "Item has been actived.",
+            key: "validate",
+            duration: 2,
+          })
           : message.error({
-              content: "Somethings went wrong. please contact programmer.",
-              key: "validate",
-              duration: 4,
-            });
+            content: "Somethings went wrong. please contact programmer.",
+            key: "validate",
+            duration: 4,
+          });
       })
       .catch((error) => {
         message.error({
@@ -1058,41 +1063,41 @@ const saveSampleItem = (id = null, data) => {
   try {
     return !id
       ? axios
-          .post(`${apiSampleItem}`, [data], header_config)
-          .then((res) => {
-            console.log("then");
-            console.log("res ", res);
-            if (res.data) {
-              return { success: true, data: res.data };
-            } else {
-              message.error(errorText.getData);
-              return { success: false, data: null };
-            }
-          })
-          .catch((error) => {
-            console.log("catch");
-            if (!error.response) message.error(errorText.network);
-            if (error.response) message.error(errorText.getData);
-            return { success: false, data: null, error: error.response };
-          })
+        .post(`${apiSampleItem}`, [data], header_config)
+        .then((res) => {
+          console.log("then");
+          console.log("res ", res);
+          if (res.data) {
+            return { success: true, data: res.data };
+          } else {
+            message.error(errorText.getData);
+            return { success: false, data: null };
+          }
+        })
+        .catch((error) => {
+          console.log("catch");
+          if (!error.response) message.error(errorText.network);
+          if (error.response) message.error(errorText.getData);
+          return { success: false, data: null, error: error.response };
+        })
       : axios
-          .put(`${apiSampleItem}/${id}`, [data], header_config)
-          .then((res) => {
-            console.log("then");
-            console.log("res ", res);
-            if (res.data) {
-              return { success: true, data: res.data };
-            } else {
-              message.error(errorText.getData);
-              return { success: false, data: null };
-            }
-          })
-          .catch((error) => {
-            console.log("catch");
-            if (!error.response) message.error(errorText.network);
-            if (error.response) message.error(errorText.getData);
-            return { success: false, data: null, error: error.response };
-          });
+        .put(`${apiSampleItem}/${id}`, [data], header_config)
+        .then((res) => {
+          console.log("then");
+          console.log("res ", res);
+          if (res.data) {
+            return { success: true, data: res.data };
+          } else {
+            message.error(errorText.getData);
+            return { success: false, data: null };
+          }
+        })
+        .catch((error) => {
+          console.log("catch");
+          if (!error.response) message.error(errorText.network);
+          if (error.response) message.error(errorText.getData);
+          return { success: false, data: null, error: error.response };
+        });
   } catch (error) {
     console.log("try catch");
     console.log(error);
