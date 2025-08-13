@@ -53,24 +53,8 @@ const JobOrderMain = () => {
       home: "/production", // path
       show: true, // bool show sub - tool bar
       breadcrumb: ["Production", "Operations", "Job Order"], // [1,2,3] = 1 / 2 / 3
-      search: true, // bool show search
+      search: false, // bool show search
       searchValue: keyword || null, //search string
-      searchBar: (
-        <Button
-          className='primary'
-          onClick={() =>
-            dispatch(
-              searchJobOrder({
-                page: 1,
-                pageSize: 20,
-                keyword: null,
-                mrp_id: null,
-              })
-            )
-          }>
-          Clear Filter
-        </Button>
-      ),
       buttonAction: [], // button
       badgeCont: 0, //number
       step: null, // object {current:0,step:[],process_complete:bool}
@@ -83,9 +67,6 @@ const JobOrderMain = () => {
       onApprove: () => console.log("Approve"),
       onReject: () => console.log("Reject"),
       onCancel: () => console.log("Cancel"),
-      onSearch: (keyword) => {
-        dispatch(searchJobOrder({ keyword }));
-      },
       openModal: () => console.log("openModal"),
     }),
     [pageSize, page, keyword]
@@ -106,17 +87,6 @@ const JobOrderMain = () => {
   return (
     <MainLayout {...layoutConfig}>
       <JobOrderListTable {...listConfig} />
-      {/* <PlanningModal
-        config={{
-          title: "Plan Detail",
-          visible: modal.visible,
-          closeModal: closeModal,
-          saveModal: saveModal,
-          width: "80%",
-        }}
-        data={modal.data}
-        readOnly={false}
-      /> */}
     </MainLayout>
   );
 };

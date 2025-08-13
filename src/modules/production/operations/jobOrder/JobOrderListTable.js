@@ -1,7 +1,7 @@
 /** @format */
 
 import { EditTwoTone, EllipsisOutlined } from "@ant-design/icons";
-import { message, Table, Tag } from "antd";
+import { Col, message, Row, Table, Tag } from "antd";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,50 +10,15 @@ import { searchJobOrder } from "../../../../actions/production/jobOrderActions";
 import { useFetch, useSubTableFetch } from "../../../../include/js/customHooks";
 import { sortData } from "../../../../include/js/function_main";
 import { convertDigit } from "../../../../include/js/main_config";
+import SearchJobOrders from "../../components/SearchJobOrders";
+import useSearch from "../../../../include/js/customHooks/useSearch";
 
 const fetchUrl = `/production/job_order/mrp`;
 const JobOrderListTable = (props) => {
   const {
     modal: { openModal },
-    filter,
   } = props;
-  const dispatch = useDispatch();
-  const [loading2, setLoading] = useState(false);
-  const { pageSize, page, keyword } = filter || {};
-  const getSearchData = (data, keyword) => {
-    console.log("keyword :>> ", keyword);
-    console.log("keyword data:>> ", data);
-    const search_data = sortData(
-      keyword
-        ? data?.filter(
-            (job) =>
-              job?.mrp_no?.indexOf(keyword) >= 0 ||
-              job?.mrp_so_running_no?.indexOf(keyword) >= 0 ||
-              job?.item_no?.indexOf(keyword) >= 0 ||
-              job?.item_no_ref?.indexOf(keyword) >= 0 ||
-              job?.mrp_description?.indexOf(keyword) >= 0
-          )
-        : data
-    );
 
-    return sortData(search_data, "id", 1);
-  };
-
-  const { data, loading, error } = useFetch(`${fetchUrl}/0`);
-  useEffect(() => {
-    if (!loading) {
-      setLoading(true);
-      console.log("Filter Keyword");
-      const respSearch = getSearchData(data, keyword);
-      setSearch(respSearch);
-      setLoading(false);
-    }
-  }, [keyword, data, loading]);
-  const [search, setSearch] = useState([]);
-  const onChange = (pagination) => {
-    const { current, pageSize } = pagination;
-    dispatch(searchJobOrder({ page: current, pageSize }));
-  };
   const { expandedRowRender, handleExpand } = useSubTableFetch({
     columns: () => subJobOrderColumns,
     url: fetchUrl,
@@ -61,7 +26,6 @@ const JobOrderListTable = (props) => {
     dataKey: "job_order",
   });
 
-  error && message.error(error, 6);
 
   const history = useHistory();
 
@@ -72,29 +36,81 @@ const JobOrderListTable = (props) => {
   const editJobOrder = (row) => {
     history.push(`/production/operations/job_order/${row?.mrp_id}`);
   };
-  console.log("Job Order Table", data);
-  console.log("search Job Order Table>> ", search);
+
+  const searchHook = useSearch({
+    endpoint: "http://localhost:3008/api/production/job/search",
+    initialParams: {
+      user_name: "2563003",
+      filter: {
+        job: undefined,
+        mrp: { label: "", value: "" },
+        bulk: { label: "", value: "" },
+        fg: { label: "", value: "" },
+        status: null,
+      },
+    },
+    debounceMs: 1000,
+    mapResult: (res) => res,
+    storageKey: "JobOrderState",
+  });
+
+  searchHook?.error && message.error(searchHook?.error, 6);
+
+
   return (
     <>
-      <Table
-        bordered
-        rowKey='id'
-        size='small'
-        onChange={onChange}
-        rowClassName='row-table-detail'
-        expandable={{ expandedRowRender }}
-        onExpand={(expanded, row) =>
-          handleExpand(expanded, row, `/${row?.mrp_id}`, 0)
-        }
-        loading={loading2}
-        columns={columns({ viewJobOrder, editJobOrder })}
-        dataSource={search}
-      />
+      <Row style={{ marginTop: 15 }}>
+        <Col span={24}>
+          <SearchJobOrders
+            hook={searchHook}
+            initialUI={{
+              job: searchHook.params.filter?.job || "",
+              bulk: {
+                value: "",
+                label: searchHook.params.filter?.selected_bulk?.label || "",
+              },
+              fg: {
+                value: "",
+                label: searchHook.params.filter?.selected_fg?.label || "",
+              },
+              mrp: {
+                value: "",
+                label: searchHook.params.filter?.selected_mrp?.label || "",
+              },
+              status: searchHook.params.filter?.status || null,
+            }}
+          />
+          <Table
+            bordered
+            rowKey='id'
+            size='small'
+            pagination={false}
+            scroll={{ y: 450 }}
+            rowClassName='row-table-detail'
+            expandable={{ expandedRowRender }}
+            onExpand={(expanded, row) =>
+              handleExpand(expanded, row, `/${row?.mrp_id}`, 0)
+            }
+            //   expandable={{
+            //     expandedRowRender: (record) => <ExpandedRowRender
+            //         record={record}
+            //         onOpen={onOpen}
+            //         data={expandedData[record.so_no] || []}
+            //     />,
+            //     onExpand: handleExpand
+            // }}
+            loading={searchHook?.loading}
+            columns={columns({ viewJobOrder, editJobOrder })}
+            dataSource={searchHook?.data}
+          />
+        </Col>
+      </Row>
     </>
   );
 };
 
 export default React.memo(JobOrderListTable);
+
 export const getJobStatus = (
   { trans_status_id = 1, trans_status_name = "Unkown" },
   callBack
@@ -148,19 +164,19 @@ export const getJobStatus = (
   }
 };
 const columns = ({ viewJobOrder, editJobOrder }) => [
-  {
-    title: (
-      <div className='text-center'>
-        <b>No.</b>
-      </div>
-    ),
-    align: "center",
-    className: "col-sm",
-    width: "5%",
-    dataIndex: "id",
-    sorter: (a, b) => a.id - b.id,
-    render: (val) => val,
-  },
+  // {
+  //   title: (
+  //     <div className='text-center'>
+  //       <b>No.</b>
+  //     </div>
+  //   ),
+  //   align: "center",
+  //   className: "col-sm",
+  //   width: "5%",
+  //   dataIndex: "id",
+  //   sorter: (a, b) => a.id - b.id,
+  //   render: (val) => val,
+  // },
   {
     title: (
       <div className='text-center'>
@@ -275,17 +291,17 @@ const columns = ({ viewJobOrder, editJobOrder }) => [
 ];
 
 const subJobOrderColumns = [
-  {
-    title: (
-      <div className='text-center'>
-        <b>No.</b>
-      </div>
-    ),
-    align: "center",
-    width: "5%",
-    dataIndex: "id",
-    render: (val) => val,
-  },
+  // {
+  //   title: (
+  //     <div className='text-center'>
+  //       <b>No.</b>
+  //     </div>
+  //   ),
+  //   align: "center",
+  //   width: "5%",
+  //   dataIndex: "id",
+  //   render: (val) => val,
+  // },
   {
     title: (
       <div className='text-center'>

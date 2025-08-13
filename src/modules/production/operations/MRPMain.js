@@ -22,6 +22,8 @@ import Search from "../../../components/Search";
 import { getAllItems } from "../../../actions/inventory/itemActions";
 import { useFetch } from "../../../include/js/customHooks";
 import { api_mrp, api_mrp_so_ref } from "../../../include/js/api";
+import SearchMRP from "../components/SearchMRP";
+import useSearch from "../../../include/js/customHooks/useSearch";
 const MRPMain = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -30,22 +32,10 @@ const MRPMain = (props) => {
   authorize.check_authorize();
   const auth = useSelector((state) => state.auth.authData);
   const [rowClick, setRowClick] = useState(false);
-  const { data: listDataMRP, loading: MPRloading } = useFetch(
-    `${api_mrp}/all/${auth.user_name}`
-  );
+
   const listDataMRP_SO_REF = useFetch(`${api_mrp_so_ref}`);
   const count_so_ref = listDataMRP_SO_REF && listDataMRP_SO_REF?.data?.length;
-  console.log("count_so_ref :>> ", count_so_ref);
-  console.log("listDataMRP :>> ", listDataMRP);
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
-  // const { mrpList, mrp } = useSelector(
-  //   (state) => state.production.operations.mrp
-  // );
-  const mrpList = listDataMRP && listDataMRP[0];
-  const [stateMRP, setStateMRP] = useState(mrpList);
-  console.log("mrpList", mrpList);
+
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -53,7 +43,7 @@ const MRPMain = (props) => {
     home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Operations", "MRP"],
-    search: true,
+    search: false,
     create: "/production/operations/mrp/create",
     buttonAction: ["Create"],
     edit: {},
@@ -63,81 +53,59 @@ const MRPMain = (props) => {
     onCancel: () => {
       console.log("Cancel");
     },
-    onSearch: (searchText) => {
-      searchText
-        ? setStateMRP(
-            mrpList.filter(
-              (mrp) =>
-                mrp.item_no_name.indexOf(searchText) >= 0 ||
-                mrp.mrp_no_description.indexOf(searchText) >= 0
-            )
-          )
-        : setStateMRP(mrpList);
-    },
-  };
-  const onChangeSeach = useCallback(
-    ({
-      mrp_id,
-      item_id,
-      mrp_plan_start_date,
-      mrp_plan_end_date,
-      mrp_due_date_start,
-      mrp_due_date_end,
-    }) => {
-      let search_data = mrpList;
 
-      console.log(
-        mrp_id,
-        item_id,
-        mrp_plan_start_date,
-        mrp_plan_end_date,
-        mrp_due_date_start,
-        mrp_due_date_end
-      );
-      if (mrp_id) {
-        search_data = search_data.filter((data) => data.mrp_id === mrp_id);
-      }
-      if (item_id) {
-        search_data = search_data.filter((data) => data.item_id === item_id);
-      }
-      if (mrp_plan_start_date) {
-        search_data = search_data.filter(
-          (data) =>
-            data.mrp_plan_start_date >= mrp_plan_start_date &&
-            data.mrp_plan_end_date <= mrp_plan_end_date
-        );
-      }
-      if (mrp_due_date_start) {
-        search_data = search_data.filter(
-          (data) =>
-            data.mrp_delivery_date >= mrp_due_date_start &&
-            data.mrp_delivery_date <= mrp_due_date_end
-        );
-      }
-      setStateMRP(search_data);
-    },
-    [stateMRP]
-  );
+  };
 
   useEffect(() => {
     dispatch(getAllMRP(auth.user_name));
     dispatch(getAllItems());
     dispatch(reset_comments());
   }, []);
-  useEffect(() => {
-    setStateMRP(mrpList);
-  }, [mrpList]);
+
+  const searchHook = useSearch({
+    endpoint: "http://localhost:3008/api/production/mrp/search",
+    initialParams: {
+      user_name: "2563003",
+      filter: {
+        vendor: undefined,
+        selected_vendor: { label: "", value: "" },
+        request_by: undefined,
+        create_date: undefined,
+        due_date: undefined,
+      },
+    },
+    debounceMs: 1000,
+    mapResult: (res) => res,
+    storageKey: "MRPState",
+  });
+
   return (
     <div>
       <MainLayout {...config}>
-        <Row className='row-tab-margin-lg'>
+        <Row style={{ marginTop: 15 }} className='row-tab-margin-lg'>
           <Col span={24}>
+            <SearchMRP
+              hook={searchHook}
+              initialUI={{
+                so: searchHook.params.filter?.so || "",
+                mrp: {
+                  value: "",
+                  label: searchHook.params.filter?.selected_mrp?.label || "",
+                },
+                item: {
+                  value: "",
+                  label: searchHook.params.filter?.selected_item?.label || "",
+                },
+                plan_date: [searchHook.params.filter?.plan_date_start || null, searchHook.params.filter?.plan_date_end],
+                due_date: [searchHook.params.filter?.due_date_start || null, searchHook.params.filter?.due_date_end],
+              }}
+            />
             <Table
-              title={() => <MRPSearchTool onChangeSeach={onChangeSeach} />}
-              loading={MPRloading ? true : false}
+              loading={searchHook?.loading}
               columns={mrp_columns()}
-              dataSource={stateMRP}
-              onChange={onChange}
+              dataSource={searchHook?.data}
+              pagination={false}
+              scroll={{ y: 530 }}
               bordered
               size='small'
               rowKey='mrp_id'

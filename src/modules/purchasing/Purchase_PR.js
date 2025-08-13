@@ -1,62 +1,36 @@
 /** @format */
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { withRouter } from "react-router-dom";
-import { Row, Col, Table, Button } from "antd";
+import { Row, Col, Table } from "antd";
 import MainLayout from "../../components/MainLayout";
 import { pr_list_columns } from "./config/pr";
 import $ from "jquery";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  get_pr_list,
   get_pr_by_id,
   filterPR,
 } from "../../actions/purchase/PR_Actions";
-import { reset_pr_data } from "../../actions/purchase/PR_Actions";
 import { reset_comments } from "../../actions/comment&log";
 import { getMasterDataItem } from "../../actions/inventory";
 
 import useKeepLogs from "../logs/useKeepLogs";
 import Authorize from "../system/Authorize";
-import { useFetch } from "../../include/js/customHooks";
-import { api_purchase_get_all_pr } from "../../include/js/api";
-import { sortData } from "../../include/js/function_main";
+import SearchPR from "./components/SearchPR";
+import useSearch from "../../include/js/customHooks/useSearch";
 
 const Requisition = (props) => {
   const authorize = Authorize();
   authorize.check_authorize();
   const dispatch = useDispatch();
   const keepLog = useKeepLogs();
-  const { filter } = useSelector((state) => state.purchase.pr);
-  const { pageSize, page, keyword } = filter || {};
-  const [data, setData] = useState([]);
   const auth = useSelector((state) => state.auth.authData);
   const currentMenu = useSelector((state) => state.auth.currentMenu);
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
     const { current, pageSize } = pagination;
     dispatch(filterPR({ page: current, pageSize }));
-  };
-  const listDataPr = useFetch(`${api_purchase_get_all_pr}/${auth.user_name}`);
-
-  const getSearchData = (keyword) => {
-    const search_data =
-      listDataPr?.data &&
-      sortData(
-        keyword
-          ? listDataPr?.data[0]?.filter(
-              (pr) =>
-                pr?.pr_no?.indexOf(keyword) >= 0 ||
-                pr?.cost_center_no_name?.indexOf(keyword) >= 0 ||
-                pr?.pr_created_by_no_name?.indexOf(keyword) >= 0 ||
-                pr?.pr_created?.indexOf(keyword) >= 0 ||
-                pr?.pr_description?.indexOf(keyword) >= 0
-            )
-          : listDataPr?.data[0]
-      );
-
-    return sortData(search_data);
   };
 
   useEffect(() => {
@@ -66,11 +40,7 @@ const Requisition = (props) => {
     dispatch(reset_comments());
   }, [dispatch]);
 
-  useEffect(() => {
-    console.log("Filter Keyword :>> ", keyword);
-    const respSearch = getSearchData(keyword);
-    setData(respSearch);
-  }, [keyword, listDataPr?.data]);
+
   const current_project = useSelector((state) => state.auth.currentProject);
   const config = {
     projectId: current_project && current_project.project_id,
@@ -78,7 +48,7 @@ const Requisition = (props) => {
     home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Purchase Requisition"],
-    search: true,
+    search: false,
     create: "/purchase/pr/create",
     buttonAction: currentMenu.button_create !== 0 ? ["Create"] : [],
     edit: {},
@@ -86,67 +56,71 @@ const Requisition = (props) => {
     onCancel: () => {
       console.log("Cancel");
     },
-    onSearch: (value) => {
-      console.log(value);
-      dispatch(filterPR({ keyword: value }));
-    },
-    searchValue: keyword || null,
-    searchBar: (
-      <Button
-        className='primary'
-        onClick={() =>
-          dispatch(
-            filterPR({
-              page: 1,
-              pageSize: 20,
-              keyword: null,
-              pr_id: null,
-            })
-          )
-        }>
-        Clear Filter
-      </Button>
-    ),
   };
 
-  const getTable = () => {
-    return (
-      <Table
-        columns={pr_list_columns}
-        dataSource={data}
-        onChange={onChange}
-        loading={listDataPr.loading ? true : false}
-        size='small'
-        rowKey='pr_id'
-        pagination={{
-          pageSize,
-          current: page,
-          pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
-        }}
-        onRow={(record, rowIndex) => {
-          return {
-            onClick: (e) => {
-              $(e.target)
-                .closest("tbody")
-                .find("tr")
-                .removeClass("selected-row");
-              $(e.target).closest("tr").addClass("selected-row");
-              dispatch(get_pr_by_id(record.pr_id, auth.user_name));
-              keepLog.keep_log_action(record.pr_no);
-              props.history.push({
-                pathname: "/purchase/pr/view/" + record.pr_id,
-              });
-            },
-          };
-        }}
-      />
-    );
-  };
+  const searchHook = useSearch({
+    endpoint: "http://localhost:3008/api/purchase/pr/search",
+    initialParams: {
+      user_name: "2563003",
+      filter: {
+        vendor: undefined,
+        selected_vendor: { label: "", value: "" },
+        request_by: undefined,
+        create_date: undefined,
+        due_date: undefined,
+      },
+    },
+    debounceMs: 1000,
+    mapResult: (res) => res,
+    storageKey: "PRState",
+  });
+  console.log("searchHook params", searchHook.params);
   return (
     <div>
       <MainLayout {...config}>
+        <Row style={{ marginTop: 25 }}>
+          <Col span={24}>
+            <SearchPR
+              hook={searchHook}
+              initialUI={{
+                pr: searchHook.params.filter?.pr || "",
+                vendor: { label: searchHook.params?.selected_vendor?.label || searchHook.params?.filter?.vendor || "", value: "" },
+                request_by: { label: searchHook.params.filter?.request_by || "", value: "" },
+                create_date: [searchHook.params.filter?.create_date_start || null, searchHook.params.filter?.create_date_end],
+                due_date: [searchHook.params.filter?.due_date_start || null, searchHook.params.filter?.due_date_end],
+              }}
+            />
+          </Col>
+        </Row>
         <Row>
-          <Col span={24}>{getTable()}</Col>
+          <Col span={24}>
+            <Table
+              columns={pr_list_columns}
+              dataSource={searchHook?.data}
+              onChange={onChange}
+              loading={searchHook.loading ? true : false}
+              size='small'
+              rowKey='pr_id'
+              pagination={false}
+              scroll={{ y: 500 }}
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: (e) => {
+                    $(e.target)
+                      .closest("tbody")
+                      .find("tr")
+                      .removeClass("selected-row");
+                    $(e.target).closest("tr").addClass("selected-row");
+                    dispatch(get_pr_by_id(record.pr_id, auth.user_name));
+                    keepLog.keep_log_action(record.pr_no);
+                    props.history.push({
+                      pathname: "/purchase/pr/view/" + record.pr_id,
+                    });
+                  },
+                };
+              }}
+            />
+          </Col>
         </Row>
       </MainLayout>
     </div>

@@ -48,6 +48,8 @@ import {
   update_pr,
 } from "../../../actions/purchase/PR_Actions";
 import CancelPR from "../CancelPR";
+import useSearch from "../../../include/js/customHooks/useSearch";
+import SearchPO from "../components/SearchPO";
 const apiGetPRbyMRP = `/purchase/pr/detail_by_mrp`;
 const apiGetPO = `/purchase/po`;
 const PO = (props) => {
@@ -60,60 +62,20 @@ const PO = (props) => {
   const {
     auth: { user_name },
   } = useContext(AppContext);
-  const [loading, setLoading] = useState(false);
   const [rowClick, setRowClick] = useState(false);
   const listDataPo = useFetch(`${apiGetPO}/${user_name}&0`, !user_name);
   console.log("listDataPo :>> ", listDataPo);
   const { filter } = useSelector((state) => state.purchase.po);
   const { pageSize, page, keyword, po_status } = filter || {};
 
-  const getSearchData = (keyword) => {
-    const search_data =
-      listDataPo?.data &&
-      sortData(
-        keyword
-          ? listDataPo?.data?.filter(
-              (po) =>
-                po?.po_no?.indexOf(keyword) >= 0 ||
-                po?.vendor_no_name?.indexOf(keyword) >= 0 ||
-                po?.po_created_by_no_name?.indexOf(keyword) >= 0 ||
-                po?.po_created?.indexOf(keyword) >= 0 ||
-                po?.po_description?.indexOf(keyword) >= 0
-            )
-          : po_status === "Pending Approve"
-          ? data?.filter((po) => po?.button_approve == 1)
-          : po_status === "Pending Confirm"
-          ? data?.filter((po) => po?.button_confirm == 1)
-          : po_status === "Pending Receive"
-          ? data?.filter((po) => po?.trans_status_name == "Pending Receive")
-          : po_status === "Completed"
-          ? data?.filter((po) => po?.trans_status_name == "Completed")
-          : po_status === "Confirm"
-          ? data?.filter((po) => po?.trans_status_name == "Confirm")
-          : po_status === "Cancel"
-          ? data?.filter((po) => po?.trans_status_name == "Cancel")
-          : po_status === "Waiting"
-          ? data?.filter((po) => po?.trans_status_name == "Draft")
-          : listDataPo?.data
-      );
-    console.log("search_data :>> ", search_data);
-    return sortData(search_data);
-  };
 
   useEffect(() => {
     if (user_name == "9999999") {
       dispatch(filterPO({ po_status: "Pending Approve" }));
     }
   }, [user_name]);
-  useEffect(() => {
-    setLoading(true);
-    console.log("Filter Keyword");
-    const respSearch = getSearchData(keyword);
-    setData(respSearch);
-    setLoading(false);
-  }, [keyword, listDataPo?.data, listDataPo?.loading, po_status]);
+
   const readOnly = false;
-  const [data, setData] = useState([]);
   const [mrp, setMrp] = useState({ mrp_id: null, listMRP: [], mpr_no: null });
   const refSearchInput = useRef();
   const [searchText, setSearchText] = useState("");
@@ -133,7 +95,7 @@ const PO = (props) => {
     home: current_project && current_project.project_url,
     show: true,
     breadcrumb: ["Home", "Purchase Orders"],
-    search: true,
+    search: false,
     create: "/purchase/po/new&mrp",
     buttonAction: current_menu.button_create !== 0 ? ["Create"] : [],
     edit: {},
@@ -143,86 +105,14 @@ const PO = (props) => {
     onCancel: () => {
       console.log("Cancel");
     },
-    onSearch: (value) => {
-      dispatch(filterPO({ keyword: value }));
-    },
-    searchValue: keyword || null,
-    searchBar: (
-      <>
-        <Space split={<Divider type="vertical" />} style={{ marginRight: 20 }}>
-          <div>
-            <Text strong>Status :</Text>
-          </div>
-          <CustomSelect
-            //disabled={filter.salesType !== 2 ? false : true}
-            name={"po_status"}
-            placeholder="PO Status"
-            data={[
-              {
-                label: "Pending Approve",
-                value: "Pending Approve",
-              },
-              {
-                label: "Pending Receive",
-                value: "Pending Receive",
-              },
-              {
-                label: "Pending Confirm",
-                value: "Pending Confirm",
-              },
-              {
-                label: "Confirm",
-                value: "Confirm",
-              },
-              {
-                label: "Completed",
-                value: "Completed",
-              },
-              {
-                label: "Waiting",
-                value: "Waiting",
-              },
-              {
-                label: "Cancel",
-                value: "Cancel",
-              },
-            ]}
-            field_id="value"
-            field_name="label"
-            style={{ width: 200 }}
-            onChange={(val, option) => dispatch(filterPO({ po_status: val }))}
-            value={po_status}
-            //defaultValue={}
-          />
-        </Space>
-        <Button
-          className="primary"
-          onClick={() =>
-            dispatch(
-              filterPO({
-                page: 1,
-                pageSize: 20,
-                keyword: null,
-                vendor_id: null,
-                po_status: null,
-              })
-            )
-          }
-        >
-          Clear Filter
-        </Button>
-      </>
-    ),
   };
-  console.log(
-    "data filter :>> ",
-    data.filter((data) => data.button_approve == 1)
-  );
+
   const GetPR_Detail_by_MRP = async (mrp_id, mrp_no) => {
     const data_mpr = await mpr_detail_data(mrp_id);
     console.log("data_mpr", data_mpr);
     setMrp({ ...mrp, listMRP: data_mpr.data, mrp_id: mrp_id, mrp_no: mrp_no });
   };
+
   const mpr_detail_data = (mrp_id) => {
     try {
       return Axios.get(`${apiGetPRbyMRP}/${mrp_id}`, header_config)
@@ -286,6 +176,25 @@ const PO = (props) => {
       modalData.map((obj) => (obj.id === id ? { ...obj, ...data } : obj))
     );
   };
+
+
+  const searchHook = useSearch({
+    endpoint: "http://localhost:3008/api/purchase/po/search",
+    initialParams: {
+      user_name: "2563003",
+      filter: {
+        vendor: undefined,
+        selected_vendor: { label: "", value: "" },
+        request_by: undefined,
+        create_date: undefined,
+        due_date: undefined,
+      },
+    },
+    debounceMs: 1000,
+    mapResult: (res) => res,
+    storageKey: "POState",
+  });
+
   console.log("mrp.length :>> ", mrp);
   return (
     <div>
@@ -306,42 +215,57 @@ const PO = (props) => {
                 <PRList2 setBadgeCount={setBadgeCount} />
               </Col>
               <Col span={18}>
-                <Table
-                  columns={po_list_columns({
-                    refSearchInput,
-                    searchText,
-                    setSearchText,
-                    searchedColumn,
-                    setSearchedColumn,
-                  })}
-                  dataSource={data}
-                  rowKey={"po_id"}
-                  loading={listDataPo?.loading ? true : false}
-                  onChange={onChange}
-                  size="small"
-                  pagination={{
-                    pageSize,
-                    current: page,
-                    pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
-                  }}
-                  onRow={(record, rowIndex) => {
-                    return {
-                      onClick: (e) => {
-                        setRowClick(true);
-                        $(e.target)
-                          .closest("tbody")
-                          .find("tr")
-                          .removeClass("selected-row");
-                        $(e.target).closest("tr").addClass("selected-row");
-                        keepLog.keep_log_action(record.po_no);
-                        props.history.push({
-                          pathname: "/purchase/po/" + record.po_id,
-                        });
-                        console.log("po click");
-                      },
-                    };
-                  }}
-                />
+                <Row >
+                  <Col span={24}>
+                    <SearchPO
+                      hook={searchHook}
+                      initialUI={{
+                        po: searchHook.params.filter?.po || "",
+                        vendor: { label: searchHook.params?.selected_vendor?.label || searchHook.params?.filter?.vendor || "", value: "" },
+                        request_by: { label: searchHook.params.filter?.request_by || "", value: "" },
+                        create_date: [searchHook.params.filter?.create_date_start || null, searchHook.params.filter?.create_date_end],
+                        due_date: [searchHook.params.filter?.due_date_start || null, searchHook.params.filter?.due_date_end],
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <Table
+                      columns={po_list_columns({
+                        refSearchInput,
+                        searchText,
+                        setSearchText,
+                        searchedColumn,
+                        setSearchedColumn,
+                      })}
+                      dataSource={searchHook?.data}
+                      rowKey={"po_id"}
+                      loading={searchHook?.loading ? true : false}
+                      onChange={onChange}
+                      size="small"
+                      pagination={false}
+                      scroll={{ y: 480 }}
+                      onRow={(record, rowIndex) => {
+                        return {
+                          onClick: (e) => {
+                            setRowClick(true);
+                            $(e.target)
+                              .closest("tbody")
+                              .find("tr")
+                              .removeClass("selected-row");
+                            $(e.target).closest("tr").addClass("selected-row");
+                            keepLog.keep_log_action(record.po_no);
+                            props.history.push({
+                              pathname: "/purchase/po/" + record.po_id,
+                            });
+                            console.log("po click");
+                          },
+                        };
+                      }}
+                    />
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Tabs.TabPane>
@@ -384,8 +308,8 @@ const PO = (props) => {
                               pathname: "/purchase/po/new&" + mrp.mrp_no,
                             });
                           }}
-                          //disabled={!countSelectPRAuto}
-                          //className=''loading={rejectLoading}
+                        //disabled={!countSelectPRAuto}
+                        //className=''loading={rejectLoading}
                         >
                           Create PO With PR AUTO
                         </Button>
