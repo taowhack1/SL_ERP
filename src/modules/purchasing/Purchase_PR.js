@@ -84,7 +84,7 @@ const Requisition = (props) => {
               hook={searchHook}
               initialUI={{
                 pr: searchHook.params.filter?.pr || "",
-                vendor: { label: searchHook.params?.selected_vendor?.label || searchHook.params?.filter?.vendor || "", value: "" },
+                vendor: { label: searchHook.params?.filter?.selected_vendor?.label || searchHook.params?.filter?.vendor || "", value: "" },
                 request_by: { label: searchHook.params.filter?.request_by || "", value: "" },
                 create_date: [searchHook.params.filter?.create_date_start || null, searchHook.params.filter?.create_date_end],
                 due_date: [searchHook.params.filter?.due_date_start || null, searchHook.params.filter?.due_date_end],

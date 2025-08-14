@@ -122,7 +122,7 @@ export default function SearchJobOrders({ hook, initialUI }) {
     const onMRPSearch = (text) => {
         setMRPDisplay(text);
         fetchMRP(text);
-        updateFilterDebounced({ mrp: text, mrp_search: undefined });
+        updateFilterDebounced({ mrp: text, selected_mrp: { value: null, label: text } });
     };
 
     const onMRPSelect = (value, option) => {
@@ -135,12 +135,14 @@ export default function SearchJobOrders({ hook, initialUI }) {
 
 
     const onBulkSearch = (text) => {
+        console.log("search", text)
         setBulkDisplay(text);
         fetchBulk(text);
-        updateFilterDebounced({ bulk: text, bulk_search: undefined });
+        updateFilterDebounced({ bulk: text, selected_bulk: { value: null, label: text } });
     };
 
     const onBulkSelect = (value, option) => {
+        console.log("select", value, option)
         const label = option && (option.label || option.children || option.value);
         const display = typeof label === "string" ? label : String(label);
         setBulkDisplay(display);
@@ -151,7 +153,7 @@ export default function SearchJobOrders({ hook, initialUI }) {
     const onFGSearch = (text) => {
         setFGDisplay(text);
         fetchFG(text);
-        updateFilterDebounced({ fg: text, fg_search: undefined });
+        updateFilterDebounced({ fg: text, selected_fg: { value: null, label: text } });
     };
 
     const onFGSelect = (value, option) => {

@@ -47,7 +47,7 @@ export default function SearchPO({ hook, initialUI }) {
         console.log("initialUI", initialUI)
         form.setFieldsValue({
             po: initialUI.po,
-            vendor: vendorDisplay || null,
+            vendor: vendorDisplay,
             create_date: initialUI.create_date[0] && initialUI.create_date[1]
                 ? [moment(initialUI.create_date[0]), moment(initialUI.create_date[1])]
                 : [null, null],
@@ -69,7 +69,7 @@ export default function SearchPO({ hook, initialUI }) {
     const onVendorSearch = (text) => {
         setVendorDisplay(text);
         fetchVendor(text);
-        updateFilterDebounced({ vendor: text, selected_vendor: undefined });
+        updateFilterDebounced({ vendor: text, selected_vendor: { value: null, label: text } });
     };
 
     const onVendorSelect = (value, option) => {

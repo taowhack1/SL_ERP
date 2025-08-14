@@ -183,9 +183,6 @@ const PO = (props) => {
     initialParams: {
       user_name: "2563003",
       filter: {
-        vendor: undefined,
-        selected_vendor: { label: "", value: "" },
-        request_by: undefined,
         create_date: undefined,
         due_date: undefined,
       },
@@ -221,7 +218,7 @@ const PO = (props) => {
                       hook={searchHook}
                       initialUI={{
                         po: searchHook.params.filter?.po || "",
-                        vendor: { label: searchHook.params?.selected_vendor?.label || searchHook.params?.filter?.vendor || "", value: "" },
+                        vendor: { label: searchHook.params?.filter?.selected_vendor?.label || searchHook.params?.filter?.vendor || "", value: "" },
                         request_by: { label: searchHook.params.filter?.request_by || "", value: "" },
                         create_date: [searchHook.params.filter?.create_date_start || null, searchHook.params.filter?.create_date_end],
                         due_date: [searchHook.params.filter?.due_date_start || null, searchHook.params.filter?.due_date_end],

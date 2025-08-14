@@ -67,9 +67,6 @@ const MRPMain = (props) => {
     initialParams: {
       user_name: "2563003",
       filter: {
-        vendor: undefined,
-        selected_vendor: { label: "", value: "" },
-        request_by: undefined,
         create_date: undefined,
         due_date: undefined,
       },
@@ -78,6 +75,7 @@ const MRPMain = (props) => {
     mapResult: (res) => res,
     storageKey: "MRPState",
   });
+  console.log("searchHook.params", searchHook.params)
 
   return (
     <div>
@@ -90,11 +88,11 @@ const MRPMain = (props) => {
                 so: searchHook.params.filter?.so || "",
                 mrp: {
                   value: "",
-                  label: searchHook.params.filter?.selected_mrp?.label || "",
+                  label: searchHook.params.filter?.selected_mrp?.label || searchHook.params.filter?.mrp || "",
                 },
                 item: {
                   value: "",
-                  label: searchHook.params.filter?.selected_item?.label || "",
+                  label: searchHook.params.filter?.selected_item?.label || searchHook.params.filter?.item || "",
                 },
                 plan_date: [searchHook.params.filter?.plan_date_start || null, searchHook.params.filter?.plan_date_end],
                 due_date: [searchHook.params.filter?.due_date_start || null, searchHook.params.filter?.due_date_end],

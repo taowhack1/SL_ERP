@@ -43,9 +43,9 @@ const JobOrderListTable = (props) => {
       user_name: "2563003",
       filter: {
         job: undefined,
-        mrp: { label: "", value: "" },
-        bulk: { label: "", value: "" },
-        fg: { label: "", value: "" },
+        mrp: undefined,
+        bulk: undefined,
+        fg: undefined,
         status: null,
       },
     },
@@ -56,6 +56,7 @@ const JobOrderListTable = (props) => {
 
   searchHook?.error && message.error(searchHook?.error, 6);
 
+  console.log("searchHook.params.filter", searchHook.params.filter)
 
   return (
     <>
@@ -67,15 +68,15 @@ const JobOrderListTable = (props) => {
               job: searchHook.params.filter?.job || "",
               bulk: {
                 value: "",
-                label: searchHook.params.filter?.selected_bulk?.label || "",
+                label: searchHook.params.filter?.selected_bulk?.label || searchHook.params?.filter?.bulk || "",
               },
               fg: {
                 value: "",
-                label: searchHook.params.filter?.selected_fg?.label || "",
+                label: searchHook.params.filter?.selected_fg?.label || searchHook.params.filter?.fg || "",
               },
               mrp: {
                 value: "",
-                label: searchHook.params.filter?.selected_mrp?.label || "",
+                label: searchHook.params.filter?.selected_mrp?.label || searchHook.params.filter?.mrp || "",
               },
               status: searchHook.params.filter?.status || null,
             }}

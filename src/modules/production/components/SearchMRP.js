@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Form, Row, Col, AutoComplete, DatePicker, Select, Switch, Button, Input, Spin } from "antd";
 import moment from "moment";
 import axios from 'axios'
+import MRPViewSalesOrderList from "../operations/mrp/MRPViewSalesOrderList";
 
 const itemAutocompleteAPI = "http://localhost:3008/api/inventory/items/autocomplete";
 const autocompleteMRP = "http://localhost:3008/api/production/mrp/autocomplete";
@@ -18,7 +19,7 @@ export default function SearchMRP({ hook, initialUI }) {
 
     const [items, setItems] = useState([]);
     const [itemLoading, setItemLoading] = useState(false);
-    const [itemDisplay, setItemDisplay] = useState(initialUI?.bulk?.label || "");
+    const [itemDisplay, setItemDisplay] = useState(initialUI?.item?.label || "");
 
     const [due, setDue] = useState(initialUI.due_date || [null, null]);
     const [plan, setPlan] = useState(initialUI.plan_date || [null, null]);
@@ -30,7 +31,7 @@ export default function SearchMRP({ hook, initialUI }) {
         console.log("initialUI", initialUI)
         form.setFieldsValue({
             so: initialUI.so,
-            bulk: itemDisplay,
+            item: itemDisplay,
             mrp: mrpDisplay,
             plan_date: initialUI.plan_date[0] && initialUI.plan_date[1]
                 ? [moment(initialUI.plan_date[0]), moment(initialUI.plan_date[1])]
@@ -118,7 +119,7 @@ export default function SearchMRP({ hook, initialUI }) {
     const onMRPSearch = (text) => {
         setMRPDisplay(text);
         fetchMRP(text);
-        updateFilterDebounced({ mrp: text, mrp_search: undefined });
+        updateFilterDebounced({ mrp: text, selected_mrp: { value: null, label: text } });
     };
 
     const onMRPSelect = (value, option) => {
@@ -133,7 +134,7 @@ export default function SearchMRP({ hook, initialUI }) {
     const onItemSearch = (text) => {
         setItemDisplay(text);
         fetchItem(text);
-        updateFilterDebounced({ item: text, item_search: undefined });
+        updateFilterDebounced({ item: text, selected_item: { value: null, label: text } });
     };
 
     const onItemSelect = (value, option) => {
@@ -221,11 +222,15 @@ export default function SearchMRP({ hook, initialUI }) {
                 </Col>
             </Row>
             <Row gutter={[12, 8]}>
-                <Col>
+                <Col md={1}>
                     <Button type="poimary" onClick={onSearchNow}>ค้นหา</Button>
                 </Col>
-                <Col>
+                <Col md={1}>
                     <Button onClick={onClear}>เคลียร์</Button>
+                </Col>
+                <Col md={20}></Col>
+                <Col md={2}>
+                    <MRPViewSalesOrderList />
                 </Col>
             </Row>
         </Form>
