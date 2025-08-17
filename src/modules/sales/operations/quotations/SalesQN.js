@@ -23,6 +23,8 @@ import { getSearchData, hasActiveFilters, getSearchSummary } from "./utils/searc
 import SearchForm from './components/SearchForm'
 import useQuotationSearchAPI from "../../../../include/js/customHooks/useQuotationSearchAPI"
 import axios from 'axios'
+import SearchQuotation from "../../components/SearchQuotation.js"
+import useSearch from "../../../../include/js/customHooks/useSearch.js"
 
 export const quotationColumns = ({ onOpenSO }) => [
     {
@@ -136,69 +138,12 @@ const SalesQN = (props) => {
     })
 
     const dispatch = useDispatch()
-    const { filter } = useSelector((state) => state.sales.qn)
-    const { pageSize, page } = filter || {}
-    const [customers, setCustomer] = useState([])
-    const [salesPerson, setSalesPerson] = useState([])
-
-    // Use search persistence hook
-    // Use the API hook
-    const { data, loading, error, debouncedSearch, initialLoad } = useQuotationSearchAPI(`${process.env.REACT_APP_API_SERVER_V2}/sales/quotation`, auth.user_name)
-
-
-    // Handle search with loading state
-    const handleSearch = useCallback(
-        (searchFilters) => {
-            console.log("Search triggered with filters:", searchFilters)
-            debouncedSearch(searchFilters)
-        },
-        [debouncedSearch],
-    )
-
-    // todo wait for api to be ready
-
-    const statusOptions = useMemo(
-        () => [
-            { value: "", label: "All" },
-            { value: "Draft", label: "Draft" },
-            { value: "Confirm", label: "Confirm" },
-            { value: "Cancel", label: "Cancel" },
-            { value: "Completed", label: "Completed" },
-        ],
-        [],
-    )
 
     useEffect(() => {
         dispatch(reset_comments())
         dispatch(getMasterDataItem())
 
-        async function loadData() {
-            const { data: dataCustomer } = await axios.get(`${process.env.REACT_APP_API_SERVER_V2}/sales/customer?search=${''}`)
-            const customerOptions = dataCustomer.map(obj => ({
-                value: obj?.customer_no,
-                label: obj?.customer_name,
-                id: obj?.customer_no
-            }))
-
-            console.log("customers", customerOptions)
-
-            const { data: dataSalesPerson } = await axios.get(`${process.env.REACT_APP_API_SERVER_V2}/sales/salesperson?search=${''}`)
-            const salespersonOptions = dataSalesPerson.map(obj => ({
-                value: obj?.emp_id,
-                label: obj?.emp_full_name,
-                id: obj?.emp_id
-            }))
-
-            console.log("salesPerson", salespersonOptions)
-
-            setCustomer(customerOptions)
-            setSalesPerson(salespersonOptions)
-        }
-
-        loadData()
-
-        initialLoad(filter)
-    }, [dispatch, initialLoad])
+    }, [dispatch])
 
     const onChange = (pagination, filters, sorter, extra) => {
         console.log("params", pagination, filters, sorter, extra)
@@ -250,25 +195,38 @@ const SalesQN = (props) => {
         [modal],
     )
 
-    // Calculate search summary
-    // const searchSummary = useMemo(() => {
-    //     return getSearchSummary(searchFilters, state.length)
-    // }, [searchFilters, state.length])
+    const searchHook = useSearch({
+        endpoint: `${process.env.REACT_APP_API_SERVER_V2}/sales/quotation/search`,
+        initialParams: {
+            user_name: auth.user_name,
+            filter: {
+                qn: undefined,
+                description: undefined,
+                sale: undefined,
+                customer: undefined,
+                create_date: undefined,
+            },
+        },
+        debounceMs: 1000,
+        mapResult: (res) => res,
+        storageKey: "QNState",
+    });
 
-    // const showSearchAlert = hasActiveFilters(searchFilters)
-    console.log("Search QN Error", error)
+
     return (
         <>
             <MainLayout {...config}>
                 <Row style={{ marginTop: 10 }}>
                     <Col span={24}>
-                        <SearchForm
-                            onSearch={handleSearch}
-                            loading={loading}
-                            customerOptions={customers}
-                            salespersonOptions={salesPerson}
-                            statusOptions={statusOptions}
-                        // existingFilters={{ salesType, soProductionType, so_status, keyword }}
+                        <SearchQuotation
+                            hook={searchHook}
+                            initialUI={{
+                                qn: searchHook.params.filter?.qn || "",
+                                description: searchHook.params.filter?.description || "",
+                                sale: { label: searchHook.params?.filter?.selected_sale?.label || searchHook.params?.filter?.sales || "", value: "" },
+                                customer: { label: searchHook.params?.filter?.selected_customer?.label || searchHook.params?.filter?.customer || "", value: "" },
+                                create_date: [searchHook.params.filter?.create_date_start || null, searchHook.params.filter?.create_date_end],
+                            }}
                         />
                     </Col>
                 </Row>
@@ -276,19 +234,13 @@ const SalesQN = (props) => {
                     <Col span={24}>
                         <Table
                             columns={quotationColumns({ onOpenSO })}
-                            dataSource={data}
-                            loading={loading}
+                            dataSource={searchHook.data}
+                            loading={searchHook.loading}
                             onChange={onChange}
                             rowKey="qn_id"
                             size="small"
-                            pagination={{
-                                pageSize,
-                                current: page,
-                                pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
-                                showSizeChanger: true,
-                                showQuickJumper: true,
-                                showTotal: (total, range) => `${range[0]}-${range[1]} จาก ${total} รายการ`,
-                            }}
+                            pagination={false}
+                            scroll={{ y: 500 }}
                             bordered
                             rowClassName="row-pointer"
                             onRow={(record, rowIndex) => {
@@ -303,16 +255,13 @@ const SalesQN = (props) => {
                                     },
                                 }
                             }}
-                        // locale={{
-                        //     emptyText: showSearchAlert ? "ไม่พบข้อมูลที่ตรงกับเงื่อนไขการค้นหา" : "ไม่มีข้อมูล",
-                        // }}
                         />
                     </Col>
                 </Row>
             </MainLayout>
 
             {/* Loading Overlay */}
-            <LoadingOverlay loading={loading} tip="กำลังค้นหาข้อมูล Quotations..." />
+            {/* <LoadingOverlay loading={searchHook.loading} tip="กำลังค้นหาข้อมูล Quotations..." /> */}
 
             <ModalConfirmOpenSO {...modalConfig} />
         </>

@@ -348,7 +348,8 @@ const SalesOrdersTable = ({
             loading={loading}
             columns={baseColumns}
             dataSource={data}
-            pagination={pagination}
+            pagination={false}
+            scroll={{ y: 500 }}
             rowKey="so_id"
             size="small"
             bordered

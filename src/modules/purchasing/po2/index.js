@@ -179,7 +179,7 @@ const PO = (props) => {
 
 
   const searchHook = useSearch({
-    endpoint: "http://localhost:3008/api/purchase/po/search",
+    endpoint: `${process.env.REACT_APP_API_SERVER_V2}/purchase/po/search`,
     initialParams: {
       user_name: "2563003",
       filter: {
