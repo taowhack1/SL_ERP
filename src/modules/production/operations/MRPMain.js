@@ -63,9 +63,9 @@ const MRPMain = (props) => {
   }, []);
 
   const searchHook = useSearch({
-    endpoint: "http://localhost:3008/api/production/mrp/search",
+    endpoint: `${process.env.REACT_APP_API_SERVER_V2}/production/mrp/search`,
     initialParams: {
-      user_name: "2563003",
+      user_name: auth.user_name,
       filter: {
         create_date: undefined,
         due_date: undefined,

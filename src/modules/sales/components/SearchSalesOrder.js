@@ -7,8 +7,8 @@ const toYMD = (d) => (d ? moment(d).format("YYYY-MM-DD") : undefined);
 const apiAutocompleteCustomer = `${process.env.REACT_APP_API_SERVER_V2}/sales/customer/autocomplete`
 const apiAutocompleteSale = `${process.env.REACT_APP_API_SERVER_V2}/sales/salesperson/autocomplete`
 
-export default function SearchQuotation({ hook, initialUI }) {
-    console.log("SearchQuotation", initialUI);
+export default function SearchSalesOrder({ hook, initialUI }) {
+    console.log("SearchSalesOrder", initialUI);
     const [form] = Form.useForm();
 
     const [customers, setCustomers] = useState([]);
@@ -70,13 +70,14 @@ export default function SearchQuotation({ hook, initialUI }) {
     useEffect(() => {
         console.log("initialUI", initialUI)
         form.setFieldsValue({
-            qn: initialUI.qn,
+            so: initialUI.so,
             description: initialUI.description,
             sale: saleDisplay,
             customer: customerDisplay,
             create_date: initialUI.create_date[0] && initialUI.create_date[1]
                 ? [moment(initialUI.create_date[0]), moment(initialUI.create_date[1])]
                 : [null, null],
+            status: initialUI.status
         });
         hook.searchNow();
     }, []);
@@ -121,7 +122,7 @@ export default function SearchQuotation({ hook, initialUI }) {
         updateFilterDebounced({ [`${key}_start`]: ymd[0], [`${key}_end`]: ymd[1] });
 
         switch (key) {
-            case 'create_date':
+            case 'order_date':
                 setCreateDate([ymd[0], ymd[1]])
                 break;
 
@@ -141,20 +142,20 @@ export default function SearchQuotation({ hook, initialUI }) {
     return (
         <Form form={form} layout="vertical">
             <Row gutter={[12, 8]} align="bottom">
-                <Col xs={24} md={6}>
-                    <Form.Item label="QN No. / Description" name="qn">
+                <Col xs={24} md={5}>
+                    <Form.Item label="SO No. / Description" name="so">
                         <AutoComplete
-                            // value={qn}
-                            onSearch={(v) => onSearchInput("qn", v)}
+                            // value={so}
+                            onSearch={(v) => onSearchInput("so", v)}
                             allowClear
-                            placeholder="ค้นหาด้วย QN No. หรือ Description"
+                            placeholder="ค้นหาด้วย SO No. หรือ Description"
                             style={{ width: "100%" }}
                         >
                             <Input />
                         </AutoComplete>
                     </Form.Item>
                 </Col>
-                <Col xs={24} md={6}>
+                <Col xs={24} md={5}>
                     <Form.Item label="Customer" name="customer">
                         <AutoComplete
                             value={customerDisplay}
@@ -171,7 +172,7 @@ export default function SearchQuotation({ hook, initialUI }) {
                         </AutoComplete>
                     </Form.Item>
                 </Col>
-                <Col xs={24} md={6}>
+                <Col xs={24} md={4}>
                     <Form.Item label="Sales person" name="sale">
                         <AutoComplete
                             value={saleDisplay}
@@ -189,12 +190,31 @@ export default function SearchQuotation({ hook, initialUI }) {
                     </Form.Item>
                 </Col>
                 <Col xs={24} md={6}>
-                    <Form.Item label="วันที่เอกสาร" name="create_date">
+                    <Form.Item label="Order Date" name="order_date">
                         <DatePicker.RangePicker
                             style={{ width: "100%" }}
                             format="DD/MM/YYYY"
-                            onChange={v => onDateRangeChange("create_date", v)}
+                            onChange={v => onDateRangeChange("order_date", v)}
                             allowEmpty={[true, true]}
+                        />
+                    </Form.Item>
+                </Col>
+                <Col xs={24} md={4}>
+                    <Form.Item label="สถานะ" name="status">
+                        <Select
+                            options={[
+                                { value: "", label: "All" },
+                                { value: "Draft", label: "Draft" },
+                                { value: "Confirm", label: "Confirm" },
+                                { value: "Cancel", label: "Cancel" },
+                                { value: "Completed", label: "Completed" },
+                                { value: "None DR", label: "None DR" },
+                            ]}
+                            onChange={(v) => onSearchInput("status", v)}
+                            allowClear
+                            placeholder="Select..."
+                            showSearch
+                            optionFilterProp="label"
                         />
                     </Form.Item>
                 </Col>

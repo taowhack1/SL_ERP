@@ -68,9 +68,9 @@ const Items = (props) => {
   };
 
   const searchHook = useSearch({
-    endpoint: "http://localhost:3008/api/inventory/items/search",
+    endpoint: `${process.env.REACT_APP_API_SERVER_V2}/inventory/items/search`,
     initialParams: {
-      user_name: "2563003",
+      user_name: auth.user_name,
       filter: {
         item: undefined,
         customer: undefined,

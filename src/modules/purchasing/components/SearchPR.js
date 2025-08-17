@@ -4,8 +4,7 @@ import moment from "moment";
 import axios from 'axios'
 
 const toYMD = (d) => (d ? moment(d).format("YYYY-MM-DD") : undefined);
-const autoCompleteVendor = "http://localhost:3008/api/purchase/vendor/autocomplete";
-const autoCompleteEmp = "http://localhost:3008/api/hrm/emp/autocomplete";
+const autoCompleteVendor = `${process.env.REACT_APP_API_SERVER_V2}/purchase/vendor/autocomplete`;
 
 export default function SearchPR({ hook, initialUI }) {
     console.log("SearchPR", initialUI);

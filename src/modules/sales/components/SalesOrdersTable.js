@@ -190,7 +190,7 @@ const SalesOrdersTable = ({
                 multiple: 3,
             },
             // Keep existing SOFilter for table search
-            ...SOFilter("so_no", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
+            // ...SOFilter("so_no", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
             render: (value) => value || "-",
         },
         {
@@ -203,7 +203,7 @@ const SalesOrdersTable = ({
                 compare: (a, b) => a.qn_id - b.qn_id,
                 multiple: 3,
             },
-            ...SOFilter("qn_no", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
+            // ...SOFilter("qn_no", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
             render: (value) => value || "-",
         },
         {
@@ -212,7 +212,7 @@ const SalesOrdersTable = ({
             key: "so_customer_po_no",
             width: "10%",
             align: "center",
-            ...SOFilter("so_customer_po_no", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
+            // ...SOFilter("so_customer_po_no", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
             render: (value) => value || "-",
         },
         {
@@ -221,7 +221,7 @@ const SalesOrdersTable = ({
             key: "so_order_date",
             width: "8%",
             align: "center",
-            ...SOFilter("so_order_date", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
+            // ...SOFilter("so_order_date", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
             render: (value) => value || "-",
         },
         {
@@ -230,7 +230,7 @@ const SalesOrdersTable = ({
             key: "tg_so_delivery_date",
             width: "8%",
             align: "center",
-            ...SOFilter("tg_so_delivery_date", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
+            // ...SOFilter("tg_so_delivery_date", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
             render: (value) => value || "-",
         },
         {
@@ -239,7 +239,7 @@ const SalesOrdersTable = ({
             key: "customer_no_name",
             align: "left",
             ellipsis: true,
-            ...SOFilter("customer_no_name", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
+            // ...SOFilter("customer_no_name", refSearchInput, searchText, setSearchText, searchedColumn, setSearchedColumn),
             render: (value) => value || "-",
         },
         {
@@ -249,14 +249,14 @@ const SalesOrdersTable = ({
             width: isProduction ? "15%" : "10%",
             align: "left",
             ellipsis: true,
-            ...SOFilter(
-                isProduction ? "so_created_by_no_name" : "so_sales_person_no_name",
-                refSearchInput,
-                searchText,
-                setSearchText,
-                searchedColumn,
-                setSearchedColumn,
-            ),
+            // ...SOFilter(
+            //     isProduction ? "so_created_by_no_name" : "so_sales_person_no_name",
+            //     refSearchInput,
+            //     searchText,
+            //     setSearchText,
+            //     searchedColumn,
+            //     setSearchedColumn,
+            // ),
             render: (value) => value || "-",
         },
         {

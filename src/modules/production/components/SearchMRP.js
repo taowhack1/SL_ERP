@@ -4,8 +4,8 @@ import moment from "moment";
 import axios from 'axios'
 import MRPViewSalesOrderList from "../operations/mrp/MRPViewSalesOrderList";
 
-const itemAutocompleteAPI = "http://localhost:3008/api/inventory/items/autocomplete";
-const autocompleteMRP = "http://localhost:3008/api/production/mrp/autocomplete";
+const itemAutocompleteAPI = `${process.env.REACT_APP_API_SERVER_V2}/inventory/items/autocomplete`;
+const autocompleteMRP = `${process.env.REACT_APP_API_SERVER_V2}/production/mrp/autocomplete`;
 
 const toYMD = (d) => (d ? moment(d).format("YYYY-MM-DD") : undefined);
 

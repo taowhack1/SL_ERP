@@ -5,8 +5,8 @@ import axios from 'axios'
 import { getMasterDataItemCategory, getMasterDataItemType } from "../../../actions/inventory";
 
 const toYMD = (d) => (d ? moment(d).format("YYYY-MM-DD") : undefined);
-const itemAutocompleteAPI = "http://localhost:3008/api/inventory/items/autocomplete";
-const autocompleteCustomer = "http://localhost:3008/api/sales/customer/autocomplete";
+const itemAutocompleteAPI = `${process.env.REACT_APP_API_SERVER_V2}/inventory/items/autocomplete`;
+const autocompleteCustomer = `${process.env.REACT_APP_API_SERVER_V2}/sales/customer/autocomplete`;
 
 export default function SearchItems({ hook, initialUI }) {
     const [form] = Form.useForm();

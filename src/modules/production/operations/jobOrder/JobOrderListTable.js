@@ -18,6 +18,7 @@ const JobOrderListTable = (props) => {
   const {
     modal: { openModal },
   } = props;
+  const auth = useSelector((state) => state.auth.authData)
 
   const { expandedRowRender, handleExpand } = useSubTableFetch({
     columns: () => subJobOrderColumns,
@@ -38,9 +39,9 @@ const JobOrderListTable = (props) => {
   };
 
   const searchHook = useSearch({
-    endpoint: "http://localhost:3008/api/production/job/search",
+    endpoint: `${process.env.REACT_APP_API_SERVER_V2}/production/job/search`,
     initialParams: {
-      user_name: "2563003",
+      user_name: auth.user_name,
       filter: {
         job: undefined,
         mrp: undefined,

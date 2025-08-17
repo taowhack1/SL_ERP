@@ -15,6 +15,8 @@ import DRForm from "./operations/dr/form/DRForm"
 import SalesOrdersSearch from "./components/SalesOrdersSearch"
 import SalesOrdersTable from "./components/SalesOrdersTable"
 import useSalesOrdersAPI from "../../include/js/customHooks/useSalesOrdersAPI"
+import SearchSalesOrder from "./components/SearchSalesOrder"
+import useSearch from "../../include/js/customHooks/useSearch"
 
 const SaleOrder = (props) => {
   const keepLog = useKeepLogs()
@@ -29,28 +31,6 @@ const SaleOrder = (props) => {
   const dispatch = useDispatch()
   const [rowClick, setRowClick] = useState(false)
 
-  // Table search states (for existing SOFilter functionality)
-  const refSearchInput = useRef()
-  const [searchText, setSearchText] = useState("")
-  const [searchedColumn, setSearchedColumn] = useState(0)
-  const [customers, setCustomer] = useState([])
-  const [salesPerson, setSalesPerson] = useState([])
-
-  // Use the API hook
-  const { data, loading, error, debouncedSearch, initialLoad } = useSalesOrdersAPI(process.env.REACT_APP_API_SERVER_V2 + `/sales/so`, auth.user_name)
-
-  const statusOptions = useMemo(
-    () => [
-      { value: "", label: "All" },
-      { value: "Draft", label: "Draft" },
-      { value: "Confirm", label: "Confirm" },
-      { value: "Cancel", label: "Cancel" },
-      { value: "Completed", label: "Completed" },
-      { value: "None DR", label: "None DR" },
-    ],
-    [],
-  )
-
   const [modal, setModal] = useState({
     visible: false,
     dr_id: null,
@@ -61,53 +41,7 @@ const SaleOrder = (props) => {
     dispatch(get_sale_master_data())
     dispatch(reset_comments())
     dispatch(getMasterDataItem())
-
-    async function loadData() {
-      const { data: dataCustomer } = await axios.get(`${process.env.REACT_APP_API_SERVER_V2}/sales/customer?search=${''}`)
-      const customerOptions = dataCustomer.map(obj => ({
-        value: obj?.customer_no,
-        label: obj?.customer_name,
-        id: obj?.customer_no
-      }))
-
-      console.log("customers", customerOptions)
-
-      const { data: dataSalesPerson } = await axios.get(`${process.env.REACT_APP_API_SERVER_V2}/sales/salesperson?search=${''}`)
-      const salespersonOptions = dataSalesPerson.map(obj => ({
-        value: obj?.emp_id,
-        label: obj?.emp_full_name,
-        id: obj?.emp_id
-      }))
-
-      console.log("salesPerson", salespersonOptions)
-
-      setCustomer(customerOptions)
-      setSalesPerson(salespersonOptions)
-    }
-
-    loadData()
-
   }, [])
-
-  // Initial load when component mounts or Redux filters change
-  useEffect(() => {
-    const existingFilters = {
-      salesType,
-      soProductionType,
-      so_status,
-      keyword,
-    }
-    initialLoad(existingFilters)
-  }, [salesType, soProductionType, so_status, keyword, initialLoad])
-
-  // Handle search from search component
-  const handleSearch = useCallback(
-    (searchFilters) => {
-      console.log("Search triggered with filters:", searchFilters)
-      debouncedSearch(searchFilters)
-    },
-    [debouncedSearch],
-  )
 
   // Modal handlers
   const onClose = useCallback(() => {
@@ -117,15 +51,9 @@ const SaleOrder = (props) => {
       dr_id: null,
       so_detail_id: null,
     }))
-    // Reload data after modal close
-    const existingFilters = {
-      salesType,
-      soProductionType,
-      so_status,
-      keyword,
-    }
-    initialLoad(existingFilters)
-  }, [setModal, initialLoad, salesType, soProductionType, so_status, keyword])
+
+    // todo search
+  }, [setModal])
 
   const onOpen = useCallback(
     (so_detail_id) =>
@@ -168,13 +96,6 @@ const SaleOrder = (props) => {
     [keepLog, props.history],
   )
 
-  // Show error message if API call fails
-  useEffect(() => {
-    if (error) {
-      message.error(`เกิดข้อผิดพลาด: ${error}`)
-    }
-  }, [error])
-
   const current_project = useSelector((state) => state.auth.currentProject)
 
   const config = {
@@ -199,19 +120,40 @@ const SaleOrder = (props) => {
     searchBar: false,
   }
 
+  const searchHook = useSearch({
+    endpoint: `${process.env.REACT_APP_API_SERVER_V2}/sales/so`,
+    initialParams: {
+      user_name: auth.user_name,
+      filter: {
+        so: undefined,
+        description: undefined,
+        sale: undefined,
+        customer: undefined,
+        create_date: undefined,
+        status: undefined,
+      },
+    },
+    debounceMs: 1000,
+    mapResult: (res) => res,
+    storageKey: "SOState",
+  });
+
+
   return (
     <div>
       <MainLayout {...config}>
         <Row style={{ marginTop: 10 }}>
           <Col span={24}>
-            {/* Enhanced Search Component */}
-            <SalesOrdersSearch
-              onSearch={handleSearch}
-              loading={loading}
-              customerOptions={customers}
-              salespersonOptions={salesPerson}
-              statusOptions={statusOptions}
-              existingFilters={{ salesType, soProductionType, so_status, keyword }}
+            <SearchSalesOrder
+              hook={searchHook}
+              initialUI={{
+                so: searchHook.params.filter?.so || "",
+                description: searchHook.params.filter?.description || "",
+                sale: { label: searchHook.params?.filter?.selected_sale?.label || searchHook.params?.filter?.sales || "", value: "" },
+                customer: { label: searchHook.params?.filter?.selected_customer?.label || searchHook.params?.filter?.customer || "", value: "" },
+                create_date: [searchHook.params.filter?.create_date_start || null, searchHook.params.filter?.create_date_end],
+                status: searchHook.params.filter.status || "",
+              }}
             />
           </Col>
         </Row>
@@ -221,25 +163,20 @@ const SaleOrder = (props) => {
 
             {/* Enhanced Table Component */}
             <SalesOrdersTable
-              data={data}
-              loading={loading}
-              error={error}
-              pagination={{
-                pageSize,
-                current: page,
-                total: data.length,
-                pageSizeOptions: ["15", "20", "30", "50", "100", "1000"],
-              }}
+              data={searchHook?.data}
+              loading={searchHook?.loading}
+              pagination={false}
+              scroll={{ y: 500 }}
               onChange={onChange}
               onRowClick={onRowClick}
               onOpen={onOpen}
               isProduction={filter.soProductionType === 3}
-              // Keep existing table search functionality
-              refSearchInput={refSearchInput}
-              searchText={searchText}
-              setSearchText={setSearchText}
-              searchedColumn={searchedColumn}
-              setSearchedColumn={setSearchedColumn}
+            // Keep existing table search functionality
+            // refSearchInput={refSearchInput}
+            // searchText={searchText}
+            // setSearchText={setSearchText}
+            // searchedColumn={searchedColumn}
+            // setSearchedColumn={setSearchedColumn}
             />
           </Col>
         </Row>

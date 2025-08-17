@@ -59,9 +59,9 @@ const Requisition = (props) => {
   };
 
   const searchHook = useSearch({
-    endpoint: "http://localhost:3008/api/purchase/pr/search",
+    endpoint: `${process.env.REACT_APP_API_SERVER_V2}/purchase/pr/search`,
     initialParams: {
-      user_name: "2563003",
+      user_name: auth.user_name,
       filter: {
         vendor: undefined,
         selected_vendor: { label: "", value: "" },

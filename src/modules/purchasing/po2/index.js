@@ -181,7 +181,7 @@ const PO = (props) => {
   const searchHook = useSearch({
     endpoint: `${process.env.REACT_APP_API_SERVER_V2}/purchase/po/search`,
     initialParams: {
-      user_name: "2563003",
+      user_name: auth.user_name,
       filter: {
         create_date: undefined,
         due_date: undefined,

@@ -4,7 +4,7 @@ import moment from "moment";
 import axios from 'axios'
 
 const toYMD = (d) => (d ? moment(d).format("YYYY-MM-DD") : undefined);
-const itemAutocompleteAPI = "http://localhost:3008/api/inventory/items/autocomplete";
+const itemAutocompleteAPI = `${process.env.REACT_APP_API_SERVER_V2}/inventory/items/autocomplete`;
 
 export default function SearchItems({ hook, initialUI }) {
     const [form] = Form.useForm();
