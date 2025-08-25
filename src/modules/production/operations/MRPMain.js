@@ -77,6 +77,9 @@ const MRPMain = (props) => {
   });
   console.log("searchHook.params", searchHook.params)
 
+  if (searchHook?.params?.user_name != auth.user_name) {
+    searchHook.clear()
+  }
   return (
     <div>
       <MainLayout {...config}>

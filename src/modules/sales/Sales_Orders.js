@@ -139,6 +139,9 @@ const SaleOrder = (props) => {
   });
 
 
+  if (searchHook?.params?.user_name != auth.user_name) {
+    searchHook.clear()
+  }
   return (
     <div>
       <MainLayout {...config}>

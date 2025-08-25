@@ -192,6 +192,10 @@ const PO = (props) => {
     storageKey: "POState",
   });
 
+  if (searchHook?.params?.user_name != auth.user_name) {
+    searchHook.clear()
+  }
+
   console.log("mrp.length :>> ", mrp);
   return (
     <div>

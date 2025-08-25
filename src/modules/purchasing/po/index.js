@@ -43,28 +43,28 @@ const PO = (props) => {
       sortData(
         keyword
           ? listDataPo?.data?.filter(
-              (po) =>
-                po?.po_no?.indexOf(keyword) >= 0 ||
-                po?.vendor_no_name?.indexOf(keyword) >= 0 ||
-                po?.po_created_by_no_name?.indexOf(keyword) >= 0 ||
-                po?.po_created?.indexOf(keyword) >= 0 ||
-                po?.po_description?.indexOf(keyword) >= 0
-            )
+            (po) =>
+              po?.po_no?.indexOf(keyword) >= 0 ||
+              po?.vendor_no_name?.indexOf(keyword) >= 0 ||
+              po?.po_created_by_no_name?.indexOf(keyword) >= 0 ||
+              po?.po_created?.indexOf(keyword) >= 0 ||
+              po?.po_description?.indexOf(keyword) >= 0
+          )
           : po_status === "Pending Approve"
-          ? data?.filter((po) => po?.button_approve == 1)
-          : po_status === "Pending Confirm"
-          ? data?.filter((po) => po?.button_confirm == 1)
-          : po_status === "Pending Receive"
-          ? data?.filter((po) => po?.trans_status_name == "Pending Receive")
-          : po_status === "Completed"
-          ? data?.filter((po) => po?.trans_status_name == "Completed")
-          : po_status === "Confirm"
-          ? data?.filter((po) => po?.trans_status_name == "Confirm")
-          : po_status === "Cancel"
-          ? data?.filter((po) => po?.trans_status_name == "Cancel")
-          : po_status === "Waiting"
-          ? data?.filter((po) => po?.trans_status_name == "Draft")
-          : listDataPo?.data
+            ? data?.filter((po) => po?.button_approve == 1)
+            : po_status === "Pending Confirm"
+              ? data?.filter((po) => po?.button_confirm == 1)
+              : po_status === "Pending Receive"
+                ? data?.filter((po) => po?.trans_status_name == "Pending Receive")
+                : po_status === "Completed"
+                  ? data?.filter((po) => po?.trans_status_name == "Completed")
+                  : po_status === "Confirm"
+                    ? data?.filter((po) => po?.trans_status_name == "Confirm")
+                    : po_status === "Cancel"
+                      ? data?.filter((po) => po?.trans_status_name == "Cancel")
+                      : po_status === "Waiting"
+                        ? data?.filter((po) => po?.trans_status_name == "Draft")
+                        : listDataPo?.data
       );
     console.log("search_data :>> ", search_data);
     return sortData(search_data);
@@ -158,7 +158,7 @@ const PO = (props) => {
             style={{ width: 200 }}
             onChange={(val, option) => dispatch(filterPO({ po_status: val }))}
             value={po_status}
-            //defaultValue={}
+          //defaultValue={}
           />
         </Space>
         <Button

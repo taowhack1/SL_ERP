@@ -82,6 +82,9 @@ const Items = (props) => {
     mapResult: (res) => res,
     storageKey: "InventoryItemsSearchState",
   });
+  if (searchHook?.params?.user_name != auth.user_name) {
+    searchHook.clear()
+  }
 
   return (
     <div>

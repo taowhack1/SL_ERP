@@ -74,6 +74,9 @@ const Requisition = (props) => {
     mapResult: (res) => res,
     storageKey: "PRState",
   });
+  if (searchHook?.params?.user_name != auth.user_name) {
+    searchHook.clear()
+  }
   console.log("searchHook params", searchHook.params);
   return (
     <div>

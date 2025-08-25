@@ -108,8 +108,8 @@ export default function SearchPR({ hook, initialUI }) {
     return (
         <Form form={form} layout="vertical">
             <Row gutter={[12, 8]} align="bottom">
-                <Col xs={24} md={6}>
-                    <Form.Item label="PR No." name="pr">
+                <Col xs={24} md={8}>
+                    <Form.Item label="PR No. / Description" name="pr">
                         <AutoComplete
                             value={pr}
                             onSearch={onPrSearch}
@@ -139,7 +139,7 @@ export default function SearchPR({ hook, initialUI }) {
                         </AutoComplete>
                     </Form.Item>
                 </Col>
-                <Col xs={24} md={6}>
+                <Col xs={24} md={5}>
                     <Form.Item label="วันที่เอกสาร" name="create_date">
                         <DatePicker.RangePicker
                             style={{ width: "100%" }}
@@ -150,7 +150,7 @@ export default function SearchPR({ hook, initialUI }) {
                         />
                     </Form.Item>
                 </Col>
-                <Col xs={24} md={6}>
+                <Col xs={24} md={5}>
                     <Form.Item label="Due Date" name="due_date">
                         <DatePicker.RangePicker
                             style={{ width: "100%" }}

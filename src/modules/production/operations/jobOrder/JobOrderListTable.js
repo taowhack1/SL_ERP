@@ -55,6 +55,9 @@ const JobOrderListTable = (props) => {
     storageKey: "JobOrderState",
   });
 
+  if (searchHook?.params?.user_name != auth.user_name) {
+    searchHook.clear()
+  }
   searchHook?.error && message.error(searchHook?.error, 6);
 
   console.log("searchHook.params.filter", searchHook.params.filter)

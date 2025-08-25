@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import axios from 'axios'
+import { useSelector } from "react-redux";
 
 export default function useSearch({
     endpoint,
@@ -8,6 +9,7 @@ export default function useSearch({
     mapResult = (r) => r,
     storageKey,
 }) {
+    const auth = useSelector((state) => state.auth.authData);
     const [params, setParams] = useState(() => {
         try {
             if (storageKey) {
