@@ -109,13 +109,13 @@ export default function SearchPO({ hook, initialUI }) {
         <Form form={form} layout="vertical">
             <Row gutter={[12, 8]} align="bottom">
                 <Col xs={24} md={6}>
-                    <Form.Item label="PO No." name="po">
+                    <Form.Item label="PO No. / Description" name="po">
                         <AutoComplete
                             value={po}
                             onSearch={onPoSearch}
                             onChange={(v) => setPO(v)}
                             allowClear
-                            placeholder="ค้นหาด้วย PO No."
+                            placeholder="ค้นหา PO No. / Description"
                             style={{ width: "100%" }}
                         >
                             <Input />
@@ -131,7 +131,7 @@ export default function SearchPO({ hook, initialUI }) {
                             onSelect={onVendorSelect}
                             onChange={(v) => setVendorDisplay(v)}
                             allowClear
-                            placeholder="ค้นหาด้วย ชื่อ, รหัส Vendor"
+                            placeholder="ค้นหา ชื่อ, รหัส Vendor"
                             notFoundContent={acLoading ? <Spin size="small" /> : null}
                             style={{ width: "100%" }}
                         >
