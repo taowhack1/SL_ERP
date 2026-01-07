@@ -1,0 +1,637 @@
+/* ============================================================================
+   Job Status Report Stylesheet
+   ============================================================================ */
+
+.job-status-report-container {
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* ============================================================================
+   HEADER SECTION
+   ============================================================================ */
+
+.report-header {
+  background-color: white;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.report-header h1 {
+  margin: 0 0 20px 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #1890ff;
+}
+
+.view-controls {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.control-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.date-range-info {
+  font-size: 13px;
+  color: #666;
+  padding-top: 10px;
+  border-top: 1px solid #e8e8e8;
+}
+
+.error-message {
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
+  border-radius: 4px;
+  color: #cf1322;
+}
+
+/* ============================================================================
+   TABLE WRAPPER & LAYOUT
+   ============================================================================ */
+
+.job-status-table-wrapper {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.table-scroll-container {
+  display: flex;
+  overflow-x: auto;
+  border: 1px solid #d9d9d9;
+}
+
+/* ============================================================================
+   FROZEN COLUMNS (LEFT SIDE)
+   ============================================================================ */
+
+.frozen-columns {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: #fafafa;
+  border-right: 2px solid #1890ff;
+  min-width: 450px;
+}
+
+.table-header-section {
+  flex: 0 0 auto;
+}
+
+.header-row {
+  display: flex;
+  background-color: #1890ff;
+  color: white;
+  font-weight: 600;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.header-cell {
+  padding: 12px 8px;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 12px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header-cell:last-child {
+  border-right: none;
+}
+
+.job-no-col {
+  flex: 0 0 60px;
+  min-width: 60px;
+}
+
+.job-name-col {
+  flex: 0 0 150px;
+  min-width: 150px;
+}
+
+.qty-col {
+  flex: 0 0 50px;
+  min-width: 50px;
+}
+
+.date-col {
+  flex: 0 0 70px;
+  min-width: 70px;
+}
+
+.table-body-section {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.body-row {
+  display: flex;
+  border-bottom: 1px solid #e8e8e8;
+  background-color: white;
+  transition: background-color 0.2s ease;
+}
+
+.body-row:hover {
+  background-color: #fafafa;
+}
+
+.body-row.even {
+  background-color: #f9f9f9;
+}
+
+.body-row.odd {
+  background-color: white;
+}
+
+.body-cell {
+  padding: 10px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 12px;
+  border-right: 1px solid #e8e8e8;
+  word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.body-cell:last-child {
+  border-right: none;
+}
+
+.job-no-col {
+  font-weight: 600;
+  color: #1890ff;
+}
+
+.job-name-col {
+  justify-content: flex-start;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* ============================================================================
+   CALENDAR GRID (RIGHT SIDE - SCROLLABLE)
+   ============================================================================ */
+
+.calendar-grid-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+  overflow: hidden;
+}
+
+.calendar-header-month {
+  display: flex;
+  background-color: #1890ff;
+  color: white;
+  font-weight: 600;
+  border-bottom: 1px solid #d9d9d9;
+  flex: 0 0 auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.calendar-header-month::-webkit-scrollbar {
+  display: none;
+}
+
+.month-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 12px;
+  min-width: 40px;
+}
+
+.month-label {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.calendar-header-date {
+  display: flex;
+  background-color: #87d068;
+  color: white;
+  font-weight: 600;
+  border-bottom: 1px solid #d9d9d9;
+  flex: 0 0 auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.calendar-header-date::-webkit-scrollbar {
+  display: none;
+}
+
+.date-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  min-width: 40px;
+  padding: 8px 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  background-color: #87d068;
+  transition: background-color 0.2s ease;
+}
+
+.date-column.sunday {
+  background-color: #52c41a;
+  font-weight: 700;
+}
+
+.date-label {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.calendar-grid-body {
+  flex: 1;
+  overflow: auto;
+  max-height: 600px;
+}
+
+.calendar-row {
+  display: flex;
+  border-bottom: 1px solid #e8e8e8;
+  background-color: white;
+}
+
+.calendar-row:hover {
+  background-color: #fafafa;
+}
+
+/* ============================================================================
+   CALENDAR CELLS
+   ============================================================================ */
+
+.calendar-cell {
+  width: 40px;
+  min-width: 40px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #e8e8e8;
+  cursor: pointer;
+  padding: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+.calendar-cell:hover {
+  background-color: #f0f2f5;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-cell.sunday {
+  background-color: #fafafa;
+}
+
+.calendar-cell.has-event {
+  cursor: pointer;
+  border: 1px solid #d9d9d9;
+  font-weight: 600;
+}
+
+.calendar-cell.has-event:hover {
+  border-color: #1890ff;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.15);
+}
+
+.cell-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+.event-label {
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.event-count {
+  font-size: 9px;
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 1px 3px;
+  border-radius: 2px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* ============================================================================
+   MODAL STYLING
+   ============================================================================ */
+
+.job-status-modal .ant-modal-header {
+  background-color: #1890ff;
+  border-bottom: 2px solid #0050b3;
+}
+
+.job-status-modal .ant-modal-title {
+  color: white;
+  font-weight: 600;
+}
+
+.modal-section {
+  margin-bottom: 20px;
+  padding: 16px 0;
+}
+
+.modal-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1890ff;
+  margin-bottom: 12px;
+}
+
+.modal-section h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.section-desc {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.info-item {
+  margin-bottom: 8px;
+}
+
+.info-item label {
+  font-weight: 600;
+  color: #333;
+  display: block;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.info-item span {
+  font-size: 13px;
+  color: #666;
+}
+
+.job-notes-textarea {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12px;
+}
+
+.job-notes-textarea:focus {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* ============================================================================
+   EVENTS MANAGEMENT
+   ============================================================================ */
+
+.events-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.events-header h3 {
+  margin: 0;
+}
+
+.add-event-form {
+  background-color: #f6f8fb;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  border: 1px solid #d9d9d9;
+}
+
+.add-event-form h4 {
+  margin: 0 0 12px 0;
+}
+
+.events-list {
+  margin-top: 16px;
+}
+
+.event-date-group {
+  margin-bottom: 20px;
+}
+
+.event-date {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1890ff;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #1890ff;
+}
+
+.events-in-date {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.event-item {
+  padding: 12px;
+  border-left: 4px solid;
+  background-color: #fafafa;
+  border-radius: 4px;
+  border: 1px solid #e8e8e8;
+  border-left-width: 4px;
+  transition: all 0.2s ease;
+}
+
+.event-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background-color: #f9f9f9;
+}
+
+.event-item.inactive {
+  opacity: 0.7;
+  background-color: #f0f0f0;
+}
+
+.event-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.event-description {
+  font-size: 12px;
+  color: #666;
+  flex: 1;
+}
+
+.event-note {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 8px;
+  padding: 8px;
+  background-color: white;
+  border-radius: 3px;
+  border-left: 2px solid #ffb534;
+}
+
+.event-note strong {
+  color: #333;
+}
+
+.event-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================ */
+
+@media (max-width: 1600px) {
+  .job-status-table-wrapper {
+    font-size: 11px;
+  }
+
+  .calendar-cell {
+    width: 35px;
+    min-width: 35px;
+  }
+
+  .header-cell,
+  .date-col {
+    padding: 8px 4px;
+    font-size: 11px;
+  }
+
+  .event-label {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .job-status-report-container {
+    padding: 12px;
+  }
+
+  .report-header {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .report-header h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .view-controls {
+    gap: 8px;
+  }
+
+  .frozen-columns {
+    min-width: 350px;
+  }
+
+  .job-name-col {
+    flex: 0 0 100px;
+    min-width: 100px;
+  }
+
+  .date-col {
+    flex: 0 0 50px;
+    min-width: 50px;
+  }
+
+  .calendar-cell {
+    width: 30px;
+    min-width: 30px;
+    height: 45px;
+    font-size: 10px;
+  }
+
+  .event-label {
+    font-size: 8px;
+  }
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+.ant-divider {
+  margin: 12px 0;
+}
+
+.ant-modal {
+  max-height: 80vh;
+}
+
+.ant-modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Print Styles */
+@media print {
+  .job-status-report-container {
+    background-color: white;
+    padding: 0;
+  }
+
+  .view-controls,
+  .report-header button {
+    display: none;
+  }
+
+  .table-scroll-container {
+    box-shadow: none;
+    border: 1px solid #000;
+  }
+
+  .calendar-cell {
+    border: 1px solid #000;
+  }
+
+  .frozen-columns {
+    border-right: 2px solid #000;
+  }
+}

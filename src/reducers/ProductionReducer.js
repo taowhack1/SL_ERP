@@ -6,6 +6,17 @@ import {
   CLEAR_FILTER_PANNING_CALENDAR,
   FILTER_PANNING_CALENDAR,
 } from "../actions/production/planningActions";
+import {
+  SET_JOB_STATUS_REPORT,
+  SET_VIEW_MODE,
+  SET_DATE_RANGE,
+  SET_SELECTED_JOB,
+  UPDATE_JOB_NOTES,
+  ADD_JOB_EVENT,
+  UPDATE_JOB_EVENT_STATUS,
+  SET_LOADING,
+  SET_ERROR,
+} from "../actions/production/jobStatusReportActions";
 import { SEARCH_ROUTING } from "../actions/production/routingAction";
 import {
   CLOSE_TIMESHEET,
@@ -94,6 +105,17 @@ export const initialState = {
         pageSize: 20,
         page: 1,
       },
+    },
+    jobStatusReport: {
+      viewMode: 'month', // 'year' | 'month' | 'custom'
+      dateRange: {
+        startDate: moment().startOf('month').format('YYYY-MM-DD'),
+        endDate: moment().endOf('month').format('YYYY-MM-DD')
+      },
+      jobs: [],
+      selectedJob: null,
+      loading: false,
+      error: null,
     },
     timesheet: {
       workCenterID: null,
@@ -422,6 +444,136 @@ export default (state = initialState, action) => {
               ...state?.operations?.jobOrder?.filter,
               ...action?.payload,
             },
+          },
+        },
+      };
+    case SET_JOB_STATUS_REPORT:
+      console.log('SET_JOB_STATUS_REPORT', action.payload);
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          jobStatusReport: {
+            ...state.operations.jobStatusReport,
+            jobs: action.payload,
+          },
+        },
+      };
+    case SET_VIEW_MODE:
+      console.log('SET_VIEW_MODE', action.payload);
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          jobStatusReport: {
+            ...state.operations.jobStatusReport,
+            viewMode: action.payload,
+          },
+        },
+      };
+    case SET_DATE_RANGE:
+      console.log('SET_DATE_RANGE', action.payload);
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          jobStatusReport: {
+            ...state.operations.jobStatusReport,
+            dateRange: action.payload,
+          },
+        },
+      };
+    case SET_SELECTED_JOB:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          jobStatusReport: {
+            ...state.operations.jobStatusReport,
+            selectedJob: action.payload,
+          },
+        },
+      };
+    case UPDATE_JOB_NOTES:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          jobStatusReport: {
+            ...state.operations.jobStatusReport,
+            jobs: state.operations.jobStatusReport.jobs.map(job =>
+              job.id === action.payload.jobId
+                ? { ...job, notes: action.payload.notes }
+                : job
+            ),
+            selectedJob:
+              state.operations.jobStatusReport.selectedJob?.id === action.payload.jobId
+                ? { ...state.operations.jobStatusReport.selectedJob, notes: action.payload.notes }
+                : state.operations.jobStatusReport.selectedJob,
+          },
+        },
+      };
+    case ADD_JOB_EVENT:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          jobStatusReport: {
+            ...state.operations.jobStatusReport,
+            jobs: state.operations.jobStatusReport.jobs.map(job =>
+              job.id === action.payload.jobId
+                ? {
+                  ...job,
+                  events: [...(job.events || []), action.payload.event],
+                }
+                : job
+            ),
+          },
+        },
+      };
+    case UPDATE_JOB_EVENT_STATUS:
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          jobStatusReport: {
+            ...state.operations.jobStatusReport,
+            jobs: state.operations.jobStatusReport.jobs.map(job =>
+              job.id === action.payload.jobId
+                ? {
+                  ...job,
+                  events: job.events.map(event =>
+                    event.id === action.payload.eventId
+                      ? { ...event, isActive: action.payload.isActive }
+                      : event
+                  ),
+                }
+                : job
+            ),
+          },
+        },
+      };
+    case SET_LOADING:
+      console.log('SET_LOADING', action.payload);
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          jobStatusReport: {
+            ...state.operations.jobStatusReport,
+            loading: action.payload,
+          },
+        },
+      };
+    case SET_ERROR:
+      console.log('SET_ERROR', action.payload);
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          jobStatusReport: {
+            ...state.operations.jobStatusReport,
+            error: action.payload,
           },
         },
       };

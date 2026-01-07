@@ -1,0 +1,512 @@
+{
+  "jobs": [
+    {
+      "id": 1,
+      "jobNo": "J001",
+      "name": "Product A - Batch 1",
+      "qty": 100,
+      "dates": {
+        "rmWithdrawal": "2026-01-05",
+        "pkWithdrawal": "2026-01-06",
+        "rmEntry": "2026-01-10",
+        "pkEntry": "2026-01-12",
+        "planDate": "2026-01-15",
+        "deliveryDate": "2026-01-25"
+      },
+      "notes": [
+        {
+          "id": 1,
+          "jobId": 1,
+          "notes": "Job นี้มีคุณลักษณะพิเศษ ต้องเก็บรักษาอย่างระมัดระวัง",
+          "updatedAt": "2026-01-10T16:00:00Z"
+        }
+      ],
+      "events": [
+        {
+          "id": 1,
+          "jobId": 1,
+          "eventType": "RM_WITHDRAWAL",
+          "date": "2026-01-05",
+          "isActive": true,
+          "createdAt": "2026-01-05T08:00:00Z",
+          "updatedAt": "2026-01-05T08:00:00Z",
+          "notes": []
+        },
+        {
+          "id": 2,
+          "jobId": 1,
+          "eventType": "PK_WITHDRAWAL",
+          "date": "2026-01-06",
+          "isActive": true,
+          "createdAt": "2026-01-06T09:30:00Z",
+          "updatedAt": "2026-01-06T09:30:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "eventId": 2,
+              "notes": "Packaging materials ถูกเบิก",
+              "updatedAt": "2026-01-06T09:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "jobId": 1,
+          "eventType": "RM_ENTRY",
+          "date": "2026-01-10",
+          "isActive": true,
+          "createdAt": "2026-01-10T14:00:00Z",
+          "updatedAt": "2026-01-10T14:00:00Z",
+          "notes": []
+        },
+        {
+          "id": 4,
+          "jobId": 1,
+          "eventType": "PLAN_DATE",
+          "date": "2026-01-15",
+          "isActive": true,
+          "createdAt": "2026-01-15T10:00:00Z",
+          "updatedAt": "2026-01-15T10:00:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "eventId": 4,
+              "notes": "วางแผนการผลิตในวันนี้",
+              "updatedAt": "2026-01-15T10:00:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "jobNo": "J002",
+      "name": "Product B - Batch 2",
+      "qty": 250,
+      "dates": {
+        "rmWithdrawal": "2026-01-03",
+        "pkWithdrawal": "2026-01-04",
+        "rmEntry": "2026-01-08",
+        "pkEntry": "2026-01-09",
+        "planDate": "2026-01-12",
+        "deliveryDate": "2026-02-05"
+      },
+      "notes": [
+        {
+          "id": 1,
+          "jobId": 2,
+          "notes": "Client ยืนยันการส่งมอบในวันที่ 5 กุมภาพันธ์ 2026",
+          "updatedAt": "2026-01-08T14:00:00Z"
+        }
+      ],
+      "events": [
+        {
+          "id": 5,
+          "jobId": 2,
+          "eventType": "RM_WITHDRAWAL",
+          "date": "2026-01-03",
+          "isActive": true,
+          "createdAt": "2026-01-03T07:00:00Z",
+          "updatedAt": "2026-01-03T07:00:00Z",
+          "notes": []
+        },
+        {
+          "id": 6,
+          "jobId": 2,
+          "eventType": "RM_ENTRY",
+          "date": "2026-01-08",
+          "isActive": true,
+          "createdAt": "2026-01-08T16:00:00Z",
+          "updatedAt": "2026-01-08T16:00:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "eventId": 6,
+              "notes": "RM ตรวจสอบคุณภาพแล้ว",
+              "updatedAt": "2026-01-08T16:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "jobId": 2,
+          "eventType": "PK_ENTRY",
+          "date": "2026-01-09",
+          "isActive": true,
+          "createdAt": "2026-01-09T15:30:00Z",
+          "updatedAt": "2026-01-09T15:30:00Z",
+          "notes": []
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "jobNo": "J003",
+      "name": "Product C - Special Order",
+      "qty": 50,
+      "dates": {
+        "rmWithdrawal": "2026-01-08",
+        "pkWithdrawal": "2026-01-09",
+        "rmEntry": "2026-01-14",
+        "pkEntry": "2026-01-16",
+        "planDate": "2026-01-18",
+        "deliveryDate": "2026-02-10"
+      },
+      "notes": [],
+      "events": [
+        {
+          "id": 8,
+          "jobId": 3,
+          "eventType": "RM_WITHDRAWAL",
+          "date": "2026-01-08",
+          "isActive": true,
+          "createdAt": "2026-01-08T08:30:00Z",
+          "updatedAt": "2026-01-08T08:30:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "eventId": 8,
+              "notes": "Special materials ที่ order แยก",
+              "updatedAt": "2026-01-08T08:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "jobId": 3,
+          "eventType": "RM_ENTRY",
+          "date": "2026-01-14",
+          "isActive": true,
+          "createdAt": "2026-01-14T17:00:00Z",
+          "updatedAt": "2026-01-14T17:00:00Z",
+          "notes": []
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "jobNo": "J004",
+      "name": "Product D - Bulk Order",
+      "qty": 500,
+      "dates": {
+        "rmWithdrawal": "2026-01-02",
+        "pkWithdrawal": "2026-01-03",
+        "rmEntry": "2026-01-07",
+        "pkEntry": "2026-01-11",
+        "planDate": "2026-01-13",
+        "deliveryDate": "2026-01-30"
+      },
+      "notes": [
+        {
+          "id": 1,
+          "jobId": 4,
+          "notes": "Rush order - ต้องตรวจสอบคุณภาพอย่างเข้มงวด",
+          "updatedAt": "2026-01-07T12:00:00Z"
+        }
+      ],
+      "events": [
+        {
+          "id": 10,
+          "jobId": 4,
+          "eventType": "RM_WITHDRAWAL",
+          "date": "2026-01-02",
+          "isActive": true,
+          "createdAt": "2026-01-02T06:00:00Z",
+          "updatedAt": "2026-01-02T06:00:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "eventId": 10,
+              "notes": "Bulk order withdrawal",
+              "updatedAt": "2026-01-02T06:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "jobId": 4,
+          "eventType": "RM_ENTRY",
+          "date": "2026-01-07",
+          "isActive": true,
+          "createdAt": "2026-01-07T18:00:00Z",
+          "updatedAt": "2026-01-07T18:00:00Z",
+          "notes": []
+        },
+        {
+          "id": 12,
+          "jobId": 4,
+          "eventType": "PK_ENTRY",
+          "date": "2026-01-11",
+          "isActive": true,
+          "createdAt": "2026-01-11T14:30:00Z",
+          "updatedAt": "2026-01-11T14:30:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "eventId": 12,
+              "notes": "Packaging ready for production",
+              "updatedAt": "2026-01-11T14:30:00Z"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "jobId": 4,
+          "eventType": "PLAN_DATE",
+          "date": "2026-01-13",
+          "isActive": true,
+          "createdAt": "2026-01-13T09:00:00Z",
+          "updatedAt": "2026-01-13T09:00:00Z",
+          "notes": []
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "jobNo": "J005",
+      "name": "Product E - Standard",
+      "qty": 150,
+      "dates": {
+        "rmWithdrawal": "2026-01-10",
+        "pkWithdrawal": "2026-01-11",
+        "rmEntry": "2026-01-17",
+        "pkEntry": "2026-01-18",
+        "planDate": "2026-01-20",
+        "deliveryDate": "2026-02-01"
+      },
+      "notes": [],
+      "events": [
+        {
+          "id": 14,
+          "jobId": 5,
+          "eventType": "RM_WITHDRAWAL",
+          "date": "2026-01-10",
+          "isActive": true,
+          "createdAt": "2026-01-10T08:00:00Z",
+          "updatedAt": "2026-01-10T08:00:00Z",
+          "notes": []
+        },
+        {
+          "id": 15,
+          "jobId": 5,
+          "eventType": "PK_WITHDRAWAL",
+          "date": "2026-01-11",
+          "isActive": true,
+          "createdAt": "2026-01-11T09:30:00Z",
+          "updatedAt": "2026-01-11T09:30:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "eventId": 15,
+              "notes": "Packaging materials issued",
+              "updatedAt": "2026-01-11T09:30:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "jobNo": "J006",
+      "name": "Product F - Custom",
+      "qty": 75,
+      "dates": {
+        "rmWithdrawal": "2026-01-04",
+        "pkWithdrawal": "2026-01-05",
+        "rmEntry": "2026-01-12",
+        "pkEntry": "2026-01-13",
+        "planDate": "2026-01-16",
+        "deliveryDate": "2026-02-03"
+      },
+      "notes": [],
+      "events": [
+        {
+          "id": 16,
+          "jobId": 6,
+          "eventType": "RM_ENTRY",
+          "date": "2026-01-12",
+          "isActive": true,
+          "createdAt": "2026-01-12T13:00:00Z",
+          "updatedAt": "2026-01-12T13:00:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "eventId": 16,
+              "notes": "Custom materials received",
+              "updatedAt": "2026-01-12T13:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "jobId": 6,
+          "eventType": "DELIVERY_DATE",
+          "date": "2026-02-03",
+          "isActive": true,
+          "createdAt": "2026-02-03T10:00:00Z",
+          "updatedAt": "2026-02-03T10:00:00Z",
+          "notes": []
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "jobNo": "J007",
+      "name": "Product G - Limited",
+      "qty": 30,
+      "dates": {
+        "rmWithdrawal": "2026-01-06",
+        "pkWithdrawal": "2026-01-07",
+        "rmEntry": "2026-01-15",
+        "pkEntry": "2026-01-17",
+        "planDate": "2026-01-19",
+        "deliveryDate": "2026-02-08"
+      },
+      "notes": [],
+      "events": [
+        {
+          "id": 18,
+          "jobId": 7,
+          "eventType": "RM_WITHDRAWAL",
+          "date": "2026-01-06",
+          "isActive": true,
+          "createdAt": "2026-01-06T07:30:00Z",
+          "updatedAt": "2026-01-06T07:30:00Z",
+          "notes": []
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "jobNo": "J008",
+      "name": "Product H - Premium",
+      "qty": 200,
+      "dates": {
+        "rmWithdrawal": "2026-01-01",
+        "pkWithdrawal": "2026-01-02",
+        "rmEntry": "2026-01-09",
+        "pkEntry": "2026-01-10",
+        "planDate": "2026-01-14",
+        "deliveryDate": "2026-01-28"
+      },
+      "notes": [],
+      "events": [
+        {
+          "id": 19,
+          "jobId": 8,
+          "eventType": "RM_WITHDRAWAL",
+          "date": "2026-01-01",
+          "isActive": true,
+          "createdAt": "2026-01-01T10:00:00Z",
+          "updatedAt": "2026-01-01T10:00:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "eventId": 19,
+              "notes": "Premium order started",
+              "updatedAt": "2026-01-01T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "jobId": 8,
+          "eventType": "PK_WITHDRAWAL",
+          "date": "2026-01-02",
+          "isActive": true,
+          "createdAt": "2026-01-02T11:00:00Z",
+          "updatedAt": "2026-01-02T11:00:00Z",
+          "notes": []
+        },
+        {
+          "id": 21,
+          "jobId": 8,
+          "eventType": "RM_ENTRY",
+          "date": "2026-01-09",
+          "isActive": true,
+          "createdAt": "2026-01-09T17:00:00Z",
+          "updatedAt": "2026-01-09T17:00:00Z",
+          "notes": []
+        },
+        {
+          "id": 22,
+          "jobId": 8,
+          "eventType": "PK_ENTRY",
+          "date": "2026-01-10",
+          "isActive": true,
+          "createdAt": "2026-01-10T15:30:00Z",
+          "updatedAt": "2026-01-10T15:30:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "eventId": 22,
+              "notes": "Premium packaging ready",
+              "updatedAt": "2026-01-10T15:30:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "jobNo": "J009",
+      "name": "Product I - Express",
+      "qty": 120,
+      "dates": {
+        "rmWithdrawal": "2026-01-09",
+        "pkWithdrawal": "2026-01-10",
+        "rmEntry": "2026-01-16",
+        "pkEntry": "2026-01-19",
+        "planDate": "2026-01-22",
+        "deliveryDate": "2026-02-05"
+      },
+      "notes": [],
+      "events": [
+        {
+          "id": 23,
+          "jobId": 9,
+          "eventType": "RM_WITHDRAWAL",
+          "date": "2026-01-09",
+          "isActive": true,
+          "createdAt": "2026-01-09T06:00:00Z",
+          "updatedAt": "2026-01-09T06:00:00Z",
+          "notes": [
+            {
+              "id": 1,
+              "eventId": 23,
+              "notes": "Express delivery requested",
+              "updatedAt": "2026-01-09T06:00:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "jobNo": "J010",
+      "name": "Product J - Economy",
+      "qty": 400,
+      "dates": {
+        "rmWithdrawal": "2026-01-07",
+        "pkWithdrawal": "2026-01-08",
+        "rmEntry": "2026-01-13",
+        "pkEntry": "2026-01-15",
+        "planDate": "2026-01-21",
+        "deliveryDate": "2026-02-02"
+      },
+      "notes": [],
+      "events": [
+        {
+          "id": 24,
+          "jobId": 10,
+          "eventType": "PK_WITHDRAWAL",
+          "date": "2026-01-08",
+          "isActive": true,
+          "createdAt": "2026-01-08T10:30:00Z",
+          "updatedAt": "2026-01-08T10:30:00Z",
+          "notes": []
+        }
+      ]
+    }
+  ]
+}

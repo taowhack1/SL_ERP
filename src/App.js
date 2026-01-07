@@ -133,6 +133,7 @@ import InventoryRoutes from "./modules/inventory/Routes";
 import AccountingRoutes from "./modules/accounting";
 import DLInput from "./modules/production/operations/dlInput";
 import RPMChecking from "./modules/production/operations/rpm_checking";
+import JobStatusReport from "./modules/production/operations/job-tracking/JobStatusReport";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -564,6 +565,13 @@ const App = (props) => {
               <Planning />
               {/* <TestCalendar /> */}
             </Route>
+            <Route
+              exact
+              path="/production/operations/job-status"
+              component={RPMChecking}
+            >
+              <JobStatusReport />
+            </Route>
             <Route exact path="/production/operations/mrp">
               <MRPMain />
             </Route>
@@ -591,6 +599,7 @@ const App = (props) => {
               path="/production/operations/rpm_checking"
               component={RPMChecking}
             />
+
             {/* PETCH ADD */}
             <Route exact path="/production/operations/workorder/">
               <WorkOrderCreate1 />
