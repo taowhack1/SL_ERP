@@ -7,7 +7,7 @@ import {
     setViewMode,
     setDateRange,
 } from '../../../../actions/production/jobStatusReportActions';
-import JobStatusReportTable from './components/JobStatusReportTable';
+import JobStatusReportVirtualized from './components/JobStatusReportVirtualized';
 import './JobStatusReport.css';
 
 const JobStatusReport = () => {
@@ -143,7 +143,7 @@ const JobStatusReport = () => {
 
             <Spin spinning={loading} tip="Loading job data...">
                 {jobs && jobs.length > 0 ? (
-                    <JobStatusReportTable
+                    <JobStatusReportVirtualized
                         jobs={jobs}
                         viewMode={viewMode}
                         dateRange={dateRange}
