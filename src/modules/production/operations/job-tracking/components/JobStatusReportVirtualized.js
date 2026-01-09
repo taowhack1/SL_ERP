@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, forwardRef, useImperativeHandle, useState } from 'react';
 import moment from 'moment';
 import { MultiGrid, AutoSizer } from 'react-virtualized';
 import { getHighestPriorityEvent, getEventConfig } from '../../../../../constants/jobEventColorConfig';
@@ -19,9 +19,9 @@ const headerLabels = [
 
 const fixedColumnWidths = [60, 180, 70, 80, 80, 80, 80, 110, 120];
 const fixedColumnCount = headerLabels.length;
-const headerRowCount = 2; // Row 0 = month label, Row 1 = date label
+const headerRowCount = 1; // Single header row with labels and dates
 
-const JobStatusReportVirtualized = ({ jobs = [], dateRange, viewMode }) => {
+const JobStatusReportVirtualized = forwardRef(({ jobs = [], dateRange, viewMode, onJobClick, visibleColumns = [] }, ref) => {
     const dateArray = useMemo(() => {
         const start = moment(dateRange.startDate);
         const end = moment(dateRange.endDate);
@@ -35,85 +35,200 @@ const JobStatusReportVirtualized = ({ jobs = [], dateRange, viewMode }) => {
         return dates;
     }, [dateRange]);
 
-    const columnCount = fixedColumnCount + dateArray.length;
+    // Today's date indicator
+    const todayDate = moment().format('YYYY-MM-DD');
+    const todayColumnIndex = dateArray.indexOf(todayDate);
+
+    // Filtered headers and widths based on visible columns
+    const filteredHeaders = useMemo(() => {
+        return headerLabels.filter((_, idx) => visibleColumns.includes(idx.toString()));
+    }, [visibleColumns]);
+
+    const filteredWidths = useMemo(() => {
+        return fixedColumnWidths.filter((_, idx) => visibleColumns.includes(idx.toString()));
+    }, [visibleColumns]);
+
+    const gridRef = useRef(null);
+
+    // Expose scrollToToday to parent component
+    useImperativeHandle(ref, () => ({
+        scrollToToday: () => {
+            if (todayColumnIndex >= 0 && gridRef.current) {
+                const columnPosition = todayColumnIndex + fixedColumnCount;
+                gridRef.current.scrollToCell({ columnIndex: columnPosition, rowIndex: 0 });
+            }
+        }
+    }));
+
+    // Calculate month spans for merged month headers
+    const monthSpans = useMemo(() => {
+        const spans = [];
+        let currentMonth = null;
+        let startIdx = 0;
+
+        dateArray.forEach((date, idx) => {
+            const month = moment(date).format('YYYY-MM');
+            if (month !== currentMonth) {
+                if (currentMonth) {
+                    spans.push({
+                        month: currentMonth,
+                        start: startIdx,
+                        count: idx - startIdx,
+                        label: moment(dateArray[startIdx]).format('MMM YYYY')
+                    });
+                }
+                currentMonth = month;
+                startIdx = idx;
+            }
+        });
+
+        if (currentMonth && dateArray.length > 0) {
+            spans.push({
+                month: currentMonth,
+                start: startIdx,
+                count: dateArray.length - startIdx,
+                label: moment(dateArray[startIdx]).format('MMM YYYY')
+            });
+        }
+
+        return spans;
+    }, [dateArray]);
+
+    const columnCount = visibleColumns.filter(c => parseInt(c) < fixedColumnCount).length + dateArray.length;
     const rowCount = headerRowCount + jobs.length;
 
     const getColumnWidth = ({ index }) => {
         if (index < fixedColumnCount) {
-            return fixedColumnWidths[index] || 80;
+            // Map visible column index to actual fixed width
+            let visibleIdx = 0;
+            for (let i = 0; i < fixedColumnCount; i++) {
+                if (visibleColumns.includes(i.toString())) {
+                    if (visibleIdx === index) {
+                        return fixedColumnWidths[i] || 80;
+                    }
+                    visibleIdx++;
+                }
+            }
+            return 80;
         }
-        return 40; // date columns
+        // Date columns
+        const dateIdx = index - visibleColumns.filter(c => parseInt(c) < fixedColumnCount).length;
+        if (dateIdx >= 0 && dateIdx < dateArray.length) {
+            return 40; // date column width
+        }
+        return 40;
     };
 
     const getRowHeight = ({ index }) => {
-        if (index < headerRowCount) return 40;
+        if (index < headerRowCount) return 50;
         return 50;
     };
 
     const renderHeaderCell = (columnIndex, rowIndex) => {
-        if (columnIndex < fixedColumnCount) {
-            // Frozen headers
-            return <div className="virtual-cell-header">{headerLabels[columnIndex]}</div>;
+        if (columnIndex < filteredHeaders.length) {
+            // Frozen columns - show header labels
+            return <div className="virtual-cell-header">{filteredHeaders[columnIndex]}</div>;
         }
 
-        const date = dateArray[columnIndex - fixedColumnCount];
-        if (rowIndex === 0) {
-            // Month label on first day of each month
-            const isFirstOfMonth = moment(date).date() === 1;
-            return (
-                <div className="virtual-cell-header">
-                    {isFirstOfMonth ? moment(date).format('MMM YYYY') : ''}
-                </div>
-            );
-        }
+        const dateIdx = columnIndex - filteredHeaders.length;
+        const date = dateArray[dateIdx];
 
-        // Row 1: day of month
+        if (!date) return <div className="virtual-cell-header"></div>;
+
+        // Show day of month for date columns
         const isSunday = moment(date).day() === 0;
+        const isToday = date === todayDate;
+        const dayLabel = moment(date).format('DD');
+        const monthLabel = moment(date).format('MMM');
+
         return (
-            <div className={`virtual-cell-header ${isSunday ? 'virtual-cell-sunday' : ''}`}>
-                {moment(date).format('DD')}
+            <div className={`virtual-cell-header ${isSunday ? 'virtual-cell-sunday' : ''} ${isToday ? 'virtual-cell-today' : ''}`}>
+                <div className="virtual-header-month">{monthLabel}</div>
+                <div className="virtual-header-day">{dayLabel}</div>
+                {isToday && <div className="today-indicator"></div>}
             </div>
         );
     };
 
     const renderJobInfoCell = (job, columnIndex) => {
-        switch (columnIndex) {
+        let content;
+        // Map visible column index to actual column index
+        let visibleIdx = 0;
+        let actualColumnIdx = -1;
+
+        for (let i = 0; i < fixedColumnCount; i++) {
+            if (visibleColumns.includes(i.toString())) {
+                if (visibleIdx === columnIndex) {
+                    actualColumnIdx = i;
+                    break;
+                }
+                visibleIdx++;
+            }
+        }
+
+        if (actualColumnIdx === -1) return '';
+
+        switch (actualColumnIdx) {
             case 0:
-                return job.jobNo;
+                content = job.jobNo;
+                break;
             case 1:
-                return job.name;
+                content = job.name;
+                break;
             case 2:
-                return job.qty;
+                content = job.qty;
+                break;
             case 3:
-                return job.dates?.rmWithdrawal
+                content = job.dates?.rmWithdrawal
                     ? moment(job.dates.rmWithdrawal).format('DD/MM')
                     : '-';
+                break;
             case 4:
-                return job.dates?.pkWithdrawal
+                content = job.dates?.pkWithdrawal
                     ? moment(job.dates.pkWithdrawal).format('DD/MM')
                     : '-';
+                break;
             case 5:
-                return job.dates?.rmEntry
+                content = job.dates?.rmEntry
                     ? moment(job.dates.rmEntry).format('DD/MM')
                     : '-';
+                break;
             case 6:
-                return job.dates?.pkEntry
+                content = job.dates?.pkEntry
                     ? moment(job.dates.pkEntry).format('DD/MM')
                     : '-';
+                break;
             case 7:
-                return job.dates?.planDate
+                content = job.dates?.planDate
                     ? moment(job.dates.planDate).format('DD/MM')
                     : '-';
+                break;
             case 8:
-                return job.dates?.deliveryDate
+                content = job.dates?.deliveryDate
                     ? moment(job.dates.deliveryDate).format('DD/MM')
                     : '-';
+                break;
             default:
-                return '';
+                content = '';
         }
+
+        // Make Job No clickable (always visible as first column)
+        if (actualColumnIdx === 0 && onJobClick) {
+            return (
+                <div
+                    className="virtual-cell-job-no-link"
+                    onClick={() => onJobClick(job)}
+                    title="Click to view job details"
+                >
+                    {content}
+                </div>
+            );
+        }
+
+        return content;
     };
 
-    const renderEventCell = (job, date) => {
+    const renderEventCell = (job, date, isToday = false) => {
         const eventsForDate = (job.events || []).filter(
             (e) => e.isActive && e.date === date
         );
@@ -121,7 +236,7 @@ const JobStatusReportVirtualized = ({ jobs = [], dateRange, viewMode }) => {
         if (!eventsForDate.length) {
             const isSunday = moment(date).day() === 0;
             return (
-                <div className={`virtual-cell ${isSunday ? 'virtual-cell-sunday' : ''}`}></div>
+                <div className={`virtual-cell ${isSunday ? 'virtual-cell-sunday' : ''} ${isToday ? 'virtual-cell-today' : ''}`}></div>
             );
         }
 
@@ -130,7 +245,7 @@ const JobStatusReportVirtualized = ({ jobs = [], dateRange, viewMode }) => {
 
         return (
             <div
-                className="virtual-cell virtual-cell-event"
+                className={`virtual-cell virtual-cell-event ${isToday ? 'virtual-cell-today' : ''}`}
                 title={`${config.label} - ${topEvent.date}`}
                 style={{
                     backgroundColor: config.bgColor,
@@ -154,10 +269,18 @@ const JobStatusReportVirtualized = ({ jobs = [], dateRange, viewMode }) => {
         }
 
         // Data rows
-        const job = jobs[rowIndex - headerRowCount];
-        if (columnIndex < fixedColumnCount) {
+        const jobRowIndex = rowIndex - headerRowCount;
+        const job = jobs[jobRowIndex];
+        const visibleFrozenColCount = visibleColumns.filter(c => parseInt(c) < fixedColumnCount).length;
+
+        if (columnIndex < visibleFrozenColCount) {
             return (
-                <div key={key} style={style} className="virtual-cell-wrapper">
+                <div
+                    key={key}
+                    style={style}
+                    className="virtual-cell-wrapper job-row-wrapper"
+                    data-row-index={jobRowIndex}
+                >
                     <div className="virtual-cell virtual-cell-frozen">
                         {renderJobInfoCell(job, columnIndex)}
                     </div>
@@ -165,10 +288,18 @@ const JobStatusReportVirtualized = ({ jobs = [], dateRange, viewMode }) => {
             );
         }
 
-        const date = dateArray[columnIndex - fixedColumnCount];
+        const dateIdx = columnIndex - visibleFrozenColCount;
+        const date = dateArray[dateIdx];
+        const isToday = date === todayDate;
+
         return (
-            <div key={key} style={style} className="virtual-cell-wrapper">
-                {renderEventCell(job, date)}
+            <div
+                key={key}
+                style={style}
+                className="virtual-cell-wrapper job-row-wrapper"
+                data-row-index={jobRowIndex}
+            >
+                {renderEventCell(job, date, isToday)}
             </div>
         );
     };
@@ -179,17 +310,18 @@ const JobStatusReportVirtualized = ({ jobs = [], dateRange, viewMode }) => {
                 <AutoSizer>
                     {({ width, height }) => (
                         <MultiGrid
+                            ref={gridRef}
                             cellRenderer={cellRenderer}
                             columnCount={columnCount}
                             columnWidth={getColumnWidth}
                             enableFixedColumnScroll
                             enableFixedRowScroll
-                            fixedColumnCount={fixedColumnCount}
+                            fixedColumnCount={visibleColumns.filter(c => parseInt(c) < fixedColumnCount).length}
                             fixedRowCount={headerRowCount}
                             height={height}
                             rowCount={rowCount}
                             rowHeight={getRowHeight}
-                            overscanColumnCount={4}
+                            overscanColumnCount={15}
                             overscanRowCount={8}
                             width={width}
                             hideTopRightGridScrollbar
@@ -200,6 +332,7 @@ const JobStatusReportVirtualized = ({ jobs = [], dateRange, viewMode }) => {
             </div>
         </div>
     );
-};
+});
 
+JobStatusReportVirtualized.displayName = 'JobStatusReportVirtualized';
 export default JobStatusReportVirtualized;

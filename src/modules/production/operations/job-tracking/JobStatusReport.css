@@ -35,6 +35,15 @@
   flex-wrap: wrap;
 }
 
+.search-container {
+  margin-bottom: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e8e8e8;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .control-label {
   font-weight: 500;
   color: #333;
@@ -633,6 +642,19 @@
   background: #1890ff;
   color: white;
   border-color: #1677c3;
+  flex-direction: column;
+  gap: 0;
+}
+
+.virtual-header-month {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.virtual-header-day {
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .virtual-cell-sunday {
@@ -658,6 +680,52 @@
   white-space: nowrap;
 }
 
+/* Month merged header */
+.virtual-cell-month-merged {
+  display: none;
+}
+
+.virtual-cell-header-empty {
+  background-color: #1890ff !important;
+  border-color: #1677c3 !important;
+}
+
+/* Job No clickable */
+.virtual-cell-job-no-link {
+  cursor: pointer;
+  color: #1890ff !important;
+  font-weight: 600;
+  text-decoration: underline;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.virtual-cell-job-no-link:hover {
+  color: #40a9ff !important;
+  background-color: #e6f7ff;
+}
+
+/* Modal sections */
+.job-modal-section {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.job-modal-section:last-child {
+  border-bottom: none;
+}
+
+.job-modal-section h3 {
+  margin-bottom: 16px;
+  color: #1890ff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
 /* ============================================================================
    UTILITY CLASSES
    ============================================================================ */
@@ -673,6 +741,32 @@
 .ant-modal-body {
   max-height: 70vh;
   overflow-y: auto;
+}
+
+/* Today's Date Indicator */
+.virtual-cell-today {
+  border-right: 3px solid #ff4d4f !important;
+  position: relative;
+}
+
+.today-indicator {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: #ff4d4f;
+}
+
+/* Row Hover Highlight - Using CSS only (no React state needed) */
+.job-row-wrapper:hover .virtual-cell {
+  background-color: #e6f7ff !important;
+  box-shadow: inset 0 0 0 1px #91d5ff;
+}
+
+.job-row-wrapper:hover .virtual-cell-frozen {
+  background-color: #f0f5fa !important;
+  box-shadow: inset 0 0 0 1px #91d5ff;
 }
 
 /* Print Styles */

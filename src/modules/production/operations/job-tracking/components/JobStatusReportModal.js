@@ -2,20 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
     Modal,
-    Tabs,
     Form,
     Input,
     Button,
     DatePicker,
     Select,
-    Divider,
     Tag,
-    Space,
-    Row,
-    Col,
-    Empty,
+    Table,
+    Switch,
+    List,
+    Card,
+    Descriptions,
+    message,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import {
     updateJobNotes,
@@ -25,35 +25,85 @@ import {
 import {
     JOB_EVENT_COLOR_CONFIG,
     getEventTypes,
+    getEventConfig,
 } from '../../../../../constants/jobEventColorConfig';
 import '../JobStatusReport.css';
 
-const JobStatusReportModal = ({ visible, job, onClose, selectedEventIndex, events }) => {
-    const dispatch = useDispatch();
-    const [form] = Form.useForm();
-    const [notesText, setNotesText] = useState(job?.notes || '');
-    const [showAddEvent, setShowAddEvent] = useState(false);
-    const [addEventForm] = Form.useForm();
+const { TextArea } = Input;
 
+const JobStatusReportModal = ({ visible, job, onClose }) => {
+    const dispatch = useDispatch();
+    const [addEventForm] = Form.useForm();
+    const [newComment, setNewComment] = useState('');
+    const [displayedComments, setDisplayedComments] = useState([]);
+    const [commentOffset, setCommentOffset] = useState(10);
+
+    // Initialize displayed comments (last 10)
     useEffect(() => {
-        // Handle nested notes structure
-        if (job?.notes && Array.isArray(job.notes) && job.notes.length > 0) {
-            setNotesText(job.notes[0].notes || '');
-        } else if (typeof job?.notes === 'string') {
-            setNotesText(job.notes || '');
+        if (job?.notes && Array.isArray(job.notes)) {
+            const sorted = [...job.notes].sort((a, b) =>
+                moment(b.updatedAt).diff(moment(a.updatedAt))
+            );
+            setDisplayedComments(sorted.slice(0, 10));
+            setCommentOffset(10);
         } else {
-            setNotesText('');
+            setDisplayedComments([]);
+            setCommentOffset(10);
         }
+        setNewComment('');
     }, [job]);
 
-    // Handle save notes (on blur or Enter)
-    const handleSaveNotes = async () => {
-        if (notesText.trim() !== job?.notes) {
-            dispatch(updateJobNotes(job.id, notesText));
+    if (!job) return null;
+
+    const jobEvents = job.events || [];
+    const jobComments = job.notes || [];
+    const hasMoreComments = jobComments.length > commentOffset;
+
+    // Load more comments (5 more)
+    const loadMoreComments = () => {
+        const sorted = [...jobComments].sort((a, b) =>
+            moment(b.updatedAt).diff(moment(a.updatedAt))
+        );
+        setDisplayedComments(sorted.slice(0, commentOffset + 5));
+        setCommentOffset(prev => prev + 5);
+    };
+
+    // Add comment (on Enter)
+    const handleAddComment = () => {
+        if (newComment.trim()) {
+            const newCommentObj = {
+                id: Date.now(),
+                jobId: job.id,
+                notes: newComment.trim(),
+                updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+            };
+
+            // Dispatch action to add comment
+            dispatch(updateJobNotes(job.id, [...jobComments, newCommentObj]));
+
+            // Update local state
+            const updated = [newCommentObj, ...jobComments].sort((a, b) =>
+                moment(b.updatedAt).diff(moment(a.updatedAt))
+            );
+            setDisplayedComments(updated.slice(0, commentOffset));
+            setNewComment('');
+            message.success('Comment added');
         }
     };
 
-    // Handle add event
+    // Delete comment
+    const handleDeleteComment = (commentId) => {
+        const filtered = jobComments.filter(c => c.id !== commentId);
+        dispatch(updateJobNotes(job.id, filtered));
+
+        const sorted = filtered.sort((a, b) =>
+            moment(b.updatedAt).diff(moment(a.updatedAt))
+        );
+        setDisplayedComments(sorted.slice(0, Math.min(commentOffset, sorted.length)));
+        message.success('Comment deleted');
+    };
+
+    // Add event
     const handleAddEvent = async () => {
         try {
             const values = await addEventForm.validateFields();
@@ -66,306 +116,250 @@ const JobStatusReportModal = ({ visible, job, onClose, selectedEventIndex, event
                 )
             );
             addEventForm.resetFields();
-            setShowAddEvent(false);
+            message.success('Event added');
         } catch (error) {
             console.error('Validation failed:', error);
         }
     };
 
-    // Handle deactivate event
-    const handleDeactivateEvent = (eventId) => {
-        dispatch(updateJobEventStatus(eventId, job.id, false));
+    // Toggle event active status
+    const handleToggleEventStatus = (event) => {
+        dispatch(updateJobEventStatus(event.id, job.id, !event.isActive));
     };
 
-    // Handle activate event
-    const handleActivateEvent = (eventId) => {
-        dispatch(updateJobEventStatus(eventId, job.id, true));
-    };
+    // Events table columns
+    const eventColumns = [
+        {
+            title: 'Type',
+            dataIndex: 'eventType',
+            key: 'eventType',
+            width: 120,
+            render: (type) => {
+                const config = getEventConfig(type);
+                return (
+                    <Tag color={config.color} style={{ margin: 0 }}>
+                        {config.label}
+                    </Tag>
+                );
+            },
+        },
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+            width: 120,
+            render: (date) => moment(date).format('DD/MM/YYYY'),
+            sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix(),
+        },
+        {
+            title: 'Note',
+            dataIndex: 'notes',
+            key: 'notes',
+            render: (notes) => (notes && notes[0]?.notes) || '-',
+        },
+        {
+            title: 'Created',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            width: 140,
+            render: (date) => moment(date).format('DD/MM/YYYY HH:mm'),
+        },
+        {
+            title: 'Updated',
+            dataIndex: 'updatedAt',
+            key: 'updatedAt',
+            width: 140,
+            render: (date) => moment(date).format('DD/MM/YYYY HH:mm'),
+        },
+        {
+            title: 'Status',
+            dataIndex: 'isActive',
+            key: 'isActive',
+            width: 80,
+            render: (isActive, record) => (
+                <Switch
+                    checked={isActive}
+                    onChange={() => handleToggleEventStatus(record)}
+                    checkedChildren="Active"
+                    unCheckedChildren="Inactive"
+                />
+            ),
+        },
+    ];
 
-    // Group events by date
-    const eventsByDate = events.reduce((acc, event) => {
-        const dateKey = event.date;
-        if (!acc[dateKey]) {
-            acc[dateKey] = [];
-        }
-        acc[dateKey].push(event);
-        return acc;
-    }, {});
-
-    const sortedDates = Object.keys(eventsByDate).sort();
+    // Sort events by date (latest first) for default display
+    const sortedEvents = [...jobEvents].sort((a, b) =>
+        moment(b.date).unix() - moment(a.date).unix()
+    );
 
     return (
         <Modal
-            title={`Job Details: ${job?.jobNo} - ${job?.name}`}
+            title={
+                <div>
+                    <div style={{ fontSize: '18px', fontWeight: 600, color: '#1890ff' }}>
+                        Job Details
+                    </div>
+                    <div style={{ fontSize: '14px', fontWeight: 'normal', color: '#666', marginTop: 4 }}>
+                        {job.jobNo} - {job.name}
+                    </div>
+                </div>
+            }
             visible={visible}
             onCancel={onClose}
-            width={900}
+            width={1100}
             footer={[
-                <Button key="close" onClick={onClose}>
+                <Button key="close" type="primary" onClick={onClose}>
                     Close
                 </Button>,
             ]}
             className="job-status-modal"
+            bodyStyle={{ maxHeight: '70vh', overflowY: 'auto' }}
         >
-            <Tabs defaultActiveKey="1">
-                {/* Tab 1: Job & Event Details */}
-                <Tabs.TabPane tab="Job & Event Details" key="1">
-                    <div className="modal-section">
-                        <h3>Job Information</h3>
-                        <Row gutter={16}>
-                            <Col span={8}>
-                                <div className="info-item">
-                                    <label>Job No.:</label>
-                                    <span>{job?.jobNo}</span>
-                                </div>
-                            </Col>
-                            <Col span={8}>
-                                <div className="info-item">
-                                    <label>Name:</label>
-                                    <span>{job?.name}</span>
-                                </div>
-                            </Col>
-                            <Col span={8}>
-                                <div className="info-item">
-                                    <label>Quantity:</label>
-                                    <span>{job?.qty}</span>
-                                </div>
-                            </Col>
-                        </Row>
+            {/* Section 1: Job Information */}
+            <div className="job-modal-section">
+                <h3>Job Information</h3>
+                <Descriptions bordered size="small" column={3}>
+                    <Descriptions.Item label="Job No">{job.jobNo}</Descriptions.Item>
+                    <Descriptions.Item label="Name" span={2}>{job.name}</Descriptions.Item>
+                    <Descriptions.Item label="Quantity">{job.qty}</Descriptions.Item>
+                    <Descriptions.Item label="RM Out">
+                        {job.dates?.rmWithdrawal ? moment(job.dates.rmWithdrawal).format('DD/MM/YYYY') : '-'}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="PK Out">
+                        {job.dates?.pkWithdrawal ? moment(job.dates.pkWithdrawal).format('DD/MM/YYYY') : '-'}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="RM In">
+                        {job.dates?.rmEntry ? moment(job.dates.rmEntry).format('DD/MM/YYYY') : '-'}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="PK In">
+                        {job.dates?.pkEntry ? moment(job.dates.pkEntry).format('DD/MM/YYYY') : '-'}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Plan Date">
+                        {job.dates?.planDate ? moment(job.dates.planDate).format('DD/MM/YYYY') : '-'}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Delivery Date">
+                        {job.dates?.deliveryDate ? moment(job.dates.deliveryDate).format('DD/MM/YYYY') : '-'}
+                    </Descriptions.Item>
+                </Descriptions>
+            </div>
 
-                        <Divider>Important Dates</Divider>
+            {/* Section 2: Events Table */}
+            <div className="job-modal-section">
+                <h3>Events</h3>
 
-                        <Row gutter={16}>
-                            <Col span={12}>
-                                <div className="info-item">
-                                    <label>RM Withdrawal:</label>
-                                    <span>
-                                        {job?.dates?.rmWithdrawal
-                                            ? moment(job.dates.rmWithdrawal).format('DD/MM/YYYY')
-                                            : '-'}
-                                    </span>
-                                </div>
-                            </Col>
-                            <Col span={12}>
-                                <div className="info-item">
-                                    <label>PK Withdrawal:</label>
-                                    <span>
-                                        {job?.dates?.pkWithdrawal
-                                            ? moment(job.dates.pkWithdrawal).format('DD/MM/YYYY')
-                                            : '-'}
-                                    </span>
-                                </div>
-                            </Col>
-                            <Col span={12}>
-                                <div className="info-item">
-                                    <label>RM Entry:</label>
-                                    <span>
-                                        {job?.dates?.rmEntry
-                                            ? moment(job.dates.rmEntry).format('DD/MM/YYYY')
-                                            : '-'}
-                                    </span>
-                                </div>
-                            </Col>
-                            <Col span={12}>
-                                <div className="info-item">
-                                    <label>PK Entry:</label>
-                                    <span>
-                                        {job?.dates?.pkEntry
-                                            ? moment(job.dates.pkEntry).format('DD/MM/YYYY')
-                                            : '-'}
-                                    </span>
-                                </div>
-                            </Col>
-                            <Col span={12}>
-                                <div className="info-item">
-                                    <label>Plan Date (Min):</label>
-                                    <span>
-                                        {job?.dates?.planDate
-                                            ? moment(job.dates.planDate).format('DD/MM/YYYY')
-                                            : '-'}
-                                    </span>
-                                </div>
-                            </Col>
-                            <Col span={12}>
-                                <div className="info-item">
-                                    <label>Delivery Date (Max):</label>
-                                    <span>
-                                        {job?.dates?.deliveryDate
-                                            ? moment(job.dates.deliveryDate).format('DD/MM/YYYY')
-                                            : '-'}
-                                    </span>
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
-                </Tabs.TabPane>
-
-                {/* Tab 2: Job Notes */}
-                <Tabs.TabPane tab="Notes" key="2">
-                    <div className="modal-section">
-                        <h3>Job Notes</h3>
-                        <p className="section-desc">
-                            General notes for this job. Press Tab or click outside to save.
-                        </p>
-                        <Input.TextArea
-                            value={notesText}
-                            onChange={(e) => setNotesText(e.target.value)}
-                            onBlur={handleSaveNotes}
-                            rows={6}
-                            placeholder="Enter job notes here..."
-                            className="job-notes-textarea"
-                        />
-                    </div>
-                </Tabs.TabPane>
-
-                {/* Tab 3: Events Management */}
-                <Tabs.TabPane tab="Events" key="3">
-                    <div className="modal-section">
-                        <div className="events-header">
-                            <h3>Job Events</h3>
-                            <Button
-                                type={showAddEvent ? 'default' : 'primary'}
-                                icon={<PlusOutlined />}
-                                onClick={() => setShowAddEvent(!showAddEvent)}
-                            >
-                                {showAddEvent ? 'Cancel' : 'Add Event'}
+                {/* Add Event Form */}
+                <Card size="small" style={{ marginBottom: 16, backgroundColor: '#fafafa' }}>
+                    <Form form={addEventForm} layout="inline">
+                        <Form.Item
+                            name="eventType"
+                            rules={[{ required: true, message: 'Select type' }]}
+                            style={{ marginBottom: 0 }}
+                        >
+                            <Select placeholder="Event Type" style={{ width: 180 }}>
+                                {getEventTypes().map((type) => {
+                                    const config = JOB_EVENT_COLOR_CONFIG[type];
+                                    return (
+                                        <Select.Option key={type} value={type}>
+                                            {config.label}
+                                        </Select.Option>
+                                    );
+                                })}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name="eventDate"
+                            rules={[{ required: true, message: 'Select date' }]}
+                            style={{ marginBottom: 0 }}
+                        >
+                            <DatePicker format="DD/MM/YYYY" placeholder="Date" />
+                        </Form.Item>
+                        <Form.Item name="eventNote" style={{ marginBottom: 0, flex: 1 }}>
+                            <Input placeholder="Note (optional)" />
+                        </Form.Item>
+                        <Form.Item style={{ marginBottom: 0 }}>
+                            <Button type="primary" icon={<PlusOutlined />} onClick={handleAddEvent}>
+                                Add
                             </Button>
-                        </div>
+                        </Form.Item>
+                    </Form>
+                </Card>
 
-                        {/* Add Event Form */}
-                        {showAddEvent && (
-                            <div className="add-event-form">
-                                <Divider>New Event</Divider>
-                                <Form form={addEventForm} layout="vertical">
-                                    <Form.Item
-                                        label="Event Type"
-                                        name="eventType"
-                                        rules={[
-                                            { required: true, message: 'Please select event type' },
-                                        ]}
-                                    >
-                                        <Select placeholder="Select event type">
-                                            {getEventTypes().map((type) => {
-                                                const config = JOB_EVENT_COLOR_CONFIG[type];
-                                                return (
-                                                    <Select.Option key={type} value={type}>
-                                                        <Tag color={config.color}>{config.label}</Tag>{' '}
-                                                        {config.description}
-                                                    </Select.Option>
-                                                );
-                                            })}
-                                        </Select>
-                                    </Form.Item>
+                {/* Events Table */}
+                <Table
+                    dataSource={sortedEvents}
+                    columns={eventColumns}
+                    rowKey="id"
+                    pagination={{
+                        pageSize: 10,
+                        showSizeChanger: false,
+                        showTotal: (total) => `Total ${total} events`
+                    }}
+                    size="small"
+                    scroll={{ y: 320 }}
+                />
+            </div>
 
-                                    <Form.Item
-                                        label="Event Date"
-                                        name="eventDate"
-                                        rules={[
-                                            { required: true, message: 'Please select event date' },
-                                        ]}
-                                    >
-                                        <DatePicker format="DD/MM/YYYY" />
-                                    </Form.Item>
+            {/* Section 3: Comments */}
+            <div className="job-modal-section">
+                <h3>Comments</h3>
 
-                                    <Form.Item
-                                        label="Event Note (Optional)"
-                                        name="eventNote"
-                                    >
-                                        <Input.TextArea
-                                            rows={3}
-                                            placeholder="Add a note for this event..."
-                                        />
-                                    </Form.Item>
+                {/* Add Comment */}
+                <TextArea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    onPressEnter={(e) => {
+                        e.preventDefault();
+                        handleAddComment();
+                    }}
+                    placeholder="Type comment and press Enter to add..."
+                    autoSize={{ minRows: 2, maxRows: 4 }}
+                    style={{ marginBottom: 16 }}
+                />
 
-                                    <Form.Item>
-                                        <Space>
-                                            <Button type="primary" onClick={handleAddEvent}>
-                                                Save Event
-                                            </Button>
-                                            <Button onClick={() => setShowAddEvent(false)}>
-                                                Cancel
-                                            </Button>
-                                        </Space>
-                                    </Form.Item>
-                                </Form>
-                                <Divider />
-                            </div>
-                        )}
-
-                        {/* Events List */}
-                        {sortedDates.length > 0 ? (
-                            <div className="events-list">
-                                {sortedDates.map((date) => (
-                                    <div key={date} className="event-date-group">
-                                        <h4 className="event-date">
-                                            {moment(date).format('DD/MM/YYYY')} (
-                                            {moment(date).format('dddd')})
-                                        </h4>
-                                        <div className="events-in-date">
-                                            {eventsByDate[date].map((event) => {
-                                                const eventConfig = JOB_EVENT_COLOR_CONFIG[event.eventType];
-                                                return (
-                                                    <div
-                                                        key={event.id}
-                                                        className={`event-item ${event.isActive ? 'active' : 'inactive'
-                                                            }`}
-                                                        style={{
-                                                            borderLeftColor: eventConfig.color,
-                                                        }}
-                                                    >
-                                                        <div className="event-header">
-                                                            <Tag color={eventConfig.color}>
-                                                                {eventConfig.label}
-                                                            </Tag>
-                                                            <span className="event-description">
-                                                                {eventConfig.description}
-                                                            </span>
-                                                            {!event.isActive && (
-                                                                <Tag color="red">Inactive</Tag>
-                                                            )}
-                                                        </div>
-
-                                                        {event.notes && event.notes.length > 0 && event.notes[0].notes && (
-                                                            <div className="event-note">
-                                                                <strong>Note:</strong> {event.notes[0].notes}
-                                                            </div>
-                                                        )}
-
-                                                        <div className="event-actions">
-                                                            {event.isActive ? (
-                                                                <Button
-                                                                    size="small"
-                                                                    type="text"
-                                                                    danger
-                                                                    onClick={() =>
-                                                                        handleDeactivateEvent(event.id)
-                                                                    }
-                                                                >
-                                                                    Deactivate
-                                                                </Button>
-                                                            ) : (
-                                                                <Button
-                                                                    size="small"
-                                                                    type="text"
-                                                                    onClick={() => handleActivateEvent(event.id)}
-                                                                >
-                                                                    Activate
-                                                                </Button>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
+                {/* Comments List */}
+                {displayedComments.length > 0 ? (
+                    <>
+                        <List
+                            dataSource={displayedComments}
+                            renderItem={(comment) => (
+                                <List.Item
+                                    key={comment.id}
+                                    actions={[
+                                        <Button
+                                            danger
+                                            size="small"
+                                            icon={<DeleteOutlined />}
+                                            onClick={() => handleDeleteComment(comment.id)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    ]}
+                                    style={{ paddingBottom: 16, borderBottom: '1px solid #f0f0f0' }}
+                                >
+                                    <div>
+                                        <p style={{ marginBottom: 8 }}>{comment.notes}</p>
+                                        <span style={{ fontSize: '12px', color: '#999' }}>
+                                            {moment(comment.updatedAt).format('DD/MM/YYYY HH:mm')}
+                                        </span>
                                     </div>
-                                ))}
+                                </List.Item>
+                            )}
+                        />
+
+                        {hasMoreComments && (
+                            <div style={{ textAlign: 'center', marginTop: 12 }}>
+                                <Button onClick={loadMoreComments}>
+                                    Load More (5 more)
+                                </Button>
                             </div>
-                        ) : (
-                            <Empty description="No events created yet" />
                         )}
+                    </>
+                ) : (
+                    <div style={{ textAlign: 'center', padding: '20px 0', color: '#999' }}>
+                        No comments yet
                     </div>
-                </Tabs.TabPane>
-            </Tabs>
+                )}
+            </div>
         </Modal>
     );
 };
