@@ -1,0 +1,176 @@
+/* AG Grid Job Status Report Styles */
+
+.ag-job-status-grid {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+}
+
+/* Row hover effect - apply to whole row including pinned */
+.ag-theme-alpine .ag-row-hover .ag-cell {
+  background-color: #e6f7ff !important;
+}
+.ag-theme-alpine .ag-row-hover {
+  background-color: #e6f7ff !important;
+}
+
+/* Month header styling */
+.ag-month-header {
+  background-color: #1890ff !important;
+  color: white !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+}
+
+/* Date header styling */
+.ag-date-header {
+  background-color: #40a9ff !important;
+  color: white !important;
+  font-size: 12px !important;
+  text-align: center !important;
+}
+
+.ag-date-header-multi .ag-header-cell-text {
+  white-space: pre-line !important; /* allow month\nday */
+}
+
+/* Today's date header */
+.ag-today-header {
+  background-color: #ff4d4f !important;
+  color: white !important;
+  font-weight: bold !important;
+  position: relative !important;
+}
+
+.ag-today-header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #cf1322;
+}
+
+/* Sunday header */
+.ag-sunday-header {
+  background-color: #52c41a !important;
+}
+
+/* Date cells */
+.ag-date-cell {
+  padding: 0px !important;
+  text-align: center !important;
+}
+
+/* Today's date cell */
+.ag-today-cell {
+  border-left: 1px solid #ff4d4f !important;
+  /* background-color: #fff2f0 !important; */
+}
+
+/* Sunday cell */
+.ag-sunday-cell {
+  background-color: #afafaf !important;
+  border-bottom: 1px solid #afafaf !important;
+}
+
+/* Event cell styling */
+.ag-event-cell {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ag-theme-alpine .ag-header-cell {
+  padding: 5px;
+}
+
+.ag-theme-alpine .ag-pinned-left-cols-container .ag-cell {
+  text-align: center;
+  padding: 5px;
+}
+
+/* Job No link */
+.ag-job-no-link:hover {
+  color: #096dd9 !important;
+  font-weight: 500;
+}
+
+/* Pinned columns shadow */
+.ag-theme-alpine .ag-pinned-left-cols-container {
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Remove cell borders for cleaner look */
+.ag-theme-alpine .ag-cell {
+  border-right: 1px solid #e8e8e8 !important;
+}
+
+/* Header text alignment */
+.ag-theme-alpine .ag-header-cell-label {
+  justify-content: center;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+/* Pinned column headers */
+.ag-theme-alpine .ag-pinned-left-header {
+  background-color: #fafafa;
+  font-weight: 600;
+}
+
+/* Pinned column cells */
+.ag-theme-alpine .ag-pinned-left-cols-container .ag-cell {
+  background-color: #fafafa;
+  font-weight: 500;
+}
+
+/* Scrollbar styling */
+.ag-theme-alpine .ag-body-horizontal-scroll {
+  height: 12px !important;
+}
+
+.ag-theme-alpine .ag-body-vertical-scroll {
+  width: 12px !important;
+}
+
+/* Custom scrollbar for webkit browsers */
+.ag-theme-alpine ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.ag-theme-alpine ::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.ag-theme-alpine ::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+}
+
+.ag-theme-alpine ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Remove row selection highlight */
+.ag-theme-alpine .ag-row-selected {
+  background-color: transparent !important;
+}
+
+/* Reduce borders on row-spanned cells for cleaner merges */
+.ag-theme-alpine .ag-cell[rowspan] {
+  border-bottom: none !important;
+}
+
+/* Grid loading overlay */
+.ag-theme-alpine .ag-overlay-loading-wrapper {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Grid no rows overlay */
+.ag-theme-alpine .ag-overlay-no-rows-wrapper {
+  background-color: rgba(255, 255, 255, 0.9);
+}

@@ -134,6 +134,7 @@ import AccountingRoutes from "./modules/accounting";
 import DLInput from "./modules/production/operations/dlInput";
 import RPMChecking from "./modules/production/operations/rpm_checking";
 import JobStatusReport from "./modules/production/operations/job-tracking/JobStatusReport";
+import JobStatusReportAGGrid from "./modules/production/operations/job-tracking/JobStatusReportAGGrid";
 const initialContext = {
   log_detail: log_detail,
   authorize: {
@@ -571,6 +572,13 @@ const App = (props) => {
               component={RPMChecking}
             >
               <JobStatusReport />
+            </Route>
+            <Route
+              exact
+              path="/production/operations/job-status-ag-grid"
+              component={RPMChecking}
+            >
+              <JobStatusReportAGGrid />
             </Route>
             <Route exact path="/production/operations/mrp">
               <MRPMain />

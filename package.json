@@ -11,6 +11,8 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "ag-grid-community": "^27.3.0",
+    "ag-grid-react": "^27.3.0",
     "antd": "^4.6.4",
     "antd-img-crop": "^3.13.2",
     "apexcharts": "^3.28.3",
