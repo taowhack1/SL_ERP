@@ -5,37 +5,41 @@
  */
 
 export const JOB_EVENT_COLOR_CONFIG = {
-    RM_ENTRY: {
+    RM_IN: {
         priority: 1,
         color: '#87CEEB', // Sky Blue
         bgColor: 'rgba(135, 206, 235, 0.7)',
         borderColor: '#4682B4',
         label: 'RM In',
-        description: 'Raw Material Entry'
+        description: 'RM เข้า',
+        type: 'RM_IN'
     },
-    RM_WITHDRAWAL: {
+    RM_BOOK: {
         priority: 2,
         color: '#8B4513', // Saddle Brown
         bgColor: 'rgba(139, 69, 19, 0.7)',
         borderColor: '#654321',
-        label: 'RM Out',
-        description: 'Raw Material Withdrawal'
+        label: 'เบิก RM',
+        description: 'เบิก RM',
+        type: 'RM_BOOK'
     },
-    PK_ENTRY: {
+    PK_IN: {
         priority: 3,
         color: '#4169E1', // Royal Blue
         bgColor: 'rgba(65, 105, 225, 0.7)',
         borderColor: '#1E40AF',
         label: 'PK In',
-        description: 'Packaging Entry'
+        description: 'PK เข้า',
+        type: 'PK_IN'
     },
-    PK_WITHDRAWAL: {
+    PK_BOOK: {
         priority: 4,
         color: '#CD853F', // Peru
         bgColor: 'rgba(205, 133, 63, 0.7)',
         borderColor: '#9B6B3A',
-        label: 'PK Out',
-        description: 'Packaging Withdrawal'
+        label: 'เบิก PK',
+        description: 'เบิก PK',
+        type: 'PK_BOOK'
     },
     PLAN_DATE: {
         priority: 5,
@@ -43,7 +47,8 @@ export const JOB_EVENT_COLOR_CONFIG = {
         bgColor: 'rgba(255, 215, 0, 0.7)',
         borderColor: '#DAA520',
         label: 'Plan',
-        description: 'Plan Date'
+        description: 'Plan',
+        type: 'PLAN'
     },
     DELIVERY_DATE: {
         priority: 6,
@@ -51,7 +56,8 @@ export const JOB_EVENT_COLOR_CONFIG = {
         bgColor: 'rgba(255, 99, 71, 0.7)',
         borderColor: '#DC143C',
         label: 'Delivery',
-        description: 'Delivery Date'
+        description: 'Delivery',
+        type: 'DELIVERY'
     }
 };
 

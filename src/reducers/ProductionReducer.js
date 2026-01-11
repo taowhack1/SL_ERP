@@ -456,6 +456,7 @@ export default (state = initialState, action) => {
           jobStatusReport: {
             ...state.operations.jobStatusReport,
             jobs: action.payload,
+            error: null,
           },
         },
       };
@@ -562,6 +563,7 @@ export default (state = initialState, action) => {
           jobStatusReport: {
             ...state.operations.jobStatusReport,
             loading: action.payload,
+            error: action.payload ? state.operations.jobStatusReport.error : null,
           },
         },
       };

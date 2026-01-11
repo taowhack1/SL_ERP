@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, Button, DatePicker, Space, Spin, Empty, Input, Popover, Checkbox, Radio } from 'antd';
+import { Row, Col, Button, DatePicker, Space, Spin, Empty, Input, Popover, Checkbox, Radio, Tag } from 'antd';
 import { SearchOutlined, CalendarOutlined, SettingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import {
     fetchJobsByDateRange,
+    fetchJobDetails,
     setViewMode,
     setDateRange,
 } from '../../../../actions/production/jobStatusReportActions';
+import { getEventConfigsByPriority } from '../../../../constants/jobEventColorConfig';
 import JobStatusReportAGGridTable from './components/JobStatusReportAGGridTable';
 import JobStatusReportModal from './components/JobStatusReportModal';
 import './JobStatusReport.css';
@@ -17,9 +19,9 @@ const JobStatusReportAGGrid = () => {
     const [customDateRange, setCustomDateRange] = useState(null);
     const [selectedJob, setSelectedJob] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
-    const [searchKeyword, setSearchKeyword] = useState('');
+    const [searchValue, setSearchValue] = useState('');
     const [customDateMode, setCustomDateMode] = useState('month');
-    const [visibleColumns, setVisibleColumns] = useState(['0', '1', '2', '3', '4', '5', '6', '7', '8']);
+    const [visibleColumns, setVisibleColumns] = useState(['0', '1', '2', '3', '4', '5']);
     const gridRef = useRef(null);
 
     const jobStatusReport = useSelector(
@@ -40,7 +42,7 @@ const JobStatusReportAGGrid = () => {
         const start = moment().startOf('month').format('YYYY-MM-DD');
         const end = moment().endOf('month').format('YYYY-MM-DD');
         dispatch(setDateRange(start, end));
-        dispatch(fetchJobsByDateRange(start, end));
+        dispatch(fetchJobsByDateRange({ date_start: start, date_end: end, search: '' }));
     }, [dispatch]);
 
     // Handle view mode change
@@ -65,17 +67,17 @@ const JobStatusReportAGGrid = () => {
         }
 
         dispatch(setDateRange(start, end));
-        dispatch(fetchJobsByDateRange(start, end));
+        dispatch(fetchJobsByDateRange({ date_start: start, date_end: end, search: searchValue }));
     };
 
     // Handle custom date range change
     const handleDateRangeChange = (dates) => {
         if (dates && dates[0] && dates[1]) {
             setCustomDateRange(dates);
-            const start = dates[0].format('YYYY-MM-DD');
-            const end = dates[1].format('YYYY-MM-DD');
+            const start = dates[0].startOf('month').format('YYYY-MM-DD');
+            const end = dates[1].endOf('month').format('YYYY-MM-DD');
             dispatch(setDateRange(start, end));
-            dispatch(fetchJobsByDateRange(start, end));
+            dispatch(fetchJobsByDateRange({ date_start: start, date_end: end, search: searchValue }));
         }
     };
 
@@ -98,10 +100,21 @@ const JobStatusReportAGGrid = () => {
         }
     };
 
-    // Handle job click
-    const handleJobClick = (job) => {
-        setSelectedJob(job);
+    // Handle job click - fetch details first
+    const handleJobClick = async (job) => {
+        const jobDetails = await fetchJobDetails(job.jobNo);
+        setSelectedJob(jobDetails);
+        // if (jobDetails) {
+        // } else {
+        //     setSelectedJob(job);
+        // }
         setModalVisible(true);
+    };
+
+    // Handle search
+    const handleSearch = (value) => {
+        setSearchValue(value);
+        dispatch(fetchJobsByDateRange({ date_start: dateRange.startDate, date_end: dateRange.endDate, search: value }));
     };
 
     // Handle column visibility toggle
@@ -121,9 +134,9 @@ const JobStatusReportAGGrid = () => {
         <div style={{ padding: '8px' }}>
             <div style={{ marginBottom: '8px', fontWeight: 600 }}>Show/Hide Columns</div>
             <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                {['0', '1', '2', '3', '4', '5', '6', '7', '8'].map((idx, i) => {
-                    const columnNames = ['Job No.', 'Name', 'Qty', 'RM Out', 'PK Out', 'RM In', 'PK In', 'Plan (Min)', 'Delivery (Max)'];
-                    const isLocked = idx === '0';
+                {['0', '1', '2', '3', '4', '5'].map((idx, i) => {
+                    const columnNames = ['MRP No.', 'Job No.', 'Name', 'Qty', 'Unit', 'Delivery Date'];
+                    const isLocked = idx === '0' || idx === '1';
                     return (
                         <div key={idx} style={{ marginBottom: '6px' }}>
                             <Checkbox
@@ -140,108 +153,68 @@ const JobStatusReportAGGrid = () => {
         </div>
     );
 
-    // Filter jobs based on search keyword
-    const filteredJobs = useMemo(() => {
-        if (!searchKeyword.trim()) {
-            return jobs;
-        }
-        const keyword = searchKeyword.toLowerCase().trim();
-        return jobs.filter(job =>
-            job.jobNo.toLowerCase().includes(keyword) ||
-            job.name.toLowerCase().includes(keyword)
+    // Event legend
+    const eventLegend = useMemo(() => {
+        const configs = getEventConfigsByPriority();
+        return (
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                <span style={{ fontWeight: 600, marginRight: '8px' }}>Legend:</span>
+                {configs.map(config => (
+                    <div key={config.type} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <div style={{
+                            width: '16px',
+                            height: '16px',
+                            backgroundColor: config.bgColor,
+                            border: `1px solid ${config.borderColor}`,
+                            borderRadius: '2px'
+                        }} />
+                        <span style={{ fontSize: '12px' }}>{config.description}</span>
+                    </div>
+                ))}
+            </div>
         );
-    }, [jobs, searchKeyword]);
+    }, []);
 
     const isCustomMode = viewMode === 'custom';
 
     return (
         <div className="job-status-report-container">
             <div className="report-header">
-                <h1>Job Status Report (AG Grid)</h1>
+                <h1>Job Status Report</h1>
 
-                <div className="view-controls">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: 12, marginBottom: 12 }}>
+                    <Space><span className="control-label">SO Date Range:</span>
+                        <DatePicker.RangePicker
+                            picker="month"
+                            format="YYYY-MM"
+                            onChange={(vals) => {
+                                if (vals && vals[0] && vals[1]) {
+                                    handleDateRangeChange(vals);
+                                }
+                            }}
+                        />
+                        <Input.Search
+                            placeholder="Search MRP No, Job No, Name..."
+                            allowClear
+                            style={{ width: 500 }}
+                            onSearch={handleSearch}
+                            onChange={(e) => {
+                                if (!e.target.value) {
+                                    handleSearch('');
+                                }
+                            }}
+                        /></Space>
                     <Space>
-                        <span className="control-label">View Mode:</span>
-                        <Button.Group>
-                            <Button
-                                type={viewMode === 'year' ? 'primary' : 'default'}
-                                onClick={() => handleViewModeChange('year')}
-                            >
-                                Year
-                            </Button>
-                            <Button
-                                type={viewMode === 'month' ? 'primary' : 'default'}
-                                onClick={() => handleViewModeChange('month')}
-                            >
-                                Month
-                            </Button>
-                            <Button
-                                type={viewMode === 'custom' ? 'primary' : 'default'}
-                                onClick={() => handleViewModeChange('custom')}
-                            >
-                                Custom
-                            </Button>
-                        </Button.Group>
-
-                        {isCustomMode && customDateMode === 'month' && (
-                            <DatePicker
-                                picker="month"
-                                format="YYYY-MM"
-                                onChange={(date) => {
-                                    if (date) {
-                                        const start = date.clone().startOf('month');
-                                        const end = date.clone().endOf('month');
-                                        handleDateRangeChange([start, end]);
-                                    }
-                                }}
-                            />
-                        )}
-
-                        {isCustomMode && customDateMode === 'year' && (
-                            <DatePicker
-                                picker="year"
-                                format="YYYY"
-                                onChange={(date) => {
-                                    if (date) {
-                                        const start = date.clone().startOf('year');
-                                        const end = date.clone().endOf('year');
-                                        handleDateRangeChange([start, end]);
-                                    }
-                                }}
-                            />
-                        )}
-
-                        {isCustomMode && (
-                            <Radio.Group onChange={handleCustomDateModeChange} value={customDateMode}>
-                                <Radio.Button value="month">Month</Radio.Button>
-                                <Radio.Button value="year">Year</Radio.Button>
-                            </Radio.Group>
-                        )}
-
+                        {eventLegend}
                         <Button icon={<CalendarOutlined />} onClick={handleGoToToday}>
-                            Today
+                            Focus Today
                         </Button>
-
                         <Popover content={columnVisibilityMenu} trigger="click" placement="bottomRight">
                             <Button icon={<SettingOutlined />}>
                                 Columns
                             </Button>
                         </Popover>
                     </Space>
-                </div>
-
-                <div className="search-controls">
-                    <Input
-                        placeholder="Search by Job No or Name..."
-                        prefix={<SearchOutlined />}
-                        value={searchKeyword}
-                        onChange={(e) => setSearchKeyword(e.target.value)}
-                        style={{ width: 300 }}
-                        allowClear
-                    />
-                    <span className="search-result-count">
-                        {filteredJobs.length} / {jobs.length} jobs
-                    </span>
                 </div>
             </div>
 
@@ -258,14 +231,10 @@ const JobStatusReportAGGrid = () => {
                     </div>
                 )}
 
-                {!loading && !error && filteredJobs.length === 0 && (
-                    <Empty description="No jobs found" />
-                )}
-
-                {!loading && !error && filteredJobs.length > 0 && (
+                {!loading && !error && (
                     <JobStatusReportAGGridTable
                         ref={gridRef}
-                        jobs={filteredJobs}
+                        jobs={jobs}
                         viewMode={viewMode}
                         dateRange={dateRange}
                         onJobClick={handleJobClick}

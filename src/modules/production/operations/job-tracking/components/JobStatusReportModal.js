@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     Modal,
     Form,
@@ -26,13 +26,16 @@ import {
     JOB_EVENT_COLOR_CONFIG,
     getEventTypes,
     getEventConfig,
+    getEventConfigsByPriority,
 } from '../../../../../constants/jobEventColorConfig';
 import '../JobStatusReport.css';
 
 const { TextArea } = Input;
 
 const JobStatusReportModal = ({ visible, job, onClose }) => {
+    console.log("job", job)
     const dispatch = useDispatch();
+    const auth = useSelector((state) => state.auth?.authData);
     const [addEventForm] = Form.useForm();
     const [newComment, setNewComment] = useState('');
     const [displayedComments, setDisplayedComments] = useState([]);
@@ -107,14 +110,22 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
     const handleAddEvent = async () => {
         try {
             const values = await addEventForm.validateFields();
-            dispatch(
-                addJobEvent(
-                    job.id,
-                    values.eventType,
-                    values.eventDate.format('YYYY-MM-DD'),
-                    values.eventNote || ''
-                )
-            );
+            const [start, end] = values.eventDateRange || [];
+            const eventRaw = {
+                job_id: job.jobNo,
+                type: values.eventType, // value equals JOB_EVENT_COLOR_CONFIG[*].type
+                description: values.description,
+                remark: '',
+                date_start: start.format('YYYY-MM-DD'),
+                date_end: end.format('YYYY-MM-DD'),
+                create_by: auth?.user_name || '',
+                status: 'ACTIVE',
+                notes: []
+            };
+
+            // Pass job internal id for state update; API can use job_id from payload
+            dispatch(addJobEvent(job.id, eventRaw));
+
             addEventForm.resetFields();
             message.success('Event added');
         } catch (error) {
@@ -135,7 +146,7 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
             key: 'eventType',
             width: 120,
             render: (type) => {
-                const config = getEventConfig(type);
+                const config = getEventConfig(type || '');
                 return (
                     <Tag color={config.color} style={{ margin: 0 }}>
                         {config.label}
@@ -144,25 +155,33 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
             },
         },
         {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
+            title: 'Date Start',
+            key: 'dateStart',
             width: 120,
-            render: (date) => moment(date).format('DD/MM/YYYY'),
-            sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix(),
+            render: (_, record) => {
+                const d = record.dateStart || record.date_start || record.date;
+                return d ? moment(d).format('DD/MM/YYYY') : '-';
+            },
+            sorter: (a, b) => {
+                const dateA = a.dateStart || a.date_start || a.date;
+                const dateB = b.dateStart || b.date_start || b.date;
+                return moment(dateA).unix() - moment(dateB).unix();
+            },
         },
         {
-            title: 'Note',
-            dataIndex: 'notes',
-            key: 'notes',
-            render: (notes) => (notes && notes[0]?.notes) || '-',
+            title: 'Date End',
+            key: 'dateEnd',
+            width: 120,
+            render: (_, record) => {
+                const d = record.dateEnd || record.date_end || record.dateStart || record.date_start || record.date;
+                return d ? moment(d).format('DD/MM/YYYY') : '-';
+            },
         },
         {
-            title: 'Created',
-            dataIndex: 'createdAt',
-            key: 'createdAt',
-            width: 140,
-            render: (date) => moment(date).format('DD/MM/YYYY HH:mm'),
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+            render: (desc) => desc || '-',
         },
         {
             title: 'Updated',
@@ -188,9 +207,13 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
     ];
 
     // Sort events by date (latest first) for default display
-    const sortedEvents = [...jobEvents].sort((a, b) =>
-        moment(b.date).unix() - moment(a.date).unix()
-    );
+    const sortedEvents = [...jobEvents].sort((a, b) => {
+        const dateA = a.dateStart || a.date;
+        const dateB = b.dateStart || b.date;
+        return moment(dateB).unix() - moment(dateA).unix();
+    });
+
+    console.log("displayedComments", displayedComments, job?.notes)
 
     return (
         <Modal
@@ -223,22 +246,22 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
                     <Descriptions.Item label="Name" span={2}>{job.name}</Descriptions.Item>
                     <Descriptions.Item label="Quantity">{job.qty}</Descriptions.Item>
                     <Descriptions.Item label="RM Out">
-                        {job.dates?.rmWithdrawal ? moment(job.dates.rmWithdrawal).format('DD/MM/YYYY') : '-'}
+                        {job.dates?.rmWithdrawal || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="PK Out">
-                        {job.dates?.pkWithdrawal ? moment(job.dates.pkWithdrawal).format('DD/MM/YYYY') : '-'}
+                        {job.dates?.pkWithdrawal || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="RM In">
-                        {job.dates?.rmEntry ? moment(job.dates.rmEntry).format('DD/MM/YYYY') : '-'}
+                        {job.dates?.rmEntry || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="PK In">
-                        {job.dates?.pkEntry ? moment(job.dates.pkEntry).format('DD/MM/YYYY') : '-'}
+                        {job.dates?.pkEntry || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="Plan Date">
-                        {job.dates?.planDate ? moment(job.dates.planDate).format('DD/MM/YYYY') : '-'}
+                        {job.dates?.planDate || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="Delivery Date">
-                        {job.dates?.deliveryDate ? moment(job.dates.deliveryDate).format('DD/MM/YYYY') : '-'}
+                        {job.dates?.deliveryDate || '-'}
                     </Descriptions.Item>
                 </Descriptions>
             </div>
@@ -255,26 +278,23 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
                             rules={[{ required: true, message: 'Select type' }]}
                             style={{ marginBottom: 0 }}
                         >
-                            <Select placeholder="Event Type" style={{ width: 180 }}>
-                                {getEventTypes().map((type) => {
-                                    const config = JOB_EVENT_COLOR_CONFIG[type];
-                                    return (
-                                        <Select.Option key={type} value={type}>
-                                            {config.label}
-                                        </Select.Option>
-                                    );
-                                })}
+                            <Select placeholder="Event Type" style={{ width: 220 }}>
+                                {getEventConfigsByPriority().map((cfg) => (
+                                    <Select.Option key={cfg.type} value={cfg.type}>
+                                        {cfg.description}
+                                    </Select.Option>
+                                ))}
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="eventDate"
-                            rules={[{ required: true, message: 'Select date' }]}
+                            name="eventDateRange"
+                            rules={[{ required: true, message: 'Select date range' }]}
                             style={{ marginBottom: 0 }}
                         >
-                            <DatePicker format="DD/MM/YYYY" placeholder="Date" />
+                            <DatePicker.RangePicker format="DD/MM/YYYY" />
                         </Form.Item>
-                        <Form.Item name="eventNote" style={{ marginBottom: 0, flex: 1 }}>
-                            <Input placeholder="Note (optional)" />
+                        <Form.Item name="description" style={{ marginBottom: 0, flex: 1 }} rules={[{ required: true, message: 'Please input description' }]}>
+                            <Input placeholder="Description" />
                         </Form.Item>
                         <Form.Item style={{ marginBottom: 0 }}>
                             <Button type="primary" icon={<PlusOutlined />} onClick={handleAddEvent}>
