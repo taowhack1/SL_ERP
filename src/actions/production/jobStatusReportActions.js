@@ -64,14 +64,11 @@ const transformJobData = (apiData) => {
  * @param {object} params
  * @param {string} params.date_start
  * @param {string} params.date_end
- * @param {string} params.mrp
- * @param {string} params.so
- * @param {string} params.job_name
+ * @param {string} params.search
  */
 export const fetchJobsByDateRange = (params = {}) => async (dispatch) => {
     try {
-        const { date_start = '', date_end = '', mrp = '', so = '', job_name = '' } = params;
-        console.log('Fetching jobs:', params);
+        const { date_start = '', date_end = '', search = '' } = params;
         dispatch({ type: SET_LOADING, payload: true });
 
         const response = await axios.get(API_JOB_CALENDAR, {
@@ -79,19 +76,13 @@ export const fetchJobsByDateRange = (params = {}) => async (dispatch) => {
             params: {
                 date_start,
                 date_end,
-                mrp,
-                so,
-                job_name,
+                search,
             }
         });
 
-        console.log('API Response:', response.data);
-        const transformedJobs = transformJobData(response.data);
-        console.log('Transformed jobs:', transformedJobs);
-
         dispatch({
             type: SET_JOB_STATUS_REPORT,
-            payload: transformedJobs
+            payload: response.data || []
         });
         dispatch({ type: SET_LOADING, payload: false });
     } catch (error) {
@@ -115,8 +106,7 @@ export const fetchJobDetails = async (mrp_no) => {
         });
 
         if (response.data && response.data.length > 0) {
-            const transformedData = transformJobData(response.data);
-            return transformedData[0];
+            return response.data[0];
         }
         return null;
     } catch (error) {
@@ -177,23 +167,13 @@ export const addJobEvent = (jobId, eventRaw) => async (dispatch, getState) => {
         // TODO: Implement API call when endpoint is available
         // const response = await axios.post(`${API_JOB_CALENDAR}/${eventRaw.job_id}/events`, eventRaw, header_config);
 
-        // Build UI-friendly event object while preserving raw shape
         const now = new Date().toISOString();
         const newEvent = {
             id: Date.now(),
-            jobId,
-            // UI fields
-            eventType: eventRaw.type,
-            date: eventRaw.date_start,
-            dateStart: eventRaw.date_start,
-            dateEnd: eventRaw.date_end,
-            isActive: (eventRaw.status || 'ACTIVE') === 'ACTIVE',
-            createdAt: now,
-            updatedAt: now,
-            description: eventRaw.description,
-            notes: eventRaw.notes || [],
-            // Preserve raw fields
             ...eventRaw,
+            created: eventRaw.created || now,
+            updated: eventRaw.updated || now,
+            status: eventRaw.status || 'ACTIVE',
         };
 
         dispatch({
@@ -202,9 +182,8 @@ export const addJobEvent = (jobId, eventRaw) => async (dispatch, getState) => {
         });
         message.success('Event added successfully');
 
-        // Refresh the selected job data to show the new event
         const state = getState();
-        const job = state.production.operations.jobStatusReport.jobs.find(j => j.id === jobId);
+        const job = state.production.operations.jobStatusReport.jobs.find(j => j.mrp_id === jobId || j.id === jobId);
         if (job) {
             dispatch(setSelectedJob({ ...job, events: [...(job.events || []), newEvent] }));
         }
@@ -226,17 +205,16 @@ export const updateJobEventStatus = (eventId, jobId, isActive) => async (dispatc
 
         dispatch({
             type: UPDATE_JOB_EVENT_STATUS,
-            payload: { eventId, jobId, isActive }
+            payload: { eventId, jobId, status: isActive ? 'ACTIVE' : 'INACTIVE' }
         });
         message.success(isActive ? 'Event activated' : 'Event deactivated');
 
-        // Refresh the selected job
         const state = getState();
-        const job = state.production.operations.jobStatusReport.jobs.find(j => j.id === jobId);
+        const job = state.production.operations.jobStatusReport.jobs.find(j => j.mrp_id === jobId || j.id === jobId);
         if (job) {
             const authUser = state.auth?.authData?.user_name || '';
-            const updatedEvents = job.events.map(e =>
-                e.id === eventId ? { ...e, isActive, updatedAt: new Date().toISOString(), update_by: authUser } : e
+            const updatedEvents = (job.events || []).map(e =>
+                e.id === eventId ? { ...e, status: isActive ? 'ACTIVE' : 'INACTIVE', updated: new Date().toISOString(), update_by: authUser } : e
             );
             dispatch(setSelectedJob({ ...job, events: updatedEvents }));
         }

@@ -29,16 +29,11 @@ const JobStatusReportAGGridTable = forwardRef(({ jobs = [], dateRange, viewMode,
     // Fixed column definitions
     const fixedColumns = [
         { field: 'mrp_no', headerName: 'MRP No.', width: 120, pinned: 'left', index: 0, },
-        { field: 'jobNo', headerName: 'Job No.', width: 90, pinned: 'left', index: 1 },
-        { field: 'name', headerName: 'Name', width: 600, pinned: 'left', index: 2, cellStyle: { textAlign: 'left' } },
-        { field: 'qty', headerName: 'Qty', width: 100, pinned: 'left', index: 3, cellStyle: { textAlign: 'right' } },
-        { field: 'unit', headerName: 'Unit', width: 50, pinned: 'left', index: 4, },
-        // { field: 'rmOut', headerName: 'RM Out', width: 110, pinned: 'left', index: 3, },
-        // { field: 'pkOut', headerName: 'PK Out', width: 110, pinned: 'left', index: 4, },
-        // { field: 'rmIn', headerName: 'RM In', width: 110, pinned: 'left', index: 5, },
-        // { field: 'pkIn', headerName: 'PK In', width: 110, pinned: 'left', index: 6, },
-        // { field: 'planDate', headerName: 'Plan (Min)', width: 110, pinned: 'left', index: 7, },
-        { field: 'deliveryDate', headerName: 'Delivery Date', width: 100, pinned: 'left', index: 5, },
+        { field: 'so_no', headerName: 'SO No.', width: 90, pinned: 'left', index: 1 },
+        { field: 'job_name', headerName: 'Job Name', width: 600, pinned: 'left', index: 2, cellStyle: { textAlign: 'left' } },
+        { field: 'order_qty', headerName: 'Qty', width: 100, pinned: 'left', index: 3, cellStyle: { textAlign: 'right' } },
+        { field: 'uom_no', headerName: 'Unit', width: 50, pinned: 'left', index: 4, },
+        { field: 'delivery_date', headerName: 'Delivery Date', width: 100, pinned: 'left', index: 5, },
     ];
 
     // Cell renderer for job number (clickable)
@@ -62,15 +57,15 @@ const JobStatusReportAGGridTable = forwardRef(({ jobs = [], dateRange, viewMode,
         if (!job || !date) return null;
 
         // Check for events that fall on this date
-        // Handle both single date and date ranges (dateStart to dateEnd)
+        // Handle both single date and date ranges (date_start to date_end)
         const eventsForDate = (job.events || []).filter(e => {
-            if (!e.isActive) return false;
+            if (e.status !== 'ACTIVE') return false;
 
-            // If event has dateStart and dateEnd, check if date falls in range
-            if (e.dateStart && e.dateEnd) {
+            // If event has date_start and date_end, check if date falls in range
+            if (e.date_start && e.date_end) {
                 const currentDate = moment(date);
-                const startDate = moment(e.dateStart);
-                const endDate = moment(e.dateEnd);
+                const startDate = moment(e.date_start);
+                const endDate = moment(e.date_end);
                 return currentDate.isBetween(startDate, endDate, 'day', '[]');
             }
 
@@ -83,14 +78,14 @@ const JobStatusReportAGGridTable = forwardRef(({ jobs = [], dateRange, viewMode,
         }
 
         const topEvent = getHighestPriorityEvent(eventsForDate);
-        const config = getEventConfig(topEvent.eventType);
+        const config = getEventConfig(topEvent.type);
 
         // Format date display
         let dateDisplay = topEvent.date;
-        if (topEvent.dateStart && topEvent.dateEnd && topEvent.dateStart !== topEvent.dateEnd) {
-            dateDisplay = `${moment(topEvent.dateStart).format('DD/MM')} - ${moment(topEvent.dateEnd).format('DD/MM')}`;
-        } else if (topEvent.dateStart) {
-            dateDisplay = moment(topEvent.dateStart).format('DD/MM/YYYY');
+        if (topEvent.date_start && topEvent.date_end && topEvent.date_start !== topEvent.date_end) {
+            dateDisplay = `${moment(topEvent.date_start).format('DD/MM')} - ${moment(topEvent.date_end).format('DD/MM')}`;
+        } else if (topEvent.date_start) {
+            dateDisplay = moment(topEvent.date_start).format('DD/MM/YYYY');
         }
 
         return (
@@ -205,16 +200,11 @@ const JobStatusReportAGGridTable = forwardRef(({ jobs = [], dateRange, viewMode,
             const row = {
                 _rawJob: job, // Keep reference to original job
                 mrp_no: job.mrp_no,
-                jobNo: job.jobNo,
-                name: job.name,
-                qty: job.qty,
-                unit: job.unit,
-                rmOut: job.dates?.rmWithdrawal ? moment(job.dates.rmWithdrawal).format('DD/MM/YYYY') : '-',
-                pkOut: job.dates?.pkWithdrawal ? moment(job.dates.pkWithdrawal).format('DD/MM/YYYY') : '-',
-                rmIn: job.dates?.rmEntry ? moment(job.dates.rmEntry).format('DD/MM/YYYY') : '-',
-                pkIn: job.dates?.pkEntry ? moment(job.dates.pkEntry).format('DD/MM/YYYY') : '-',
-                planDate: job.dates?.planDate ? moment(job.dates.planDate).format('DD/MM/YYYY') : '-',
-                deliveryDate: job.dates?.deliveryDate ? job.dates.deliveryDate : '-',
+                so_no: job.so_no,
+                job_name: job.job_name,
+                order_qty: job.order_qty,
+                uom_no: job.uom_no,
+                delivery_date: job.delivery_date || '-',
             };
 
             // Add date fields - empty string prevents showing raw values

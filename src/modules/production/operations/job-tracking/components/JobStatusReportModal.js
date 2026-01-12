@@ -46,7 +46,7 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
     useEffect(() => {
         if (job?.notes && Array.isArray(job.notes)) {
             const sorted = [...job.notes].sort((a, b) =>
-                moment(b.updatedAt).diff(moment(a.updatedAt))
+                moment(b.created).diff(moment(a.created))
             );
             setDisplayedComments(sorted.slice(0, 10));
             setCommentOffset(10);
@@ -66,7 +66,7 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
     // Load more comments (5 more)
     const loadMoreComments = () => {
         const sorted = [...jobComments].sort((a, b) =>
-            moment(b.updatedAt).diff(moment(a.updatedAt))
+            moment(b.created).diff(moment(a.created))
         );
         setDisplayedComments(sorted.slice(0, commentOffset + 5));
         setCommentOffset(prev => prev + 5);
@@ -77,17 +77,19 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
         if (newComment.trim()) {
             const newCommentObj = {
                 id: Date.now(),
-                jobId: job.id,
-                notes: newComment.trim(),
-                updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+                job_id: job.mrp_id,
+                description: newComment.trim(),
+                created: moment().format('YYYY-MM-DD HH:mm:ss'),
+                create_by: auth?.user_name || '',
+                status: 'ACTIVE'
             };
 
             // Dispatch action to add comment
-            dispatch(updateJobNotes(job.id, [...jobComments, newCommentObj]));
+            dispatch(updateJobNotes(job.mrp_id, [...jobComments, newCommentObj]));
 
             // Update local state
             const updated = [newCommentObj, ...jobComments].sort((a, b) =>
-                moment(b.updatedAt).diff(moment(a.updatedAt))
+                moment(b.created).diff(moment(a.created))
             );
             setDisplayedComments(updated.slice(0, commentOffset));
             setNewComment('');
@@ -98,10 +100,10 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
     // Delete comment
     const handleDeleteComment = (commentId) => {
         const filtered = jobComments.filter(c => c.id !== commentId);
-        dispatch(updateJobNotes(job.id, filtered));
+        dispatch(updateJobNotes(job.mrp_id, filtered));
 
         const sorted = filtered.sort((a, b) =>
-            moment(b.updatedAt).diff(moment(a.updatedAt))
+            moment(b.created).diff(moment(a.created))
         );
         setDisplayedComments(sorted.slice(0, Math.min(commentOffset, sorted.length)));
         message.success('Comment deleted');
@@ -113,7 +115,7 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
             const values = await addEventForm.validateFields();
             const [start, end] = values.eventDateRange || [];
             const eventRaw = {
-                job_id: job.jobNo,
+                job_id: job.mrp_id,
                 type: values.eventType, // value equals JOB_EVENT_COLOR_CONFIG[*].type
                 description: values.description,
                 remark: '',
@@ -124,8 +126,8 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
                 notes: []
             };
 
-            // Pass job internal id for state update; API can use job_id from payload
-            dispatch(addJobEvent(job.id, eventRaw));
+            // Pass job mrp_id for state update
+            dispatch(addJobEvent(job.mrp_id, eventRaw));
 
             addEventForm.resetFields();
             message.success('Event added');
@@ -136,15 +138,15 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
 
     // Toggle event active status
     const handleToggleEventStatus = (event) => {
-        dispatch(updateJobEventStatus(event.id, job.id, !event.isActive));
+        dispatch(updateJobEventStatus(event.id, job.mrp_id, event.status !== 'ACTIVE'));
     };
 
     // Events table columns
     const eventColumns = [
         {
             title: 'Type',
-            dataIndex: 'eventType',
-            key: 'eventType',
+            dataIndex: 'type',
+            key: 'type',
             width: 120,
             render: (type) => {
                 const config = getEventConfig(type || '');
@@ -157,24 +159,24 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
         },
         {
             title: 'Date Start',
-            key: 'dateStart',
+            key: 'date_start',
             width: 120,
             render: (_, record) => {
-                const d = record.dateStart || record.date_start || record.date;
+                const d = record.date_start || record.date;
                 return d ? moment(d).format('DD/MM/YYYY') : '-';
             },
             sorter: (a, b) => {
-                const dateA = a.dateStart || a.date_start || a.date;
-                const dateB = b.dateStart || b.date_start || b.date;
+                const dateA = a.date_start || a.date;
+                const dateB = b.date_start || b.date;
                 return moment(dateA).unix() - moment(dateB).unix();
             },
         },
         {
             title: 'Date End',
-            key: 'dateEnd',
+            key: 'date_end',
             width: 120,
             render: (_, record) => {
-                const d = record.dateEnd || record.date_end || record.dateStart || record.date_start || record.date;
+                const d = record.date_end || record.date_start || record.date;
                 return d ? moment(d).format('DD/MM/YYYY') : '-';
             },
         },
@@ -186,19 +188,19 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
         },
         {
             title: 'Updated',
-            dataIndex: 'updatedAt',
-            key: 'updatedAt',
+            dataIndex: 'updated',
+            key: 'updated',
             width: 140,
             render: (date) => moment(date).format('DD/MM/YYYY HH:mm'),
         },
         {
             title: 'Status',
-            dataIndex: 'isActive',
-            key: 'isActive',
+            dataIndex: 'status',
+            key: 'status',
             width: 80,
-            render: (isActive, record) => (
+            render: (status, record) => (
                 <Switch
-                    checked={isActive}
+                    checked={status === 'ACTIVE'}
                     onChange={() => handleToggleEventStatus(record)}
                     checkedChildren="Active"
                     unCheckedChildren="Inactive"
@@ -209,8 +211,8 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
 
     // Sort events by date (latest first) for default display
     const sortedEvents = [...jobEvents].sort((a, b) => {
-        const dateA = a.dateStart || a.date;
-        const dateB = b.dateStart || b.date;
+        const dateA = a.date_start || a.date;
+        const dateB = b.date_start || b.date;
         return moment(dateB).unix() - moment(dateA).unix();
     });
 
@@ -224,7 +226,7 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
                         Job Details
                     </div>
                     <div style={{ fontSize: '14px', fontWeight: 'normal', color: '#666', marginTop: 4 }}>
-                        {job.jobNo} - {job.name}
+                        {job.so_no} - {job.job_name}
                     </div>
                 </div>
             }
@@ -243,29 +245,29 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
             <div className="job-modal-section">
                 <h3>Job Information</h3>
                 <Descriptions bordered size="small" column={3}>
-                    <Descriptions.Item label="Job No" style={{ width: 150 }}>{job.jobNo}</Descriptions.Item>
-                    <Descriptions.Item label="Name" span={2}>{job.name}</Descriptions.Item>
+                    <Descriptions.Item label="SO No" style={{ width: 150 }}>{job.so_no}</Descriptions.Item>
+                    <Descriptions.Item label="Name" span={2}>{job.job_name}</Descriptions.Item>
                     <Descriptions.Item label="MRP No" style={{ width: 150 }}>
                         {job?.mrp_no || '-'}
                     </Descriptions.Item>
+                    <Descriptions.Item label="RM Book Date" style={{ width: 150 }}>
+                        {job.rm_book_date ? moment(job.rm_book_date).format('DD/MM/YYYY') : '-'}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="PK Book Date" style={{ width: 150 }}>
+                        {job.pk_book_date ? moment(job.pk_book_date).format('DD/MM/YYYY') : '-'}
+                    </Descriptions.Item>
                     <Descriptions.Item label="RM In" style={{ width: 150 }}>
-                        {job.dates?.rmEntry || '-'}
+                        {job.rm_in_date ? moment(job.rm_in_date).format('DD/MM/YYYY') : '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="PK In" style={{ width: 150 }}>
-                        {job.dates?.pkEntry || '-'}
+                        {job.pk_in_date ? moment(job.pk_in_date).format('DD/MM/YYYY') : '-'}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Quantity" style={{ width: 150 }}>{numeral(job.qty).format('0,000.00')}</Descriptions.Item>
-                    <Descriptions.Item label="RM Out" style={{ width: 150 }}>
-                        {job.dates?.rmWithdrawal || '-'}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="PK Out" style={{ width: 150 }}>
-                        {job.dates?.pkWithdrawal || '-'}
-                    </Descriptions.Item>
+                    <Descriptions.Item label="Quantity" style={{ width: 150 }}>{numeral(job.order_qty).format('0,000.00')}</Descriptions.Item>
                     <Descriptions.Item label="Plan Date" style={{ width: 150 }}>
-                        {job.dates?.planDate || '-'}
+                        {job.plan_date ? moment(job.plan_date).format('DD/MM/YYYY') : '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="Delivery Date">
-                        {job.dates?.deliveryDate || '-'}
+                        {job.delivery_date ? moment(job.delivery_date).format('DD/MM/YYYY') : '-'}
                     </Descriptions.Item>
                 </Descriptions>
             </div>
@@ -361,9 +363,9 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
                                     style={{ paddingBottom: 16, borderBottom: '1px solid #f0f0f0' }}
                                 >
                                     <div>
-                                        <p style={{ marginBottom: 8 }}>{comment.notes}</p>
+                                        <p style={{ marginBottom: 8 }}>{comment.description}</p>
                                         <span style={{ fontSize: '12px', color: '#999' }}>
-                                            {moment(comment.updatedAt).format('DD/MM/YYYY HH:mm')}
+                                            {moment(comment.created).format('DD/MM/YYYY HH:mm')}
                                         </span>
                                     </div>
                                 </List.Item>

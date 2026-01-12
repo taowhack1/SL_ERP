@@ -503,12 +503,13 @@ export default (state = initialState, action) => {
           jobStatusReport: {
             ...state.operations.jobStatusReport,
             jobs: state.operations.jobStatusReport.jobs.map(job =>
-              job.id === action.payload.jobId
+              job.mrp_id === action.payload.jobId || job.id === action.payload.jobId
                 ? { ...job, notes: action.payload.notes }
                 : job
             ),
             selectedJob:
-              state.operations.jobStatusReport.selectedJob?.id === action.payload.jobId
+              state.operations.jobStatusReport.selectedJob?.mrp_id === action.payload.jobId ||
+                state.operations.jobStatusReport.selectedJob?.id === action.payload.jobId
                 ? { ...state.operations.jobStatusReport.selectedJob, notes: action.payload.notes }
                 : state.operations.jobStatusReport.selectedJob,
           },
@@ -522,7 +523,7 @@ export default (state = initialState, action) => {
           jobStatusReport: {
             ...state.operations.jobStatusReport,
             jobs: state.operations.jobStatusReport.jobs.map(job =>
-              job.id === action.payload.jobId
+              job.mrp_id === action.payload.jobId || job.id === action.payload.jobId
                 ? {
                   ...job,
                   events: [...(job.events || []), action.payload.event],
@@ -540,12 +541,12 @@ export default (state = initialState, action) => {
           jobStatusReport: {
             ...state.operations.jobStatusReport,
             jobs: state.operations.jobStatusReport.jobs.map(job =>
-              job.id === action.payload.jobId
+              job.mrp_id === action.payload.jobId || job.id === action.payload.jobId
                 ? {
                   ...job,
-                  events: job.events.map(event =>
+                  events: (job.events || []).map(event =>
                     event.id === action.payload.eventId
-                      ? { ...event, isActive: action.payload.isActive }
+                      ? { ...event, status: action.payload.status }
                       : event
                   ),
                 }
