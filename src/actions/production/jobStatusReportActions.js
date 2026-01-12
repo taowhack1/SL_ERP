@@ -105,12 +105,12 @@ export const fetchJobsByDateRange = (params = {}) => async (dispatch) => {
 /**
  * Fetch job details for modal (card view)
  */
-export const fetchJobDetails = async (jobId) => {
+export const fetchJobDetails = async (mrp_no) => {
     try {
         const response = await axios.get(`${API_JOB_CALENDAR}/card`, {
             ...header_config,
             params: {
-                so_no: jobId
+                mrp_no: mrp_no
             }
         });
 

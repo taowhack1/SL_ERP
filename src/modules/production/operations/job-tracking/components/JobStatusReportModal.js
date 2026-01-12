@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import numeral from 'numeral'
 import { useDispatch, useSelector } from 'react-redux';
 import {
     Modal,
@@ -242,22 +243,25 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
             <div className="job-modal-section">
                 <h3>Job Information</h3>
                 <Descriptions bordered size="small" column={3}>
-                    <Descriptions.Item label="Job No">{job.jobNo}</Descriptions.Item>
+                    <Descriptions.Item label="Job No" style={{ width: 150 }}>{job.jobNo}</Descriptions.Item>
                     <Descriptions.Item label="Name" span={2}>{job.name}</Descriptions.Item>
-                    <Descriptions.Item label="Quantity">{job.qty}</Descriptions.Item>
-                    <Descriptions.Item label="RM Out">
-                        {job.dates?.rmWithdrawal || '-'}
+                    <Descriptions.Item label="MRP No" style={{ width: 150 }}>
+                        {job?.mrp_no || '-'}
                     </Descriptions.Item>
-                    <Descriptions.Item label="PK Out">
-                        {job.dates?.pkWithdrawal || '-'}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="RM In">
+                    <Descriptions.Item label="RM In" style={{ width: 150 }}>
                         {job.dates?.rmEntry || '-'}
                     </Descriptions.Item>
-                    <Descriptions.Item label="PK In">
+                    <Descriptions.Item label="PK In" style={{ width: 150 }}>
                         {job.dates?.pkEntry || '-'}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Plan Date">
+                    <Descriptions.Item label="Quantity" style={{ width: 150 }}>{numeral(job.qty).format('0,000.00')}</Descriptions.Item>
+                    <Descriptions.Item label="RM Out" style={{ width: 150 }}>
+                        {job.dates?.rmWithdrawal || '-'}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="PK Out" style={{ width: 150 }}>
+                        {job.dates?.pkWithdrawal || '-'}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Plan Date" style={{ width: 150 }}>
                         {job.dates?.planDate || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="Delivery Date">

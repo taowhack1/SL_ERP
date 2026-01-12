@@ -102,7 +102,7 @@ const JobStatusReportAGGrid = () => {
 
     // Handle job click - fetch details first
     const handleJobClick = async (job) => {
-        const jobDetails = await fetchJobDetails(job.jobNo);
+        const jobDetails = await fetchJobDetails(job.mrp_no);
         setSelectedJob(jobDetails);
         // if (jobDetails) {
         // } else {

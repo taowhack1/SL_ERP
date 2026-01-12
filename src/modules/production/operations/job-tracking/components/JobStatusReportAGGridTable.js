@@ -42,7 +42,7 @@ const JobStatusReportAGGridTable = forwardRef(({ jobs = [], dateRange, viewMode,
     ];
 
     // Cell renderer for job number (clickable)
-    const JobNoCellRenderer = (params) => {
+    const mrpNoCellRenderer = (params) => {
         return (
             <div
                 className="ag-job-no-link"
@@ -152,8 +152,8 @@ const JobStatusReportAGGridTable = forwardRef(({ jobs = [], dateRange, viewMode,
                     rowSpan: getTwoRowSpan,
                 };
 
-                if (col.field === 'jobNo') {
-                    colDef.cellRenderer = JobNoCellRenderer;
+                if (col.field === 'mrp_no') {
+                    colDef.cellRenderer = mrpNoCellRenderer;
                 }
 
                 cols.push(colDef);
@@ -197,7 +197,7 @@ const JobStatusReportAGGridTable = forwardRef(({ jobs = [], dateRange, viewMode,
         });
 
         return cols;
-    }, [fixedColumns, dateArray, visibleColumns, todayDate, JobNoCellRenderer, EventCellRenderer, getTwoRowSpan]);
+    }, [fixedColumns, dateArray, visibleColumns, todayDate, mrpNoCellRenderer, EventCellRenderer, getTwoRowSpan]);
 
     // Transform jobs data for AG Grid
     const rowData = useMemo(() => {
