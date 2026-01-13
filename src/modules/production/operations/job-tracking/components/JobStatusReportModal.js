@@ -21,7 +21,11 @@ import moment from 'moment';
 import {
     updateJobNotes,
     addJobEvent,
+    addJobComment,
+    updateJobEvent,
     updateJobEventStatus,
+    setSelectedJob,
+    deleteJobComment,
 } from '../../../../../actions/production/jobStatusReportActions';
 import {
     JOB_EVENT_COLOR_CONFIG,
@@ -33,14 +37,29 @@ import '../JobStatusReport.css';
 
 const { TextArea } = Input;
 
-const JobStatusReportModal = ({ visible, job, onClose }) => {
-    console.log("job", job)
+const JobStatusReportModal = ({ visible, onClose, initialEditEvent = null }) => {
     const dispatch = useDispatch();
     const auth = useSelector((state) => state.auth?.authData);
+    const selectedJob = useSelector((state) => state.production?.operations?.jobStatusReport?.selectedJob);
     const [addEventForm] = Form.useForm();
     const [newComment, setNewComment] = useState('');
     const [displayedComments, setDisplayedComments] = useState([]);
     const [commentOffset, setCommentOffset] = useState(10);
+    const [editingEvent, setEditingEvent] = useState(null);
+
+    const job = selectedJob;
+
+    // DEBUG: Log when selectedJob changes
+    useEffect(() => {
+        if (job) {
+            console.log('Modal: selectedJob updated', {
+                mrp_id: job.mrp_id,
+                mrp_no: job.mrp_no,
+                eventsCount: job.events?.length,
+                events: job.events
+            });
+        }
+    }, [job]);
 
     // Initialize displayed comments (last 10)
     useEffect(() => {
@@ -56,6 +75,38 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
         }
         setNewComment('');
     }, [job]);
+
+    // Handle initial edit event from calendar double-click
+    useEffect(() => {
+        if (initialEditEvent) {
+            setEditingEvent(initialEditEvent);
+            // Form will be set in next useEffect or in the effect that runs after
+        }
+    }, [initialEditEvent]);
+
+    // Set form values when editing event changes
+    useEffect(() => {
+        if (editingEvent) {
+            addEventForm.setFieldsValue({
+                eventType: editingEvent.type,
+                description: editingEvent.description,
+                eventDateRange: [moment(editingEvent.date_start), moment(editingEvent.date_end)]
+            });
+        }
+    }, [editingEvent, addEventForm]);
+
+    // DEBUG: Log when events change (before early return)
+    useEffect(() => {
+        if (job?.events && job.events.length > 0) {
+            console.log('Modal: jobEvents changed', job.events.map(e => ({
+                id: e.id,
+                type: e.type,
+                date_start: e.date_start,
+                date_end: e.date_end,
+                updated: e.updated
+            })));
+        }
+    }, [job?.events]);
 
     if (!job) return null;
 
@@ -75,38 +126,27 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
     // Add comment (on Enter)
     const handleAddComment = () => {
         if (newComment.trim()) {
-            const newCommentObj = {
-                id: Date.now(),
-                job_id: job.mrp_id,
+            const commentRaw = {
+                job_id: job.mrp_no,
                 description: newComment.trim(),
-                created: moment().format('YYYY-MM-DD HH:mm:ss'),
+                remark: '',
                 create_by: auth?.user_name || '',
                 status: 'ACTIVE'
             };
 
-            // Dispatch action to add comment
-            dispatch(updateJobNotes(job.mrp_id, [...jobComments, newCommentObj]));
-
-            // Update local state
-            const updated = [newCommentObj, ...jobComments].sort((a, b) =>
-                moment(b.created).diff(moment(a.created))
-            );
-            setDisplayedComments(updated.slice(0, commentOffset));
+            // Dispatch action to add comment via API
+            dispatch(addJobComment(job.mrp_id, commentRaw));
             setNewComment('');
-            message.success('Comment added');
         }
     };
 
-    // Delete comment
-    const handleDeleteComment = (commentId) => {
-        const filtered = jobComments.filter(c => c.id !== commentId);
-        dispatch(updateJobNotes(job.mrp_id, filtered));
-
-        const sorted = filtered.sort((a, b) =>
-            moment(b.created).diff(moment(a.created))
-        );
+    // Delete comment via API
+    const handleDeleteComment = async (commentId) => {
+        await dispatch(deleteJobComment(commentId, job.mrp_id));
+        // displayedComments will naturally refresh on next job update effect; but keep UX responsive:
+        const filtered = jobComments.filter((c) => c.id !== commentId);
+        const sorted = filtered.sort((a, b) => moment(b.created).diff(moment(a.created)));
         setDisplayedComments(sorted.slice(0, Math.min(commentOffset, sorted.length)));
-        message.success('Comment deleted');
     };
 
     // Add event
@@ -114,26 +154,55 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
         try {
             const values = await addEventForm.validateFields();
             const [start, end] = values.eventDateRange || [];
-            const eventRaw = {
-                job_id: job.mrp_id,
-                type: values.eventType, // value equals JOB_EVENT_COLOR_CONFIG[*].type
-                description: values.description,
-                remark: '',
-                date_start: start.format('YYYY-MM-DD'),
-                date_end: end.format('YYYY-MM-DD'),
-                create_by: auth?.user_name || '',
-                status: 'ACTIVE',
-                notes: []
-            };
 
-            // Pass job mrp_id for state update
-            dispatch(addJobEvent(job.mrp_id, eventRaw));
+            if (editingEvent) {
+                // Update existing event
+                const eventData = {
+                    id: editingEvent.id,
+                    job_id: job.mrp_no,
+                    type: values.eventType,
+                    description: values.description,
+                    remark: '',
+                    date_start: start.format('YYYY-MM-DD'),
+                    date_end: end.format('YYYY-MM-DD'),
+                    status: editingEvent.status || 'ACTIVE'
+                };
+
+                dispatch(updateJobEvent(job.mrp_id, eventData));
+                setEditingEvent(null);
+            } else {
+                // Add new event
+                const eventRaw = {
+                    job_id: job.mrp_no,
+                    type: values.eventType,
+                    description: values.description,
+                    remark: '',
+                    date_start: start.format('YYYY-MM-DD'),
+                    date_end: end.format('YYYY-MM-DD'),
+                    create_by: auth?.user_name || '',
+                    status: 'ACTIVE',
+                    notes: []
+                };
+
+                dispatch(addJobEvent(job.mrp_id, eventRaw));
+            }
 
             addEventForm.resetFields();
-            message.success('Event added');
         } catch (error) {
             console.error('Validation failed:', error);
         }
+    };
+
+    // Edit event (load to form) - simplified to just set the editing state
+    const handleEditEvent = (event) => {
+        setEditingEvent(event);
+        // Form values are set automatically by useEffect
+    };
+
+    // Cancel edit event
+    const handleCancelEdit = () => {
+        setEditingEvent(null);
+        addEventForm.resetFields();
     };
 
     // Toggle event active status
@@ -209,10 +278,10 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
         },
     ];
 
-    // Sort events by date (latest first) for default display
+    // Sort events by created date (latest first) for default display
     const sortedEvents = [...jobEvents].sort((a, b) => {
-        const dateA = a.date_start || a.date;
-        const dateB = b.date_start || b.date;
+        const dateA = a.created || a.date_start;
+        const dateB = b.created || b.date_start;
         return moment(dateB).unix() - moment(dateA).unix();
     });
 
@@ -251,23 +320,23 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
                         {job?.mrp_no || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="RM Book Date" style={{ width: 150 }}>
-                        {job.rm_book_date ? moment(job.rm_book_date).format('DD/MM/YYYY') : '-'}
+                        {job.rm_book_date || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="PK Book Date" style={{ width: 150 }}>
-                        {job.pk_book_date ? moment(job.pk_book_date).format('DD/MM/YYYY') : '-'}
+                        {job.pk_book_date || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="RM In" style={{ width: 150 }}>
-                        {job.rm_in_date ? moment(job.rm_in_date).format('DD/MM/YYYY') : '-'}
+                        {job.rm_in_date || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="PK In" style={{ width: 150 }}>
-                        {job.pk_in_date ? moment(job.pk_in_date).format('DD/MM/YYYY') : '-'}
+                        {job.pk_in_date || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="Quantity" style={{ width: 150 }}>{numeral(job.order_qty).format('0,000.00')}</Descriptions.Item>
                     <Descriptions.Item label="Plan Date" style={{ width: 150 }}>
-                        {job.plan_date ? moment(job.plan_date).format('DD/MM/YYYY') : '-'}
+                        {job.plan_date || '-'}
                     </Descriptions.Item>
                     <Descriptions.Item label="Delivery Date">
-                        {job.delivery_date ? moment(job.delivery_date).format('DD/MM/YYYY') : '-'}
+                        {job.delivery_date || '-'}
                     </Descriptions.Item>
                 </Descriptions>
             </div>
@@ -277,7 +346,7 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
                 <h3>Events</h3>
 
                 {/* Add Event Form */}
-                <Card size="small" style={{ marginBottom: 16, backgroundColor: '#fafafa' }}>
+                <Card size="small" style={{ marginBottom: 16, backgroundColor: editingEvent ? '#fff7e6' : '#fafafa' }}>
                     <Form form={addEventForm} layout="inline">
                         <Form.Item
                             name="eventType"
@@ -303,9 +372,20 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
                             <Input placeholder="Description" />
                         </Form.Item>
                         <Form.Item style={{ marginBottom: 0 }}>
-                            <Button type="primary" icon={<PlusOutlined />} onClick={handleAddEvent}>
-                                Add
-                            </Button>
+                            {editingEvent ? (
+                                <>
+                                    <Button type="primary" icon={<PlusOutlined />} onClick={handleAddEvent} style={{ marginRight: 8 }}>
+                                        Update
+                                    </Button>
+                                    <Button onClick={handleCancelEdit}>
+                                        Cancel
+                                    </Button>
+                                </>
+                            ) : (
+                                <Button type="primary" icon={<PlusOutlined />} onClick={handleAddEvent}>
+                                    Add
+                                </Button>
+                            )}
                         </Form.Item>
                     </Form>
                 </Card>
@@ -322,6 +402,9 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
                     }}
                     size="small"
                     scroll={{ y: 320 }}
+                    onRow={(record) => ({
+                        onDoubleClick: () => handleEditEvent(record)
+                    })}
                 />
             </div>
 
@@ -360,12 +443,12 @@ const JobStatusReportModal = ({ visible, job, onClose }) => {
                                             Delete
                                         </Button>
                                     ]}
-                                    style={{ paddingBottom: 16, borderBottom: '1px solid #f0f0f0' }}
+                                    style={{ paddingTop: 8, paddingBottom: 8, borderBottom: '1px solid #f0f0f0' }}
                                 >
-                                    <div>
-                                        <p style={{ marginBottom: 8 }}>{comment.description}</p>
-                                        <span style={{ fontSize: '12px', color: '#999' }}>
-                                            {moment(comment.created).format('DD/MM/YYYY HH:mm')}
+                                    <div style={{ width: '100%' }}>
+                                        <p style={{ marginBottom: 4, fontSize: '13px' }}>{comment.description}</p>
+                                        <span style={{ fontSize: '11px', color: '#999' }}>
+                                            {moment(comment.created).format('DD/MM/YYYY HH:mm:ss')}
                                         </span>
                                     </div>
                                 </List.Item>

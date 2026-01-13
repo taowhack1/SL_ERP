@@ -6,7 +6,7 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { getHighestPriorityEvent, getEventConfig } from '../../../../../constants/jobEventColorConfig';
 import './JobStatusReportAGGrid.css';
 
-const JobStatusReportAGGridTable = forwardRef(({ jobs = [], dateRange, viewMode, onJobClick, visibleColumns = [] }, ref) => {
+const JobStatusReportAGGridTable = forwardRef(({ jobs = [], dateRange, viewMode, onJobClick, onEventDoubleClick, visibleColumns = [] }, ref) => {
     const gridRef = useRef(null);
 
     // Generate date array
@@ -92,6 +92,12 @@ const JobStatusReportAGGridTable = forwardRef(({ jobs = [], dateRange, viewMode,
             <div
                 className="ag-event-cell"
                 title={`${config.label} - ${dateDisplay}`}
+                onDoubleClick={(e) => {
+                    e.stopPropagation();
+                    if (onEventDoubleClick) {
+                        onEventDoubleClick(job, topEvent);
+                    }
+                }}
                 style={{
                     backgroundColor: config.bgColor,
                     color: '#111',
@@ -103,7 +109,8 @@ const JobStatusReportAGGridTable = forwardRef(({ jobs = [], dateRange, viewMode,
                     height: '100%',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    cursor: 'pointer'
                 }}
             >
                 {config.label}

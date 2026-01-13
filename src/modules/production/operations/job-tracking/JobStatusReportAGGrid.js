@@ -8,6 +8,7 @@ import {
     fetchJobDetails,
     setViewMode,
     setDateRange,
+    setSelectedJob,
 } from '../../../../actions/production/jobStatusReportActions';
 import { getEventConfigsByPriority } from '../../../../constants/jobEventColorConfig';
 import JobStatusReportAGGridTable from './components/JobStatusReportAGGridTable';
@@ -17,11 +18,11 @@ import './JobStatusReport.css';
 const JobStatusReportAGGrid = () => {
     const dispatch = useDispatch();
     const [customDateRange, setCustomDateRange] = useState(null);
-    const [selectedJob, setSelectedJob] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [customDateMode, setCustomDateMode] = useState('month');
     const [visibleColumns, setVisibleColumns] = useState(['0', '1', '2', '3', '4', '5']);
+    const [editingEvent, setEditingEvent] = useState(null);
     const gridRef = useRef(null);
 
     const jobStatusReport = useSelector(
@@ -100,15 +101,24 @@ const JobStatusReportAGGrid = () => {
         }
     };
 
-    // Handle job click - fetch details first
+    // Handle job click - fetch details and update Redux
     const handleJobClick = async (job) => {
         const jobDetails = await fetchJobDetails(job.mrp_no);
-        setSelectedJob(jobDetails);
-        // if (jobDetails) {
-        // } else {
-        //     setSelectedJob(job);
-        // }
-        setModalVisible(true);
+        if (jobDetails) {
+            dispatch(setSelectedJob(jobDetails));  // Update Redux, not local state
+            setEditingEvent(null); // Clear any editing event
+            setModalVisible(true);
+        }
+    };
+
+    // Handle event double-click from calendar grid
+    const handleEventDoubleClick = async (job, event) => {
+        const jobDetails = await fetchJobDetails(job.mrp_no);
+        if (jobDetails) {
+            dispatch(setSelectedJob(jobDetails));  // Update Redux
+            setEditingEvent(event);
+            setModalVisible(true);
+        }
     };
 
     // Handle search
@@ -238,6 +248,7 @@ const JobStatusReportAGGrid = () => {
                         viewMode={viewMode}
                         dateRange={dateRange}
                         onJobClick={handleJobClick}
+                        onEventDoubleClick={handleEventDoubleClick}
                         visibleColumns={visibleColumns}
                     />
                 )}
@@ -245,10 +256,10 @@ const JobStatusReportAGGrid = () => {
 
             <JobStatusReportModal
                 visible={modalVisible}
-                job={selectedJob}
+                initialEditEvent={editingEvent}
                 onClose={() => {
                     setModalVisible(false);
-                    setSelectedJob(null);
+                    setEditingEvent(null);
                 }}
             />
         </div>

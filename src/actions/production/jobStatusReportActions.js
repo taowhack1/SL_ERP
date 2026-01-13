@@ -9,6 +9,7 @@ export const SET_DATE_RANGE = 'SET_DATE_RANGE';
 export const SET_SELECTED_JOB = 'SET_SELECTED_JOB';
 export const UPDATE_JOB_NOTES = 'UPDATE_JOB_NOTES';
 export const ADD_JOB_EVENT = 'ADD_JOB_EVENT';
+export const UPDATE_JOB_EVENT = 'UPDATE_JOB_EVENT';
 export const UPDATE_JOB_EVENT_STATUS = 'UPDATE_JOB_EVENT_STATUS';
 export const SET_LOADING = 'SET_LOADING';
 export const SET_ERROR = 'SET_ERROR';
@@ -141,21 +142,78 @@ export const setSelectedJob = (job) => ({
 });
 
 /**
- * Update job notes
+ * Update job notes (for internal use - updating entire notes array)
  */
 export const updateJobNotes = (jobId, notes) => async (dispatch) => {
     try {
-        // TODO: Implement API call when endpoint is available
-        // await axios.put(`${API_JOB_CALENDAR}/${jobId}/notes`, { description: notes }, header_config);
-
         dispatch({
             type: UPDATE_JOB_NOTES,
             payload: { jobId, notes }
         });
-        message.success('Job notes updated successfully');
     } catch (error) {
         console.error('Error updating job notes:', error);
         message.error('Failed to update job notes');
+    }
+};
+
+/**
+ * Add new job comment
+ */
+export const addJobComment = (jobId, commentRaw) => async (dispatch, getState) => {
+    try {
+        const response = await axios.post(`${API_JOB_CALENDAR}/comment`, commentRaw, header_config);
+
+        // Use response data which includes the new ID from server
+        const newComment = response.data;
+
+        const state = getState();
+        const job = state.production.operations.jobStatusReport.jobs.find(j => j.mrp_id === jobId || j.id === jobId);
+
+        if (job) {
+            const updatedNotes = [...(job.notes || []), newComment];
+
+            dispatch({
+                type: UPDATE_JOB_NOTES,
+                payload: { jobId, notes: updatedNotes }
+            });
+
+            dispatch(setSelectedJob({ ...job, notes: updatedNotes }));
+            message.success('Comment added successfully');
+        }
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        message.error('Failed to add comment');
+    }
+};
+
+/**
+ * Delete job comment by id (API returns 1 on success)
+ */
+export const deleteJobComment = (commentId, jobId) => async (dispatch, getState) => {
+    try {
+        const response = await axios.delete(`${API_JOB_CALENDAR}/comment/${commentId}`, header_config);
+
+        const ok = response?.data === 1 || response?.data?.result === 1 || response?.data?.success === 1;
+        if (!ok) {
+            message.error('Failed to delete comment');
+            return;
+        }
+
+        const state = getState();
+        const job = state.production.operations.jobStatusReport.jobs.find(
+            (j) => j.mrp_id === jobId || j.id === jobId
+        );
+
+        const updatedNotes = (job?.notes || []).filter((c) => c.id !== commentId);
+        dispatch({
+            type: UPDATE_JOB_NOTES,
+            payload: { jobId, notes: updatedNotes },
+        });
+
+        message.success('Comment deleted');
+    } catch (error) {
+        console.error('Error deleting comment:', error);
+        message.error('Failed to delete comment');
     }
 };
 
@@ -164,32 +222,55 @@ export const updateJobNotes = (jobId, notes) => async (dispatch) => {
  */
 export const addJobEvent = (jobId, eventRaw) => async (dispatch, getState) => {
     try {
-        // TODO: Implement API call when endpoint is available
-        // const response = await axios.post(`${API_JOB_CALENDAR}/${eventRaw.job_id}/events`, eventRaw, header_config);
+        const response = await axios.post(`${API_JOB_CALENDAR}/event`, eventRaw, header_config);
 
-        const now = new Date().toISOString();
-        const newEvent = {
-            id: Date.now(),
-            ...eventRaw,
-            created: eventRaw.created || now,
-            updated: eventRaw.updated || now,
-            status: eventRaw.status || 'ACTIVE',
-        };
+        // Use response data which includes the new ID from server
+        const newEvent = response.data;
 
         dispatch({
             type: ADD_JOB_EVENT,
             payload: { jobId, event: newEvent }
         });
-        message.success('Event added successfully');
 
-        const state = getState();
-        const job = state.production.operations.jobStatusReport.jobs.find(j => j.mrp_id === jobId || j.id === jobId);
-        if (job) {
-            dispatch(setSelectedJob({ ...job, events: [...(job.events || []), newEvent] }));
-        }
+        // Reducer handles both jobs[] and selectedJob update - no need for additional setSelectedJob dispatch
+        message.success('Event added successfully');
     } catch (error) {
         console.error('Error adding event:', error);
         message.error('Failed to add event');
+    }
+};
+
+/**
+ * Update existing job event
+ */
+export const updateJobEvent = (jobId, eventData) => async (dispatch, getState) => {
+    try {
+        const state = getState();
+        const authUser = state.auth?.authData?.user_name || '';
+
+        const payload = {
+            ...eventData,
+            update_by: authUser,
+            updated: new Date().toISOString()
+        };
+
+        console.log('updateJobEvent sending payload:', payload);
+        const response = await axios.put(`${API_JOB_CALENDAR}/event`, payload, header_config);
+
+        // Use response data which includes updated event from server
+        const updatedEvent = response.data;
+        console.log('updateJobEvent received response:', updatedEvent);
+
+        dispatch({
+            type: UPDATE_JOB_EVENT,
+            payload: { jobId, event: updatedEvent }
+        });
+
+        // Reducer handles both jobs[] and selectedJob update - no need for additional setSelectedJob dispatch
+        message.success('Event updated successfully');
+    } catch (error) {
+        console.error('Error updating event:', error);
+        message.error('Failed to update event');
     }
 };
 
@@ -198,10 +279,29 @@ export const addJobEvent = (jobId, eventRaw) => async (dispatch, getState) => {
  */
 export const updateJobEventStatus = (eventId, jobId, isActive) => async (dispatch, getState) => {
     try {
-        // TODO: Implement API call when endpoint is available
-        // await axios.put(`${API_JOB_CALENDAR}/events/${eventId}`, {
-        //     status: isActive ? 'ACTIVE' : 'INACTIVE'
-        // }, header_config);
+        const state = getState();
+        const authUser = state.auth?.authData?.user_name || '';
+        const job = state.production.operations.jobStatusReport.jobs.find(j => j.mrp_id === jobId || j.id === jobId);
+
+        if (!job) return;
+
+        const event = (job.events || []).find(e => e.id === eventId);
+        if (!event) return;
+
+        const payload = {
+            id: eventId,
+            job_id: event.job_id,
+            type: event.type,
+            description: event.description,
+            remark: event.remark || '',
+            date_start: event.date_start,
+            date_end: event.date_end,
+            status: isActive ? 'ACTIVE' : 'INACTIVE',
+            update_by: authUser,
+            updated: new Date().toISOString()
+        };
+
+        await axios.put(`${API_JOB_CALENDAR}/event`, payload, header_config);
 
         dispatch({
             type: UPDATE_JOB_EVENT_STATUS,
@@ -209,15 +309,10 @@ export const updateJobEventStatus = (eventId, jobId, isActive) => async (dispatc
         });
         message.success(isActive ? 'Event activated' : 'Event deactivated');
 
-        const state = getState();
-        const job = state.production.operations.jobStatusReport.jobs.find(j => j.mrp_id === jobId || j.id === jobId);
-        if (job) {
-            const authUser = state.auth?.authData?.user_name || '';
-            const updatedEvents = (job.events || []).map(e =>
-                e.id === eventId ? { ...e, status: isActive ? 'ACTIVE' : 'INACTIVE', updated: new Date().toISOString(), update_by: authUser } : e
-            );
-            dispatch(setSelectedJob({ ...job, events: updatedEvents }));
-        }
+        const updatedEvents = (job.events || []).map(e =>
+            e.id === eventId ? { ...e, status: isActive ? 'ACTIVE' : 'INACTIVE', updated: new Date().toISOString(), update_by: authUser } : e
+        );
+        dispatch(setSelectedJob({ ...job, events: updatedEvents }));
     } catch (error) {
         console.error('Error updating event status:', error);
         message.error('Failed to update event status');

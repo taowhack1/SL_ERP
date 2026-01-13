@@ -7,54 +7,54 @@
 export const JOB_EVENT_COLOR_CONFIG = {
     RM_IN: {
         priority: 1,
-        color: '#87CEEB', // Sky Blue
-        bgColor: 'rgba(135, 206, 235, 0.7)',
-        borderColor: '#4682B4',
+        color: '#A8E6CE', // Cornsilk (light yellow)
+        bgColor: '#A8E6CE',
+        borderColor: '#A8E6CE',
         label: 'RM In',
         description: 'RM เข้า',
         type: 'RM_IN'
     },
     RM_BOOK: {
         priority: 2,
-        color: '#8B4513', // Saddle Brown
-        bgColor: 'rgba(139, 69, 19, 0.7)',
-        borderColor: '#654321',
+        color: '#628dbd', // Goldenrod (dark yellow)
+        bgColor: '#628dbd',
+        borderColor: '#628dbd',
         label: 'เบิก RM',
         description: 'เบิก RM',
         type: 'RM_BOOK'
     },
     PK_IN: {
         priority: 3,
-        color: '#4169E1', // Royal Blue
-        bgColor: 'rgba(65, 105, 225, 0.7)',
-        borderColor: '#1E40AF',
+        color: '#b9bbe6ff', // Light blue
+        bgColor: '#b9bbe6ff',
+        borderColor: '#b9bbe6ff',
         label: 'PK In',
         description: 'PK เข้า',
         type: 'PK_IN'
     },
     PK_BOOK: {
         priority: 4,
-        color: '#CD853F', // Peru
-        bgColor: 'rgba(205, 133, 63, 0.7)',
-        borderColor: '#9B6B3A',
+        color: '#ab99faff', // Dark blue (Navy)
+        bgColor: '#ab99faff',
+        borderColor: '#ab99faff',
         label: 'เบิก PK',
         description: 'เบิก PK',
         type: 'PK_BOOK'
     },
-    PLAN_DATE: {
+    PLAN: {
         priority: 5,
-        color: '#FFD700', // Gold
-        bgColor: 'rgba(255, 215, 0, 0.7)',
-        borderColor: '#DAA520',
+        color: '#FFD6A5', // Lime green
+        bgColor: '#FFD6A5',
+        borderColor: '#dba15bff',
         label: 'Plan',
         description: 'Plan',
         type: 'PLAN'
     },
-    DELIVERY_DATE: {
+    DELIVERY: {
         priority: 6,
-        color: '#FF6347', // Tomato
-        bgColor: 'rgba(255, 99, 71, 0.7)',
-        borderColor: '#DC143C',
+        color: '#fa8072', // Bright red
+        bgColor: '#fa8072',
+        borderColor: '#fa8072',
         label: 'Delivery',
         description: 'Delivery',
         type: 'DELIVERY'
@@ -67,7 +67,7 @@ export const JOB_EVENT_COLOR_CONFIG = {
  * @returns {object} Event configuration
  */
 export const getEventConfig = (eventType) => {
-    return JOB_EVENT_COLOR_CONFIG[eventType] || JOB_EVENT_COLOR_CONFIG.PLAN_DATE;
+    return JOB_EVENT_COLOR_CONFIG[eventType] || JOB_EVENT_COLOR_CONFIG.PLAN;
 };
 
 /**

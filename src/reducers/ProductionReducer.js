@@ -13,6 +13,7 @@ import {
   SET_SELECTED_JOB,
   UPDATE_JOB_NOTES,
   ADD_JOB_EVENT,
+  UPDATE_JOB_EVENT,
   UPDATE_JOB_EVENT_STATUS,
   SET_LOADING,
   SET_ERROR,
@@ -516,20 +517,62 @@ export default (state = initialState, action) => {
         },
       };
     case ADD_JOB_EVENT:
+      const updatedJobsAfterAdd = state.operations.jobStatusReport.jobs.map(job =>
+        job.mrp_id === action.payload.jobId || job.id === action.payload.jobId
+          ? {
+            ...job,
+            events: [...(job.events || []), action.payload.event],
+          }
+          : job
+      );
       return {
         ...state,
         operations: {
           ...state.operations,
           jobStatusReport: {
             ...state.operations.jobStatusReport,
-            jobs: state.operations.jobStatusReport.jobs.map(job =>
-              job.mrp_id === action.payload.jobId || job.id === action.payload.jobId
-                ? {
-                  ...job,
-                  events: [...(job.events || []), action.payload.event],
-                }
-                : job
+            jobs: updatedJobsAfterAdd,
+            // Also update selectedJob if it matches
+            selectedJob: state.operations.jobStatusReport.selectedJob?.mrp_id === action.payload.jobId ||
+              state.operations.jobStatusReport.selectedJob?.id === action.payload.jobId
+              ? {
+                ...state.operations.jobStatusReport.selectedJob,
+                events: [...(state.operations.jobStatusReport.selectedJob.events || []), action.payload.event],
+              }
+              : state.operations.jobStatusReport.selectedJob,
+          },
+        },
+      };
+    case UPDATE_JOB_EVENT:
+      console.log('UPDATE_JOB_EVENT action:', action.payload);
+      const updatedJobsAfterUpdate = state.operations.jobStatusReport.jobs.map(job =>
+        job.mrp_id === action.payload.jobId || job.id === action.payload.jobId || job.mrp_no === action.payload.jobId
+          ? {
+            ...job,
+            events: (job.events || []).map(e =>
+              e.id === action.payload.event.id ? action.payload.event : e
             ),
+          }
+          : job
+      );
+      return {
+        ...state,
+        operations: {
+          ...state.operations,
+          jobStatusReport: {
+            ...state.operations.jobStatusReport,
+            jobs: updatedJobsAfterUpdate,
+            // Also update selectedJob if it matches
+            selectedJob: state.operations.jobStatusReport.selectedJob?.mrp_id === action.payload.jobId ||
+              state.operations.jobStatusReport.selectedJob?.id === action.payload.jobId ||
+              state.operations.jobStatusReport.selectedJob?.mrp_no === action.payload.jobId
+              ? {
+                ...state.operations.jobStatusReport.selectedJob,
+                events: (state.operations.jobStatusReport.selectedJob.events || []).map(e =>
+                  e.id === action.payload.event.id ? action.payload.event : e
+                ),
+              }
+              : state.operations.jobStatusReport.selectedJob,
           },
         },
       };
