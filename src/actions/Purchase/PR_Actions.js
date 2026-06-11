@@ -147,6 +147,32 @@ export const get_pr_by_id = (pr_id, user_name) => async (dispatch) => {
 
 export const pr_actions = (data, pr_id) => (dispatch) => {
   data.commit = 1;
+  // ส่งแจ้งเตือน LINE ในจังหวะเดียวกับ Sales Order (so_actions)
+  if (
+    data.process_status_id >= 2 &&
+    data.process_status_id != 6 &&
+    data.process_status_id != 7
+  ) {
+    axios
+      .post(
+        `${process.env.REACT_APP_LOCAL_LINE_APPROVE_PR}`,
+        { pr_id, ...data },
+        header_config
+      )
+      .then((res) => {
+        console.log("sending Line pr_approve:>> ", res);
+      });
+  } else if (data.process_status_id == 6 && data.node_stay == 3) {
+    axios
+      .post(
+        `${process.env.REACT_APP_LOCAL_LINE_APPROVE_PR}`,
+        { pr_id, ...data, reject: true },
+        header_config
+      )
+      .then((res) => {
+        console.log("sending Line pr_approve reject:>> ", res);
+      });
+  }
   axios
     .put(`${api_approve}/${data.process_id}`, data, header_config)
     .then((res) => {

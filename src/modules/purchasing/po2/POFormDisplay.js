@@ -223,7 +223,16 @@ const POFormDisplay = () => {
 
   const onDoAction = async (data, msg = "Update Status") => {
     setLoading(true);
-    const resp = await approveFunction(data);
+    const node_stay = getPO?.data?.length ? getPO.data[0]?.node_stay : undefined;
+    const resp = await approveFunction({
+      ...data,
+      line: {
+        url: process.env.REACT_APP_LOCAL_LINE_APPROVE_PO,
+        docIdKey: "po_id",
+        docId: id,
+        node_stay,
+      },
+    });
     if (resp.success) {
       message.success(`${msg} Successfully.`);
       getPO.fetchData();

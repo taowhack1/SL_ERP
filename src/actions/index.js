@@ -9,6 +9,7 @@ const approveFunction = async ({
   process_id = null,
   user_name = null,
   remark = null,
+  line = null,
 }) => {
   // require status
   // 2 = Confirm , 3 = Cancel , 4 = Complete , 5 = Approve , 6 = Reject
@@ -22,6 +23,24 @@ const approveFunction = async ({
       commit: 1,
       process_member_remark: remark,
     };
+    // ส่งแจ้งเตือน LINE (เฉพาะเอกสารที่ส่ง config line เข้ามา เช่น PO)
+    // ใช้เงื่อนไขเดียวกับ Sales Order: status 2/3/5 ส่งปกติ, reject (6) เฉพาะ node_stay ที่กำหนด
+    if (line && line.url) {
+      const sendNormal = status >= 2 && status != 6 && status != 7;
+      const sendReject = status == 6 && line.node_stay == 3;
+      if (sendNormal || sendReject) {
+        const linePayload = {
+          [line.docIdKey]: line.docId,
+          ...app_detail,
+          node_stay: line.node_stay,
+        };
+        if (sendReject) linePayload.reject = true;
+        axios
+          .post(`${line.url}`, linePayload, header_config)
+          .then((res) => console.log("sending Line approve:>> ", res))
+          .catch((err) => console.log("sending Line approve error:>> ", err));
+      }
+    }
     return await axios
       .put(`${api_approve}/${process_id}`, app_detail, header_config)
       .then((res) => {

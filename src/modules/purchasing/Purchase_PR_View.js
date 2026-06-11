@@ -57,6 +57,7 @@ const PRView = (props) => {
       user_name: auth.user_name,
       process_id: data_head.process_id,
       process_member_remark: remark,
+      node_stay: data_head.node_stay,
     };
     message.success({ content: "Reject", key: "validate", duration: 1 });
     dispatch(pr_actions(app_detail, data_head.pr_id));
@@ -130,6 +131,7 @@ const PRView = (props) => {
         user_name: auth.user_name,
         process_id: data_head.process_id,
         process_member_remark: remark,
+        node_stay: data_head.node_stay,
       };
       dispatch(pr_actions(app_detail, data_head.pr_id));
     },
@@ -138,6 +140,7 @@ const PRView = (props) => {
         process_status_id: 2,
         user_name: auth.user_name,
         process_id: data_head.process_id,
+        node_stay: data_head.node_stay,
       };
       dispatch(pr_actions(app_detail, data_head.pr_id));
       console.log("Confirm");
@@ -155,6 +158,7 @@ const PRView = (props) => {
         process_status_id: 3,
         user_name: auth.user_name,
         process_id: data_head.process_id,
+        node_stay: data_head.node_stay,
       };
       dispatch(pr_actions(app_detail, data_head.pr_id));
     },
